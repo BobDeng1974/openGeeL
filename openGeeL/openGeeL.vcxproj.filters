@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="main">
+      <UniqueIdentifier>{afe3341d-e421-4da8-9986-92dc816cabe5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer">
+      <UniqueIdentifier>{2e7645fd-edde-442b-8ec1-49dd98d7750b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer\shaders">
+      <UniqueIdentifier>{f7196ad3-8d6d-4d55-a6da-21459b72e4a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer\texturing">
+      <UniqueIdentifier>{f8161c2b-4b16-44c4-bd0b-0e69f9987b60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer\cameras">
+      <UniqueIdentifier>{31fa0071-4812-4698-9ca2-0863ef10deed}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main\main.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="main\a_window.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\shader.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\renderer.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="main\a_texture.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\texturing\simpletexture.cpp">
+      <Filter>renderer\texturing</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\texturing\layeredtexture.cpp">
+      <Filter>renderer\texturing</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\inputmanager.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="main\a_coordinate.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\window.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="main\a_cameras.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\cameras\camera.cpp">
+      <Filter>renderer\cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\cameras\perspectivecamera.cpp">
+      <Filter>renderer\cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="main\a_lightning.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main\a_window.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shader.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\renderer.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\renderobject.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="main\a_texture.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\texturing\texture.h">
+      <Filter>renderer\texturing</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\texturing\simpletexture.h">
+      <Filter>renderer\texturing</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\texturing\layeredtexture.h">
+      <Filter>renderer\texturing</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\inputmanager.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="main\a_coordinate.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\window.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="main\a_cameras.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\cameras\camera.h">
+      <Filter>renderer\cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\cameras\perspectivecamera.h">
+      <Filter>renderer\cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="main\a_lightning.h">
+      <Filter>main</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="renderer\shaders\simple.vert">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\simple.frag">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\simpleTex.vert">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\simpleTex.frag">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\transform.vert">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\lighting.vert">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\lighting.frag">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\lamp.frag">
+      <Filter>renderer\shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
