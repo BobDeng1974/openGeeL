@@ -2,6 +2,7 @@
 #include <glew.h>
 #include <SOIL.h>
 #include "simpletexture.h"
+#include "../shader.h"
 
 namespace geeL {
 
@@ -12,14 +13,13 @@ namespace geeL {
 
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+		glGenerateMipmap(GL_TEXTURE_2D);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMode);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterMode);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-		glGenerateMipmap(GL_TEXTURE_2D);
 
 		SOIL_free_image_data(image);
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -29,9 +29,12 @@ namespace geeL {
 		//delete name;
 	}
 
-	void SimpleTexture::draw(GLint shader, int texLayer) {
+	void SimpleTexture::bind(const Shader* shader, int texLayer) {
+		glUniform1i(glGetUniformLocation(shader->program, name), texLayer);
+	}
+
+	void SimpleTexture::draw(int texLayer) {
 		glBindTexture(GL_TEXTURE_2D, texture);
-		glUniform1i(glGetUniformLocation(shader, name), texLayer);
 	}
 
 

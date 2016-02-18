@@ -9,15 +9,22 @@ namespace geeL {
 		textures.push_back(texture);
 	}
 
-	void LayeredTexture::draw(GLint shader, int texLayer) {
+	void LayeredTexture::bind(const Shader* shader, int texLayer) {
 		int layer = GL_TEXTURE0 + texLayer;
 
 		for (size_t i = 0; i < textures.size(); i++) {
 			SimpleTexture& texture = textures[i];
-			glActiveTexture(layer);
-			texture.draw(shader, i);
+			texture.bind(shader, i);
+		}
+	}
 
-			layer++;
+	void LayeredTexture::draw(int texLayer) {
+		int layer = GL_TEXTURE0 + texLayer;
+
+		for (size_t i = 0; i < textures.size(); i++) {
+			SimpleTexture& texture = textures[i];
+			glActiveTexture(layer + i);
+			texture.draw();
 		}
 	}
 

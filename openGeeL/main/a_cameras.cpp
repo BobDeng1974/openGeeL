@@ -113,7 +113,7 @@ namespace {
 
 			camera.update();
 
-			texmex.draw(shader->program, 0);
+			texmex.draw();
 			shader->use();
 
 			glm::mat4 view;

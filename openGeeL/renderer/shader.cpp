@@ -84,7 +84,7 @@ namespace geeL {
 
 	}
 
-	void Shader::use() {
+	void Shader::use() const {
 		glUseProgram(program);
 	}
 }

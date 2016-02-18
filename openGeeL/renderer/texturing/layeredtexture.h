@@ -14,7 +14,9 @@ public:
 	LayeredTexture() {}
 
 	void addTexture(const SimpleTexture& texture);
-	virtual void draw(GLint shader, int texLayer = 0);
+
+	virtual void bind(const Shader* shader, int texLayer = 0);
+	virtual void draw(int texLayer = 0);
 
 private:
 	std::vector<SimpleTexture> textures;

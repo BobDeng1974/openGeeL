@@ -70,7 +70,7 @@ public:
 		GLint mixLocation = glGetUniformLocation(shader->program, "mixValue");
 		glUniform1f(mixLocation, greenValue);
 
-		texmex.draw(shader->program, 0);
+		texmex.draw();
 		shader->use();
 
 		glBindVertexArray(VAO);

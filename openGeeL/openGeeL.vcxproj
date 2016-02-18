@@ -146,6 +146,8 @@
     <ClCompile Include="renderer\cameras\camera.cpp" />
     <ClCompile Include="renderer\cameras\perspectivecamera.cpp" />
     <ClCompile Include="renderer\inputmanager.cpp" />
+    <ClCompile Include="renderer\lighting\lightmanager.cpp" />
+    <ClCompile Include="renderer\lighting\pointlight.cpp" />
     <ClCompile Include="renderer\renderer.cpp" />
     <ClCompile Include="renderer\shader.cpp" />
     <ClCompile Include="renderer\texturing\layeredtexture.cpp" />
@@ -161,6 +163,9 @@
     <ClInclude Include="renderer\cameras\camera.h" />
     <ClInclude Include="renderer\cameras\perspectivecamera.h" />
     <ClInclude Include="renderer\inputmanager.h" />
+    <ClInclude Include="renderer\lighting\light.h" />
+    <ClInclude Include="renderer\lighting\lightmanager.h" />
+    <ClInclude Include="renderer\lighting\pointlight.h" />
     <ClInclude Include="renderer\renderer.h" />
     <ClInclude Include="renderer\renderobject.h" />
     <ClInclude Include="renderer\shader.h" />

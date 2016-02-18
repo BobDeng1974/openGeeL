@@ -1,3 +1,5 @@
+.vs/
 .git/
 .gitignore
 x64/
+*.sdf

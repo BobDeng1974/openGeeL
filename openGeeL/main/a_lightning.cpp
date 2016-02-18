@@ -2,6 +2,9 @@
 #include <iostream>
 #include "../renderer/cameras/camera.h"
 #include "../renderer/cameras/perspectivecamera.h"
+#include "../renderer/lighting/light.h"
+#include "../renderer/lighting/lightmanager.h"
+#include "../renderer/lighting/pointlight.h"
 
 #define pi 3.141592f
 
@@ -16,6 +19,11 @@ namespace {
 		GLuint VBO, VAO, containerVAO, lightVAO;
 		GLuint texture1, texture2;
 		SimpleTexture texmex;
+		SimpleTexture spectex;
+		LayeredTexture laytex;
+		LightManager manager;
+		
+		glm::vec3 cubePositions[10];
 
 		PerspectiveCamera camera;
 
@@ -32,50 +40,60 @@ namespace {
 				45.f, window->width, window->height, 0.1f, 100.f);
 
 			GLfloat vertices[] = {
-				-0.5f, -0.5f, -0.5f,
-				0.5f, -0.5f, -0.5f,
-				0.5f,  0.5f, -0.5f,
-				0.5f,  0.5f, -0.5f,
-				-0.5f,  0.5f, -0.5f,
-				-0.5f, -0.5f, -0.5f,
+				// Positions          // Normals           // Texture Coords
+				-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+				0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+				0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+				0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+				-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+				-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
 
-				-0.5f, -0.5f,  0.5f,
-				0.5f, -0.5f,  0.5f,
-				0.5f,  0.5f,  0.5f,
-				0.5f,  0.5f,  0.5f,
-				-0.5f,  0.5f,  0.5f,
-				-0.5f, -0.5f,  0.5f,
+				-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+				0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+				0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+				0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+				-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+				-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
 
-				-0.5f,  0.5f,  0.5f,
-				-0.5f,  0.5f, -0.5f,
-				-0.5f, -0.5f, -0.5f,
-				-0.5f, -0.5f, -0.5f,
-				-0.5f, -0.5f,  0.5f,
-				-0.5f,  0.5f,  0.5f,
+				-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+				-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+				-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+				-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+				-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+				-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-				0.5f,  0.5f,  0.5f,
-				0.5f,  0.5f, -0.5f,
-				0.5f, -0.5f, -0.5f,
-				0.5f, -0.5f, -0.5f,
-				0.5f, -0.5f,  0.5f,
-				0.5f,  0.5f,  0.5f,
+				0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+				0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+				0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+				0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+				0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+				0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-				-0.5f, -0.5f, -0.5f,
-				0.5f, -0.5f, -0.5f,
-				0.5f, -0.5f,  0.5f,
-				0.5f, -0.5f,  0.5f,
-				-0.5f, -0.5f,  0.5f,
-				-0.5f, -0.5f, -0.5f,
+				-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+				0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
+				0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+				0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+				-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
+				-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
 
-				-0.5f,  0.5f, -0.5f,
-				0.5f,  0.5f, -0.5f,
-				0.5f,  0.5f,  0.5f,
-				0.5f,  0.5f,  0.5f,
-				-0.5f,  0.5f,  0.5f,
-				-0.5f,  0.5f, -0.5f
+				-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+				0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
+				0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+				0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+				-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
+				-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
 			};
 
-			
+			cubePositions[0] = glm::vec3(0.0f, 0.0f, 0.0f);
+			cubePositions[1] = glm::vec3(2.0f, 5.0f, -15.0f);
+			cubePositions[2] = glm::vec3(-1.5f, -2.2f, -2.5f);
+			cubePositions[3] = glm::vec3(-3.8f, -2.0f, -12.3f);
+			cubePositions[4] = glm::vec3(2.4f, -0.4f, -3.5f);
+			cubePositions[5] = glm::vec3(-1.7f, 3.0f, -7.5f);
+			cubePositions[6] = glm::vec3(1.3f, -2.0f, -2.5f);
+			cubePositions[7] = glm::vec3(1.5f, 2.0f, -2.5f);
+			cubePositions[8] = glm::vec3(1.5f, 0.2f, -1.5f);
+			cubePositions[9] = glm::vec3(-1.3f, 1.0f, -1.5f);
 
 			glGenVertexArrays(1, &containerVAO);
 			glGenBuffers(1, &VBO);
@@ -84,9 +102,12 @@ namespace {
 			glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 			glBindVertexArray(containerVAO);
-			// Position attribute
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
 			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+			glEnableVertexAttribArray(2);
 			glBindVertexArray(0);
 
 			// Then, we set the light's VAO (VBO stays the same. After all, the vertices are the same for the light object (also a 3D cube))
@@ -95,30 +116,62 @@ namespace {
 			// We only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need.
 			glBindBuffer(GL_ARRAY_BUFFER, VBO);
 			// Set the vertex attributes (only position data for the lamp))
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
 			glEnableVertexAttribArray(0);
 			glBindVertexArray(0);
 
-			texmex = SimpleTexture("tex", "data/images/container.jpg", GL_REPEAT, GL_LINEAR);
+
+			texmex = SimpleTexture("material.diffuse", "data/images/container2.png", GL_REPEAT, GL_LINEAR);
+			spectex = SimpleTexture("material.specular", "data/images/container2_specular.png", GL_REPEAT, GL_LINEAR);
+			laytex = LayeredTexture();
+
+			shader->use();
+			laytex.addTexture(texmex);
+			laytex.addTexture(spectex);
+			laytex.bind(shader);
+
+
+			PointLight* light1 = new PointLight(glm::vec3(1.2f, 1.0f, 2.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.2f, 0.2f, 0.2f));
+			PointLight* light2 = new PointLight(glm::vec3(-4.0f, 2.0f, -12.0f), glm::vec3(0.3f, 0.3f, 0.9f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.2f, 0.2f, 0.2f));
+
+			manager = LightManager();
+			//manager.addLight(light1);
+			manager.addLight(light2);
+			manager.addReceiver(shader);
+
+			manager.bind();
+
+
 		}
 
 		glm::vec3 lightPos = glm::vec3(1.2f, 1.0f, 2.0f);
 		virtual void update() {
 
 			camera.update();
-
-			texmex.draw(shader->program, 0);
 			shader->use();
 
+			GLint cameraPositionLoc = glGetUniformLocation(shader->program, "viewerPosition");
+			glUniform3f(cameraPositionLoc, camera.position.x, camera.position.y, camera.position.z);
 
-			// Use cooresponding shader when setting uniforms/drawing objects
-			
-			GLint objectColorLoc = glGetUniformLocation(shader->program, "objectColor");
-			GLint lightColorLoc = glGetUniformLocation(shader->program, "lightColor");
-			glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);
-			glUniform3f(lightColorLoc, 1.0f, 0.5f, 1.0f);
+			GLint matShineLoc = glGetUniformLocation(shader->program, "material.shininess");
+			glUniform1f(matShineLoc, 64.0f);
+
+			GLint lightAmbientLoc = glGetUniformLocation(shader->program, "lights[0].ambient");
+			GLint lightDiffuseLoc = glGetUniformLocation(shader->program, "lights[0].diffuse");
+			GLint lightSpecularLoc = glGetUniformLocation(shader->program, "lights[0].specular");
+			GLint lightPositionLoc = glGetUniformLocation(shader->program, "lights[0].position");
+
+			glUniform3f(lightAmbientLoc, 0.2f, 0.2f, 0.2f);
+			glUniform3f(lightDiffuseLoc, 0.5f, 0.5f, 0.5f); 
+			glUniform3f(lightSpecularLoc, 1.0f, 1.0f, 1.0f);
+			glUniform3f(lightPositionLoc, lightPos.x, lightPos.y, lightPos.z);
+
+			glUniform1f(glGetUniformLocation(shader->program, "lights[0].constant"), 1.0f);
+			glUniform1f(glGetUniformLocation(shader->program, "lights[0].linear"), 0.09);
+			glUniform1f(glGetUniformLocation(shader->program, "lights[0].quadratic"), 0.032);
 
 
+			laytex.draw();
 
 			glm::mat4 view;
 			glm::mat4 projection;
@@ -132,11 +185,18 @@ namespace {
 			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 			glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-			// Draw the container (using container's vertex attributes)
-			glBindVertexArray(containerVAO);
 			glm::mat4 model;
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			glBindVertexArray(containerVAO);
+			for (GLuint i = 0; i < 10; i++)
+			{
+				model = glm::mat4();
+				model = glm::translate(model, cubePositions[i]);
+				GLfloat angle = 20.0f * i;
+				model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+				glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+				glDrawArrays(GL_TRIANGLES, 0, 36);
+			}
 			glBindVertexArray(0);
 
 			// Also draw the lamp object, again binding the appropriate shader
@@ -145,6 +205,7 @@ namespace {
 			modelLoc = glGetUniformLocation(lamp->program, "model");
 			viewLoc = glGetUniformLocation(lamp->program, "view");
 			projLoc = glGetUniformLocation(lamp->program, "projection");
+
 			// Set matrices
 			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 			glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));

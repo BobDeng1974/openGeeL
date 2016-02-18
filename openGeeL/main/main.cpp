@@ -7,6 +7,7 @@
 
 int main() {
 	a_lighting();
+	//a_cameras();
 
 	return 0;
 }

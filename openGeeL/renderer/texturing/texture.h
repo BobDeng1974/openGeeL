@@ -5,11 +5,14 @@
 
 namespace geeL {
 
+class Shader;
+
 class Texture {
 
 public:
 
-	virtual void draw(GLint shader, int texLayer = 0) = 0;
+	virtual void bind(const Shader* shader, int texLayer = 0) = 0;
+	virtual void draw(int texLayer = 0) = 0;
 };
 
 }

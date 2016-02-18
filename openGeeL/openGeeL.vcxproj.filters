@@ -16,6 +16,9 @@
     <Filter Include="renderer\cameras">
       <UniqueIdentifier>{31fa0071-4812-4698-9ca2-0863ef10deed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="renderer\lighting">
+      <UniqueIdentifier>{62cbc5e1-9a2c-4eea-ab1f-e12654bd7bde}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main\main.cpp">
@@ -59,6 +62,12 @@
     </ClCompile>
     <ClCompile Include="main\a_lightning.cpp">
       <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\lighting\pointlight.cpp">
+      <Filter>renderer\lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\lighting\lightmanager.cpp">
+      <Filter>renderer\lighting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +115,15 @@
     </ClInclude>
     <ClInclude Include="main\a_lightning.h">
       <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\lighting\light.h">
+      <Filter>renderer\lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\lighting\pointlight.h">
+      <Filter>renderer\lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\lighting\lightmanager.h">
+      <Filter>renderer\lighting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,7 +14,8 @@ public:
 	SimpleTexture(const char* name, const char* fileName, GLint wrapMode = GL_REPEAT, GLint filterMode = GL_LINEAR);
 	~SimpleTexture();
 
-	virtual void draw(GLint shader, int texLayer = 0);
+	virtual void bind(const Shader* shader, int texLayer = 0);
+	virtual void draw(int texLayer = 0);
 
 private:
 	GLuint texture;
