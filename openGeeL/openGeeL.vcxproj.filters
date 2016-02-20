@@ -19,21 +19,15 @@
     <Filter Include="renderer\lighting">
       <UniqueIdentifier>{62cbc5e1-9a2c-4eea-ab1f-e12654bd7bde}</UniqueIdentifier>
     </Filter>
+    <Filter Include="renderer\shader">
+      <UniqueIdentifier>{00ef9d40-5d00-4d23-a235-ad586ad301d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer\renderer">
+      <UniqueIdentifier>{f5c8f5ad-a3f0-42fd-b2b9-4156616c12a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main\main.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
-    <ClCompile Include="main\a_window.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\shader.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\renderer.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="main\a_texture.cpp">
       <Filter>main</Filter>
     </ClCompile>
     <ClCompile Include="renderer\texturing\simpletexture.cpp">
@@ -45,14 +39,8 @@
     <ClCompile Include="renderer\inputmanager.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="main\a_coordinate.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\window.cpp">
       <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="main\a_cameras.cpp">
-      <Filter>main</Filter>
     </ClCompile>
     <ClCompile Include="renderer\cameras\camera.cpp">
       <Filter>renderer\cameras</Filter>
@@ -69,22 +57,31 @@
     <ClCompile Include="renderer\lighting\lightmanager.cpp">
       <Filter>renderer\lighting</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\shader\shader.cpp">
+      <Filter>renderer\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\shader\shadermanager.cpp">
+      <Filter>renderer\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\transform.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\renderer\simplerenderer.cpp">
+      <Filter>renderer\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\renderer.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\renderer\splitrenderer.cpp">
+      <Filter>renderer\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main\a_window.h">
-      <Filter>main</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\shader.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\renderer.h">
       <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\renderobject.h">
       <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="main\a_texture.h">
-      <Filter>main</Filter>
     </ClInclude>
     <ClInclude Include="renderer\texturing\texture.h">
       <Filter>renderer\texturing</Filter>
@@ -98,14 +95,8 @@
     <ClInclude Include="renderer\inputmanager.h">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="main\a_coordinate.h">
-      <Filter>main</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\window.h">
       <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="main\a_cameras.h">
-      <Filter>main</Filter>
     </ClInclude>
     <ClInclude Include="renderer\cameras\camera.h">
       <Filter>renderer\cameras</Filter>
@@ -124,6 +115,21 @@
     </ClInclude>
     <ClInclude Include="renderer\lighting\lightmanager.h">
       <Filter>renderer\lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shader\shader.h">
+      <Filter>renderer\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shader\shadermanager.h">
+      <Filter>renderer\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\transform.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\renderer\simplerenderer.h">
+      <Filter>renderer\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\renderer\splitrenderer.h">
+      <Filter>renderer\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

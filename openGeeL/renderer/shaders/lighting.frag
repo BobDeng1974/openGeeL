@@ -1,4 +1,4 @@
-#version 330 core
+#version 430
 
 struct Material {
 	sampler2D diffuse;
@@ -19,7 +19,17 @@ struct PointLight {
 	float quadratic;
 };
 
+layout (std140) uniform shader_data { 
+	vec3 position;
 
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+
+	float constant;
+	float linear;
+	float quadratic;
+};
 
 struct DirectionalLight {
 	vec3 direction;
@@ -41,6 +51,7 @@ uniform Material material;
 
 #define MAX_POINT_LIGHTS 5
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
+
 
 void main() {
 

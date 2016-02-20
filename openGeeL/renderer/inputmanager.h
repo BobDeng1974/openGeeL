@@ -1,19 +1,20 @@
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
-#include <glfw3.h>
 #include <vector>
 #include <map>
-#include <iostream>
 
 #define maxKeys 400
 
 using namespace std;
 
+struct GLFWwindow;
+
 namespace geeL {
 
+typedef void(*InputCallback)(GLFWwindow*, int, int, int, int);
+
 class RenderWindow;
-class RenderObject;
 
 class InputManager {
 
@@ -26,7 +27,7 @@ public:
 	void init(const RenderWindow* renderWindow);
 	void update();
 
-	void addCallback(GLFWkeyfun callback);
+	void addCallback(InputCallback callback);
 
 	void callKey(GLFWwindow* window, int key, int scancode, int action, int mode);
 	void callScroll(GLFWwindow* window, double x, double y);
@@ -49,10 +50,11 @@ public:
 	double getMouseXOffset() const;
 	double getMouseYOffset() const;
 	double getMouseScroll() const;
+	double getMouseScrollOffset() const;
 
 private:
 	const RenderWindow* window;
-	vector<GLFWkeyfun> callbacks;
+	vector<InputCallback> callbacks;
 	map<string, vector<int>> buttonMapping;
 
 	int keyboardBuffer1[maxKeys];
@@ -66,6 +68,7 @@ private:
 	double lastX;
 	double lastY;
 	double scroll;
+	double lastScroll;
 
 	bool getButtonHelper(string button, KeyAction keyFunction) const;
 	

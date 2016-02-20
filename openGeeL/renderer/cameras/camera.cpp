@@ -1,85 +1,114 @@
+#define GLEW_STATIC
+#include <glew.h>
 #include <glfw3.h>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 #include "camera.h"
 #include "../inputmanager.h"
+#include "../transform.h"
+#include "../shader/shader.h"
+#include <iostream>
 
 #define pi 3.141592f
 
 namespace geeL {
 
-	Camera::Camera(const InputManager* inputManager, vec3 position, vec3 forward, vec3 up)
-		: inputManager(inputManager), position(position), forward(forward), up(up), worldUp(up), yaw(0), pitch(0), speed(0), sensitivity(0) {
+	Camera::Camera(Transform* transform)
+		: transform(transform), speed(0), sensitivity(0) {}
 
-	}
+	Camera::Camera(Transform* transform, float speed, float sensitivity) 
+		: transform(transform), speed(speed), sensitivity(sensitivity) {}
 
-	Camera::Camera(const InputManager* inputManager, vec3 position, vec3 up, float yaw, float pitch, float speed, float sensitivity)
-		: inputManager(inputManager), position(position), up(up), worldUp(up), yaw(yaw), pitch(pitch), speed(speed), sensitivity(sensitivity) {
-
-		updateVectors();
+	Camera::~Camera() {
+		delete transform;
 	}
 
 	mat4 Camera::viewMatrix() const {
-		return glm::lookAt(position, position + forward, up);
+		return transform->lookAt();
 	}
 
 	float lastFrame = 0.f;
-	void Camera::update() {
+	void Camera::handleInput(const InputManager& input) {
 		float currentFrame = glfwGetTime();
 		float deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		computeKeyboardInput(deltaTime);
-		computeMouseInput();
+		computeKeyboardInput(input, deltaTime);
+		computeMouseInput(input);
 	}
 
-
-	void Camera::computeKeyboardInput(float deltaTime) {
+	void Camera::computeKeyboardInput(const InputManager& input, float deltaTime) {
 
 		GLfloat cameraSpeed = speed * deltaTime;
 
-		if (inputManager->getKeyHold(GLFW_KEY_LEFT_SHIFT) || inputManager->getKey(GLFW_KEY_LEFT_SHIFT))
+		if (input.getKeyHold(GLFW_KEY_LEFT_SHIFT) || input.getKey(GLFW_KEY_LEFT_SHIFT))
 			cameraSpeed *= 2.5f;
-		else if (inputManager->getKeyHold(GLFW_KEY_LEFT_CONTROL) || inputManager->getKey(GLFW_KEY_LEFT_CONTROL))
+		else if (input.getKeyHold(GLFW_KEY_LEFT_CONTROL) || input.getKey(GLFW_KEY_LEFT_CONTROL))
 			cameraSpeed *= 0.5f;
-
-		if (inputManager->getKeyHold(GLFW_KEY_W) || inputManager->getKey(GLFW_KEY_W))
-			position += cameraSpeed * forward;
-		if (inputManager->getKeyHold(GLFW_KEY_S) || inputManager->getKey(GLFW_KEY_S))
-			position -= cameraSpeed * forward;
-		if (inputManager->getKeyHold(GLFW_KEY_A) || inputManager->getKey(GLFW_KEY_A))
-			position -= glm::normalize(glm::cross(forward, up)) * cameraSpeed;
-		if (inputManager->getKeyHold(GLFW_KEY_D) || inputManager->getKey(GLFW_KEY_D))
-			position += glm::normalize(glm::cross(forward, up)) * cameraSpeed;
+		
+		if (input.getKeyHold(GLFW_KEY_W) || input.getKey(GLFW_KEY_W))
+			transform->translate(cameraSpeed * transform->forward);
+		if (input.getKeyHold(GLFW_KEY_S) || input.getKey(GLFW_KEY_S))
+			transform->translate(-cameraSpeed * transform->forward);
+		if (input.getKeyHold(GLFW_KEY_A) || input.getKey(GLFW_KEY_A))
+			transform->translate(-cameraSpeed * transform->right);
+		if (input.getKeyHold(GLFW_KEY_D) || input.getKey(GLFW_KEY_D))
+			transform->translate(cameraSpeed * transform->right);
 	}
 
-	void Camera::computeMouseInput() {
-		GLfloat xoffset = inputManager->getMouseXOffset() / 100.f;
-		GLfloat yoffset = inputManager->getMouseYOffset() / 100.f;
+	void Camera::computeMouseInput(const InputManager& input) {
 
-		xoffset *= sensitivity;
-		yoffset *= sensitivity;
+		if (input.getKeyHold(GLFW_KEY_LEFT_ALT) || input.getKey(GLFW_KEY_LEFT_ALT)) {
 
-		yaw += xoffset;
-		pitch += yoffset;
+			GLfloat xoffset = input.getMouseXOffset();
+			GLfloat yoffset = input.getMouseYOffset();
 
-		if (pitch > pi - 0.1f)
+			xoffset *= sensitivity;
+			yoffset *= sensitivity;
+
+			vec3 rotation = transform->rotation;
+
+			//std::cout << rotation.x << ", " << rotation.y << ", " << rotation.z << "\n";
+
+			/*
+			yaw += xoffset;
+			pitch += yoffset;
+
+			if (pitch > pi - 0.1f)
 			pitch = pi - 0.1f;
-		if (pitch < -pi + 0.1f)
+			if (pitch < -pi + 0.1f)
 			pitch = -pi + 0.1f;
 
-		updateVectors();
+			updateVectors();
+			*/
+
+			float newPitch = transform->rotation.x + yoffset;
+
+			if (newPitch >= 90.f)
+				yoffset = 90.f - transform->rotation.x;
+
+			//std::cout << yoffset << "\n";
+
+			//if (newPitch < 90.f && newPitch > -90.f) {
+			transform->rotate(vec3(0.f, 1.f, 0.f), xoffset);
+			transform->rotate(vec3(1.f, 0.f, 0.f), yoffset);
+
+			//}
+
+
+
+		}
+		
+
 	}
 
-	void Camera::updateVectors() {
-		glm::vec3 front;
-		front.x = cos(yaw) * cos(pitch);
-		front.y = sin(pitch);
-		front.z = sin(yaw) * cos(pitch);
+	void Camera::bind(const Shader& shader) const {
+		shader.use();
 
-		forward = normalize(front);
-		right   = normalize(cross(forward, worldUp));
-		up      = normalize(cross(right, forward));
+		GLint viewLoc = glGetUniformLocation(shader.program, "view");
+		GLint projLoc = glGetUniformLocation(shader.program, "projection");
+
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix()));
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix()));
 	}
-
 }

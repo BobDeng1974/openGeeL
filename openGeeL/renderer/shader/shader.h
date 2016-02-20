@@ -1,23 +1,21 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include <glew.h>;
-
 namespace geeL {
 
 class Shader {
 
 public:
+	int program;
 
-	GLuint program;
-
-	Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
+	Shader() {}
+	Shader(const char* vertexPath, const char* fragmentPath);
 
 	void use() const;
-
 };
 
 
 }
 
 #endif
+

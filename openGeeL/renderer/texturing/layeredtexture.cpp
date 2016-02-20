@@ -1,5 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <glfw3.h>
 #include "layeredtexture.h"
 #include "simpletexture.h"
 
@@ -9,7 +10,7 @@ namespace geeL {
 		textures.push_back(texture);
 	}
 
-	void LayeredTexture::bind(const Shader* shader, int texLayer) {
+	void LayeredTexture::bind(const Shader& shader, int texLayer) {
 		int layer = GL_TEXTURE0 + texLayer;
 
 		for (size_t i = 0; i < textures.size(); i++) {

@@ -1,8 +1,9 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <glfw3.h>
 #include <SOIL.h>
 #include "simpletexture.h"
-#include "../shader.h"
+#include "../shader/shader.h"
 
 namespace geeL {
 
@@ -29,8 +30,8 @@ namespace geeL {
 		//delete name;
 	}
 
-	void SimpleTexture::bind(const Shader* shader, int texLayer) {
-		glUniform1i(glGetUniformLocation(shader->program, name), texLayer);
+	void SimpleTexture::bind(const Shader& shader, int texLayer) {
+		glUniform1i(glGetUniformLocation(shader.program, name), texLayer);
 	}
 
 	void SimpleTexture::draw(int texLayer) {

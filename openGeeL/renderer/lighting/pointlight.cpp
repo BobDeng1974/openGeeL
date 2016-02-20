@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "pointlight.h"
-#include "../shader.h"
+#include "../shader/shader.h"
 #include <string>
 
 namespace geeL {
@@ -10,8 +10,8 @@ namespace geeL {
 		: Light(diffuse, specular, ambient, intensity), position(position), constant(constant), linear(linear), quadratic(quadratic) {}
 
 
-	void PointLight::bind(const Shader* shader, int index) const {
-		GLuint program = shader->program;
+	void PointLight::bind(const Shader& shader, int index) const {
+		GLuint program = shader.program;
 
 		std::string location = "pointLights[" + std::to_string(index) + "].";
 

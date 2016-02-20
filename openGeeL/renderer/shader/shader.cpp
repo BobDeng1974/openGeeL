@@ -1,3 +1,5 @@
+#define GLEW_STATIC
+#include <glew.h>
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -6,7 +8,7 @@
 
 namespace geeL {
 
-	Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath) {
+	Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 
 		//Read code from file path
 		std::string vertexCode;
@@ -16,7 +18,7 @@ namespace geeL {
 
 		vShaderFile.exceptions(std::ifstream::badbit);
 		fShaderFile.exceptions(std::ifstream::badbit);
-		
+
 		try {
 			// Open files
 			vShaderFile.open(vertexPath);
@@ -42,6 +44,7 @@ namespace geeL {
 		//Compile shaders
 		//Vertex shader
 		GLuint vertexShader;
+
 		vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
 		glShaderSource(vertexShader, 1, &vShaderCode, NULL);

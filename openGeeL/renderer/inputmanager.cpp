@@ -1,6 +1,6 @@
+#include <glfw3.h>
 #include "inputmanager.h"
 #include "window.h"
-#include <iostream>
 
 namespace geeL {
 
@@ -47,7 +47,7 @@ namespace geeL {
 	
 
 	//Add a callback to to the input manager that will be called during runtime
-	void InputManager::addCallback(GLFWkeyfun callback) {
+	void InputManager::addCallback(InputCallback callback) {
 		callbacks.push_back(callback);
 	}
 
@@ -65,6 +65,7 @@ namespace geeL {
 	}
 
 	void InputManager::callScroll(GLFWwindow* window, double x, double y) {
+		lastScroll = scroll;
 		scroll -= y;
 	}
 
@@ -161,6 +162,10 @@ namespace geeL {
 
 	double InputManager::getMouseScroll() const {
 		return scroll;
+	}
+
+	double InputManager::getMouseScrollOffset() const {
+		return scroll - lastScroll;
 	}
 
 }

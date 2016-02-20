@@ -22,8 +22,9 @@ public:
 	~LightManager();
 
 	void addLight(const Light* light);
-	void addReceiver(const Shader* shader);
+	void addReceiver(const Shader& shader);
 	void bind() const;
+	void bind(const Shader& shader) const;
 
 private:
 	std::vector<const Light*> lights;

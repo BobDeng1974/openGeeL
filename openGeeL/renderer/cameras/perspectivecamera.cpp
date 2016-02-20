@@ -2,23 +2,26 @@
 #include <gtc/type_ptr.hpp>
 #include "perspectivecamera.h"
 #include "../inputmanager.h"
+#include "../transform.h"
 
 namespace geeL {
 
-	PerspectiveCamera::PerspectiveCamera(const InputManager* inputManager, vec3 position, vec3 forward, vec3 up, 
+	PerspectiveCamera::PerspectiveCamera(Transform* transform, 
 		float fov, float width, float height, float nearClip, float farClip)
-		: Camera(inputManager, position, forward, up), FOV(fov), width(width), height(height), nearClip(nearClip), farClip(farClip) {}
+		: Camera(transform), FOV(fov), currentFOV(fov), width(width), height(height), nearClip(nearClip), farClip(farClip) {}
 
-	PerspectiveCamera::PerspectiveCamera(const InputManager* inputManager, vec3 position, vec3 up, float yaw, float pitch, float speed, float sensitivity, 
-		float fov, float width, float height, float nearClip, float farClip)
-		: Camera(inputManager, position, up, yaw, pitch, speed, sensitivity), FOV(fov), width(width), height(height), nearClip(nearClip), farClip(farClip) {}
+	PerspectiveCamera::PerspectiveCamera(Transform* transform, float speed, float sensitivity,
+		float fov, float width, float height, float nearClip, float farClip) 
+		: Camera(transform, speed, sensitivity), FOV(fov), currentFOV(fov), width(width), height(height), nearClip(nearClip), farClip(farClip) {
+	}
 
 	mat4 PerspectiveCamera::projectionMatrix() const {
-		return glm::perspective(getCurrentZoom(), width / height, nearClip, farClip);
+		return glm::perspective(currentFOV, width / height, nearClip, farClip);
 	}
 
-	float PerspectiveCamera::getCurrentZoom() const {
-		return FOV + inputManager->getMouseScroll();
-	}
+	void PerspectiveCamera::handleInput(const InputManager& input) {
+		Camera::handleInput(input);
 
+		currentFOV = FOV + input.getMouseScroll();
+	}
 }

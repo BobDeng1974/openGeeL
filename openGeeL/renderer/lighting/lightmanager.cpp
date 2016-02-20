@@ -1,6 +1,6 @@
 #include "lightmanager.h"
 #include "light.h"
-#include "../shader.h"
+#include "../shader/shader.h"
 
 namespace geeL {
 
@@ -15,9 +15,9 @@ namespace geeL {
 			lights.push_back(light);
 	}
 
-	void LightManager::addReceiver(const Shader* shader) {
-		if (shader != nullptr)
-			shaders.push_back(shader);
+	void LightManager::addReceiver(const Shader& shader) {
+		//if (shader != nullptr)
+			shaders.push_back(&shader);
 	}
 
 	void LightManager::bind() const {
@@ -26,8 +26,16 @@ namespace geeL {
 			shader->use();
 			
 			for (size_t j = 0; j < lights.size(); j++) {
-				lights[j]->bind(shader, j);
+				lights[j]->bind(*shader, j);
 			}
+		}
+	}
+
+	void LightManager::bind(const Shader& shader) const {
+		shader.use();
+
+		for (size_t j = 0; j < lights.size(); j++) {
+			lights[j]->bind(shader, j);
 		}
 	}
 }

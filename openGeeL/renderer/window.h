@@ -5,6 +5,8 @@ struct GLFWwindow;
 
 namespace geeL {
 
+class Camera;
+
 class RenderWindow {
 
 public:
@@ -14,17 +16,9 @@ public:
 
 	RenderWindow(const char* name, unsigned int width, unsigned int height, bool resizable = false);
 
-	inline void RenderWindow::swapBuffer() {
-		glfwSwapBuffers(glWindow);
-	}
-
-	inline bool RenderWindow::shouldClose() {
-		return glfwWindowShouldClose(glWindow);
-	}
-
-	inline void RenderWindow::close() {
-		glfwTerminate();
-	}
+	void RenderWindow::swapBuffer();
+	bool RenderWindow::shouldClose();
+	void RenderWindow::close();
 	
 };
 

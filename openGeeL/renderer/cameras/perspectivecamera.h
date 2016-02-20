@@ -1,10 +1,11 @@
 #ifndef PERSPECTIVECAMERA_H
 #define PERSPECTIVECAMERA_H
 
-#include <glm.hpp>
 #include "camera.h"
 
 using namespace glm;
+
+class Transform;
 
 namespace geeL {
 
@@ -13,19 +14,19 @@ class PerspectiveCamera : public Camera {
 public:		
 	PerspectiveCamera() {};
 
-	PerspectiveCamera(const InputManager* inputManager, vec3 position, vec3 forward, vec3 up, 
+	PerspectiveCamera(Transform* transform,
 		float fov, float width, float height, float nearClip, float farClip);
 
-	PerspectiveCamera(const InputManager* inputManager, vec3 position, vec3 up, float yaw, float pitch, float speed, float sensitivity,
+	PerspectiveCamera(Transform* transform, float speed, float sensitivity,
 		float fov, float width, float height, float nearClip, float farClip);
 
 	virtual mat4 projectionMatrix() const;
 
-private:
-	float FOV, width, height, 
-		nearClip, farClip;
+	virtual void handleInput(const InputManager& input);
 
-	float getCurrentZoom() const;
+private:
+	float FOV, currentFOV, width, height, 
+		nearClip, farClip;
 
 };
 
