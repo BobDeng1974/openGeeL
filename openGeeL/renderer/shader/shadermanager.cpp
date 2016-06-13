@@ -1,37 +1,36 @@
-#include "shadermanager.h"
+#include <list>
+#include "shader.h"
+#include "../cameras/camera.h"
 #include "../lighting/lightmanager.h"
-#include "../shader/shader.h"
-#include <iostream>
+#include "../materials/materialfactory.h"
+#include "shadermanager.h"
 
 namespace geeL {
 
-	typedef map<string, const Shader*>::const_iterator shadersIterator;
+	ShaderManager::ShaderManager(const MaterialFactory& factory) 
+		: factory(factory) {}
 
-	ShaderManager::ShaderManager(const LightManager* lightManager) : lightManager(lightManager) {
 
-	}
+	void ShaderManager::staticBind(const LightManager& lightManager) const {
 
-	ShaderManager::~ShaderManager() {
-		for (std::map<string, const Shader*>::iterator it = shaders.begin(); it != shaders.end(); ++it)
-			delete it->second;
-	}
+		for (list<Shader>::const_iterator it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
+			const Shader& shader = *it;
 
-	void ShaderManager::addShader(string name, const Shader* shader) {
-		if (shader != nullptr && !shaders.count(name))
-			shaders[name] = shader;
-	}
-
-	const Shader* ShaderManager::getShader(string name) {
-		return shaders[name];
-	}
-
-	void ShaderManager::staticBind() const {
-
-	}
-
-	void ShaderManager::dynamicBind() const {
-		for (shadersIterator it = shaders.begin(); it != shaders.end(); it++) {
-			lightManager->bind(*it->second);
+			shader.use();
+			if (shader.useLight) lightManager.bind(shader);
 		}
 	}
+
+	void ShaderManager::dynamicBind(const LightManager& lightManager, const Camera& currentCamera, string cameraName) const {
+
+		for (list<Shader>::const_iterator it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
+			const Shader& shader = *it;
+
+			shader.use();
+			if (shader.useLight) lightManager.bind(shader);
+			if (shader.useCamera) currentCamera.bind(shader, cameraName);
+		}
+	}
+
+
 }

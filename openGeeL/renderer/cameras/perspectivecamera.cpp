@@ -2,15 +2,15 @@
 #include <gtc/type_ptr.hpp>
 #include "perspectivecamera.h"
 #include "../inputmanager.h"
-#include "../transform.h"
+#include "../transformation/transform.h"
 
 namespace geeL {
 
-	PerspectiveCamera::PerspectiveCamera(Transform* transform, 
+	PerspectiveCamera::PerspectiveCamera(Transform& transform, 
 		float fov, float width, float height, float nearClip, float farClip)
 		: Camera(transform), FOV(fov), currentFOV(fov), width(width), height(height), nearClip(nearClip), farClip(farClip) {}
 
-	PerspectiveCamera::PerspectiveCamera(Transform* transform, float speed, float sensitivity,
+	PerspectiveCamera::PerspectiveCamera(Transform& transform, float speed, float sensitivity,
 		float fov, float width, float height, float nearClip, float farClip) 
 		: Camera(transform, speed, sensitivity), FOV(fov), currentFOV(fov), width(width), height(height), nearClip(nearClip), farClip(farClip) {
 	}

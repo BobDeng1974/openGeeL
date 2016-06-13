@@ -3,8 +3,6 @@
 
 #include "camera.h"
 
-using namespace glm;
-
 class Transform;
 
 namespace geeL {
@@ -12,12 +10,10 @@ namespace geeL {
 class PerspectiveCamera : public Camera {
 
 public:		
-	PerspectiveCamera() {};
-
-	PerspectiveCamera(Transform* transform,
+	PerspectiveCamera(Transform& transform,
 		float fov, float width, float height, float nearClip, float farClip);
 
-	PerspectiveCamera(Transform* transform, float speed, float sensitivity,
+	PerspectiveCamera(Transform& transform, float speed, float sensitivity,
 		float fov, float width, float height, float nearClip, float farClip);
 
 	virtual mat4 projectionMatrix() const;

@@ -1,38 +1,29 @@
 #ifndef SHADERMANAGER_H
 #define SHADERMANAGER_H
 
-#include <map>
+#include <string>
 
 using namespace std;
 
 namespace geeL {
 
-class LightManager;
-class Window;
-class Shader;
 class Camera;
+class LightManager;
+class MaterialFactory;
+class Shader;
 
 class ShaderManager {
 
 public:
-	const Window* window;
-	const LightManager* lightManager;
+	ShaderManager(const MaterialFactory& factory);
 
-	ShaderManager(const LightManager* lightManager);
-	~ShaderManager();
-
-	void addShader(string name, const Shader* shader);
-	const Shader* getShader(string name);
-
-	void staticBind() const;
-	void dynamicBind() const;
+	void staticBind(const LightManager& lightManager) const;
+	void dynamicBind(const LightManager& lightManager, const Camera& currentCamera, string cameraName = "camera") const;
 
 private:
-	map<string, const Shader*> shaders;
-
+	const MaterialFactory& factory;
 
 };
-
 
 }
 

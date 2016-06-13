@@ -25,6 +25,18 @@
     <Filter Include="renderer\renderer">
       <UniqueIdentifier>{f5c8f5ad-a3f0-42fd-b2b9-4156616c12a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="renderer\materials">
+      <UniqueIdentifier>{1234491a-99f3-40af-9c6f-1aa8f75c428d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer\utility">
+      <UniqueIdentifier>{1eecf185-c6d6-4aa1-b37d-08e73d3fb0de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer\meshes">
+      <UniqueIdentifier>{1f116d60-735e-403d-a817-2d2365e1c31e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer\transformation">
+      <UniqueIdentifier>{ab82eccb-7be9-4699-97a1-f6cf00e5fc3a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main\main.cpp">
@@ -60,12 +72,6 @@
     <ClCompile Include="renderer\shader\shader.cpp">
       <Filter>renderer\shader</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\shader\shadermanager.cpp">
-      <Filter>renderer\shader</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\transform.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\renderer\simplerenderer.cpp">
       <Filter>renderer\renderer</Filter>
     </ClCompile>
@@ -74,6 +80,42 @@
     </ClCompile>
     <ClCompile Include="renderer\renderer\splitrenderer.cpp">
       <Filter>renderer\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\materials\material.cpp">
+      <Filter>renderer\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\lighting\directionallight.cpp">
+      <Filter>renderer\lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\lighting\spotlight.cpp">
+      <Filter>renderer\lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\lighting\light.cpp">
+      <Filter>renderer\lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\meshes\mesh.cpp">
+      <Filter>renderer\meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\meshes\model.cpp">
+      <Filter>renderer\meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\materials\materialfactory.cpp">
+      <Filter>renderer\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\shader\shadermanager.cpp">
+      <Filter>renderer\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\transformation\transform.cpp">
+      <Filter>renderer\transformation</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\transformation\transformfactory.cpp">
+      <Filter>renderer\transformation</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\meshes\meshrenderer.cpp">
+      <Filter>renderer\meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\meshes\meshfactory.cpp">
+      <Filter>renderer\meshes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -119,17 +161,47 @@
     <ClInclude Include="renderer\shader\shader.h">
       <Filter>renderer\shader</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\shader\shadermanager.h">
-      <Filter>renderer\shader</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\transform.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\renderer\simplerenderer.h">
       <Filter>renderer\renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\renderer\splitrenderer.h">
       <Filter>renderer\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\materials\material.h">
+      <Filter>renderer\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\lighting\directionallight.h">
+      <Filter>renderer\lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\lighting\spotlight.h">
+      <Filter>renderer\lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\utility\rendertime.h">
+      <Filter>renderer\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\meshes\mesh.h">
+      <Filter>renderer\meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\meshes\model.h">
+      <Filter>renderer\meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\materials\materialfactory.h">
+      <Filter>renderer\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shader\shadermanager.h">
+      <Filter>renderer\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\transformation\transform.h">
+      <Filter>renderer\transformation</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\transformation\transformfactory.h">
+      <Filter>renderer\transformation</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\meshes\meshrenderer.h">
+      <Filter>renderer\meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\meshes\meshfactory.h">
+      <Filter>renderer\meshes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +227,9 @@
       <Filter>renderer\shaders</Filter>
     </None>
     <None Include="renderer\shaders\lamp.frag">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\simpleDiffuse.frag">
       <Filter>renderer\shaders</Filter>
     </None>
   </ItemGroup>

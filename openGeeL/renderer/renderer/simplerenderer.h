@@ -10,7 +10,7 @@ class Camera;
 class SimpleRenderer : public Renderer {
 
 public:
-	SimpleRenderer(RenderWindow* window, InputManager* inputManager, ShaderManager* shaderManger);
+	SimpleRenderer(RenderWindow* window, InputManager* inputManager);
 
 	virtual void init();
 	virtual void render();

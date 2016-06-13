@@ -1,10 +1,13 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-//#include "../renderobject.h"
-#include <glm.hpp>
+#include <string>
+#include <vec3.hpp>
+#include <mat4x4.hpp>
 
-using namespace glm;
+using namespace std;
+using glm::vec3;
+using glm::mat4;
 
 namespace geeL {
 
@@ -15,16 +18,13 @@ class Shader;
 class Camera {
 
 public:
-	Transform* transform;
-
-	Camera() {}
-	~Camera();
+	Transform& transform;
 
 	//Defines a static camera 
-	Camera(Transform* transform);
+	Camera(Transform& transform);
 
 	//Defines a movable camera
-	Camera(Transform* transform, float speed, float sensitivity);
+	Camera(Transform& transform, float speed, float sensitivity);
 
 	mat4 viewMatrix() const;
 	virtual mat4 projectionMatrix() const = 0;
@@ -35,7 +35,7 @@ public:
 
 	virtual void handleInput(const InputManager& input);
 
-	void bind(const Shader& shader) const;
+	void bind(const Shader& shader, string name = "camera") const;
 
 protected:
 	float speed;
@@ -43,6 +43,7 @@ protected:
 
 	virtual void computeKeyboardInput(const InputManager& input, float deltaTime);
 	virtual void computeMouseInput(const InputManager& input);
+
 };
 
 

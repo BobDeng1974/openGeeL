@@ -8,7 +8,8 @@
 
 namespace geeL {
 
-	Shader::Shader(const char* vertexPath, const char* fragmentPath) {
+	Shader::Shader(const char* vertexPath, const char* fragmentPath, bool useLight, bool useCamera) 
+		: useLight(useLight), useCamera(useCamera) {
 
 		//Read code from file path
 		std::string vertexCode;

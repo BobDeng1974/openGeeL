@@ -3,3 +3,4 @@
 .gitignore
 x64/
 *.sdf
+*.opendb

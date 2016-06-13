@@ -69,16 +69,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);dependencies/glfw;dependencies/glew;dependencies/soil;dependencies/glm</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);dependencies/glfw;dependencies/glew;dependencies/soil;dependencies/glm;dependencies/assimp</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);dependencies/glfw;dependencies/glew;dependencies/soil;dependencies/glm</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);dependencies/glfw;dependencies/glew;dependencies/soil;dependencies/glm;dependencies/assimp</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);dependencies/glfw;dependencies/glew;dependencies/soil;dependencies/glm</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);dependencies/glfw;dependencies/glew;dependencies/soil;dependencies/glm;dependencies/assimp</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);dependencies/glfw;dependencies/glew;dependencies/soil;dependencies/glm</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);dependencies/glfw;dependencies/glew;dependencies/soil;dependencies/glm;dependencies/assimp</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -90,8 +90,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>dependencies/glfw;dependencies/glew;dependencies/soil;dependencies/glm</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opengl32.lib;glfw3.lib;glew32s.lib;SOIL.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>dependencies/glfw;dependencies/glew;dependencies/soil;dependencies/glm;dependencies/assimp</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opengl32.lib;glfw3.lib;glew32s.lib;SOIL.lib;assimp.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -104,8 +104,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>dependencies/glfw;dependencies/glew;dependencies/soil;dependencies/glm</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opengl32.lib;glfw3.lib;glew32s.lib;SOIL.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>dependencies/glfw;dependencies/glew;dependencies/soil;dependencies/glm;dependencies/assimp</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opengl32.lib;glfw3.lib;glew32s.lib;SOIL.lib;assimp.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -122,8 +122,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>dependencies/glfw;dependencies/glew;dependencies/soil;dependencies/glm</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opengl32.lib;glfw3.lib;glew32s.lib;SOIL.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>dependencies/glfw;dependencies/glew;dependencies/soil;dependencies/glm;dependencies/assimp</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opengl32.lib;glfw3.lib;glew32s.lib;SOIL.lib;assimp.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -140,8 +140,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>dependencies/glfw;dependencies/glew;dependencies/soil;dependencies/glm</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opengl32.lib;glfw3.lib;glew32s.lib;SOIL.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>dependencies/glfw;dependencies/glew;dependencies/soil;dependencies/glm;dependencies/assimp</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opengl32.lib;glfw3.lib;glew32s.lib;SOIL.lib;assimp.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -150,8 +150,17 @@
     <ClCompile Include="renderer\cameras\camera.cpp" />
     <ClCompile Include="renderer\cameras\perspectivecamera.cpp" />
     <ClCompile Include="renderer\inputmanager.cpp" />
+    <ClCompile Include="renderer\lighting\directionallight.cpp" />
+    <ClCompile Include="renderer\lighting\light.cpp" />
     <ClCompile Include="renderer\lighting\lightmanager.cpp" />
     <ClCompile Include="renderer\lighting\pointlight.cpp" />
+    <ClCompile Include="renderer\lighting\spotlight.cpp" />
+    <ClCompile Include="renderer\materials\material.cpp" />
+    <ClCompile Include="renderer\materials\materialfactory.cpp" />
+    <ClCompile Include="renderer\meshes\mesh.cpp" />
+    <ClCompile Include="renderer\meshes\meshfactory.cpp" />
+    <ClCompile Include="renderer\meshes\meshrenderer.cpp" />
+    <ClCompile Include="renderer\meshes\model.cpp" />
     <ClCompile Include="renderer\renderer.cpp" />
     <ClCompile Include="renderer\renderer\simplerenderer.cpp" />
     <ClCompile Include="renderer\renderer\splitrenderer.cpp" />
@@ -159,7 +168,8 @@
     <ClCompile Include="renderer\shader\shadermanager.cpp" />
     <ClCompile Include="renderer\texturing\layeredtexture.cpp" />
     <ClCompile Include="renderer\texturing\simpletexture.cpp" />
-    <ClCompile Include="renderer\transform.cpp" />
+    <ClCompile Include="renderer\transformation\transform.cpp" />
+    <ClCompile Include="renderer\transformation\transformfactory.cpp" />
     <ClCompile Include="renderer\window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -167,9 +177,17 @@
     <ClInclude Include="renderer\cameras\camera.h" />
     <ClInclude Include="renderer\cameras\perspectivecamera.h" />
     <ClInclude Include="renderer\inputmanager.h" />
+    <ClInclude Include="renderer\lighting\directionallight.h" />
     <ClInclude Include="renderer\lighting\light.h" />
     <ClInclude Include="renderer\lighting\lightmanager.h" />
     <ClInclude Include="renderer\lighting\pointlight.h" />
+    <ClInclude Include="renderer\lighting\spotlight.h" />
+    <ClInclude Include="renderer\materials\material.h" />
+    <ClInclude Include="renderer\materials\materialfactory.h" />
+    <ClInclude Include="renderer\meshes\mesh.h" />
+    <ClInclude Include="renderer\meshes\meshfactory.h" />
+    <ClInclude Include="renderer\meshes\meshrenderer.h" />
+    <ClInclude Include="renderer\meshes\model.h" />
     <ClInclude Include="renderer\renderer.h" />
     <ClInclude Include="renderer\renderer\simplerenderer.h" />
     <ClInclude Include="renderer\renderer\splitrenderer.h" />
@@ -179,7 +197,9 @@
     <ClInclude Include="renderer\texturing\layeredtexture.h" />
     <ClInclude Include="renderer\texturing\simpletexture.h" />
     <ClInclude Include="renderer\texturing\texture.h" />
-    <ClInclude Include="renderer\transform.h" />
+    <ClInclude Include="renderer\transformation\transform.h" />
+    <ClInclude Include="renderer\transformation\transformfactory.h" />
+    <ClInclude Include="renderer\utility\rendertime.h" />
     <ClInclude Include="renderer\window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +208,7 @@
     <None Include="renderer\shaders\lighting.vert" />
     <None Include="renderer\shaders\simple.frag" />
     <None Include="renderer\shaders\simple.vert" />
+    <None Include="renderer\shaders\simpleDiffuse.frag" />
     <None Include="renderer\shaders\simpleTex.frag" />
     <None Include="renderer\shaders\simpleTex.vert" />
     <None Include="renderer\shaders\transform.vert" />

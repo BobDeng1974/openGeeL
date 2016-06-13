@@ -1,6 +1,7 @@
 #include <glfw3.h>
 #include "inputmanager.h"
 #include "window.h"
+#include <iostream>
 
 namespace geeL {
 
@@ -13,7 +14,6 @@ namespace geeL {
 		InputManager* manager = static_cast<InputManager*>(glfwGetWindowUserPointer(window));
 		manager->callScroll(window, x, y);
 	}
-
 
 	//Forwards the input manager (as user pointer) and the callbacks to GLFW 
 	void InputManager::init(const RenderWindow* renderWindow) {
@@ -30,10 +30,9 @@ namespace geeL {
 	}
 
 	void InputManager::update() {
+
 		//switch key buffers
 		int* temp = currentKeys;
-		currentKeys = previousKeys;
-
 		for (size_t i = 0; i < maxKeys; i++)
 			currentKeys[i] = temp[i];
 
@@ -134,6 +133,11 @@ namespace geeL {
 
 	bool InputManager::getButtonHold(string button) const {
 		return getButtonHelper(button, &InputManager::getKeyHold);
+	}
+
+	bool InputManager::getMouseKey(int key) const {
+		int state = glfwGetMouseButton(window->glWindow, GLFW_MOUSE_BUTTON_LEFT);
+		return state == GLFW_PRESS;
 	}
 
 	double InputManager::getMouseX() const {

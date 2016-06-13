@@ -10,7 +10,6 @@
 #include "../window.h"
 #include "../renderobject.h"
 #include "../inputmanager.h"
-#include "../shader/shadermanager.h"
 #include "../cameras/camera.h"
 
 #define fps 10
@@ -18,8 +17,8 @@
 namespace geeL {
 
 
-	SimpleRenderer::SimpleRenderer(RenderWindow* window, InputManager* inputManager, ShaderManager* shaderManger)
-		: Renderer(window, inputManager, shaderManger) {
+	SimpleRenderer::SimpleRenderer(RenderWindow* window, InputManager* inputManager)
+		: Renderer(window, inputManager) {
 
 		glewExperimental = GL_TRUE;
 		if (glewInit() != GLEW_OK) {
@@ -29,7 +28,6 @@ namespace geeL {
 		glViewport(0, 0, window->width, window->height);
 		glEnable(GL_DEPTH_TEST);
 	}
-
 
 
 	void exitCallback(GLFWwindow* window, int key, int scancode, int action, int mode) {
@@ -54,7 +52,6 @@ namespace geeL {
 		GLfloat currentFrame = 0.f;
 
 		while (!window->shouldClose()) {
-
 			int currFPS = ceil(deltaTime * 1000);
 			std::this_thread::sleep_for(std::chrono::milliseconds(fps - currFPS));
 
@@ -83,7 +80,7 @@ namespace geeL {
 		currentCamera->update();
 
 		for (size_t i = 0; i < objects.size(); i++)
-			objects[i]->update(currentCamera);
+			objects[i]->draw(currentCamera);
 	}
 
 	void SimpleRenderer::handleInput() {

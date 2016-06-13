@@ -5,6 +5,7 @@
 #include <map>
 
 #define maxKeys 400
+#define mouseKeys 7
 
 using namespace std;
 
@@ -43,6 +44,7 @@ public:
 	bool getButtonUp(string button) const;
 	bool getButtonHold(string button) const;
 
+	bool getMouseKey(int key) const;
 	double getMouseX() const;
 	double getMouseY() const;
 	double getMouseXNorm() const;

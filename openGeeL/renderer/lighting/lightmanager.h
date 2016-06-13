@@ -1,35 +1,36 @@
 #ifndef LIGHTMANAGER_H
 #define LIGHTMANAGER_H
 
-#include <glm.hpp>
 #include <vector>
 
-using namespace glm;
+using namespace std;
 
-#define MAX_LIGHTS 10
+#define MAX_POINTLIGHTS 5
+#define MAX_DIRECTIONALLIGHTS 5
+#define MAX_SPOTLIGHTS 5
 
 namespace geeL {
 
 class Light;
+class PointLight;
 class Shader;
 
 class LightManager {
 
 public:
-	LightManager() {}
+	LightManager();
 
 	//Manager is responsible for removing the lights
 	~LightManager();
 
-	void addLight(const Light* light);
-	void addReceiver(const Shader& shader);
-	void bind() const;
-	void bind(const Shader& shader) const;
+	void addLight(const PointLight* light);
+
+	void bind(const Shader& shader, string plName = "pointLights", string dlName = "directionalLights", string slName = "spotLights",
+		string plCountName = "plCount", string dlCountName = "dlCount", string slCountName = "slCount") const;
 
 private:
-	std::vector<const Light*> lights;
-	std::vector<const Shader*> shaders;
-
+	vector<const Light*> staticPLs, staticDLs, staticSLs;
+	vector<const Light*> dynamicPLs, dynamicDLs, dynamicSLs;
 };
 
 }

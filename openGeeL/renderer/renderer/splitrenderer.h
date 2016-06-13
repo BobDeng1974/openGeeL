@@ -4,7 +4,6 @@
 #include "../renderer.h"
 #include <utility>
 
-
 using namespace std;
 
 namespace geeL {
@@ -21,7 +20,7 @@ struct RenderViewport {
 class SplitRenderer : public Renderer {
 
 public:
-	SplitRenderer(RenderWindow* window, InputManager* inputManager, ShaderManager* shaderManger);
+	SplitRenderer(RenderWindow* window, InputManager* inputManager);
 
 	virtual void init();
 	virtual void render();

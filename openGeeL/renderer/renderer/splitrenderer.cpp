@@ -10,14 +10,13 @@
 #include "../window.h"
 #include "../renderobject.h"
 #include "../inputmanager.h"
-#include "../shader/shadermanager.h"
 
 #define fps 10
 
 namespace geeL {
 
-	SplitRenderer::SplitRenderer(RenderWindow* window, InputManager* inputManager, ShaderManager* shaderManger)
-		: Renderer(window, inputManager, shaderManger) {
+	SplitRenderer::SplitRenderer(RenderWindow* window, InputManager* inputManager)
+		: Renderer(window, inputManager) {
 	
 		glewExperimental = GL_TRUE;
 		if (glewInit() != GLEW_OK) {
@@ -86,8 +85,8 @@ namespace geeL {
 		float mouseX = inputManager->getMouseXNorm();
 		float mouseY = inputManager->getMouseYNorm();
 		
-		for (size_t i = 0; i < renderers.size(); i++) {
-			pair<Renderer*, RenderViewport>pair = renderers[i];
+		for (size_t i = renderers.size(); i > 0 ; i--) {
+			pair<Renderer*, RenderViewport>pair = renderers[i - 1];
 			RenderViewport view = pair.second;
 			
 			float minX = view.x;

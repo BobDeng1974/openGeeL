@@ -13,7 +13,7 @@ class ShaderManager;
 class Renderer {
 
 public:
-	Renderer(RenderWindow* window, InputManager* inputManager, ShaderManager* shaderManger);
+	Renderer(RenderWindow* window, InputManager* inputManager);
 
 	virtual void init() = 0;
 	virtual void render() = 0;
@@ -25,7 +25,6 @@ public:
 protected:
 	RenderWindow* window;
 	InputManager* inputManager;
-	ShaderManager* shaderManger;
 	
 	std::vector<RenderObject*> objects;
 

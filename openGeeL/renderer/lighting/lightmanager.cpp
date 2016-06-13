@@ -1,41 +1,41 @@
+#define GLEW_STATIC
+#include <glew.h>
 #include "lightmanager.h"
 #include "light.h"
+#include "pointlight.h"
 #include "../shader/shader.h"
 
 namespace geeL {
 
+	LightManager::LightManager() {}
+
 	LightManager::~LightManager() {
-		for (size_t j = 0; j < lights.size(); j++) {
-			delete lights[j];
+		for (size_t j = 0; j < staticPLs.size(); j++) {
+			delete staticPLs[j];
+		}
+
+		for (size_t j = 0; j < dynamicPLs.size(); j++) {
+			delete dynamicPLs[j];
 		}
 	}
 
-	void LightManager::addLight(const Light* light) {
-		if (light != nullptr && lights.size() < MAX_LIGHTS)
-			lights.push_back(light);
-	}
-
-	void LightManager::addReceiver(const Shader& shader) {
-		//if (shader != nullptr)
-			shaders.push_back(&shader);
-	}
-
-	void LightManager::bind() const {
-		for (size_t i = 0; i < shaders.size(); i++) {
-			const Shader* shader = shaders[i];
-			shader->use();
-			
-			for (size_t j = 0; j < lights.size(); j++) {
-				lights[j]->bind(*shader, j);
-			}
+	void LightManager::addLight(const PointLight* light) {
+		if (light != nullptr && staticPLs.size() < MAX_POINTLIGHTS) {
+			staticPLs.push_back(light);
 		}
 	}
 
-	void LightManager::bind(const Shader& shader) const {
+	void LightManager::bind(const Shader& shader, string plName, string dlName, string slName,
+		string plCountName, string dlCountName, string slCountName) const {
+
 		shader.use();
 
-		for (size_t j = 0; j < lights.size(); j++) {
-			lights[j]->bind(shader, j);
+		glUniform1i(glGetUniformLocation(shader.program, plCountName.c_str()), staticPLs.size());
+		glUniform1i(glGetUniformLocation(shader.program, dlCountName.c_str()), staticDLs.size());
+		glUniform1i(glGetUniformLocation(shader.program, slCountName.c_str()), staticSLs.size());
+
+		for (size_t j = 0; j < staticPLs.size(); j++) {
+			staticPLs[j]->bind(shader, j, plName);
 		}
 	}
 }

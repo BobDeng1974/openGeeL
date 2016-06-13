@@ -14,6 +14,7 @@
 #include "../renderer/renderobject.h"
 #include "../renderer/inputmanager.h"
 #include "../renderer/window.h"
+#include "../renderer/texturing/texture.h"
 #include "../renderer/texturing/simpletexture.h"
 #include "../renderer/texturing/layeredtexture.h"
 

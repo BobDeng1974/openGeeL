@@ -1,25 +1,29 @@
 #ifndef LAYEREDTEXTURE_H
 #define LAYEREDTEXTURE_H
 
+#include <utility>
 #include <vector>
 #include "texture.h"
+#include "simpletexture.h"
+
+using namespace std;
 
 namespace geeL {
 
-class SimpleTexture;
+//class SimpleTexture;
 
-class LayeredTexture : Texture {
+class LayeredTexture : public Texture {
 
 public:
 	LayeredTexture() {}
 
-	void addTexture(const SimpleTexture& texture);
+	void addTexture(string name, SimpleTexture texture);
 
-	virtual void bind(const Shader& shader, int texLayer = 0);
-	virtual void draw(int texLayer = 0);
+	virtual void bind(const Shader& shader, const char* name, int texLayer = 0) const;
+	virtual void draw(int texLayer = 0) const;
 
 private:
-	std::vector<SimpleTexture> textures;
+	vector<pair<string, SimpleTexture>> textures;
 
 };
 
