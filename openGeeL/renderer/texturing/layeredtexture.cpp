@@ -6,8 +6,8 @@
 
 namespace geeL {
 
-	void LayeredTexture::addTexture(string name, SimpleTexture texture) {
-		textures.push_back(pair<string, SimpleTexture>(name, texture));
+	void LayeredTexture::addTexture(string name, SimpleTexture& texture) {
+		textures.push_back(pair<string, SimpleTexture*>(name, &texture));
 	}
 
 	void LayeredTexture::bind(const Shader& shader, const char* name, int texLayer) const {
@@ -15,8 +15,9 @@ namespace geeL {
 
 		for (size_t i = 0; i < textures.size(); i++) {
 			string name = textures[i].first;
-			SimpleTexture texture = textures[i].second;
-			texture.bind(shader, name.c_str(), i);
+			SimpleTexture* texture = textures[i].second;
+
+			texture->bind(shader, name.c_str(), i);
 		}
 	}
 
@@ -24,15 +25,10 @@ namespace geeL {
 		int layer = GL_TEXTURE0 + texLayer;
 
 		for (size_t i = 0; i < textures.size(); i++) {
-			SimpleTexture texture = textures[i].second;
+			SimpleTexture* texture = textures[i].second;
 			glActiveTexture(layer + i);
 
-			//Temp
-			//string name = textures[i].first;
-			//texture.bind(shader, name.c_str(), i);
-			//
-
-			texture.draw();
+			texture->draw();
 		}
 	}
 

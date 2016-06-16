@@ -37,6 +37,12 @@
     <Filter Include="renderer\transformation">
       <UniqueIdentifier>{ab82eccb-7be9-4699-97a1-f6cf00e5fc3a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="renderer\postprocessing">
+      <UniqueIdentifier>{afbc38fe-58f0-4f97-850a-890aebdff1b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer\cubemapping">
+      <UniqueIdentifier>{94442e4d-631a-4ef1-821d-af60aed6766b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main\main.cpp">
@@ -116,6 +122,21 @@
     </ClCompile>
     <ClCompile Include="renderer\meshes\meshfactory.cpp">
       <Filter>renderer\meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\renderer\postrenderer.cpp">
+      <Filter>renderer\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\postprocessing\postprocessing.cpp">
+      <Filter>renderer\postprocessing</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\postprocessing\colorcorrection.cpp">
+      <Filter>renderer\postprocessing</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\cubemapping\skybox.cpp">
+      <Filter>renderer\cubemapping</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\cubemapping\cubemap.cpp">
+      <Filter>renderer\cubemapping</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -203,6 +224,21 @@
     <ClInclude Include="renderer\meshes\meshfactory.h">
       <Filter>renderer\meshes</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\renderer\postrenderer.h">
+      <Filter>renderer\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\postprocessing\postprocessing.h">
+      <Filter>renderer\postprocessing</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\postprocessing\colorcorrection.h">
+      <Filter>renderer\postprocessing</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\cubemapping\skybox.h">
+      <Filter>renderer\cubemapping</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\cubemapping\cubemap.h">
+      <Filter>renderer\cubemapping</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\simple.vert">
@@ -230,6 +266,30 @@
       <Filter>renderer\shaders</Filter>
     </None>
     <None Include="renderer\shaders\simpleDiffuse.frag">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\screen.vert">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\screen.frag">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\postprocessing\colorcorrection.frag">
+      <Filter>renderer\postprocessing</Filter>
+    </None>
+    <None Include="renderer\postprocessing\gaussianblur.frag">
+      <Filter>renderer\postprocessing</Filter>
+    </None>
+    <None Include="renderer\cubemapping\skybox.vert">
+      <Filter>renderer\cubemapping</Filter>
+    </None>
+    <None Include="renderer\cubemapping\skybox.frag">
+      <Filter>renderer\cubemapping</Filter>
+    </None>
+    <None Include="renderer\shaders\reflective.vert">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\reflective.frag">
       <Filter>renderer\shaders</Filter>
     </None>
   </ItemGroup>

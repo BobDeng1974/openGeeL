@@ -18,6 +18,13 @@
 #include "../renderer/meshes/meshrenderer.h"
 #include "../renderer/meshes/meshfactory.h"
 
+#include "../renderer/renderer/postrenderer.h"
+#include "../renderer/postprocessing/postprocessing.h"
+#include "../renderer/postprocessing/colorcorrection.h"
+
+#include "../renderer/cubemapping/cubemap.h"
+#include "../renderer/cubemapping/skybox.h"
+
 
 #define pi 3.141592f
 
@@ -28,8 +35,7 @@ namespace {
 	public:
 
 		Shader* shader;
-		const Shader* lamp;
-		GLuint VBO, VAO, containerVAO, lightVAO;
+		GLuint VBO, VAO, containerVAO;
 		GLuint texture1, texture2;
 		SimpleTexture* texmex;
 		SimpleTexture* spectex;
@@ -50,8 +56,7 @@ namespace {
 		virtual void init(const Camera* const camera) {
 
 			//shader = &factory.defaultShader;
-			shader = &factory.CreateShader("renderer/shaders/lighting.vert", "renderer/shaders/lighting.frag");
-			lamp = &factory.CreateShader("renderer/shaders/lighting.vert", "renderer/shaders/lamp.frag");
+			shader = &factory.CreateShader("renderer/shaders/reflective.vert", "renderer/shaders/reflective.frag");
 			material = &factory.CreateMaterial(*shader);
 
 			cubePositions[0] = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -125,17 +130,8 @@ namespace {
 			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
 			glBindVertexArray(0);
 
-			// Then, we set the light's VAO (VBO stays the same. After all, the vertices are the same for the light object (also a 3D cube))
-			glGenVertexArrays(1, &lightVAO);
-			glBindVertexArray(lightVAO);
-			// We only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need.
-			glBindBuffer(GL_ARRAY_BUFFER, VBO);
-			// Set the vertex attributes (only position data for the lamp))
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
-			glEnableVertexAttribArray(0);
-			glBindVertexArray(0);
-
-			PointLight* light1 = new PointLight(glm::vec3(1.2f, 1.0f, 2.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.2f, 0.2f, 0.2f));
+			PointLight* light1 = new PointLight(glm::vec3(1.2f, 1.0f, 2.0f), glm::vec3(0.5f, 0.5f, 0.5f), 
+				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.2f, 0.2f, 0.2f), 1.f, 0.69f, 0.032f);
 			PointLight* light2 = new PointLight(glm::vec3(-2.0f, 2.0f, -7.0f), glm::vec3(0.3f, 0.3f, 0.9f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.1f, 0.1f, 0.1f));
 
 			manager = LightManager();
@@ -145,14 +141,12 @@ namespace {
 			texmex = &factory.CreateTexture("data/images/container2.png");
 			spectex = &factory.CreateTexture("data/images/container2_specular.png");
 			
-			shaderManager.staticBind(manager);
+			shaderManager.staticBind(manager, *camera);
 
-			material->addTexture("material.diffuse", *texmex);
-			material->addTexture("material.specular", *spectex);
-			material->addParameter("material.shininess", 64.f);
-			material->useCamera("camera");
-			material->useLights("", "", "");
-			material->staticBind(manager);
+			material->addTexture("diffuse", *texmex);
+			material->addTexture("specular", *spectex);
+			material->addParameter("shininess", 64.f);
+			material->staticBind();
 
 			nano = &meshFactory.CreateModel("resources/nanosuit/nanosuit.obj", factory);
 
@@ -161,14 +155,15 @@ namespace {
 			nanoRenderer = new MeshRenderer(*transi, *nano);
 		}
 
-		//glm::vec3 lightPos = glm::vec3(1.2f, 1.0f, 2.0f);
 		virtual void draw(const Camera* const camera) {
 			
 			GLuint program = shader->program;
 
+			glDisable(GL_CULL_FACE);
+
 			shaderManager.dynamicBind(manager, *camera);
 
-			material->dynamicBind(manager, *camera);
+			material->dynamicBind();
 			GLint modelLoc = glGetUniformLocation(program, "model");
 
 			glm::mat4 model;
@@ -184,31 +179,12 @@ namespace {
 				glDrawArrays(GL_TRIANGLES, 0, 36);
 			}
 			glBindVertexArray(0);
+			glEnable(GL_CULL_FACE);
+
 			
-
-			nanoRenderer->draw(manager, *camera);
-
-			/*
-			camera->bind(*lamp);
-			// Also draw the lamp object, again binding the appropriate shader
-			lamp->use();
-			// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
-			modelLoc = glGetUniformLocation(lamp->program, "model");
-
-			model = glm::mat4();
-			model = glm::translate(model, lightPos);
-			model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-			// Draw the light object (using light's vertex attributes)
-			glBindVertexArray(lightVAO);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-			glBindVertexArray(0);
-			*/
-		}
-
-		virtual void handleInput(const InputManager& input) {
-
-
+			nanoRenderer->draw();
+			nanoRenderer->transform.rotate(vec3(0, 1, 0), 25);
+			
 		}
 
 		virtual void quit() {
@@ -249,7 +225,8 @@ void a_lighting() {
 	SplitRenderer renderer = SplitRenderer(window, manager);
 	SimpleRenderer renderer1 = SimpleRenderer(window, manager);
 	SimpleRenderer renderer2 = SimpleRenderer(window, manager);
-	SimpleRenderer renderer3 = SimpleRenderer(window, manager);
+	//SimpleRenderer renderer3 = SimpleRenderer(window, manager);
+	PostProcessingRenderer renderer3 = PostProcessingRenderer(window, manager);
 	
 	renderer1.setCamera(&camera);
 	renderer2.setCamera(&camera2);
@@ -262,16 +239,29 @@ void a_lighting() {
 	renderer.addRenderer(&renderer1, view2);
 	renderer.addRenderer(&renderer2, view1);
 	renderer.addRenderer(&renderer3, view3);
-	
+
+	PostProcessingEffect& effect1 = ColorCorrection(); // ColorCorrection(0.2, 0.4, 0.4, 1, 1, 5);
 	
 	LightTestObject* testObj = new LightTestObject();
 	renderer1.addObject(testObj);
 	renderer2.addObject(testObj);
 	renderer3.addObject(testObj);
 	
-	renderer.init();
-	renderer.render();
-	
+	//CubeMap map = CubeMap("resources/skybox1/cwd_rt.jpg", "resources/skybox2/stormydays_lf.tga", "resources/skybox1/cwd_up.jpg",
+	//	"resources/skybox1/cwd_dn.jpg", "resources/skybox1/cwd_bk.jpg", "resources/skybox1/cwd_ft.jpg");
+
+	CubeMap map = CubeMap("resources/skybox2/right.jpg", "resources/skybox2/left.jpg", "resources/skybox2/top.jpg", 
+		"resources/skybox2/bottom.jpg", "resources/skybox2/back.jpg", "resources/skybox2/front.jpg");
+
+	Skybox skybox = Skybox(map);
+
+	//renderer.init();
+	//renderer.render();
+	renderer3.setEffect(effect1);
+	camera3.setSkybox(skybox);
+	renderer3.init();
+	renderer3.render();
+
 	delete testObj;
 	delete window;
 	delete manager;

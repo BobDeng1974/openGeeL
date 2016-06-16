@@ -13,17 +13,23 @@ class Transform;
 class LightManager;
 class Camera;
 
+enum CullingMode {
+	cullNone,
+	cullFront,
+	cullBack
+};
+
 class MeshRenderer {
 
 public:
 	Transform& transform;
 	Model& model;
 	vector<Material*> customMaterials;
+	const CullingMode faceCulling;
 
-	MeshRenderer(Transform& transform, Model& model);
+	MeshRenderer(Transform& transform, Model& model, CullingMode faceCulling = cullFront);
 
-	void draw(const LightManager& lightManager, const Camera& currentCamera);
-
+	void draw();
 };
 
 }

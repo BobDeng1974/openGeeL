@@ -25,24 +25,23 @@ namespace geeL {
 		processNode(factory, scene->mRootNode, scene);
 	}
 
-	void Model::draw(const LightManager& lightManager, const Camera& currentCamera) {
+	void Model::draw() {
 		for (unsigned int i = 0; i < meshes.size(); i++)
-			meshes[i].draw(lightManager, currentCamera);
+			meshes[i].draw();
 	}
 
-	void Model::draw(const LightManager& lightManager, const Camera& currentCamera, vector<Material*> customMaterials) {
+	void Model::draw(vector<Material*> customMaterials) {
 		size_t size = customMaterials.size();
 
 		for (unsigned int i = 0; i < meshes.size(); i++) {
 			if (i < size) {
 				Material& mat = *customMaterials[i];
-				meshes[i].draw(lightManager, currentCamera, mat);
+				meshes[i].draw(mat);
 			}
 			else
-				meshes[i].draw(lightManager, currentCamera);
+				meshes[i].draw();
 		}
 	}
-
 
 	void Model::processNode(MaterialFactory& factory, aiNode* node, const aiScene* scene) {
 
@@ -55,14 +54,16 @@ namespace geeL {
 			processNode(factory, node->mChildren[i], scene);
 	}
 
-	vector<SimpleTexture> loadMaterialTextures(aiMaterial* mat, aiTextureType aiType, TextureType type) {
-		vector<SimpleTexture> textures;
+	vector<SimpleTexture*> loadMaterialTextures(MaterialFactory& factory, aiMaterial* mat, aiTextureType aiType, TextureType type, string directory) {
+		vector<SimpleTexture*> textures;
 
 		for (GLuint i = 0; i < mat->GetTextureCount(aiType); i++) {
 			aiString str;
 			mat->GetTexture(aiType, i, &str);
-			SimpleTexture texture = SimpleTexture(str.C_Str());
-			textures.push_back(texture);
+
+			string fileName = directory + "/" + string(str.C_Str());
+			SimpleTexture& texture = factory.CreateTexture(fileName, type);	//TODO: reference it up
+			textures.push_back(&texture);
 		}
 
 		return textures;
@@ -73,7 +74,7 @@ namespace geeL {
 		// Data to fill
 		vector<Vertex> vertices;
 		vector<GLuint> indices;
-		vector<SimpleTexture> textures;
+		vector<SimpleTexture*> textures;
 
 		// Walk through each of the mesh's vertices
 		for (GLuint i = 0; i < mesh->mNumVertices; i++) {
@@ -122,15 +123,16 @@ namespace geeL {
 
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-			vector<SimpleTexture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, Diffuse);
+			vector<SimpleTexture*> diffuseMaps = loadMaterialTextures(factory, material, aiTextureType_DIFFUSE, Diffuse, directory);
 			textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-			vector<SimpleTexture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, Specular);
+			vector<SimpleTexture*> specularMaps = loadMaterialTextures(factory, material, aiTextureType_SPECULAR, Specular, directory);
 			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 		}
 
 		Material& mat = factory.CreateMaterial();
 		mat.addTextures(textures);
+		mat.addParameter("shininess", 64.f);
 
 		return Mesh(vertices, indices, mat);
 	}

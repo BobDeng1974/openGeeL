@@ -19,18 +19,23 @@ class Camera;
 class SimpleTexture;
 class Shader;
 
+enum MaterialType {
+	Opaque = 0,
+	Cutout = 1,
+	Transparent = 2	//TODO: doesn't really make sense right now because of unordered draw calls
+};
+
 class Material {
 
 public:
 	Shader& shader;
+	const MaterialType type;
+	const string name;
 
-	Material(Shader& shader);
+	Material(Shader& shader, string name = "material", MaterialType type = Opaque);
 
 	void addTexture(string name, SimpleTexture& texture);
-	void addTextures(vector<SimpleTexture> textures);
-
-	void useCamera(string name);
-	void useLights(string point, string spot, string directional);
+	void addTextures(vector<SimpleTexture*> textures);
 
 	void addParameter(string name, float parameter);
 	void addParameter(string name, float* parameter);
@@ -44,14 +49,11 @@ public:
 	void addParameter(string name, mat4 parameter);
 	void addParameter(string name, mat4* parameter);
 
-	void staticBind(const LightManager& lightManager) const;
-	void dynamicBind(const LightManager& lightManager, const Camera& currentCamera) const;
+	void staticBind() const;
+	void dynamicBind() const;
 
 private:
 	LayeredTexture textureStack;
-
-	bool useCam, useLight;
-	string cam, point, spot, directional;
 
 	vector<pair<string, float>> staticFloats;
 	vector<pair<string, float*>> dynamicFloats;

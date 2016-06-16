@@ -11,24 +11,25 @@ namespace geeL {
 		: factory(factory) {}
 
 
-	void ShaderManager::staticBind(const LightManager& lightManager) const {
+	void ShaderManager::staticBind(const LightManager& lightManager, const Camera& currentCamera) const {
 
 		for (list<Shader>::const_iterator it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
 			const Shader& shader = *it;
 
 			shader.use();
 			if (shader.useLight) lightManager.bind(shader);
+			if (shader.useSkybox) currentCamera.bindSkybox(shader);
 		}
 	}
 
-	void ShaderManager::dynamicBind(const LightManager& lightManager, const Camera& currentCamera, string cameraName) const {
+	void ShaderManager::dynamicBind(const LightManager& lightManager, const Camera& currentCamera) const {
 
 		for (list<Shader>::const_iterator it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
 			const Shader& shader = *it;
 
 			shader.use();
 			if (shader.useLight) lightManager.bind(shader);
-			if (shader.useCamera) currentCamera.bind(shader, cameraName);
+			if (shader.useCamera) currentCamera.bind(shader);
 		}
 	}
 

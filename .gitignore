@@ -2,5 +2,6 @@
 .git/
 .gitignore
 x64/
+resources/
 *.sdf
 *.opendb

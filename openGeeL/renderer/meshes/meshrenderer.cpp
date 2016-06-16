@@ -13,10 +13,17 @@
 
 namespace geeL{
 
-	MeshRenderer::MeshRenderer(Transform& transform, Model& model)
-		: transform(transform), model(model) {}
+	MeshRenderer::MeshRenderer(Transform& transform, Model& model, CullingMode faceCulling)
+		: transform(transform), model(model), faceCulling(faceCulling) {}
 
-	void MeshRenderer::draw(const LightManager& lightManager, const Camera& currentCamera) {
+	void MeshRenderer::draw() {
+
+		switch (faceCulling) {
+			case cullNone:
+				glDisable(GL_CULL_FACE);
+			case cullBack:
+				glCullFace(GL_BACK);
+		}
 
 		//Load transform into vertex shaders
 		for (vector<Mesh>::iterator it = model.meshesBegin(); it != model.meshesEnd(); it++) {
@@ -29,9 +36,16 @@ namespace geeL{
 
 		//Draw materials
 		if (customMaterials.size() > 0)
-			model.draw(lightManager, currentCamera, customMaterials);
+			model.draw(customMaterials);
 		else
-			model.draw(lightManager, currentCamera);
+			model.draw();
+
+		switch (faceCulling) {
+			case cullNone:
+				glEnable(GL_CULL_FACE);
+			case cullBack:
+				glCullFace(GL_FRONT);
+		}
 	}
 
 }

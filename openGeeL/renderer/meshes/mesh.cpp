@@ -11,10 +11,10 @@ namespace geeL {
 	Mesh::Mesh(vector<Vertex> vertices, vector<GLuint> indices, Material& material)
 		: vertices(vertices), indices(indices), material(material) {
 	
-		init(LightManager());
+		init();
 	}
 
-	void Mesh::init(const LightManager& lightManager) {
+	void Mesh::init() {
 		glGenVertexArrays(1, &vao);
 		glGenBuffers(1, &vbo);
 		glGenBuffers(1, &ebo);
@@ -38,15 +38,15 @@ namespace geeL {
 
 		glBindVertexArray(0);
 
-		material.staticBind(lightManager);
+		material.staticBind();
 	}
 
-	void Mesh::draw(const LightManager& lightManager, const Camera& currentCamera) {
-		draw(lightManager, currentCamera, material);
+	void Mesh::draw() {
+		draw(material);
 	}
 
-	void Mesh::draw(const LightManager& lightManager, const Camera& currentCamera, Material& customMaterial) {
-		customMaterial.dynamicBind(lightManager, currentCamera);
+	void Mesh::draw(Material& customMaterial) {
+		customMaterial.dynamicBind();
 
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

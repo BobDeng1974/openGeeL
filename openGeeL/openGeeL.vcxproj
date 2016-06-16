@@ -149,6 +149,8 @@
     <ClCompile Include="main\main.cpp" />
     <ClCompile Include="renderer\cameras\camera.cpp" />
     <ClCompile Include="renderer\cameras\perspectivecamera.cpp" />
+    <ClCompile Include="renderer\cubemapping\cubemap.cpp" />
+    <ClCompile Include="renderer\cubemapping\skybox.cpp" />
     <ClCompile Include="renderer\inputmanager.cpp" />
     <ClCompile Include="renderer\lighting\directionallight.cpp" />
     <ClCompile Include="renderer\lighting\light.cpp" />
@@ -161,7 +163,10 @@
     <ClCompile Include="renderer\meshes\meshfactory.cpp" />
     <ClCompile Include="renderer\meshes\meshrenderer.cpp" />
     <ClCompile Include="renderer\meshes\model.cpp" />
+    <ClCompile Include="renderer\postprocessing\colorcorrection.cpp" />
+    <ClCompile Include="renderer\postprocessing\postprocessing.cpp" />
     <ClCompile Include="renderer\renderer.cpp" />
+    <ClCompile Include="renderer\renderer\postrenderer.cpp" />
     <ClCompile Include="renderer\renderer\simplerenderer.cpp" />
     <ClCompile Include="renderer\renderer\splitrenderer.cpp" />
     <ClCompile Include="renderer\shader\shader.cpp" />
@@ -176,6 +181,8 @@
     <ClInclude Include="main\a_lightning.h" />
     <ClInclude Include="renderer\cameras\camera.h" />
     <ClInclude Include="renderer\cameras\perspectivecamera.h" />
+    <ClInclude Include="renderer\cubemapping\cubemap.h" />
+    <ClInclude Include="renderer\cubemapping\skybox.h" />
     <ClInclude Include="renderer\inputmanager.h" />
     <ClInclude Include="renderer\lighting\directionallight.h" />
     <ClInclude Include="renderer\lighting\light.h" />
@@ -188,7 +195,10 @@
     <ClInclude Include="renderer\meshes\meshfactory.h" />
     <ClInclude Include="renderer\meshes\meshrenderer.h" />
     <ClInclude Include="renderer\meshes\model.h" />
+    <ClInclude Include="renderer\postprocessing\colorcorrection.h" />
+    <ClInclude Include="renderer\postprocessing\postprocessing.h" />
     <ClInclude Include="renderer\renderer.h" />
+    <ClInclude Include="renderer\renderer\postrenderer.h" />
     <ClInclude Include="renderer\renderer\simplerenderer.h" />
     <ClInclude Include="renderer\renderer\splitrenderer.h" />
     <ClInclude Include="renderer\renderobject.h" />
@@ -203,9 +213,17 @@
     <ClInclude Include="renderer\window.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="renderer\cubemapping\skybox.frag" />
+    <None Include="renderer\cubemapping\skybox.vert" />
+    <None Include="renderer\postprocessing\colorcorrection.frag" />
+    <None Include="renderer\postprocessing\gaussianblur.frag" />
     <None Include="renderer\shaders\lamp.frag" />
     <None Include="renderer\shaders\lighting.frag" />
     <None Include="renderer\shaders\lighting.vert" />
+    <None Include="renderer\shaders\reflective.frag" />
+    <None Include="renderer\shaders\reflective.vert" />
+    <None Include="renderer\shaders\screen.frag" />
+    <None Include="renderer\shaders\screen.vert" />
     <None Include="renderer\shaders\simple.frag" />
     <None Include="renderer\shaders\simple.vert" />
     <None Include="renderer\shaders\simpleDiffuse.frag" />

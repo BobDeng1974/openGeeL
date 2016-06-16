@@ -15,7 +15,7 @@ public:
 
 	virtual void init(const Camera* const camera) = 0;
 	virtual void draw(const Camera* const camera) = 0;
-	virtual void handleInput(const InputManager& input) = 0;
+	virtual void handleInput(const InputManager& input) {}
 	virtual void quit() = 0;
 };
 

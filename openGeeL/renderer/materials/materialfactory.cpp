@@ -6,7 +6,7 @@
 namespace geeL {
 
 	MaterialFactory::MaterialFactory() 
-		: defaultShader(Shader("renderer/shaders/lighting.vert", "renderer/shaders/simpleDiffuse.frag")) {
+		: defaultShader(Shader("renderer/shaders/lighting.vert", "renderer/shaders/lighting.frag")) {
 	
 		shaders.push_back(defaultShader);
 	}

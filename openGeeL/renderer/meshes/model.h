@@ -34,9 +34,8 @@ public:
 	Model::Model(string path) : path(path) {}
 
 	void loadModel(MaterialFactory& factory);
-	void draw(const LightManager& lightManager, const Camera& currentCamera);
-	void draw(const LightManager& lightManager, const Camera& currentCamera, 
-		vector<Material*> customMaterials);
+	void draw();
+	void draw(vector<Material*> customMaterials);
 
 	vector<Mesh>::iterator meshesBegin();
 	vector<Mesh>::iterator meshesEnd();

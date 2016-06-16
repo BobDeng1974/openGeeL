@@ -34,9 +34,9 @@ public:
 
 	Mesh(vector<Vertex> vertices, vector<GLuint> indices, Material& material);
 
-	void init(const LightManager& lightManager);
-	void draw(const LightManager& lightManager, const Camera& currentCamera);
-	void draw(const LightManager& lightManager, const Camera& currentCamera, Material& customMaterial);
+	void init();
+	void draw();
+	void draw(Material& customMaterial);
 
 private:
 	GLuint vao, vbo, ebo;

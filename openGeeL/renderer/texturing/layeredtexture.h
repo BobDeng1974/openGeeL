@@ -17,13 +17,13 @@ class LayeredTexture : public Texture {
 public:
 	LayeredTexture() {}
 
-	void addTexture(string name, SimpleTexture texture);
+	void addTexture(string name, SimpleTexture& texture);
 
 	virtual void bind(const Shader& shader, const char* name, int texLayer = 0) const;
 	virtual void draw(int texLayer = 0) const;
 
 private:
-	vector<pair<string, SimpleTexture>> textures;
+	vector<pair<string, SimpleTexture*>> textures;
 
 };
 

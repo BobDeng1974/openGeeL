@@ -1,30 +1,29 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include <string>
-#include <fstream>
-#include <sstream>
 #include <iostream>
 #include "shader.h"
 
 namespace geeL {
 
-	Shader::Shader(const char* vertexPath, const char* fragmentPath, bool useLight, bool useCamera) 
-		: useLight(useLight), useCamera(useCamera) {
+	Shader::Shader(const char* vertexPath, const char* fragmentPath, bool useLight, bool useCamera, bool useSkybox
+		, string cam, string skybox, string pointlight, string spotLights, string directionalLights)
+		: useLight(useLight), useCamera(useCamera), useSkybox(useSkybox), cam("camera"), skybox(skybox),
+		point("pointLights"), spot("spotLights"), directional("directionalLights") {
 
 		//Read code from file path
-		std::string vertexCode;
-		std::string fragmentCode;
-		std::ifstream vShaderFile;
-		std::ifstream fShaderFile;
+		string vertexCode;
+		string fragmentCode;
+		ifstream vShaderFile;
+		ifstream fShaderFile;
 
-		vShaderFile.exceptions(std::ifstream::badbit);
-		fShaderFile.exceptions(std::ifstream::badbit);
+		vShaderFile.exceptions(ifstream::badbit);
+		fShaderFile.exceptions(ifstream::badbit);
 
 		try {
 			// Open files
 			vShaderFile.open(vertexPath);
 			fShaderFile.open(fragmentPath);
-			std::stringstream vShaderStream, fShaderStream;
+			stringstream vShaderStream, fShaderStream;
 			// Read file's buffer contents into streams
 			vShaderStream << vShaderFile.rdbuf();
 			fShaderStream << fShaderFile.rdbuf();
@@ -35,8 +34,8 @@ namespace geeL {
 			vertexCode = vShaderStream.str();
 			fragmentCode = fShaderStream.str();
 		}
-		catch (std::ifstream::failure e) {
-			std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+		catch (ifstream::failure e) {
+			cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << endl;
 		}
 
 		const GLchar* vShaderCode = vertexCode.c_str();
@@ -56,7 +55,7 @@ namespace geeL {
 		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
 		if (!success) {
 			glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-			std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+			cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << endl;
 		}
 
 		//Fragment shader
@@ -69,7 +68,7 @@ namespace geeL {
 		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
 		if (!success) {
 			glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-			std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+			cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << endl;
 		}
 
 		program = glCreateProgram();
@@ -80,7 +79,7 @@ namespace geeL {
 		glGetProgramiv(program, GL_LINK_STATUS, &success);
 		if (!success) {
 			glGetProgramInfoLog(program, 512, NULL, infoLog);
-			std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+			cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << endl;
 		}
 
 		glDeleteShader(vertexShader);

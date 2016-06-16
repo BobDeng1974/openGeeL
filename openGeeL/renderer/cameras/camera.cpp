@@ -4,10 +4,11 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
+#include "../shader/shader.h"
+#include "../cubemapping/skybox.h"
 #include "camera.h"
 #include "../inputmanager.h"
 #include "../transformation/transform.h"
-#include "../shader/shader.h"
 #include <iostream>
 
 #define pi 3.141592f
@@ -15,10 +16,10 @@
 namespace geeL {
 
 	Camera::Camera(Transform& transform)
-		: transform(transform), speed(0), sensitivity(0) {}
+		: transform(transform), speed(0), sensitivity(0), skybox(nullptr) {}
 
 	Camera::Camera(Transform& transform, float speed, float sensitivity) 
-		: transform(transform), speed(speed), sensitivity(sensitivity) {}
+		: transform(transform), speed(speed), sensitivity(sensitivity), skybox(nullptr) {}
 
 
 	mat4 Camera::viewMatrix() const {
@@ -65,11 +66,11 @@ namespace geeL {
 		}
 	}
 
-	void Camera::bind(const Shader& shader, string name) const {
+	void Camera::bind(const Shader& shader) const {
 		shader.use();
 
 		vec3 position = transform.position;
-		string posName = name + ".position";
+		string posName = shader.cam + ".position";
 		glUniform3f(glGetUniformLocation(shader.program, posName.c_str()), position.x, position.y, position.z);
 
 		GLint viewLoc = glGetUniformLocation(shader.program, "view");
@@ -78,4 +79,19 @@ namespace geeL {
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix()));
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix()));
 	}
+
+	void Camera::setSkybox(Skybox& skybox) {
+		this->skybox = &skybox;
+	}
+
+	void Camera::drawSkybox() const {
+		if (skybox != nullptr)
+			skybox->draw(*this);
+	}
+
+	void Camera::bindSkybox(const Shader& shader) const {
+		if (skybox != nullptr)
+			skybox->bind(shader);
+	}
+
 }

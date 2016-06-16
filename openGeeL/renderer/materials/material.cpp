@@ -7,81 +7,66 @@
 #include "../texturing/simpletexture.h"
 #include "../cameras/camera.h"
 #include "../lighting/lightmanager.h"
-//#include "../transformation/transform.h"
 
 namespace geeL {
 
-	Material::Material(Shader& shader) : shader(shader), useCam(false), useLight(false) {
+	Material::Material(Shader& shader, string name, MaterialType type) : shader(shader), type(type), name(name) {
 		textureStack = LayeredTexture();
 	}
 
 	void Material::addTexture(string name, SimpleTexture& texture) {
-		textureStack.addTexture(name, texture);
+		textureStack.addTexture(this->name + "." + name, texture);
 	}
 
-	void Material::addTextures(vector<SimpleTexture> textures) {
+	void Material::addTextures(vector<SimpleTexture*> textures) {
 
 		for (size_t i = 0; i < textures.size(); i++) {
-			SimpleTexture texture = textures[i];
-			string name = texture.GetTypeAsString() + std::to_string(i);
+			SimpleTexture& texture = *textures[i];
+			string name = this->name + "." + texture.GetTypeAsString(); //+ std::to_string(i);
 
 			textureStack.addTexture(name, texture);
 		}
 	}
 
-	void Material::useCamera(string name) {
-		useCam = true;
-		cam = name;
-	}
-
-	void Material::useLights(string point, string spot, string directional) {
-		useLight = true;
-		point = point;
-		spot = spot;
-		directional = directional;
-	}
-
 	void Material::addParameter(string name, float parameter) {
-		staticFloats.push_back(pair<string, float>(name, parameter));
+		staticFloats.push_back(pair<string, float>(this->name + "." + name, parameter));
 	}
 
 	void Material::addParameter(string name, float* parameter) {
-		dynamicFloats.push_back(pair<string, float*>(name, parameter));
+		dynamicFloats.push_back(pair<string, float*>(this->name + "." + name, parameter));
 	}
 
 	void Material::addParameter(string name, int parameter) {
-		staticInts.push_back(pair<string, int>(name, parameter));
+		staticInts.push_back(pair<string, int>(this->name + "." + name, parameter));
 	}
 
 	void Material::addParameter(string name, int* parameter) {
-		dynamicInts.push_back(pair<string, int*>(name, parameter));
+		dynamicInts.push_back(pair<string, int*>(this->name + "." + name, parameter));
 	}
 
 	void Material::addParameter(string name, vec3 parameter) {
-		staticVec3s.push_back(pair<string, vec3>(name, parameter));
+		staticVec3s.push_back(pair<string, vec3>(this->name + "." + name, parameter));
 	}
 
 	void Material::addParameter(string name, vec3* parameter) {
-		dynamicVec3s.push_back(pair<string, vec3*>(name, parameter));
+		dynamicVec3s.push_back(pair<string, vec3*>(this->name + "." + name, parameter));
 	}
 
 	void Material::addParameter(string name, mat4 parameter) {
-		staticMat4s.push_back(pair<string, mat4>(name, parameter));
+		staticMat4s.push_back(pair<string, mat4>(this->name + "." + name, parameter));
 	}
 
 	void Material::addParameter(string name, mat4* parameter) {
-		dynamicMat4s.push_back(pair<string, mat4*>(name, parameter));
+		dynamicMat4s.push_back(pair<string, mat4*>(this->name + "." + name, parameter));
 	}
 
-	void Material::staticBind(const LightManager& lightManager) const {
+	void Material::staticBind() const {
 
 		shader.use();
-
 		textureStack.bind(shader, "");
+
+		glUniform1f(glGetUniformLocation(shader.program, "material.type"), type);
 		
-		//lightManager.bind(shader);
-
-
 		GLint location;
 		for (size_t i = 0; i < staticFloats.size(); i++) {
 			pair<string, float> pair = staticFloats[i];
@@ -112,9 +97,7 @@ namespace geeL {
 		}
 	}
 
-
-
-	void Material::dynamicBind(const LightManager& lightManager, const Camera& currentCamera) const {
+	void Material::dynamicBind() const {
 
 		shader.use();
 		textureStack.draw();

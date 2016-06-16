@@ -17,8 +17,8 @@ class ShaderManager {
 public:
 	ShaderManager(const MaterialFactory& factory);
 
-	void staticBind(const LightManager& lightManager) const;
-	void dynamicBind(const LightManager& lightManager, const Camera& currentCamera, string cameraName = "camera") const;
+	void staticBind(const LightManager& lightManager, const Camera& currentCamera) const;
+	void dynamicBind(const LightManager& lightManager, const Camera& currentCamera) const;
 
 private:
 	const MaterialFactory& factory;

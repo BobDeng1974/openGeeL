@@ -4,6 +4,7 @@ struct Material {
 	sampler2D diffuse;
 	sampler2D specular;
 
+	int type; //0 = Opaque, 1 = Cutout, 2 = Transparent
 	float shininess;
 };
 
@@ -70,17 +71,21 @@ vec3 calculateDirectionaLight(DirectionalLight light, vec3 normal, vec3 fragPosi
 
 void main() {
 
+	//Discard fragment when material type is cutout and alpha value is very low
+	if(material.type == 1 && texture(material.diffuse, textureCoordinates).a < 0.1f)
+		discard;
+
 	vec3 texColor = vec3(texture(material.diffuse, textureCoordinates));
 	vec3 speColor = vec3(texture(material.specular, textureCoordinates));
 
 	vec3 norm = normalize(normal);
 	vec3 viewDirection = normalize(camera.position - fragPosition);
 	
-	vec3 result = vec3(0, 0, 0);
+	vec3 result = vec3(0.f, 0.f, 0.f);
 	for(int i = 0; i < plCount; i++)
         result += calculatePointLight(pointLights[i], norm, fragPosition, viewDirection, texColor, speColor);    
 
-	color = vec4(result, 1.0);
+	color = vec4(result, 1.f);
 }
 
 
