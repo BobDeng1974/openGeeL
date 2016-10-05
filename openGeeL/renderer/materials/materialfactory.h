@@ -22,7 +22,8 @@ public:
 
 	//Creates and returns a new texture from given file path or 
 	//returns an existing texture if it already uses this file
-	SimpleTexture& CreateTexture(string filePath, TextureType type = Diffuse, GLint wrapMode = GL_REPEAT, GLint filterMode = GL_LINEAR);
+	SimpleTexture& CreateTexture(string filePath, bool linear = false, 
+		TextureType type = Diffuse, GLint wrapMode = GL_REPEAT, GLint filterMode = GL_LINEAR);
 
 	//Creates and returns a new material with default shading
 	Material& CreateMaterial();

@@ -10,6 +10,7 @@
 #include "../inputmanager.h"
 #include "../transformation/transform.h"
 #include <iostream>
+#include "../utility/rendertime.h"
 
 #define pi 3.141592f
 
@@ -26,19 +27,14 @@ namespace geeL {
 		return transform.lookAt();
 	}
 
-	float lastFrame = 0.f;
 	void Camera::handleInput(const InputManager& input) {
-		float currentFrame = glfwGetTime();
-		float deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
-
-		computeKeyboardInput(input, deltaTime);
+		computeKeyboardInput(input);
 		computeMouseInput(input);
 	}
 
-	void Camera::computeKeyboardInput(const InputManager& input, float deltaTime) {
+	void Camera::computeKeyboardInput(const InputManager& input) {
 
-		GLfloat cameraSpeed = speed * deltaTime;
+		GLfloat cameraSpeed = speed * Time::deltaTime;
 
 		if (input.getKeyHold(GLFW_KEY_LEFT_SHIFT) || input.getKey(GLFW_KEY_LEFT_SHIFT))
 			cameraSpeed *= 2.5f;
@@ -72,12 +68,27 @@ namespace geeL {
 		vec3 position = transform.position;
 		string posName = shader.cam + ".position";
 		glUniform3f(glGetUniformLocation(shader.program, posName.c_str()), position.x, position.y, position.z);
-
+		
 		GLint viewLoc = glGetUniformLocation(shader.program, "view");
 		GLint projLoc = glGetUniformLocation(shader.program, "projection");
 
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix()));
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix()));
+	}
+
+	void Camera::uniformBind(int uniformID) const {
+
+		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projectionMatrix()));
+		//glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(viewMatrix()));
+		//glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
+		glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &transform.position);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
 	void Camera::setSkybox(Skybox& skybox) {

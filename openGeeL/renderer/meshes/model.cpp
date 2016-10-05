@@ -30,6 +30,10 @@ namespace geeL {
 			meshes[i].draw();
 	}
 
+	void Model::drawInstanced() {
+		//TODO: implement this
+	}
+
 	void Model::draw(vector<Material*> customMaterials) {
 		size_t size = customMaterials.size();
 
@@ -54,7 +58,9 @@ namespace geeL {
 			processNode(factory, node->mChildren[i], scene);
 	}
 
-	vector<SimpleTexture*> loadMaterialTextures(MaterialFactory& factory, aiMaterial* mat, aiTextureType aiType, TextureType type, string directory) {
+	vector<SimpleTexture*> loadMaterialTextures(MaterialFactory& factory, aiMaterial* mat, 
+		aiTextureType aiType, TextureType type, string directory, bool linear) {
+		
 		vector<SimpleTexture*> textures;
 
 		for (GLuint i = 0; i < mat->GetTextureCount(aiType); i++) {
@@ -62,7 +68,7 @@ namespace geeL {
 			mat->GetTexture(aiType, i, &str);
 
 			string fileName = directory + "/" + string(str.C_Str());
-			SimpleTexture& texture = factory.CreateTexture(fileName, type);	//TODO: reference it up
+			SimpleTexture& texture = factory.CreateTexture(fileName, linear, type);	//TODO: reference it up
 			textures.push_back(&texture);
 		}
 
@@ -123,11 +129,17 @@ namespace geeL {
 
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-			vector<SimpleTexture*> diffuseMaps = loadMaterialTextures(factory, material, aiTextureType_DIFFUSE, Diffuse, directory);
+			vector<SimpleTexture*> diffuseMaps = loadMaterialTextures(factory, material, 
+				aiTextureType_DIFFUSE, Diffuse, directory, false);
 			textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-			vector<SimpleTexture*> specularMaps = loadMaterialTextures(factory, material, aiTextureType_SPECULAR, Specular, directory);
+			vector<SimpleTexture*> specularMaps = loadMaterialTextures(factory, material, 
+				aiTextureType_SPECULAR, Specular, directory, true);
 			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+
+			vector<SimpleTexture*> reflectionMaps = loadMaterialTextures(factory, material, 
+				aiTextureType_AMBIENT, Reflection, directory, true);
+			textures.insert(textures.end(), reflectionMaps.begin(), reflectionMaps.end());
 		}
 
 		Material& mat = factory.CreateMaterial();

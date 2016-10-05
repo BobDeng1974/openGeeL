@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cmath>
 
+#include "../utility/rendertime.h"
 #include "../shader/shader.h"
 #include "../postprocessing/postprocessing.h"
 #include "postrenderer.h"
@@ -134,15 +135,9 @@ namespace geeL {
 
 	void PostProcessingRenderer::render() {
 
-		GLfloat deltaTime = 0.f;
-		GLfloat lastFrame = 0.f;
-		GLfloat currentFrame = 0.f;
-
 		while (!window->shouldClose()) {
-			int currFPS = ceil(deltaTime * 1000);
+			int currFPS = ceil(Time::deltaTime * 1000.f);
 			std::this_thread::sleep_for(std::chrono::milliseconds(fps - currFPS));
-
-			lastFrame = glfwGetTime();
 
 			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 			glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
@@ -166,8 +161,7 @@ namespace geeL {
 			inputManager->update();
 			handleInput();
 
-			currentFrame = glfwGetTime();
-			deltaTime = currentFrame - lastFrame;
+			Time::update();
 		}
 
 		for (size_t i = 0; i < objects.size(); i++)

@@ -41,13 +41,14 @@ public:
 	void bindSkybox(const Shader& shader) const;
 
 	void bind(const Shader& shader) const;
+	void uniformBind(int uniformID) const;
 
 protected:
 	float speed;
 	float sensitivity;
 	Skybox* skybox;
 
-	virtual void computeKeyboardInput(const InputManager& input, float deltaTime);
+	virtual void computeKeyboardInput(const InputManager& input);
 	virtual void computeMouseInput(const InputManager& input);
 
 };

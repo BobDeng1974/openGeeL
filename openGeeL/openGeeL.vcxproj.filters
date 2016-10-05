@@ -138,6 +138,15 @@
     <ClCompile Include="renderer\cubemapping\cubemap.cpp">
       <Filter>renderer\cubemapping</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\utility\rendertime.cpp">
+      <Filter>renderer\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\meshes\modeldrawer.cpp">
+      <Filter>renderer\meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\postprocessing\gammacorrection.cpp">
+      <Filter>renderer\postprocessing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -239,6 +248,12 @@
     <ClInclude Include="renderer\cubemapping\cubemap.h">
       <Filter>renderer\cubemapping</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\meshes\modeldrawer.h">
+      <Filter>renderer\meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\postprocessing\gammacorrection.h">
+      <Filter>renderer\postprocessing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\simple.vert">
@@ -291,6 +306,9 @@
     </None>
     <None Include="renderer\shaders\reflective.frag">
       <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\postprocessing\gammacorrection.frag">
+      <Filter>renderer\postprocessing</Filter>
     </None>
   </ItemGroup>
 </Project>

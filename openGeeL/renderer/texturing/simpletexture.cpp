@@ -7,7 +7,7 @@
 
 namespace geeL {
 
-	SimpleTexture::SimpleTexture(const char* fileName, TextureType type, GLint wrapMode, GLint filterMode) 
+	SimpleTexture::SimpleTexture(const char* fileName, bool linear, TextureType type, GLint wrapMode, GLint filterMode) 
 		: type(type), path(fileName) {
 
 		int imgWidth, imgHeight;
@@ -15,7 +15,12 @@ namespace geeL {
 
 		glGenTextures(1, &id);
 		glBindTexture(GL_TEXTURE_2D, id);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imgWidth, imgHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
+		if(linear)
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA, imgWidth, imgHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+		else
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA, imgWidth, imgHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
@@ -41,6 +46,8 @@ namespace geeL {
 				return "diffuse";
 			case Specular:
 				return "specular";
+			case Reflection:
+				return "reflection";
 		}
 
 		return "";

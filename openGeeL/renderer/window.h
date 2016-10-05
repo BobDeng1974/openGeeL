@@ -3,6 +3,7 @@
 
 struct GLFWwindow;
 
+
 namespace geeL {
 
 class Camera;

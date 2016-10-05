@@ -15,7 +15,8 @@ namespace geeL {
 
 enum TextureType {
 	Diffuse,
-	Specular
+	Specular,
+	Reflection
 };
 
 class SimpleTexture : public Texture {
@@ -25,8 +26,8 @@ public:
 	string path;
 
 	SimpleTexture() {}
-	SimpleTexture(const char* fileName, TextureType type = Diffuse, GLint wrapMode = GL_REPEAT, GLint filterMode = GL_LINEAR);
-	//~SimpleTexture();
+	SimpleTexture(const char* fileName, bool linear = false, 
+		TextureType type = Diffuse, GLint wrapMode = GL_REPEAT, GLint filterMode = GL_LINEAR);
 
 	virtual void bind(const Shader& shader, const char* name, int texLayer = 0) const;
 	virtual void draw(int texLayer = 0) const;

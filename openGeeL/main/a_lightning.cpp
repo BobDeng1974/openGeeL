@@ -17,10 +17,12 @@
 #include "../renderer/meshes/model.h"
 #include "../renderer/meshes/meshrenderer.h"
 #include "../renderer/meshes/meshfactory.h"
+#include "../renderer/meshes/modeldrawer.h"
 
 #include "../renderer/renderer/postrenderer.h"
 #include "../renderer/postprocessing/postprocessing.h"
 #include "../renderer/postprocessing/colorcorrection.h"
+#include "../renderer/postprocessing/gammacorrection.h"
 
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/skybox.h"
@@ -45,13 +47,17 @@ namespace {
 
 		Model* nano;
 		MeshRenderer* nanoRenderer;
-		MeshFactory meshFactory;
+		MeshFactory* meshFactory;
+		MeshDrawer* meshDrawer;
 
 		Material* material;
 		
 		glm::vec3 cubePositions[10];
 
-		LightTestObject() : shaderManager(factory) {}
+		LightTestObject() : shaderManager(factory) {
+			meshFactory = new MeshFactory(factory);
+			meshDrawer = new MeshDrawer(*meshFactory);
+		}
 
 		virtual void init(const Camera* const camera) {
 
@@ -148,11 +154,11 @@ namespace {
 			material->addParameter("shininess", 64.f);
 			material->staticBind();
 
-			nano = &meshFactory.CreateModel("resources/nanosuit/nanosuit.obj", factory);
+			nano = &meshFactory->CreateModel("resources/nanosuit/nanosuit.obj");
 
 			geeL::Transform* transi = new geeL::Transform(glm::vec3(0.0f, -5.75f, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.2f, 0.2f, 0.2f));
 
-			nanoRenderer = new MeshRenderer(*transi, *nano);
+			nanoRenderer = &meshFactory->CreateMeshRenderer(*nano, *transi, cullFront);
 		}
 
 		virtual void draw(const Camera* const camera) {
@@ -163,7 +169,6 @@ namespace {
 
 			shaderManager.dynamicBind(manager, *camera);
 
-			material->dynamicBind();
 			GLint modelLoc = glGetUniformLocation(program, "model");
 
 			glm::mat4 model;
@@ -181,10 +186,10 @@ namespace {
 			glBindVertexArray(0);
 			glEnable(GL_CULL_FACE);
 
-			
-			nanoRenderer->draw();
-			nanoRenderer->transform.rotate(vec3(0, 1, 0), 25);
-			
+
+
+			meshDrawer->draw();
+			//nanoRenderer->transform.rotate(vec3(0, 1, 0), 25);
 		}
 
 		virtual void quit() {
@@ -240,7 +245,7 @@ void a_lighting() {
 	renderer.addRenderer(&renderer2, view1);
 	renderer.addRenderer(&renderer3, view3);
 
-	PostProcessingEffect& effect1 = ColorCorrection(); // ColorCorrection(0.2, 0.4, 0.4, 1, 1, 5);
+	PostProcessingEffect& effect1 = GammaCorrection();
 	
 	LightTestObject* testObj = new LightTestObject();
 	renderer1.addObject(testObj);

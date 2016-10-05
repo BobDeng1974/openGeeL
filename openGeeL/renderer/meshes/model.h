@@ -35,6 +35,7 @@ public:
 
 	void loadModel(MaterialFactory& factory);
 	void draw();
+	void drawInstanced();
 	void draw(vector<Material*> customMaterials);
 
 	vector<Mesh>::iterator meshesBegin();
