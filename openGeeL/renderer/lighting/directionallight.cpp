@@ -4,8 +4,8 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 #include "../shader/shader.h"
-#include "../meshes/modeldrawer.h"
 #include "directionallight.h"
+#include "../scene.h"
 
 using namespace glm;
 
@@ -51,7 +51,7 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void DirectionalLight::renderShadowmap(const MeshDrawer& meshDrawer, const Shader& shader) {
+	void DirectionalLight::renderShadowmap(const RenderScene& scene, const Shader& shader) {
 		glViewport(0, 0, shadowmapWidth, shadowmapHeight);
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowmapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -61,7 +61,7 @@ namespace geeL {
 		glUniformMatrix4fv(glGetUniformLocation(shader.program, "lightTransform"), 1, GL_FALSE, 
 			glm::value_ptr(computeLightTransform()));
 
-		meshDrawer.draw(shader);
+		scene.drawObjects(shader);
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}

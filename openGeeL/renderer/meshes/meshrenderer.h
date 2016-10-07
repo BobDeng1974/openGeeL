@@ -34,10 +34,10 @@ public:
 	MeshRenderer(Transform& transform, Model& model, CullingMode faceCulling = cullFront);
 
 	//Draw models material(if parameter 'shade' is true) and its gemoetry (if it has an assigned model)
-	void draw(bool shade = true);
+	void draw(bool shade = true) const;
 
 	//Transform given model with transformation data of this mesh renderer
-	void transformMeshes(Model& model);
+	void transformMeshes(Model& model) const;
 
 private:
 	bool instanced;

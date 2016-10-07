@@ -34,9 +34,9 @@ public:
 	Model::Model(string path) : path(path) {}
 
 	void loadModel(MaterialFactory& factory);
-	void draw(bool shade = true);
-	void drawInstanced(bool shade = true);
-	void draw(vector<Material*> customMaterials);
+	void draw(bool shade = true) const;
+	void drawInstanced(bool shade = true) const;
+	void draw(vector<Material*> customMaterials) const;
 
 	vector<Mesh>::iterator meshesBegin();
 	vector<Mesh>::iterator meshesEnd();

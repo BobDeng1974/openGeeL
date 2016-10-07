@@ -16,8 +16,8 @@
 #include "../inputmanager.h"
 #include "../cameras/camera.h"
 #include "../lighting/lightmanager.h"
-#include "../meshes/modeldrawer.h"
 #include "../shader/shadermanager.h"
+#include "../scene.h"
 
 #define fps 10
 
@@ -128,14 +128,14 @@ namespace geeL {
 	void PostProcessingRenderer::render() {
 
 		DefaultPostProcess defaultEffect = DefaultPostProcess();
-		shaderManager->staticBind(*lightManager, *currentCamera);
+		shaderManager->staticBind(*scene);
 		glDrawBuffer(GL_FRONT);
 
 		while (!window->shouldClose()) {
 			int currFPS = ceil(Time::deltaTime * 1000.f);
 			std::this_thread::sleep_for(std::chrono::milliseconds(fps - currFPS));
 
-			lightManager->drawShadowmaps();
+			scene->lightManager.drawShadowmaps(*scene);
 
 			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 			glViewport(0, 0, window->width, window->height);
@@ -175,28 +175,19 @@ namespace geeL {
 	}
 
 	void PostProcessingRenderer::renderFrame() {
-		currentCamera->update();
-
 		for (size_t i = 0; i < objects.size(); i++)
-			objects[i]->draw(*currentCamera);
+			objects[i]->draw(scene->camera);
 
-		shaderManager->dynamicBind(*lightManager, *currentCamera);
-		meshDrawer->draw();
-		currentCamera->drawSkybox();
+		shaderManager->dynamicBind(*scene);
+		scene->draw();
 	}
 
 	void PostProcessingRenderer::handleInput() {
-		currentCamera->handleInput(*inputManager);
+		scene->camera.handleInput(*inputManager);
 	}
 
 	void PostProcessingRenderer::setEffect(PostProcessingEffect& effect) {
 		this->effect = &effect;
 	}
-
-	void PostProcessingRenderer::setCamera(Camera* camera) {
-		if (camera != nullptr)
-			currentCamera = camera;
-	}
-
 
 }

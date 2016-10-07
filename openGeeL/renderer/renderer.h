@@ -6,7 +6,8 @@
 namespace geeL {
 
 class RenderWindow;
-class RenderObject;
+class RenderScene;
+class SceneObject;
 class InputManager;
 class LightManager;
 class MeshDrawer;
@@ -23,11 +24,10 @@ public:
 	virtual void renderFrame() = 0;
 	virtual void handleInput() = 0;
 
-	virtual void addObject(RenderObject* obj);
+	virtual void addObject(SceneObject* obj);
 	virtual void initObjects();
 	
-	void setLightManager(const LightManager& manager);
-	void setMeshDrawer(const MeshDrawer& drawer);
+	void setScene(const RenderScene& scene);
 	void setShaderManager(const ShaderManager& manager);
 
 
@@ -35,11 +35,10 @@ protected:
 	RenderWindow* window;
 	InputManager* inputManager;
 
-	const LightManager* lightManager;
-	const MeshDrawer* meshDrawer;
+	const RenderScene* scene;
 	const ShaderManager* shaderManager;
 	
-	std::vector<RenderObject*> objects;
+	std::vector<SceneObject*> objects;
 
 };
 

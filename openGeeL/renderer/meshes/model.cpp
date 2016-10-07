@@ -25,16 +25,16 @@ namespace geeL {
 		processNode(factory, scene->mRootNode, scene);
 	}
 
-	void Model::draw(bool shade) {
+	void Model::draw(bool shade) const {
 		for (unsigned int i = 0; i < meshes.size(); i++)
 			meshes[i].draw(shade);
 	}
 
-	void Model::drawInstanced(bool shade) {
+	void Model::drawInstanced(bool shade) const {
 		//TODO: implement this
 	}
 
-	void Model::draw(vector<Material*> customMaterials) {
+	void Model::draw(vector<Material*> customMaterials) const {
 		size_t size = customMaterials.size();
 
 		for (unsigned int i = 0; i < meshes.size(); i++) {

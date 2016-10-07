@@ -25,7 +25,6 @@ public:
 	Model& CreateModel(string filePath);
 
 	MeshRenderer& CreateMeshRenderer(Model& model, Transform& transform, CullingMode faceCulling);
-	MeshRenderer& CreateInstancedMeshRenderer(string filepath, Transform& transform, CullingMode faceCulling);
 
 	map<string, Model>::iterator modelsBegin();
 	map<string, Model>::iterator modelsEnd();
@@ -33,14 +32,10 @@ public:
 	list<MeshRenderer>::iterator rendererBegin();
 	list<MeshRenderer>::iterator rendererEnd();
 
-	map<Model*, list<MeshRenderer>>::iterator instancedModelsBegin();
-	map<Model*, list<MeshRenderer>>::iterator instancedModelsEnd();
-
 private:
 	MaterialFactory& factory;
 	map<string, Model> models;
 	list<MeshRenderer> meshRenderer;
-	map<Model*, list<MeshRenderer>> instancedModels;
 
 };
 

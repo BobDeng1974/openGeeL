@@ -23,15 +23,6 @@ namespace geeL {
 		return meshRenderer.back();
 	}
 
-	MeshRenderer& MeshFactory::CreateInstancedMeshRenderer(string filepath, Transform& transform, CullingMode faceCulling) {
-		Model& model = CreateModel(filepath);
-
-		if (instancedModels.find(&model) == instancedModels.end())
-			instancedModels[&model].push_back(MeshRenderer(transform, faceCulling));
-
-		return instancedModels[&model].back();
-	}
-
 	map<string, Model>::iterator MeshFactory::modelsBegin() {
 		return models.begin();
 	}
@@ -46,14 +37,6 @@ namespace geeL {
 
 	list<MeshRenderer>::iterator MeshFactory::rendererEnd() {
 		return meshRenderer.end();
-	}
-
-	map<Model*, list<MeshRenderer>>::iterator MeshFactory::instancedModelsBegin() {
-		return instancedModels.begin();
-	}
-
-	map<Model*, list<MeshRenderer>>::iterator MeshFactory::instancedModelsEnd() {
-		return instancedModels.end();
 	}
 
 }

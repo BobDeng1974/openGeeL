@@ -6,6 +6,7 @@
 #include "../lighting/lightmanager.h"
 #include "../materials/materialfactory.h"
 #include "shadermanager.h"
+#include "../scene.h"
 
 #include <iostream>
 
@@ -18,28 +19,28 @@ namespace geeL {
 	}
 
 
-	void ShaderManager::staticBind(const LightManager& lightManager, const Camera& currentCamera) const {
+	void ShaderManager::staticBind(const RenderScene& scene) const {
 
 		for (list<Shader>::const_iterator it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
 			const Shader& shader = *it;
 
 			shader.use();
-			if (shader.useLight) lightManager.bind(shader);
-			if (shader.useSkybox) currentCamera.bindSkybox(shader);
+			if (shader.useLight) scene.lightManager.bind(shader);
+			if (shader.useSkybox) scene.bindSkybox(shader);
 			if (shader.useCamera) glUniformBlockBinding(shader.program,
 				glGetUniformBlockIndex(shader.program, "cameraMatrices"),
 				getUniformBindingPoint(camID));
 		}
 	}
 
-	void ShaderManager::dynamicBind(const LightManager& lightManager, const Camera& currentCamera) const {
-		currentCamera.uniformBind(camID);
+	void ShaderManager::dynamicBind(const RenderScene& scene) const {
+		scene.camera.uniformBind(camID);
 
 		for (list<Shader>::const_iterator it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
 			const Shader& shader = *it;
 
 			shader.use();
-			if (shader.useLight) lightManager.bind(shader);
+			if (shader.useLight) scene.lightManager.bind(shader);
 		}
 	}
 

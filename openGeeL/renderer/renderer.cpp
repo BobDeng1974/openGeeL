@@ -11,7 +11,7 @@ namespace geeL{
 		: window(window), inputManager(inputManager) {}
 
 
-	void Renderer::addObject(RenderObject* obj) {
+	void Renderer::addObject(SceneObject* obj) {
 		objects.push_back(obj);
 	}
 
@@ -21,12 +21,8 @@ namespace geeL{
 		}
 	}
 
-	void Renderer::setLightManager(const LightManager& manager) {
-		lightManager = &manager;
-	}
-
-	void Renderer::setMeshDrawer(const MeshDrawer& drawer) {
-		meshDrawer = &drawer;
+	void Renderer::setScene(const RenderScene& scene) {
+		this->scene = &scene;
 	}
 
 	void Renderer::setShaderManager(const ShaderManager& manager) {

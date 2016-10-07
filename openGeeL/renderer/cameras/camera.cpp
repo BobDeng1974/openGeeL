@@ -5,7 +5,6 @@
 #include <gtc/type_ptr.hpp>
 
 #include "../shader/shader.h"
-#include "../cubemapping/skybox.h"
 #include "camera.h"
 #include "../inputmanager.h"
 #include "../transformation/transform.h"
@@ -17,10 +16,10 @@
 namespace geeL {
 
 	Camera::Camera(Transform& transform)
-		: transform(transform), speed(0), sensitivity(0), skybox(nullptr) {}
+		: transform(transform), speed(0), sensitivity(0) {}
 
 	Camera::Camera(Transform& transform, float speed, float sensitivity) 
-		: transform(transform), speed(speed), sensitivity(sensitivity), skybox(nullptr) {}
+		: transform(transform), speed(speed), sensitivity(sensitivity) {}
 
 
 	mat4 Camera::viewMatrix() const {
@@ -89,20 +88,6 @@ namespace geeL {
 		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
 		glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &transform.position);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	}
-
-	void Camera::setSkybox(Skybox& skybox) {
-		this->skybox = &skybox;
-	}
-
-	void Camera::drawSkybox() const {
-		if (skybox != nullptr)
-			skybox->draw(*this);
-	}
-
-	void Camera::bindSkybox(const Shader& shader) const {
-		if (skybox != nullptr)
-			skybox->bind(shader);
 	}
 
 }

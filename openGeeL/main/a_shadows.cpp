@@ -18,7 +18,6 @@
 #include "../renderer/meshes/model.h"
 #include "../renderer/meshes/meshrenderer.h"
 #include "../renderer/meshes/meshfactory.h"
-#include "../renderer/meshes/modeldrawer.h"
 
 #include "../renderer/renderer/postrenderer.h"
 #include "../renderer/postprocessing/postprocessing.h"
@@ -27,12 +26,13 @@
 
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/skybox.h"
+#include "../renderer/scene.h"
 
 #define pi 3.141592f
 
 namespace {
 
-	class ShadowTestObject : public RenderObject {
+	class ShadowTestObject : public SceneObject {
 
 	public:
 
@@ -47,19 +47,21 @@ namespace {
 		Model* nano;
 		MeshRenderer* nanoRenderer;
 		MeshFactory& meshFactory;
-		MeshDrawer& meshDrawer;
+		//MeshDrawer& meshDrawer;
+		//RenderScene& scene;
 
 		Material* material;
 
 
 		ShadowTestObject(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
-			ShaderManager& shaderManager, MeshDrawer& meshDrawer) 
+			ShaderManager& shaderManager, RenderScene& scene) 
 			: 
+			SceneObject(scene),
 			materialFactory(materialFactory),
 			meshFactory(meshFactory), 
 			lightManager(lightManager),
-			shaderManager(shaderManager), 
-			meshDrawer(meshDrawer) {}
+			shaderManager(shaderManager)
+			{}
 
 
 		virtual void init() {
@@ -83,15 +85,13 @@ namespace {
 			material->addParameter("shininess", 64.f);
 			material->staticBind();
 
-			nano = &meshFactory.CreateModel("resources/nanosuit/nanosuit.obj");
-
+			
 			geeL::Transform* transi = new geeL::Transform(glm::vec3(0.0f, -5.75f, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.2f, 0.2f, 0.2f));
-
-			nanoRenderer = &meshFactory.CreateMeshRenderer(*nano, *transi, cullFront);
+			scene.AddMeshRenderer("resources/nanosuit/nanosuit.obj", *transi, cullFront);
 
 			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, -5.75f, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(10.2f, 0.2f, 10.2f));
-			Model* plane = &meshFactory.CreateModel("resources/primitives/plane.obj");
-			meshFactory.CreateMeshRenderer(*plane, *transi2, cullFront);
+			scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront);
+			
 		}
 
 		virtual void draw(const Camera& camera) {
@@ -120,34 +120,32 @@ void a_shadows() {
 	PerspectiveCamera camera3 = PerspectiveCamera(transform3, 5.f, 15.f, 65.f, window->width, window->height, 0.1f, 100.f);
 
 	PostProcessingRenderer renderer3 = PostProcessingRenderer(window, manager);
-	renderer3.setCamera(&camera3);
 	renderer3.init();
 
 
 	MaterialFactory materialFactory = MaterialFactory();
 	MeshFactory meshFactory = MeshFactory(materialFactory);
 
-	MeshDrawer meshDrawer = MeshDrawer(meshFactory);
-	LightManager lightManager = LightManager(meshDrawer);
+	LightManager lightManager = LightManager();
 	ShaderManager shaderManager = ShaderManager(materialFactory);
 	
-
-	renderer3.setLightManager(lightManager);
-	renderer3.setMeshDrawer(meshDrawer);
+	RenderScene scene = RenderScene(lightManager, camera3, meshFactory);
+	
+	renderer3.setScene(scene);
 	renderer3.setShaderManager(shaderManager);
 
 
 	ShadowTestObject* testObj = new ShadowTestObject(materialFactory, meshFactory, 
-		lightManager, shaderManager, meshDrawer);
+		lightManager, shaderManager, scene);
 
 	renderer3.addObject(testObj);
 	renderer3.initObjects();
 
-	//CubeMap map = CubeMap("resources/skybox2/right.jpg", "resources/skybox2/left.jpg", "resources/skybox2/top.jpg",
-	//	"resources/skybox2/bottom.jpg", "resources/skybox2/back.jpg", "resources/skybox2/front.jpg");
+	CubeMap map = CubeMap("resources/skybox2/right.jpg", "resources/skybox2/left.jpg", "resources/skybox2/top.jpg",
+		"resources/skybox2/bottom.jpg", "resources/skybox2/back.jpg", "resources/skybox2/front.jpg");
 
-	//Skybox skybox = Skybox(map);
-	//camera3.setSkybox(skybox);
+	Skybox skybox = Skybox(map);
+	scene.setSkybox(skybox);
 
 	//PostProcessingEffect& effect1 = GammaCorrection();
 	//renderer3.setEffect(effect1);

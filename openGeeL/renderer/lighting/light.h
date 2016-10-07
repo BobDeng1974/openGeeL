@@ -9,7 +9,7 @@ using glm::vec3;
 
 namespace geeL {
 
-class MeshDrawer;
+class RenderScene;
 class Shader;
 
 class Light {
@@ -26,7 +26,7 @@ public:
 	virtual void bind(const Shader& shader, int index, string name) const;
 
 	virtual void initShadowmap() {}
-	virtual void renderShadowmap(const MeshDrawer& meshDrawer, const Shader& shader) {}
+	virtual void renderShadowmap(const RenderScene& scene, const Shader& shader) {}
 
 protected:
 	int shadowmapFBO;

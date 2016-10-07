@@ -41,15 +41,15 @@ namespace geeL {
 		material.staticBind();
 	}
 
-	void Mesh::draw(bool shade) {
+	void Mesh::draw(bool shade) const {
 		draw(material, shade);
 	}
 
-	void Mesh::draw(Material& customMaterial) {
+	void Mesh::draw(Material& customMaterial) const {
 		draw(customMaterial, true);
 	}
 
-	void Mesh::draw(Material& customMaterial, bool shade) {
+	void Mesh::draw(Material& customMaterial, bool shade) const {
 		if(shade)
 			customMaterial.dynamicBind();
 

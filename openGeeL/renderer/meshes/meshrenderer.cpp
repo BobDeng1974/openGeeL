@@ -20,7 +20,7 @@ namespace geeL{
 		: transform(transform), model(&model), faceCulling(faceCulling), instanced(false) {}
 
 
-	void MeshRenderer::draw(bool shade) {
+	void MeshRenderer::draw(bool shade) const {
 
 		switch (faceCulling) {
 			case cullNone:
@@ -50,7 +50,7 @@ namespace geeL{
 		}
 	}
 
-	void MeshRenderer::transformMeshes(Model& model) {
+	void MeshRenderer::transformMeshes(Model& model) const {
 		//Load transform into vertex shaders
 		for (vector<Mesh>::iterator it = model.meshesBegin(); it != model.meshesEnd(); it++) {
 			Mesh& mesh = *it;

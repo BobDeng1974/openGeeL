@@ -35,13 +35,13 @@ public:
 	Mesh(vector<Vertex> vertices, vector<GLuint> indices, Material& material);
 
 	void init();
-	void draw(bool shade = true);
-	void draw(Material& customMaterial);
+	void draw(bool shade = true) const;
+	void draw(Material& customMaterial) const;
 
 private:
 	GLuint vao, vbo, ebo;
 
-	void draw(Material& customMaterial, bool shade);
+	void draw(Material& customMaterial, bool shade) const;
 
 };
 

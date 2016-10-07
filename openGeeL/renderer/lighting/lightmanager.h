@@ -15,14 +15,14 @@ namespace geeL {
 class Light;
 class PointLight;
 class DirectionalLight;
-class MeshDrawer;
 class SpotLight;
 class Shader;
+class RenderScene;
 
 class LightManager {
 
 public:
-	LightManager(const MeshDrawer& meshDrawer);
+	LightManager();
 
 	//Manager is responsible for removing the lights
 	~LightManager();
@@ -45,10 +45,9 @@ public:
 		string slName = "spotLights", string plCountName = "plCount", 
 		string dlCountName = "dlCount", string slCountName = "slCount") const;
 
-	void drawShadowmaps() const;
+	void drawShadowmaps(const RenderScene& scene) const;
 
 private:
-	const MeshDrawer& meshDrawer;
 	Shader& dlShader;
 
 	vector<Light*> staticPLs, staticDLs, staticSLs;

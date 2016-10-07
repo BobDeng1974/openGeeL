@@ -6,16 +6,14 @@
 #include "directionallight.h"
 #include "spotlight.h"
 #include "../shader/shader.h"
-#include "../meshes/modeldrawer.h"
+#include "../scene.h"
 
 using namespace glm;
 
 namespace geeL {
 
-	LightManager::LightManager(const MeshDrawer& meshDrawer)
-		: 
-		meshDrawer(meshDrawer), 
-		dlShader(Shader("renderer/shaders/shadowmapping.vert", "renderer/shaders/empty.frag")) {}
+	LightManager::LightManager()
+		: dlShader(Shader("renderer/shaders/shadowmapping.vert", "renderer/shaders/empty.frag")) {}
 
 	LightManager::~LightManager() {
 		for (size_t j = 0; j < staticPLs.size(); j++)
@@ -87,9 +85,9 @@ namespace geeL {
 		}
 	}
 
-	void LightManager::drawShadowmaps() const {
+	void LightManager::drawShadowmaps(const RenderScene& scene) const {
 		for (size_t j = 0; j < staticDLs.size(); j++) {
-			staticDLs[j]->renderShadowmap(meshDrawer, dlShader);
+			staticDLs[j]->renderShadowmap(scene, dlShader);
 		}
 	}
 }

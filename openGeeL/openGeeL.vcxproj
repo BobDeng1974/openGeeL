@@ -163,7 +163,6 @@
     <ClCompile Include="renderer\meshes\meshfactory.cpp" />
     <ClCompile Include="renderer\meshes\meshrenderer.cpp" />
     <ClCompile Include="renderer\meshes\model.cpp" />
-    <ClCompile Include="renderer\meshes\modeldrawer.cpp" />
     <ClCompile Include="renderer\postprocessing\colorcorrection.cpp" />
     <ClCompile Include="renderer\postprocessing\drawdefault.cpp" />
     <ClCompile Include="renderer\postprocessing\gammacorrection.cpp" />
@@ -172,6 +171,7 @@
     <ClCompile Include="renderer\renderer\postrenderer.cpp" />
     <ClCompile Include="renderer\renderer\simplerenderer.cpp" />
     <ClCompile Include="renderer\renderer\splitrenderer.cpp" />
+    <ClCompile Include="renderer\scene.cpp" />
     <ClCompile Include="renderer\shader\shader.cpp" />
     <ClCompile Include="renderer\shader\shadermanager.cpp" />
     <ClCompile Include="renderer\texturing\layeredtexture.cpp" />
@@ -199,7 +199,6 @@
     <ClInclude Include="renderer\meshes\meshfactory.h" />
     <ClInclude Include="renderer\meshes\meshrenderer.h" />
     <ClInclude Include="renderer\meshes\model.h" />
-    <ClInclude Include="renderer\meshes\modeldrawer.h" />
     <ClInclude Include="renderer\postprocessing\colorcorrection.h" />
     <ClInclude Include="renderer\postprocessing\drawdefault.h" />
     <ClInclude Include="renderer\postprocessing\gammacorrection.h" />
@@ -209,6 +208,7 @@
     <ClInclude Include="renderer\renderer\simplerenderer.h" />
     <ClInclude Include="renderer\renderer\splitrenderer.h" />
     <ClInclude Include="renderer\renderobject.h" />
+    <ClInclude Include="renderer\scene.h" />
     <ClInclude Include="renderer\shader\shader.h" />
     <ClInclude Include="renderer\shader\shadermanager.h" />
     <ClInclude Include="renderer\texturing\layeredtexture.h" />

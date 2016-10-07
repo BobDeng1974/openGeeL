@@ -8,8 +8,7 @@ using namespace std;
 
 namespace geeL {
 
-class Camera;
-class LightManager;
+class RenderScene;
 class MaterialFactory;
 class Shader;
 
@@ -18,8 +17,8 @@ class ShaderManager {
 public:
 	ShaderManager(const MaterialFactory& factory);
 
-	void staticBind(const LightManager& lightManager, const Camera& currentCamera) const;
-	void dynamicBind(const LightManager& lightManager, const Camera& currentCamera) const;
+	void staticBind(const RenderScene& scene) const;
+	void dynamicBind(const RenderScene& scene) const;
 
 	//Generate a new uniform buffer object and return its ID
 	int generateUniformBuffer(int size);

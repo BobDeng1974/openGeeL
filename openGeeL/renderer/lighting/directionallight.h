@@ -15,7 +15,7 @@ public:
 	virtual void bind(const Shader& shader, int index, string name) const;
 
 	virtual void initShadowmap();
-	virtual void renderShadowmap(const MeshDrawer& meshDrawer, const Shader& shader);
+	virtual void renderShadowmap(const RenderScene& scene, const Shader& shader);
 	virtual glm::mat4 computeLightTransform();
 
 private:

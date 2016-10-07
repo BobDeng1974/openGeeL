@@ -23,11 +23,9 @@ public:
 
 	void setEffect(PostProcessingEffect& effect);
 
-	void setCamera(Camera* camera);
 
 private:
 	GLuint frameBuffer, colorBuffer, screenVAO, screenVBO;
-	Camera* currentCamera;
 	Shader* postShader;
 	PostProcessingEffect* effect;
 
