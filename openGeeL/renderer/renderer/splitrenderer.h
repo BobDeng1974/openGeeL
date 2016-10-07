@@ -20,7 +20,7 @@ struct RenderViewport {
 class SplitRenderer : public Renderer {
 
 public:
-	SplitRenderer(RenderWindow* window, InputManager* inputManager);
+	SplitRenderer(RenderWindow* window, InputManager* inputManagerz);
 
 	virtual void init();
 	virtual void render();

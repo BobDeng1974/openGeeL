@@ -20,7 +20,7 @@ namespace geeL{
 		: transform(transform), model(&model), faceCulling(faceCulling), instanced(false) {}
 
 
-	void MeshRenderer::draw() {
+	void MeshRenderer::draw(bool shade) {
 
 		switch (faceCulling) {
 			case cullNone:
@@ -39,7 +39,7 @@ namespace geeL{
 			if (customMaterials.size() > 0)
 				model->draw(customMaterials);
 			else
-				model->draw();
+				model->draw(shade);
 		}
 
 		switch (faceCulling) {

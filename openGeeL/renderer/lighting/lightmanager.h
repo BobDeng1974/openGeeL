@@ -2,6 +2,7 @@
 #define LIGHTMANAGER_H
 
 #include <vector>
+#include <vec3.hpp>
 
 using namespace std;
 
@@ -13,24 +14,45 @@ namespace geeL {
 
 class Light;
 class PointLight;
+class DirectionalLight;
+class MeshDrawer;
+class SpotLight;
 class Shader;
 
 class LightManager {
 
 public:
-	LightManager();
+	LightManager(const MeshDrawer& meshDrawer);
 
 	//Manager is responsible for removing the lights
 	~LightManager();
 
-	void addLight(const PointLight* light);
+	//Add and create directional light
+	DirectionalLight& addLight(glm::vec3 direction, glm::vec3 diffuse, glm::vec3 specular, 
+		glm::vec3 ambient, float intensity);
+	
+	//Add and create point light
+	PointLight& addLight(glm::vec3 position, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 ambient, 
+		float intensity, float attenuation);
+	
+	//Add and create spotlight
+	SpotLight& addLight(glm::vec3 position, glm::vec3 direction, glm::vec3 diffuse, glm::vec3 specular, 
+		glm::vec3 ambient, float angle, float outerAngle, float intensity, float attenuation);
 
-	void bind(const Shader& shader, string plName = "pointLights", string dlName = "directionalLights", string slName = "spotLights",
-		string plCountName = "plCount", string dlCountName = "dlCount", string slCountName = "slCount") const;
+
+	void bind(const Shader& shader, 
+		string plName = "pointLights", string dlName = "directionalLights", 
+		string slName = "spotLights", string plCountName = "plCount", 
+		string dlCountName = "dlCount", string slCountName = "slCount") const;
+
+	void drawShadowmaps() const;
 
 private:
-	vector<const Light*> staticPLs, staticDLs, staticSLs;
-	vector<const Light*> dynamicPLs, dynamicDLs, dynamicSLs;
+	const MeshDrawer& meshDrawer;
+	Shader& dlShader;
+
+	vector<Light*> staticPLs, staticDLs, staticSLs;
+	vector<Light*> dynamicPLs, dynamicDLs, dynamicSLs;
 };
 
 }

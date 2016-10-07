@@ -27,6 +27,8 @@ namespace geeL {
 
 	Material& MaterialFactory::CreateMaterial(Shader& shader) {
 		materials.push_back(Material(shader));
+		//materials.back().staticBind();
+
 		return materials.back();
 	}
 

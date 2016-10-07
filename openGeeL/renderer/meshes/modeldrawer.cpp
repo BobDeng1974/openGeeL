@@ -3,6 +3,7 @@
 #include "meshrenderer.h"
 #include "model.h"
 #include "meshfactory.h"
+#include "../shader/shader.h"
 
 #include <list>
 
@@ -29,7 +30,17 @@ namespace geeL {
 			for (std::list<MeshRenderer>::iterator iit = it->second.begin(); iit != it->second.end(); iit++)
 				iit->draw();
 		}
+	}
 
+	void MeshDrawer::draw(const Shader& shader) const {
+		shader.use();
+
+		for (std::list<MeshRenderer>::iterator it = factory.rendererBegin(); it != factory.rendererEnd(); it++) {
+
+			it->draw(false);
+
+		}
+			
 	}
 
 }

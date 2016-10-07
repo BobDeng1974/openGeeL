@@ -33,8 +33,8 @@ public:
 	//Constructor for mesh renderer with an unique assigned model
 	MeshRenderer(Transform& transform, Model& model, CullingMode faceCulling = cullFront);
 
-	//Draw models material and its gemoetry if it has an assigned model
-	void draw();
+	//Draw models material(if parameter 'shade' is true) and its gemoetry (if it has an assigned model)
+	void draw(bool shade = true);
 
 	//Transform given model with transformation data of this mesh renderer
 	void transformMeshes(Model& model);

@@ -41,15 +41,22 @@ namespace geeL {
 		material.staticBind();
 	}
 
-	void Mesh::draw() {
-		draw(material);
+	void Mesh::draw(bool shade) {
+		draw(material, shade);
 	}
 
 	void Mesh::draw(Material& customMaterial) {
-		customMaterial.dynamicBind();
+		draw(customMaterial, true);
+	}
+
+	void Mesh::draw(Material& customMaterial, bool shade) {
+		if(shade)
+			customMaterial.dynamicBind();
 
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
+
+	
 }

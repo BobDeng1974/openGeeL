@@ -41,10 +41,6 @@ namespace geeL {
 	}
 
 	void SimpleRenderer::init() {
-		for (size_t i = 0; i < objects.size(); i++) {
-			objects[i]->init(currentCamera);
-		}
-
 		inputManager->addCallback(exitCallback);
 		inputManager->init(window);
 	}
@@ -84,7 +80,7 @@ namespace geeL {
 		currentCamera->update();
 
 		for (size_t i = 0; i < objects.size(); i++)
-			objects[i]->draw(currentCamera);
+			objects[i]->draw(*currentCamera);
 	}
 
 	void SimpleRenderer::handleInput() {

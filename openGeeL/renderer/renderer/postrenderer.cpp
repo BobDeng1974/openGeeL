@@ -9,11 +9,15 @@
 #include "../utility/rendertime.h"
 #include "../shader/shader.h"
 #include "../postprocessing/postprocessing.h"
+#include "../postprocessing/drawdefault.h"
 #include "postrenderer.h"
 #include "../window.h"
 #include "../renderobject.h"
 #include "../inputmanager.h"
 #include "../cameras/camera.h"
+#include "../lighting/lightmanager.h"
+#include "../meshes/modeldrawer.h"
+#include "../shader/shadermanager.h"
 
 #define fps 10
 
@@ -44,10 +48,6 @@ namespace geeL {
 	}
 
 	void PostProcessingRenderer::init() {
-		for (size_t i = 0; i < objects.size(); i++) {
-			objects[i]->init(currentCamera);
-		}
-
 		inputManager->addCallback(exitCallbackk);
 		inputManager->init(window);
 		
@@ -55,26 +55,19 @@ namespace geeL {
 		initScreenQuad();
 	}
 
-	// Generates a texture that is suited for attachments to a framebuffer
-	GLuint generateAttachmentTexture(GLboolean depth, GLboolean stencil, int screenWidth, int screenHeight) {
-
-		// What enum to use?
-		GLenum attachment_type;
-		if (!depth && !stencil)
-			attachment_type = GL_RGB;
-		else if (depth && !stencil)
-			attachment_type = GL_DEPTH_COMPONENT;
-		else if (!depth && stencil)
-			attachment_type = GL_STENCIL_INDEX;
+	// Generates a texture for framebuffer
+	GLuint generateTexture(bool color, int screenWidth, int screenHeight) {
 
 		//Generate texture ID and load texture data 
 		GLuint textureID;
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
-		if (!depth && !stencil)
-			glTexImage2D(GL_TEXTURE_2D, 0, attachment_type, screenWidth, screenHeight, 0, attachment_type, GL_UNSIGNED_BYTE, NULL);
-		else // Using both a stencil and depth test, needs special format arguments
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, screenWidth, screenHeight, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
+
+		if (color)
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		else
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, screenWidth, screenHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -88,10 +81,10 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 
 		// Create a color attachment texture
-		colorBuffer = generateAttachmentTexture(false, false, window->width, window->height);
+		colorBuffer = generateTexture(true, window->width, window->height);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
 
-		// Create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
+		// Create a renderbuffer object for depth and stencil attachment
 		GLuint rbo;
 		glGenRenderbuffers(1, &rbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
@@ -99,18 +92,17 @@ namespace geeL {
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); 
 																									  
-		// Now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	//Create quad that will display rendered image on screen
 	void PostProcessingRenderer::initScreenQuad() {
 
-		// Vertex attributes for a quad that fills the entire screen
 		GLfloat quadVertices[] = {   
-			// Positions   // TexCoords
+			//Positions    //Tex Coords
 			-1.0f,  1.0f,  0.0f, 1.0f,
 			-1.0f, -1.0f,  0.0f, 0.0f,
 			1.0f, -1.0f,  1.0f, 0.0f,
@@ -135,12 +127,19 @@ namespace geeL {
 
 	void PostProcessingRenderer::render() {
 
+		DefaultPostProcess defaultEffect = DefaultPostProcess();
+		shaderManager->staticBind(*lightManager, *currentCamera);
+		glDrawBuffer(GL_FRONT);
+
 		while (!window->shouldClose()) {
 			int currFPS = ceil(Time::deltaTime * 1000.f);
 			std::this_thread::sleep_for(std::chrono::milliseconds(fps - currFPS));
 
+			lightManager->drawShadowmaps();
+
 			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-			glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
+			glViewport(0, 0, window->width, window->height);
+			glClearColor(0.002f, 0.002f, 0.002f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glEnable(GL_DEPTH_TEST);
 
@@ -153,6 +152,11 @@ namespace geeL {
 			if (effect != nullptr) {
 				effect->draw();
 				effect->bindToScreen(screenVAO, colorBuffer);
+			}
+			//Default rendering
+			else {
+				defaultEffect.draw();
+				defaultEffect.bindToScreen(screenVAO, colorBuffer);
 			}
 
 			window->swapBuffer();
@@ -174,8 +178,10 @@ namespace geeL {
 		currentCamera->update();
 
 		for (size_t i = 0; i < objects.size(); i++)
-			objects[i]->draw(currentCamera);
+			objects[i]->draw(*currentCamera);
 
+		shaderManager->dynamicBind(*lightManager, *currentCamera);
+		meshDrawer->draw();
 		currentCamera->drawSkybox();
 	}
 

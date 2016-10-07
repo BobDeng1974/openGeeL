@@ -66,9 +66,6 @@
     <ClCompile Include="renderer\cameras\perspectivecamera.cpp">
       <Filter>renderer\cameras</Filter>
     </ClCompile>
-    <ClCompile Include="main\a_lightning.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\lighting\pointlight.cpp">
       <Filter>renderer\lighting</Filter>
     </ClCompile>
@@ -147,6 +144,12 @@
     <ClCompile Include="renderer\postprocessing\gammacorrection.cpp">
       <Filter>renderer\postprocessing</Filter>
     </ClCompile>
+    <ClCompile Include="main\a_shadows.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\postprocessing\drawdefault.cpp">
+      <Filter>renderer\postprocessing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -175,9 +178,6 @@
     </ClInclude>
     <ClInclude Include="renderer\cameras\perspectivecamera.h">
       <Filter>renderer\cameras</Filter>
-    </ClInclude>
-    <ClInclude Include="main\a_lightning.h">
-      <Filter>main</Filter>
     </ClInclude>
     <ClInclude Include="renderer\lighting\light.h">
       <Filter>renderer\lighting</Filter>
@@ -254,6 +254,12 @@
     <ClInclude Include="renderer\postprocessing\gammacorrection.h">
       <Filter>renderer\postprocessing</Filter>
     </ClInclude>
+    <ClInclude Include="main\a_shadows.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\postprocessing\drawdefault.h">
+      <Filter>renderer\postprocessing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\simple.vert">
@@ -309,6 +315,12 @@
     </None>
     <None Include="renderer\postprocessing\gammacorrection.frag">
       <Filter>renderer\postprocessing</Filter>
+    </None>
+    <None Include="renderer\shaders\shadowmapping.vert">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\empty.frag">
+      <Filter>renderer\shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

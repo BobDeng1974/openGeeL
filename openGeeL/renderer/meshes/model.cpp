@@ -25,12 +25,12 @@ namespace geeL {
 		processNode(factory, scene->mRootNode, scene);
 	}
 
-	void Model::draw() {
+	void Model::draw(bool shade) {
 		for (unsigned int i = 0; i < meshes.size(); i++)
-			meshes[i].draw();
+			meshes[i].draw(shade);
 	}
 
-	void Model::drawInstanced() {
+	void Model::drawInstanced(bool shade) {
 		//TODO: implement this
 	}
 

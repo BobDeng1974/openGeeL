@@ -2,6 +2,7 @@
 #define DIRECTIONALLIGHT_H
 
 #include "light.h"
+#include <mat4x4.hpp>
 
 namespace geeL {
 
@@ -13,8 +14,13 @@ public:
 
 	virtual void bind(const Shader& shader, int index, string name) const;
 
+	virtual void initShadowmap();
+	virtual void renderShadowmap(const MeshDrawer& meshDrawer, const Shader& shader);
+	virtual glm::mat4 computeLightTransform();
+
 private:
 	vec3 direction;
+	glm::mat4 lightTransform;
 
 };
 

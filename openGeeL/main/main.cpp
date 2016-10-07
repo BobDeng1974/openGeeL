@@ -1,8 +1,8 @@
 #include <iostream>
-#include "a_lightning.h"
+#include "a_shadows.h"
 
 int main() {
-	a_lighting();
+	a_shadows();
 
 	return 0;
 }
