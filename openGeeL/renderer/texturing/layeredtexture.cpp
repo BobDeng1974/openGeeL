@@ -1,6 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <glfw3.h>
+#include "../shader/shader.h"
 #include "simpletexture.h"
 #include "layeredtexture.h"
 
@@ -11,24 +12,22 @@ namespace geeL {
 	}
 
 	void LayeredTexture::bind(const Shader& shader, const char* name, int texLayer) const {
-		int layer = GL_TEXTURE0 + texLayer;
-
 		for (size_t i = 0; i < textures.size(); i++) {
 			string name = textures[i].first;
 			SimpleTexture* texture = textures[i].second;
 
-			texture->bind(shader, name.c_str(), i);
+			texture->bind(shader, name.c_str(), i + shader.mapBindingPos);
 		}
 	}
 
-	void LayeredTexture::draw(int texLayer) const {
+	void LayeredTexture::draw(const Shader& shader, int texLayer) const {
 		int layer = GL_TEXTURE0 + texLayer;
 
 		for (size_t i = 0; i < textures.size(); i++) {
 			SimpleTexture* texture = textures[i].second;
-			glActiveTexture(layer + i);
+			glActiveTexture(layer + i + shader.mapBindingPos);
 
-			texture->draw();
+			texture->draw(shader);
 		}
 	}
 

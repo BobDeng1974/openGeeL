@@ -1,11 +1,9 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include <list>
 #include <string>
-#include <fstream>
-#include <sstream>
-
-using namespace std;
+#include <utility>
 
 namespace geeL {
 
@@ -13,19 +11,33 @@ class Shader {
 
 public:
 	int program;
+	int mapBindingPos;
 	const bool useLight;
 	const bool useCamera;
 	const bool useSkybox;
-	string cam, skybox, point, spot, directional;
+	std::string cam, skybox, point, spot, directional;
 
 	Shader() : useLight(false), useCamera(false), useSkybox(false), cam("camera"), skybox("skybox"),
-		point(""), spot(""), directional("") {}
+		point(""), spot(""), directional(""), mapBindingPos(0) {}
 
 	Shader(const char* vertexPath, const char* fragmentPath, bool useLight = true, bool useCamera = true, bool useSkybox = true,
-		string cam = "camera", string skybox = "skybox", string pointLight = "pointLights", 
-		string spotLights = "spotLights", string directionalLights = "directionalLights");
+		std::string cam = "camera", std::string skybox = "skybox", std::string pointLight = "pointLights",
+		std::string spotLights = "spotLights", std::string directionalLights = "directionalLights");
 
 	void use() const;
+
+	//Add a new map to the shader, e.g a shadow map
+	void addMap(int mapID, std::string name);
+
+	//Bind all added maps to the shader
+	void bindMaps();
+
+	//Load maps into their binding points in the shader
+	void loadMaps() const;
+
+private:
+	std::list<std::pair<int, std::string>> maps;
+
 
 };
 

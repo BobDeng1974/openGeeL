@@ -36,7 +36,7 @@ namespace geeL {
 		glUniform1i(glGetUniformLocation(shader.program, name), texLayer);
 	}
 
-	void SimpleTexture::draw(int texLayer) const {
+	void SimpleTexture::draw(const Shader& shader, int texLayer) const {
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 

@@ -29,108 +29,60 @@ namespace geeL {
 	}
 
 	void Material::addParameter(string name, float parameter) {
-		staticFloats.push_back(pair<string, float>(this->name + "." + name, parameter));
-	}
-
-	void Material::addParameter(string name, float* parameter) {
-		dynamicFloats.push_back(pair<string, float*>(this->name + "." + name, parameter));
+		floatParameters.push_back(pair<string, float>(this->name + "." + name, parameter));
 	}
 
 	void Material::addParameter(string name, int parameter) {
-		staticInts.push_back(pair<string, int>(this->name + "." + name, parameter));
-	}
-
-	void Material::addParameter(string name, int* parameter) {
-		dynamicInts.push_back(pair<string, int*>(this->name + "." + name, parameter));
+		intParameters.push_back(pair<string, int>(this->name + "." + name, parameter));
 	}
 
 	void Material::addParameter(string name, vec3 parameter) {
-		staticVec3s.push_back(pair<string, vec3>(this->name + "." + name, parameter));
-	}
-
-	void Material::addParameter(string name, vec3* parameter) {
-		dynamicVec3s.push_back(pair<string, vec3*>(this->name + "." + name, parameter));
+		vec3Parameters.push_back(pair<string, vec3>(this->name + "." + name, parameter));
 	}
 
 	void Material::addParameter(string name, mat4 parameter) {
-		staticMat4s.push_back(pair<string, mat4>(this->name + "." + name, parameter));
+		mat4Parameters.push_back(pair<string, mat4>(this->name + "." + name, parameter));
 	}
 
-	void Material::addParameter(string name, mat4* parameter) {
-		dynamicMat4s.push_back(pair<string, mat4*>(this->name + "." + name, parameter));
-	}
-
-	void Material::staticBind() const {
-
+	void Material::bindTextures() const {
 		shader.use();
 		textureStack.bind(shader, "");
+	}
+
+	void Material::bind() const {
+		shader.use();
+		textureStack.draw(shader);
 
 		glUniform1f(glGetUniformLocation(shader.program, "material.type"), type);
-		
+
 		GLint location;
-		for (size_t i = 0; i < staticFloats.size(); i++) {
-			pair<string, float> pair = staticFloats[i];
+		for (size_t i = 0; i < floatParameters.size(); i++) {
+			pair<string, float> pair = floatParameters[i];
 
 			location = glGetUniformLocation(shader.program, pair.first.c_str());
 			glUniform1f(location, pair.second);
 		}
 
-		for (size_t i = 0; i < staticInts.size(); i++) {
-			pair<string, int> pair = staticInts[i];
+		for (size_t i = 0; i < intParameters.size(); i++) {
+			pair<string, int> pair = intParameters[i];
 
 			location = glGetUniformLocation(shader.program, pair.first.c_str());
 			glUniform1i(location, pair.second);
 		}
 
-		for (size_t i = 0; i < staticVec3s.size(); i++) {
-			pair<string, vec3> pair = staticVec3s[i];
+		for (size_t i = 0; i < vec3Parameters.size(); i++) {
+			pair<string, vec3> pair = vec3Parameters[i];
 
 			location = glGetUniformLocation(shader.program, pair.first.c_str());
 			glUniform3f(location, pair.second.x, pair.second.y, pair.second.z);
 		}
 
-		for (size_t i = 0; i < staticMat4s.size(); i++) {
-			pair<string, mat4> pair = staticMat4s[i];
+		for (size_t i = 0; i < mat4Parameters.size(); i++) {
+			pair<string, mat4> pair = mat4Parameters[i];
 
 			location = glGetUniformLocation(shader.program, pair.first.c_str());
 			glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(pair.second));
 		}
-	}
-
-	void Material::dynamicBind() const {
-
-		shader.use();
-		textureStack.draw();
-
-		GLint location;
-		for (size_t i = 0; i < dynamicFloats.size(); i++) {
-			pair<string, float*> pair = dynamicFloats[i];
-
-			location = glGetUniformLocation(shader.program, pair.first.c_str());
-			glUniform1f(location, *pair.second);
-		}
-
-		for (size_t i = 0; i < dynamicInts.size(); i++) {
-			pair<string, int*> pair = dynamicInts[i];
-
-			location = glGetUniformLocation(shader.program, pair.first.c_str());
-			glUniform1i(location, *pair.second);
-		}
-
-		for (size_t i = 0; i < dynamicVec3s.size(); i++) {
-			pair<string, vec3*> pair = dynamicVec3s[i];
-
-			location = glGetUniformLocation(shader.program, pair.first.c_str());
-			glUniform3f(location, pair.second->x, pair.second->y, pair.second->z);
-		}
-
-		for (size_t i = 0; i < dynamicMat4s.size(); i++) {
-			pair<string, mat4*> pair = dynamicMat4s[i];
-
-			location = glGetUniformLocation(shader.program, pair.first.c_str());
-			glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(*pair.second));
-		}
-
 	}
 
 }

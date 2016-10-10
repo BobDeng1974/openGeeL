@@ -14,10 +14,16 @@
 namespace geeL{
 
 	MeshRenderer::MeshRenderer(Transform& transform, CullingMode faceCulling)
-		: transform(transform), model(nullptr), faceCulling(faceCulling), instanced(true) {}
+		: transform(transform), model(nullptr), faceCulling(faceCulling), instanced(true) {
+	
+		initMaterials();
+	}
 
 	MeshRenderer::MeshRenderer(Transform& transform, Model& model, CullingMode faceCulling)
-		: transform(transform), model(&model), faceCulling(faceCulling), instanced(false) {}
+		: transform(transform), model(&model), faceCulling(faceCulling), instanced(false) {
+	
+		initMaterials();
+	}
 
 
 	void MeshRenderer::draw(bool shade) const {
@@ -36,7 +42,7 @@ namespace geeL{
 		if (!instanced && model != nullptr) {
 			transformMeshes(*model);
 
-			if (customMaterials.size() > 0)
+			if (shade)
 				model->draw(customMaterials);
 			else
 				model->draw(shade);
@@ -59,6 +65,30 @@ namespace geeL{
 			shader.use();
 			glUniformMatrix4fv(glGetUniformLocation(shader.program, "model"), 1, GL_FALSE, glm::value_ptr(transform.matrix));
 		}
+	}
+
+	void MeshRenderer::customizeMaterials(vector<Material*> materials) {
+		int size = (materials.size() > customMaterials.size()) ? customMaterials.size()
+			: materials.size();
+
+		for (size_t i = 0; i < size; i++)
+			customMaterials[i] = materials[i];
+	}
+
+	void MeshRenderer::initMaterials() {
+
+		//Load the default materials of the models meshes as materials of this mesh renderer
+		for (vector<Mesh>::iterator it = model->meshesBegin(); it != model->meshesEnd(); it++) {
+			customMaterials.push_back(&it->material);
+		}
+	}
+
+	vector<Material*>::const_iterator MeshRenderer::materialsBegin() const {
+		return customMaterials.begin();
+	}
+
+	vector<Material*>::const_iterator MeshRenderer::materialsEnd() const {
+		return customMaterials.end();
 	}
 
 }

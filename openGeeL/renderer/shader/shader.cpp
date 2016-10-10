@@ -1,14 +1,18 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <fstream>
+#include <sstream>
 #include <iostream>
 #include "shader.h"
+
+using namespace std;
 
 namespace geeL {
 
 	Shader::Shader(const char* vertexPath, const char* fragmentPath, bool useLight, bool useCamera, bool useSkybox
 		, string cam, string skybox, string pointlight, string spotLights, string directionalLights)
 		: useLight(useLight), useCamera(useCamera), useSkybox(useSkybox), cam("camera"), skybox(skybox),
-		point("pointLights"), spot("spotLights"), directional("directionalLights") {
+		point("pointLights"), spot("spotLights"), directional("directionalLights"), mapBindingPos(0) {
 
 		//Read code from file path
 		string vertexCode;
@@ -89,6 +93,31 @@ namespace geeL {
 
 	void Shader::use() const {
 		glUseProgram(program);
+	}
+
+	void Shader::addMap(int mapID, string name) {
+		maps.push_back(pair<int, string>(mapID, name));
+	}
+
+	void Shader::bindMaps() {
+		int counter = 0;
+		for (list<pair<int, string>>::const_iterator it = maps.begin(); it != maps.end(); it++) {
+			glUniform1i(glGetUniformLocation(program, it->second.c_str()), counter);
+			counter++;
+		}
+
+		mapBindingPos = maps.size();
+	}
+
+	void Shader::loadMaps() const {
+		int layer = GL_TEXTURE0;
+		int counter = 0;
+		for (list<pair<int, string>>::const_iterator it = maps.begin(); it != maps.end(); it++) {
+			glActiveTexture(layer + counter);
+			glBindTexture(GL_TEXTURE_2D, it->first);
+			counter++;
+		}
+
 	}
 }
 

@@ -24,7 +24,6 @@ class MeshRenderer {
 public:
 	Transform& transform;
 	Model* model;
-	vector<Material*> customMaterials;
 	const CullingMode faceCulling;
 
 	//Constructor for mesh renderer with no assigned model (since it will be drawn instanced)
@@ -39,8 +38,21 @@ public:
 	//Transform given model with transformation data of this mesh renderer
 	void transformMeshes(Model& model) const;
 
+	//Change materials of mesh renderer in numerical order. For clarification:
+	//Let materials hold i materials and default materials hold j materials
+	//If i < j, then the first i materials will be changed
+	//If i > j, then j materials will be change and the remaining (i - j) materials ignored
+	void customizeMaterials(vector<Material*> materials);
+
+	vector<Material*>::const_iterator materialsBegin() const;
+	vector<Material*>::const_iterator materialsEnd() const;
+
+
 private:
 	bool instanced;
+	vector<Material*> customMaterials;
+
+	void initMaterials();
 
 };
 

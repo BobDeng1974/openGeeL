@@ -23,14 +23,17 @@ namespace geeL {
 
 		for (list<Shader>::const_iterator it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
 			const Shader& shader = *it;
-
-			shader.use();
-			if (shader.useLight) scene.lightManager.bind(shader);
-			if (shader.useSkybox) scene.bindSkybox(shader);
-			if (shader.useCamera) glUniformBlockBinding(shader.program,
-				glGetUniformBlockIndex(shader.program, "cameraMatrices"),
-				getUniformBindingPoint(camID));
+			staticBind(scene, shader);
 		}
+	}
+
+	void ShaderManager::staticBind(const RenderScene& scene, const Shader& shader) const {
+		shader.use();
+		if (shader.useLight) scene.lightManager.bind(shader);
+		if (shader.useSkybox) scene.bindSkybox(shader);
+		if (shader.useCamera) glUniformBlockBinding(shader.program,
+			glGetUniformBlockIndex(shader.program, "cameraMatrices"),
+			getUniformBindingPoint(camID));
 	}
 
 	void ShaderManager::dynamicBind(const RenderScene& scene) const {

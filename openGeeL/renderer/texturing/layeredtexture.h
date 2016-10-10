@@ -20,7 +20,7 @@ public:
 	void addTexture(string name, SimpleTexture& texture);
 
 	virtual void bind(const Shader& shader, const char* name, int texLayer = 0) const;
-	virtual void draw(int texLayer = 0) const;
+	virtual void draw(const Shader& shader, int texLayer = 0) const;
 
 private:
 	vector<pair<string, SimpleTexture*>> textures;

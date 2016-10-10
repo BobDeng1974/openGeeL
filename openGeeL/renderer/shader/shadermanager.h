@@ -20,6 +20,9 @@ public:
 	void staticBind(const RenderScene& scene) const;
 	void dynamicBind(const RenderScene& scene) const;
 
+	//Static bind a single shader. Should be called when a new shader is created at runtime
+	void staticBind(const RenderScene& scene, const Shader& shader) const;
+
 	//Generate a new uniform buffer object and return its ID
 	int generateUniformBuffer(int size);
 

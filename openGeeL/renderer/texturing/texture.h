@@ -10,7 +10,7 @@ class Texture {
 public:
 
 	virtual void bind(const Shader& shader, const char* name, int texLayer = 0) const = 0;
-	virtual void draw(int texLayer = 0) const = 0;
+	virtual void draw(const Shader& shader, int texLayer = 0) const = 0;
 };
 
 }

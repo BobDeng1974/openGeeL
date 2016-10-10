@@ -38,34 +38,20 @@ public:
 	void addTextures(vector<SimpleTexture*> textures);
 
 	void addParameter(string name, float parameter);
-	void addParameter(string name, float* parameter);
-
 	void addParameter(string name, int parameter);
-	void addParameter(string name, int* parameter);
-
 	void addParameter(string name, vec3 parameter);
-	void addParameter(string name, vec3* parameter);
-
 	void addParameter(string name, mat4 parameter);
-	void addParameter(string name, mat4* parameter);
 
-	void staticBind() const;
-	void dynamicBind() const;
+	void bindTextures() const;
+	void bind() const;
 
 private:
 	LayeredTexture textureStack;
 
-	vector<pair<string, float>> staticFloats;
-	vector<pair<string, float*>> dynamicFloats;
-
-	vector<pair<string, int>> staticInts;
-	vector<pair<string, int*>> dynamicInts;
-
-	vector<pair<string, vec3>> staticVec3s;
-	vector<pair<string, vec3*>> dynamicVec3s;
-
-	vector<pair<string, mat4>> staticMat4s;
-	vector<pair<string, mat4*>> dynamicMat4s;
+	vector<pair<string, float>> floatParameters;
+	vector<pair<string, int>> intParameters;
+	vector<pair<string, vec3>> vec3Parameters;
+	vector<pair<string, mat4>> mat4Parameters;
 };
 
 

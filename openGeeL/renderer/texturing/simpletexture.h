@@ -30,7 +30,7 @@ public:
 		TextureType type = Diffuse, GLint wrapMode = GL_REPEAT, GLint filterMode = GL_LINEAR);
 
 	virtual void bind(const Shader& shader, const char* name, int texLayer = 0) const;
-	virtual void draw(int texLayer = 0) const;
+	virtual void draw(const Shader& shader, int texLayer = 0) const;
 
 	string GetTypeAsString() const;
 	const int GetID() const;

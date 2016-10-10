@@ -38,7 +38,7 @@ namespace geeL {
 
 		glBindVertexArray(0);
 
-		material.staticBind();
+		material.bindTextures();
 	}
 
 	void Mesh::draw(bool shade) const {
@@ -50,8 +50,11 @@ namespace geeL {
 	}
 
 	void Mesh::draw(Material& customMaterial, bool shade) const {
-		if(shade)
-			customMaterial.dynamicBind();
+		if (shade) {
+			customMaterial.bindTextures();
+			customMaterial.bind();
+		}
+			
 
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

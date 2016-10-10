@@ -83,7 +83,7 @@ namespace {
 			material->addTexture("diffuse", *texmex);
 			material->addTexture("specular", *spectex);
 			material->addParameter("shininess", 64.f);
-			material->staticBind();
+			material->bindTextures();
 
 			
 			geeL::Transform* transi = new geeL::Transform(glm::vec3(0.0f, -5.75f, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.2f, 0.2f, 0.2f));
