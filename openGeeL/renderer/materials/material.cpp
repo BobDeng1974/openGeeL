@@ -51,6 +51,7 @@ namespace geeL {
 
 	void Material::bind() const {
 		shader.use();
+		//shader.loadMaps();
 		textureStack.draw(shader);
 
 		glUniform1f(glGetUniformLocation(shader.program, "material.type"), type);

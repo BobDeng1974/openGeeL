@@ -37,8 +37,6 @@ namespace geeL {
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texCoords));
 
 		glBindVertexArray(0);
-
-		material.bindTextures();
 	}
 
 	void Mesh::draw(bool shade) const {
@@ -54,12 +52,9 @@ namespace geeL {
 			customMaterial.bindTextures();
 			customMaterial.bind();
 		}
-			
 
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
-
-	
 }

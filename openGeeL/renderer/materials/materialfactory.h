@@ -16,9 +16,10 @@ class Shader;
 class MaterialFactory {
 
 public:
-	Shader defaultShader;
+	Shader* defaultShader;
 
 	MaterialFactory();
+	~MaterialFactory();
 
 	//Creates and returns a new texture from given file path or 
 	//returns an existing texture if it already uses this file
@@ -41,15 +42,15 @@ public:
 	list<Material>::const_iterator materialsBegin() const;
 	list<Material>::const_iterator materialsEnd() const;
 
-	list<Shader>::const_iterator shadersBegin() const;
-	list<Shader>::const_iterator shadersEnd() const;
+	list<Shader*>::iterator shadersBegin();
+	list<Shader*>::iterator shadersEnd();
 
 	map<string, SimpleTexture>::const_iterator texturesBegin() const;
 	map<string, SimpleTexture>::const_iterator texturesEnd() const;
 
 private:
 	list<Material> materials;
-	list<Shader> shaders;
+	list<Shader*> shaders;
 	map<string, SimpleTexture> textures;
 
 

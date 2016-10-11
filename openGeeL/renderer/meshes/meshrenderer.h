@@ -33,10 +33,11 @@ public:
 	MeshRenderer(Transform& transform, Model& model, CullingMode faceCulling = cullFront);
 
 	//Draw models material(if parameter 'shade' is true) and its gemoetry (if it has an assigned model)
-	void draw(bool shade = true) const;
+	void draw() const;
+	void draw(const Shader& shader) const;
 
 	//Transform given model with transformation data of this mesh renderer
-	void transformMeshes(Model& model) const;
+	void transformMeshes(Model& model, const Shader* shader = nullptr) const;
 
 	//Change materials of mesh renderer in numerical order. For clarification:
 	//Let materials hold i materials and default materials hold j materials

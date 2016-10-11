@@ -6,11 +6,17 @@
 namespace geeL {
 
 	MaterialFactory::MaterialFactory() 
-		: defaultShader(Shader("renderer/shaders/lighting.vert", "renderer/shaders/lighting.frag")) {
+		: defaultShader(new Shader("renderer/shaders/lighting.vert", "renderer/shaders/lighting.frag")) {
 	
 		shaders.push_back(defaultShader);
 	}
 
+	MaterialFactory::~MaterialFactory() {
+		for (list<Shader*>::iterator it = shaders.begin(); it != shaders.end(); it++) {
+			Shader* shader = *it;
+			delete shader;
+		}
+	}
 
 	SimpleTexture& MaterialFactory::CreateTexture(string filePath, 
 		bool linear, TextureType type, GLint wrapMode, GLint filterMode) {
@@ -22,7 +28,7 @@ namespace geeL {
 	}
 
 	Material& MaterialFactory::CreateMaterial() {
-		return CreateMaterial(defaultShader);
+		return CreateMaterial(*defaultShader);
 	}
 
 	Material& MaterialFactory::CreateMaterial(Shader& shader) {
@@ -33,8 +39,8 @@ namespace geeL {
 	}
 
 	Shader& MaterialFactory::CreateShader(string vertexPath, string fragmentPath) {
-		shaders.push_back(Shader(vertexPath.c_str(), fragmentPath.c_str()));
-		return shaders.back();
+		shaders.push_back(new Shader(vertexPath.c_str(), fragmentPath.c_str()));
+		return *shaders.back();
 	}
 
 	list<Material>::iterator MaterialFactory::materialsBegin() {
@@ -53,11 +59,11 @@ namespace geeL {
 		return materials.end();
 	}
 
-	list<Shader>::const_iterator MaterialFactory::shadersBegin() const {
+	list<Shader*>::iterator MaterialFactory::shadersBegin() {
 		return shaders.begin();
 	}
 
-	list<Shader>::const_iterator MaterialFactory::shadersEnd() const {
+	list<Shader*>::iterator MaterialFactory::shadersEnd()  {
 		return shaders.end();
 	}
 

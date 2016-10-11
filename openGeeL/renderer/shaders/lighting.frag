@@ -53,6 +53,7 @@ in vec3 cameraPosition;
 
 out vec4 color;
   
+uniform sampler2D shadowMap;
 uniform Material material;
 
 uniform int plCount;
@@ -97,17 +98,31 @@ void main() {
 }
 
 float calculateDirectionalLightShadows(vec4 fragPositionLightSpace) {
-
-	/*
 	vec3 coords = fragPositionLightSpace.xyz / fragPositionLightSpace.w;
 	coords = coords * 0.5f + 0.5f;
 
-	float mapDepth = texture(shadowMap, coords.xy).r;
-	float curDepth = coords.z;
+	//Don't draw shadow when outside of farPlane region.
+    if(coords.z > 1.0f)
+        return 0.0f;
 
-	return curDepth > mapDepth ? 1.0f : 0.0f;
-	*/
-	return 0.0f;
+	float mapDepth = texture(shadowMap, coords.xy).r;
+	float bias = 0.0005f;
+	//float bias = max(0.05f * (1.0f - dot(normal, lightDir)), 0.005f);
+	float curDepth = coords.z - bias;
+
+	float shadow = 0.0;
+	vec2 texelSize = 1.0f / textureSize(shadowMap, 0);
+	//Interpolate shadow map in kernel around point
+	int kernel = 1;
+	for(int x = -kernel; x <= kernel; x++) {
+		for(int y = -kernel; y <= kernel; y++) {
+			float depth = texture(shadowMap, coords.xy + vec2(x, y) * texelSize).r; 
+			shadow += curDepth - bias > depth ? 1.0f : 0.0f;        
+		}    
+	}
+	
+	int kernelSize = 2 * kernel + 1; 
+	return shadow / (kernelSize * kernelSize);
 }
 
 vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn) {
@@ -118,7 +133,6 @@ vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPosition, vec3 
 	vec3 direction = normalize(dir);
 
 	vec3 ambient = light.ambient * texColor;
-
 
 	float attenuation = 1.0f / (light.constant + light.linear * distance + 
     		    light.quadratic * (distance * distance));  
@@ -185,7 +199,7 @@ vec3 calculateSpotLight(SpotLight light, vec3 normal, vec3 fragPosition, vec3 vi
 
 vec3 calculateDirectionaLight(DirectionalLight light, vec3 normal, vec3 fragPosition, vec4 fragPositionLightSpace, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn) {
 
-	vec3 direction = normalize(-light.direction);
+	vec3 direction = normalize(light.direction - fragPosition);
 
 	vec3 ambient = light.ambient * texColor;
 

@@ -19,6 +19,8 @@ public:
 	vec3 specular;
 	vec3 ambient;
 	float intensity;
+	unsigned int shadowmapFBO;
+	int shadowmapID;
 
 	Light(vec3 diffuse, vec3 specular, vec3 ambient, float intensity) 
 		: diffuse(diffuse), specular(specular), ambient(ambient), intensity(intensity) {}
@@ -26,10 +28,11 @@ public:
 	virtual void bind(const Shader& shader, int index, string name) const;
 
 	virtual void initShadowmap() {}
+	virtual void addShadowmap(Shader& shader) {}
 	virtual void renderShadowmap(const RenderScene& scene, const Shader& shader) {}
 
 protected:
-	int shadowmapFBO;
+	
 	int shadowmapHeight;
 	int shadowmapWidth;
 

@@ -27,7 +27,7 @@ void main() {
 
 	normal = transpose(inverse(mat3(model))) * nnormal;
 	fragPosition = vec3(localPosition);
-	fragPositionLightSpace = lightTransform * vec4(fragPosition, 1.0f);
+	fragPositionLightSpace = lightTransform * localPosition;
 
 	textureCoordinates = texCoords;
 	cameraPosition = camPosition;

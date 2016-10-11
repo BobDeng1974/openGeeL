@@ -8,39 +8,44 @@
 #include "shadermanager.h"
 #include "../scene.h"
 
-#include <iostream>
 
 namespace geeL {
 
-	ShaderManager::ShaderManager(const MaterialFactory& factory) 
+	ShaderManager::ShaderManager(MaterialFactory& factory) 
 		: factory(factory), bindingPointCounter(0) {
 	
 		camID = generateUniformBuffer(2.f * sizeof(glm::mat4) + sizeof(glm::vec3));
 	}
 
-
 	void ShaderManager::staticBind(const RenderScene& scene) const {
-
-		for (list<Shader>::const_iterator it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
-			const Shader& shader = *it;
+		for (list<Shader*>::iterator it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
+			Shader& shader = **it;
 			staticBind(scene, shader);
 		}
 	}
 
-	void ShaderManager::staticBind(const RenderScene& scene, const Shader& shader) const {
+	void ShaderManager::staticBind(const RenderScene& scene, Shader& shader) const {
 		shader.use();
-		if (shader.useLight) scene.lightManager.bind(shader);
+
+		if (shader.useLight) {
+			scene.lightManager.bind(shader);
+			scene.lightManager.bindShadowmaps(shader);
+		}
 		if (shader.useSkybox) scene.bindSkybox(shader);
-		if (shader.useCamera) glUniformBlockBinding(shader.program,
-			glGetUniformBlockIndex(shader.program, "cameraMatrices"),
-			getUniformBindingPoint(camID));
+		if (shader.useCamera) {
+			glUniformBlockBinding(shader.program,
+				glGetUniformBlockIndex(shader.program, "cameraMatrices"),
+				getUniformBindingPoint(camID));
+
+			scene.camera.uniformBind(camID);
+		}
 	}
 
 	void ShaderManager::dynamicBind(const RenderScene& scene) const {
 		scene.camera.uniformBind(camID);
 
-		for (list<Shader>::const_iterator it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
-			const Shader& shader = *it;
+		for (list<Shader*>::const_iterator it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
+			const Shader& shader = **it;
 
 			shader.use();
 			if (shader.useLight) scene.lightManager.bind(shader);

@@ -36,7 +36,7 @@ namespace geeL {
 		for (std::list<MeshRenderer>::const_iterator it = renderObjects.begin(); 
 			it != renderObjects.end(); it++) {
 
-			it->draw(false);
+			it->draw(shader);
 		}
 	}
 

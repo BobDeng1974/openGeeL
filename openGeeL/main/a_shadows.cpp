@@ -37,9 +37,6 @@ namespace {
 	public:
 
 		Shader* shader;
-		GLuint texture1, texture2;
-		SimpleTexture* texmex;
-		SimpleTexture* spectex;
 		LightManager& lightManager;
 		MaterialFactory& materialFactory;
 		ShaderManager& shaderManager;
@@ -67,29 +64,20 @@ namespace {
 		virtual void init() {
 
 			shader = &materialFactory.CreateShader("renderer/shaders/reflective.vert", "renderer/shaders/reflective.frag");
-			material = &materialFactory.CreateMaterial(*shader);
 
 			//PointLight* light1 = new PointLight(glm::vec3(1.2f, 1.0f, 2.0f), glm::vec3(0.5f, 0.5f, 0.5f),
 			//	glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.2f, 0.2f, 0.2f), 1.f, 0.69f, 0.032f);
 			//PointLight* light2 = new PointLight(glm::vec3(-2.0f, 2.0f, -7.0f), glm::vec3(0.3f, 0.3f, 0.9f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.1f, 0.1f, 0.1f));
 
-			float l = 1.f;
-			lightManager.addLight(-glm::vec3(1.2f, 1.0f, 2.0f), glm::vec3(l, l, l),
-				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), 1.f);
+			//float l = 1.f;
+			//lightManager.addLight(-glm::vec3(-1.2f, -1.0f, -2.0f), glm::vec3(l, l, l),
+			//	glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), 1.f);
 
-			texmex = &materialFactory.CreateTexture("data/images/container2.png");
-			spectex = &materialFactory.CreateTexture("data/images/container2_specular.png");
-
-			material->addTexture("diffuse", *texmex);
-			material->addTexture("specular", *spectex);
-			material->addParameter("shininess", 64.f);
-			material->bindTextures();
-
-			
-			geeL::Transform* transi = new geeL::Transform(glm::vec3(0.0f, -5.75f, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.2f, 0.2f, 0.2f));
+			float height = -2.f;
+			geeL::Transform* transi = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.2f, 0.2f, 0.2f));
 			scene.AddMeshRenderer("resources/nanosuit/nanosuit.obj", *transi, cullFront);
 
-			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, -5.75f, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(10.2f, 0.2f, 10.2f));
+			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(10.2f, 0.2f, 10.2f));
 			scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront);
 			
 		}
@@ -116,7 +104,7 @@ void a_shadows() {
 	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	TransformFactory transFactory = TransformFactory(world);
 
-	geeL::Transform& transform3 = transFactory.CreateTransform(glm::vec3(0.0f, 0.0f, 3.0f), vec3(0.f, -90.f, 0.f), vec3(1.f, 1.f, 1.f));
+	geeL::Transform& transform3 = transFactory.CreateTransform(glm::vec3(0.0f, 2.0f, 9.0f), vec3(-100.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera camera3 = PerspectiveCamera(transform3, 5.f, 15.f, 65.f, window->width, window->height, 0.1f, 100.f);
 
 	PostProcessingRenderer renderer3 = PostProcessingRenderer(window, manager);
@@ -133,7 +121,6 @@ void a_shadows() {
 	
 	renderer3.setScene(scene);
 	renderer3.setShaderManager(shaderManager);
-
 
 	ShadowTestObject* testObj = new ShadowTestObject(materialFactory, meshFactory, 
 		lightManager, shaderManager, scene);

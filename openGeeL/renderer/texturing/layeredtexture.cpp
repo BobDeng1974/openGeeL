@@ -25,6 +25,8 @@ namespace geeL {
 
 		for (size_t i = 0; i < textures.size(); i++) {
 			SimpleTexture* texture = textures[i].second;
+			
+			int l = i + texLayer + shader.mapBindingPos;
 			glActiveTexture(layer + i + shader.mapBindingPos);
 
 			texture->draw(shader);

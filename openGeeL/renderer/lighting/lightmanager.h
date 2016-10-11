@@ -45,10 +45,12 @@ public:
 		string slName = "spotLights", string plCountName = "plCount", 
 		string dlCountName = "dlCount", string slCountName = "slCount") const;
 
+	void bindShadowmaps(Shader& shader) const;
 	void drawShadowmaps(const RenderScene& scene) const;
+	
 
 private:
-	Shader& dlShader;
+	Shader* dlShader;
 
 	vector<Light*> staticPLs, staticDLs, staticSLs;
 	vector<Light*> dynamicPLs, dynamicDLs, dynamicSLs;

@@ -26,7 +26,7 @@ namespace geeL{
 	}
 
 
-	void MeshRenderer::draw(bool shade) const {
+	void MeshRenderer::draw() const {
 
 		switch (faceCulling) {
 			case cullNone:
@@ -36,16 +36,9 @@ namespace geeL{
 		}
 
 		//Draw model
-		//But only if the mesh renderer is not instanced
-		//In that case the models geometry will be drawn instanced
-		//by the model drawer class
 		if (!instanced && model != nullptr) {
 			transformMeshes(*model);
-
-			if (shade)
-				model->draw(customMaterials);
-			else
-				model->draw(shade);
+			model->draw(customMaterials);
 		}
 
 		switch (faceCulling) {
@@ -56,19 +49,53 @@ namespace geeL{
 		}
 	}
 
-	void MeshRenderer::transformMeshes(Model& model) const {
+	void MeshRenderer::draw(const Shader& shader) const {
+
+		switch (faceCulling) {
+		case cullNone:
+			glDisable(GL_CULL_FACE);
+		case cullBack:
+			glCullFace(GL_BACK);
+		}
+
+		//Draw model
+		if (!instanced && model != nullptr) {
+			transformMeshes(*model, &shader);
+			model->draw(false);
+		}
+
+		switch (faceCulling) {
+		case cullNone:
+			glEnable(GL_CULL_FACE);
+		case cullBack:
+			glCullFace(GL_FRONT);
+		}
+	}
+
+	void MeshRenderer::transformMeshes(Model& model, const Shader* shader) const {
+		
+		int counter = 0;
 		//Load transform into vertex shaders
 		for (vector<Mesh>::iterator it = model.meshesBegin(); it != model.meshesEnd(); it++) {
 			Mesh& mesh = *it;
-			Shader& shader = mesh.material.shader;
 
-			shader.use();
-			glUniformMatrix4fv(glGetUniformLocation(shader.program, "model"), 1, GL_FALSE, glm::value_ptr(transform.matrix));
+			const Shader* sha;
+			if (shader == nullptr) {
+				Material* mat = customMaterials[counter];
+				sha = &mat->shader;
+			}
+			else
+				sha = shader;
+
+			sha->use();
+			glUniformMatrix4fv(glGetUniformLocation(sha->program, "model"), 1, GL_FALSE, glm::value_ptr(transform.matrix));
+			counter++;
 		}
 	}
 
 	void MeshRenderer::customizeMaterials(vector<Material*> materials) {
-		int size = (materials.size() > customMaterials.size()) ? customMaterials.size()
+		int size = (materials.size() > customMaterials.size()) 
+			? customMaterials.size()
 			: materials.size();
 
 		for (size_t i = 0; i < size; i++)

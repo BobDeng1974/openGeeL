@@ -16,6 +16,8 @@ public:
 
 	virtual void initShadowmap();
 	virtual void renderShadowmap(const RenderScene& scene, const Shader& shader);
+	virtual void addShadowmap(Shader& shader);
+
 	virtual glm::mat4 computeLightTransform();
 
 private:

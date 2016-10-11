@@ -13,9 +13,11 @@ using namespace glm;
 namespace geeL {
 
 	LightManager::LightManager()
-		: dlShader(Shader("renderer/shaders/shadowmapping.vert", "renderer/shaders/empty.frag")) {}
+		: dlShader(new Shader("renderer/shaders/shadowmapping.vert", "renderer/shaders/empty.frag")) {}
 
 	LightManager::~LightManager() {
+		delete dlShader;
+
 		for (size_t j = 0; j < staticPLs.size(); j++)
 			delete staticPLs[j];
 
@@ -85,9 +87,18 @@ namespace geeL {
 		}
 	}
 
+	void LightManager::bindShadowmaps(Shader& shader) const {
+		shader.use();
+		for (size_t j = 0; j < staticDLs.size(); j++) {
+			staticDLs[j]->addShadowmap(shader);
+		}
+
+		shader.bindMaps();
+	}
+
 	void LightManager::drawShadowmaps(const RenderScene& scene) const {
 		for (size_t j = 0; j < staticDLs.size(); j++) {
-			staticDLs[j]->renderShadowmap(scene, dlShader);
+			staticDLs[j]->renderShadowmap(scene, *dlShader);
 		}
 	}
 }
