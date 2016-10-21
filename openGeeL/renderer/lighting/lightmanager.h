@@ -37,7 +37,7 @@ public:
 	
 	//Add and create spotlight
 	SpotLight& addLight(glm::vec3 position, glm::vec3 direction, glm::vec3 diffuse, glm::vec3 specular, 
-		glm::vec3 ambient, float angle, float outerAngle, float intensity, float attenuation);
+		glm::vec3 ambient, float angle, float outerAngle, float intensity);
 
 
 	void bind(const Shader& shader, 

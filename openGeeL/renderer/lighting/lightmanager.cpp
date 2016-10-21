@@ -56,11 +56,12 @@ namespace geeL {
 	}
 
 	SpotLight& LightManager::addLight(vec3 position, vec3 direction, vec3 diffuse, vec3 specular, vec3 ambient,
-		float angle, float outerAngle, float intensity, float attenuation) {
+		float angle, float outerAngle, float intensity) {
 
 		SpotLight* light = new SpotLight(position, direction, diffuse, specular, 
 			ambient, intensity, angle, outerAngle);
 		staticSLs.push_back(light);
+		light->initShadowmap();
 
 		return *light;
 	}
@@ -89,8 +90,13 @@ namespace geeL {
 
 	void LightManager::bindShadowmaps(Shader& shader) const {
 		shader.use();
+		
 		for (size_t j = 0; j < staticDLs.size(); j++) {
 			staticDLs[j]->addShadowmap(shader);
+		}
+
+		for (size_t j = 0; j < staticSLs.size(); j++) {
+			staticSLs[j]->addShadowmap(shader);
 		}
 
 		shader.bindMaps();
@@ -99,6 +105,10 @@ namespace geeL {
 	void LightManager::drawShadowmaps(const RenderScene& scene) const {
 		for (size_t j = 0; j < staticDLs.size(); j++) {
 			staticDLs[j]->renderShadowmap(scene, *dlShader);
+		}
+
+		for (size_t j = 0; j < staticSLs.size(); j++) {
+			staticSLs[j]->renderShadowmap(scene, *dlShader);
 		}
 	}
 }

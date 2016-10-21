@@ -7,6 +7,7 @@
 #include "../renderer/lighting/lightmanager.h"
 #include "../renderer/lighting/pointlight.h"
 #include "../renderer/lighting/directionallight.h"
+#include "../renderer//lighting/spotlight.h"
 
 #include "../renderer/transformation/transform.h"
 #include "../renderer/transformation/transformfactory.h"
@@ -29,7 +30,10 @@
 #include "../renderer/cubemapping/skybox.h"
 #include "../renderer/scene.h"
 
+#include <glm.hpp>
+
 #define pi 3.141592f
+
 
 namespace {
 
@@ -45,8 +49,7 @@ namespace {
 		Model* nano;
 		MeshRenderer* nanoRenderer;
 		MeshFactory& meshFactory;
-		//MeshDrawer& meshDrawer;
-		//RenderScene& scene;
+		SpotLight* spotLight;
 
 		Material* material;
 
@@ -70,9 +73,16 @@ namespace {
 			//	glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.2f, 0.2f, 0.2f), 1.f, 0.69f, 0.032f);
 			//PointLight* light2 = new PointLight(glm::vec3(-2.0f, 2.0f, -7.0f), glm::vec3(0.3f, 0.3f, 0.9f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.1f, 0.1f, 0.1f));
 
-			float l = 1.f;
-			lightManager.addLight(-glm::vec3(-1.2f, -1.0f, -2.0f), glm::vec3(l, l, l),
-				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), 1.f);
+			float l = 50.f;
+			float angle = glm::cos(glm::radians(25.5f));
+			float outerAngle = glm::cos(glm::radians(30.5f));
+
+			spotLight = &lightManager.addLight(glm::vec3(-7, 5, 0), glm::vec3(3, -1.0f, 0), glm::vec3(l, l, l),
+				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), angle, outerAngle, 10.f);
+
+			l = 1.f;
+			//lightManager.addLight(-glm::vec3(-1.2f, -1.0f, -2.0f), glm::vec3(l, l, l),
+			//	glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), 1.f);
 
 			float height = -2.f;
 			geeL::Transform* transi = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.2f, 0.2f, 0.2f));

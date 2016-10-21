@@ -2,6 +2,7 @@
 #define LIGHT_H
 
 #include <vec3.hpp>
+#include <mat4x4.hpp>
 #include <string>
 
 using namespace std;
@@ -26,9 +27,10 @@ public:
 
 	virtual void bind(const Shader& shader, int index, string name) const;
 
-	virtual void initShadowmap() {}
-	virtual void addShadowmap(Shader& shader) {}
-	virtual void renderShadowmap(const RenderScene& scene, const Shader& shader) {}
+	virtual void initShadowmap();
+	virtual void addShadowmap(Shader& shader);
+	virtual void renderShadowmap(const RenderScene& scene, const Shader& shader);
+	virtual glm::mat4 computeLightTransform() { return glm::mat4(); }
 
 	const int getShadowMapID() const;
 	const int getShadowMapFBO() const;
@@ -38,6 +40,7 @@ protected:
 	int shadowmapID;
 	int shadowmapHeight;
 	int shadowmapWidth;
+	glm::mat4 lightTransform;
 
 };
 

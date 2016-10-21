@@ -66,10 +66,13 @@ uniform PointLight pointLights[MAX_POINT_LIGHTS];
 #define MAX_DIRECTIONAL_LIGHTS 5
 uniform DirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
 
+#define MAX_SPOTLIGHTS 5
+uniform SpotLight spotLights[MAX_SPOTLIGHTS];
+
 vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn);
-vec3 calculateSpotLight(SpotLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn);
+vec3 calculateSpotLight(SpotLight light, vec3 normal, vec3 fragPosition, vec4 fragPositionLightSpace, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn);
 vec3 calculateDirectionaLight(DirectionalLight light, vec3 normal, vec3 fragPosition, vec4 fragPositionLightSpace, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn);
-float calculateDirectionalLightShadows(vec4 fragPositionLightSpace);
+float calculateLightShadows(vec4 fragPositionLightSpace);
 
 void main() {
 
@@ -92,10 +95,13 @@ void main() {
 	for(int i = 0; i < dlCount; i++)
         result += calculateDirectionaLight(directionalLights[i], norm, fragPosition, fragPositionLightSpace, viewDirection, texColor, speColor, blinn);
 
+	for(int i = 0; i < slCount; i++)
+		result += calculateSpotLight(spotLights[i], norm, fragPosition, fragPositionLightSpace, viewDirection, texColor, speColor, blinn);
+
 	color = vec4(result, 1.f);
 }
 
-float calculateDirectionalLightShadows(vec4 fragPositionLightSpace) {
+float calculateLightShadows(vec4 fragPositionLightSpace) {
 	vec3 coords = fragPositionLightSpace.xyz / fragPositionLightSpace.w;
 	coords = coords * 0.5f + 0.5f;
 
@@ -156,7 +162,7 @@ vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPosition, vec3 
 
 }
 
-vec3 calculateSpotLight(SpotLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn) {
+vec3 calculateSpotLight(SpotLight light, vec3 normal, vec3 fragPosition, vec4 fragPositionLightSpace, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn) {
 
 	vec3 dir = light.position - fragPosition;
 
@@ -191,8 +197,9 @@ vec3 calculateSpotLight(SpotLight light, vec3 normal, vec3 fragPosition, vec3 vi
 	}
 
 	vec3 specular = spec * speColor * light.specular * intensity;
-	
-    return (ambient + diffuse + specular) * attenuation;
+
+	float shadow = calculateLightShadows(fragPositionLightSpace);
+    return (ambient + (1.0f - shadow) * (diffuse + specular)) * attenuation;
 }
 
 vec3 calculateDirectionaLight(DirectionalLight light, vec3 normal, vec3 fragPosition, vec4 fragPositionLightSpace, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn) {
@@ -218,7 +225,7 @@ vec3 calculateDirectionaLight(DirectionalLight light, vec3 normal, vec3 fragPosi
 
 	vec3 specular = spec * speColor * light.specular;
 
-	float shadow = calculateDirectionalLightShadows(fragPositionLightSpace);
+	float shadow = calculateLightShadows(fragPositionLightSpace);
 	
     return (ambient + (1.0f - shadow) * (diffuse + specular));
 }

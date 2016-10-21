@@ -13,16 +13,11 @@ public:
 	DirectionalLight(vec3 direction, vec3 diffuse, vec3 specular, vec3 ambient, float intensity = 1.f);
 
 	virtual void bind(const Shader& shader, int index, string name) const;
-
-	virtual void initShadowmap();
-	virtual void renderShadowmap(const RenderScene& scene, const Shader& shader);
-	virtual void addShadowmap(Shader& shader);
-
 	virtual glm::mat4 computeLightTransform();
 
 private:
 	vec3 direction;
-	glm::mat4 lightTransform;
+	
 
 };
 
