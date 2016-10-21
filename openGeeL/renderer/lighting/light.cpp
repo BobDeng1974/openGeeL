@@ -17,4 +17,12 @@ namespace geeL {
 
 		glUniform1f(glGetUniformLocation(program, (location + "intensity").c_str()), intensity);
 	}
+
+	const int Light::getShadowMapID() const {
+		return shadowmapID;
+	}
+
+	const int Light::getShadowMapFBO() const {
+		return shadowmapFBO;
+	}
 }

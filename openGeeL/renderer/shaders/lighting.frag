@@ -92,8 +92,6 @@ void main() {
 	for(int i = 0; i < dlCount; i++)
         result += calculateDirectionaLight(directionalLights[i], norm, fragPosition, fragPositionLightSpace, viewDirection, texColor, speColor, blinn);
 
-	result = pow(result, vec3(0.45f));
-
 	color = vec4(result, 1.f);
 }
 

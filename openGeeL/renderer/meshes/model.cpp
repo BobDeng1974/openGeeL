@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include "../shader/shader.h"
 #include "../materials/material.h"
 #include "../materials/materialfactory.h"

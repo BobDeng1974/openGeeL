@@ -150,6 +150,9 @@
     <ClCompile Include="renderer\scene.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\postprocessing\tonemapping.cpp">
+      <Filter>renderer\postprocessing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -260,6 +263,9 @@
     <ClInclude Include="renderer\scene.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\postprocessing\tonemapping.h">
+      <Filter>renderer\postprocessing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\simple.vert">
@@ -298,9 +304,6 @@
     <None Include="renderer\postprocessing\colorcorrection.frag">
       <Filter>renderer\postprocessing</Filter>
     </None>
-    <None Include="renderer\postprocessing\gaussianblur.frag">
-      <Filter>renderer\postprocessing</Filter>
-    </None>
     <None Include="renderer\cubemapping\skybox.vert">
       <Filter>renderer\cubemapping</Filter>
     </None>
@@ -321,6 +324,15 @@
     </None>
     <None Include="renderer\shaders\empty.frag">
       <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\postprocessing\tonemapping.frag">
+      <Filter>renderer\postprocessing</Filter>
+    </None>
+    <None Include="renderer\postprocessing\kernelprocessing.frag">
+      <Filter>renderer\postprocessing</Filter>
+    </None>
+    <None Include="renderer\postprocessing\drawdefault.frag">
+      <Filter>renderer\postprocessing</Filter>
     </None>
   </ItemGroup>
 </Project>

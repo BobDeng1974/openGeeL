@@ -23,6 +23,7 @@
 #include "../renderer/postprocessing/postprocessing.h"
 #include "../renderer/postprocessing/colorcorrection.h"
 #include "../renderer/postprocessing/gammacorrection.h"
+#include "../renderer/postprocessing/tonemapping.h"
 
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/skybox.h"
@@ -69,21 +70,21 @@ namespace {
 			//	glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.2f, 0.2f, 0.2f), 1.f, 0.69f, 0.032f);
 			//PointLight* light2 = new PointLight(glm::vec3(-2.0f, 2.0f, -7.0f), glm::vec3(0.3f, 0.3f, 0.9f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.1f, 0.1f, 0.1f));
 
-			//float l = 1.f;
-			//lightManager.addLight(-glm::vec3(-1.2f, -1.0f, -2.0f), glm::vec3(l, l, l),
-			//	glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), 1.f);
+			float l = 1.f;
+			lightManager.addLight(-glm::vec3(-1.2f, -1.0f, -2.0f), glm::vec3(l, l, l),
+				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), 1.f);
 
 			float height = -2.f;
 			geeL::Transform* transi = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.2f, 0.2f, 0.2f));
-			scene.AddMeshRenderer("resources/nanosuit/nanosuit.obj", *transi, cullFront);
-
-			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(10.2f, 0.2f, 10.2f));
+			nanoRenderer = &scene.AddMeshRenderer("resources/nanosuit/nanosuit.obj", *transi, cullFront);
+			
+			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(100.2f, 0.2f, 100.2f));
 			scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront);
 			
 		}
 
 		virtual void draw(const Camera& camera) {
-			//nanoRenderer->transform.rotate(vec3(0, 1, 0), 25);
+			nanoRenderer->transform.rotate(vec3(0, 1, 0), 25);
 		}
 
 		virtual void quit() {}
@@ -134,9 +135,8 @@ void a_shadows() {
 	Skybox skybox = Skybox(map);
 	scene.setSkybox(skybox);
 
-	//PostProcessingEffect& effect1 = GammaCorrection();
-	//renderer3.setEffect(effect1);
-	
+	//PostProcessingEffect& effect2 = ToneMapping(1.f);
+	//renderer3.setEffect(effect2);
 	
 	renderer3.render();
 

@@ -167,6 +167,7 @@
     <ClCompile Include="renderer\postprocessing\drawdefault.cpp" />
     <ClCompile Include="renderer\postprocessing\gammacorrection.cpp" />
     <ClCompile Include="renderer\postprocessing\postprocessing.cpp" />
+    <ClCompile Include="renderer\postprocessing\tonemapping.cpp" />
     <ClCompile Include="renderer\renderer.cpp" />
     <ClCompile Include="renderer\renderer\postrenderer.cpp" />
     <ClCompile Include="renderer\renderer\simplerenderer.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="renderer\postprocessing\drawdefault.h" />
     <ClInclude Include="renderer\postprocessing\gammacorrection.h" />
     <ClInclude Include="renderer\postprocessing\postprocessing.h" />
+    <ClInclude Include="renderer\postprocessing\tonemapping.h" />
     <ClInclude Include="renderer\renderer.h" />
     <ClInclude Include="renderer\renderer\postrenderer.h" />
     <ClInclude Include="renderer\renderer\simplerenderer.h" />
@@ -223,8 +225,10 @@
     <None Include="renderer\cubemapping\skybox.frag" />
     <None Include="renderer\cubemapping\skybox.vert" />
     <None Include="renderer\postprocessing\colorcorrection.frag" />
+    <None Include="renderer\postprocessing\drawdefault.frag" />
     <None Include="renderer\postprocessing\gammacorrection.frag" />
-    <None Include="renderer\postprocessing\gaussianblur.frag" />
+    <None Include="renderer\postprocessing\kernelprocessing.frag" />
+    <None Include="renderer\postprocessing\tonemapping.frag" />
     <None Include="renderer\shaders\empty.frag" />
     <None Include="renderer\shaders\lamp.frag" />
     <None Include="renderer\shaders\lighting.frag" />

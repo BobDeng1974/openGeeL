@@ -18,8 +18,6 @@
 #include "../lighting/lightmanager.h"
 #include "../shader/shadermanager.h"
 #include "../scene.h"
-#include "../lighting/directionallight.h"
-#include <iostream>
 
 #define fps 10
 
@@ -63,8 +61,10 @@ namespace geeL {
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
-		if (color)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		if (color) {
+			//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+		}
 		else
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, screenWidth, screenHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
@@ -126,16 +126,10 @@ namespace geeL {
 	}
 
 
-
 	void PostProcessingRenderer::render() {
-
-		float l = 1.f;
-		DirectionalLight& light = scene->lightManager.addLight(glm::vec3(0.f, 3.0f, 1.0f), glm::vec3(l, l, l),
-			glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), 1.f);
 
 		DefaultPostProcess defaultEffect = DefaultPostProcess();
 		shaderManager->staticBind(*scene);
-		glDrawBuffer(GL_FRONT);
 
 		while (!window->shouldClose()) {
 			int currFPS = ceil(Time::deltaTime * 1000.f);
@@ -144,17 +138,16 @@ namespace geeL {
 			inputManager->update();
 			handleInput();
 
+			glEnable(GL_DEPTH_TEST);
 			scene->lightManager.drawShadowmaps(*scene);
 
-			//glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 			glViewport(0, 0, window->width, window->height);
 			glClearColor(0.002f, 0.002f, 0.002f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glEnable(GL_DEPTH_TEST);
 
 			renderFrame();
 			
-			/*
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			glClear(GL_COLOR_BUFFER_BIT);
 			glDisable(GL_DEPTH_TEST);
@@ -168,7 +161,6 @@ namespace geeL {
 				defaultEffect.draw();
 				defaultEffect.bindToScreen(screenVAO, colorBuffer);
 			}
-			*/
 
 			window->swapBuffer();
 			Time::update();

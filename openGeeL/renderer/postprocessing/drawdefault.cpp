@@ -3,7 +3,7 @@
 
 namespace geeL {
 
-	DefaultPostProcess::DefaultPostProcess() : PostProcessingEffect("renderer/shaders/screen.frag") {}
+	DefaultPostProcess::DefaultPostProcess() : PostProcessingEffect("renderer/postprocessing/drawdefault.frag") {}
 
 	void DefaultPostProcess::draw() {
 		shader.use();

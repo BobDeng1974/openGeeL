@@ -111,7 +111,6 @@ namespace geeL {
 	void Shader::loadMaps() const {
 		int layer = GL_TEXTURE0;
 		int counter = 0;
-		glBindTexture(GL_TEXTURE_2D, 0);
 		for (list<pair<int, string>>::const_iterator it = maps.begin(); it != maps.end(); it++) {
 			glActiveTexture(layer + counter);
 			glBindTexture(GL_TEXTURE_2D, it->first);
