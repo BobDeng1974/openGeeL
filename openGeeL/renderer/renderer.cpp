@@ -1,6 +1,6 @@
 #include "renderer.h"
 #include "window.h"
-#include "renderobject.h"
+#include "scripting\scenecontrolobject.h"
 #include "inputmanager.h"
 #include "cameras/camera.h"
 
@@ -11,7 +11,7 @@ namespace geeL{
 		: window(window), inputManager(inputManager) {}
 
 
-	void Renderer::addObject(SceneObject* obj) {
+	void Renderer::addObject(SceneControlObject* obj) {
 		objects.push_back(obj);
 	}
 

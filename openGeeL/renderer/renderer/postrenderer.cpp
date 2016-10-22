@@ -12,7 +12,7 @@
 #include "../postprocessing/drawdefault.h"
 #include "postrenderer.h"
 #include "../window.h"
-#include "../renderobject.h"
+#include "../scripting/scenecontrolobject.h"
 #include "../inputmanager.h"
 #include "../cameras/camera.h"
 #include "../lighting/lightmanager.h"

@@ -43,6 +43,9 @@
     <Filter Include="renderer\cubemapping">
       <UniqueIdentifier>{94442e4d-631a-4ef1-821d-af60aed6766b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="renderer\scripting">
+      <UniqueIdentifier>{bcc18f39-e065-40af-a54f-ec1ce6ead7cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main\main.cpp">
@@ -153,12 +156,12 @@
     <ClCompile Include="renderer\postprocessing\tonemapping.cpp">
       <Filter>renderer\postprocessing</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\sceneobject.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\renderobject.h">
       <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\texturing\texture.h">
@@ -265,6 +268,15 @@
     </ClInclude>
     <ClInclude Include="renderer\postprocessing\tonemapping.h">
       <Filter>renderer\postprocessing</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\scripting\scenecontrolobject.h">
+      <Filter>renderer\scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\scripting\component.h">
+      <Filter>renderer\scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\sceneobject.h">
+      <Filter>renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

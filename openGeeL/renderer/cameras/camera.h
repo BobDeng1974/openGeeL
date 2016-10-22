@@ -4,6 +4,7 @@
 #include <string>
 #include <vec3.hpp>
 #include <mat4x4.hpp>
+#include "../sceneobject.h"
 
 using namespace std;
 using glm::vec3;
@@ -15,11 +16,9 @@ class InputManager;
 class Transform;
 class Shader;
 
-class Camera {
+class Camera : public SceneObject {
 
 public:
-	Transform& transform;
-
 	//Defines a static camera 
 	Camera(Transform& transform);
 
@@ -28,10 +27,6 @@ public:
 
 	mat4 viewMatrix() const;
 	virtual mat4 projectionMatrix() const = 0;
-
-	virtual void init() {}
-	virtual void update() {}
-	virtual void quit() {}
 
 	virtual void handleInput(const InputManager& input);
 

@@ -14,13 +14,13 @@
 namespace geeL{
 
 	MeshRenderer::MeshRenderer(Transform& transform, CullingMode faceCulling)
-		: transform(transform), model(nullptr), faceCulling(faceCulling), instanced(true) {
+		: SceneObject(transform), model(nullptr), faceCulling(faceCulling), instanced(true) {
 	
 		initMaterials();
 	}
 
 	MeshRenderer::MeshRenderer(Transform& transform, Model& model, CullingMode faceCulling)
-		: transform(transform), model(&model), faceCulling(faceCulling), instanced(false) {
+		: SceneObject(transform), model(&model), faceCulling(faceCulling), instanced(false) {
 	
 		initMaterials();
 	}

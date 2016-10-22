@@ -8,7 +8,7 @@
 
 #include "simplerenderer.h"
 #include "../window.h"
-#include "../renderobject.h"
+#include "../scripting/scenecontrolobject.h"
 #include "../inputmanager.h"
 #include "../cameras/camera.h"
 
@@ -77,8 +77,6 @@ namespace geeL {
 	}
 
 	void SimpleRenderer::renderFrame() {
-		currentCamera->update();
-
 		for (size_t i = 0; i < objects.size(); i++)
 			objects[i]->draw(*currentCamera);
 	}

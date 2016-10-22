@@ -5,6 +5,7 @@
 #include "pointlight.h"
 #include "directionallight.h"
 #include "spotlight.h"
+#include "../transformation/transform.h"
 #include "../shader/shader.h"
 #include "../scene.h"
 
@@ -37,8 +38,8 @@ namespace geeL {
 			delete dynamicSLs[j];
 	}
 
-	DirectionalLight& LightManager::addLight(vec3 direction, vec3 diffuse, vec3 specular, vec3 ambient, float intensity) {
-		DirectionalLight* light = new DirectionalLight(direction, diffuse, specular, ambient, intensity);
+	DirectionalLight& LightManager::addLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, float intensity) {
+		DirectionalLight* light = new DirectionalLight(transform, diffuse, specular, ambient, intensity);
 		staticDLs.push_back(light);
 		light->initShadowmap();
 
@@ -46,20 +47,20 @@ namespace geeL {
 	}
 
 	
-	PointLight& LightManager::addLight(vec3 position, vec3 diffuse, vec3 specular, vec3 ambient,
+	PointLight& LightManager::addLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient,
 		float intensity, float attenuation) {
 
-		PointLight* light = new PointLight(position, diffuse, specular, ambient, intensity);
+		PointLight* light = new PointLight(transform, diffuse, specular, ambient, intensity);
 		staticPLs.push_back(light);
 		light->initShadowmap();
 		
 		return *light;
 	}
 
-	SpotLight& LightManager::addLight(vec3 position, vec3 direction, vec3 diffuse, vec3 specular, vec3 ambient,
+	SpotLight& LightManager::addLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient,
 		float angle, float outerAngle, float intensity) {
 
-		SpotLight* light = new SpotLight(position, direction, diffuse, specular, 
+		SpotLight* light = new SpotLight(transform, diffuse, specular,
 			ambient, intensity, angle, outerAngle);
 		staticSLs.push_back(light);
 		light->initShadowmap();

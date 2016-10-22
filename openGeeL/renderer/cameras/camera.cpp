@@ -16,10 +16,10 @@
 namespace geeL {
 
 	Camera::Camera(Transform& transform)
-		: transform(transform), speed(0), sensitivity(0) {}
+		: SceneObject(transform), speed(0), sensitivity(0) {}
 
-	Camera::Camera(Transform& transform, float speed, float sensitivity) 
-		: transform(transform), speed(speed), sensitivity(sensitivity) {}
+	Camera::Camera(Transform& transform, float speed, float sensitivity)
+		: SceneObject(transform), speed(speed), sensitivity(sensitivity) {}
 
 
 	mat4 Camera::viewMatrix() const {

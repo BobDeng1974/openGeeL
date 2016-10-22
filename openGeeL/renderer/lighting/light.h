@@ -4,16 +4,18 @@
 #include <vec3.hpp>
 #include <mat4x4.hpp>
 #include <string>
+#include "../sceneobject.h"
 
 using namespace std;
 using glm::vec3;
 
 namespace geeL {
 
+class Transform;
 class RenderScene;
 class Shader;
 
-class Light {
+class Light : public SceneObject {
 
 public:
 	vec3 diffuse;
@@ -22,8 +24,8 @@ public:
 	float intensity;
 	
 
-	Light(vec3 diffuse, vec3 specular, vec3 ambient, float intensity) 
-		: diffuse(diffuse), specular(specular), ambient(ambient), intensity(intensity) {}
+	Light(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, float intensity) 
+		: SceneObject(transform), diffuse(diffuse), specular(specular), ambient(ambient), intensity(intensity) {}
 
 	virtual void bind(const Shader& shader, int index, string name) const;
 

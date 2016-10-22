@@ -4,15 +4,19 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 #include "../shader/shader.h"
+#include "../transformation/transform.h"
 #include "spotlight.h"
 
 using namespace glm;
 
+
 namespace geeL {
 
-	SpotLight::SpotLight(vec3 position, vec3 direction, vec3 diffuse, vec3 specular, vec3 ambient, float intensity, float angle, 
-		float outerAngle, float constant, float linear, float quadratic) : Light(diffuse, specular, ambient, intensity),
-		position(position), direction(direction), angle(angle), outerAngle(outerAngle),
+	SpotLight::SpotLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, float intensity, float angle, 
+		float outerAngle, float constant, float linear, float quadratic) 
+		: 
+		Light(transform, diffuse, specular, ambient, intensity),
+		angle(angle), outerAngle(outerAngle),
 		constant(constant), linear(linear), quadratic(quadratic) {}
 
 
@@ -22,8 +26,11 @@ namespace geeL {
 		GLuint program = shader.program;
 		std::string location = name + "[" + std::to_string(index) + "].";
 
-		glUniform3f(glGetUniformLocation(program, (location + "position").c_str()), position.x, position.y, position.z);
-		glUniform3f(glGetUniformLocation(program, (location + "direction").c_str()), direction.x, direction.y, direction.z);
+		glUniform3f(glGetUniformLocation(program, (location + "position").c_str()), 
+			transform.position.x, transform.position.y, transform.position.z);
+		
+		glUniform3f(glGetUniformLocation(program, (location + "direction").c_str()), 
+			transform.forward.x, transform.forward.y, transform.forward.z);
 		
 		glUniform1f(glGetUniformLocation(program, (location + "angle").c_str()), angle);
 		glUniform1f(glGetUniformLocation(program, (location + "outerAngle").c_str()), outerAngle);
@@ -38,7 +45,7 @@ namespace geeL {
 	void SpotLight::computeLightTransform() {
 		float fov = glm::degrees(angle);
 		mat4 projection = glm::perspective(fov, 1.f, 1.0f, 50.f);
-		mat4 view = lookAt(position, vec3(0.f, 0.f, 0.f), vec3(0.f, 1.f, 0.f));
+		mat4 view = lookAt(transform.position, transform.forward, transform.up);
 
 		lightTransform = projection * view;
 	}

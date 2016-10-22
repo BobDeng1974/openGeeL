@@ -173,6 +173,7 @@
     <ClCompile Include="renderer\renderer\simplerenderer.cpp" />
     <ClCompile Include="renderer\renderer\splitrenderer.cpp" />
     <ClCompile Include="renderer\scene.cpp" />
+    <ClCompile Include="renderer\sceneobject.cpp" />
     <ClCompile Include="renderer\shader\shader.cpp" />
     <ClCompile Include="renderer\shader\shadermanager.cpp" />
     <ClCompile Include="renderer\texturing\layeredtexture.cpp" />
@@ -209,8 +210,10 @@
     <ClInclude Include="renderer\renderer\postrenderer.h" />
     <ClInclude Include="renderer\renderer\simplerenderer.h" />
     <ClInclude Include="renderer\renderer\splitrenderer.h" />
-    <ClInclude Include="renderer\renderobject.h" />
     <ClInclude Include="renderer\scene.h" />
+    <ClInclude Include="renderer\sceneobject.h" />
+    <ClInclude Include="renderer\scripting\component.h" />
+    <ClInclude Include="renderer\scripting\scenecontrolobject.h" />
     <ClInclude Include="renderer\shader\shader.h" />
     <ClInclude Include="renderer\shader\shadermanager.h" />
     <ClInclude Include="renderer\texturing\layeredtexture.h" />

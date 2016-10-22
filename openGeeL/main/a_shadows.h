@@ -11,7 +11,7 @@
 #include "../renderer/renderer/splitrenderer.h"
 #include "../renderer/renderer/simplerenderer.h"
 
-#include "../renderer/renderobject.h"
+#include "../renderer/scripting/scenecontrolobject.h"
 #include "../renderer/inputmanager.h"
 #include "../renderer/window.h"
 #include "../renderer/texturing/texture.h"

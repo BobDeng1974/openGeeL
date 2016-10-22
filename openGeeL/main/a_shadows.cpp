@@ -37,7 +37,7 @@
 
 namespace {
 
-	class ShadowTestObject : public SceneObject {
+	class ShadowTestObject : public SceneControlObject {
 
 	public:
 
@@ -45,23 +45,26 @@ namespace {
 		LightManager& lightManager;
 		MaterialFactory& materialFactory;
 		ShaderManager& shaderManager;
+		TransformFactory transformFactory;
 
 		Model* nano;
 		MeshRenderer* nanoRenderer;
 		MeshFactory& meshFactory;
 		SpotLight* spotLight;
+		DirectionalLight* dirLight;
 
 		Material* material;
 
 
 		ShadowTestObject(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
-			ShaderManager& shaderManager, RenderScene& scene) 
+			ShaderManager& shaderManager, RenderScene& scene, TransformFactory& transformFactory) 
 			: 
-			SceneObject(scene),
+			SceneControlObject(scene),
 			materialFactory(materialFactory),
 			meshFactory(meshFactory), 
 			lightManager(lightManager),
-			shaderManager(shaderManager)
+			shaderManager(shaderManager),
+			transformFactory(transformFactory)
 			{}
 
 
@@ -73,16 +76,22 @@ namespace {
 			//	glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.2f, 0.2f, 0.2f), 1.f, 0.69f, 0.032f);
 			//PointLight* light2 = new PointLight(glm::vec3(-2.0f, 2.0f, -7.0f), glm::vec3(0.3f, 0.3f, 0.9f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.1f, 0.1f, 0.1f));
 
-			float l = 50.f;
+			
+			float l = 200.f;
 			float angle = glm::cos(glm::radians(25.5f));
-			float outerAngle = glm::cos(glm::radians(30.5f));
+			float outerAngle = glm::cos(glm::radians(27.5f));
 
-			spotLight = &lightManager.addLight(glm::vec3(-7, 5, 0), glm::vec3(3, -1.0f, 0), glm::vec3(l, l, l),
+			
+			geeL::Transform* lighTransi = new geeL::Transform(glm::vec3(-7, 5, 0), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
+			spotLight = &lightManager.addLight(*lighTransi, glm::vec3(l, l, l),
 				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), angle, outerAngle, 10.f);
-
-			l = 1.f;
-			//lightManager.addLight(-glm::vec3(-1.2f, -1.0f, -2.0f), glm::vec3(l, l, l),
-			//	glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), 1.f);
+				
+			/*
+			float l = 1.f;
+			geeL::Transform* lighTransi2 = new geeL::Transform(glm::vec3(0.f, 0.f, 0.f), glm::vec3(50.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
+			dirLight = &lightManager.addLight(*lighTransi2, glm::vec3(l, l, l),
+				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), 1.f);
+			*/
 
 			float height = -2.f;
 			geeL::Transform* transi = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.2f, 0.2f, 0.2f));
@@ -95,6 +104,7 @@ namespace {
 
 		virtual void draw(const Camera& camera) {
 			nanoRenderer->transform.rotate(vec3(0, 1, 0), 25);
+			//spotLight->transform.rotate(vec3(0, 0, 1), -3);
 		}
 
 		virtual void quit() {}
@@ -134,7 +144,7 @@ void a_shadows() {
 	renderer3.setShaderManager(shaderManager);
 
 	ShadowTestObject* testObj = new ShadowTestObject(materialFactory, meshFactory, 
-		lightManager, shaderManager, scene);
+		lightManager, shaderManager, scene, transFactory);
 
 	renderer3.addObject(testObj);
 	renderer3.initObjects();

@@ -5,9 +5,8 @@
 #include "meshes\meshfactory.h"
 #include "cameras\camera.h"
 #include "cubemapping\skybox.h"
-
-
 #include "scene.h"
+
 
 namespace geeL {
 
@@ -16,8 +15,6 @@ namespace geeL {
 
 
 	void RenderScene::draw() const {
-
-		camera.update();
 		drawSkybox();
 		drawObjects();
 	}

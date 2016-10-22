@@ -18,6 +18,7 @@ class DirectionalLight;
 class SpotLight;
 class Shader;
 class RenderScene;
+class Transform;
 
 class LightManager {
 
@@ -28,15 +29,15 @@ public:
 	~LightManager();
 
 	//Add and create directional light
-	DirectionalLight& addLight(glm::vec3 direction, glm::vec3 diffuse, glm::vec3 specular, 
+	DirectionalLight& addLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular, 
 		glm::vec3 ambient, float intensity);
 	
 	//Add and create point light
-	PointLight& addLight(glm::vec3 position, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 ambient, 
+	PointLight& addLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 ambient,
 		float intensity, float attenuation);
 	
 	//Add and create spotlight
-	SpotLight& addLight(glm::vec3 position, glm::vec3 direction, glm::vec3 diffuse, glm::vec3 specular, 
+	SpotLight& addLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,
 		glm::vec3 ambient, float angle, float outerAngle, float intensity);
 
 

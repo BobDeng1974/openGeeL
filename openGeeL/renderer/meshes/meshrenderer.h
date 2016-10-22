@@ -2,6 +2,7 @@
 #define MESHRENDERER_H
 
 #include <vector>
+#include "../sceneobject.h"
 
 using namespace std;
 
@@ -19,10 +20,9 @@ enum CullingMode {
 	cullBack
 };
 
-class MeshRenderer {
+class MeshRenderer : public SceneObject {
 
 public:
-	Transform& transform;
 	Model* model;
 	const CullingMode faceCulling;
 
