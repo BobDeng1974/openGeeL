@@ -30,14 +30,14 @@ public:
 	virtual void initShadowmap();
 	virtual void addShadowmap(Shader& shader);
 	virtual void renderShadowmap(const RenderScene& scene, const Shader& shader);
-	virtual glm::mat4 computeLightTransform() { return glm::mat4(); }
+	virtual void computeLightTransform() = 0;
 
 	const int getShadowMapID() const;
 	const int getShadowMapFBO() const;
 
 protected:
 	unsigned int shadowmapFBO;
-	int shadowmapID;
+	unsigned int shadowmapID;
 	int shadowmapHeight;
 	int shadowmapWidth;
 	glm::mat4 lightTransform;

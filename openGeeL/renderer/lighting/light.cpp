@@ -28,12 +28,10 @@ namespace geeL {
 		shadowmapHeight = shadowmapWidth = 512;
 
 		//Generate depth map texture
-		GLuint depthMap;
-		glGenTextures(1, &depthMap);
-		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glGenTextures(1, &shadowmapID);
+		glBindTexture(GL_TEXTURE_2D, shadowmapID);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
 			shadowmapWidth, shadowmapHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		shadowmapID = depthMap;
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -46,7 +44,7 @@ namespace geeL {
 		//Bind depth map to frame buffer (the shadow map)
 		glGenFramebuffers(1, &shadowmapFBO);
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowmapFBO);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowmapID, 0);
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -59,9 +57,9 @@ namespace geeL {
 	void Light::renderShadowmap(const RenderScene& scene, const Shader& shader) {
 		shader.use();
 		//Write light transform into shader
-		mat4 trans = computeLightTransform();
+		computeLightTransform();
 		glUniformMatrix4fv(glGetUniformLocation(shader.program, "lightTransform"), 1, GL_FALSE,
-			glm::value_ptr(trans));
+			glm::value_ptr(lightTransform));
 
 		glViewport(0, 0, shadowmapWidth, shadowmapHeight);
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowmapFBO);

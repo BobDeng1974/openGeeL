@@ -35,12 +35,11 @@ namespace geeL {
 			glm::value_ptr(lightTransform));
 	}
 
-	mat4 SpotLight::computeLightTransform() {
+	void SpotLight::computeLightTransform() {
 		float fov = glm::degrees(angle);
 		mat4 projection = glm::perspective(fov, 1.f, 1.0f, 50.f);
 		mat4 view = lookAt(position, vec3(0.f, 0.f, 0.f), vec3(0.f, 1.f, 0.f));
-		lightTransform = projection * view;
 
-		return lightTransform;
+		lightTransform = projection * view;
 	}
 }

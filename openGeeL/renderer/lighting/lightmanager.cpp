@@ -51,6 +51,7 @@ namespace geeL {
 
 		PointLight* light = new PointLight(position, diffuse, specular, ambient, intensity);
 		staticPLs.push_back(light);
+		light->initShadowmap();
 		
 		return *light;
 	}
@@ -90,6 +91,10 @@ namespace geeL {
 
 	void LightManager::bindShadowmaps(Shader& shader) const {
 		shader.use();
+
+		for (size_t j = 0; j < staticPLs.size(); j++) {
+			staticPLs[j]->addShadowmap(shader);
+		}
 		
 		for (size_t j = 0; j < staticDLs.size(); j++) {
 			staticDLs[j]->addShadowmap(shader);
@@ -103,6 +108,11 @@ namespace geeL {
 	}
 
 	void LightManager::drawShadowmaps(const RenderScene& scene) const {
+		for (size_t j = 0; j < staticPLs.size(); j++) {
+			//TODO: change dlShader
+			staticPLs[j]->renderShadowmap(scene, *dlShader);
+		}
+
 		for (size_t j = 0; j < staticDLs.size(); j++) {
 			staticDLs[j]->renderShadowmap(scene, *dlShader);
 		}

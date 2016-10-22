@@ -27,12 +27,11 @@ namespace geeL {
 			glm::value_ptr(lightTransform));
 	}
 
-	mat4 DirectionalLight::computeLightTransform() {
+	void DirectionalLight::computeLightTransform() {
 		float a = shadowmapWidth / 100.f;
 		mat4 projection = ortho(-a, a, -a, a, 1.0f, 50.f);
 		mat4 view = lookAt(direction, vec3(0.f, 0.f, 0.f), vec3(0.f, 1.f, 0.f));
+		
 		lightTransform = projection * view;
-
-		return lightTransform;
 	}
 }
