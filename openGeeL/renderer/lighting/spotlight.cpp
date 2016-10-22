@@ -7,6 +7,7 @@
 #include "../transformation/transform.h"
 #include "spotlight.h"
 
+using namespace std;
 using namespace glm;
 
 
@@ -24,7 +25,7 @@ namespace geeL {
 		Light::bind(shader, index, name);
 
 		GLuint program = shader.program;
-		std::string location = name + "[" + std::to_string(index) + "].";
+		string location = name + "[" + to_string(index) + "].";
 
 		glUniform3f(glGetUniformLocation(program, (location + "position").c_str()), 
 			transform.position.x, transform.position.y, transform.position.z);
@@ -38,7 +39,8 @@ namespace geeL {
 		glUniform1f(glGetUniformLocation(program, (location + "linear").c_str()), linear);
 		glUniform1f(glGetUniformLocation(program, (location + "quadratic").c_str()), quadratic);
 
-		glUniformMatrix4fv(glGetUniformLocation(shader.program, "lightTransform"), 1, GL_FALSE,
+		location = "spotLightMatrix[" + to_string(index) + "]";
+		glUniformMatrix4fv(glGetUniformLocation(shader.program, location.c_str()), 1, GL_FALSE,
 			glm::value_ptr(lightTransform));
 	}
 

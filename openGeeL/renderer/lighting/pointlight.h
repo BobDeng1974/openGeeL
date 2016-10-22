@@ -13,7 +13,7 @@ public:
 	PointLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, 
 		float intensity = 1.f, float constant = 1.f, float linear = 0.09f, float quadratic = 0.032f);
 
-	virtual void bind(const Shader& shader, int index, string name) const;
+	virtual void bind(const Shader& shader, int index, std::string name) const;
 	virtual void initShadowmap();
 	virtual void renderShadowmap(const RenderScene& scene, const Shader& shader);
 	virtual void computeLightTransform();
@@ -21,7 +21,7 @@ public:
 private:
 	float constant, linear, quadratic;
 
-	vector<glm::mat4> lightTransforms;
+	std::vector<glm::mat4> lightTransforms;
 };
 
 }

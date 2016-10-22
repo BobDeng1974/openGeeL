@@ -8,8 +8,8 @@
 #include "directionallight.h"
 #include "../scene.h"
 
+using namespace std;
 using namespace glm;
-
 
 namespace geeL {
 
@@ -21,11 +21,12 @@ namespace geeL {
 		Light::bind(shader, index, name);
 
 		GLuint program = shader.program;
-		std::string location = name + "[" + std::to_string(index) + "].";
+		string location = name + "[" + to_string(index) + "].";
 		glUniform3f(glGetUniformLocation(program, (location + "direction").c_str()), 
 			transform.forward.x, transform.forward.y, transform.forward.z);
 
-		glUniformMatrix4fv(glGetUniformLocation(shader.program, "lightTransform"), 1, GL_FALSE,
+		location = "direLightMatrix[" + to_string(index) + "]";
+		glUniformMatrix4fv(glGetUniformLocation(shader.program, location.c_str()), 1, GL_FALSE,
 			glm::value_ptr(lightTransform));
 	}
 

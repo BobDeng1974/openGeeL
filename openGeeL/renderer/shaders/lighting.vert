@@ -17,9 +17,15 @@ out vec2 textureCoordinates;
 out vec3 cameraPosition;
 out vec4 fragPositionLightSpace;
 
-uniform mat4 model;
-uniform mat4 lightTransform;
+out vec4 spotLightTransforms[5];
+out vec4 direLightTransforms[5];
 
+uniform int dlCount;
+uniform int slCount;
+
+uniform mat4 model;
+uniform mat4 spotLightMatrix[5];
+uniform mat4 direLightMatrix[5];
 
 void main() {
 	
@@ -27,7 +33,13 @@ void main() {
 
 	normal = transpose(inverse(mat3(model))) * nnormal;
 	fragPosition = vec3(localPosition);
-	fragPositionLightSpace = lightTransform * localPosition;
+
+	//Write transforms for shadow mapping. This is done here in the 
+	//vertex shader because these transforms are equal for every fragment 
+	for(int i = 0; i < slCount; i++)
+		spotLightTransforms[i] = spotLightMatrix[i] * localPosition;
+	for(int i = 0; i < dlCount; i++)
+		direLightTransforms[i] = direLightMatrix[i] * localPosition;
 
 	textureCoordinates = texCoords;
 	cameraPosition = camPosition;

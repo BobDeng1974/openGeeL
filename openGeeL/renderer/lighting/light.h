@@ -6,7 +6,7 @@
 #include <string>
 #include "../sceneobject.h"
 
-using namespace std;
+
 using glm::vec3;
 
 namespace geeL {
@@ -27,10 +27,10 @@ public:
 	Light(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, float intensity) 
 		: SceneObject(transform), diffuse(diffuse), specular(specular), ambient(ambient), intensity(intensity) {}
 
-	virtual void bind(const Shader& shader, int index, string name) const;
+	virtual void bind(const Shader& shader, int index, std::string name) const;
 
 	virtual void initShadowmap();
-	virtual void addShadowmap(Shader& shader);
+	virtual void addShadowmap(Shader& shader, std::string name = "shadowMap");
 	virtual void renderShadowmap(const RenderScene& scene, const Shader& shader);
 	virtual void computeLightTransform() = 0;
 

@@ -21,6 +21,8 @@ struct PointLight {
 };
 
 struct SpotLight {
+	sampler2D shadowMap;
+
     vec3 position;
     vec3 direction;
 
@@ -38,6 +40,7 @@ struct SpotLight {
 
 
 struct DirectionalLight {
+	sampler2D shadowMap;
 	vec3 direction;
   
     vec3 ambient;
@@ -47,32 +50,29 @@ struct DirectionalLight {
 
 in vec3 normal;
 in vec3 fragPosition;
-in vec4 fragPositionLightSpace;
 in vec2 textureCoordinates;
 in vec3 cameraPosition;
 
+in vec4 spotLightTransforms[5];
+in vec4 direLightTransforms[5];
+
 out vec4 color;
   
-uniform sampler2D shadowMap;
 uniform Material material;
 
 uniform int plCount;
 uniform int dlCount;
 uniform int slCount;
 
-#define MAX_POINT_LIGHTS 5
-uniform PointLight pointLights[MAX_POINT_LIGHTS];
-
-#define MAX_DIRECTIONAL_LIGHTS 5
-uniform DirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
-
-#define MAX_SPOTLIGHTS 5
-uniform SpotLight spotLights[MAX_SPOTLIGHTS];
+uniform PointLight pointLights[5];
+uniform DirectionalLight directionalLights[5];
+uniform SpotLight spotLights[5];
 
 vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn);
-vec3 calculateSpotLight(SpotLight light, vec3 normal, vec3 fragPosition, vec4 fragPositionLightSpace, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn);
-vec3 calculateDirectionaLight(DirectionalLight light, vec3 normal, vec3 fragPosition, vec4 fragPositionLightSpace, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn);
-float calculateLightShadows(vec4 fragPositionLightSpace);
+vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn);
+vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn);
+float calculateSpotLightShadows(int i);
+float calculateDirectionalLightShadows(int i);
 
 void main() {
 
@@ -93,41 +93,16 @@ void main() {
         result += calculatePointLight(pointLights[i], norm, fragPosition, viewDirection, texColor, speColor, blinn);
 
 	for(int i = 0; i < dlCount; i++)
-        result += calculateDirectionaLight(directionalLights[i], norm, fragPosition, fragPositionLightSpace, viewDirection, texColor, speColor, blinn);
+        result += calculateDirectionaLight(i, directionalLights[i], norm, fragPosition, viewDirection, texColor, speColor, blinn);
 
 	for(int i = 0; i < slCount; i++)
-		result += calculateSpotLight(spotLights[i], norm, fragPosition, fragPositionLightSpace, viewDirection, texColor, speColor, blinn);
+		result += calculateSpotLight(i, spotLights[i], norm, fragPosition, viewDirection, texColor, speColor, blinn);
 
 	color = vec4(result, 1.f);
 }
 
-float calculateLightShadows(vec4 fragPositionLightSpace) {
-	vec3 coords = fragPositionLightSpace.xyz / fragPositionLightSpace.w;
-	coords = coords * 0.5f + 0.5f;
 
-	//Don't draw shadow when outside of farPlane region.
-    if(coords.z > 1.0f)
-        return 0.0f;
-
-	float mapDepth = texture(shadowMap, coords.xy).r;
-	float bias = 0.0005f;
-	//float bias = max(0.05f * (1.0f - dot(normal, lightDir)), 0.005f);
-	float curDepth = coords.z - bias;
-
-	float shadow = 0.0;
-	vec2 texelSize = 1.0f / textureSize(shadowMap, 0);
-	//Interpolate shadow map in kernel around point
-	int kernel = 1;
-	for(int x = -kernel; x <= kernel; x++) {
-		for(int y = -kernel; y <= kernel; y++) {
-			float depth = texture(shadowMap, coords.xy + vec2(x, y) * texelSize).r; 
-			shadow += curDepth - bias > depth ? 1.0f : 0.0f;        
-		}    
-	}
-	
-	int kernelSize = 2 * kernel + 1; 
-	return shadow / (kernelSize * kernelSize);
-}
+//Point Lights
 
 vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn) {
 
@@ -162,7 +137,37 @@ vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPosition, vec3 
 
 }
 
-vec3 calculateSpotLight(SpotLight light, vec3 normal, vec3 fragPosition, vec4 fragPositionLightSpace, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn) {
+//Spotlights
+
+float calculateSpotLightShadows(int i) {
+	vec3 coords = spotLightTransforms[i].xyz / spotLightTransforms[i].w;
+	coords = coords * 0.5f + 0.5f;
+
+	//Don't draw shadow when outside of farPlane region.
+    if(coords.z > 1.0f)
+        return 0.0f;
+
+	float mapDepth = texture(spotLights[i].shadowMap, coords.xy).r;
+	float bias = 0.0005f;
+	//float bias = max(0.05f * (1.0f - dot(normal, lightDir)), 0.005f);
+	float curDepth = coords.z - bias;
+
+	float shadow = 0.0;
+	vec2 texelSize = 1.0f / textureSize(spotLights[i].shadowMap, 0);
+	//Interpolate shadow map in kernel around point
+	int kernel = 1;
+	for(int x = -kernel; x <= kernel; x++) {
+		for(int y = -kernel; y <= kernel; y++) {
+			float depth = texture(spotLights[i].shadowMap, coords.xy + vec2(x, y) * texelSize).r; 
+			shadow += curDepth - bias > depth ? 1.0f : 0.0f;        
+		}    
+	}
+	
+	int kernelSize = 2 * kernel + 1; 
+	return shadow / (kernelSize * kernelSize);
+}
+
+vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn) {
 
 	vec3 dir = light.position - fragPosition;
 
@@ -198,11 +203,41 @@ vec3 calculateSpotLight(SpotLight light, vec3 normal, vec3 fragPosition, vec4 fr
 
 	vec3 specular = spec * speColor * light.specular * intensity;
 
-	float shadow = calculateLightShadows(fragPositionLightSpace);
+	float shadow = calculateSpotLightShadows(index);
     return (ambient + (1.0f - shadow) * (diffuse + specular)) * attenuation;
 }
 
-vec3 calculateDirectionaLight(DirectionalLight light, vec3 normal, vec3 fragPosition, vec4 fragPositionLightSpace, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn) {
+//Directional Lights
+
+float calculateDirectionalLightShadows(int i) {
+	vec3 coords = direLightTransforms[i].xyz / direLightTransforms[i].w;
+	coords = coords * 0.5f + 0.5f;
+
+	//Don't draw shadow when outside of farPlane region.
+    if(coords.z > 1.0f)
+        return 0.0f;
+
+	float mapDepth = texture(directionalLights[i].shadowMap, coords.xy).r;
+	float bias = 0.0005f;
+	//float bias = max(0.05f * (1.0f - dot(normal, lightDir)), 0.005f);
+	float curDepth = coords.z - bias;
+
+	float shadow = 0.0;
+	vec2 texelSize = 1.0f / textureSize(directionalLights[i].shadowMap, 0);
+	//Interpolate shadow map in kernel around point
+	int kernel = 1;
+	for(int x = -kernel; x <= kernel; x++) {
+		for(int y = -kernel; y <= kernel; y++) {
+			float depth = texture(directionalLights[i].shadowMap, coords.xy + vec2(x, y) * texelSize).r; 
+			shadow += curDepth - bias > depth ? 1.0f : 0.0f;        
+		}    
+	}
+	
+	int kernelSize = 2 * kernel + 1; 
+	return shadow / (kernelSize * kernelSize);
+}
+
+vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn) {
 
 	vec3 direction = normalize(light.direction - fragPosition);
 
@@ -225,7 +260,7 @@ vec3 calculateDirectionaLight(DirectionalLight light, vec3 normal, vec3 fragPosi
 
 	vec3 specular = spec * speColor * light.specular;
 
-	float shadow = calculateLightShadows(fragPositionLightSpace);
+	float shadow = calculateDirectionalLightShadows(index);
 	
     return (ambient + (1.0f - shadow) * (diffuse + specular));
 }

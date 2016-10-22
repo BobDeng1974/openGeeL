@@ -4,8 +4,6 @@
 #include <vector>
 #include <vec3.hpp>
 
-using namespace std;
-
 #define MAX_POINTLIGHTS 5
 #define MAX_DIRECTIONALLIGHTS 5
 #define MAX_SPOTLIGHTS 5
@@ -23,6 +21,13 @@ class Transform;
 class LightManager {
 
 public:
+	std::string plName = "pointLights";
+	std::string dlName = "directionalLights";
+	std::string slName = "spotLights";
+	std::string plCountName = "plCount";
+	std::string dlCountName = "dlCount";
+	std::string slCountName = "slCount";
+
 	LightManager();
 
 	//Manager is responsible for removing the lights
@@ -41,11 +46,7 @@ public:
 		glm::vec3 ambient, float angle, float outerAngle, float intensity);
 
 
-	void bind(const Shader& shader, 
-		string plName = "pointLights", string dlName = "directionalLights", 
-		string slName = "spotLights", string plCountName = "plCount", 
-		string dlCountName = "dlCount", string slCountName = "slCount") const;
-
+	void bind(const Shader& shader) const;
 	void bindShadowmaps(Shader& shader) const;
 	void drawShadowmaps(const RenderScene& scene) const;
 	
@@ -53,8 +54,8 @@ public:
 private:
 	Shader* dlShader;
 
-	vector<Light*> staticPLs, staticDLs, staticSLs;
-	vector<Light*> dynamicPLs, dynamicDLs, dynamicSLs;
+	std::vector<Light*> staticPLs, staticDLs, staticSLs;
+	std::vector<Light*> dynamicPLs, dynamicDLs, dynamicSLs;
 };
 
 }

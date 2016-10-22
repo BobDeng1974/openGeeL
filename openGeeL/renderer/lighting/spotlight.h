@@ -14,7 +14,7 @@ public:
 		float intensity = 1.f, float angle = 30.f, float outerAngle = 5.f,
 		float constant = 1.f, float linear = 0.09f, float quadratic = 0.032f);
 
-	virtual void bind(const Shader& shader, int index, string name) const;
+	virtual void bind(const Shader& shader, int index, std::string name) const;
 	virtual void computeLightTransform();
 
 private:

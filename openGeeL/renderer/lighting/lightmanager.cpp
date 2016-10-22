@@ -8,7 +8,9 @@
 #include "../transformation/transform.h"
 #include "../shader/shader.h"
 #include "../scene.h"
+#include <iostream>
 
+using namespace std;
 using namespace glm;
 
 namespace geeL {
@@ -68,8 +70,7 @@ namespace geeL {
 		return *light;
 	}
 
-	void LightManager::bind(const Shader& shader, string plName,  string dlName, string slName, 
-		string plCountName, string dlCountName, string slCountName) const {
+	void LightManager::bind(const Shader& shader) const {
 
 		shader.use();
 
@@ -98,11 +99,15 @@ namespace geeL {
 		}
 		
 		for (size_t j = 0; j < staticDLs.size(); j++) {
-			staticDLs[j]->addShadowmap(shader);
+			string name = dlName + "[" + to_string(j) + "].shadowMap";
+			staticDLs[j]->addShadowmap(shader, name);
 		}
 
 		for (size_t j = 0; j < staticSLs.size(); j++) {
-			staticSLs[j]->addShadowmap(shader);
+			string name = slName + "[" + to_string(j) + "].shadowMap";
+
+			std::cout << name << "\n";
+			staticSLs[j]->addShadowmap(shader, name);
 		}
 
 		shader.bindMaps();

@@ -8,6 +8,7 @@
 #include "../scene.h"
 #include "light.h"
 
+using namespace std;
 using namespace glm;
 
 namespace geeL {
@@ -50,8 +51,8 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void Light::addShadowmap(Shader& shader) {
-		shader.addMap(shadowmapID, "shadowMap");
+	void Light::addShadowmap(Shader& shader, string name) {
+		shader.addMap(shadowmapID, name);
 	}
 
 	void Light::renderShadowmap(const RenderScene& scene, const Shader& shader) {

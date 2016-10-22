@@ -24,6 +24,10 @@ public:
 		std::string cam = "camera", std::string skybox = "skybox", std::string pointLight = "pointLights",
 		std::string spotLights = "spotLights", std::string directionalLights = "directionalLights");
 
+	Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath, bool useLight = true, bool useCamera = true, bool useSkybox = true,
+		std::string cam = "camera", std::string skybox = "skybox", std::string pointLight = "pointLights",
+		std::string spotLights = "spotLights", std::string directionalLights = "directionalLights");
+
 	void use() const;
 
 	//Add a new map to the shader, e.g a shadow map

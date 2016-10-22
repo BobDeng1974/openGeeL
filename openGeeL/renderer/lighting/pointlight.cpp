@@ -9,6 +9,7 @@
 #include "../scene.h"
 #include "pointlight.h"
 
+using namespace std;
 using namespace glm;
 
 namespace geeL {

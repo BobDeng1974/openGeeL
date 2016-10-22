@@ -85,9 +85,15 @@ namespace {
 			geeL::Transform* lighTransi = new geeL::Transform(glm::vec3(-7, 5, 0), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
 			spotLight = &lightManager.addLight(*lighTransi, glm::vec3(l, l, l),
 				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), angle, outerAngle, 10.f);
-				
+
 			/*
-			float l = 1.f;
+			geeL::Transform* lighTransi3 = new geeL::Transform(glm::vec3(-7, 5, 0), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
+			&lightManager.addLight(*lighTransi3, glm::vec3(l, l, l),
+				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), angle, outerAngle, 10.f);
+			*/	
+			
+			/*
+			l = 10.f;
 			geeL::Transform* lighTransi2 = new geeL::Transform(glm::vec3(0.f, 0.f, 0.f), glm::vec3(50.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
 			dirLight = &lightManager.addLight(*lighTransi2, glm::vec3(l, l, l),
 				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), 1.f);
