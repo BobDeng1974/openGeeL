@@ -233,6 +233,7 @@
     <None Include="renderer\postprocessing\kernelprocessing.frag" />
     <None Include="renderer\postprocessing\tonemapping.frag" />
     <None Include="renderer\shaders\empty.frag" />
+    <None Include="renderer\shaders\empty.vert" />
     <None Include="renderer\shaders\lamp.frag" />
     <None Include="renderer\shaders\lighting.frag" />
     <None Include="renderer\shaders\lighting.vert" />
@@ -240,6 +241,8 @@
     <None Include="renderer\shaders\reflective.vert" />
     <None Include="renderer\shaders\screen.frag" />
     <None Include="renderer\shaders\screen.vert" />
+    <None Include="renderer\shaders\shadowmapping.frag" />
+    <None Include="renderer\shaders\shadowmapping.gs" />
     <None Include="renderer\shaders\shadowmapping.vert" />
     <None Include="renderer\shaders\simple.frag" />
     <None Include="renderer\shaders\simple.vert" />

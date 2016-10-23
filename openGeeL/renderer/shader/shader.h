@@ -5,7 +5,19 @@
 #include <string>
 #include <utility>
 
+#define GL_TEXTURE_2D 0x0DE1
+
 namespace geeL {
+
+struct TextureBinding {
+	unsigned int id;
+	unsigned int type;
+	std::string name;
+
+	TextureBinding(unsigned int id, unsigned int type, std::string name) :
+		id(id), type(type), name(name) {}
+};
+
 
 class Shader {
 
@@ -24,14 +36,14 @@ public:
 		std::string cam = "camera", std::string skybox = "skybox", std::string pointLight = "pointLights",
 		std::string spotLights = "spotLights", std::string directionalLights = "directionalLights");
 
-	Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath, bool useLight = true, bool useCamera = true, bool useSkybox = true,
+	Shader(const char* vertexPath, const char* geometryPath, const char* fragmentPath, bool useLight = true, bool useCamera = true, bool useSkybox = true,
 		std::string cam = "camera", std::string skybox = "skybox", std::string pointLight = "pointLights",
 		std::string spotLights = "spotLights", std::string directionalLights = "directionalLights");
 
 	void use() const;
 
 	//Add a new map to the shader, e.g a shadow map
-	void addMap(int mapID, std::string name);
+	void addMap(unsigned int mapID, std::string name, unsigned int type = GL_TEXTURE_2D);
 
 	//Bind all added maps to the shader
 	void bindMaps();
@@ -40,7 +52,7 @@ public:
 	void loadMaps() const;
 
 private:
-	std::list<std::pair<int, std::string>> maps;
+	std::list<TextureBinding> maps;
 
 
 };

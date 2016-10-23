@@ -24,13 +24,15 @@ public:
 	float intensity;
 	
 
-	Light(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, float intensity) 
-		: SceneObject(transform), diffuse(diffuse), specular(specular), ambient(ambient), intensity(intensity) {}
+	Light(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, float intensity, float shadowBias) 
+		: 
+		SceneObject(transform), diffuse(diffuse), specular(specular), ambient(ambient), 
+		intensity(intensity), shadowBias(shadowBias) {}
 
 	virtual void bind(const Shader& shader, int index, std::string name) const;
 
 	virtual void initShadowmap();
-	virtual void addShadowmap(Shader& shader, std::string name = "shadowMap");
+	virtual void addShadowmap(Shader& shader, std::string name);
 	virtual void renderShadowmap(const RenderScene& scene, const Shader& shader);
 	virtual void computeLightTransform() = 0;
 
@@ -42,6 +44,7 @@ protected:
 	unsigned int shadowmapID;
 	int shadowmapHeight;
 	int shadowmapWidth;
+	float shadowBias;
 	glm::mat4 lightTransform;
 
 };

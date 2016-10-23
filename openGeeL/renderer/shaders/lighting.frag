@@ -9,6 +9,7 @@ struct Material {
 };
 
 struct PointLight {
+	samplerCube shadowMap;
     vec3 position;
   
     vec3 ambient;
@@ -18,6 +19,9 @@ struct PointLight {
 	float constant;
 	float linear;
 	float quadratic;
+
+	float bias;
+	float farPlane;
 };
 
 struct SpotLight {
@@ -28,6 +32,7 @@ struct SpotLight {
 
     float angle;
     float outerAngle;
+	float bias;
 
     vec3 ambient;
     vec3 diffuse;
@@ -46,6 +51,8 @@ struct DirectionalLight {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+	float bias;
 };
 
 in vec3 normal;
@@ -68,11 +75,14 @@ uniform PointLight pointLights[5];
 uniform DirectionalLight directionalLights[5];
 uniform SpotLight spotLights[5];
 
-vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn);
+vec3 calculatePointLight(int index, PointLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn);
 vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn);
 vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn);
+
+float calculatePointLightShadows(int i);
 float calculateSpotLightShadows(int i);
 float calculateDirectionalLightShadows(int i);
+
 
 void main() {
 
@@ -90,7 +100,7 @@ void main() {
 	
 	vec3 result = vec3(0.f, 0.f, 0.f);
 	for(int i = 0; i < plCount; i++)
-        result += calculatePointLight(pointLights[i], norm, fragPosition, viewDirection, texColor, speColor, blinn);
+        result += calculatePointLight(i, pointLights[i], norm, fragPosition, viewDirection, texColor, speColor, blinn);
 
 	for(int i = 0; i < dlCount; i++)
         result += calculateDirectionaLight(i, directionalLights[i], norm, fragPosition, viewDirection, texColor, speColor, blinn);
@@ -104,7 +114,42 @@ void main() {
 
 //Point Lights
 
-vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn) {
+vec3 sampleDirections[20] = vec3[] (
+   vec3(1, 1, 1), vec3(1, -1, 1), vec3(-1, -1, 1), vec3(-1, 1, 1), 
+   vec3(1, 1, -1), vec3(1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
+   vec3(1, 1, 0), vec3(1, -1, 0), vec3(-1, -1, 0), vec3(-1, 1, 0),
+   vec3(1, 0, 1), vec3(-1, 0, 1), vec3(1, 0, -1), vec3(-1, 0, -1),
+   vec3(0, 1, 1), vec3(0, -1, 1), vec3(0, -1, -1), vec3(0, 1, -1)
+); 
+
+float calculatePointLightShadows(int i) {
+
+	vec3 direction = fragPosition - pointLights[i].position; 
+	float curDepth = length(direction) / pointLights[i].farPlane;
+
+	//Dont' draw shadow when too far away from the viewer or from light
+	float camDistance = length(fragPosition - cameraPosition) / pointLights[i].farPlane;
+	if(camDistance > 1.0f || curDepth > 0.5f)
+		return 0.0f;
+
+	//float minBias = pointLights[i].bias;
+	float minBias = 0.0075f;
+	vec3 lightDir =  spotLights[i].position - fragPosition;
+	float bias = max((minBias * 10.0f) * (1.0f - dot(normal, lightDir)), minBias);
+
+	float shadow = 0.0f;
+	int samples = 10;
+	float diskRadius = 0.04f;
+
+	for(int j = 0; j < samples; j++) {
+		float depth = texture(pointLights[i].shadowMap, direction + sampleDirections[j] * diskRadius).r;
+		shadow += curDepth - bias > depth ? 1.0f : 0.0f;        
+	}    
+
+	return shadow / float(samples);
+}
+
+vec3 calculatePointLight(int index, PointLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn) {
 
 	vec3 dir = light.position - fragPosition;
 
@@ -132,8 +177,9 @@ vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPosition, vec3 
 	}
 
 	vec3 specular = spec * speColor * light.specular;
+	float shadow = calculatePointLightShadows(index);
 	
-    return (ambient + diffuse + specular) * attenuation;
+    return (ambient + (1.0f - shadow) * (diffuse + specular)) * attenuation;
 
 }
 
@@ -146,10 +192,11 @@ float calculateSpotLightShadows(int i) {
 	//Don't draw shadow when outside of farPlane region.
     if(coords.z > 1.0f)
         return 0.0f;
-
-	float mapDepth = texture(spotLights[i].shadowMap, coords.xy).r;
-	float bias = 0.0005f;
-	//float bias = max(0.05f * (1.0f - dot(normal, lightDir)), 0.005f);
+	
+	//float minBias = spotLights[i].bias;
+	float minBias = 0.0005f;
+	vec3 lightDir =  spotLights[i].position - fragPosition;
+	float bias = max((minBias * 10.0f) * (1.0f - dot(normal, lightDir)), minBias);
 	float curDepth = coords.z - bias;
 
 	float shadow = 0.0;
@@ -202,8 +249,8 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, vec3 fragPositi
 	}
 
 	vec3 specular = spec * speColor * light.specular * intensity;
-
 	float shadow = calculateSpotLightShadows(index);
+
     return (ambient + (1.0f - shadow) * (diffuse + specular)) * attenuation;
 }
 
@@ -218,7 +265,7 @@ float calculateDirectionalLightShadows(int i) {
         return 0.0f;
 
 	float mapDepth = texture(directionalLights[i].shadowMap, coords.xy).r;
-	float bias = 0.0005f;
+	float bias = directionalLights[i].bias;
 	//float bias = max(0.05f * (1.0f - dot(normal, lightDir)), 0.005f);
 	float curDepth = coords.z - bias;
 
@@ -259,7 +306,6 @@ vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, ve
 	}
 
 	vec3 specular = spec * speColor * light.specular;
-
 	float shadow = calculateDirectionalLightShadows(index);
 	
     return (ambient + (1.0f - shadow) * (diffuse + specular));

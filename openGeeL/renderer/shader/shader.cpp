@@ -93,7 +93,7 @@ namespace geeL {
 	}
 
 
-	Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath,
+	Shader::Shader(const char* vertexPath, const char* geometryPath, const char* fragmentPath,
 		bool useLight, bool useCamera, bool useSkybox, 
 		string cam, string skybox, string pointlight, string spotLights, string directionalLights)
 		: 
@@ -205,14 +205,14 @@ namespace geeL {
 		glUseProgram(program);
 	}
 
-	void Shader::addMap(int mapID, string name) {
-		maps.push_back(pair<int, string>(mapID, name));
+	void Shader::addMap(unsigned int mapID, std::string name, unsigned int type) {
+		maps.push_back(TextureBinding(mapID, type, name));
 	}
 
 	void Shader::bindMaps() {
 		int counter = 0;
-		for (list<pair<int, string>>::const_iterator it = maps.begin(); it != maps.end(); it++) {
-			glUniform1i(glGetUniformLocation(program, it->second.c_str()), counter);
+		for (list<TextureBinding>::const_iterator it = maps.begin(); it != maps.end(); it++) {
+			glUniform1i(glGetUniformLocation(program, it->name.c_str()), counter);
 			counter++;
 		}
 
@@ -222,9 +222,9 @@ namespace geeL {
 	void Shader::loadMaps() const {
 		int layer = GL_TEXTURE0;
 		int counter = 0;
-		for (list<pair<int, string>>::const_iterator it = maps.begin(); it != maps.end(); it++) {
+		for (list<TextureBinding>::const_iterator it = maps.begin(); it != maps.end(); it++) {
 			glActiveTexture(layer + counter);
-			glBindTexture(GL_TEXTURE_2D, it->first);
+			glBindTexture(it->type, it->id);
 			counter++;
 		}
 	}

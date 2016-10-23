@@ -15,12 +15,13 @@ using namespace glm;
 namespace geeL {
 
 	PointLight::PointLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, 
-		float intensity, float constant, float linear, float quadratic)
+		float intensity, float shadowBias, float constant, float linear, float quadratic)
 		: 
-		Light(transform, diffuse, specular, ambient, intensity), 
-		constant(constant), linear(linear), quadratic(quadratic) {
+		Light(transform, diffuse, specular, ambient, intensity, shadowBias), 
+		constant(constant), linear(linear), quadratic(quadratic), farPlane(50.f) {
 	
 		lightTransforms.reserve(6);
+		initLightTransform();
 	}
 
 
@@ -35,6 +36,7 @@ namespace geeL {
 		glUniform1f(glGetUniformLocation(program, (location + "constant").c_str()), constant);
 		glUniform1f(glGetUniformLocation(program, (location + "linear").c_str()), linear);
 		glUniform1f(glGetUniformLocation(program, (location + "quadratic").c_str()), quadratic);
+		glUniform1f(glGetUniformLocation(program, (location + "farPlane").c_str()), farPlane);
 	}
 
 	void PointLight::initShadowmap() {
@@ -54,7 +56,7 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 		//Bind depth map to frame buffer (the shadow map)
 		glGenFramebuffers(1, &shadowmapFBO);
@@ -65,16 +67,24 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	void PointLight::addShadowmap(Shader& shader, std::string name) {
+		shader.addMap(shadowmapID, name, GL_TEXTURE_CUBE_MAP);
+	}
+
 	void PointLight::renderShadowmap(const RenderScene& scene, const Shader& shader) {
 		shader.use();
 
 		//Write light transforms of cubemap faces into shader
 		computeLightTransform();
 		for (int i = 0; i < 6; i++) {
-			string name = "lightTransforms[" + std::to_string(i) + "]";
+			string name = "lightTransforms[" + to_string(i) + "]";
 			glUniformMatrix4fv(glGetUniformLocation(shader.program, name.c_str()), 1, GL_FALSE,
 				glm::value_ptr(lightTransforms[i]));
 		}
+
+		glUniform1f(glGetUniformLocation(shader.program, "farPlane"), farPlane);
+		glUniform3f(glGetUniformLocation(shader.program, "lightPosition"),
+			transform.position.x, transform.position.y, transform.position.z);
 
 		glViewport(0, 0, shadowmapWidth, shadowmapHeight);
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowmapFBO);
@@ -85,8 +95,8 @@ namespace geeL {
 	}
 
 	
-	void PointLight::computeLightTransform() {
-		mat4 projection = glm::perspective(90.f, 1.f, 1.0f, 50.f);
+	void PointLight::initLightTransform() {
+		mat4 projection = glm::perspective(90.f, 1.f, 1.0f, farPlane);
 
 		mat4 view = glm::lookAt(transform.position, transform.position + vec3(1.f, 0.f, 0.f), vec3(0.f, -1.f, 0.f));
 		lightTransforms.push_back(projection * view);
@@ -105,6 +115,28 @@ namespace geeL {
 
 		view = glm::lookAt(transform.position, transform.position + vec3(0.f, 0.f, -1.f), vec3(0.f, -1.f, 0.f));
 		lightTransforms.push_back(projection * view);
+	}
+
+	void PointLight::computeLightTransform() {
+		mat4 projection = glm::perspective(90.f, 1.f, 1.0f, farPlane);
+
+		mat4 view = glm::lookAt(transform.position, transform.position + vec3(1.f, 0.f, 0.f), vec3(0.f, -1.f, 0.f));
+		lightTransforms[0] = projection * view;
+
+		view = glm::lookAt(transform.position, transform.position + vec3(-1.f, 0.f, 0.f), vec3(0.f, -1.f, 0.f));
+		lightTransforms[1] = projection * view;
+
+		view = glm::lookAt(transform.position, transform.position + vec3(0.f, 1.f, 0.f), vec3(0.f, 0.f, 1.f));
+		lightTransforms[2] = projection * view;
+
+		view = glm::lookAt(transform.position, transform.position + vec3(0.f, -1.f, 0.f), vec3(0.f, 0.f, -1.f));
+		lightTransforms[3] = projection * view;
+
+		view = glm::lookAt(transform.position, transform.position + vec3(0.f, 0.f, 1.f), vec3(0.f, -1.f, 0.f));
+		lightTransforms[4] = projection * view;
+
+		view = glm::lookAt(transform.position, transform.position + vec3(0.f, 0.f, -1.f), vec3(0.f, -1.f, 0.f));
+		lightTransforms[5] = projection * view;
 	}
 	
 }

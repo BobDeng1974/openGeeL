@@ -13,8 +13,10 @@ using namespace glm;
 
 namespace geeL {
 
-	DirectionalLight::DirectionalLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, float intensity)
-		: Light(transform, diffuse, specular, ambient, intensity) {}
+	DirectionalLight::DirectionalLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, 
+		float intensity, float shadowBias)
+		: 
+		Light(transform, diffuse, specular, ambient, intensity, shadowBias) {}
 
 
 	void DirectionalLight::bind(const Shader& shader, int index, string name) const {

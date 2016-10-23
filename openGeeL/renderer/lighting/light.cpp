@@ -23,6 +23,7 @@ namespace geeL {
 		glUniform3f(glGetUniformLocation(program, (location + "ambient").c_str()), ambient.x, ambient.y, ambient.z);
 
 		glUniform1f(glGetUniformLocation(program, (location + "intensity").c_str()), intensity);
+		glUniform1f(glGetUniformLocation(program, (location + "bias").c_str()), shadowBias);
 	}
 
 	void Light::initShadowmap() {
@@ -52,11 +53,12 @@ namespace geeL {
 	}
 
 	void Light::addShadowmap(Shader& shader, string name) {
-		shader.addMap(shadowmapID, name);
+		shader.addMap(shadowmapID, name, GL_TEXTURE_2D);
 	}
 
 	void Light::renderShadowmap(const RenderScene& scene, const Shader& shader) {
 		shader.use();
+
 		//Write light transform into shader
 		computeLightTransform();
 		glUniformMatrix4fv(glGetUniformLocation(shader.program, "lightTransform"), 1, GL_FALSE,

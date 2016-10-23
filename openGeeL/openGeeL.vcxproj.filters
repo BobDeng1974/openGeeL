@@ -346,5 +346,14 @@
     <None Include="renderer\postprocessing\drawdefault.frag">
       <Filter>renderer\postprocessing</Filter>
     </None>
+    <None Include="renderer\shaders\shadowmapping.frag">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\empty.vert">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\shadowmapping.gs">
+      <Filter>renderer\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

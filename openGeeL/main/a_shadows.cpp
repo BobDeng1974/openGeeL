@@ -41,7 +41,6 @@ namespace {
 
 	public:
 
-		Shader* shader;
 		LightManager& lightManager;
 		MaterialFactory& materialFactory;
 		ShaderManager& shaderManager;
@@ -50,7 +49,7 @@ namespace {
 		Model* nano;
 		MeshRenderer* nanoRenderer;
 		MeshFactory& meshFactory;
-		SpotLight* spotLight;
+		Light* light;
 		DirectionalLight* dirLight;
 
 		Material* material;
@@ -70,21 +69,22 @@ namespace {
 
 		virtual void init() {
 
-			shader = &materialFactory.CreateShader("renderer/shaders/reflective.vert", "renderer/shaders/reflective.frag");
-
-			//PointLight* light1 = new PointLight(glm::vec3(1.2f, 1.0f, 2.0f), glm::vec3(0.5f, 0.5f, 0.5f),
-			//	glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.2f, 0.2f, 0.2f), 1.f, 0.69f, 0.032f);
-			//PointLight* light2 = new PointLight(glm::vec3(-2.0f, 2.0f, -7.0f), glm::vec3(0.3f, 0.3f, 0.9f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.1f, 0.1f, 0.1f));
-
+			float l = 20.f;
 			
-			float l = 200.f;
+			geeL::Transform* lighTransi4 = new geeL::Transform(glm::vec3(7, 5, 5), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
+			light = &lightManager.addLight(*lighTransi4, glm::vec3(l, l, l),
+				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), 1.f, 1.f);
+			
+
+			l = 100.f;
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
 
 			
 			geeL::Transform* lighTransi = new geeL::Transform(glm::vec3(-7, 5, 0), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
-			spotLight = &lightManager.addLight(*lighTransi, glm::vec3(l, l, l),
+			light = &lightManager.addLight(*lighTransi, glm::vec3(l, l, l),
 				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), angle, outerAngle, 10.f);
+			
 
 			/*
 			geeL::Transform* lighTransi3 = new geeL::Transform(glm::vec3(-7, 5, 0), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
@@ -109,8 +109,9 @@ namespace {
 		}
 
 		virtual void draw(const Camera& camera) {
-			nanoRenderer->transform.rotate(vec3(0, 1, 0), 25);
-			//spotLight->transform.rotate(vec3(0, 0, 1), -3);
+			//nanoRenderer->transform.rotate(vec3(0, 1, 0), 25);
+			//light->transform.rotate(vec3(0, 0, 1), -3);
+			//light->transform.translate(vec3(-0.01, 0, 0));
 		}
 
 		virtual void quit() {}

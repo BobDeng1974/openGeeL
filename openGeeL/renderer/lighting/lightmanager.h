@@ -52,7 +52,9 @@ public:
 	
 
 private:
+	//Shader for spotlights and directional lights
 	Shader* dlShader;
+	Shader* plShader;
 
 	std::vector<Light*> staticPLs, staticDLs, staticSLs;
 	std::vector<Light*> dynamicPLs, dynamicDLs, dynamicSLs;

@@ -16,10 +16,16 @@ using namespace glm;
 namespace geeL {
 
 	LightManager::LightManager()
-		: dlShader(new Shader("renderer/shaders/shadowmapping.vert", "renderer/shaders/empty.frag")) {}
+		: 
+		dlShader(new Shader("renderer/shaders/shadowmapping.vert", "renderer/shaders/empty.frag")),
+		plShader(new Shader("renderer/shaders/empty.vert", "renderer/shaders/shadowmapping.gs", 
+			"renderer/shaders/shadowmapping.frag"))
+		{}
+
 
 	LightManager::~LightManager() {
 		delete dlShader;
+		delete plShader;
 
 		for (size_t j = 0; j < staticPLs.size(); j++)
 			delete staticPLs[j];
@@ -95,7 +101,8 @@ namespace geeL {
 		shader.use();
 
 		for (size_t j = 0; j < staticPLs.size(); j++) {
-			staticPLs[j]->addShadowmap(shader);
+			string name = plName + "[" + to_string(j) + "].shadowMap";
+			staticPLs[j]->addShadowmap(shader, name);
 		}
 		
 		for (size_t j = 0; j < staticDLs.size(); j++) {
@@ -105,8 +112,6 @@ namespace geeL {
 
 		for (size_t j = 0; j < staticSLs.size(); j++) {
 			string name = slName + "[" + to_string(j) + "].shadowMap";
-
-			std::cout << name << "\n";
 			staticSLs[j]->addShadowmap(shader, name);
 		}
 
@@ -115,8 +120,7 @@ namespace geeL {
 
 	void LightManager::drawShadowmaps(const RenderScene& scene) const {
 		for (size_t j = 0; j < staticPLs.size(); j++) {
-			//TODO: change dlShader
-			staticPLs[j]->renderShadowmap(scene, *dlShader);
+			staticPLs[j]->renderShadowmap(scene, *plShader);
 		}
 
 		for (size_t j = 0; j < staticDLs.size(); j++) {
