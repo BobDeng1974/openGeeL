@@ -161,7 +161,7 @@ namespace geeL {
 				defaultEffect.draw();
 				defaultEffect.bindToScreen(screenVAO, colorBuffer);
 			}
-
+			
 			window->swapBuffer();
 			Time::update();
 		}

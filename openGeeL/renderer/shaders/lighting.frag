@@ -108,19 +108,46 @@ void main() {
 	for(int i = 0; i < slCount; i++)
 		result += calculateSpotLight(i, spotLights[i], norm, fragPosition, viewDirection, texColor, speColor, blinn);
 
+	//result = pow(result.rgb, vec3(0.4545f));
 	color = vec4(result, 1.f);
 }
 
+float random(vec3 seed, int i){
+	vec4 seed4 = vec4(seed, i);
+	float dt = dot(seed4, vec4(12.9898,78.233,45.164,94.673));
+	float sn = mod(dt,3.14);
+	return fract(sin(sn) * 43758.5453);
+}
 
-//Point Lights
-
-vec3 sampleDirections[20] = vec3[] (
+vec3 sampleDirections3D[20] = vec3[] (
    vec3(1, 1, 1), vec3(1, -1, 1), vec3(-1, -1, 1), vec3(-1, 1, 1), 
    vec3(1, 1, -1), vec3(1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
    vec3(1, 1, 0), vec3(1, -1, 0), vec3(-1, -1, 0), vec3(-1, 1, 0),
    vec3(1, 0, 1), vec3(-1, 0, 1), vec3(1, 0, -1), vec3(-1, 0, -1),
    vec3(0, 1, 1), vec3(0, -1, 1), vec3(0, -1, -1), vec3(0, 1, -1)
 ); 
+
+//Poisson disc
+vec2 sampleDirections2D[16] = vec2[]( 
+   vec2( -0.94201624, -0.39906216 ), 
+   vec2( 0.94558609, -0.76890725 ), 
+   vec2( -0.094184101, -0.92938870 ), 
+   vec2( 0.34495938, 0.29387760 ), 
+   vec2( -0.91588581, 0.45771432 ), 
+   vec2( -0.81544232, -0.87912464 ), 
+   vec2( -0.38277543, 0.27676845 ), 
+   vec2( 0.97484398, 0.75648379 ), 
+   vec2( 0.44323325, -0.97511554 ), 
+   vec2( 0.53742981, -0.47373420 ), 
+   vec2( -0.26496911, -0.41893023 ), 
+   vec2( 0.79197514, 0.19090188 ), 
+   vec2( -0.24188840, 0.99706507 ), 
+   vec2( -0.81409955, 0.91437590 ), 
+   vec2( 0.19984126, 0.78641367 ), 
+   vec2( 0.14383161, -0.14100790 ) 
+);
+
+//Point Lights
 
 float calculatePointLightShadows(int i) {
 
@@ -133,16 +160,19 @@ float calculatePointLightShadows(int i) {
 		return 0.0f;
 
 	//float minBias = pointLights[i].bias;
-	float minBias = 0.0075f;
+	float minBias = 0.0045f;
 	vec3 lightDir =  spotLights[i].position - fragPosition;
 	float bias = max((minBias * 10.0f) * (1.0f - dot(normal, lightDir)), minBias);
 
 	float shadow = 0.0f;
-	int samples = 10;
-	float diskRadius = 0.04f;
+	int samples = 5;
+	float diskRadius = 0.03f;
 
 	for(int j = 0; j < samples; j++) {
-		float depth = texture(pointLights[i].shadowMap, direction + sampleDirections[j] * diskRadius).r;
+		//int index = j;
+		int index = int(20.0f * random(floor(fragPosition.xyz * 1000.0f), j)) % 20;
+
+		float depth = texture(pointLights[i].shadowMap, direction + sampleDirections3D[index] * diskRadius).r;
 		shadow += curDepth - bias > depth ? 1.0f : 0.0f;        
 	}    
 
@@ -205,8 +235,8 @@ float calculateSpotLightShadows(int i) {
 	int kernel = 1;
 	for(int x = -kernel; x <= kernel; x++) {
 		for(int y = -kernel; y <= kernel; y++) {
-			float depth = texture(spotLights[i].shadowMap, coords.xy + vec2(x, y) * texelSize).r; 
-			shadow += curDepth - bias > depth ? 1.0f : 0.0f;        
+			float depth = texture(spotLights[i].shadowMap, coords.xy + vec2(x, y) * texelSize).r;
+			shadow += curDepth - bias > depth ? 1.0f : 0.0f;     
 		}    
 	}
 	

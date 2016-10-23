@@ -7,6 +7,7 @@ uniform sampler2D screenTexture;
 
 
 void main() { 
+
 	vec3 hdr = texture(screenTexture, TexCoords).rgb;
 
 	//Tone mapping
