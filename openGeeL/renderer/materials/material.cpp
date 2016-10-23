@@ -22,7 +22,7 @@ namespace geeL {
 
 		for (size_t i = 0; i < textures.size(); i++) {
 			SimpleTexture& texture = *textures[i];
-			string name = this->name + "." + texture.GetTypeAsString(); //+ std::to_string(i);
+			string name = this->name + "." + texture.GetTypeAsString();
 
 			textureStack.addTexture(name, texture);
 		}
@@ -54,6 +54,7 @@ namespace geeL {
 		shader.loadMaps();
 		textureStack.draw(shader);
 
+		glUniform1i(glGetUniformLocation(shader.program, "material.mapFlags"), textureStack.mapFlags);
 		glUniform1f(glGetUniformLocation(shader.program, "material.type"), type);
 
 		GLint location;

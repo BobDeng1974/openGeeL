@@ -9,11 +9,14 @@
 #include "mesh.h"
 #include "model.h"
 
+using namespace std;
+
 namespace geeL {
 
 	void Model::loadModel(MaterialFactory& factory) {
 		Assimp::Importer import;
-		const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+		const aiScene* scene = import.ReadFile(path, 
+			aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 		
 		if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
 			cout << "ERROR::ASSIMP::" << import.GetErrorString() << endl;
@@ -92,12 +95,36 @@ namespace geeL {
 
 			vertex.position = vector;
 			
-			vector.x = mesh->mNormals[i].x;
-			vector.y = mesh->mNormals[i].y;
-			vector.z = mesh->mNormals[i].z;
+			if (mesh->mNormals != nullptr) {
+				vector.x = mesh->mNormals[i].x;
+				vector.y = mesh->mNormals[i].y;
+				vector.z = mesh->mNormals[i].z;
 
-			vertex.normal = vector;
+				vertex.normal = vector;
+			}
+			else
+				vertex.normal = glm::vec3(0, 0, 0);
+
+			if (mesh->mTangents != nullptr) {
+				vector.x = mesh->mTangents[i].x;
+				vector.y = mesh->mTangents[i].y;
+				vector.z = mesh->mTangents[i].z;
+
+				vertex.tangent = vector;
+			}
+			else
+				vertex.tangent = glm::vec3(0, 0, 0);
 			
+			if (mesh->mBitangents != nullptr) {
+				vector.x = mesh->mBitangents[i].x;
+				vector.y = mesh->mBitangents[i].y;
+				vector.z = mesh->mBitangents[i].z;
+
+				vertex.bitangent = vector;
+			}
+			else
+				vertex.bitangent = glm::vec3(0, 0, 0);
+
 			// Does the mesh contain texture coordinates?
 			if (mesh->mTextureCoords[0]) {
 
@@ -115,7 +142,7 @@ namespace geeL {
 			vertices.push_back(vertex);
 		}
 
-		// Now wak through each of the mesh's faces and retrieve the corresponding vertex indices.
+		// Now walk through each of the mesh's faces and retrieve the corresponding vertex indices.
 		for (GLuint i = 0; i < mesh->mNumFaces; i++) {
 			aiFace face = mesh->mFaces[i];
 			// Retrieve all indices of the face and store them in the indices vector
@@ -135,6 +162,10 @@ namespace geeL {
 			vector<SimpleTexture*> specularMaps = loadMaterialTextures(factory, material, 
 				aiTextureType_SPECULAR, Specular, directory, true);
 			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+
+			vector<SimpleTexture*> normalMaps = loadMaterialTextures(factory, material,
+				aiTextureType_HEIGHT, Normal, directory, true);
+			textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
 			vector<SimpleTexture*> reflectionMaps = loadMaterialTextures(factory, material, 
 				aiTextureType_AMBIENT, Reflection, directory, true);

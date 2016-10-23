@@ -10,13 +10,15 @@ using namespace std;
 
 namespace geeL {
 
-//class SimpleTexture;
 
 class LayeredTexture : public Texture {
 
 public:
-	LayeredTexture() {}
+	int mapFlags;
+	LayeredTexture() : mapFlags(0) {}
 
+	//Add texture. Ill behaviour possible (and not checked)
+	//if more than one texture of each type is added (e.g. two normal maps)
 	void addTexture(string name, SimpleTexture& texture);
 
 	virtual void bind(const Shader& shader, const char* name, int texLayer = 0) const;

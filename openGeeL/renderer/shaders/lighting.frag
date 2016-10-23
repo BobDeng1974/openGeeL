@@ -3,7 +3,9 @@
 struct Material {
 	sampler2D diffuse;
 	sampler2D specular;
+	sampler2D normal;
 
+	int mapFlags;
 	int type; //0 = Opaque, 1 = Cutout, 2 = Transparent
 	float shininess;
 };
@@ -59,6 +61,7 @@ in vec3 normal;
 in vec3 fragPosition;
 in vec2 textureCoordinates;
 in vec3 cameraPosition;
+in mat3 TBN;
 
 in vec4 spotLightTransforms[5];
 in vec4 direLightTransforms[5];
@@ -79,25 +82,36 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal, vec3 fragPosi
 vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn);
 vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn);
 
-float calculatePointLightShadows(int i);
-float calculateSpotLightShadows(int i);
-float calculateDirectionalLightShadows(int i);
+float calculatePointLightShadows(int i, vec3 norm);
+float calculateSpotLightShadows(int i, vec3 norm);
+float calculateDirectionalLightShadows(int i, vec3 norm);
 
 
 void main() {
 
+	//Check if materials is actually textured
+	float diffFlag = mod(material.mapFlags, 10);
+	float specFlag = mod(material.mapFlags / 10, 10);
+	float normFlag = mod(material.mapFlags / 100, 10);
+
 	//Discard fragment when material type is cutout and alpha value is very low
-	if(material.type == 1 && texture(material.diffuse, textureCoordinates).a < 0.1f)
+	if(material.type == 1 && diffFlag == 1 && texture(material.diffuse, textureCoordinates).a < 0.1f)
 		discard;
 
-	vec3 texColor = vec3(texture(material.diffuse, textureCoordinates).rgb);
-	vec3 speColor = vec3(texture(material.specular, textureCoordinates));
+	vec3 texColor = (diffFlag == 1) ? vec3(texture(material.diffuse, textureCoordinates)) : vec3(0.01f, 0.01f, 0.01f);
+	vec3 speColor = (specFlag == 1) ? vec3(texture(material.specular, textureCoordinates)) : vec3(0.1f, 0.1f, 0.1f); 
 
 	vec3 norm = normalize(normal);
+	
+	if(normFlag == 1) {
+		norm = texture(material.normal, textureCoordinates).rgb;
+		norm = normalize(norm * 2.0f - 1.0f);
+		norm = normalize(TBN * norm);
+	}
+
 	vec3 viewDirection = normalize(cameraPosition - fragPosition);
 
-	bool blinn = true;
-	
+	bool blinn = true;	
 	vec3 result = vec3(0.f, 0.f, 0.f);
 	for(int i = 0; i < plCount; i++)
         result += calculatePointLight(i, pointLights[i], norm, fragPosition, viewDirection, texColor, speColor, blinn);
@@ -149,7 +163,7 @@ vec2 sampleDirections2D[16] = vec2[](
 
 //Point Lights
 
-float calculatePointLightShadows(int i) {
+float calculatePointLightShadows(int i, vec3 norm) {
 
 	vec3 direction = fragPosition - pointLights[i].position; 
 	float curDepth = length(direction) / pointLights[i].farPlane;
@@ -160,9 +174,9 @@ float calculatePointLightShadows(int i) {
 		return 0.0f;
 
 	//float minBias = pointLights[i].bias;
-	float minBias = 0.0045f;
+	float minBias = 0.0065f;
 	vec3 lightDir =  spotLights[i].position - fragPosition;
-	float bias = max((minBias * 10.0f) * (1.0f - dot(normal, lightDir)), minBias);
+	float bias = max((minBias * 10.0f) * (1.0f - dot(norm, lightDir)), minBias);
 
 	float shadow = 0.0f;
 	int samples = 5;
@@ -207,7 +221,7 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal, vec3 fragPosi
 	}
 
 	vec3 specular = spec * speColor * light.specular;
-	float shadow = calculatePointLightShadows(index);
+	float shadow = calculatePointLightShadows(index, normal);
 	
     return (ambient + (1.0f - shadow) * (diffuse + specular)) * attenuation;
 
@@ -215,7 +229,7 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal, vec3 fragPosi
 
 //Spotlights
 
-float calculateSpotLightShadows(int i) {
+float calculateSpotLightShadows(int i, vec3 norm) {
 	vec3 coords = spotLightTransforms[i].xyz / spotLightTransforms[i].w;
 	coords = coords * 0.5f + 0.5f;
 
@@ -226,7 +240,7 @@ float calculateSpotLightShadows(int i) {
 	//float minBias = spotLights[i].bias;
 	float minBias = 0.0005f;
 	vec3 lightDir =  spotLights[i].position - fragPosition;
-	float bias = max((minBias * 10.0f) * (1.0f - dot(normal, lightDir)), minBias);
+	float bias = max((minBias * 10.0f) * (1.0f - dot(norm, lightDir)), minBias);
 	float curDepth = coords.z - bias;
 
 	float shadow = 0.0;
@@ -279,14 +293,14 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, vec3 fragPositi
 	}
 
 	vec3 specular = spec * speColor * light.specular * intensity;
-	float shadow = calculateSpotLightShadows(index);
+	float shadow = calculateSpotLightShadows(index, normal);
 
     return (ambient + (1.0f - shadow) * (diffuse + specular)) * attenuation;
 }
 
 //Directional Lights
 
-float calculateDirectionalLightShadows(int i) {
+float calculateDirectionalLightShadows(int i, vec3 norm) {
 	vec3 coords = direLightTransforms[i].xyz / direLightTransforms[i].w;
 	coords = coords * 0.5f + 0.5f;
 
@@ -296,7 +310,7 @@ float calculateDirectionalLightShadows(int i) {
 
 	float mapDepth = texture(directionalLights[i].shadowMap, coords.xy).r;
 	float bias = directionalLights[i].bias;
-	//float bias = max(0.05f * (1.0f - dot(normal, lightDir)), 0.005f);
+	//float bias = max(0.05f * (1.0f - dot(norm, lightDir)), 0.005f);
 	float curDepth = coords.z - bias;
 
 	float shadow = 0.0;
@@ -336,7 +350,7 @@ vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, ve
 	}
 
 	vec3 specular = spec * speColor * light.specular;
-	float shadow = calculateDirectionalLightShadows(index);
+	float shadow = calculateDirectionalLightShadows(index, normal);
 	
     return (ambient + (1.0f - shadow) * (diffuse + specular));
 }

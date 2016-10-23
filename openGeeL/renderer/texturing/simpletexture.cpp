@@ -4,6 +4,7 @@
 #include <SOIL.h>
 #include "simpletexture.h"
 #include "../shader/shader.h"
+#include <iostream>
 
 namespace geeL {
 
@@ -11,6 +12,7 @@ namespace geeL {
 		: type(type), path(fileName) {
 
 		int imgWidth, imgHeight;
+
 		unsigned char* image = SOIL_load_image(fileName, &imgWidth, &imgHeight, 0, SOIL_LOAD_RGBA);
 
 		glGenTextures(1, &id);
@@ -46,6 +48,8 @@ namespace geeL {
 				return "diffuse";
 			case Specular:
 				return "specular";
+			case Normal:
+				return "normal";
 			case Reflection:
 				return "reflection";
 		}

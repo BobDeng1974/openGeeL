@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 enum   aiTextureType;
 struct aiNode;
 struct aiMesh;
@@ -31,20 +29,20 @@ class Model {
 	
 public:
 	Model::Model() {}
-	Model::Model(string path) : path(path) {}
+	Model::Model(std::string path) : path(path) {}
 
 	void loadModel(MaterialFactory& factory);
 	void draw(bool shade = true) const;
 	void drawInstanced(bool shade = true) const;
-	void draw(vector<Material*> customMaterials) const;
+	void draw(std::vector<Material*> customMaterials) const;
 
-	vector<Mesh>::iterator meshesBegin();
-	vector<Mesh>::iterator meshesEnd();
+	std::vector<Mesh>::iterator meshesBegin();
+	std::vector<Mesh>::iterator meshesEnd();
 
 private:
-	string path;
-	vector<Mesh> meshes;
-	string directory;
+	std::string path;
+	std::vector<Mesh> meshes;
+	std::string directory;
 
 	void processNode(MaterialFactory& factory, aiNode* node, const aiScene* scene);
 	Mesh processMesh(MaterialFactory& factory, aiMesh* mesh, const aiScene* scene);

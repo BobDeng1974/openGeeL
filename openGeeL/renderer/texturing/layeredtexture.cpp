@@ -8,6 +8,21 @@
 namespace geeL {
 
 	void LayeredTexture::addTexture(string name, SimpleTexture& texture) {
+		switch (texture.type) {
+			case Diffuse:
+				mapFlags += 1;
+				break;
+			case Specular:
+				mapFlags += 10;
+				break;
+			case Normal:
+				mapFlags += 100;
+				break;
+			case Reflection:
+				mapFlags += 1000;
+				break;
+		}
+
 		textures.push_back(pair<string, SimpleTexture*>(name, &texture));
 	}
 

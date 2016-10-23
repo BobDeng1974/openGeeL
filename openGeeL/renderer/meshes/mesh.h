@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
 using glm::vec3;
 using glm::vec2;
 
@@ -21,7 +20,9 @@ class Material;
 struct Vertex {
 	glm::vec3 position;
 	glm::vec3 normal;
-	vec2 texCoords;
+	glm::vec2 texCoords;
+	glm::vec3 tangent;
+	glm::vec3 bitangent;
 };
 
 
@@ -29,10 +30,10 @@ class Mesh {
 
 public:
 	Material& material;
-	vector<Vertex> vertices;
-	vector<GLuint> indices;
+	std::vector<Vertex> vertices;
+	std::vector<GLuint> indices;
 
-	Mesh(vector<Vertex> vertices, vector<GLuint> indices, Material& material);
+	Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, Material& material);
 
 	void init();
 	void draw(bool shade = true) const;

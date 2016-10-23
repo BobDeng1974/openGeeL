@@ -16,6 +16,7 @@ namespace geeL {
 enum TextureType {
 	Diffuse,
 	Specular,
+	Normal,
 	Reflection
 };
 

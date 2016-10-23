@@ -75,9 +75,10 @@ namespace {
 			light = &lightManager.addLight(*lighTransi4, glm::vec3(l, l, l),
 				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), 1.f, 1.f);
 
-			l = 200.f;
+			l = 100.f;
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
+			
 			
 			geeL::Transform* lighTransi = new geeL::Transform(glm::vec3(-7, 5, 0), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
 			light = &lightManager.addLight(*lighTransi, glm::vec3(l, l, l),
@@ -100,14 +101,16 @@ namespace {
 			float height = -2.f;
 			geeL::Transform* transi = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.2f, 0.2f, 0.2f));
 			nanoRenderer = &scene.AddMeshRenderer("resources/nanosuit/nanosuit.obj", *transi, cullFront);
-			
+
 			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(100.2f, 0.2f, 100.2f));
 			scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront);
-			
+
+			geeL::Transform* transi7 = new geeL::Transform(glm::vec3(4.f, -0.4f, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
+			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", *transi7, cullFront);
 		}
 
 		virtual void draw(const Camera& camera) {
-			//nanoRenderer->transform.rotate(vec3(0, 1, 0), 25);
+			nanoRenderer->transform.rotate(vec3(0, 1, 0), 25);
 			//light->transform.rotate(vec3(0, 0, 1), -3);
 			//light->transform.translate(vec3(-0.01, 0, 0));
 		}
@@ -158,7 +161,7 @@ void a_shadows() {
 		"resources/skybox2/bottom.jpg", "resources/skybox2/back.jpg", "resources/skybox2/front.jpg");
 
 	Skybox skybox = Skybox(map);
-	scene.setSkybox(skybox);
+	//scene.setSkybox(skybox);
 
 	//PostProcessingEffect& effect2 = ToneMapping(1.f);
 	//renderer3.setEffect(effect2);

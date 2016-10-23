@@ -143,7 +143,7 @@ namespace geeL {
 
 			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 			glViewport(0, 0, window->width, window->height);
-			glClearColor(0.002f, 0.002f, 0.002f, 1.0f);
+			glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			renderFrame();
