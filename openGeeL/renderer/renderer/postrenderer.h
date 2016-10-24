@@ -1,6 +1,8 @@
 #ifndef POSTRENDERER_H
 #define POSTRENDERER_H
 
+#include "../postprocessing/postprocessscreen.h"
+#include "../utility/framebuffer.h"
 #include "../renderer.h"
 
 typedef unsigned int GLuint;
@@ -18,20 +20,16 @@ public:
 
 	virtual void init();
 	virtual void render();
-	virtual void renderFrame();
+	virtual void draw();
 	virtual void handleInput();
 
 	void setEffect(PostProcessingEffect& effect);
 
-
 private:
-	GLuint frameBuffer, colorBuffer, screenVAO, screenVBO;
 	Shader* postShader;
 	PostProcessingEffect* effect;
-
-	void initFrameBuffer();
-	void initScreenQuad();
-
+	PostProcessingScreen screen;
+	FrameBuffer frameBuffer;
 };
 
 }

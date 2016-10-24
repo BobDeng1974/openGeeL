@@ -167,6 +167,7 @@
     <ClCompile Include="renderer\postprocessing\drawdefault.cpp" />
     <ClCompile Include="renderer\postprocessing\gammacorrection.cpp" />
     <ClCompile Include="renderer\postprocessing\postprocessing.cpp" />
+    <ClCompile Include="renderer\postprocessing\postprocessscreen.cpp" />
     <ClCompile Include="renderer\postprocessing\tonemapping.cpp" />
     <ClCompile Include="renderer\renderer.cpp" />
     <ClCompile Include="renderer\renderer\postrenderer.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="renderer\texturing\simpletexture.cpp" />
     <ClCompile Include="renderer\transformation\transform.cpp" />
     <ClCompile Include="renderer\transformation\transformfactory.cpp" />
+    <ClCompile Include="renderer\utility\framebuffer.cpp" />
     <ClCompile Include="renderer\utility\rendertime.cpp" />
     <ClCompile Include="renderer\window.cpp" />
   </ItemGroup>
@@ -201,10 +203,12 @@
     <ClInclude Include="renderer\meshes\meshfactory.h" />
     <ClInclude Include="renderer\meshes\meshrenderer.h" />
     <ClInclude Include="renderer\meshes\model.h" />
+    <ClInclude Include="renderer\postprocessing\bloom.h" />
     <ClInclude Include="renderer\postprocessing\colorcorrection.h" />
     <ClInclude Include="renderer\postprocessing\drawdefault.h" />
     <ClInclude Include="renderer\postprocessing\gammacorrection.h" />
     <ClInclude Include="renderer\postprocessing\postprocessing.h" />
+    <ClInclude Include="renderer\postprocessing\postprocessscreen.h" />
     <ClInclude Include="renderer\postprocessing\tonemapping.h" />
     <ClInclude Include="renderer\renderer.h" />
     <ClInclude Include="renderer\renderer\postrenderer.h" />
@@ -221,6 +225,7 @@
     <ClInclude Include="renderer\texturing\texture.h" />
     <ClInclude Include="renderer\transformation\transform.h" />
     <ClInclude Include="renderer\transformation\transformfactory.h" />
+    <ClInclude Include="renderer\utility\framebuffer.h" />
     <ClInclude Include="renderer\utility\rendertime.h" />
     <ClInclude Include="renderer\window.h" />
   </ItemGroup>

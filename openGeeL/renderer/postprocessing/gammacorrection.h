@@ -10,7 +10,8 @@ class GammaCorrection : public PostProcessingEffect {
 public:
 	GammaCorrection(float gamma = 2.2f);
 
-	virtual void draw();
+protected:
+	virtual void bindValues();
 
 private:
 	float gamma;

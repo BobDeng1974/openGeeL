@@ -13,8 +13,8 @@ public:
 	ColorCorrection(float red = 1.f, float green = 1.f, float blue = 1.f, 
 		float hue = 1.f, float saturation = 1.f, float brightness = 1.f);
 
-
-	virtual void draw();
+protected:
+	virtual void bindValues();
 
 };
 

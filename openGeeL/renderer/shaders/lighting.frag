@@ -103,11 +103,12 @@ void main() {
 
 	vec3 norm = normalize(normal);
 	
+	/*
 	if(normFlag == 1) {
 		norm = texture(material.normal, textureCoordinates).rgb;
 		norm = normalize(norm * 2.0f - 1.0f);
-		norm = normalize(TBN * norm);
-	}
+		//norm = normalize(TBN * norm);
+	}*/
 
 	vec3 viewDirection = normalize(cameraPosition - fragPosition);
 

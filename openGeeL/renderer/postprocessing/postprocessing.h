@@ -2,28 +2,43 @@
 #define POSTPROCESSINGEFFECT_H
 
 #include <string>
+#include "../shader/shader.h"
 
 using namespace std;
 
 typedef unsigned int GLuint;
 
+#include "../renderer.h"
+
 namespace geeL {
 
 class Shader;
+class PostProcessingScreen;
 
-class PostProcessingEffect {
+class PostProcessingEffect : Drawer {
 
 public:
 	PostProcessingEffect(string shaderPath);
 
-	virtual void draw() = 0;
-	void bindToScreen(GLuint screenVAO, GLuint colorBuffer);
+	//Set buffer that will be used as base for post processing
+	void setBuffer(unsigned int buffer);
+	void setScreen(PostProcessingScreen& screen);
 
+	void draw();
 
 protected:
+	unsigned int buffer;
 	Shader shader;
+	PostProcessingScreen* screen;
+
+	virtual void bindValues() = 0;
+	void bindToScreen();
+
 
 };
+
+
+
 
 }
 

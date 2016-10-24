@@ -9,9 +9,7 @@ namespace geeL {
 		: PostProcessingEffect("renderer/postprocessing/tonemapping.frag"), exposure(exposure) {}
 
 
-	void ToneMapping::draw() {
-
-		shader.use();
+	void ToneMapping::bindValues() {
 		glUniform1f(glGetUniformLocation(shader.program, "exposure"), exposure);
 	}
 

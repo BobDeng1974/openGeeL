@@ -10,9 +10,7 @@ namespace geeL {
 		r(red), g(green), b(blue), h(hue), s(saturation), v(brightness) {}
 
 
-	void ColorCorrection::draw() {
-
-		shader.use();
+	void ColorCorrection::bindValues() {
 		glUniform1f(glGetUniformLocation(shader.program, "r"), r);
 		glUniform1f(glGetUniformLocation(shader.program, "g"), g);
 		glUniform1f(glGetUniformLocation(shader.program, "b"), b);

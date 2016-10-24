@@ -24,7 +24,7 @@ public:
 
 	virtual void init();
 	virtual void render();
-	virtual void renderFrame();
+	virtual void draw();
 	virtual void handleInput();
 
 	void addRenderer(Renderer* renderer, RenderViewport view);

@@ -59,7 +59,7 @@ namespace geeL {
 
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			renderFrame();
+			draw();
 			window->swapBuffer();
 
 			glfwPollEvents();
@@ -76,7 +76,7 @@ namespace geeL {
 		window->close();
 	}
 
-	void SimpleRenderer::renderFrame() {
+	void SimpleRenderer::draw() {
 		for (size_t i = 0; i < objects.size(); i++)
 			objects[i]->draw(*currentCamera);
 	}

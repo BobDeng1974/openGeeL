@@ -14,7 +14,9 @@ public:
 
 	ToneMapping(float exposure);
 
-	virtual void draw();
+protected:
+	virtual void bindValues();
+
 };
 
 }

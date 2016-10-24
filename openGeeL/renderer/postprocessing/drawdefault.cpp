@@ -5,7 +5,6 @@ namespace geeL {
 
 	DefaultPostProcess::DefaultPostProcess() : PostProcessingEffect("renderer/postprocessing/drawdefault.frag") {}
 
-	void DefaultPostProcess::draw() {
-		shader.use();
-	}
+	void DefaultPostProcess::bindValues() {}
+
 }

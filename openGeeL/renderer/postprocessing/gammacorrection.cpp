@@ -9,9 +9,7 @@ namespace geeL {
 		PostProcessingEffect("renderer/postprocessing/gammacorrection.frag"), gamma(gamma) {}
 
 
-	void GammaCorrection::draw() {
-		shader.use();
-
+	void GammaCorrection::bindValues() {
 		glUniform1f(glGetUniformLocation(shader.program, "gamma"), gamma);
 	}
 

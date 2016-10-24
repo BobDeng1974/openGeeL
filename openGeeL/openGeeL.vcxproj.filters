@@ -159,6 +159,12 @@
     <ClCompile Include="renderer\sceneobject.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\utility\framebuffer.cpp">
+      <Filter>renderer\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\postprocessing\postprocessscreen.cpp">
+      <Filter>renderer\postprocessing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -277,6 +283,15 @@
     </ClInclude>
     <ClInclude Include="renderer\sceneobject.h">
       <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\postprocessing\bloom.h">
+      <Filter>renderer\postprocessing</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\utility\framebuffer.h">
+      <Filter>renderer\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\postprocessing\postprocessscreen.h">
+      <Filter>renderer\postprocessing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -53,7 +53,7 @@ namespace geeL {
 
 			glClearColor(0.02f, 0.02f, 0.02f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			renderFrame();
+			draw();
 			window->swapBuffer();
 
 			glfwPollEvents();
@@ -70,14 +70,14 @@ namespace geeL {
 		window->close();
 	}
 
-	void SplitRenderer::renderFrame() {
+	void SplitRenderer::draw() {
 		for (size_t i = 0; i < renderers.size(); i++) {
 			pair<Renderer*, RenderViewport>pair = renderers[i];
 			Renderer* renderer = pair.first;
 			RenderViewport view = pair.second;
 
 			glViewport(view.x * window->width, view.y * window->height, view.width * window->width, view.height * window->height);
-			renderer->renderFrame();
+			renderer->draw();
 		}
 	}
 
