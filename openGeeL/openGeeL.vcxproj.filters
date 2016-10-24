@@ -168,6 +168,9 @@
     <ClCompile Include="renderer\postprocessing\gaussianblur.cpp">
       <Filter>renderer\postprocessing</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\postprocessing\bloom.cpp">
+      <Filter>renderer\postprocessing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -377,6 +380,12 @@
       <Filter>renderer\shaders</Filter>
     </None>
     <None Include="renderer\postprocessing\gaussianblur.frag">
+      <Filter>renderer\postprocessing</Filter>
+    </None>
+    <None Include="renderer\postprocessing\bloomfilter.frag">
+      <Filter>renderer\postprocessing</Filter>
+    </None>
+    <None Include="renderer\postprocessing\bloomcombine.frag">
       <Filter>renderer\postprocessing</Filter>
     </None>
   </ItemGroup>

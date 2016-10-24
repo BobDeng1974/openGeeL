@@ -6,7 +6,7 @@ uniform float r, g, b, h, s, v;
 in vec2 TexCoords;
 out vec4 color;
 
-uniform sampler2D screenTexture;
+uniform sampler2D image;
 
 
 vec3 rgb2hsv(vec3 c) {
@@ -29,7 +29,7 @@ vec3 hsv2rgb(vec3 c) {
 
 
 void main() { 
-	color = texture(screenTexture, TexCoords);
+	color = texture(image, TexCoords);
 
 	vec3 col = vec3(color);
 	col.r *= r;

@@ -51,6 +51,9 @@ public:
 	//Load maps into their binding points in the shader
 	void loadMaps() const;
 
+	void setInteger(std::string name, int value) const;
+	void setFloat(std::string name, float value) const;
+
 private:
 	std::list<TextureBinding> maps;
 

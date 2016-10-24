@@ -10,7 +10,7 @@ namespace geeL {
 
 
 	void GammaCorrection::bindValues() {
-		glUniform1f(glGetUniformLocation(shader.program, "gamma"), gamma);
+		shader.setFloat("gamma", gamma);
 	}
 
 

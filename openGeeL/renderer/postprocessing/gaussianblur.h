@@ -29,4 +29,4 @@ private:
 
 }
 
-#endif // ! GAUSSIAN_H
+#endif

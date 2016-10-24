@@ -228,5 +228,13 @@ namespace geeL {
 			counter++;
 		}
 	}
+
+	void Shader::setInteger(string name, int value) const {
+		glUniform1i(glGetUniformLocation(program, name.c_str()), value);
+	}
+
+	void Shader::setFloat(std::string name, float value) const {
+		glUniform1f(glGetUniformLocation(program, name.c_str()), value);
+	}
 }
 

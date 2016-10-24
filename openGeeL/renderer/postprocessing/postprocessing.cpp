@@ -4,6 +4,8 @@
 #include "postprocessscreen.h"
 #include "postprocessing.h"
 
+#include <iostream>
+
 namespace geeL {
 
 	PostProcessingEffect::PostProcessingEffect(string shaderPath) 
@@ -11,7 +13,20 @@ namespace geeL {
 
 
 	void PostProcessingEffect::setBuffer(unsigned int buffer) {
-		this->buffer = buffer;
+		buffers.clear();
+		buffers.push_back(buffer);
+	}
+
+	void PostProcessingEffect::setBuffer(std::list<unsigned int> buffers) {
+		this->buffers.clear();
+		int counter = 0;
+		for (std::list<unsigned int>::iterator it = buffers.begin(); it != buffers.end(); it++) {
+			this->buffers.push_back(*it);
+
+			counter++;
+			if (counter >= maxBuffers)
+				return;
+		}
 	}
 
 	void PostProcessingEffect::setScreen(PostProcessingScreen& screen) {
@@ -26,9 +41,17 @@ namespace geeL {
 	}
 
 	void PostProcessingEffect::bindToScreen() {
+		shader.use();
 		glBindVertexArray(screen->vao);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, buffer);
+
+		int counter = 0;
+		for (std::list<unsigned int>::iterator it = buffers.begin(); it != buffers.end(); it++) {
+			glActiveTexture(GL_TEXTURE0 + counter);
+			glBindTexture(GL_TEXTURE_2D, *it);
+
+			counter++;
+		}
+		
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 	}

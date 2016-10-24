@@ -11,11 +11,11 @@ namespace geeL {
 
 
 	void ColorCorrection::bindValues() {
-		glUniform1f(glGetUniformLocation(shader.program, "r"), r);
-		glUniform1f(glGetUniformLocation(shader.program, "g"), g);
-		glUniform1f(glGetUniformLocation(shader.program, "b"), b);
-		glUniform1f(glGetUniformLocation(shader.program, "h"), h);
-		glUniform1f(glGetUniformLocation(shader.program, "s"), s);
-		glUniform1f(glGetUniformLocation(shader.program, "v"), v);
+		shader.setFloat("r", r);
+		shader.setFloat("g", g);
+		shader.setFloat("b", b);
+		shader.setFloat("h", h);
+		shader.setFloat("s", s);
+		shader.setFloat("v", v);
 	}
 }

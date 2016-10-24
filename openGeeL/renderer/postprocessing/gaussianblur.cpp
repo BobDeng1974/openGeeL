@@ -28,14 +28,14 @@ namespace geeL {
 		//Set kernel
 		for (int i = 0; i < 5; i++) {
 			string name = "kernel[" + std::to_string(i) + "]";
-			glUniform1f(glGetUniformLocation(shader.program, name.c_str()), kernel[i]);
+			shader.setFloat(name, kernel[i]);
 		}
 		
 		//Blur one time less because last blurring will be done when drawing to screen
 		for (int i = 0; i < (amount - 1); i++) {
 
 			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffers[horizontal].fbo);
-			glUniform1i(glGetUniformLocation(shader.program, "horizontal"), horizontal);
+			shader.setInteger("horizontal", horizontal);
 
 			//Pick committed color buffer the first time and then the previous blurred buffer
 			if (first) 
@@ -48,11 +48,11 @@ namespace geeL {
 
 			horizontal = !horizontal;
 		}
+		
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		//Set color buffer to the last blurred buffer
 		setBuffer(frameBuffers[0].color);
-		
 	}
 
 	void GaussianBlur::setKernel(float newKernel[5]) {

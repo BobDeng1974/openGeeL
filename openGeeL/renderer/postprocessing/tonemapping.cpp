@@ -10,7 +10,7 @@ namespace geeL {
 
 
 	void ToneMapping::bindValues() {
-		glUniform1f(glGetUniformLocation(shader.program, "exposure"), exposure);
+		shader.setFloat("exposure", exposure);
 	}
 
 }

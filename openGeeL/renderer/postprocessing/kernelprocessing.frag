@@ -5,7 +5,7 @@ const float offset = 1.0 / 600;
 in vec2 TexCoords;
 out vec4 color;
 
-uniform sampler2D screenTexture;
+uniform sampler2D image;
 
 void main() {
 	vec2 offsets[9] = vec2[](
@@ -38,7 +38,7 @@ void main() {
 	vec3 sampleTex[9];
 
 	for(int i = 0; i < 9; i++) {
-		sampleTex[i] = vec3(texture(screenTexture, TexCoords.st + offsets[i]));
+		sampleTex[i] = vec3(texture(image, TexCoords.st + offsets[i]));
 	}
 
 	vec3 col;

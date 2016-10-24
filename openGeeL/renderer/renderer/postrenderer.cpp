@@ -72,7 +72,6 @@ namespace geeL {
 			
 			glClear(GL_COLOR_BUFFER_BIT);
 			glDisable(GL_DEPTH_TEST);
-			
 
 			if (effect != nullptr) {
 				effect->setBuffer(frameBuffer.color);
