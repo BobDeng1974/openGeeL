@@ -26,7 +26,7 @@ namespace geeL {
 	PostProcessingRenderer::PostProcessingRenderer(RenderWindow* window, InputManager* inputManager)
 		: 
 		Renderer(window, inputManager), effect(nullptr), 
-		frameBuffer(FrameBuffer(window->width, window->height)), screen(PostProcessingScreen()) {
+		frameBuffer(FrameBuffer()), screen(PostProcessingScreen(window->width, window->height)) {
 
 		glewExperimental = GL_TRUE;
 		if (glewInit() != GLEW_OK) {
@@ -49,7 +49,7 @@ namespace geeL {
 		inputManager->addCallback(exitCallbackk);
 		inputManager->init(window);
 		
-		frameBuffer.init();
+		frameBuffer.init(window->width, window->height);
 		screen.init();
 	}
 

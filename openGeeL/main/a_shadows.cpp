@@ -25,6 +25,7 @@
 #include "../renderer/postprocessing/colorcorrection.h"
 #include "../renderer/postprocessing/gammacorrection.h"
 #include "../renderer/postprocessing/tonemapping.h"
+#include "../renderer/postprocessing/gaussianblur.h"
 
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/skybox.h"
@@ -165,6 +166,8 @@ void a_shadows() {
 
 	//PostProcessingEffect& effect2 = ToneMapping(1.f);
 	//renderer3.setEffect(effect2);
+	//PostProcessingEffect& effect3 = GaussianBlur();
+	//renderer3.setEffect(effect3);
 	
 	renderer3.render();
 

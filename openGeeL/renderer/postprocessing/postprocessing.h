@@ -22,7 +22,7 @@ public:
 
 	//Set buffer that will be used as base for post processing
 	void setBuffer(unsigned int buffer);
-	void setScreen(PostProcessingScreen& screen);
+	virtual void setScreen(PostProcessingScreen& screen);
 
 	void draw();
 

@@ -14,9 +14,9 @@ public:
 	int width;
 	int height;
 
-	FrameBuffer(int width, int height);
+	FrameBuffer();
 
-	void init();
+	void init(int width, int height);
 	void fill(Drawer& drawer);
 
 private:

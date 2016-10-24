@@ -8,11 +8,13 @@ using namespace std;
 
 namespace geeL {
 
-	FrameBuffer::FrameBuffer(int width, int height) 
-		: width(width), height(height) {}
+	FrameBuffer::FrameBuffer() {}
 
 
-	void FrameBuffer::init() {
+	void FrameBuffer::init(int width, int height) {
+		this->width = width;
+		this->height = height;
+
 		glGenFramebuffers(1, &fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 

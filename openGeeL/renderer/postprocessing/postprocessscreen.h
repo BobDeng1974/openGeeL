@@ -11,8 +11,11 @@ class PostProcessingScreen {
 public:
 	unsigned int vbo;
 	unsigned int vao;
+	int width;
+	int height;
 
-	PostProcessingScreen() {}
+	PostProcessingScreen(int width, int height) 
+		: width(width), height(height) {}
 
 	void init();
 
