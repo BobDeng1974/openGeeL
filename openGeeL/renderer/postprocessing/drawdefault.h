@@ -10,9 +10,6 @@ class DefaultPostProcess : public PostProcessingEffect {
 public:
 	DefaultPostProcess();
 
-protected:
-	virtual void bindValues();
-
 };
 
 }

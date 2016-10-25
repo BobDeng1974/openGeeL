@@ -13,10 +13,10 @@ namespace geeL {
 
 
 	void BloomFilter::bindValues() {
+		PostProcessingEffect::bindValues();
+
 		shader.setFloat("scatter", scatter);
 	}
-
-
 
 	Bloom::Bloom(GaussianBlur& blur, float scatter) 
 		: 
@@ -45,8 +45,8 @@ namespace geeL {
 	}
 
 	void Bloom::bindValues() {
-		shader.setInteger("scene", 0);
-		shader.setInteger("bloom", 1);
+		shader.setInteger("image", bindingStart);
+		shader.setInteger("bloom", bindingStart + 1);
 
 		filter->setBuffer(buffers.front());
 		filterBuffer.fill(*filter);

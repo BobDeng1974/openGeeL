@@ -166,7 +166,6 @@ void a_shadows() {
 	//scene.setSkybox(skybox);
 
 
-
 	renderer3.render();
 
 	delete testObj;

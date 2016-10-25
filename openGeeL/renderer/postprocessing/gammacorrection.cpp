@@ -10,6 +10,8 @@ namespace geeL {
 
 
 	void GammaCorrection::bindValues() {
+		PostProcessingEffect::bindValues();
+
 		shader.setFloat("gamma", gamma);
 	}
 

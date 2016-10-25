@@ -3,12 +3,12 @@
 in vec2 TexCoords;
 out vec4 color;
 
-uniform sampler2D screenTexture;
+uniform sampler2D image;
 
 
 void main() { 
 
-	vec3 hdr = texture(screenTexture, TexCoords).rgb;
+	vec3 hdr = texture(image, TexCoords).rgb;
 
 	//Tone mapping
 	float exposure = 1.0f;

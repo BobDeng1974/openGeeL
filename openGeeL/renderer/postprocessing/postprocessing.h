@@ -33,12 +33,13 @@ public:
 	void draw();
 
 protected:
+	int bindingStart = 1;
 	std::list<unsigned int> buffers;
 	unsigned int maxBuffers = 4;
 	Shader shader;
 	PostProcessingScreen* screen;
 
-	virtual void bindValues() = 0;
+	virtual void bindValues();
 	void bindToScreen();
 
 

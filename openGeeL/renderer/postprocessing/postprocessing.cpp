@@ -44,7 +44,7 @@ namespace geeL {
 		shader.use();
 		glBindVertexArray(screen->vao);
 
-		int counter = 0;
+		int counter = bindingStart;
 		for (std::list<unsigned int>::iterator it = buffers.begin(); it != buffers.end(); it++) {
 			glActiveTexture(GL_TEXTURE0 + counter);
 			glBindTexture(GL_TEXTURE_2D, *it);
@@ -54,5 +54,9 @@ namespace geeL {
 		
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
+	}
+
+	void PostProcessingEffect::bindValues() {
+		shader.setInteger("image", bindingStart);
 	}
 }

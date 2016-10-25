@@ -22,6 +22,8 @@ namespace geeL {
 	}
 
 	void GaussianBlur::bindValues() {
+		PostProcessingEffect::bindValues();
+
 		bool horizontal = true;
 		bool first = true;
 

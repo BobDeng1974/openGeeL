@@ -11,6 +11,8 @@ namespace geeL {
 
 
 	void ColorCorrection::bindValues() {
+		PostProcessingEffect::bindValues();
+
 		shader.setFloat("r", r);
 		shader.setFloat("g", g);
 		shader.setFloat("b", b);

@@ -5,6 +5,4 @@ namespace geeL {
 
 	DefaultPostProcess::DefaultPostProcess() : PostProcessingEffect("renderer/postprocessing/drawdefault.frag") {}
 
-	void DefaultPostProcess::bindValues() {}
-
 }

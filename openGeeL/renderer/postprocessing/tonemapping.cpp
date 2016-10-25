@@ -10,6 +10,8 @@ namespace geeL {
 
 
 	void ToneMapping::bindValues() {
+		PostProcessingEffect::bindValues();
+
 		shader.setFloat("exposure", exposure);
 	}
 
