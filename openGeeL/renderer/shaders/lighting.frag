@@ -123,7 +123,7 @@ void main() {
 	for(int i = 0; i < slCount; i++)
 		result += calculateSpotLight(i, spotLights[i], norm, fragPosition, viewDirection, texColor, speColor, blinn);
 
-	//result = pow(result.rgb, vec3(0.4545f));
+	result = pow(result.rgb, vec3(0.4545f));
 	color = vec4(result, 1.f);
 }
 
@@ -175,9 +175,10 @@ float calculatePointLightShadows(int i, vec3 norm) {
 		return 0.0f;
 
 	//float minBias = pointLights[i].bias;
-	float minBias = 0.0065f;
+	float minBias = 0.0055f;
 	vec3 lightDir =  spotLights[i].position - fragPosition;
-	float bias = max((minBias * 10.0f) * (1.0f - dot(norm, lightDir)), minBias);
+	//float bias = max((minBias * 5.0f) * (1.0f - dot(norm, lightDir)), minBias);
+	float bias = minBias;
 
 	float shadow = 0.0f;
 	int samples = 5;

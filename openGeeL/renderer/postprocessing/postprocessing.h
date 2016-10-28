@@ -20,7 +20,8 @@ class PostProcessingScreen;
 class PostProcessingEffect : public Drawer {
 
 public:
-	PostProcessingEffect(string shaderPath);
+	PostProcessingEffect(string fragmentPath);
+	PostProcessingEffect(string vertexPath, string fragmentPath);
 
 	//Set buffer that will be used as base for post processing
 	void setBuffer(unsigned int buffer);

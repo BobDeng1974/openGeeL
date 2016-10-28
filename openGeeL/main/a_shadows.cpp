@@ -27,6 +27,8 @@
 #include "../renderer/postprocessing/tonemapping.h"
 #include "../renderer/postprocessing/gaussianblur.h"
 #include "../renderer/postprocessing/bloom.h"
+#include "../renderer/postprocessing/godray.h"
+
 
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/skybox.h"
@@ -56,6 +58,8 @@ namespace {
 
 		Material* material;
 
+		geeL::Transform* transi;
+
 
 		ShadowTestObject(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
 			ShaderManager& shaderManager, RenderScene& scene, TransformFactory& transformFactory) 
@@ -76,16 +80,14 @@ namespace {
 			geeL::Transform* lighTransi4 = new geeL::Transform(glm::vec3(7, 5, 5), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
 			light = &lightManager.addLight(*lighTransi4, glm::vec3(l, l, l),
 				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), 1.f, 1.f);
-
+				
 			l = 100.f;
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
-			
-			
+	
 			geeL::Transform* lighTransi = new geeL::Transform(glm::vec3(-7, 5, 0), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
 			light = &lightManager.addLight(*lighTransi, glm::vec3(l, l, l),
 				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), angle, outerAngle, 10.f);
-			
 
 			/*
 			geeL::Transform* lighTransi3 = new geeL::Transform(glm::vec3(-7, 5, 0), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
@@ -94,14 +96,14 @@ namespace {
 			*/	
 			
 			/*
-			l = 10.f;
-			geeL::Transform* lighTransi2 = new geeL::Transform(glm::vec3(0.f, 0.f, 0.f), glm::vec3(50.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
+			l = 4.f;
+			geeL::Transform* lighTransi2 = new geeL::Transform(glm::vec3(10.f, 10.f, 100.f), glm::vec3(50.0f, 0, -30), glm::vec3(1.f, 1.f, 1.f));
 			dirLight = &lightManager.addLight(*lighTransi2, glm::vec3(l, l, l),
 				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), 1.f);
 			*/
 
 			float height = -2.f;
-			geeL::Transform* transi = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.2f, 0.2f, 0.2f));
+			transi = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.2f, 0.2f, 0.2f));
 			nanoRenderer = &scene.AddMeshRenderer("resources/nanosuit/nanosuit.obj", *transi, cullFront);
 
 			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(100.2f, 0.2f, 100.2f));
@@ -163,7 +165,10 @@ void a_shadows() {
 		"resources/skybox2/bottom.jpg", "resources/skybox2/back.jpg", "resources/skybox2/front.jpg");
 
 	Skybox skybox = Skybox(map);
-	//scene.setSkybox(skybox);
+	scene.setSkybox(skybox);
+
+	GodRay ray = GodRay(scene, glm::vec3(-40, 30, -50));
+	renderer3.setEffect(ray);
 
 
 	renderer3.render();

@@ -1,6 +1,7 @@
 #ifndef RENDERSCENE_H
 #define RENDERSCENE_H
 
+#include <vec3.hpp>
 #include <list>
 
 namespace geeL {
@@ -34,6 +35,9 @@ public:
 
 	//Draw only the objects in the scene and all with given shader
 	void drawObjects(const Shader& shader) const;
+
+	glm::vec3 TranslateToScreenSpace(glm::vec3 vector) const;
+
 
 private:
 	Skybox* skybox;

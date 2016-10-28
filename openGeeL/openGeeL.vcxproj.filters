@@ -171,6 +171,9 @@
     <ClCompile Include="renderer\postprocessing\bloom.cpp">
       <Filter>renderer\postprocessing</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\postprocessing\godray.cpp">
+      <Filter>renderer\postprocessing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -302,6 +305,9 @@
     <ClInclude Include="renderer\postprocessing\gaussianblur.h">
       <Filter>renderer\postprocessing</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\postprocessing\godray.h">
+      <Filter>renderer\postprocessing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\simple.vert">
@@ -386,6 +392,9 @@
       <Filter>renderer\postprocessing</Filter>
     </None>
     <None Include="renderer\postprocessing\bloomcombine.frag">
+      <Filter>renderer\postprocessing</Filter>
+    </None>
+    <None Include="renderer\postprocessing\godray.frag">
       <Filter>renderer\postprocessing</Filter>
     </None>
   </ItemGroup>

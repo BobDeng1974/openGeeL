@@ -1,3 +1,5 @@
+#include <vec4.hpp>
+#include <mat4x4.hpp>
 #include "shader\shader.h"
 #include "meshes\mesh.h"
 #include "meshes\model.h"
@@ -57,5 +59,12 @@ namespace geeL {
 
 		return renderObjects.back();
 	}
+
+	glm::vec3 RenderScene::TranslateToScreenSpace(glm::vec3 vector) const {
+		glm::vec4 vec = camera.projectionMatrix() * camera.viewMatrix() * glm::vec4(vector, 1.f);
+		return glm::vec3(vec.x / vec.w, vec.y / vec.w, vec.z / vec.w) * 0.5f + 0.5f;
+	}
+
+		
 
 }

@@ -8,8 +8,11 @@
 
 namespace geeL {
 
-	PostProcessingEffect::PostProcessingEffect(string shaderPath) 
-		: shader(Shader("renderer/shaders/screen.vert", shaderPath.c_str())) {}
+	PostProcessingEffect::PostProcessingEffect(string fragmentPath)
+		: shader(Shader("renderer/shaders/screen.vert", fragmentPath.c_str())) {}
+
+	PostProcessingEffect::PostProcessingEffect(string vertexPath, string fragmentPath)
+		: shader(Shader(vertexPath.c_str(), fragmentPath.c_str())) {}
 
 
 	void PostProcessingEffect::setBuffer(unsigned int buffer) {
