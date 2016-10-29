@@ -2,26 +2,23 @@
 #include <glew.h>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
-#include "material.h"
+#include "genericmaterial.h"
 #include "../shader/shader.h"
 #include "../texturing/simpletexture.h"
-#include "../cameras/camera.h"
-#include "../lighting/lightmanager.h"
 
 using namespace std;
 
 namespace geeL {
 
-	Material::Material(Shader& shader, string name, MaterialType type) : shader(shader), type(type), name(name) {
+	GenericMaterial::GenericMaterial(Shader& shader, string name, MaterialType type) : Material(shader, name, type) {
 		textureStack = LayeredTexture();
 	}
 
-	void Material::addTexture(string name, SimpleTexture& texture) {
+	void GenericMaterial::addTexture(string name, SimpleTexture& texture) {
 		textureStack.addTexture(this->name + "." + name, texture);
 	}
 
-	void Material::addTextures(vector<SimpleTexture*> textures) {
-
+	void GenericMaterial::addTextures(vector<SimpleTexture*> textures) {
 		for (size_t i = 0; i < textures.size(); i++) {
 			SimpleTexture& texture = *textures[i];
 			string name = this->name + "." + texture.GetTypeAsString();
@@ -30,71 +27,71 @@ namespace geeL {
 		}
 	}
 
-	void Material::addParameter(string name, float parameter) {
+	void GenericMaterial::addParameter(string name, float parameter) {
 		floatParameters.push_back(pair<string, float>(this->name + "." + name, parameter));
 	}
 
-	void Material::addParameter(string name, int parameter) {
+	void GenericMaterial::addParameter(string name, int parameter) {
 		intParameters.push_back(pair<string, int>(this->name + "." + name, parameter));
 	}
 
-	void Material::addParameter(string name, vec3 parameter) {
+	void GenericMaterial::addParameter(string name, vec3 parameter) {
 		vec3Parameters.push_back(pair<string, vec3>(this->name + "." + name, parameter));
 	}
 
-	void Material::addParameter(string name, mat4 parameter) {
+	void GenericMaterial::addParameter(string name, mat4 parameter) {
 		mat4Parameters.push_back(pair<string, mat4>(this->name + "." + name, parameter));
 	}
 
-	void Material::addParameter(string name, const float* parameter) {
+	void GenericMaterial::addParameter(string name, const float* parameter) {
 		unmanagedFloatParameters.push_back(pair<string, const float*>(this->name + "." + name, parameter));
 	}
 
-	void Material::addParameter(string name, const int* parameter) {
+	void GenericMaterial::addParameter(string name, const int* parameter) {
 		unmanagedIntParameters.push_back(pair<string, const int*>(this->name + "." + name, parameter));
 	}
 
-	void Material::addParameter(string name, const vec3* parameter) {
+	void GenericMaterial::addParameter(string name, const vec3* parameter) {
 		unmanagedVec3Parameters.push_back(pair<string, const vec3*>(this->name + "." + name, parameter));
 	}
 
-	void Material::addParameter(string name, const mat4* parameter) {
+	void GenericMaterial::addParameter(string name, const mat4* parameter) {
 		unmanagedMat4Parameters.push_back(pair<string, const mat4*>(this->name + "." + name, parameter));
 	}
 
-	void Material::bindTextures() const {
+	void GenericMaterial::bindTextures() const {
 		shader.use();
 		textureStack.bind(shader, "");
 	}
 
-	void Material::bind() const {
+	void GenericMaterial::bind() const {
 		shader.use();
 		shader.loadMaps();
 		textureStack.draw(shader);
 
-		glUniform1i(glGetUniformLocation(shader.program, "material.mapFlags"), textureStack.mapFlags);
-		glUniform1f(glGetUniformLocation(shader.program, "material.type"), type);
+		shader.setInteger("material.mapFlags", textureStack.mapFlags);
+		shader.setFloat("material.type", type);
 
 		GLint location;
 		for (list<pair<string, float>>::const_iterator it = floatParameters.begin(); it != floatParameters.end(); it++) {
 			pair<string, float> pair = *it;
 
-			location = glGetUniformLocation(shader.program, pair.first.c_str());
-			glUniform1f(location, pair.second);
+			shader.setFloat(pair.first, pair.second);
 		}
 
 		for (list<pair<string, const float*>>::const_iterator it = unmanagedFloatParameters.begin(); it != unmanagedFloatParameters.end(); it++) {
 			pair<string, const float*> pair = *it;
-
-			location = glGetUniformLocation(shader.program, pair.first.c_str());
-			glUniform1f(location, *pair.second);
+			shader.setFloat(pair.first, *pair.second);
 		}
 
 		for (list<pair<string, int>>::const_iterator it = intParameters.begin(); it != intParameters.end(); it++) {
 			pair<string, int> pair = *it;
+			shader.setInteger(pair.first, pair.second);
+		}
 
-			location = glGetUniformLocation(shader.program, pair.first.c_str());
-			glUniform1i(location, pair.second);
+		for (list<pair<string, const int*>>::const_iterator it = unmanagedIntParameters.begin(); it != unmanagedIntParameters.end(); it++) {
+			pair<string, const int*> pair = *it;
+			shader.setInteger(pair.first, *pair.second);
 		}
 
 		for (list<pair<string, vec3>>::const_iterator it = vec3Parameters.begin(); it != vec3Parameters.end(); it++) {

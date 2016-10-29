@@ -1,4 +1,6 @@
 #include "../shader/shader.h"
+#include "genericmaterial.h"
+#include "defaultmaterial.h"
 #include "material.h"
 #include "materialfactory.h"
 
@@ -16,6 +18,11 @@ namespace geeL {
 			Shader* shader = *it;
 			delete shader;
 		}
+
+		for (list<Material*>::iterator it = materials.begin(); it != materials.end(); it++) {
+			Material* material = *it;
+			delete material;
+		}
 	}
 
 	SimpleTexture& MaterialFactory::CreateTexture(string filePath, 
@@ -27,15 +34,18 @@ namespace geeL {
 		return textures[filePath];
 	}
 
-	Material& MaterialFactory::CreateMaterial() {
-		return CreateMaterial(*defaultShader);
+	DefaultMaterial& MaterialFactory::CreateMaterial() {
+		DefaultMaterial* mat = new DefaultMaterial(*defaultShader);
+		materials.push_back(mat);
+
+		return *mat;
 	}
 
-	Material& MaterialFactory::CreateMaterial(Shader& shader) {
-		materials.push_back(Material(shader));
-		//materials.back().staticBind();
+	GenericMaterial& MaterialFactory::CreateMaterial(Shader& shader) {
+		GenericMaterial* mat = new GenericMaterial(shader);
+		materials.push_back(mat);
 
-		return materials.back();
+		return *mat;
 	}
 
 	Shader& MaterialFactory::CreateShader(string vertexPath, string fragmentPath) {
@@ -43,19 +53,19 @@ namespace geeL {
 		return *shaders.back();
 	}
 
-	list<Material>::iterator MaterialFactory::materialsBegin() {
+	list<Material*>::iterator MaterialFactory::materialsBegin() {
 		return materials.begin();
 	}
 
-	list<Material>::iterator MaterialFactory::materialsEnd() {
+	list<Material*>::iterator MaterialFactory::materialsEnd() {
 		return materials.end();
 	}
 
-	list<Material>::const_iterator MaterialFactory::materialsBegin() const {
+	list<Material*>::const_iterator MaterialFactory::materialsBegin() const {
 		return materials.begin();
 	}
 
-	list<Material>::const_iterator MaterialFactory::materialsEnd() const {
+	list<Material*>::const_iterator MaterialFactory::materialsEnd() const {
 		return materials.end();
 	}
 

@@ -87,9 +87,6 @@
     <ClCompile Include="renderer\renderer\splitrenderer.cpp">
       <Filter>renderer\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\materials\material.cpp">
-      <Filter>renderer\materials</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\lighting\directionallight.cpp">
       <Filter>renderer\lighting</Filter>
     </ClCompile>
@@ -173,6 +170,12 @@
     </ClCompile>
     <ClCompile Include="renderer\postprocessing\godray.cpp">
       <Filter>renderer\postprocessing</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\materials\genericmaterial.cpp">
+      <Filter>renderer\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\materials\defaultmaterial.cpp">
+      <Filter>renderer\materials</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -307,6 +310,12 @@
     </ClInclude>
     <ClInclude Include="renderer\postprocessing\godray.h">
       <Filter>renderer\postprocessing</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\materials\genericmaterial.h">
+      <Filter>renderer\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\materials\defaultmaterial.h">
+      <Filter>renderer\materials</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

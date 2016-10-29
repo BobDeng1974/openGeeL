@@ -157,7 +157,8 @@
     <ClCompile Include="renderer\lighting\lightmanager.cpp" />
     <ClCompile Include="renderer\lighting\pointlight.cpp" />
     <ClCompile Include="renderer\lighting\spotlight.cpp" />
-    <ClCompile Include="renderer\materials\material.cpp" />
+    <ClCompile Include="renderer\materials\defaultmaterial.cpp" />
+    <ClCompile Include="renderer\materials\genericmaterial.cpp" />
     <ClCompile Include="renderer\materials\materialfactory.cpp" />
     <ClCompile Include="renderer\meshes\mesh.cpp" />
     <ClCompile Include="renderer\meshes\meshfactory.cpp" />
@@ -200,6 +201,8 @@
     <ClInclude Include="renderer\lighting\lightmanager.h" />
     <ClInclude Include="renderer\lighting\pointlight.h" />
     <ClInclude Include="renderer\lighting\spotlight.h" />
+    <ClInclude Include="renderer\materials\defaultmaterial.h" />
+    <ClInclude Include="renderer\materials\genericmaterial.h" />
     <ClInclude Include="renderer\materials\material.h" />
     <ClInclude Include="renderer\materials\materialfactory.h" />
     <ClInclude Include="renderer\meshes\mesh.h" />

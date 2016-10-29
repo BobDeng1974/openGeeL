@@ -47,24 +47,6 @@ namespace geeL {
 		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, bitangent));
 
 		glBindVertexArray(0);
-
-		/*
-		for (int i = 0; i < vertices.size(); i++) {
-
-			std::cout << vertices[i].tangent.x << ", " << vertices[i].tangent.y << "," << vertices[i].tangent.z << "\n";
-			std::cout << vertices[i].bitangent.x << ", " << vertices[i].bitangent.y << "," << vertices[i].bitangent.z << "\n";
-			std::cout << "\n";
-
-			glm::vec3 ayy = glm::cross(vertices[i].tangent, vertices[i].bitangent);
-
-			std::cout << ayy.x << ", " << ayy.y << "," << ayy.z << "\n";
-			std::cout << vertices[i].normal.x << ", " << vertices[i].normal.y << "," << vertices[i].normal.z << "\n";
-			std::cout << "\n\n\n";
-
-		}
-
-		std::cout << ":::::::::\n";
-		*/
 	}
 
 	void Mesh::draw(bool shade) const {

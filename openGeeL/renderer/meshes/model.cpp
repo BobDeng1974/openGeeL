@@ -1,6 +1,6 @@
 #include <iostream>
 #include "../shader/shader.h"
-#include "../materials/material.h"
+#include "../materials/defaultmaterial.h"
 #include "../materials/materialfactory.h"
 #include "../texturing/simpletexture.h"
 #include "../../dependencies/assimp/Importer.hpp"
@@ -172,9 +172,9 @@ namespace geeL {
 			textures.insert(textures.end(), reflectionMaps.begin(), reflectionMaps.end());
 		}
 
-		Material& mat = factory.CreateMaterial();
+		DefaultMaterial& mat = factory.CreateMaterial();
 		mat.addTextures(textures);
-		mat.addParameter("shininess", 64.f);
+		mat.setShininess(64.f);
 
 		return Mesh(vertices, indices, mat);
 	}
