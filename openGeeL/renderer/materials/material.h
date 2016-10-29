@@ -2,13 +2,13 @@
 #define RENDERMATERIAL_H
 
 #include <utility>
-#include <vector>
+#include <list>
 #include <string>
 #include <vec3.hpp>
 #include <mat4x4.hpp>
 #include "../texturing/layeredtexture.h"
 
-using namespace std;
+
 using glm::vec3;
 using glm::mat4;
 
@@ -22,7 +22,7 @@ class Shader;
 enum MaterialType {
 	Opaque = 0,
 	Cutout = 1,
-	Transparent = 2	//TODO: doesn't really make sense right now because of unordered draw calls
+	Transparent = 2
 };
 
 class Material {
@@ -30,17 +30,22 @@ class Material {
 public:
 	Shader& shader;
 	const MaterialType type;
-	const string name;
+	const std::string name;
 
 	Material(Shader& shader, string name = "material", MaterialType type = Opaque);
 
-	void addTexture(string name, SimpleTexture& texture);
-	void addTextures(vector<SimpleTexture*> textures);
+	void addTexture(std::string name, SimpleTexture& texture);
+	void addTextures(std::vector<SimpleTexture*> textures);
 
-	void addParameter(string name, float parameter);
-	void addParameter(string name, int parameter);
-	void addParameter(string name, vec3 parameter);
-	void addParameter(string name, mat4 parameter);
+	void addParameter(std::string name, float parameter);
+	void addParameter(std::string name, int parameter);
+	void addParameter(std::string name, vec3 parameter);
+	void addParameter(std::string name, mat4 parameter);
+
+	void addParameter(std::string name, const float* parameter);
+	void addParameter(std::string name, const int* parameter);
+	void addParameter(std::string name, const vec3* parameter);
+	void addParameter(std::string name, const mat4* parameter);
 
 	void bindTextures() const;
 	void bind() const;
@@ -48,10 +53,15 @@ public:
 private:
 	LayeredTexture textureStack;
 
-	vector<pair<string, float>> floatParameters;
-	vector<pair<string, int>> intParameters;
-	vector<pair<string, vec3>> vec3Parameters;
-	vector<pair<string, mat4>> mat4Parameters;
+	std::list<std::pair<std::string, float>> floatParameters;
+	std::list<std::pair<std::string, int>> intParameters;
+	std::list<std::pair<std::string, vec3>> vec3Parameters;
+	std::list<std::pair<std::string, mat4>> mat4Parameters;
+
+	std::list<std::pair<std::string, const float*>> unmanagedFloatParameters;
+	std::list<std::pair<std::string, const int*>> unmanagedIntParameters;
+	std::list<std::pair<std::string, const vec3*>> unmanagedVec3Parameters;
+	std::list<std::pair<std::string, const mat4*>> unmanagedMat4Parameters;
 };
 
 

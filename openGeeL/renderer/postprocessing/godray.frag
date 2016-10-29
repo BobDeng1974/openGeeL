@@ -15,7 +15,7 @@ float random(vec2 co){
 void main() { 
 
 	float falloff = pow(TexCoords.y, 3.5f);
-	float density = 1.5f;
+	float density = 2.0f;
 	float decay = 1.0f;
 	float weight = 1.0f / float(samples);
 
@@ -28,7 +28,7 @@ void main() {
 
 	float i = 0;
 	while(i < samples) {
-		float offset = 0.7f + 0.3f * random(coords);
+		float offset = 0.5f + 0.5f * random(coords);
 		coords -= deltaCoords * offset;
 		result += texture(image, coords).rgb * weight * currDecay * offset * falloff;
 		currDecay *= decay;
