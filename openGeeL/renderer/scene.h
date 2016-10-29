@@ -16,7 +16,6 @@ class MeshFactory;
 class Transform;
 enum CullingMode;
 
-
 class RenderScene {
 
 public:
@@ -29,7 +28,7 @@ public:
 	void bindSkybox(const Shader& shader) const;
 
 	//Create and add new mesh renderer to scene
-	MeshRenderer& AddMeshRenderer(string modelPath, Transform& transform, CullingMode faceCulling);
+	MeshRenderer& AddMeshRenderer(std::string modelPath, Transform& transform, CullingMode faceCulling);
 		
 	void draw() const;
 
@@ -42,7 +41,7 @@ public:
 private:
 	Skybox* skybox;
 	MeshFactory& meshFactory;
-	list<MeshRenderer> renderObjects;
+	std::list<MeshRenderer> renderObjects;
 
 	void drawSkybox() const;
 	void drawObjects() const;

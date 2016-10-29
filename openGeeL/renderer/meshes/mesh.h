@@ -13,8 +13,7 @@ typedef unsigned int GLuint;
 
 namespace geeL {
 
-class Camera;
-class LightManager;
+class DefaultMaterial;
 class Material;
 
 struct Vertex {
@@ -29,11 +28,11 @@ struct Vertex {
 class Mesh {
 
 public:
-	Material& material;
+	DefaultMaterial& material;
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
 
-	Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, Material& material);
+	Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, DefaultMaterial& material);
 
 	void init();
 	void draw(bool shade = true) const;

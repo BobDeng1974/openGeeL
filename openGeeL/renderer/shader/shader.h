@@ -3,9 +3,11 @@
 
 #include <list>
 #include <string>
-#include <utility>
+#include <vec3.hpp>
+#include <mat4x4.hpp>
 
 #define GL_TEXTURE_2D 0x0DE1
+
 
 namespace geeL {
 
@@ -53,6 +55,8 @@ public:
 
 	void setInteger(std::string name, int value) const;
 	void setFloat(std::string name, float value) const;
+	void setVector3(std::string name, const glm::vec3& value) const;
+	void setMat4(std::string name, const glm::mat4& value) const;
 
 private:
 	std::list<TextureBinding> maps;

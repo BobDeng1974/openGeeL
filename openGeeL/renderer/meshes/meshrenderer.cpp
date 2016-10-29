@@ -3,6 +3,7 @@
 #include <glfw3.h>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
+#include "../materials/defaultmaterial.h"
 #include "../materials/material.h"
 #include "../transformation/transform.h"
 #include "../shader/shader.h"
@@ -10,6 +11,7 @@
 #include "model.h"
 #include "meshrenderer.h"
 
+using namespace std;
 
 namespace geeL{
 

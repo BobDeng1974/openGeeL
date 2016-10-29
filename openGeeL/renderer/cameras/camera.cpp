@@ -1,9 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <glfw3.h>
-#include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
-
 #include "../shader/shader.h"
 #include "camera.h"
 #include "../inputmanager.h"
@@ -64,15 +62,9 @@ namespace geeL {
 	void Camera::bind(const Shader& shader) const {
 		shader.use();
 
-		vec3 position = transform.position;
-		string posName = shader.cam + ".position";
-		glUniform3f(glGetUniformLocation(shader.program, posName.c_str()), position.x, position.y, position.z);
-		
-		GLint viewLoc = glGetUniformLocation(shader.program, "view");
-		GLint projLoc = glGetUniformLocation(shader.program, "projection");
-
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix()));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix()));
+		shader.setVector3(shader.cam + ".position", transform.position);
+		shader.setMat4("view", viewMatrix());
+		shader.setMat4("projection", projectionMatrix());
 	}
 
 	void Camera::uniformBind(int uniformID) const {

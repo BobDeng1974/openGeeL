@@ -2,7 +2,6 @@
 #include <glew.h>
 #include <string>
 #include <gtc/matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>
 #include "../shader/shader.h"
 #include "../transformation/transform.h"
 #include "directionallight.h"
@@ -22,14 +21,11 @@ namespace geeL {
 	void DirectionalLight::bind(const Shader& shader, int index, string name) const {
 		Light::bind(shader, index, name);
 
-		GLuint program = shader.program;
 		string location = name + "[" + to_string(index) + "].";
-		glUniform3f(glGetUniformLocation(program, (location + "direction").c_str()), 
-			transform.forward.x, transform.forward.y, transform.forward.z);
+		shader.setVector3(location + "direction", transform.forward);
 
 		location = "direLightMatrix[" + to_string(index) + "]";
-		glUniformMatrix4fv(glGetUniformLocation(shader.program, location.c_str()), 1, GL_FALSE,
-			glm::value_ptr(lightTransform));
+		shader.setMat4(location, lightTransform);
 	}
 
 	void DirectionalLight::computeLightTransform() {

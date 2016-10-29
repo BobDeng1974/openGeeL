@@ -3,28 +3,24 @@
 
 #include <string>
 
-using namespace std;
-
 namespace geeL {
 
-	class Shader;
+class Shader;
 
-	class CubeMap {
+class CubeMap {
 
-	public:
+public:
 
-		CubeMap(string rightPath, string leftPath, string topPath, 
-			string bottomPath, string backPath, string frontPath);
+	CubeMap(std::string rightPath, std::string leftPath, std::string topPath,
+		std::string bottomPath, std::string backPath, std::string frontPath);
 
-		void draw(const Shader& shader, string name);
+	void draw(const Shader& shader, std::string name);
 
-	private:
-		unsigned int id;
+private:
+	unsigned int id;
 
-	};
-
+};
 
 }
-
 
 #endif

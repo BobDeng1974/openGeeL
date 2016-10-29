@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
 #include "shader.h"
 
 using namespace std;
@@ -233,8 +235,19 @@ namespace geeL {
 		glUniform1i(glGetUniformLocation(program, name.c_str()), value);
 	}
 
-	void Shader::setFloat(std::string name, float value) const {
+	void Shader::setFloat(string name, float value) const {
 		glUniform1f(glGetUniformLocation(program, name.c_str()), value);
 	}
+
+	void Shader::setVector3(string name, const glm::vec3& value) const {
+		glUniform3f(glGetUniformLocation(program, name.c_str()),
+			value.x, value.y, value.z);
+	}
+
+	void Shader::setMat4(string name, const glm::mat4& value) const {
+		glUniformMatrix4fv(glGetUniformLocation(program, name.c_str()), 1, GL_FALSE,
+			glm::value_ptr(value));
+	}
+
 }
 

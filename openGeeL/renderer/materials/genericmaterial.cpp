@@ -96,32 +96,23 @@ namespace geeL {
 
 		for (list<pair<string, vec3>>::const_iterator it = vec3Parameters.begin(); it != vec3Parameters.end(); it++) {
 			pair<string, vec3> pair = *it;
-
-			location = glGetUniformLocation(shader.program, pair.first.c_str());
-			glUniform3f(location, pair.second.x, pair.second.y, pair.second.z);
+			shader.setVector3(pair.first, pair.second);
 		}
 
 		for (list<pair<string, const vec3*>>::const_iterator it = unmanagedVec3Parameters.begin(); it != unmanagedVec3Parameters.end(); it++) {
 			pair<string, const vec3*> pair = *it;
-
-			location = glGetUniformLocation(shader.program, pair.first.c_str());
-			glUniform3f(location, pair.second->x, pair.second->y, pair.second->z);
+			shader.setVector3(pair.first, *pair.second);
 		}
 
 		for (list<pair<string, mat4>>::const_iterator it = mat4Parameters.begin(); it != mat4Parameters.end(); it++) {
 			pair<string, mat4> pair = *it;
-
-			location = glGetUniformLocation(shader.program, pair.first.c_str());
-			glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(pair.second));
+			shader.setMat4(pair.first, pair.second);
 		}
 
 		for (list<pair<string, const mat4*>>::const_iterator it = unmanagedMat4Parameters.begin(); it != unmanagedMat4Parameters.end(); it++) {
 			pair<string, const mat4*> pair = *it;
-
-			location = glGetUniformLocation(shader.program, pair.first.c_str());
-			glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(*pair.second));
+			shader.setMat4(pair.first, *pair.second);
 		}
-
 	}
 
 }

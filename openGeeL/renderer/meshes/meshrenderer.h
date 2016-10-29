@@ -4,15 +4,11 @@
 #include <vector>
 #include "../sceneobject.h"
 
-using namespace std;
-
 namespace geeL {
 
 class Material;
 class Model;
 class Transform;
-class LightManager;
-class Camera;
 
 enum CullingMode {
 	cullNone,
@@ -43,15 +39,15 @@ public:
 	//Let materials hold i materials and default materials hold j materials
 	//If i < j, then the first i materials will be changed
 	//If i > j, then j materials will be change and the remaining (i - j) materials ignored
-	void customizeMaterials(vector<Material*> materials);
+	void customizeMaterials(std::vector<Material*> materials);
 
-	vector<Material*>::const_iterator materialsBegin() const;
-	vector<Material*>::const_iterator materialsEnd() const;
+	std::vector<Material*>::const_iterator materialsBegin() const;
+	std::vector<Material*>::const_iterator materialsEnd() const;
 
 
 private:
 	bool instanced;
-	vector<Material*> customMaterials;
+	std::vector<Material*> customMaterials;
 
 	void initMaterials();
 

@@ -2,7 +2,6 @@
 #include <glew.h>
 #include <string>
 #include <gtc/matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>
 #include "../shader/shader.h"
 #include "../transformation/transform.h"
 #include "spotlight.h"
@@ -24,24 +23,19 @@ namespace geeL {
 	void SpotLight::bind(const Shader& shader, int index, string name) const {
 		Light::bind(shader, index, name);
 
-		GLuint program = shader.program;
 		string location = name + "[" + to_string(index) + "].";
 
-		glUniform3f(glGetUniformLocation(program, (location + "position").c_str()), 
-			transform.position.x, transform.position.y, transform.position.z);
-		
-		glUniform3f(glGetUniformLocation(program, (location + "direction").c_str()), 
-			transform.forward.x, transform.forward.y, transform.forward.z);
-		
-		glUniform1f(glGetUniformLocation(program, (location + "angle").c_str()), angle);
-		glUniform1f(glGetUniformLocation(program, (location + "outerAngle").c_str()), outerAngle);
-		glUniform1f(glGetUniformLocation(program, (location + "constant").c_str()), constant);
-		glUniform1f(glGetUniformLocation(program, (location + "linear").c_str()), linear);
-		glUniform1f(glGetUniformLocation(program, (location + "quadratic").c_str()), quadratic);
+		shader.setVector3(location + "position", transform.position);
+		shader.setVector3(location + "direction", transform.forward);
+
+		shader.setFloat(location + "angle", angle);
+		shader.setFloat(location + "outerAngle", outerAngle);
+		shader.setFloat(location + "constant", constant);
+		shader.setFloat(location + "linear", linear);
+		shader.setFloat(location + "quadratic", quadratic);
 
 		location = "spotLightMatrix[" + to_string(index) + "]";
-		glUniformMatrix4fv(glGetUniformLocation(shader.program, location.c_str()), 1, GL_FALSE,
-			glm::value_ptr(lightTransform));
+		shader.setMat4(location, lightTransform);
 	}
 
 	void SpotLight::computeLightTransform() {

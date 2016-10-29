@@ -18,7 +18,7 @@ namespace geeL {
 
 		shader.setInteger("samples", samples);
 		glm::vec3 pos = scene.TranslateToScreenSpace(lightPosition);
-		glUniform3f(glGetUniformLocation(shader.program, "lightPosition"), pos.x, pos.y, pos.z);
+		shader.setVector3("lightPosition", pos);
 	}
 
 

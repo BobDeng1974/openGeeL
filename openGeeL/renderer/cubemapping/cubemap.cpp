@@ -4,6 +4,8 @@
 #include "../shader/shader.h"
 #include "cubemap.h"
 
+using namespace std;
+
 namespace geeL {
 
 	CubeMap::CubeMap(string rightPath, string leftPath, string topPath,

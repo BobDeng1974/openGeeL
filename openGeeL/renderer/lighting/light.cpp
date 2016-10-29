@@ -1,7 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <string>
-#include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 #include "../shader/shader.h"
 #include "../meshes/meshrenderer.h"
@@ -14,16 +13,14 @@ using namespace glm;
 namespace geeL {
 
 	void Light::bind(const Shader& shader, int index, string name) const {
-		GLuint program = shader.program;
-
 		std::string location = name + "[" + std::to_string(index) + "].";
 
-		glUniform3f(glGetUniformLocation(program, (location + "diffuse").c_str()), diffuse.x, diffuse.y, diffuse.z);
-		glUniform3f(glGetUniformLocation(program, (location + "specular").c_str()), specular.x, specular.y, specular.z);
-		glUniform3f(glGetUniformLocation(program, (location + "ambient").c_str()), ambient.x, ambient.y, ambient.z);
+		shader.setVector3(location + "diffuse", diffuse);
+		shader.setVector3(location + "specular", specular);
+		shader.setVector3(location + "ambient", ambient);
 
-		glUniform1f(glGetUniformLocation(program, (location + "intensity").c_str()), intensity);
-		glUniform1f(glGetUniformLocation(program, (location + "bias").c_str()), shadowBias);
+		shader.setFloat(location + "intensity", intensity);
+		shader.setFloat(location + "bias", shadowBias);
 	}
 
 	void Light::initShadowmap() {
@@ -61,8 +58,7 @@ namespace geeL {
 
 		//Write light transform into shader
 		computeLightTransform();
-		glUniformMatrix4fv(glGetUniformLocation(shader.program, "lightTransform"), 1, GL_FALSE,
-			glm::value_ptr(lightTransform));
+		shader.setMat4("lightTransform", lightTransform);
 
 		glViewport(0, 0, shadowmapWidth, shadowmapHeight);
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowmapFBO);

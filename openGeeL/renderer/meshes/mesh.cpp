@@ -2,17 +2,14 @@
 #include <glew.h>
 #include <glfw3.h>
 #include "mesh.h"
-#include "../cameras/camera.h"
+#include "../materials/defaultmaterial.h"
 #include "../materials/material.h"
-#include "../lighting/lightmanager.h"
-#include <iostream>
-#include <glm.hpp>
 
 using namespace std;
 
 namespace geeL {
 
-	Mesh::Mesh(vector<Vertex> vertices, vector<GLuint> indices, Material& material)
+	Mesh::Mesh(vector<Vertex> vertices, vector<GLuint> indices, DefaultMaterial& material)
 		: vertices(vertices), indices(indices), material(material) {
 	
 		init();

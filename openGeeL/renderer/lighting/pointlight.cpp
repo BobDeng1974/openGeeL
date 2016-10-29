@@ -1,7 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <gtc/matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>
 #include <string>
 #include "../shader/shader.h"
 #include "../transformation/transform.h"
@@ -28,15 +27,13 @@ namespace geeL {
 	void PointLight::bind(const Shader& shader, int index, string name) const {
 		Light::bind(shader, index, name);
 
-		GLuint program = shader.program;
 		std::string location = name + "[" + std::to_string(index) + "].";
 
-		glUniform3f(glGetUniformLocation(program, (location + "position").c_str()), 
-			transform.position.x, transform.position.y, transform.position.z);
-		glUniform1f(glGetUniformLocation(program, (location + "constant").c_str()), constant);
-		glUniform1f(glGetUniformLocation(program, (location + "linear").c_str()), linear);
-		glUniform1f(glGetUniformLocation(program, (location + "quadratic").c_str()), quadratic);
-		glUniform1f(glGetUniformLocation(program, (location + "farPlane").c_str()), farPlane);
+		shader.setVector3(location + "position", transform.position);
+		shader.setFloat(location + "constant", constant);
+		shader.setFloat(location + "linear", linear);
+		shader.setFloat(location + "quadratic", quadratic);
+		shader.setFloat(location + "farPlane", farPlane);
 	}
 
 	void PointLight::initShadowmap() {
@@ -78,14 +75,11 @@ namespace geeL {
 		computeLightTransform();
 		for (int i = 0; i < 6; i++) {
 			string name = "lightTransforms[" + to_string(i) + "]";
-			glUniformMatrix4fv(glGetUniformLocation(shader.program, name.c_str()), 1, GL_FALSE,
-				glm::value_ptr(lightTransforms[i]));
+			shader.setMat4(name, lightTransforms[i]);
 		}
 
-		glUniform1f(glGetUniformLocation(shader.program, "farPlane"), farPlane);
-		glUniform3f(glGetUniformLocation(shader.program, "lightPosition"),
-			transform.position.x, transform.position.y, transform.position.z);
-
+		shader.setFloat("farPlane", farPlane);
+		shader.setVector3("lightPosition", transform.position);
 		glViewport(0, 0, shadowmapWidth, shadowmapHeight);
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowmapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
