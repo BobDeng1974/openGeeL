@@ -2,11 +2,13 @@
 #define MESHRENDERER_H
 
 #include <vector>
+#include <map>
 #include "../sceneobject.h"
 
 namespace geeL {
 
 class Material;
+class DefaultMaterial;
 class Model;
 class Transform;
 
@@ -28,8 +30,8 @@ public:
 	//Constructor for mesh renderer with an unique assigned model
 	MeshRenderer(Transform& transform, Model& model, CullingMode faceCulling = cullFront);
 
-	//Draw models material(if parameter 'shade' is true) and its gemoetry (if it has an assigned model)
-	void draw() const;
+
+	void draw(bool drawDefault = true) const;
 	void draw(const Shader& shader) const;
 
 	//Transform given model with transformation data of this mesh renderer
@@ -41,15 +43,20 @@ public:
 	//If i > j, then j materials will be change and the remaining (i - j) materials ignored
 	void customizeMaterials(std::vector<Material*> materials);
 
-	std::vector<Material*>::const_iterator materialsBegin() const;
-	std::vector<Material*>::const_iterator materialsEnd() const;
-
+	//Check if the meshes only consists of default materials (using default shading) or not
+	bool hasIrregularMaterials() const;
 
 private:
 	bool instanced;
-	std::vector<Material*> customMaterials;
+	//std::vector<Material*> customMaterials;
+
+
+	std::map<unsigned int, Material*> defaultMaterials;
+	std::map<unsigned int, Material*> customMaterials;
 
 	void initMaterials();
+	void transformMeshes(Model& model, const std::map<unsigned int, Material*>& materials, 
+		const Shader* shader = nullptr) const;
 
 };
 

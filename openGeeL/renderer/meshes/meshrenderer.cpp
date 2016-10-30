@@ -1,8 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <glfw3.h>
-#include <gtc/matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>
 #include "../materials/defaultmaterial.h"
 #include "../materials/material.h"
 #include "../transformation/transform.h"
@@ -10,6 +8,7 @@
 #include "mesh.h"
 #include "model.h"
 #include "meshrenderer.h"
+#include <iostream>
 
 using namespace std;
 
@@ -28,7 +27,7 @@ namespace geeL{
 	}
 
 
-	void MeshRenderer::draw() const {
+	void MeshRenderer::draw(bool drawDefault) const {
 
 		switch (faceCulling) {
 			case cullNone:
@@ -39,8 +38,14 @@ namespace geeL{
 
 		//Draw model
 		if (!instanced && model != nullptr) {
-			transformMeshes(*model);
-			model->draw(customMaterials);
+			if (drawDefault) {
+				transformMeshes(*model, defaultMaterials);
+				model->draw(defaultMaterials);
+			}
+			else {
+				transformMeshes(*model, customMaterials);
+				model->draw(customMaterials);
+			}
 		}
 
 		switch (faceCulling) {
@@ -73,51 +78,62 @@ namespace geeL{
 			glCullFace(GL_FRONT);
 		}
 	}
+	
+
+	void MeshRenderer::customizeMaterials(vector<Material*> materials) {
+		int size = (materials.size() > model->meshCount()) 
+			? model->meshCount()
+			: materials.size();
+
+		for (size_t i = 0; i < size; i++) {
+			
+			DefaultMaterial* mat = dynamic_cast<DefaultMaterial*>(materials[i]);
+			if (mat != nullptr)
+				defaultMaterials[i] = mat;
+			else
+				customMaterials[i] = materials[i];
+		}
+	}
+
+	void MeshRenderer::initMaterials() {
+
+		//Load the default materials of the models meshes as materials of this mesh renderer
+		int counter = 0;
+		for (vector<Mesh>::iterator it = model->meshesBegin(); it != model->meshesEnd(); it++) {
+			defaultMaterials[counter] = &it->material;
+			counter++;
+		}
+	}
 
 	void MeshRenderer::transformMeshes(Model& model, const Shader* shader) const {
-		
-		int counter = 0;
-		//Load transform into vertex shaders
-		for (vector<Mesh>::iterator it = model.meshesBegin(); it != model.meshesEnd(); it++) {
-			Mesh& mesh = *it;
 
+		//Load transform into vertex shaders
+		transformMeshes(model, defaultMaterials, shader);
+		transformMeshes(model, customMaterials, shader);
+	}
+
+	void MeshRenderer::transformMeshes(Model& model, 
+		const map<unsigned int, Material*>& materials, const Shader* shader) const {
+
+		for (map<unsigned int, Material*>::const_iterator it = materials.begin(); 
+			it != materials.end(); it++) {
+
+			unsigned int i = it->first;
 			const Shader* sha;
 			if (shader == nullptr) {
-				Material* mat = customMaterials[counter];
+				Material* mat = it->second;
 				sha = &mat->shader;
 			}
 			else
 				sha = shader;
 
 			sha->use();
-			glUniformMatrix4fv(glGetUniformLocation(sha->program, "model"), 1, GL_FALSE, glm::value_ptr(transform.matrix));
-			counter++;
+			sha->setMat4("model", transform.matrix);
 		}
 	}
 
-	void MeshRenderer::customizeMaterials(vector<Material*> materials) {
-		int size = (materials.size() > customMaterials.size()) 
-			? customMaterials.size()
-			: materials.size();
-
-		for (size_t i = 0; i < size; i++)
-			customMaterials[i] = materials[i];
-	}
-
-	void MeshRenderer::initMaterials() {
-
-		//Load the default materials of the models meshes as materials of this mesh renderer
-		for (vector<Mesh>::iterator it = model->meshesBegin(); it != model->meshesEnd(); it++) {
-			customMaterials.push_back(&it->material);
-		}
-	}
-
-	vector<Material*>::const_iterator MeshRenderer::materialsBegin() const {
-		return customMaterials.begin();
-	}
-
-	vector<Material*>::const_iterator MeshRenderer::materialsEnd() const {
-		return customMaterials.end();
+	bool MeshRenderer::hasIrregularMaterials() const {
+		return customMaterials.size() > 0;
 	}
 
 }

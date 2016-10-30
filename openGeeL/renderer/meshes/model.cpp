@@ -49,6 +49,17 @@ namespace geeL {
 		}
 	}
 
+	void Model::draw(map<unsigned int, Material*> customMaterials) const {
+
+		for (map<unsigned int, Material*>::iterator it = customMaterials.begin(); 
+			it != customMaterials.end(); it++) {
+			
+			unsigned int i = it->first;
+			Material& mat = *it->second;
+			meshes[i].draw(mat);
+		}
+	}
+
 	void Model::processNode(MaterialFactory& factory, aiNode* node, const aiScene* scene) {
 
 		for (GLuint i = 0; i < node->mNumMeshes; i++) {
@@ -185,6 +196,18 @@ namespace geeL {
 
 	vector<Mesh>::iterator Model::meshesEnd() {
 		return meshes.end();
+	}
+
+	const Mesh& Model::getMesh(unsigned int index) {
+		if (index < meshes.size()) {
+			return meshes[index];
+		}
+
+		throw std::out_of_range("Index out of range");
+	}
+
+	int Model::meshCount() const {
+		return meshes.size();
 	}
 
 }

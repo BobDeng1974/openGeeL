@@ -98,7 +98,7 @@ namespace geeL {
 			objects[i]->draw(scene->camera);
 
 		shaderManager->dynamicBind(*scene);
-		scene->draw();
+		scene->drawDeferred();
 	}
 
 	void PostProcessingRenderer::handleInput() {

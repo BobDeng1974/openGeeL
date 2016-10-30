@@ -3,6 +3,7 @@
 
 #include <vec3.hpp>
 #include <list>
+#include <vector>
 
 namespace geeL {
 
@@ -12,6 +13,7 @@ class Skybox;
 class Shader;
 class MeshRenderer;
 class Model;
+class Material;
 class MeshFactory;
 class Transform;
 enum CullingMode;
@@ -23,14 +25,20 @@ public:
 	LightManager& lightManager;
 
 	RenderScene(LightManager& lightManager, Camera& camera, MeshFactory& meshFactory);
+	~RenderScene();
 
 	void setSkybox(Skybox& skybox);
 	void bindSkybox(const Shader& shader) const;
 
 	//Create and add new mesh renderer to scene
 	MeshRenderer& AddMeshRenderer(std::string modelPath, Transform& transform, CullingMode faceCulling);
+
+	//Create and add new mesh renderer with custom materials to scene
+	MeshRenderer& AddMeshRenderer(std::string modelPath, Transform& transform, 
+		std::vector<Material*> materials, CullingMode faceCulling);
 		
-	void draw() const;
+	void drawDeferred() const;
+	void drawForward() const;
 
 	//Draw only the objects in the scene and all with given shader
 	void drawObjects(const Shader& shader) const;
@@ -41,17 +49,15 @@ public:
 private:
 	Skybox* skybox;
 	MeshFactory& meshFactory;
-	std::list<MeshRenderer> renderObjects;
+	std::list<MeshRenderer*> deferredRenderObjects;
+	std::list<MeshRenderer*> forwardRenderObjects;
 
 	void drawSkybox() const;
-	void drawObjects() const;
+	void drawObjects(const std::list<MeshRenderer*>& objects) const;
 
 };
 
 
 }
-
-
-
 
 #endif

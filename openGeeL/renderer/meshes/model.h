@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 enum   aiTextureType;
 struct aiNode;
@@ -35,9 +36,13 @@ public:
 	void draw(bool shade = true) const;
 	void drawInstanced(bool shade = true) const;
 	void draw(std::vector<Material*> customMaterials) const;
+	void draw(std::map<unsigned int, Material*> customMaterials) const;
 
 	std::vector<Mesh>::iterator meshesBegin();
 	std::vector<Mesh>::iterator meshesEnd();
+	const Mesh& getMesh(unsigned int index);
+	int meshCount() const;
+
 
 private:
 	std::string path;
