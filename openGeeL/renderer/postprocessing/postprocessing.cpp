@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "../shader/shader.h"
-#include "postprocessscreen.h"
+#include "../utility/screenquad.h"
 #include "postprocessing.h"
 
 #include <iostream>
@@ -32,7 +32,7 @@ namespace geeL {
 		}
 	}
 
-	void PostProcessingEffect::setScreen(PostProcessingScreen& screen) {
+	void PostProcessingEffect::setScreen(ScreenQuad& screen) {
 		this->screen = &screen;
 	}
 
@@ -45,7 +45,6 @@ namespace geeL {
 
 	void PostProcessingEffect::bindToScreen() {
 		shader.use();
-		glBindVertexArray(screen->vao);
 
 		int counter = bindingStart;
 		for (std::list<unsigned int>::iterator it = buffers.begin(); it != buffers.end(); it++) {
@@ -55,8 +54,7 @@ namespace geeL {
 			counter++;
 		}
 		
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glBindVertexArray(0);
+		screen->draw();
 	}
 
 	void PostProcessingEffect::bindValues() {

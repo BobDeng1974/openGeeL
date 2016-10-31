@@ -67,6 +67,11 @@ namespace geeL {
 		shader.setMat4("projection", projectionMatrix());
 	}
 
+	void Camera::bindPosition(const Shader& shader, std::string name) const {
+		shader.use();
+		shader.setVector3(name, transform.position);
+	}
+
 	void Camera::uniformBind(int uniformID) const {
 
 		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);

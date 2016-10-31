@@ -1,7 +1,7 @@
 #ifndef POSTRENDERER_H
 #define POSTRENDERER_H
 
-#include "../postprocessing/postprocessscreen.h"
+#include "../utility/screenquad.h"
 #include "../utility/framebuffer.h"
 #include "../renderer.h"
 
@@ -26,9 +26,8 @@ public:
 	void setEffect(PostProcessingEffect& effect);
 
 private:
-	Shader* postShader;
 	PostProcessingEffect* effect;
-	PostProcessingScreen screen;
+	ScreenQuad screen;
 	FrameBuffer frameBuffer;
 };
 

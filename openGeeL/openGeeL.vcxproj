@@ -171,9 +171,9 @@
     <ClCompile Include="renderer\postprocessing\gaussianblur.cpp" />
     <ClCompile Include="renderer\postprocessing\godray.cpp" />
     <ClCompile Include="renderer\postprocessing\postprocessing.cpp" />
-    <ClCompile Include="renderer\postprocessing\postprocessscreen.cpp" />
     <ClCompile Include="renderer\postprocessing\tonemapping.cpp" />
     <ClCompile Include="renderer\renderer.cpp" />
+    <ClCompile Include="renderer\renderer\deferredrenderer.cpp" />
     <ClCompile Include="renderer\renderer\postrenderer.cpp" />
     <ClCompile Include="renderer\renderer\simplerenderer.cpp" />
     <ClCompile Include="renderer\renderer\splitrenderer.cpp" />
@@ -186,7 +186,9 @@
     <ClCompile Include="renderer\transformation\transform.cpp" />
     <ClCompile Include="renderer\transformation\transformfactory.cpp" />
     <ClCompile Include="renderer\utility\framebuffer.cpp" />
+    <ClCompile Include="renderer\utility\gbuffer.cpp" />
     <ClCompile Include="renderer\utility\rendertime.cpp" />
+    <ClCompile Include="renderer\utility\screenquad.cpp" />
     <ClCompile Include="renderer\window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -216,9 +218,9 @@
     <ClInclude Include="renderer\postprocessing\gaussianblur.h" />
     <ClInclude Include="renderer\postprocessing\godray.h" />
     <ClInclude Include="renderer\postprocessing\postprocessing.h" />
-    <ClInclude Include="renderer\postprocessing\postprocessscreen.h" />
     <ClInclude Include="renderer\postprocessing\tonemapping.h" />
     <ClInclude Include="renderer\renderer.h" />
+    <ClInclude Include="renderer\renderer\deferredrenderer.h" />
     <ClInclude Include="renderer\renderer\postrenderer.h" />
     <ClInclude Include="renderer\renderer\simplerenderer.h" />
     <ClInclude Include="renderer\renderer\splitrenderer.h" />
@@ -234,7 +236,9 @@
     <ClInclude Include="renderer\transformation\transform.h" />
     <ClInclude Include="renderer\transformation\transformfactory.h" />
     <ClInclude Include="renderer\utility\framebuffer.h" />
+    <ClInclude Include="renderer\utility\gbuffer.h" />
     <ClInclude Include="renderer\utility\rendertime.h" />
+    <ClInclude Include="renderer\utility\screenquad.h" />
     <ClInclude Include="renderer\window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -249,8 +253,12 @@
     <None Include="renderer\postprocessing\godray.frag" />
     <None Include="renderer\postprocessing\kernelprocessing.frag" />
     <None Include="renderer\postprocessing\tonemapping.frag" />
+    <None Include="renderer\shaders\deferredlighting.frag" />
+    <None Include="renderer\shaders\deferredlighting.vert" />
     <None Include="renderer\shaders\empty.frag" />
     <None Include="renderer\shaders\empty.vert" />
+    <None Include="renderer\shaders\gbuffer.frag" />
+    <None Include="renderer\shaders\gbuffer.vert" />
     <None Include="renderer\shaders\lamp.frag" />
     <None Include="renderer\shaders\lighting.frag" />
     <None Include="renderer\shaders\lighting.vert" />

@@ -31,6 +31,7 @@ public:
 	virtual void handleInput(const InputManager& input);
 
 	void bind(const Shader& shader) const;
+	void bindPosition(const Shader& shader, std::string name = "cameraPosition") const;
 	void uniformBind(int uniformID) const;
 
 protected:

@@ -23,6 +23,9 @@ public:
 	//Static bind a single shader. Should be called when a new shader is created at runtime
 	void staticBind(const RenderScene& scene, Shader& shader) const;
 
+	//Bind only the uniform camera information
+	void bindCamera(const RenderScene& scene) const;
+
 	//Generate a new uniform buffer object and return its ID
 	int generateUniformBuffer(int size);
 

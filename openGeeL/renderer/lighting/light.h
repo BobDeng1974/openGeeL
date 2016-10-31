@@ -29,7 +29,8 @@ public:
 		SceneObject(transform), diffuse(diffuse), specular(specular), ambient(ambient), 
 		intensity(intensity), shadowBias(shadowBias) {}
 
-	virtual void bind(const Shader& shader, int index, std::string name) const;
+	virtual void deferredBind(const Shader& shader, int index, std::string name) const;
+	virtual void forwardBind(const Shader& shader, int index, std::string name) const;
 
 	virtual void initShadowmap();
 	virtual void addShadowmap(Shader& shader, std::string name);

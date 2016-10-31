@@ -24,16 +24,19 @@ namespace geeL {
 	}
 
 
-	void PointLight::bind(const Shader& shader, int index, string name) const {
-		Light::bind(shader, index, name);
+	void PointLight::deferredBind(const Shader& shader, int index, string name) const {
+		Light::deferredBind(shader, index, name);
 
 		std::string location = name + "[" + std::to_string(index) + "].";
-
 		shader.setVector3(location + "position", transform.position);
 		shader.setFloat(location + "constant", constant);
 		shader.setFloat(location + "linear", linear);
 		shader.setFloat(location + "quadratic", quadratic);
 		shader.setFloat(location + "farPlane", farPlane);
+	}
+
+	void PointLight::forwardBind(const Shader& shader, int index, string name) const {
+		deferredBind(shader, index, name);
 	}
 
 	void PointLight::initShadowmap() {

@@ -212,20 +212,21 @@ namespace geeL {
 	}
 
 	void Shader::bindMaps() {
-		int counter = 0;
+		int counter = mapOffset;
 		for (list<TextureBinding>::const_iterator it = maps.begin(); it != maps.end(); it++) {
 			glUniform1i(glGetUniformLocation(program, it->name.c_str()), counter);
 			counter++;
 		}
 
-		mapBindingPos = maps.size();
+		mapBindingPos = maps.size() + mapOffset;
 	}
 
 	void Shader::loadMaps() const {
 		int layer = GL_TEXTURE0;
-		int counter = 0;
+		int counter = mapOffset;
 		for (list<TextureBinding>::const_iterator it = maps.begin(); it != maps.end(); it++) {
 			glActiveTexture(layer + counter);
+
 			glBindTexture(it->type, it->id);
 			counter++;
 		}

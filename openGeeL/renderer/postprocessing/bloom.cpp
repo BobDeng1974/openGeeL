@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "gaussianblur.h"
-#include "postprocessscreen.h"
+#include "../utility/screenquad.h"
 #include "bloom.h"
 
 #include <iostream>
@@ -32,7 +32,7 @@ namespace geeL {
 		filter->scatter = scatter;
 	}
 
-	void Bloom::setScreen(PostProcessingScreen& screen) {
+	void Bloom::setScreen(ScreenQuad& screen) {
 		PostProcessingEffect::setScreen(screen);
 
 		filterBuffer.init(screen.width, screen.height);

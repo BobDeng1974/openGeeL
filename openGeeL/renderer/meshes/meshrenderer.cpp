@@ -86,7 +86,6 @@ namespace geeL{
 			: materials.size();
 
 		for (size_t i = 0; i < size; i++) {
-			
 			DefaultMaterial* mat = dynamic_cast<DefaultMaterial*>(materials[i]);
 			if (mat != nullptr)
 				defaultMaterials[i] = mat;

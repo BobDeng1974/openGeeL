@@ -40,6 +40,9 @@ public:
 	void drawDeferred() const;
 	void drawForward() const;
 
+	//Draw skybox indepentently
+	void drawSkybox() const;
+
 	//Draw only the objects in the scene and all with given shader
 	void drawObjects(const Shader& shader) const;
 
@@ -51,8 +54,7 @@ private:
 	MeshFactory& meshFactory;
 	std::list<MeshRenderer*> deferredRenderObjects;
 	std::list<MeshRenderer*> forwardRenderObjects;
-
-	void drawSkybox() const;
+	
 	void drawObjects(const std::list<MeshRenderer*>& objects) const;
 
 };

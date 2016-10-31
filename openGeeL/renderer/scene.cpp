@@ -33,7 +33,7 @@ namespace geeL {
 
 
 	void RenderScene::drawDeferred() const {
-		drawSkybox();
+		//drawSkybox();
 		drawObjects(deferredRenderObjects);
 	}
 

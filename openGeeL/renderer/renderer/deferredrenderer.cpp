@@ -1,0 +1,153 @@
+#define GLEW_STATIC
+#include <glew.h>
+#include <glfw3.h>
+#include <thread>
+#include <chrono>
+#include <iostream>
+#include <cmath>
+#include "../utility/rendertime.h"
+#include "../shader/shader.h"
+#include "../postprocessing/drawdefault.h"
+#include "deferredrenderer.h"
+#include "../window.h"
+#include "../scripting/scenecontrolobject.h"
+#include "../inputmanager.h"
+#include "../postprocessing/postprocessing.h"
+#include "../cameras/camera.h"
+#include "../lighting/lightmanager.h"
+#include "../shader/shadermanager.h"
+#include "../scene.h"
+
+#define fps 10
+
+namespace geeL {
+
+	DeferredRenderer::DeferredRenderer(RenderWindow* window, InputManager* inputManager)
+		:
+		Renderer(window, inputManager), effect(nullptr),
+		frameBuffer(FrameBuffer()), gBuffer(GBuffer()), screen(ScreenQuad(window->width, window->height)),
+		deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
+			"renderer/shaders/deferredlighting.frag")) {
+
+		glewExperimental = GL_TRUE;
+		if (glewInit() != GLEW_OK) {
+			std::cout << "Failed to initialize GLEW" << std::endl;
+		}
+
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		glFrontFace(GL_CW);
+	}
+
+	DeferredRenderer::~DeferredRenderer() {
+		delete deferredShader;
+	}
+
+
+	void exitCallbackkk(GLFWwindow* window, int key, int scancode, int action, int mode) {
+		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+			glfwSetWindowShouldClose(window, GL_TRUE);
+		}
+	}
+
+	void DeferredRenderer::init() {
+		inputManager->addCallback(exitCallbackkk);
+		inputManager->init(window);
+
+		gBuffer.init(window->width, window->height);
+
+		deferredShader->use();
+		deferredShader->mapOffset = 1;
+		deferredShader->addMap(gBuffer.position, "gPosition");
+		deferredShader->addMap(gBuffer.normal, "gNormal");
+		deferredShader->addMap(gBuffer.diffuseSpec, "gDiffuseSpec");
+		//deferredShader->bindMaps();
+
+		frameBuffer.init(window->width, window->height);
+		screen.init();
+	}
+
+	void DeferredRenderer::render() {
+
+		DefaultPostProcess defaultEffect = DefaultPostProcess();
+		defaultEffect.setScreen(screen);
+		shaderManager->staticBind(*scene);
+
+		deferredShader->use();
+		scene->lightManager.deferredBind(*deferredShader);
+		scene->lightManager.bindShadowmaps(*deferredShader);
+
+		while (!window->shouldClose()) {
+			int currFPS = ceil(Time::deltaTime * 1000.f);
+			std::this_thread::sleep_for(std::chrono::milliseconds(fps - currFPS));
+			glfwPollEvents();
+			inputManager->update();
+			handleInput();
+
+			glEnable(GL_DEPTH_TEST);
+			scene->lightManager.drawShadowmaps(*scene);
+
+			//Geometry path
+			gBuffer.fill(*this);
+			
+			//Lighting path
+			frameBuffer.fill(*this);
+
+			//Forward pass
+			//TODO: implement this
+			//scene->drawSkybox();
+
+			glClear(GL_COLOR_BUFFER_BIT);
+			glDisable(GL_DEPTH_TEST);
+
+			if (effect != nullptr) {
+				effect->setBuffer(frameBuffer.color);
+				effect->draw();
+			}
+			//Default rendering
+			else {
+				defaultEffect.setBuffer(frameBuffer.color);
+				defaultEffect.draw();
+			}
+			
+			window->swapBuffer();
+			Time::update();
+		}
+
+		for (size_t i = 0; i < objects.size(); i++)
+			objects[i]->quit();
+
+		window->close();
+	}
+
+	void DeferredRenderer::draw() {
+		if (geometryPass) {
+			for (size_t i = 0; i < objects.size(); i++)
+				objects[i]->draw(scene->camera);
+
+			shaderManager->bindCamera(*scene);
+			scene->drawDeferred();
+		}
+		else {
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			deferredShader->use();
+			deferredShader->loadMaps();
+			scene->lightManager.deferredBind(*deferredShader);
+			scene->camera.bindPosition(*deferredShader);
+			screen.draw();
+		}
+
+		geometryPass = !geometryPass;
+	}
+
+	void DeferredRenderer::handleInput() {
+		scene->camera.handleInput(*inputManager);
+	}
+
+	void DeferredRenderer::setEffect(PostProcessingEffect& effect) {
+		this->effect = &effect;
+		this->effect->setScreen(screen);
+	}
+
+}

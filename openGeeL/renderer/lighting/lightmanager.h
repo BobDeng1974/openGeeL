@@ -46,7 +46,9 @@ public:
 		glm::vec3 ambient, float angle, float outerAngle, float intensity);
 
 
-	void bind(const Shader& shader) const;
+	void deferredBind(const Shader& shader) const;
+	void forwardBind(const Shader& shader) const;
+
 	void bindShadowmaps(Shader& shader) const;
 	void drawShadowmaps(const RenderScene& scene) const;
 	

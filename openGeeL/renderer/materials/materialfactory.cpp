@@ -8,12 +8,19 @@
 namespace geeL {
 
 	MaterialFactory::MaterialFactory() 
-		: defaultShader(new Shader("renderer/shaders/lighting.vert", "renderer/shaders/lighting.frag")) {
+		: 
+		forwardShader(new Shader("renderer/shaders/lighting.vert", "renderer/shaders/lighting.frag")),
+		deferredShader(new Shader("renderer/shaders/gbuffer.vert", "renderer/shaders/gbuffer.frag", false)) {
 	
+		defaultShader = forwardShader;
 		shaders.push_back(defaultShader);
 	}
 
 	MaterialFactory::~MaterialFactory() {
+		//delete defaultShader;
+		//delete forwardShader;
+		//delete deferredShader;
+
 		for (list<Shader*>::iterator it = shaders.begin(); it != shaders.end(); it++) {
 			Shader* shader = *it;
 			delete shader;
@@ -51,6 +58,11 @@ namespace geeL {
 	Shader& MaterialFactory::CreateShader(string vertexPath, string fragmentPath) {
 		shaders.push_back(new Shader(vertexPath.c_str(), fragmentPath.c_str()));
 		return *shaders.back();
+	}
+
+	void MaterialFactory::setDefaultShader(bool deferred) {
+		defaultShader = deferred ? deferredShader : forwardShader;
+		shaders.front() = defaultShader;
 	}
 
 	list<Material*>::iterator MaterialFactory::materialsBegin() {

@@ -18,8 +18,16 @@ namespace geeL {
 		Light(transform, diffuse, specular, ambient, intensity, shadowBias) {}
 
 
-	void DirectionalLight::bind(const Shader& shader, int index, string name) const {
-		Light::bind(shader, index, name);
+	void DirectionalLight::deferredBind(const Shader& shader, int index, string name) const {
+		Light::deferredBind(shader, index, name);
+
+		string location = name + "[" + to_string(index) + "].";
+		shader.setVector3(location + "direction", transform.forward);
+		shader.setMat4(location + "lightTransform", lightTransform);
+	}
+
+	void DirectionalLight::forwardBind(const Shader& shader, int index, string name) const {
+		Light::forwardBind(shader, index, name);
 
 		string location = name + "[" + to_string(index) + "].";
 		shader.setVector3(location + "direction", transform.forward);

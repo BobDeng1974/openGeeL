@@ -13,7 +13,7 @@ public:
 	GaussianBlur(unsigned int strength = 1);
 
 	void setKernel(float newKernel[5]);
-	virtual void setScreen(PostProcessingScreen& screen);
+	virtual void setScreen(ScreenQuad& screen);
 
 protected:
 	virtual void bindValues();

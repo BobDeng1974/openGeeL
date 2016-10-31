@@ -15,7 +15,7 @@ typedef unsigned int GLuint;
 namespace geeL {
 
 class Shader;
-class PostProcessingScreen;
+class ScreenQuad;
 
 class PostProcessingEffect : public Drawer {
 
@@ -29,7 +29,7 @@ public:
 	//Set multiple buffers for post processing that will be used in list order. Maximum of 4
 	void setBuffer(std::list<unsigned int> buffers);
 
-	virtual void setScreen(PostProcessingScreen& screen);
+	virtual void setScreen(ScreenQuad& screen);
 
 	void draw();
 
@@ -38,7 +38,7 @@ protected:
 	std::list<unsigned int> buffers;
 	unsigned int maxBuffers = 4;
 	Shader shader;
-	PostProcessingScreen* screen;
+	ScreenQuad* screen;
 
 	virtual void bindValues();
 	void bindToScreen();

@@ -20,14 +20,26 @@ namespace geeL {
 		constant(constant), linear(linear), quadratic(quadratic) {}
 
 
-	void SpotLight::bind(const Shader& shader, int index, string name) const {
-		Light::bind(shader, index, name);
+	void SpotLight::deferredBind(const Shader& shader, int index, string name) const {
+		Light::deferredBind(shader, index, name);
 
 		string location = name + "[" + to_string(index) + "].";
-
 		shader.setVector3(location + "position", transform.position);
 		shader.setVector3(location + "direction", transform.forward);
+		shader.setFloat(location + "angle", angle);
+		shader.setFloat(location + "outerAngle", outerAngle);
+		shader.setFloat(location + "constant", constant);
+		shader.setFloat(location + "linear", linear);
+		shader.setFloat(location + "quadratic", quadratic);
+		shader.setMat4(location + "lightTransform", lightTransform);
+	}
 
+	void SpotLight::forwardBind(const Shader& shader, int index, string name) const {
+		Light::deferredBind(shader, index, name);
+
+		string location = name + "[" + to_string(index) + "].";
+		shader.setVector3(location + "position", transform.position);
+		shader.setVector3(location + "direction", transform.forward);
 		shader.setFloat(location + "angle", angle);
 		shader.setFloat(location + "outerAngle", outerAngle);
 		shader.setFloat(location + "constant", constant);

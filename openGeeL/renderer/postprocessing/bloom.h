@@ -29,7 +29,7 @@ public:
 	~Bloom();
 
 	void setScatter(float scatter);
-	virtual void setScreen(PostProcessingScreen& screen);
+	virtual void setScreen(ScreenQuad& screen);
 
 protected:
 	virtual void bindValues();

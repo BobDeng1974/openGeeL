@@ -38,6 +38,9 @@ public:
 	//for vertex and fragment shaders
 	Shader& CreateShader(string vertexPath, string fragmentPath);
 
+	//Decide whether default shader should use forward or deferred shading
+	void setDefaultShader(bool deferred);
+
 	list<Material*>::iterator materialsBegin();
 	list<Material*>::iterator materialsEnd();
 
@@ -51,6 +54,8 @@ public:
 	map<string, SimpleTexture>::const_iterator texturesEnd() const;
 
 private:
+	Shader* forwardShader;
+	Shader* deferredShader;
 	list<Material*> materials;
 	list<Shader*> shaders;
 	map<string, SimpleTexture> textures;

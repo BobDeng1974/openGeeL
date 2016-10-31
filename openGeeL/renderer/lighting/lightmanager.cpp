@@ -76,25 +76,38 @@ namespace geeL {
 		return *light;
 	}
 
-	void LightManager::bind(const Shader& shader) const {
-
+	void LightManager::deferredBind(const Shader& shader) const {
 		shader.use();
 
 		glUniform1i(glGetUniformLocation(shader.program, plCountName.c_str()), staticPLs.size());
 		glUniform1i(glGetUniformLocation(shader.program, dlCountName.c_str()), staticDLs.size());
 		glUniform1i(glGetUniformLocation(shader.program, slCountName.c_str()), staticSLs.size());
 
-		for (size_t j = 0; j < staticPLs.size(); j++) {
-			staticPLs[j]->bind(shader, j, plName);
-		}
+		for (size_t j = 0; j < staticPLs.size(); j++)
+			staticPLs[j]->deferredBind(shader, j, plName);
 
-		for (size_t j = 0; j < staticDLs.size(); j++) {
-			staticDLs[j]->bind(shader, j, dlName);
-		}
+		for (size_t j = 0; j < staticDLs.size(); j++)
+			staticDLs[j]->deferredBind(shader, j, dlName);
 
-		for (size_t j = 0; j < staticSLs.size(); j++) {
-			staticSLs[j]->bind(shader, j, slName);
-		}
+		for (size_t j = 0; j < staticSLs.size(); j++)
+			staticSLs[j]->deferredBind(shader, j, slName);
+	}
+
+	void LightManager::forwardBind(const Shader& shader) const {
+		shader.use();
+
+		glUniform1i(glGetUniformLocation(shader.program, plCountName.c_str()), staticPLs.size());
+		glUniform1i(glGetUniformLocation(shader.program, dlCountName.c_str()), staticDLs.size());
+		glUniform1i(glGetUniformLocation(shader.program, slCountName.c_str()), staticSLs.size());
+
+		for (size_t j = 0; j < staticPLs.size(); j++)
+			staticPLs[j]->forwardBind(shader, j, plName);
+
+		for (size_t j = 0; j < staticDLs.size(); j++)
+			staticDLs[j]->forwardBind(shader, j, dlName);
+
+		for (size_t j = 0; j < staticSLs.size(); j++)
+			staticSLs[j]->forwardBind(shader, j, slName);
 	}
 
 	void LightManager::bindShadowmaps(Shader& shader) const {

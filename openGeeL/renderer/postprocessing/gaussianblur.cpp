@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "../shader/shader.h"
-#include "postprocessscreen.h"
+#include "../utility/screenquad.h"
 #include "gaussianblur.h"
 
 namespace geeL {
@@ -14,7 +14,7 @@ namespace geeL {
 			amount = maxAmount;
 	}
 
-	void GaussianBlur::setScreen(PostProcessingScreen& screen) {
+	void GaussianBlur::setScreen(ScreenQuad& screen) {
 		PostProcessingEffect::setScreen(screen);
 
 		frameBuffers[0].init(screen.width, screen.height);

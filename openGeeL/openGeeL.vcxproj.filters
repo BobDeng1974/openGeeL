@@ -159,9 +159,6 @@
     <ClCompile Include="renderer\utility\framebuffer.cpp">
       <Filter>renderer\utility</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\postprocessing\postprocessscreen.cpp">
-      <Filter>renderer\postprocessing</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\postprocessing\gaussianblur.cpp">
       <Filter>renderer\postprocessing</Filter>
     </ClCompile>
@@ -176,6 +173,15 @@
     </ClCompile>
     <ClCompile Include="renderer\materials\defaultmaterial.cpp">
       <Filter>renderer\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\renderer\deferredrenderer.cpp">
+      <Filter>renderer\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\utility\gbuffer.cpp">
+      <Filter>renderer\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\utility\screenquad.cpp">
+      <Filter>renderer\utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -302,9 +308,6 @@
     <ClInclude Include="renderer\utility\framebuffer.h">
       <Filter>renderer\utility</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\postprocessing\postprocessscreen.h">
-      <Filter>renderer\postprocessing</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\postprocessing\gaussianblur.h">
       <Filter>renderer\postprocessing</Filter>
     </ClInclude>
@@ -316,6 +319,15 @@
     </ClInclude>
     <ClInclude Include="renderer\materials\defaultmaterial.h">
       <Filter>renderer\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\renderer\deferredrenderer.h">
+      <Filter>renderer\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\utility\gbuffer.h">
+      <Filter>renderer\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\utility\screenquad.h">
+      <Filter>renderer\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -405,6 +417,18 @@
     </None>
     <None Include="renderer\postprocessing\godray.frag">
       <Filter>renderer\postprocessing</Filter>
+    </None>
+    <None Include="renderer\shaders\gbuffer.vert">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\gbuffer.frag">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\deferredlighting.frag">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\deferredlighting.vert">
+      <Filter>renderer\shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

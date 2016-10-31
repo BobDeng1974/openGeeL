@@ -26,6 +26,7 @@ class Shader {
 public:
 	int program;
 	int mapBindingPos;
+	int mapOffset = 0;
 	const bool useLight;
 	const bool useCamera;
 	const bool useSkybox;

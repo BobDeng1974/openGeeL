@@ -7,7 +7,8 @@
 #include "../renderer/lighting/lightmanager.h"
 #include "../renderer/lighting/pointlight.h"
 #include "../renderer/lighting/directionallight.h"
-#include "../renderer//lighting/spotlight.h"
+#include "../renderer/lighting/spotlight.h"
+#include "../renderer/renderer/deferredrenderer.h"
 
 #include "../renderer/transformation/transform.h"
 #include "../renderer/transformation/transformfactory.h"
@@ -144,7 +145,12 @@ void a_shadows() {
 	renderer3.init();
 
 
+	DeferredRenderer renderer1 = DeferredRenderer(window, manager);
+	renderer1.init();
+
+
 	MaterialFactory materialFactory = MaterialFactory();
+	materialFactory.setDefaultShader(true);
 	MeshFactory meshFactory = MeshFactory(materialFactory);
 
 	LightManager lightManager = LightManager();
@@ -152,14 +158,20 @@ void a_shadows() {
 	
 	RenderScene scene = RenderScene(lightManager, camera3, meshFactory);
 	
-	renderer3.setScene(scene);
+	//renderer3.setScene(scene);
 	renderer3.setShaderManager(shaderManager);
+
+	renderer1.setScene(scene);
+	renderer1.setShaderManager(shaderManager);
 
 	ShadowTestObject* testObj = new ShadowTestObject(materialFactory, meshFactory, 
 		lightManager, shaderManager, scene, transFactory);
 
-	renderer3.addObject(testObj);
-	renderer3.initObjects();
+	//renderer3.addObject(testObj);
+	//renderer3.initObjects();
+
+	renderer1.addObject(testObj);
+	renderer1.initObjects();
 
 	CubeMap map = CubeMap("resources/skybox2/right.jpg", "resources/skybox2/left.jpg", "resources/skybox2/top.jpg",
 		"resources/skybox2/bottom.jpg", "resources/skybox2/back.jpg", "resources/skybox2/front.jpg");
@@ -171,7 +183,9 @@ void a_shadows() {
 	renderer3.setEffect(ray);
 
 
-	renderer3.render();
+	//renderer3.render();
+
+	renderer1.render();
 
 	delete testObj;
 	delete window;
