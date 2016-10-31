@@ -48,9 +48,6 @@ public:
 
 private:
 	bool instanced;
-	//std::vector<Material*> customMaterials;
-
-
 	std::map<unsigned int, Material*> defaultMaterials;
 	std::map<unsigned int, Material*> customMaterials;
 

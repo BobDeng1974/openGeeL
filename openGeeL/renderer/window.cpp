@@ -1,3 +1,5 @@
+#define GLEW_STATIC
+#include <glew.h>
 #include <glfw3.h>
 #include <iostream>
 #include "window.h"
@@ -19,6 +21,11 @@ namespace geeL {
 		}
 
 		glfwMakeContextCurrent(glWindow);
+
+		glewExperimental = GL_TRUE;
+		if (glewInit() != GLEW_OK) {
+			std::cout << "Failed to initialize GLEW" << std::endl;
+		}
 	}
 
 	void RenderWindow::swapBuffer() {

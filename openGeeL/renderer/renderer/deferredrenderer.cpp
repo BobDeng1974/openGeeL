@@ -29,11 +29,6 @@ namespace geeL {
 		deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
 			"renderer/shaders/deferredlighting.frag")) {
 
-		glewExperimental = GL_TRUE;
-		if (glewInit() != GLEW_OK) {
-			std::cout << "Failed to initialize GLEW" << std::endl;
-		}
-
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT);
@@ -72,11 +67,8 @@ namespace geeL {
 
 		DefaultPostProcess defaultEffect = DefaultPostProcess();
 		defaultEffect.setScreen(screen);
+		shaderManager->staticDeferredBind(*scene, *deferredShader);
 		shaderManager->staticBind(*scene);
-
-		deferredShader->use();
-		scene->lightManager.deferredBind(*deferredShader);
-		scene->lightManager.bindShadowmaps(*deferredShader);
 
 		while (!window->shouldClose()) {
 			int currFPS = ceil(Time::deltaTime * 1000.f);
@@ -91,12 +83,8 @@ namespace geeL {
 			//Geometry path
 			gBuffer.fill(*this);
 			
-			//Lighting path
+			//Lighting path & forward pass
 			frameBuffer.fill(*this);
-
-			//Forward pass
-			//TODO: implement this
-			//scene->drawSkybox();
 
 			glClear(GL_COLOR_BUFFER_BIT);
 			glDisable(GL_DEPTH_TEST);
@@ -105,7 +93,7 @@ namespace geeL {
 				effect->setBuffer(frameBuffer.color);
 				effect->draw();
 			}
-			//Default rendering
+			//Default post processing(Gamma correction & tone mapping)
 			else {
 				defaultEffect.setBuffer(frameBuffer.color);
 				defaultEffect.draw();
@@ -131,11 +119,22 @@ namespace geeL {
 		}
 		else {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			//Lighting pass
 			deferredShader->use();
 			deferredShader->loadMaps();
 			scene->lightManager.deferredBind(*deferredShader);
 			scene->camera.bindPosition(*deferredShader);
 			screen.draw();
+
+			glClear(GL_DEPTH_BUFFER_BIT);
+			//Copy depth buffer from gBuffer to draw forward 
+			//rendered objects 'into' the scene instead of 'on top'
+			frameBuffer.copyDepth(gBuffer.fbo);
+
+			//Forward pass
+			shaderManager->dynamicBind(*scene);
+			scene->drawForward();
+			scene->drawSkybox();
 		}
 
 		geometryPass = !geometryPass;

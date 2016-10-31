@@ -53,6 +53,12 @@ public:
 	map<string, SimpleTexture>::const_iterator texturesBegin() const;
 	map<string, SimpleTexture>::const_iterator texturesEnd() const;
 
+	//Returns default shader for forward rendering
+	Shader& getForwardShader() const;
+
+	//Returns default shader for deferred rendering
+	Shader& getDeferredShader() const;
+
 private:
 	Shader* forwardShader;
 	Shader* deferredShader;

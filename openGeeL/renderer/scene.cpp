@@ -33,20 +33,25 @@ namespace geeL {
 
 
 	void RenderScene::drawDeferred() const {
-		//drawSkybox();
-		drawObjects(deferredRenderObjects);
+		drawObjects(deferredRenderObjects, true);
 	}
 
 	void RenderScene::drawForward() const {
-		drawObjects(forwardRenderObjects);
+		drawObjects(forwardRenderObjects, false);
 	}
 
-	void RenderScene::drawObjects(const std::list<MeshRenderer*>& objects) const {
+	void RenderScene::drawObjects(const std::list<MeshRenderer*>& objects, bool deferred) const {
 		for (std::list<MeshRenderer*>::const_iterator it = objects.begin();
 			it != objects.end(); it++) {
 			
-			(*it)->draw();
+			(*it)->draw(deferred);
 		}
+	}
+
+	void RenderScene::draw() const {
+		drawObjects(deferredRenderObjects, true);
+		drawObjects(forwardRenderObjects, false);
+		drawSkybox();
 	}
 
 	void RenderScene::drawObjects(const Shader& shader) const {
@@ -54,6 +59,12 @@ namespace geeL {
 
 		for (std::list<MeshRenderer*>::const_iterator it = deferredRenderObjects.begin();
 			it != deferredRenderObjects.end(); it++) {
+
+			(*it)->draw(shader);
+		}
+
+		for (std::list<MeshRenderer*>::const_iterator it = forwardRenderObjects.begin();
+			it != forwardRenderObjects.end(); it++) {
 
 			(*it)->draw(shader);
 		}

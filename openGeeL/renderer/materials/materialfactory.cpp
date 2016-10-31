@@ -13,7 +13,7 @@ namespace geeL {
 		deferredShader(new Shader("renderer/shaders/gbuffer.vert", "renderer/shaders/gbuffer.frag", false)) {
 	
 		defaultShader = forwardShader;
-		shaders.push_back(defaultShader);
+		shaders.push_back(forwardShader);
 	}
 
 	MaterialFactory::~MaterialFactory() {
@@ -62,7 +62,7 @@ namespace geeL {
 
 	void MaterialFactory::setDefaultShader(bool deferred) {
 		defaultShader = deferred ? deferredShader : forwardShader;
-		shaders.front() = defaultShader;
+		//shaders.front() = defaultShader;
 	}
 
 	list<Material*>::iterator MaterialFactory::materialsBegin() {
@@ -95,6 +95,14 @@ namespace geeL {
 
 	map<string, SimpleTexture>::const_iterator MaterialFactory::texturesEnd() const {
 		return textures.end();
+	}
+
+	Shader& MaterialFactory::getForwardShader() const {
+		return *forwardShader;
+	}
+
+	Shader& MaterialFactory::getDeferredShader() const {
+		return *deferredShader;
 	}
 
 }

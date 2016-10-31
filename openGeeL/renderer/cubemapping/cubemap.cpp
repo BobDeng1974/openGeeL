@@ -48,8 +48,8 @@ namespace geeL {
 
 	void CubeMap::draw(const Shader& shader, string name) {
 
-		glActiveTexture(GL_TEXTURE0);
-		glUniform1i(glGetUniformLocation(shader.program, name.c_str()), 0);
+		glActiveTexture(GL_TEXTURE1);
+		glUniform1i(glGetUniformLocation(shader.program, name.c_str()), 1);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 	}
 

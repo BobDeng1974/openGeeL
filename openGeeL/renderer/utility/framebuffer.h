@@ -18,6 +18,7 @@ public:
 
 	void init(int width, int height);
 	void fill(Drawer& drawer);
+	void copyDepth(unsigned int targetFBO);
 
 private:
 	unsigned int generateTexture(bool color);

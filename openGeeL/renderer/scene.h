@@ -37,8 +37,14 @@ public:
 	MeshRenderer& AddMeshRenderer(std::string modelPath, Transform& transform, 
 		std::vector<Material*> materials, CullingMode faceCulling);
 		
+	//Draw only those objects that are suited for deferred rendering
 	void drawDeferred() const;
+
+	//Draw all those objects that are suited not for deferred rendering (with forward rendering)
 	void drawForward() const;
+
+	//Draw all objects with forward rendering
+	void draw() const;
 
 	//Draw skybox indepentently
 	void drawSkybox() const;
@@ -55,7 +61,7 @@ private:
 	std::list<MeshRenderer*> deferredRenderObjects;
 	std::list<MeshRenderer*> forwardRenderObjects;
 	
-	void drawObjects(const std::list<MeshRenderer*>& objects) const;
+	void drawObjects(const std::list<MeshRenderer*>& objects, bool deferred = true) const;
 
 };
 

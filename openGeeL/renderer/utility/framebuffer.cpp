@@ -46,6 +46,13 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	void FrameBuffer::copyDepth(unsigned int targetFBO) {
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, targetFBO);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+		glBlitFramebuffer(0, 0, width, height, 0, 0,
+			width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+	}
+
 	unsigned int FrameBuffer::generateTexture(bool color) {
 
 		//Generate texture ID and load texture data 

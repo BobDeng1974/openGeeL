@@ -1,6 +1,7 @@
 #include "a_shadows.h"
 
 #include <iostream>
+#include <vector>
 #include "../renderer/cameras/camera.h"
 #include "../renderer/cameras/perspectivecamera.h"
 #include "../renderer/lighting/light.h"
@@ -14,6 +15,7 @@
 #include "../renderer/transformation/transformfactory.h"
 
 #include "../renderer/materials/material.h"
+#include "../renderer/materials/genericmaterial.h"
 #include "../renderer/materials/materialfactory.h"
 #include "../renderer/shader/shadermanager.h"
 #include "../renderer/meshes/mesh.h"
@@ -110,8 +112,19 @@ namespace {
 			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(100.2f, 0.2f, 100.2f));
 			scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront);
 
+
+			
+			GenericMaterial* custom = &materialFactory.CreateMaterial(materialFactory.getForwardShader());
+			custom->addParameter("shininess", 64.f);
+
+			std::vector<Material*> materials;
+			materials.push_back(custom);
+			materials.push_back(custom);
+			materials.push_back(custom);
+			materials.push_back(custom);
+
 			geeL::Transform* transi7 = new geeL::Transform(glm::vec3(4.f, -0.4f, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", *transi7, cullFront);
+			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", *transi7, materials, cullFront);
 		}
 
 		virtual void draw(const Camera& camera) {
@@ -130,7 +143,7 @@ namespace {
 
 
 void a_shadows() {
-	RenderWindow* window = new RenderWindow("CameraTest", 1500, 850, true);
+	RenderWindow* window = new RenderWindow("geeL", 1440, 810, true);
 	InputManager* manager = new InputManager();
 	manager->defineButton("Forward", GLFW_KEY_W);
 	manager->defineButton("Forward", GLFW_KEY_A);
@@ -141,13 +154,8 @@ void a_shadows() {
 	geeL::Transform& transform3 = transFactory.CreateTransform(glm::vec3(0.0f, 2.0f, 9.0f), vec3(-100.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera camera3 = PerspectiveCamera(transform3, 5.f, 15.f, 65.f, window->width, window->height, 0.1f, 100.f);
 
-	PostProcessingRenderer renderer3 = PostProcessingRenderer(window, manager);
-	renderer3.init();
-
-
 	DeferredRenderer renderer1 = DeferredRenderer(window, manager);
 	renderer1.init();
-
 
 	MaterialFactory materialFactory = MaterialFactory();
 	materialFactory.setDefaultShader(true);
@@ -157,18 +165,12 @@ void a_shadows() {
 	ShaderManager shaderManager = ShaderManager(materialFactory);
 	
 	RenderScene scene = RenderScene(lightManager, camera3, meshFactory);
-	
-	//renderer3.setScene(scene);
-	renderer3.setShaderManager(shaderManager);
 
 	renderer1.setScene(scene);
 	renderer1.setShaderManager(shaderManager);
 
 	ShadowTestObject* testObj = new ShadowTestObject(materialFactory, meshFactory, 
 		lightManager, shaderManager, scene, transFactory);
-
-	//renderer3.addObject(testObj);
-	//renderer3.initObjects();
 
 	renderer1.addObject(testObj);
 	renderer1.initObjects();
@@ -180,10 +182,7 @@ void a_shadows() {
 	scene.setSkybox(skybox);
 
 	GodRay ray = GodRay(scene, glm::vec3(-40, 30, -50));
-	renderer3.setEffect(ray);
-
-
-	//renderer3.render();
+	//renderer1.setEffect(ray);
 
 	renderer1.render();
 

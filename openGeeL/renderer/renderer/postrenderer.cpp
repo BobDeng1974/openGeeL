@@ -28,11 +28,6 @@ namespace geeL {
 		Renderer(window, inputManager), effect(nullptr), 
 		frameBuffer(FrameBuffer()), screen(ScreenQuad(window->width, window->height)) {
 
-		glewExperimental = GL_TRUE;
-		if (glewInit() != GLEW_OK) {
-			std::cout << "Failed to initialize GLEW" << std::endl;
-		}
-
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT);
@@ -98,7 +93,7 @@ namespace geeL {
 			objects[i]->draw(scene->camera);
 
 		shaderManager->dynamicBind(*scene);
-		scene->drawDeferred();
+		scene->draw();
 	}
 
 	void PostProcessingRenderer::handleInput() {

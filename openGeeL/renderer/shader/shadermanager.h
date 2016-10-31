@@ -21,7 +21,8 @@ public:
 	void dynamicBind(const RenderScene& scene) const;
 
 	//Static bind a single shader. Should be called when a new shader is created at runtime
-	void staticBind(const RenderScene& scene, Shader& shader) const;
+	void staticForwardBind(const RenderScene& scene, Shader& shader) const;
+	void staticDeferredBind(const RenderScene& scene, Shader& shader) const;
 
 	//Bind only the uniform camera information
 	void bindCamera(const RenderScene& scene) const;
