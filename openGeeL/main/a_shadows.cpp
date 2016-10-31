@@ -32,7 +32,6 @@
 #include "../renderer/postprocessing/bloom.h"
 #include "../renderer/postprocessing/godray.h"
 
-
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/skybox.h"
 #include "../renderer/scene.h"
@@ -119,12 +118,10 @@ namespace {
 
 			std::vector<Material*> materials;
 			materials.push_back(custom);
-			materials.push_back(custom);
-			materials.push_back(custom);
-			materials.push_back(custom);
+			
 
 			geeL::Transform* transi7 = new geeL::Transform(glm::vec3(4.f, -0.4f, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", *transi7, materials, cullFront);
+			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", *transi7, cullFront);
 		}
 
 		virtual void draw(const Camera& camera) {

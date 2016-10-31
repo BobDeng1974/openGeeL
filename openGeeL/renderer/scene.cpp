@@ -111,6 +111,4 @@ namespace geeL {
 		return glm::vec3(vec.x / vec.w, vec.y / vec.w, vec.z / vec.w) * 0.5f + 0.5f;
 	}
 
-		
-
 }

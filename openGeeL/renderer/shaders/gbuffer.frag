@@ -35,12 +35,11 @@ void main() {
     gPosition = fragPosition;
     
 	vec3 norm = normalize(normal);
-	/*
 	if(normFlag == 1) {
 		norm = texture(material.normal, textureCoordinates).rgb;
 		norm = normalize(norm * 2.0f - 1.0f);
-		//norm = normalize(TBN * norm);
-	}*/
+		norm = normalize(TBN * norm);
+	}
 	gNormal = norm;
 
 	vec3 texColor = (diffFlag == 1) ? texture(material.diffuse, textureCoordinates).rgb : vec3(0.01f, 0.01f, 0.01f);

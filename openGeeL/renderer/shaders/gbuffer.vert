@@ -30,7 +30,7 @@ void main() {
 	vec3 T = normalize(normalMat * tangent);
 	vec3 B = normalize(normalMat * bitangent);
 	vec3 N = normalize(normalMat * nnormal);
-	mat3 TBN = mat3(T, B, N);
+	TBN = mat3(T, B, N);
 
     gl_Position = projection * view * localPosition;
 } 

@@ -6,8 +6,7 @@ layout (location = 2) in vec2 texCoords;
 layout (location = 3) in vec3 tangent;
 layout (location = 4) in vec3 bitangent;
 
-layout (std140) uniform cameraMatrices
-{
+layout (std140) uniform cameraMatrices {
     mat4 projection;
     mat4 view;
 	vec3 camPosition;
@@ -50,7 +49,7 @@ void main() {
 	vec3 T = normalize(normalMat * tangent);
 	vec3 B = normalize(normalMat * bitangent);
 	vec3 N = normalize(normalMat * nnormal);
-	mat3 TBN = mat3(T, B, N);
+	TBN = mat3(T, B, N);
 
     gl_Position = projection * view * localPosition;
 } 
