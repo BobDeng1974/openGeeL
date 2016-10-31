@@ -87,10 +87,16 @@ namespace geeL{
 
 		for (size_t i = 0; i < size; i++) {
 			DefaultMaterial* mat = dynamic_cast<DefaultMaterial*>(materials[i]);
-			if (mat != nullptr)
+			if (mat != nullptr) {
 				defaultMaterials[i] = mat;
-			else
+				if (customMaterials.find(i) != customMaterials.end())
+					customMaterials.erase(customMaterials.find(i));
+			}
+			else {
 				customMaterials[i] = materials[i];
+				if (defaultMaterials.find(i) != defaultMaterials.end())
+					defaultMaterials.erase(defaultMaterials.find(i));
+			}
 		}
 	}
 
@@ -131,8 +137,12 @@ namespace geeL{
 		}
 	}
 
-	bool MeshRenderer::hasIrregularMaterials() const {
+	bool MeshRenderer::containsNonDefaultMaterials() const {
 		return customMaterials.size() > 0;
+	}
+
+	bool MeshRenderer::containsDefaultMaterials() const {
+		return defaultMaterials.size() > 0;
 	}
 
 }

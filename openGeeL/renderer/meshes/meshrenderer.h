@@ -43,8 +43,11 @@ public:
 	//If i > j, then j materials will be change and the remaining (i - j) materials ignored
 	void customizeMaterials(std::vector<Material*> materials);
 
-	//Check if the meshes only consists of default materials (using default shading) or not
-	bool hasIrregularMaterials() const;
+	//Check if the meshes contain materials with non-default materials (meaning: with no default shading)
+	bool containsNonDefaultMaterials() const;
+
+	//Check if the meshes contain default materials (meaning: with default shading)
+	bool containsDefaultMaterials() const;
 
 private:
 	bool instanced;

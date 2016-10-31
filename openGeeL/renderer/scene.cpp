@@ -98,10 +98,10 @@ namespace geeL {
 		MeshRenderer* renderer = new MeshRenderer(transform, model, faceCulling);
 		renderer->customizeMaterials(materials);
 
-		if (renderer->hasIrregularMaterials())
-			forwardRenderObjects.push_back(renderer);
-		else
+		if (renderer->containsDefaultMaterials())
 			deferredRenderObjects.push_back(renderer);
+		if (renderer->containsNonDefaultMaterials())
+			forwardRenderObjects.push_back(renderer);
 
 		return *renderer;
 	}
