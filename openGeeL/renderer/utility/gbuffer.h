@@ -17,7 +17,6 @@ public:
 	int height;
 
 	GBuffer();
-	~GBuffer();
 
 	void init(int width, int height);
 	void fill(Drawer& drawer);

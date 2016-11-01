@@ -5,6 +5,7 @@
 #include <chrono>
 #include <iostream>
 #include <cmath>
+#include <gtc/matrix_transform.hpp>
 #include "../utility/rendertime.h"
 #include "../shader/shader.h"
 #include "../postprocessing/drawdefault.h"
@@ -16,6 +17,7 @@
 #include "../cameras/camera.h"
 #include "../lighting/lightmanager.h"
 #include "../shader/shadermanager.h"
+#include "../transformation/transform.h"
 #include "../scene.h"
 
 #define fps 10
@@ -114,6 +116,7 @@ namespace geeL {
 			for (size_t i = 0; i < objects.size(); i++)
 				objects[i]->draw(scene->camera);
 
+			scene->update();
 			shaderManager->bindCamera(*scene);
 			scene->drawDeferred();
 		}
@@ -122,8 +125,9 @@ namespace geeL {
 			//Lighting pass
 			deferredShader->use();
 			deferredShader->loadMaps();
-			scene->lightManager.deferredBind(*deferredShader);
-			scene->camera.bindPosition(*deferredShader);
+			scene->lightManager.deferredBind(*scene, *deferredShader);
+			deferredShader->setMat4("inverseView", glm::inverse(scene->camera.getViewMatrix()));
+			deferredShader->setVector3("origin", scene->GetOriginInViewSpace());
 			screen.draw();
 
 			glClear(GL_DEPTH_BUFFER_BIT);

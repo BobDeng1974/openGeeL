@@ -5,6 +5,7 @@
 #include "../shader/shader.h"
 #include "../transformation/transform.h"
 #include "../meshes/meshrenderer.h"
+#include "../cameras/camera.h"
 #include "../scene.h"
 #include "pointlight.h"
 
@@ -24,11 +25,11 @@ namespace geeL {
 	}
 
 
-	void PointLight::deferredBind(const Shader& shader, int index, string name) const {
-		Light::deferredBind(shader, index, name);
+	void PointLight::deferredBind(const RenderScene& scene, const Shader& shader, int index, string name) const {
+		Light::deferredBind(scene, shader, index, name);
 
 		std::string location = name + "[" + std::to_string(index) + "].";
-		shader.setVector3(location + "position", transform.position);
+		shader.setVector3(location + "position", scene.TranslateToViewSpace(transform.position));
 		shader.setFloat(location + "constant", constant);
 		shader.setFloat(location + "linear", linear);
 		shader.setFloat(location + "quadratic", quadratic);
@@ -36,7 +37,14 @@ namespace geeL {
 	}
 
 	void PointLight::forwardBind(const Shader& shader, int index, string name) const {
-		deferredBind(shader, index, name);
+		Light::forwardBind(shader, index, name);
+
+		std::string location = name + "[" + std::to_string(index) + "].";
+		shader.setVector3(location + "position", transform.position);
+		shader.setFloat(location + "constant", constant);
+		shader.setFloat(location + "linear", linear);
+		shader.setFloat(location + "quadratic", quadratic);
+		shader.setFloat(location + "farPlane", farPlane);
 	}
 
 	void PointLight::initShadowmap() {

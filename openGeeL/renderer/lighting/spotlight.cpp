@@ -4,7 +4,9 @@
 #include <gtc/matrix_transform.hpp>
 #include "../shader/shader.h"
 #include "../transformation/transform.h"
+#include "../scene.h"
 #include "spotlight.h"
+#include <iostream>
 
 using namespace std;
 using namespace glm;
@@ -20,12 +22,13 @@ namespace geeL {
 		constant(constant), linear(linear), quadratic(quadratic) {}
 
 
-	void SpotLight::deferredBind(const Shader& shader, int index, string name) const {
-		Light::deferredBind(shader, index, name);
+	void SpotLight::deferredBind(const RenderScene& scene, const Shader& shader, int index, string name) const {
+		Light::deferredBind(scene, shader, index, name);
 
 		string location = name + "[" + to_string(index) + "].";
-		shader.setVector3(location + "position", transform.position);
-		shader.setVector3(location + "direction", transform.forward);
+		shader.setVector3(location + "position", scene.TranslateToViewSpace(transform.position));
+		shader.setVector3(location + "direction", 
+			scene.TranslateToViewSpace(transform.forward) - scene.GetOriginInViewSpace());
 		shader.setFloat(location + "angle", angle);
 		shader.setFloat(location + "outerAngle", outerAngle);
 		shader.setFloat(location + "constant", constant);
@@ -35,7 +38,7 @@ namespace geeL {
 	}
 
 	void SpotLight::forwardBind(const Shader& shader, int index, string name) const {
-		Light::deferredBind(shader, index, name);
+		Light::forwardBind(shader, index, name);
 
 		string location = name + "[" + to_string(index) + "].";
 		shader.setVector3(location + "position", transform.position);

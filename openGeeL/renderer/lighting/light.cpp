@@ -12,7 +12,11 @@ using namespace glm;
 
 namespace geeL {
 
-	void Light::deferredBind(const Shader& shader, int index, string name) const {
+	void Light::deferredBind(const RenderScene& scene, const Shader& shader, int index, string name) const {
+		forwardBind(shader, index, name);
+	}
+
+	void Light::forwardBind(const Shader& shader, int index, string name) const {
 		std::string location = name + "[" + std::to_string(index) + "].";
 
 		shader.setVector3(location + "diffuse", diffuse);
@@ -21,10 +25,6 @@ namespace geeL {
 
 		shader.setFloat(location + "intensity", intensity);
 		shader.setFloat(location + "bias", shadowBias);
-	}
-
-	void Light::forwardBind(const Shader& shader, int index, string name) const {
-		deferredBind(shader, index, name);
 	}
 
 	void Light::initShadowmap() {

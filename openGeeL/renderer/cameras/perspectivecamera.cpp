@@ -15,7 +15,7 @@ namespace geeL {
 		: Camera(transform, speed, sensitivity), FOV(fov), currentFOV(fov), width(width), height(height), nearClip(nearClip), farClip(farClip) {
 	}
 
-	mat4 PerspectiveCamera::projectionMatrix() const {
+	mat4 PerspectiveCamera::computeProjectionMatrix() const {
 		return glm::perspective(currentFOV, width / height, nearClip, farClip);
 	}
 

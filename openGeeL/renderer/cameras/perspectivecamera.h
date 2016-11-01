@@ -16,13 +16,13 @@ public:
 	PerspectiveCamera(Transform& transform, float speed, float sensitivity,
 		float fov, float width, float height, float nearClip, float farClip);
 
-	virtual mat4 projectionMatrix() const;
-
 	virtual void handleInput(const InputManager& input);
 
 private:
 	float FOV, currentFOV, width, height, 
 		nearClip, farClip;
+
+	virtual mat4 computeProjectionMatrix() const;
 
 };
 

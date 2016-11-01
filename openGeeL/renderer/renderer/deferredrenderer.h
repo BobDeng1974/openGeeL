@@ -32,7 +32,6 @@ private:
 	ScreenQuad screen;
 	GBuffer gBuffer;
 	FrameBuffer frameBuffer;
-
 };
 
 }

@@ -25,8 +25,8 @@ public:
 	//Defines a movable camera
 	Camera(Transform& transform, float speed, float sensitivity);
 
-	mat4 viewMatrix() const;
-	virtual mat4 projectionMatrix() const = 0;
+	//Update view and projection matrices
+	void update();
 
 	virtual void handleInput(const InputManager& input);
 
@@ -34,12 +34,20 @@ public:
 	void bindPosition(const Shader& shader, std::string name = "cameraPosition") const;
 	void uniformBind(int uniformID) const;
 
+	const mat4& getViewMatrix() const;
+	const mat4& getProjectionMatrix() const;
+
 protected:
 	float speed;
 	float sensitivity;
+	mat4 viewMatrix;
+	mat4 projectionMatrix;
 
 	virtual void computeKeyboardInput(const InputManager& input);
 	virtual void computeMouseInput(const InputManager& input);
+
+	mat4 computeViewMatrix() const;
+	virtual mat4 computeProjectionMatrix() const = 0;
 
 };
 

@@ -40,7 +40,6 @@
 
 #define pi 3.141592f
 
-
 namespace {
 
 	class ShadowTestObject : public SceneControlObject {
@@ -52,7 +51,6 @@ namespace {
 		ShaderManager& shaderManager;
 		TransformFactory transformFactory;
 
-		Model* nano;
 		MeshRenderer* nanoRenderer;
 		MeshFactory& meshFactory;
 		Light* light;
@@ -86,16 +84,10 @@ namespace {
 			l = 100.f;
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
-	
-			geeL::Transform* lighTransi = new geeL::Transform(glm::vec3(-7, 5, 0), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
-			light = &lightManager.addLight(*lighTransi, glm::vec3(l, l, l),
-				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), angle, outerAngle, 10.f);
 
-			/*
 			geeL::Transform* lighTransi3 = new geeL::Transform(glm::vec3(-7, 5, 0), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
 			&lightManager.addLight(*lighTransi3, glm::vec3(l, l, l),
 				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), angle, outerAngle, 10.f);
-			*/	
 			
 			/*
 			l = 4.f;
@@ -111,14 +103,10 @@ namespace {
 			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(100.2f, 0.2f, 100.2f));
 			scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront);
 
-
-			
 			GenericMaterial* custom = &materialFactory.CreateMaterial(materialFactory.getForwardShader());
 			custom->addParameter("shininess", 64.f);
-
 			std::vector<Material*> materials;
 			materials.push_back(custom);
-			
 
 			geeL::Transform* transi7 = new geeL::Transform(glm::vec3(4.f, -0.4f, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", *transi7, cullFront);

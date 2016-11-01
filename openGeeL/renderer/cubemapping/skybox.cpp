@@ -20,9 +20,9 @@ namespace geeL {
 		glDepthFunc(GL_LEQUAL);
 		shader.use();
 
-		mat4 view = mat4(mat3(camera.viewMatrix()));
-		glUniformMatrix4fv(glGetUniformLocation(shader.program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(shader.program, "projection"), 1, GL_FALSE, glm::value_ptr(camera.projectionMatrix()));
+		mat4 view = mat4(mat3(camera.getViewMatrix()));
+		shader.setMat4("view", view);
+		shader.setMat4("projection", camera.getProjectionMatrix());
 		glBindVertexArray(boxVAO);
 
 		cubeMap.draw(shader, "skybox");

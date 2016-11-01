@@ -59,10 +59,12 @@ uniform int plCount;
 uniform int dlCount;
 uniform int slCount;
 
-uniform vec3 cameraPosition;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gDiffuseSpec;
+
+uniform mat4 inverseView;
+uniform vec3 origin;
 
 uniform PointLight pointLights[5];
 uniform DirectionalLight directionalLights[5];
@@ -73,8 +75,8 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, vec3 fragPositi
 vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn);
 
 float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition);
-//float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition);
-//float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition);
+float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition);
+float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition);
 
 
 void main() {
@@ -83,7 +85,7 @@ void main() {
     vec3 texColor = texture(gDiffuseSpec, textureCoordinates).rgb;
     float spec = texture(gDiffuseSpec, textureCoordinates).a;
 	vec3 speColor = vec3(spec, spec, spec);
-	vec3 viewDirection = normalize(cameraPosition - fragPosition);
+	vec3 viewDirection = normalize(fragPosition);
 	
 	bool blinn = true;	
 	vec3 result = vec3(0.f, 0.f, 0.f);
@@ -140,11 +142,12 @@ vec2 sampleDirections2D[16] = vec2[](
 
 float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 
-	vec3 direction = fragPosition - pointLights[i].position; 
+	vec4 posLightSpace = inverseView * vec4(origin + fragPosition - pointLights[i].position, 1);
+	vec3 direction = posLightSpace.xyz;
 	float curDepth = length(direction) / pointLights[i].farPlane;
 
 	//Dont' draw shadow when too far away from the viewer or from light
-	float camDistance = length(fragPosition - cameraPosition) / pointLights[i].farPlane;
+	float camDistance = length(fragPosition) / pointLights[i].farPlane;
 	if(camDistance > 1.0f || curDepth > 0.5f)
 		return 0.0f;
 
@@ -172,7 +175,6 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 vec3 calculatePointLight(int index, PointLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn) {
 
 	vec3 dir = light.position - fragPosition;
-
 	float distance = length(dir);
 	vec3 direction = normalize(dir);
 
@@ -206,7 +208,7 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal, vec3 fragPosi
 //Spotlights
 
 float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition) {
-	vec4 posLightSpace = spotLights[i].lightTransform * vec4(fragPosition, 1.0f);
+	vec4 posLightSpace = spotLights[i].lightTransform * inverseView * vec4(fragPosition, 1.0f);
 	vec3 coords = posLightSpace.xyz / posLightSpace.w;
 	coords = coords * 0.5f + 0.5f;
 
@@ -236,14 +238,9 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition) {
 }
 
 vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, bool blinn) {
-
 	vec3 dir = light.position - fragPosition;
-
 	float distance = length(dir);
 	vec3 direction = normalize(dir);
-
-	vec3 ambient = light.ambient * texColor;
-
 
 	//float attenuation = 1.0f / (light.constant + light.linear * distance + 
     //		    light.quadratic * (distance * distance));  
@@ -270,6 +267,7 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, vec3 fragPositi
 	}
 
 	vec3 specular = spec * speColor * light.specular * intensity;
+	vec3 ambient = light.ambient * texColor;
 	float shadow = calculateSpotLightShadows(index, normal, fragPosition);
 
     return (ambient + (1.0f - shadow) * (diffuse + specular)) * attenuation;
@@ -278,7 +276,7 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, vec3 fragPositi
 //Directional Lights
 
 float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
-	vec4 posLightSpace = spotLights[i].lightTransform * vec4(fragPosition, 1.0f);
+	vec4 posLightSpace = spotLights[i].lightTransform * inverseView * vec4(fragPosition, 1.0f);
 	vec3 coords = posLightSpace.xyz / posLightSpace.w;
 	coords = coords * 0.5f + 0.5f;
 

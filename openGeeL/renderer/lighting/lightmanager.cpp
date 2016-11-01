@@ -76,7 +76,7 @@ namespace geeL {
 		return *light;
 	}
 
-	void LightManager::deferredBind(const Shader& shader) const {
+	void LightManager::deferredBind(const RenderScene& scene, const Shader& shader) const {
 		shader.use();
 
 		glUniform1i(glGetUniformLocation(shader.program, plCountName.c_str()), staticPLs.size());
@@ -84,13 +84,13 @@ namespace geeL {
 		glUniform1i(glGetUniformLocation(shader.program, slCountName.c_str()), staticSLs.size());
 
 		for (size_t j = 0; j < staticPLs.size(); j++)
-			staticPLs[j]->deferredBind(shader, j, plName);
+			staticPLs[j]->deferredBind(scene, shader, j, plName);
 
 		for (size_t j = 0; j < staticDLs.size(); j++)
-			staticDLs[j]->deferredBind(shader, j, dlName);
+			staticDLs[j]->deferredBind(scene, shader, j, dlName);
 
 		for (size_t j = 0; j < staticSLs.size(); j++)
-			staticSLs[j]->deferredBind(shader, j, slName);
+			staticSLs[j]->deferredBind(scene, shader, j, slName);
 	}
 
 	void LightManager::forwardBind(const Shader& shader) const {

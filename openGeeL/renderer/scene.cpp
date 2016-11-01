@@ -32,6 +32,13 @@ namespace geeL {
 	}
 
 
+	void RenderScene::update() {
+		camera.update();
+
+		originViewSpace = TranslateToViewSpace(vec3(0.f, 0.f, 0.f));
+	}
+
+
 	void RenderScene::drawDeferred() const {
 		drawObjects(deferredRenderObjects, true);
 	}
@@ -107,8 +114,17 @@ namespace geeL {
 	}
 
 	glm::vec3 RenderScene::TranslateToScreenSpace(glm::vec3 vector) const {
-		glm::vec4 vec = camera.projectionMatrix() * camera.viewMatrix() * glm::vec4(vector, 1.f);
+		glm::vec4 vec = camera.getProjectionMatrix() * camera.getViewMatrix() * glm::vec4(vector, 1.f);
 		return glm::vec3(vec.x / vec.w, vec.y / vec.w, vec.z / vec.w) * 0.5f + 0.5f;
+	}
+
+	glm::vec3 RenderScene::TranslateToViewSpace(glm::vec3 vector) const {
+		glm::vec4 vec = camera.getViewMatrix() * glm::vec4(vector, 1.f);
+		return glm::vec3(vec.x, vec.y, vec.z);
+	}
+
+	const glm::vec3& RenderScene::GetOriginInViewSpace() const {
+		return originViewSpace;
 	}
 
 }

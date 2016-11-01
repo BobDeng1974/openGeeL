@@ -36,6 +36,9 @@ public:
 	//Create and add new mesh renderer with custom materials to scene
 	MeshRenderer& AddMeshRenderer(std::string modelPath, Transform& transform, 
 		std::vector<Material*> materials, CullingMode faceCulling);
+
+	//Update scene information. Should be called once at beginning of frame
+	void update();
 		
 	//Draw only those objects that are suited for deferred rendering
 	void drawDeferred() const;
@@ -53,9 +56,11 @@ public:
 	void drawObjects(const Shader& shader) const;
 
 	glm::vec3 TranslateToScreenSpace(glm::vec3 vector) const;
-
+	glm::vec3 TranslateToViewSpace(glm::vec3 vector) const;
+	const glm::vec3& GetOriginInViewSpace() const;
 
 private:
+	glm::vec3 originViewSpace;
 	Skybox* skybox;
 	MeshFactory& meshFactory;
 	std::list<MeshRenderer*> deferredRenderObjects;

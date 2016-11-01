@@ -45,7 +45,7 @@ namespace geeL {
 		shader.use();
 
 		if (shader.useLight) {
-			scene.lightManager.deferredBind(shader);
+			scene.lightManager.deferredBind(scene, shader);
 			shader.mapOffset = 1;
 			scene.lightManager.bindShadowmaps(shader);
 		}

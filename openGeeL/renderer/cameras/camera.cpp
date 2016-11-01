@@ -20,7 +20,20 @@ namespace geeL {
 		: SceneObject(transform), speed(speed), sensitivity(sensitivity) {}
 
 
-	mat4 Camera::viewMatrix() const {
+	void Camera::update() {
+		viewMatrix = computeViewMatrix();
+		projectionMatrix = computeProjectionMatrix();
+	}
+
+	const mat4& Camera::getViewMatrix() const {
+		return viewMatrix;
+	}
+
+	const mat4& Camera::getProjectionMatrix() const {
+		return projectionMatrix;
+	}
+
+	mat4 Camera::computeViewMatrix() const {
 		return transform.lookAt();
 	}
 
@@ -63,8 +76,8 @@ namespace geeL {
 		shader.use();
 
 		shader.setVector3(shader.cam + ".position", transform.position);
-		shader.setMat4("view", viewMatrix());
-		shader.setMat4("projection", projectionMatrix());
+		shader.setMat4("view", viewMatrix);
+		shader.setMat4("projection", projectionMatrix);
 	}
 
 	void Camera::bindPosition(const Shader& shader, std::string name) const {
@@ -75,11 +88,11 @@ namespace geeL {
 	void Camera::uniformBind(int uniformID) const {
 
 		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projectionMatrix()));
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projectionMatrix));
 		//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
-		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(viewMatrix()));
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(viewMatrix));
 		//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);

@@ -48,7 +48,7 @@ public:
 	virtual void addObject(SceneControlObject* obj);
 	virtual void initObjects();
 	
-	void setScene(const RenderScene& scene);
+	void setScene(RenderScene& scene);
 	void setShaderManager(const ShaderManager& manager);
 
 
@@ -56,7 +56,7 @@ protected:
 	RenderWindow* window;
 	InputManager* inputManager;
 
-	const RenderScene* scene;
+	RenderScene* scene;
 	const ShaderManager* shaderManager;
 	
 	std::vector<SceneControlObject*> objects;

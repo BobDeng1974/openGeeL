@@ -12,7 +12,7 @@ class RenderScene;
 class GodRay : public PostProcessingEffect {
 
 public:
-	GodRay(const RenderScene& scene, glm::vec3 lightPosition, unsigned int samples = 10.f);
+	GodRay(const RenderScene& scene, glm::vec3 lightPosition, unsigned int samples = 15.f);
 
 protected:
 	virtual void bindValues();

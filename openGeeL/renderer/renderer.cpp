@@ -21,7 +21,7 @@ namespace geeL{
 		}
 	}
 
-	void Renderer::setScene(const RenderScene& scene) {
+	void Renderer::setScene(RenderScene& scene) {
 		this->scene = &scene;
 	}
 

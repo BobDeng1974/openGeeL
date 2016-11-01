@@ -35,6 +35,7 @@ void main() {
     gPosition = fragPosition;
     
 	vec3 norm = normalize(normal);
+	
 	if(normFlag == 1) {
 		norm = texture(material.normal, textureCoordinates).rgb;
 		norm = normalize(norm * 2.0f - 1.0f);

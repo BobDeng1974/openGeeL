@@ -9,8 +9,6 @@ namespace geeL {
 
 	GBuffer::GBuffer() {}
 
-	GBuffer::~GBuffer() {}
-
 
 	void GBuffer::init(int width, int height) {
 		this->width = width;
