@@ -59,7 +59,7 @@ uniform int plCount;
 uniform int dlCount;
 uniform int slCount;
 
-uniform sampler2D gPosition;
+uniform sampler2D gPositionDepth;
 uniform sampler2D gNormal;
 uniform sampler2D gDiffuseSpec;
 
@@ -80,7 +80,7 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition);
 
 
 void main() {
-	vec3 fragPosition = texture(gPosition, textureCoordinates).rgb;
+	vec3 fragPosition = texture(gPositionDepth, textureCoordinates).rgb;
     vec3 normal = texture(gNormal, textureCoordinates).rgb;
     vec3 texColor = texture(gDiffuseSpec, textureCoordinates).rgb;
     float spec = texture(gDiffuseSpec, textureCoordinates).a;

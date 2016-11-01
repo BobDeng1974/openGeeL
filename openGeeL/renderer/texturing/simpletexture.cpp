@@ -8,7 +8,7 @@
 
 namespace geeL {
 
-	SimpleTexture::SimpleTexture(const char* fileName, bool linear, TextureType type, GLint wrapMode, GLint filterMode) 
+	SimpleTexture::SimpleTexture(const char* fileName, bool linear, TextureType type, int wrapMode, int filterMode) 
 		: type(type), path(fileName) {
 
 		int imgWidth, imgHeight;
@@ -31,6 +31,19 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterMode);
 
 		SOIL_free_image_data(image);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	SimpleTexture::SimpleTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height,
+		int wrapMode, int filterMode) {
+
+		glGenTextures(1, &id);
+		glBindTexture(GL_TEXTURE_2D, id);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, &colors[0]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMode);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterMode);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 

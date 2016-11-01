@@ -1,7 +1,9 @@
 #ifndef SIMPLETEXTURE_H
 #define SIMPLETEXTURE_H
 
+#include <vector>
 #include <string>
+#include <vec3.hpp>
 #include "texture.h"
 
 using namespace std;
@@ -28,7 +30,10 @@ public:
 
 	SimpleTexture() {}
 	SimpleTexture(const char* fileName, bool linear = false, 
-		TextureType type = Diffuse, GLint wrapMode = GL_REPEAT, GLint filterMode = GL_LINEAR);
+		TextureType type = Diffuse, int wrapMode = GL_REPEAT, int filterMode = GL_LINEAR);
+
+	SimpleTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height, 
+		int wrapMode = GL_REPEAT, int filterMode = GL_LINEAR);
 
 	virtual void bind(const Shader& shader, const char* name, int texLayer = 0) const;
 	virtual void draw(const Shader& shader, int texLayer = 0) const;

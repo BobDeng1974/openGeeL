@@ -171,6 +171,7 @@
     <ClCompile Include="renderer\postprocessing\gaussianblur.cpp" />
     <ClCompile Include="renderer\postprocessing\godray.cpp" />
     <ClCompile Include="renderer\postprocessing\postprocessing.cpp" />
+    <ClCompile Include="renderer\postprocessing\ssao.cpp" />
     <ClCompile Include="renderer\postprocessing\tonemapping.cpp" />
     <ClCompile Include="renderer\renderer.cpp" />
     <ClCompile Include="renderer\renderer\deferredrenderer.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="renderer\postprocessing\gaussianblur.h" />
     <ClInclude Include="renderer\postprocessing\godray.h" />
     <ClInclude Include="renderer\postprocessing\postprocessing.h" />
+    <ClInclude Include="renderer\postprocessing\ssao.h" />
     <ClInclude Include="renderer\postprocessing\tonemapping.h" />
     <ClInclude Include="renderer\renderer.h" />
     <ClInclude Include="renderer\renderer\deferredrenderer.h" />
@@ -252,6 +254,7 @@
     <None Include="renderer\postprocessing\gaussianblur.frag" />
     <None Include="renderer\postprocessing\godray.frag" />
     <None Include="renderer\postprocessing\kernelprocessing.frag" />
+    <None Include="renderer\postprocessing\ssao.frag" />
     <None Include="renderer\postprocessing\tonemapping.frag" />
     <None Include="renderer\shaders\deferredlighting.frag" />
     <None Include="renderer\shaders\deferredlighting.vert" />

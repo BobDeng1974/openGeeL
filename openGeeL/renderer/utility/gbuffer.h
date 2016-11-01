@@ -10,7 +10,7 @@ class GBuffer {
 public:
 	unsigned int fbo;
 	unsigned int diffuseSpec;
-	unsigned int position;
+	unsigned int positionDepth;
 	unsigned int normal;
 	unsigned int depth;
 	int width;

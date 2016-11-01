@@ -1,6 +1,6 @@
 #version 330 core
 
-layout (location = 0) out vec3 gPosition;
+layout (location = 0) out vec4 gPositionDepth;
 layout (location = 1) out vec3 gNormal;
 layout (location = 2) out vec4 gDiffuseSpec;
 
@@ -21,6 +21,13 @@ in mat3 TBN;
 
 uniform Material material;
 
+const float NEAR = 0.1;
+const float FAR = 100.0f;
+float LinearizeDepth(float depth) {
+    float z = depth * 2.0 - 1.0; // Back to NDC 
+    return (2.0f * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR));	
+}
+
 void main() {    
 
 	//Check if materials is actually textured
@@ -32,7 +39,8 @@ void main() {
 	if(material.type == 1 && diffFlag == 1 && texture(material.diffuse, textureCoordinates).a < 0.1f)
 		discard;
 
-    gPosition = fragPosition;
+    gPositionDepth.xyz = fragPosition;
+	gPositionDepth.a = LinearizeDepth(gl_FragCoord.z); 
     
 	vec3 norm = normalize(normal);
 	

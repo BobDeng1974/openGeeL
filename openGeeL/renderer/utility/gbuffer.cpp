@@ -18,9 +18,9 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 		//Create attachements for all color buffers
-		position    = generateTexture(0, GL_RGB16F);
-		normal      = generateTexture(1, GL_RGB16F);
-		diffuseSpec = generateTexture(2, GL_RGBA);
+		positionDepth = generateTexture(0, GL_RGBA16F);
+		normal        = generateTexture(1, GL_RGB16F);
+		diffuseSpec   = generateTexture(2, GL_RGBA);
 		GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
 		glDrawBuffers(3, attachments);
 
@@ -55,7 +55,7 @@ namespace geeL {
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexImage2D(GL_TEXTURE_2D, 0, type, width, height, 0, 
-			(type == GL_RGB16F) ? GL_RGB : GL_RGBA, (type == GL_RGB16F) ? GL_FLOAT : GL_UNSIGNED_BYTE, NULL);
+			(type == GL_RGB16F) ? GL_RGB : GL_RGBA, (type == GL_RGB16F || type == GL_RGBA16F) ? GL_FLOAT : GL_UNSIGNED_BYTE, NULL);
 		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

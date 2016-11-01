@@ -183,6 +183,9 @@
     <ClCompile Include="renderer\utility\screenquad.cpp">
       <Filter>renderer\utility</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\postprocessing\ssao.cpp">
+      <Filter>renderer\postprocessing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -329,6 +332,9 @@
     <ClInclude Include="renderer\utility\screenquad.h">
       <Filter>renderer\utility</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\postprocessing\ssao.h">
+      <Filter>renderer\postprocessing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\simple.vert">
@@ -429,6 +435,9 @@
     </None>
     <None Include="renderer\shaders\deferredlighting.vert">
       <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\postprocessing\ssao.frag">
+      <Filter>renderer\postprocessing</Filter>
     </None>
   </ItemGroup>
 </Project>
