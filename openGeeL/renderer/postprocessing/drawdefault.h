@@ -8,7 +8,12 @@ namespace geeL {
 class DefaultPostProcess : public PostProcessingEffect {
 
 public:
-	DefaultPostProcess();
+	float exposure;
+
+	DefaultPostProcess(float exposure = 1.f);
+
+protected:
+	virtual void bindValues();
 
 };
 

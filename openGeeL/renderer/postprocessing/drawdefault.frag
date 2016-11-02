@@ -4,6 +4,7 @@ in vec2 TexCoords;
 out vec4 color;
 
 uniform sampler2D image;
+uniform float exposure;
 
 
 void main() { 
@@ -11,7 +12,6 @@ void main() {
 	vec3 hdr = texture(image, TexCoords).rgb;
 
 	//Tone mapping
-	float exposure = 1.0f;
 	vec3 result = vec3(1.0f) - exp(-hdr * exposure);
 
 	//Gamma correction

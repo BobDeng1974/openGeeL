@@ -3,6 +3,7 @@
 #include "../shader/shader.h"
 #include "../utility/screenquad.h"
 #include "gaussianblur.h"
+#include <iostream>
 
 namespace geeL {
 
@@ -52,7 +53,7 @@ namespace geeL {
 			bindToScreen();
 			horizontal = !horizontal;
 		}
-		
+				
 		FrameBuffer::bind(parentFBO);
 	}
 

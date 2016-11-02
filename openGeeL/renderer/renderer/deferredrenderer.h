@@ -11,12 +11,14 @@ namespace geeL {
 
 class Camera;
 class Shader;
+class SSAO;
 class PostProcessingEffect;
 
 class DeferredRenderer : public Renderer {
 
 public:
 	DeferredRenderer(RenderWindow* window, InputManager* inputManager);
+	DeferredRenderer(RenderWindow* window, InputManager* inputManager, SSAO* ssao);
 	~DeferredRenderer();
 
 	virtual void init();
@@ -36,6 +38,9 @@ private:
 	GBuffer gBuffer;
 	FrameBuffer frameBuffer1;
 	FrameBuffer frameBuffer2;
+
+	SSAO* ssao = nullptr;
+	FrameBuffer* ssaoBuffer = nullptr;
 };
 
 }

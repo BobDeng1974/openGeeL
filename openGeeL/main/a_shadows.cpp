@@ -31,6 +31,7 @@
 #include "../renderer/postprocessing/gaussianblur.h"
 #include "../renderer/postprocessing/bloom.h"
 #include "../renderer/postprocessing/godray.h"
+#include "../renderer/postprocessing/ssao.h"
 
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/skybox.h"
@@ -77,9 +78,11 @@ namespace {
 
 			float l = 20.f;
 			
+			float ambient = 2.f;
+
 			geeL::Transform* lighTransi4 = new geeL::Transform(glm::vec3(7, 5, 5), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
 			light = &lightManager.addLight(*lighTransi4, glm::vec3(l, l, l),
-				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), 1.f, 1.f);
+				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(ambient, ambient, ambient), 1.f, 1.f);
 				
 			l = 100.f;
 			float angle = glm::cos(glm::radians(25.5f));
@@ -102,6 +105,12 @@ namespace {
 
 			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(100.2f, 0.2f, 100.2f));
 			scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront);
+
+			geeL::Transform* transi5 = new geeL::Transform(glm::vec3(0.0f, 5, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(5.2f, 1.2f, 5.2f));
+			scene.AddMeshRenderer("resources/primitives/cube.obj", *transi5, cullFront);
+
+			geeL::Transform* transi3 = new geeL::Transform(glm::vec3(0.0f, 1, -2.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(5.2f, 2.2f, 1.2f));
+			scene.AddMeshRenderer("resources/primitives/cube.obj", *transi3, cullFront);
 
 			GenericMaterial* custom = &materialFactory.CreateMaterial(materialFactory.getForwardShader());
 			custom->addParameter("shininess", 64.f);
@@ -139,7 +148,9 @@ void a_shadows() {
 	geeL::Transform& transform3 = transFactory.CreateTransform(glm::vec3(0.0f, 2.0f, 9.0f), vec3(-100.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera camera3 = PerspectiveCamera(transform3, 5.f, 15.f, 65.f, window->width, window->height, 0.1f, 100.f);
 
-	DeferredRenderer renderer1 = DeferredRenderer(window, manager);
+	GaussianBlur blur = GaussianBlur(1);
+	SSAO ssao = SSAO(camera3, blur);
+	DeferredRenderer renderer1 = DeferredRenderer(window, manager, &ssao);
 	renderer1.init();
 
 	MaterialFactory materialFactory = MaterialFactory();
@@ -166,14 +177,16 @@ void a_shadows() {
 	Skybox skybox = Skybox(map);
 	scene.setSkybox(skybox);
 
+	
 	GodRay ray = GodRay(scene, glm::vec3(-40, 30, -50));
-	//GaussianBlur blur = GaussianBlur(1);
+	
 	//GaussianBlur blur2 = GaussianBlur(10);
 	//Bloom bloom = Bloom(blur2);
 	//ColorCorrection cCorrect = ColorCorrection(0.5, 0.5, 0.5);
 	//ToneMapping tone = ToneMapping(1.1);
 
-	renderer1.addEffect(ray);
+	//renderer1.addEffect(blur);
+	//renderer1.addEffect(ray);
 	renderer1.render();
 
 	delete testObj;

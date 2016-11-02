@@ -13,6 +13,7 @@
 #include "../window.h"
 #include "../scripting/scenecontrolobject.h"
 #include "../inputmanager.h"
+#include "../postprocessing/ssao.h"
 #include "../postprocessing/postprocessing.h"
 #include "../cameras/camera.h"
 #include "../lighting/lightmanager.h"
@@ -26,26 +27,33 @@ using namespace std;
 
 namespace geeL {
 
-	DeferredRenderer::DeferredRenderer(RenderWindow* window, InputManager* inputManager)
+	DeferredRenderer::DeferredRenderer(RenderWindow* window, InputManager* inputManager) 
+		: DeferredRenderer(window, inputManager, nullptr) {}
+
+	DeferredRenderer::DeferredRenderer(RenderWindow* window, InputManager* inputManager, SSAO* ssao) 
 		:
-		Renderer(window, inputManager), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()), 
-		gBuffer(GBuffer()), screen(ScreenQuad(window->width, window->height)),
-		deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
-			"renderer/shaders/deferredlighting.frag")) {
+		Renderer(window, inputManager), ssao(ssao), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()),
+			gBuffer(GBuffer()), screen(ScreenQuad(window->width, window->height)),
+			deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
+				"renderer/shaders/deferredlighting.frag")) {
 
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_FRONT);
-		glFrontFace(GL_CW);
+			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_FRONT);
+			glFrontFace(GL_CW);
 
-		//Default post processing with tone mapping and gamma correction
-		DefaultPostProcess* defaultEffect = new DefaultPostProcess();
-		defaultEffect->setScreen(screen);
-		effects.push_back(defaultEffect);
+			//Default post processing with tone mapping and gamma correction
+			DefaultPostProcess* defaultEffect = new DefaultPostProcess();
+			defaultEffect->setScreen(screen);
+			effects.push_back(defaultEffect);
 	}
 
 	DeferredRenderer::~DeferredRenderer() {
+		delete effects.front();
 		delete deferredShader;
+
+		if (ssaoBuffer != nullptr)
+			delete ssaoBuffer;
 	}
 
 
@@ -61,12 +69,19 @@ namespace geeL {
 
 		gBuffer.init(window->width, window->height);
 
+		if (ssao != nullptr) {
+			ssaoBuffer = new FrameBuffer();
+			ssaoBuffer->init(window->width, window->height, false, Single, GL_NEAREST);
+		}
+
 		deferredShader->use();
 		deferredShader->mapOffset = 1;
 		deferredShader->addMap(gBuffer.positionDepth, "gPositionDepth");
 		deferredShader->addMap(gBuffer.normal, "gNormal");
 		deferredShader->addMap(gBuffer.diffuseSpec, "gDiffuseSpec");
-		//deferredShader->bindMaps();
+		
+		if (ssao != nullptr)
+			deferredShader->addMap(ssaoBuffer->color, "ssao");
 
 		frameBuffer1.init(window->width, window->height);
 		frameBuffer2.init(window->width, window->height);
@@ -87,6 +102,15 @@ namespace geeL {
 			chooseBuffer = !chooseBuffer;
 		}
 
+		//Init SSAO (if added)
+		if (ssao != nullptr) {
+			std::list<unsigned int> ssaoMaps = { gBuffer.positionDepth, gBuffer.normal };
+			ssao->setBuffer(ssaoMaps);
+
+			ssao->setScreen(screen);
+			ssao->setParentFBO(ssaoBuffer->fbo);
+		}
+
 		shaderManager->staticDeferredBind(*scene, *deferredShader);
 		shaderManager->staticBind(*scene);
 
@@ -103,7 +127,13 @@ namespace geeL {
 
 			//Geometry pass
 			gBuffer.fill(*this);
-			
+
+			//SSAO pass
+			if (ssao != nullptr) {
+				ssaoBuffer->fill(*ssao);
+				//effects.front()->setBuffer(ssaoBuffer->color);
+			}
+
 			//Lighting & forward pass
 			frameBuffer1.fill(*this);
 

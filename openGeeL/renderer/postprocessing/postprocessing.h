@@ -29,7 +29,7 @@ public:
 
 	virtual void setScreen(ScreenQuad& screen);
 
-	void draw();
+	virtual void draw();
 
 protected:
 	std::list<unsigned int> buffers;
