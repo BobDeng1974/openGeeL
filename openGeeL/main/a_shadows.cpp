@@ -167,8 +167,13 @@ void a_shadows() {
 	scene.setSkybox(skybox);
 
 	GodRay ray = GodRay(scene, glm::vec3(-40, 30, -50));
-	//renderer1.setEffect(ray);
+	//GaussianBlur blur = GaussianBlur(1);
+	//GaussianBlur blur2 = GaussianBlur(10);
+	//Bloom bloom = Bloom(blur2);
+	//ColorCorrection cCorrect = ColorCorrection(0.5, 0.5, 0.5);
+	//ToneMapping tone = ToneMapping(1.1);
 
+	renderer1.addEffect(ray);
 	renderer1.render();
 
 	delete testObj;

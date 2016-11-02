@@ -1,6 +1,7 @@
 #ifndef DEFERREDRENDERER_H
 #define DEFERREDRENDERER_H
 
+#include <list>
 #include "../utility/screenquad.h"
 #include "../utility/framebuffer.h"
 #include "../utility/gbuffer.h"
@@ -23,15 +24,18 @@ public:
 	virtual void draw();
 	virtual void handleInput();
 
-	void setEffect(PostProcessingEffect& effect);
+	//Add new post processing effect to renderer. 
+	//Note: Effects will be drawn in reverse adding order
+	void addEffect(PostProcessingEffect& effect);
 
 private:
 	bool geometryPass = true;
 	Shader* deferredShader;
-	PostProcessingEffect* effect;
+	std::list<PostProcessingEffect*> effects;
 	ScreenQuad screen;
 	GBuffer gBuffer;
-	FrameBuffer frameBuffer;
+	FrameBuffer frameBuffer1;
+	FrameBuffer frameBuffer2;
 };
 
 }

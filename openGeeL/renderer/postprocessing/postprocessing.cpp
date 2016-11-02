@@ -4,20 +4,21 @@
 #include "../utility/screenquad.h"
 #include "postprocessing.h"
 
-#include <iostream>
-
 namespace geeL {
 
 	PostProcessingEffect::PostProcessingEffect(string fragmentPath)
-		: shader(Shader("renderer/shaders/screen.vert", fragmentPath.c_str())) {}
+		: PostProcessingEffect("renderer/shaders/screen.vert", fragmentPath) {}
 
 	PostProcessingEffect::PostProcessingEffect(string vertexPath, string fragmentPath)
-		: shader(Shader(vertexPath.c_str(), fragmentPath.c_str())) {}
+		: shader(Shader(vertexPath.c_str(), fragmentPath.c_str())) {
+	
+		shader.mapOffset = 1;
+		buffers.push_back(0);
+	}
 
 
 	void PostProcessingEffect::setBuffer(unsigned int buffer) {
-		buffers.clear();
-		buffers.push_back(buffer);
+		buffers.front() = buffer;
 	}
 
 	void PostProcessingEffect::setBuffer(std::list<unsigned int> buffers) {
@@ -45,19 +46,11 @@ namespace geeL {
 
 	void PostProcessingEffect::bindToScreen() {
 		shader.use();
-
-		int counter = bindingStart;
-		for (std::list<unsigned int>::iterator it = buffers.begin(); it != buffers.end(); it++) {
-			glActiveTexture(GL_TEXTURE0 + counter);
-			glBindTexture(GL_TEXTURE_2D, *it);
-
-			counter++;
-		}
-		
+		shader.loadMaps(buffers);
 		screen->draw();
 	}
 
 	void PostProcessingEffect::bindValues() {
-		shader.setInteger("image", bindingStart);
+		shader.setInteger("image", shader.mapOffset);
 	}
 }

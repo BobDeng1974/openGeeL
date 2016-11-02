@@ -33,28 +33,35 @@ namespace geeL {
 			shader.setFloat(name, kernel[i]);
 		}
 		
-		//Blur one time less because last blurring will be done when drawing to screen
-		for (int i = 0; i < (amount - 1); i++) {
-
-			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffers[horizontal].fbo);
+		for (int i = 0; i < amount; i++) {
+			frameBuffers[horizontal].bind();
 			shader.setInteger("horizontal", horizontal);
 
 			//Pick committed color buffer the first time and then the previous blurred buffer
-			if (first) 
+			if (first) {
 				first = false;
-			else
-				setBuffer(frameBuffers[!horizontal].color);
+				//Use the original the first time
+				currBuffer = buffers.front();
+			}
+			else {
+				//Then use the previously blurred image
+				currBuffer = frameBuffers[!horizontal].color;
+			}
 
 			//Render Call
 			bindToScreen();
-
 			horizontal = !horizontal;
 		}
 		
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		FrameBuffer::bind(parentFBO);
+	}
 
-		//Set color buffer to the last blurred buffer
-		setBuffer(frameBuffers[0].color);
+	void GaussianBlur::bindToScreen() {
+		shader.use();
+
+		std::list<unsigned int> buffs = { currBuffer };
+		shader.loadMaps(buffs);
+		screen->draw();
 	}
 
 	void GaussianBlur::setKernel(float newKernel[5]) {

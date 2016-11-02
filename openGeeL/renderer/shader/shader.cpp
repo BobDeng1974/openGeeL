@@ -232,6 +232,17 @@ namespace geeL {
 		}
 	}
 
+	void Shader::loadMaps(std::list<unsigned int>& maps, unsigned int type) const {
+		int layer = GL_TEXTURE0;
+		int counter = mapOffset;
+		for (list<unsigned int>::const_iterator it = maps.begin(); it != maps.end(); it++) {
+			glActiveTexture(layer + counter);
+
+			glBindTexture(type, *it);
+			counter++;
+		}
+	}
+
 	void Shader::setInteger(string name, int value) const {
 		glUniform1i(glGetUniformLocation(program, name.c_str()), value);
 	}

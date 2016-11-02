@@ -3,6 +3,7 @@
 
 namespace geeL {
 
-	DefaultPostProcess::DefaultPostProcess() : PostProcessingEffect("renderer/postprocessing/drawdefault.frag") {}
+	DefaultPostProcess::DefaultPostProcess() 
+		: PostProcessingEffect("renderer/postprocessing/drawdefault.frag") {}
 
 }

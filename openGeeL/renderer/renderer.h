@@ -18,15 +18,15 @@ class ShaderManager;
 class Drawer {
 
 public:
-	unsigned int fbo = 0;
+	unsigned int parentFBO = 0;
 
 	virtual void draw() = 0;
 
 	//FBO this object should be drawn to.
 	//If the object used other fbo's itself it should activate
 	//this one afterwards
-	void setFBO(unsigned int fbo) {
-		this->fbo = fbo;
+	void setParentFBO(unsigned int fbo) {
+		this->parentFBO = fbo;
 	}
 };
 

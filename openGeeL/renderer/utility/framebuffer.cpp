@@ -40,7 +40,19 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void FrameBuffer::fill(Drawer& drawer) {
+	void FrameBuffer::bind() const {
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	}
+
+	void FrameBuffer::bind(unsigned int fbo) {
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	}
+
+	void FrameBuffer::unbind() {
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void FrameBuffer::fill(Drawer& drawer) const {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glViewport(0, 0, width, height);
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
@@ -50,7 +62,7 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void FrameBuffer::copyDepth(unsigned int targetFBO) {
+	void FrameBuffer::copyDepth(unsigned int targetFBO) const {
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, targetFBO);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 		glBlitFramebuffer(0, 0, width, height, 0, 0,

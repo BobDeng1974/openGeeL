@@ -54,6 +54,11 @@ public:
 	//Load maps into their binding points in the shader
 	void loadMaps() const;
 
+	//Loads committed maps into the shader
+	//IMPORTANT: no binding is taken care of, multiple calls will override previous one
+	//and loading maps from other sources will also override this call
+	void loadMaps(std::list<unsigned int>& maps, unsigned int type = GL_TEXTURE_2D) const;
+
 	void setInteger(std::string name, int value) const;
 	void setFloat(std::string name, float value) const;
 	void setVector3(std::string name, const glm::vec3& value) const;

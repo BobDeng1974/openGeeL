@@ -18,7 +18,7 @@ namespace geeL {
 		default_random_engine generator;
 
 		// Sample kernel
-		for (unsigned int i = 0; i < 64; ++i) {
+		for (unsigned int i = 0; i < sampleCount; ++i) {
 			vec3 sample = vec3(random(generator) * 2.f - 1.f, 
 				random(generator) * 2.f - 1.f, 
 				random(generator));
@@ -33,7 +33,7 @@ namespace geeL {
 		}
 		
 		//Sample noise
-		for (unsigned int i = 0; i < sampleCount; ++i) {
+		for (unsigned int i = 0; i < 16; ++i) {
 			vec3 sample = vec3(random(generator) * 2.f - 1.f,
 				random(generator) * 2.f - 1.f,
 				0.f);
@@ -46,9 +46,9 @@ namespace geeL {
 
 
 	void SSAO::bindValues() {
-		shader.setInteger("gPositionDepth", bindingStart);
-		shader.setInteger("gNormal", bindingStart + 1);
-		shader.setInteger("noiseTexture", bindingStart + 2);
+		shader.setInteger("gPositionDepth", shader.mapOffset);
+		shader.setInteger("gNormal", shader.mapOffset + 1);
+		shader.setInteger("noiseTexture", shader.mapOffset + 2);
 
 		for (unsigned int i = 0; i < sampleCount; i++)
 			shader.setVector3("samples[" + to_string(i) + "]", kernel[i]);

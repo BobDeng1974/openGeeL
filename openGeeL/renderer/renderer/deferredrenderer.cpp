@@ -22,12 +22,14 @@
 
 #define fps 10
 
+using namespace std;
+
 namespace geeL {
 
 	DeferredRenderer::DeferredRenderer(RenderWindow* window, InputManager* inputManager)
 		:
-		Renderer(window, inputManager), effect(nullptr),
-		frameBuffer(FrameBuffer()), gBuffer(GBuffer()), screen(ScreenQuad(window->width, window->height)),
+		Renderer(window, inputManager), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()), 
+		gBuffer(GBuffer()), screen(ScreenQuad(window->width, window->height)),
 		deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
 			"renderer/shaders/deferredlighting.frag")) {
 
@@ -35,6 +37,11 @@ namespace geeL {
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT);
 		glFrontFace(GL_CW);
+
+		//Default post processing with tone mapping and gamma correction
+		DefaultPostProcess* defaultEffect = new DefaultPostProcess();
+		defaultEffect->setScreen(screen);
+		effects.push_back(defaultEffect);
 	}
 
 	DeferredRenderer::~DeferredRenderer() {
@@ -61,17 +68,29 @@ namespace geeL {
 		deferredShader->addMap(gBuffer.diffuseSpec, "gDiffuseSpec");
 		//deferredShader->bindMaps();
 
-		frameBuffer.init(window->width, window->height);
+		frameBuffer1.init(window->width, window->height);
+		frameBuffer2.init(window->width, window->height);
 		screen.init();
 	}
 
 	void DeferredRenderer::render() {
 
-		DefaultPostProcess defaultEffect = DefaultPostProcess();
-		defaultEffect.setScreen(screen);
+		//Init all post processing effects with two alternating framebuffers
+		//Current effect will then always read from one and write to one
+		bool chooseBuffer = true;
+		for (list<PostProcessingEffect*>::reverse_iterator it = effects.rbegin(); 
+			it != effects.rend(); it++) {
+
+			(*it)->setBuffer(chooseBuffer ? frameBuffer1.color : frameBuffer2.color);
+			(*it)->setParentFBO(chooseBuffer ? frameBuffer2.fbo : frameBuffer1.fbo);
+
+			chooseBuffer = !chooseBuffer;
+		}
+
 		shaderManager->staticDeferredBind(*scene, *deferredShader);
 		shaderManager->staticBind(*scene);
 
+		//Render loop
 		while (!window->shouldClose()) {
 			int currFPS = ceil(Time::deltaTime * 1000.f);
 			std::this_thread::sleep_for(std::chrono::milliseconds(fps - currFPS));
@@ -82,25 +101,31 @@ namespace geeL {
 			glEnable(GL_DEPTH_TEST);
 			scene->lightManager.drawShadowmaps(*scene);
 
-			//Geometry path
+			//Geometry pass
 			gBuffer.fill(*this);
 			
-			//Lighting path & forward pass
-			frameBuffer.fill(*this);
+			//Lighting & forward pass
+			frameBuffer1.fill(*this);
 
 			glClear(GL_COLOR_BUFFER_BIT);
 			glDisable(GL_DEPTH_TEST);
 
-			if (effect != nullptr) {
-				effect->setBuffer(frameBuffer.color);
-				effect->draw();
+			//Post processing
+			chooseBuffer = true;
+			//Draw all the post processing effects on top of each other. Ping pong style!
+			for (list<PostProcessingEffect*>::reverse_iterator it = effects.rbegin(); 
+				it != prev(effects.rend()); it++) {
+				
+				if (chooseBuffer)
+					frameBuffer2.fill(**it);
+				else
+					frameBuffer1.fill(**it);
+
+				chooseBuffer = !chooseBuffer;
 			}
-			//Default post processing(Gamma correction & tone mapping)
-			else {
-				defaultEffect.setBuffer(frameBuffer.color);
-				defaultEffect.draw();
-			}
-			
+			//Draw the last (default) effect to screen.
+			effects.front()->draw();
+
 			window->swapBuffer();
 			Time::update();
 		}
@@ -133,7 +158,7 @@ namespace geeL {
 			glClear(GL_DEPTH_BUFFER_BIT);
 			//Copy depth buffer from gBuffer to draw forward 
 			//rendered objects 'into' the scene instead of 'on top'
-			frameBuffer.copyDepth(gBuffer.fbo);
+			frameBuffer1.copyDepth(gBuffer.fbo);
 
 			//Forward pass
 			shaderManager->dynamicBind(*scene);
@@ -148,9 +173,9 @@ namespace geeL {
 		scene->camera.handleInput(*inputManager);
 	}
 
-	void DeferredRenderer::setEffect(PostProcessingEffect& effect) {
-		this->effect = &effect;
-		this->effect->setScreen(screen);
+	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {
+		effect.setScreen(screen);
+		effects.push_back(&effect);
 	}
 
 }

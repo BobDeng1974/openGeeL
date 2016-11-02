@@ -4,8 +4,6 @@
 #include "../utility/screenquad.h"
 #include "bloom.h"
 
-#include <iostream>
-
 namespace geeL {
 
 	BloomFilter::BloomFilter(float scatter)
@@ -41,12 +39,15 @@ namespace geeL {
 		filter->setScreen(screen);
 		blur.setScreen(screen);
 
-		blur.setFBO(blurBuffer.fbo);
+		blur.setParentFBO(blurBuffer.fbo);
+
+		//Assign buffer that the blurred and cutout bloom image will be rendered to
+		buffers.push_back(blurBuffer.color);
 	}
 
 	void Bloom::bindValues() {
-		shader.setInteger("image", bindingStart);
-		shader.setInteger("bloom", bindingStart + 1);
+		shader.setInteger("image", shader.mapOffset);
+		shader.setInteger("bloom", shader.mapOffset + 1);
 
 		filter->setBuffer(buffers.front());
 		filterBuffer.fill(*filter);
@@ -54,10 +55,7 @@ namespace geeL {
 		blur.setBuffer(filterBuffer.color);
 		blurBuffer.fill(blur);
 
-		std::list<unsigned int> newBuffers;
-		newBuffers.push_back(buffers.front());
-		newBuffers.push_back(blurBuffer.color);
-		setBuffer(newBuffers);
+		FrameBuffer::bind(parentFBO);
 	}
 
 
