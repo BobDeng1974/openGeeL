@@ -18,7 +18,7 @@ void main() {
 	vec3 result = vec3(1.0f) - exp(-hdr * exposure);
 
 	//Gamma correction
-	result.rgb = pow(result.rgb, vec3(0.4545f));
+	result = pow(result.rgb, vec3(0.4545f));
 	
 	float dither = texture(noiseMap, TexCoords * noiseScale.xy).r * 0.005f;
 	color = vec4(result + dither, 1.0f);

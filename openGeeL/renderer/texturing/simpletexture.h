@@ -28,6 +28,13 @@ enum ColorType {
 	ColorRGBA,
 };
 
+enum FilterMode{
+	None,
+	Linear,
+	Bilinear,
+	Trilinear
+};
+
 class SimpleTexture : public Texture {
 
 public:
@@ -37,7 +44,7 @@ public:
 	SimpleTexture() {}
 	SimpleTexture(const char* fileName, bool linear = false, 
 		TextureType textureTpe = Diffuse, ColorType colorType = ColorRGBA, 
-		int wrapMode = GL_REPEAT, int filterMode = GL_LINEAR);
+		int wrapMode = GL_REPEAT, FilterMode filterMode = None);
 
 	SimpleTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height, 
 		int wrapMode = GL_REPEAT, int filterMode = GL_LINEAR);
