@@ -81,7 +81,7 @@ namespace geeL {
 			mat->GetTexture(aiType, i, &str);
 
 			string fileName = directory + "/" + string(str.C_Str());
-			SimpleTexture& texture = factory.CreateTexture(fileName, linear, type);	//TODO: reference it up
+			SimpleTexture& texture = factory.CreateTexture(fileName, linear, type);
 			textures.push_back(&texture);
 		}
 

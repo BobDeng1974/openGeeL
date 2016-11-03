@@ -22,6 +22,12 @@ enum TextureType {
 	Reflection
 };
 
+enum ColorType {
+	ColorSingle,
+	ColorRGB,
+	ColorRGBA,
+};
+
 class SimpleTexture : public Texture {
 
 public:
@@ -30,7 +36,8 @@ public:
 
 	SimpleTexture() {}
 	SimpleTexture(const char* fileName, bool linear = false, 
-		TextureType type = Diffuse, int wrapMode = GL_REPEAT, int filterMode = GL_LINEAR);
+		TextureType textureTpe = Diffuse, ColorType colorType = ColorRGBA, 
+		int wrapMode = GL_REPEAT, int filterMode = GL_LINEAR);
 
 	SimpleTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height, 
 		int wrapMode = GL_REPEAT, int filterMode = GL_LINEAR);
@@ -45,6 +52,9 @@ private:
 	GLuint id;
 
 };
+
+
+
 
 }
 

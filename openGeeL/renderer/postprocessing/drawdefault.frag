@@ -6,6 +6,9 @@ out vec4 color;
 uniform sampler2D image;
 uniform float exposure;
 
+uniform sampler2D noiseMap;
+uniform vec3 noiseScale;
+
 
 void main() { 
 
@@ -16,6 +19,7 @@ void main() {
 
 	//Gamma correction
 	result.rgb = pow(result.rgb, vec3(0.4545f));
-
-	color = vec4(result, 1.0f);
+	
+	float dither = texture(noiseMap, TexCoords * noiseScale.xy).r * 0.005f;
+	color = vec4(result + dither, 1.0f);
 }

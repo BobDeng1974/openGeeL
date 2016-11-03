@@ -62,7 +62,9 @@ uniform int slCount;
 uniform sampler2D gPositionDepth;
 uniform sampler2D gNormal;
 uniform sampler2D gDiffuseSpec;
+
 uniform sampler2D ssao;
+uniform int useSSAO;
 
 uniform mat4 inverseView;
 uniform vec3 origin;
@@ -85,7 +87,7 @@ void main() {
     vec3 normal = texture(gNormal, textureCoordinates).rgb;
     vec3 texColor = texture(gDiffuseSpec, textureCoordinates).rgb;
     float spec = texture(gDiffuseSpec, textureCoordinates).a;
-	float occlusion = texture(ssao, textureCoordinates).r;
+	float occlusion = (useSSAO == 1) ? texture(ssao, textureCoordinates).r : 1.f;
 
 	vec3 speColor = vec3(spec, spec, spec);
 	vec3 viewDirection = normalize(fragPosition);
@@ -101,9 +103,7 @@ void main() {
 	for(int i = 0; i < slCount; i++)
 		result += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, texColor, speColor, occlusion, blinn);
 
-	//result = pow(result.rgb, vec3(0.4545f));
-	color = vec4(result, 1.f);
-	
+	color = vec4(result * occlusion, 1.f);
 }
 
 float random(vec3 seed, int i){
@@ -155,17 +155,15 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 		return 0.0f;
 
 	//float minBias = pointLights[i].bias;
-	float minBias = 0.0055f;
+	float minBias = 0.006f;
 	vec3 lightDir =  spotLights[i].position - fragPosition;
-	//float bias = max((minBias * 5.0f) * (1.0f - dot(norm, lightDir)), minBias);
-	float bias = minBias;
+	float bias = max((minBias * 5.0f) * (1.0f - dot(norm, lightDir)), minBias);
 
 	float shadow = 0.0f;
 	int samples = 5;
 	float diskRadius = 0.03f;
 
 	for(int j = 0; j < samples; j++) {
-		//int index = j;
 		int index = int(20.0f * random(floor(fragPosition.xyz * 1000.0f), j)) % 20;
 
 		float depth = texture(pointLights[i].shadowMap, direction + sampleDirections3D[index] * diskRadius).r;
@@ -179,23 +177,23 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal, vec3 fragPosi
 
 	vec3 dir = light.position - fragPosition;
 	float distance = length(dir);
-	vec3 direction = normalize(dir);
+	vec3 lightDirection = normalize(dir);
 
 	float attenuation = 1.0f / (light.constant + light.linear * distance + 
     		    light.quadratic * (distance * distance));  
 
 	//Diffuse
-	float diff = max(dot(normal, direction), 0.0f);
+	float diff = max(dot(normal, lightDirection), 0.0f);
 	vec3 diffuse = diff * light.diffuse * texColor;
 
 	//Specular
 	float spec = 0.0f;
 	if(blinn) {
-		vec3 halfwayDir = normalize(direction + viewDirection);  
+		vec3 halfwayDir = normalize(lightDirection + viewDirection);  
         spec = pow(max(dot(normal, halfwayDir), 0.0f), 32.0f);	
 	}
 	else {
-		vec3 reflectionDirection = reflect(-direction, normal);
+		vec3 reflectionDirection = reflect(-lightDirection, normal);
 		spec = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 32.0f);
 	}
 
@@ -219,7 +217,7 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition) {
         return 0.0f;
 	
 	//float minBias = spotLights[i].bias;
-	float minBias = 0.0005f;
+	float minBias = 0.001f;
 	vec3 lightDir =  spotLights[i].position - fragPosition;
 	float bias = max((minBias * 10.0f) * (1.0f - dot(norm, lightDir)), minBias);
 	float curDepth = coords.z - bias;

@@ -78,7 +78,7 @@ namespace {
 
 			float l = 20.f;
 			
-			float ambient = 2.f;
+			float ambient = 3.f;
 
 			geeL::Transform* lighTransi4 = new geeL::Transform(glm::vec3(7, 5, 5), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
 			light = &lightManager.addLight(*lighTransi4, glm::vec3(l, l, l),
@@ -186,7 +186,7 @@ void a_shadows() {
 	//ToneMapping tone = ToneMapping(1.1);
 
 	//renderer1.addEffect(blur);
-	//renderer1.addEffect(ray);
+	renderer1.addEffect(ray);
 	renderer1.render();
 
 	delete testObj;

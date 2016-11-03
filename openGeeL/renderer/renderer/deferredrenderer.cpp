@@ -9,6 +9,7 @@
 #include "../utility/rendertime.h"
 #include "../shader/shader.h"
 #include "../postprocessing/drawdefault.h"
+#include "../texturing/simpletexture.h"
 #include "deferredrenderer.h"
 #include "../window.h"
 #include "../scripting/scenecontrolobject.h"
@@ -80,8 +81,11 @@ namespace geeL {
 		deferredShader->addMap(gBuffer.normal, "gNormal");
 		deferredShader->addMap(gBuffer.diffuseSpec, "gDiffuseSpec");
 		
-		if (ssao != nullptr)
+		if (ssao != nullptr) {
 			deferredShader->addMap(ssaoBuffer->color, "ssao");
+			deferredShader->setInteger("useSSAO", 1);
+		}
+			
 
 		frameBuffer1.init(window->width, window->height);
 		frameBuffer2.init(window->width, window->height);

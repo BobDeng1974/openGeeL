@@ -33,10 +33,10 @@ namespace geeL {
 	}
 
 	SimpleTexture& MaterialFactory::CreateTexture(string filePath, 
-		bool linear, TextureType type, GLint wrapMode, GLint filterMode) {
+		bool linear, TextureType type, ColorType colorType, GLint wrapMode, GLint filterMode) {
 		
 		if (textures.find(filePath) == textures.end())
-			textures[filePath] = SimpleTexture(filePath.c_str(), linear, type, wrapMode, filterMode);
+			textures[filePath] = SimpleTexture(filePath.c_str(), linear, type, colorType, wrapMode, filterMode);
 
 		return textures[filePath];
 	}

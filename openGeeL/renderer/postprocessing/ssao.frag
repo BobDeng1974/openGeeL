@@ -31,7 +31,7 @@ void main() {
 	vec3 bitangent = cross(normal, tangent); 
 	mat3 TBN = mat3(tangent, bitangent, normal);
 
-	int sampleCount = 8;
+	int sampleCount = 16;
 	float occlusion = 0.f;
 	for(int i = 0; i < sampleCount; i++) {
 		vec3 sample = TBN * samples[i];
