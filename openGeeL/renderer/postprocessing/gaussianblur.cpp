@@ -10,7 +10,7 @@ namespace geeL {
 	GaussianBlur::GaussianBlur(unsigned int strength)
 		: PostProcessingEffect("renderer/postprocessing/gaussianblur.frag") {
 		
-		amount = 4 + 2 * strength;
+		amount = 1 + 2 * strength;
 		if (amount > maxAmount)
 			amount = maxAmount;
 	}
@@ -50,6 +50,7 @@ namespace geeL {
 			}
 
 			//Render Call
+			glClear(GL_DEPTH_BUFFER_BIT);
 			bindToScreen();
 			horizontal = !horizontal;
 		}

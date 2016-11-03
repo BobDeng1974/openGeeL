@@ -186,6 +186,9 @@
     <ClCompile Include="renderer\postprocessing\ssao.cpp">
       <Filter>renderer\postprocessing</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\postprocessing\simpleblur.cpp">
+      <Filter>renderer\postprocessing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -335,6 +338,9 @@
     <ClInclude Include="renderer\postprocessing\ssao.h">
       <Filter>renderer\postprocessing</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\postprocessing\simpleblur.h">
+      <Filter>renderer\postprocessing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\simple.vert">
@@ -437,6 +443,9 @@
       <Filter>renderer\shaders</Filter>
     </None>
     <None Include="renderer\postprocessing\ssao.frag">
+      <Filter>renderer\postprocessing</Filter>
+    </None>
+    <None Include="renderer\postprocessing\simpleblur.frag">
       <Filter>renderer\postprocessing</Filter>
     </None>
   </ItemGroup>

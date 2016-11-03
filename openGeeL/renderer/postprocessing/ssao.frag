@@ -1,4 +1,4 @@
-#version 330 core
+#version 430 core
 
 in vec2 TexCoords;
 
@@ -31,22 +31,21 @@ void main() {
 	vec3 bitangent = cross(normal, tangent); 
 	mat3 TBN = mat3(tangent, bitangent, normal);
 
-	int sampleCount = 16;
+	int sampleCount = 20;
 	float occlusion = 0.f;
 	for(int i = 0; i < sampleCount; i++) {
-		vec3 sample = TBN * samples[i];
-		sample = fragPos + sample * radius;
+		vec3 samp = TBN * samples[i];
+		samp = fragPos + samp * radius;
 
-		vec4 offset = vec4(sample, 1.f);
+		vec4 offset = vec4(samp, 1.f);
 		//Transform to screen space
 		offset = projection * offset;
 		offset.xyz = offset.xyz / offset.w;
 		offset.xyz = offset.xyz * 0.5 + 0.5;
 
-		float depth = -texture(gPositionDepth, offset.xy).w;	
-		
-		if(depth >= sample.z)
-			occlusion += smoothstep(0.f, 1.f, radius / abs(fragPos.z - depth));;
+		float depth = -texture(gPositionDepth, offset.xy).w; //Very slow
+		if(depth > samp.z)
+			occlusion += smoothstep(0.f, 1.f, radius / abs(fragPos.z - depth));
 	}
 
 	color = 1.f - (occlusion / float(sampleCount));

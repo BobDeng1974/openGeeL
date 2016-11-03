@@ -3,8 +3,10 @@
 #include <random>
 #include <string>
 #include <glm.hpp>
+#include "../postprocessing/gaussianblur.h"
 #include "../utility/screenquad.h"
 #include "../cameras/camera.h"
+#include "simpleblur.h"
 #include "ssao.h"
 
 using namespace glm;
@@ -13,9 +15,9 @@ using namespace std;
 
 namespace geeL {
 
-	SSAO::SSAO(const Camera& camera, GaussianBlur& blur, float radius)
-		: PostProcessingEffect("renderer/postprocessing/ssao.frag")
-		, camera(camera), blur(blur), radius(radius) {
+	SSAO::SSAO(const Camera& camera, SimpleBlur& blur, float radius)
+		: PostProcessingEffect("renderer/postprocessing/ssao.frag"), 
+		camera(camera), blur(blur), radius(radius) {
 	
 		uniform_real_distribution<GLfloat> random(0.f, 1.f);
 		default_random_engine generator;
@@ -50,9 +52,30 @@ namespace geeL {
 	void SSAO::setScreen(ScreenQuad& screen) {
 		PostProcessingEffect::setScreen(screen);
 
+		tempBuffer.init(screen.width, screen.height, false, Single, GL_NEAREST);
+
+		blur.setScreen(screen);
+		blur.setBuffer(tempBuffer.color);
+		blur.setParentFBO(parentFBO);
+
 		buffers.push_back(noiseTexture.GetID());
 	}
 
+	void SSAO::draw() {
+		if (ssaoPass) {
+			ssaoPass = !ssaoPass;
+			bindToScreen();
+		}
+		else {
+			ssaoPass = !ssaoPass;
+
+			shader.use();
+			bindValues();
+
+			FrameBuffer::bind(parentFBO);
+			blur.draw();
+		}
+	}
 
 	void SSAO::bindValues() {
 		shader.setInteger("gPositionDepth", shader.mapOffset);
@@ -67,5 +90,7 @@ namespace geeL {
 			shader.setVector3("samples[" + to_string(i) + "]", kernel[i]);
 
 		shader.setMat4("projection", camera.getProjectionMatrix());
+
+		tempBuffer.fill(*this);
 	}
 }

@@ -1,7 +1,9 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <gtc/matrix_transform.hpp>
 #include "../transformation/transform.h"
 #include "../lighting/directionallight.h"
+#include "../utility/screenquad.h"
 #include "../scene.h"
 #include "godray.h"
 
@@ -17,8 +19,12 @@ namespace geeL {
 		PostProcessingEffect::bindValues();
 
 		shader.setInteger("samples", samples);
-		glm::vec3 pos = scene.TranslateToScreenSpace(lightPosition);
-		shader.setVector3("lightPosition", pos);
+		glm::vec3 screenPos = scene.TranslateToScreenSpace(lightPosition);
+		shader.setVector3("lightPosition", screenPos);
+
+		glm::vec3 viewPos = scene.TranslateToViewSpace(lightPosition);
+		viewPos = -glm::normalize(viewPos);
+		shader.setVector3("lightPositionView", viewPos);
 	}
 
 

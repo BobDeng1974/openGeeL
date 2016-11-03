@@ -10,15 +10,15 @@
 namespace geeL {
 
 class Camera;
-class GaussianBlur;
+class SimpleBlur;
 
 class SSAO : public PostProcessingEffect {
 
 public:
-	SSAO(const Camera& camera, GaussianBlur& blur, float radius = 20.f);
+	SSAO(const Camera& camera, SimpleBlur& blur, float radius = 1.f);
 
 	virtual void setScreen(ScreenQuad& screen);
-	//virtual void draw();
+	virtual void draw();
 
 protected:
 	virtual void bindValues();
@@ -31,7 +31,7 @@ private:
 	std::vector<glm::vec3> kernel;
 	std::vector<glm::vec3> noise;
 	const Camera& camera;
-	GaussianBlur& blur;
+	SimpleBlur& blur;
 	FrameBuffer tempBuffer;
 	
 

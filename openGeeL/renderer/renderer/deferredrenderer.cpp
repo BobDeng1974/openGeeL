@@ -110,9 +110,8 @@ namespace geeL {
 		if (ssao != nullptr) {
 			std::list<unsigned int> ssaoMaps = { gBuffer.positionDepth, gBuffer.normal };
 			ssao->setBuffer(ssaoMaps);
-
-			ssao->setScreen(screen);
 			ssao->setParentFBO(ssaoBuffer->fbo);
+			ssao->setScreen(screen);
 		}
 
 		shaderManager->staticDeferredBind(*scene, *deferredShader);
@@ -133,10 +132,8 @@ namespace geeL {
 			gBuffer.fill(*this);
 
 			//SSAO pass
-			if (ssao != nullptr) {
+			if (ssao != nullptr)
 				ssaoBuffer->fill(*ssao);
-				//effects.front()->setBuffer(ssaoBuffer->color);
-			}
 
 			//Lighting & forward pass
 			frameBuffer1.fill(*this);

@@ -1,7 +1,7 @@
 #ifndef DEFAULTPOST_H
 #define DEFAULTPOST_H
 
-#include "../texturing/simpletexture.h"
+
 #include "postprocessing.h"
 
 namespace geeL {
@@ -17,9 +17,6 @@ public:
 
 protected:
 	virtual void bindValues();
-
-private:
-	SimpleTexture noise;
 
 };
 

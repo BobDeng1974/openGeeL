@@ -21,7 +21,6 @@ private:
 	unsigned int samples;
 	glm::vec3 lightPosition;
 	const RenderScene& scene;
-
 };
 
 }

@@ -32,10 +32,12 @@
 #include "../renderer/postprocessing/bloom.h"
 #include "../renderer/postprocessing/godray.h"
 #include "../renderer/postprocessing/ssao.h"
+#include "../renderer/postprocessing/simpleblur.h"
 
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/skybox.h"
 #include "../renderer/scene.h"
+#include "../renderer/utility/rendertime.h"
 
 #include <glm.hpp>
 
@@ -122,7 +124,7 @@ namespace {
 		}
 
 		virtual void draw(const Camera& camera) {
-			nanoRenderer->transform.rotate(vec3(0, 1, 0), 25);
+			nanoRenderer->transform.rotate(vec3(0, 1, 0), 2000 * Time::deltaTime);
 			//light->transform.rotate(vec3(0, 0, 1), -3);
 			//light->transform.translate(vec3(-0.01, 0, 0));
 		}
@@ -148,8 +150,8 @@ void a_shadows() {
 	geeL::Transform& transform3 = transFactory.CreateTransform(glm::vec3(0.0f, 2.0f, 9.0f), vec3(-100.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera camera3 = PerspectiveCamera(transform3, 5.f, 15.f, 65.f, window->width, window->height, 0.1f, 100.f);
 
-	GaussianBlur blur = GaussianBlur(1);
-	SSAO ssao = SSAO(camera3, blur);
+	SimpleBlur blur = SimpleBlur(1);
+	SSAO ssao = SSAO(camera3, blur, 10.f);
 	DeferredRenderer renderer1 = DeferredRenderer(window, manager, &ssao);
 	renderer1.init();
 
@@ -180,12 +182,12 @@ void a_shadows() {
 	
 	GodRay ray = GodRay(scene, glm::vec3(-40, 30, -50));
 	
-	//GaussianBlur blur2 = GaussianBlur(10);
+	//GaussianBlur blur2 = GaussianBlur(1);
 	//Bloom bloom = Bloom(blur2);
 	//ColorCorrection cCorrect = ColorCorrection(0.5, 0.5, 0.5);
 	//ToneMapping tone = ToneMapping(1.1);
 
-	//renderer1.addEffect(blur);
+	//renderer1.addEffect(bloom);
 	renderer1.addEffect(ray);
 	renderer1.render();
 

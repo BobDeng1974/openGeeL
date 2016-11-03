@@ -1,6 +1,7 @@
 #include <vec3.hpp>
 #include "../shader/shader.h"
 #include "../utility/screenquad.h"
+#include "../texturing/simpletexture.h"
 #include "drawdefault.h"
 
 using namespace glm;
