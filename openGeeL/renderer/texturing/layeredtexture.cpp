@@ -1,9 +1,12 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <glfw3.h>
+#include <algorithm>
 #include "../shader/shader.h"
 #include "simpletexture.h"
 #include "layeredtexture.h"
+
+using namespace std;
 
 namespace geeL {
 
@@ -26,24 +29,28 @@ namespace geeL {
 		textures.push_back(pair<string, SimpleTexture*>(name, &texture));
 	}
 
-	void LayeredTexture::bind(const Shader& shader, const char* name, int texLayer) const {
-		for (size_t i = 0; i < textures.size(); i++) {
-			string name = textures[i].first;
-			SimpleTexture* texture = textures[i].second;
+	void LayeredTexture::bind(const Shader& shader, std::string name, int texLayer) const {
 
-			texture->bind(shader, name.c_str(), i + shader.mapBindingPos);
-		}
+		int counter = 0;
+		for_each(textures.begin(), textures.end(), [&](pair<std::string, SimpleTexture*> tex) {
+			SimpleTexture* texture = tex.second;
+
+			texture->bind(shader, tex.first, counter + shader.mapBindingPos);
+			counter++;
+		});
 	}
 
 	void LayeredTexture::draw(const Shader& shader, int texLayer) const {
 		int layer = GL_TEXTURE0 + texLayer;
 
-		for (size_t i = 0; i < textures.size(); i++) {
-			SimpleTexture* texture = textures[i].second;
-			glActiveTexture(layer + i + shader.mapBindingPos);
+		int counter = 0;
+		for_each(textures.begin(), textures.end(), [&](pair<std::string, SimpleTexture*> tex) {
+			SimpleTexture* texture = tex.second;
 
+			glActiveTexture(layer + counter + shader.mapBindingPos);
 			texture->draw(shader);
-		}
+			counter++;
+		});
 	}
 
 }

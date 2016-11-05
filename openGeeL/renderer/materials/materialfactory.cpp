@@ -21,15 +21,11 @@ namespace geeL {
 		//delete forwardShader;
 		//delete deferredShader;
 
-		for (list<Shader*>::iterator it = shaders.begin(); it != shaders.end(); it++) {
-			Shader* shader = *it;
-			delete shader;
-		}
+		for (auto shader = shaders.begin(); shader != shaders.end(); shader++)
+			delete *shader;
 
-		for (list<Material*>::iterator it = materials.begin(); it != materials.end(); it++) {
-			Material* material = *it;
-			delete material;
-		}
+		for (auto material = materials.begin(); material != materials.end(); material++)
+			delete *material;
 	}
 
 	SimpleTexture& MaterialFactory::CreateTexture(string filePath, 

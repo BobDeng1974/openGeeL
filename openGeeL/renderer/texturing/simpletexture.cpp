@@ -6,6 +6,8 @@
 #include "../shader/shader.h"
 #include <iostream>
 
+using namespace std;
+
 namespace geeL {
 
 	SimpleTexture::SimpleTexture(const char* fileName, bool linear, TextureType type, ColorType colorType, int wrapMode, FilterMode filterMode)
@@ -74,8 +76,8 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void SimpleTexture::bind(const Shader& shader, const char* name, int texLayer) const {
-		glUniform1i(glGetUniformLocation(shader.program, name), texLayer);
+	void SimpleTexture::bind(const Shader& shader, std::string name, int texLayer) const {
+		glUniform1i(glGetUniformLocation(shader.program, name.c_str()), texLayer);
 	}
 
 	void SimpleTexture::draw(const Shader& shader, int texLayer) const {

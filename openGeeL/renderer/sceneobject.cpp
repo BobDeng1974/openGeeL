@@ -1,8 +1,8 @@
+#include <algorithm>
 #include "scripting/component.h"
 #include "sceneobject.h"
 
 using namespace std;
-
 
 namespace geeL {
 
@@ -10,10 +10,9 @@ namespace geeL {
 
 
 	void SceneObject::update() {
-		for (list<shared_ptr<Component>>::iterator it = components.begin(); it != components.end(); it++) {
-			shared_ptr<Component> comp = *it;
+		for_each(components.begin(), components.end(), [&](shared_ptr<Component> comp) {
 			comp->update();
-		}
+		});
 	}
 
 	void SceneObject::addComponent(shared_ptr<Component> component) {

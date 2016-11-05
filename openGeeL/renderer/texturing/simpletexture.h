@@ -6,8 +6,6 @@
 #include <vec3.hpp>
 #include "texture.h"
 
-using namespace std;
-
 typedef int GLint;
 typedef unsigned int GLuint;
 #define GL_REPEAT 0x2901 
@@ -39,7 +37,7 @@ class SimpleTexture : public Texture {
 
 public:
 	TextureType type;
-	string path;
+	std::string path;
 
 	SimpleTexture() {}
 	SimpleTexture(const char* fileName, bool linear = false, 
@@ -49,10 +47,10 @@ public:
 	SimpleTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height, 
 		int wrapMode = GL_REPEAT, int filterMode = GL_LINEAR);
 
-	virtual void bind(const Shader& shader, const char* name, int texLayer = 0) const;
+	virtual void bind(const Shader& shader, std::string name, int texLayer = 0) const;
 	virtual void draw(const Shader& shader, int texLayer = 0) const;
 
-	string GetTypeAsString() const;
+	std::string GetTypeAsString() const;
 	const int GetID() const;
 
 private:

@@ -30,20 +30,11 @@ namespace geeL {
 		for (size_t j = 0; j < staticPLs.size(); j++)
 			delete staticPLs[j];
 
-		for (size_t j = 0; j < dynamicPLs.size(); j++)
-			delete dynamicPLs[j];
-		
 		for (size_t j = 0; j < staticDLs.size(); j++)
 			delete staticDLs[j];
 
-		for (size_t j = 0; j < dynamicDLs.size(); j++)
-			delete dynamicDLs[j];
-
 		for (size_t j = 0; j < staticSLs.size(); j++)
 			delete staticSLs[j];
-
-		for (size_t j = 0; j < dynamicSLs.size(); j++)
-			delete dynamicSLs[j];
 	}
 
 	DirectionalLight& LightManager::addLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, float intensity) {
@@ -79,9 +70,9 @@ namespace geeL {
 	void LightManager::deferredBind(const RenderScene& scene, const Shader& shader) const {
 		shader.use();
 
-		glUniform1i(glGetUniformLocation(shader.program, plCountName.c_str()), staticPLs.size());
-		glUniform1i(glGetUniformLocation(shader.program, dlCountName.c_str()), staticDLs.size());
-		glUniform1i(glGetUniformLocation(shader.program, slCountName.c_str()), staticSLs.size());
+		shader.setInteger(plCountName, staticPLs.size());
+		shader.setInteger(dlCountName, staticDLs.size());
+		shader.setInteger(slCountName, staticSLs.size());
 
 		for (size_t j = 0; j < staticPLs.size(); j++)
 			staticPLs[j]->deferredBind(scene, shader, j, plName);
@@ -96,9 +87,9 @@ namespace geeL {
 	void LightManager::forwardBind(const Shader& shader) const {
 		shader.use();
 
-		glUniform1i(glGetUniformLocation(shader.program, plCountName.c_str()), staticPLs.size());
-		glUniform1i(glGetUniformLocation(shader.program, dlCountName.c_str()), staticDLs.size());
-		glUniform1i(glGetUniformLocation(shader.program, slCountName.c_str()), staticSLs.size());
+		shader.setInteger(plCountName, staticPLs.size());
+		shader.setInteger(dlCountName, staticDLs.size());
+		shader.setInteger(slCountName, staticSLs.size());
 
 		for (size_t j = 0; j < staticPLs.size(); j++)
 			staticPLs[j]->forwardBind(shader, j, plName);

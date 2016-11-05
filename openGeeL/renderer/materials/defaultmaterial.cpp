@@ -6,7 +6,7 @@
 #include "../texturing/simpletexture.h"
 #include "defaultmaterial.h"
 
-#include <iostream>
+using namespace std;
 
 namespace geeL {
 

@@ -85,7 +85,6 @@ namespace geeL {
 			deferredShader->addMap(ssaoBuffer->color, "ssao");
 			deferredShader->setInteger("useSSAO", 1);
 		}
-			
 
 		frameBuffer1.init(window->width, window->height);
 		frameBuffer2.init(window->width, window->height);
@@ -97,11 +96,9 @@ namespace geeL {
 		//Init all post processing effects with two alternating framebuffers
 		//Current effect will then always read from one and write to one
 		bool chooseBuffer = true;
-		for (list<PostProcessingEffect*>::reverse_iterator it = effects.rbegin(); 
-			it != effects.rend(); it++) {
-
-			(*it)->setBuffer(chooseBuffer ? frameBuffer1.color : frameBuffer2.color);
-			(*it)->setParentFBO(chooseBuffer ? frameBuffer2.fbo : frameBuffer1.fbo);
+		for (auto effect = effects.rbegin(); effect != effects.rend(); effect++) {
+			(*effect)->setBuffer(chooseBuffer ? frameBuffer1.color : frameBuffer2.color);
+			(*effect)->setParentFBO(chooseBuffer ? frameBuffer2.fbo : frameBuffer1.fbo);
 
 			chooseBuffer = !chooseBuffer;
 		}
@@ -144,13 +141,11 @@ namespace geeL {
 			//Post processing
 			chooseBuffer = true;
 			//Draw all the post processing effects on top of each other. Ping pong style!
-			for (list<PostProcessingEffect*>::reverse_iterator it = effects.rbegin(); 
-				it != prev(effects.rend()); it++) {
-				
+			for (auto effect = effects.rbegin(); effect != prev(effects.rend()); effect++) {
 				if (chooseBuffer)
-					frameBuffer2.fill(**it);
+					frameBuffer2.fill(**effect);
 				else
-					frameBuffer1.fill(**it);
+					frameBuffer1.fill(**effect);
 
 				chooseBuffer = !chooseBuffer;
 			}

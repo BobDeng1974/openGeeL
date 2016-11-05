@@ -59,7 +59,6 @@ private:
 	Shader* plShader;
 
 	std::vector<Light*> staticPLs, staticDLs, staticSLs;
-	std::vector<Light*> dynamicPLs, dynamicDLs, dynamicSLs;
 };
 
 }

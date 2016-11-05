@@ -17,7 +17,7 @@ namespace geeL {
 	}
 
 	void Light::forwardBind(const Shader& shader, int index, string name) const {
-		std::string location = name + "[" + std::to_string(index) + "].";
+		string location = name + "[" + std::to_string(index) + "].";
 
 		shader.setVector3(location + "diffuse", diffuse);
 		shader.setVector3(location + "specular", specular);

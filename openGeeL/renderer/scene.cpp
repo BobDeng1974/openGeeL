@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <vec4.hpp>
 #include <mat4x4.hpp>
 #include "shader\shader.h"
@@ -10,6 +11,7 @@
 #include "cubemapping\skybox.h"
 #include "scene.h"
 
+using namespace std;
 
 namespace geeL {
 
@@ -18,17 +20,13 @@ namespace geeL {
 
 	
 	RenderScene::~RenderScene() {
-		for (std::list<MeshRenderer*>::iterator it = deferredRenderObjects.begin();
-			it != deferredRenderObjects.end(); it++) {
+		for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), [&](MeshRenderer* object) {
+			delete object;
+		});
 
-			delete *it;
-		}
-		
-		for (std::list<MeshRenderer*>::iterator it = forwardRenderObjects.begin();
-			it != forwardRenderObjects.end(); it++) {
-
-			delete *it;
-		}
+		for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), [&](MeshRenderer* object) {
+			delete object;
+		});
 	}
 
 
@@ -48,11 +46,9 @@ namespace geeL {
 	}
 
 	void RenderScene::drawObjects(const std::list<MeshRenderer*>& objects, bool deferred) const {
-		for (std::list<MeshRenderer*>::const_iterator it = objects.begin();
-			it != objects.end(); it++) {
-			
-			(*it)->draw(deferred);
-		}
+		for_each(objects.begin(), objects.end(), [&](MeshRenderer* object) {
+			object->draw(deferred);
+		});
 	}
 
 	void RenderScene::draw() const {
@@ -64,17 +60,13 @@ namespace geeL {
 	void RenderScene::drawObjects(const Shader& shader) const {
 		shader.use();
 
-		for (std::list<MeshRenderer*>::const_iterator it = deferredRenderObjects.begin();
-			it != deferredRenderObjects.end(); it++) {
+		for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), [&](MeshRenderer* object) {
+			object->draw(shader);
+		});
 
-			(*it)->draw(shader);
-		}
-
-		for (std::list<MeshRenderer*>::const_iterator it = forwardRenderObjects.begin();
-			it != forwardRenderObjects.end(); it++) {
-
-			(*it)->draw(shader);
-		}
+		for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), [&](MeshRenderer* object) {
+			object->draw(shader);
+		});
 	}
 
 	void RenderScene::setSkybox(Skybox& skybox) {

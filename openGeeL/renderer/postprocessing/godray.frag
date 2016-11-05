@@ -15,7 +15,7 @@ float random(vec2 co){
 
 void main() { 
 
-	float angle = max(0, dot(lightPositionView, vec3(0.f, 0.f, 1.f)));
+	float angle = max(0, dot(lightPositionView, vec3(0.f, 0.f, 1.f)) - 0.25);
 	float yFalloff = pow(TexCoords.y, 3.f);
 	float density = 2.0f;
 	float decay = 1.0f;
@@ -31,7 +31,7 @@ void main() {
 
 	float i = 0;
 	while(i < samples) {
-		float offset = 0.5f + 0.5f * max(0.1f, random(coords));
+		float offset = (angle > 0.1) ? 0.5f + 0.5f * max(0.1f, random(coords)) : 0.5;
 		coords -= deltaCoords * offset;
 		result += texture(image, coords).rgb * currDecay * offset * falloff;
 		currDecay *= decay;
