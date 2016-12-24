@@ -259,6 +259,7 @@
     <None Include="renderer\postprocessing\simpleblur.frag" />
     <None Include="renderer\postprocessing\ssao.frag" />
     <None Include="renderer\postprocessing\tonemapping.frag" />
+    <None Include="renderer\shaders\cooktorrancedeferred.frag" />
     <None Include="renderer\shaders\deferredlighting.frag" />
     <None Include="renderer\shaders\deferredlighting.vert" />
     <None Include="renderer\shaders\empty.frag" />

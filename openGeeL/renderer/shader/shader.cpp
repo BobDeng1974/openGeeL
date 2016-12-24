@@ -220,7 +220,7 @@ namespace geeL {
 
 		mapBindingPos = maps.size() + mapOffset;
 	}
-
+	
 	void Shader::loadMaps() const {
 		int layer = GL_TEXTURE0;
 		int counter = mapOffset;

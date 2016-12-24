@@ -36,7 +36,8 @@ namespace geeL {
 		Renderer(window, inputManager), ssao(ssao), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()),
 			gBuffer(GBuffer()), screen(ScreenQuad(window->width, window->height)),
 			deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
-				"renderer/shaders/deferredlighting.frag")) {
+				//"renderer/shaders/deferredlighting.frag")) {
+				"renderer/shaders/cooktorrancedeferred.frag")) {
 
 			glEnable(GL_DEPTH_TEST);
 			glEnable(GL_CULL_FACE);
@@ -94,7 +95,7 @@ namespace geeL {
 	void DeferredRenderer::render() {
 
 		//Init all post processing effects with two alternating framebuffers
-		//Current effect will then always read from one and write to one
+		//Current effect will then always read from one and write to the other
 		bool chooseBuffer = true;
 		for (auto effect = effects.rbegin(); effect != effects.rend(); effect++) {
 			(*effect)->setBuffer(chooseBuffer ? frameBuffer1.color : frameBuffer2.color);
@@ -105,7 +106,7 @@ namespace geeL {
 
 		//Init SSAO (if added)
 		if (ssao != nullptr) {
-			std::list<unsigned int> ssaoMaps = { gBuffer.positionDepth, gBuffer.normal };
+			list<unsigned int> ssaoMaps = { gBuffer.positionDepth, gBuffer.normal };
 			ssao->setBuffer(ssaoMaps);
 			ssao->setParentFBO(ssaoBuffer->fbo);
 			ssao->setScreen(screen);
@@ -117,7 +118,7 @@ namespace geeL {
 		//Render loop
 		while (!window->shouldClose()) {
 			int currFPS = ceil(Time::deltaTime * 1000.f);
-			std::this_thread::sleep_for(std::chrono::milliseconds(fps - currFPS));
+			this_thread::sleep_for(chrono::milliseconds(fps - currFPS));
 			glfwPollEvents();
 			inputManager->update();
 			handleInput();

@@ -78,7 +78,7 @@ namespace {
 
 		virtual void init() {
 
-			float l = 20.f;
+			float l = 200.f;
 			
 			float ambient = 3.f;
 
@@ -90,10 +90,12 @@ namespace {
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
 
+			/*
 			geeL::Transform* lighTransi3 = new geeL::Transform(glm::vec3(-7, 5, 0), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
 			&lightManager.addLight(*lighTransi3, glm::vec3(l, l, l),
 				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.05f, 0.05f, 0.05f), angle, outerAngle, 10.f);
-			
+		*/
+
 			/*
 			l = 4.f;
 			geeL::Transform* lighTransi2 = new geeL::Transform(glm::vec3(10.f, 10.f, 100.f), glm::vec3(50.0f, 0, -30), glm::vec3(1.f, 1.f, 1.f));
@@ -180,7 +182,7 @@ void a_shadows() {
 	scene.setSkybox(skybox);
 
 	
-	GodRay ray = GodRay(scene, glm::vec3(-40, 30, -50));
+	//GodRay ray = GodRay(scene, glm::vec3(-40, 30, -50));
 	
 	//GaussianBlur blur2 = GaussianBlur(1);
 	//Bloom bloom = Bloom(blur2);
@@ -188,7 +190,7 @@ void a_shadows() {
 	//ToneMapping tone = ToneMapping(1.1);
 
 	//renderer1.addEffect(bloom);
-	renderer1.addEffect(ray);
+	//renderer1.addEffect(ray);
 	renderer1.render();
 
 	delete testObj;

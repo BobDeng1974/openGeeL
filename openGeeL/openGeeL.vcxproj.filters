@@ -448,5 +448,8 @@
     <None Include="renderer\postprocessing\simpleblur.frag">
       <Filter>renderer\postprocessing</Filter>
     </None>
+    <None Include="renderer\shaders\cooktorrancedeferred.frag">
+      <Filter>renderer\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
