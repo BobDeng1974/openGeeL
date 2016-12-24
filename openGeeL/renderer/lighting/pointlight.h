@@ -10,8 +10,7 @@ class PointLight : public Light {
 
 public:
 
-	PointLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, 
-		float intensity = 1.f, float shadowBias = 0.007f, float constant = 1.f, float linear = 0.09f, float quadratic = 0.032f);
+	PointLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, float shadowBias = 0.007f);
 
 	virtual void deferredBind(const RenderScene& scene, const Shader& shader, int index, std::string name) const;
 	virtual void forwardBind(const Shader& shader, int index, std::string name) const;
@@ -21,7 +20,6 @@ public:
 	virtual void computeLightTransform();
 
 private:
-	float constant, linear, quadratic;
 	float farPlane;
 
 	std::vector<glm::mat4> lightTransforms;

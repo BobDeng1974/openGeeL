@@ -37,8 +37,8 @@ namespace geeL {
 			delete staticSLs[j];
 	}
 
-	DirectionalLight& LightManager::addLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, float intensity) {
-		DirectionalLight* light = new DirectionalLight(transform, diffuse, specular, ambient, intensity);
+	DirectionalLight& LightManager::addDirectionalLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, float shadowBias) {
+		DirectionalLight* light = new DirectionalLight(transform, diffuse, specular, ambient, shadowBias);
 		staticDLs.push_back(light);
 		light->initShadowmap();
 
@@ -46,21 +46,21 @@ namespace geeL {
 	}
 
 	
-	PointLight& LightManager::addLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient,
-		float intensity, float attenuation) {
+	PointLight& LightManager::addPointLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient,
+		float shadowBias) {
 
-		PointLight* light = new PointLight(transform, diffuse, specular, ambient, intensity);
+		PointLight* light = new PointLight(transform, diffuse, specular, ambient, shadowBias);
 		staticPLs.push_back(light);
 		light->initShadowmap();
 		
 		return *light;
 	}
 
-	SpotLight& LightManager::addLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient,
-		float angle, float outerAngle, float intensity) {
+	SpotLight& LightManager::addSpotlight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient,
+		float angle, float outerAngle, float shadowBias) {
 
 		SpotLight* light = new SpotLight(transform, diffuse, specular,
-			ambient, intensity, angle, outerAngle);
+			ambient, angle, outerAngle, shadowBias);
 		staticSLs.push_back(light);
 		light->initShadowmap();
 

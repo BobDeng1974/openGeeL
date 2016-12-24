@@ -83,8 +83,8 @@ namespace {
 			float ambient = 3.f;
 
 			geeL::Transform* lighTransi4 = new geeL::Transform(glm::vec3(7, 5, 5), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
-			light = &lightManager.addLight(*lighTransi4, glm::vec3(l, l, l),
-				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(ambient, ambient, ambient), 1.f, 1.f);
+			light = &lightManager.addPointLight(*lighTransi4, glm::vec3(l, l, l),
+				glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(ambient, ambient, ambient));
 				
 			l = 100.f;
 			float angle = glm::cos(glm::radians(25.5f));

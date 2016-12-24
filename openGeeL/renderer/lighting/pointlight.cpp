@@ -14,11 +14,8 @@ using namespace glm;
 
 namespace geeL {
 
-	PointLight::PointLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, 
-		float intensity, float shadowBias, float constant, float linear, float quadratic)
-		: 
-		Light(transform, diffuse, specular, ambient, intensity, shadowBias), 
-		constant(constant), linear(linear), quadratic(quadratic), farPlane(50.f) {
+	PointLight::PointLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, float shadowBias)
+		: Light(transform, diffuse, specular, ambient, shadowBias), farPlane(50.f) {
 	
 		lightTransforms.reserve(6);
 		initLightTransform();
@@ -30,9 +27,6 @@ namespace geeL {
 
 		std::string location = name + "[" + std::to_string(index) + "].";
 		shader.setVector3(location + "position", scene.TranslateToViewSpace(transform.position));
-		shader.setFloat(location + "constant", constant);
-		shader.setFloat(location + "linear", linear);
-		shader.setFloat(location + "quadratic", quadratic);
 		shader.setFloat(location + "farPlane", farPlane);
 	}
 
@@ -41,9 +35,6 @@ namespace geeL {
 
 		std::string location = name + "[" + std::to_string(index) + "].";
 		shader.setVector3(location + "position", transform.position);
-		shader.setFloat(location + "constant", constant);
-		shader.setFloat(location + "linear", linear);
-		shader.setFloat(location + "quadratic", quadratic);
 		shader.setFloat(location + "farPlane", farPlane);
 	}
 

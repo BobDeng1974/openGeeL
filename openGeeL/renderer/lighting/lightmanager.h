@@ -34,16 +34,16 @@ public:
 	~LightManager();
 
 	//Add and create directional light
-	DirectionalLight& addLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular, 
-		glm::vec3 ambient, float intensity);
+	DirectionalLight& addDirectionalLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular, 
+		glm::vec3 ambient, float shadowBias = 0.0005f);
 	
 	//Add and create point light
-	PointLight& addLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 ambient,
-		float intensity, float attenuation);
+	PointLight& addPointLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 ambient,
+		float shadowBias = 0.007f);
 	
 	//Add and create spotlight
-	SpotLight& addLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,
-		glm::vec3 ambient, float angle, float outerAngle, float intensity);
+	SpotLight& addSpotlight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,
+		glm::vec3 ambient, float angle, float outerAngle, float shadowBias = 0.0005f);
 
 
 	void deferredBind(const RenderScene& scene, const Shader& shader) const;

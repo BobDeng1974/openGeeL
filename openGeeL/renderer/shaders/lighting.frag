@@ -18,10 +18,6 @@ struct PointLight {
     vec3 diffuse;
     vec3 specular;
 
-	float constant;
-	float linear;
-	float quadratic;
-
 	float bias;
 	float farPlane;
 };
@@ -39,10 +35,6 @@ struct SpotLight {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;    
-	
-	float constant;
-    float linear;
-    float quadratic;   
 };
 
 
@@ -202,8 +194,7 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal, vec3 fragPosi
 
 	vec3 ambient = light.ambient * texColor;
 
-	float attenuation = 1.0f / (light.constant + light.linear * distance + 
-    		    light.quadratic * (distance * distance));  
+	float attenuation = 1.0f / (distance * distance);
 
 	//Diffuse
 	float diff = max(dot(normal, direction), 0.0f);
@@ -267,11 +258,7 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, vec3 fragPositi
 
 	vec3 ambient = light.ambient * texColor;
 
-
-	//float attenuation = 1.0f / (light.constant + light.linear * distance + 
-    //		    light.quadratic * (distance * distance));  
-
-	float attenuation = 1.0f / (distance * distance);  
+	float attenuation = 1.0f / (distance * distance);
 
 	float theta = dot(direction, normalize(-light.direction)); 
     float epsilon = (light.angle - light.outerAngle);
