@@ -141,7 +141,7 @@ vec2 sampleDirections2D[16] = vec2[](
    vec2( 0.14383161, -0.14100790 ) 
 );
 
-//Point Lights
+//Shadows...................................................................................................................
 
 float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 
@@ -173,40 +173,6 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	return shadow / float(samples);
 }
 
-vec3 calculatePointLight(int index, PointLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, float occlusion, bool blinn) {
-
-	vec3 dir = light.position - fragPosition;
-	float distance = length(dir);
-	vec3 lightDirection = normalize(dir);
-
-	float attenuation = 1.0f / (light.constant + light.linear * distance + 
-    		    light.quadratic * (distance * distance));  
-
-	//Diffuse
-	float diff = max(dot(normal, lightDirection), 0.0f);
-	vec3 diffuse = diff * light.diffuse * texColor;
-
-	//Specular
-	float spec = 0.0f;
-	if(blinn) {
-		vec3 halfwayDir = normalize(lightDirection - viewDirection);  
-        spec = pow(max(dot(normal, halfwayDir), 0.0f), 32.0f);	
-	}
-	else {
-		vec3 reflectionDirection = reflect(-lightDirection, normal);
-		spec = pow(max(dot(-viewDirection, reflectionDirection), 0.0f), 32.0f);
-	}
-
-	vec3 specular = spec * speColor * light.specular;
-	vec3 ambient = light.ambient * texColor * occlusion;
-	float shadow = calculatePointLightShadows(index, normal, fragPosition);
-	
-    return (ambient + (1.0f - shadow) * (diffuse + specular)) * attenuation;
-
-}
-
-//Spotlights
-
 float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	vec4 posLightSpace = spotLights[i].lightTransform * inverseView * vec4(fragPosition, 1.0f);
 	vec3 coords = posLightSpace.xyz / posLightSpace.w;
@@ -237,44 +203,6 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	return shadow / (kernelSize * kernelSize);
 }
 
-vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, float occlusion, bool blinn) {
-	vec3 dir = light.position - fragPosition;
-	float distance = length(dir);
-	vec3 direction = normalize(dir);
-
-	//float attenuation = 1.0f / (light.constant + light.linear * distance + 
-    //		    light.quadratic * (distance * distance));  
-
-	float attenuation = 1.0f / (distance * distance);  
-
-	float theta = dot(direction, normalize(-light.direction)); 
-    float epsilon = (light.angle - light.outerAngle);
-    float intensity = clamp((theta - light.outerAngle) / epsilon, 0.0, 1.0);
-
-	//Diffuse
-	float diff = max(dot(normal, direction), 0.0f);
-	vec3 diffuse = diff * light.diffuse * texColor * intensity;
-
-	//Specular
-	float spec = 0.0f;
-	if(blinn) {
-		vec3 halfwayDir = normalize(direction - viewDirection);  
-        spec = pow(max(dot(normal, halfwayDir), 0.0f), 32.0f);	
-	}
-	else {
-		vec3 reflectionDirection = reflect(-direction, normal);
-		spec = pow(max(dot(-viewDirection, reflectionDirection), 0.0f), 32.0f);
-	}
-
-	vec3 specular = spec * speColor * light.specular * intensity;
-	vec3 ambient = light.ambient * texColor * occlusion;
-	float shadow = calculateSpotLightShadows(index, normal, fragPosition);
-
-    return (ambient + (1.0f - shadow) * (diffuse + specular)) * attenuation;
-}
-
-//Directional Lights
-
 float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	vec4 posLightSpace = spotLights[i].lightTransform * inverseView * vec4(fragPosition, 1.0f);
 	vec3 coords = posLightSpace.xyz / posLightSpace.w;
@@ -304,26 +232,86 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	return shadow / (kernelSize * kernelSize);
 }
 
-vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, float occlusion, bool blinn) {
 
-	vec3 direction = normalize(light.direction - fragPosition);
+//Lighting.....................................................................................................................................
 
-	//Diffuse
-	float diff = max(dot(normal, direction), 0.0f);
-	vec3 diffuse = diff * light.diffuse * texColor;
 
-	//Specular
+vec3 calculateDiffuseLighting(vec3 normal, vec3 lightDirection, vec3 diffuseMat, vec3 diffuseLight) {
+	float diff = max(dot(normal, lightDirection), 0.0f);
+	return diff * diffuseLight * diffuseMat;
+}
+
+vec3 calculateSpecularLighting(vec3 normal, vec3 lightDirection, vec3 viewDirection, vec3 specularMat, vec3 specularLight, bool blinn) {
 	float spec = 0.0f;
+
 	if(blinn) {
-		vec3 halfwayDir = normalize(direction - viewDirection);  
+		vec3 halfwayDir = normalize(lightDirection - viewDirection);  
         spec = pow(max(dot(normal, halfwayDir), 0.0f), 32.0f);	
 	}
 	else {
-		vec3 reflectionDirection = reflect(-direction, normal);
+		vec3 reflectionDirection = reflect(-lightDirection, normal);
 		spec = pow(max(dot(-viewDirection, reflectionDirection), 0.0f), 32.0f);
 	}
 
-	vec3 specular = spec * speColor * light.specular;
+	return spec * specularMat * specularLight;
+}
+
+vec3 calculatePointLight(int index, PointLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, float occlusion, bool blinn) {
+
+	vec3 dir = light.position - fragPosition;
+	float distance = length(dir);
+	vec3 lightDirection = normalize(dir);
+
+	float attenuation = 1.0f / (light.constant + light.linear * distance + 
+    		    light.quadratic * (distance * distance));  
+	
+	//Inverse square law
+	//float attenuation = 1.0f / (distance * distance);  
+
+	vec3 diffuse = calculateDiffuseLighting(normal, lightDirection, texColor, light.diffuse);
+
+	vec3 specular = calculateSpecularLighting(normal, lightDirection, 
+		viewDirection, speColor, light.specular, blinn);
+	
+	vec3 ambient = light.ambient * texColor * occlusion;
+	float shadow = calculatePointLightShadows(index, normal, fragPosition);
+	
+    return (ambient + (1.0f - shadow) * (diffuse + specular)) * attenuation;
+
+}
+
+vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, float occlusion, bool blinn) {
+	vec3 dir = light.position - fragPosition;
+	float distance = length(dir);
+	vec3 lightDirection = normalize(dir);
+
+	//Inverse square law
+	float attenuation = 1.0f / (distance * distance);  
+
+	//Set intensity depending on if object is inside spotlights halo (or outer halo)
+	float theta = dot(lightDirection, normalize(-light.direction)); 
+    float epsilon = (light.angle - light.outerAngle);
+    float intensity = clamp((theta - light.outerAngle) / epsilon, 0.0, 1.0);
+
+	vec3 diffuse = calculateDiffuseLighting(normal, lightDirection, texColor, light.diffuse) * intensity;
+
+	vec3 specular = calculateSpecularLighting(normal, lightDirection, 
+		viewDirection, speColor, light.specular, blinn) * intensity;
+
+	vec3 ambient = light.ambient * texColor * occlusion;
+	float shadow = calculateSpotLightShadows(index, normal, fragPosition);
+
+    return (ambient + (1.0f - shadow) * (diffuse + specular)) * attenuation;
+}
+
+vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, vec3 fragPosition, vec3 viewDirection, vec3 texColor, vec3 speColor, float occlusion, bool blinn) {
+	vec3 lightDirection = normalize(light.direction - fragPosition);
+
+	vec3 diffuse = calculateDiffuseLighting(normal, lightDirection, texColor, light.diffuse);
+
+	vec3 specular = calculateSpecularLighting(normal, lightDirection, 
+		viewDirection, speColor, light.specular, blinn);	
+
 	vec3 ambient = light.ambient * texColor * occlusion;
 	float shadow = calculateDirectionalLightShadows(index, normal, fragPosition);
 	
