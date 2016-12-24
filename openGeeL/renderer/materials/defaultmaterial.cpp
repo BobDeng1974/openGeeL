@@ -34,6 +34,10 @@ namespace geeL {
 		shininess = value;
 	}
 
+	void DefaultMaterial::setMetallic(float value) {
+		metallic = value;
+	}
+
 	void DefaultMaterial::bindTextures() const {
 		shader.use();
 		textureStack.bind(shader, "");
@@ -47,5 +51,6 @@ namespace geeL {
 		shader.setInteger("material.mapFlags", textureStack.mapFlags);
 		shader.setFloat("material.type", type);
 		shader.setFloat("material.shininess", shininess);
+		shader.setFloat("material.metallic", metallic);
 	}
 }

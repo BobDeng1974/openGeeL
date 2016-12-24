@@ -19,7 +19,7 @@ namespace geeL {
 
 		//Create attachements for all color buffers
 		positionDepth = generateTexture(0, GL_RGBA16F);
-		normal        = generateTexture(1, GL_RGB16F);
+		normalMet     = generateTexture(1, GL_RGBA16F);
 		diffuseSpec   = generateTexture(2, GL_RGBA);
 		GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
 		glDrawBuffers(3, attachments);

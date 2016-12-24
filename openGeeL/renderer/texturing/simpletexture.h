@@ -17,7 +17,8 @@ enum TextureType {
 	Diffuse,
 	Specular,
 	Normal,
-	Reflection
+	Reflection,
+	Metallic
 };
 
 enum ColorType {

@@ -5,7 +5,7 @@ in vec2 TexCoords;
 out float color;
 
 uniform sampler2D gPositionDepth;
-uniform sampler2D gNormal;
+uniform sampler2D gNormalMet;
 uniform sampler2D noiseTexture;
 
 uniform vec3 samples[64];
@@ -22,7 +22,7 @@ vec2 noiseScale() {
 void main() {
 
 	vec3 fragPos = texture(gPositionDepth, TexCoords).xyz;
-	vec3 normal  = texture(gNormal, TexCoords).rgb;
+	vec3 normal  = texture(gNormalMet, TexCoords).rgb;
 
 	vec3 random = texture(noiseTexture, TexCoords * noiseScale()).xyz;
 	random = normalize(random);

@@ -181,11 +181,17 @@ namespace geeL {
 			vector<SimpleTexture*> reflectionMaps = loadMaterialTextures(factory, material, 
 				aiTextureType_AMBIENT, Reflection, directory, true);
 			textures.insert(textures.end(), reflectionMaps.begin(), reflectionMaps.end());
+
+			//TODO: choose a better texture type than Emmissive
+			vector<SimpleTexture*> metallicnMaps = loadMaterialTextures(factory, material,
+				aiTextureType_EMISSIVE, Metallic, directory, true);
+			textures.insert(textures.end(), metallicnMaps.begin(), metallicnMaps.end());
 		}
 
 		DefaultMaterial& mat = factory.CreateMaterial();
 		mat.addTextures(textures);
 		mat.setShininess(64.f);
+		mat.setMetallic(0.2f);
 
 		return Mesh(vertices, indices, mat);
 	}

@@ -11,7 +11,7 @@ public:
 	unsigned int fbo;
 	unsigned int diffuseSpec;
 	unsigned int positionDepth;
-	unsigned int normal;
+	unsigned int normalMet;
 	unsigned int depth;
 	int width;
 	int height;

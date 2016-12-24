@@ -21,8 +21,11 @@ namespace geeL {
 			case Normal:
 				mapFlags += 100;
 				break;
-			case Reflection:
+			case Metallic:
 				mapFlags += 1000;
+				break;
+			case Reflection:
+				mapFlags += 10000;
 				break;
 		}
 

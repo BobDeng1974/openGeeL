@@ -54,7 +54,7 @@ uniform int dlCount;
 uniform int slCount;
 
 uniform sampler2D gPositionDepth;
-uniform sampler2D gNormal;
+uniform sampler2D gNormalMet;
 uniform sampler2D gDiffuseSpec;
 
 uniform sampler2D ssao;
@@ -89,10 +89,10 @@ float random(vec3 seed, int i);
 
 void main() {
 	vec3 fragPosition = texture(gPositionDepth, textureCoordinates).rgb;
-    vec3 normal		  = texture(gNormal, textureCoordinates).rgb;
+    vec3 normal		  = texture(gNormalMet, textureCoordinates).rgb;
     vec3 albedo		  = texture(gDiffuseSpec, textureCoordinates).rgb;
 	float roughness	  = texture(gDiffuseSpec, textureCoordinates).a;
-	float metallic    = 0.3; //TODO: read from texture
+	float metallic    = texture(gNormalMet, textureCoordinates).a;
 
 	float occlusion   = (useSSAO == 1) ? texture(ssao, textureCoordinates).r : 1.f;
 

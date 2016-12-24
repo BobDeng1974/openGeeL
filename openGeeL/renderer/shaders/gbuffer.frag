@@ -1,17 +1,19 @@
 #version 330 core
 
 layout (location = 0) out vec4 gPositionDepth;
-layout (location = 1) out vec3 gNormal;
+layout (location = 1) out vec4 gNormalMet;
 layout (location = 2) out vec4 gDiffuseSpec;
 
 struct Material {
 	sampler2D diffuse;
 	sampler2D specular;
 	sampler2D normal;
+	sampler2D metal;
 
 	int mapFlags;
 	int type; //0 = Opaque, 1 = Cutout, 2 = Transparent
 	float shininess;
+	float metallic;
 };
 
 in vec3 normal;
@@ -34,6 +36,7 @@ void main() {
 	float diffFlag = mod(material.mapFlags, 10);
 	float specFlag = mod(material.mapFlags / 10, 10);
 	float normFlag = mod(material.mapFlags / 100, 10);
+	float metaFlag = mod(material.mapFlags / 1000, 10);
 
 	//Discard fragment when material type is cutout and alpha value is very low
 	if(material.type == 1 && diffFlag == 1 && texture(material.diffuse, textureCoordinates).a < 0.1f)
@@ -49,7 +52,9 @@ void main() {
 		norm = normalize(norm * 2.0f - 1.0f);
 		norm = normalize(TBN * norm);
 	}
-	gNormal = norm;
+
+	gNormalMet.rgb = norm;
+	gNormalMet.a = (metaFlag == 1) ? texture(material.metal, textureCoordinates).r : material.metallic;
 
 	vec3 texColor = (diffFlag == 1) ? texture(material.diffuse, textureCoordinates).rgb : vec3(0.01f, 0.01f, 0.01f);
 	vec3 speColor = (specFlag == 1) ? texture(material.specular, textureCoordinates).rgb : vec3(0.1f, 0.1f, 0.1f); 

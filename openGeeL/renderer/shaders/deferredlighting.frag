@@ -60,7 +60,7 @@ uniform int dlCount;
 uniform int slCount;
 
 uniform sampler2D gPositionDepth;
-uniform sampler2D gNormal;
+uniform sampler2D gNormalMet;
 uniform sampler2D gDiffuseSpec;
 
 uniform sampler2D ssao;
@@ -90,7 +90,7 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition);
 
 void main() {
 	vec3 fragPosition = texture(gPositionDepth, textureCoordinates).rgb;
-    vec3 normal		  = texture(gNormal, textureCoordinates).rgb;
+    vec3 normal		  = texture(gNormalMet, textureCoordinates).rgb;
     vec3 albedo		  = texture(gDiffuseSpec, textureCoordinates).rgb;
     float specular	  = texture(gDiffuseSpec, textureCoordinates).a;
 	float occlusion   = (useSSAO == 1) ? texture(ssao, textureCoordinates).r : 1.f;

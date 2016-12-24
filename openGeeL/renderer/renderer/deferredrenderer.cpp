@@ -79,13 +79,15 @@ namespace geeL {
 		deferredShader->use();
 		deferredShader->mapOffset = 1;
 		deferredShader->addMap(gBuffer.positionDepth, "gPositionDepth");
-		deferredShader->addMap(gBuffer.normal, "gNormal");
+		deferredShader->addMap(gBuffer.normalMet, "gNormalMet");
 		deferredShader->addMap(gBuffer.diffuseSpec, "gDiffuseSpec");
 		
 		if (ssao != nullptr) {
 			deferredShader->addMap(ssaoBuffer->color, "ssao");
 			deferredShader->setInteger("useSSAO", 1);
 		}
+
+		deferredShader->bindMaps();
 
 		frameBuffer1.init(window->width, window->height);
 		frameBuffer2.init(window->width, window->height);
@@ -106,7 +108,7 @@ namespace geeL {
 
 		//Init SSAO (if added)
 		if (ssao != nullptr) {
-			list<unsigned int> ssaoMaps = { gBuffer.positionDepth, gBuffer.normal };
+			list<unsigned int> ssaoMaps = { gBuffer.positionDepth, gBuffer.normalMet };
 			ssao->setBuffer(ssaoMaps);
 			ssao->setParentFBO(ssaoBuffer->fbo);
 			ssao->setScreen(screen);

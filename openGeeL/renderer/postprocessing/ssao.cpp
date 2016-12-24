@@ -79,7 +79,7 @@ namespace geeL {
 
 	void SSAO::bindValues() {
 		shader.setInteger("gPositionDepth", shader.mapOffset);
-		shader.setInteger("gNormal", shader.mapOffset + 1);
+		shader.setInteger("gNormalMet", shader.mapOffset + 1);
 		shader.setInteger("noiseTexture", shader.mapOffset + 2);
 
 		shader.setFloat("screenWidth", screen->width);
