@@ -21,14 +21,14 @@ public:
 
 	void addTexture(std::string name, SimpleTexture& texture);
 	void addTextures(std::vector<SimpleTexture*> textures);
-	void setShininess(float value);
+	void setRoughness(float value);
 	void setMetallic(float value);
 
 	virtual void bindTextures() const;
 	virtual void bind() const;
 
 private:
-	float shininess;
+	float roughness;
 	float metallic;
 	LayeredTexture textureStack;
 

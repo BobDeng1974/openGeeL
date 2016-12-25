@@ -25,6 +25,7 @@ public:
 	virtual void render();
 	virtual void draw();
 	virtual void handleInput();
+	virtual void setScene(RenderScene& scene);
 
 	//Add new post processing effect to renderer. 
 	//Note: Effects will be drawn in reverse adding order

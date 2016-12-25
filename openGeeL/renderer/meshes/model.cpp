@@ -190,7 +190,7 @@ namespace geeL {
 
 		DefaultMaterial& mat = factory.CreateMaterial();
 		mat.addTextures(textures);
-		mat.setShininess(64.f);
+		mat.setRoughness(1.0f);
 		mat.setMetallic(0.2f);
 
 		return Mesh(vertices, indices, mat);

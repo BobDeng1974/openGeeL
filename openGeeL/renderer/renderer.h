@@ -48,7 +48,7 @@ public:
 	virtual void addObject(SceneControlObject* obj);
 	virtual void initObjects();
 	
-	void setScene(RenderScene& scene);
+	virtual void setScene(RenderScene& scene);
 	void setShaderManager(const ShaderManager& manager);
 
 

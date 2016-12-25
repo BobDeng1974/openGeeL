@@ -49,6 +49,9 @@ public:
 	//Check if the meshes contain default materials (meaning: with default shading)
 	bool containsDefaultMaterials() const;
 
+	std::map<unsigned int, Material*>::iterator defaultMaterialsBegin();
+	std::map<unsigned int, Material*>::iterator defaultMaterialsEnd();
+
 private:
 	bool instanced;
 	std::map<unsigned int, Material*> defaultMaterials;

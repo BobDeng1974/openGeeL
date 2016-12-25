@@ -52,6 +52,8 @@ uniform sampler2D gDiffuseSpec;
 uniform sampler2D ssao;
 uniform int useSSAO;
 
+uniform samplerCube skybox;
+
 uniform mat4 inverseView;
 uniform vec3 origin;
 uniform vec3 ambient;
@@ -61,13 +63,13 @@ uniform DirectionalLight directionalLights[5];
 uniform SpotLight spotLights[5];
 
 vec3 calculatePointLight(int index, PointLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness);
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection);
 
 vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness);
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection);
 
 vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness);
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection);
 
 vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness);
 
@@ -97,15 +99,18 @@ void main() {
     vec3 kd = vec3(1.0f) - ks;
     kd *= 1.0f - metallic; //metallic surfaces don't refract light => nullify kD if metallic
 
+	vec4 reflectionDir = inverseView * vec4(origin + reflect(fragPosition, normal), 1.f);
+	vec3 reflection = texture(skybox, reflectionDir.rgb).rgb * ks * (1.0f - roughness);
+
 	vec3 irradiance = vec3(0.f, 0.f, 0.f);
 	for(int i = 0; i < plCount; i++)
-        irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness);
+        irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness, reflection);
 
 	for(int i = 0; i < dlCount; i++)
-        irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness);
+        irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness, reflection);
 
 	for(int i = 0; i < slCount; i++)
-		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness);
+		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness, reflection);
 
 	vec3 ambience = ambient * albedo * occlusion;
 
@@ -156,7 +161,7 @@ float calculateGeometryFunctionSmith(vec3 normal, vec3 viewDirection, vec3 light
 
 //Reflectance equation with Cook-Torrance BRDF
 vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection, 
-	vec3 lightPosition, vec3 lightDiffuse, vec3 albedo, vec3 kd, vec3 ks, float roughness, bool directional) {
+	vec3 lightPosition, vec3 lightDiffuse, vec3 albedo, vec3 kd, vec3 ks, float roughness, bool directional, vec3 reflection) {
 	
 	vec3 dir = directional ? -lightPosition : lightPosition - fragPosition;
 	vec3 lightDirection   = normalize(dir);
@@ -178,21 +183,21 @@ vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection,
 	//Lighting equation
 	float NdotL = doto(normal, lightDirection);                
 
-	return (kd * albedo / PI + brdf) * radiance * NdotL; 
+	return (((kd * albedo / PI + brdf) * radiance) + reflection) * NdotL; 
 }
 
 vec3 calculatePointLight(int index, PointLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness) {
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection) {
 
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
-		viewDirection, light.position, light.diffuse, albedo, kd, ks, roughness, false);
+		viewDirection, light.position, light.diffuse, albedo, kd, ks, roughness, false, reflection);
 	float shadow = 1.0f - calculatePointLightShadows(index, normal, fragPosition);
 	
     return shadow * reflectance;
 }
 
 vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness) {
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection) {
 	
 	vec3 lightDirection = normalize(light.position - fragPosition);
 
@@ -202,17 +207,17 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal,
     float intensity = clamp((theta - light.outerAngle) / epsilon, 0.0, 1.0);
 
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
-		viewDirection, light.position, light.diffuse, albedo, kd, ks, roughness, false);
+		viewDirection, light.position, light.diffuse, albedo, kd, ks, roughness, false, reflection);
 	float shadow = 1.0f - calculateSpotLightShadows(index, normal, fragPosition);
 
     return shadow * reflectance * intensity;
 }
 
 vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness) {
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection) {
 	
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
-		viewDirection, light.direction, light.diffuse, albedo, kd, ks, roughness, true);
+		viewDirection, light.direction, light.diffuse, albedo, kd, ks, roughness, true, reflection);
 	float shadow = 1.0f - calculateDirectionalLightShadows(index, normal, fragPosition);
 	
     return shadow * reflectance;

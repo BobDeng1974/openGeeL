@@ -43,7 +43,7 @@ void main() {
 		offset.xyz = offset.xyz / offset.w;
 		offset.xyz = offset.xyz * 0.5 + 0.5;
 
-		float depth = -texture(gPositionDepth, offset.xy).w; //Very slow
+		float depth = -texture(gPositionDepth, offset.xy).w;
 		if(depth > samp.z)
 			occlusion += smoothstep(0.f, 1.f, radius / abs(fragPos.z - depth));
 	}

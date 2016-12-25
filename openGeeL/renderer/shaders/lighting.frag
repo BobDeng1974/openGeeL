@@ -7,7 +7,7 @@ struct Material {
 
 	int mapFlags;
 	int type; //0 = Opaque, 1 = Cutout, 2 = Transparent
-	float shininess;
+	float roughness;
 };
 
 struct PointLight {
@@ -204,11 +204,11 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal, vec3 fragPosi
 	float spec = 0.0f;
 	if(blinn) {
 		vec3 halfwayDir = normalize(direction + viewDirection);  
-        spec = pow(max(dot(normal, halfwayDir), 0.0f), material.shininess);	
+        spec = pow(max(dot(normal, halfwayDir), 0.0f), material.roughness);	
 	}
 	else {
 		vec3 reflectionDirection = reflect(-direction, normal);
-		spec = pow(max(dot(viewDirection, reflectionDirection), 0.0f), material.shininess);
+		spec = pow(max(dot(viewDirection, reflectionDirection), 0.0f), material.roughness);
 	}
 
 	vec3 specular = spec * speColor * light.specular;
@@ -272,11 +272,11 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, vec3 fragPositi
 	float spec = 0.0f;
 	if(blinn) {
 		vec3 halfwayDir = normalize(direction + viewDirection);  
-        spec = pow(max(dot(normal, halfwayDir), 0.0f), material.shininess);	
+        spec = pow(max(dot(normal, halfwayDir), 0.0f), material.roughness);	
 	}
 	else {
 		vec3 reflectionDirection = reflect(-direction, normal);
-		spec = pow(max(dot(viewDirection, reflectionDirection), 0.0f), material.shininess);
+		spec = pow(max(dot(viewDirection, reflectionDirection), 0.0f), material.roughness);
 	}
 
 	vec3 specular = spec * speColor * light.specular * intensity;
@@ -329,11 +329,11 @@ vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, ve
 	float spec = 0.0f;
 	if(blinn) {
 		vec3 halfwayDir = normalize(direction + viewDirection);  
-        spec = pow(max(dot(normal, halfwayDir), 0.0f), material.shininess);	
+        spec = pow(max(dot(normal, halfwayDir), 0.0f), material.roughness);	
 	}
 	else {
 		vec3 reflectionDirection = reflect(-direction, normal);
-		spec = pow(max(dot(viewDirection, reflectionDirection), 0.0f), material.shininess);
+		spec = pow(max(dot(viewDirection, reflectionDirection), 0.0f), material.roughness);
 	}
 
 	vec3 specular = spec * speColor * light.specular;

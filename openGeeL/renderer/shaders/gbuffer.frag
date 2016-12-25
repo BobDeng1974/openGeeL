@@ -12,7 +12,7 @@ struct Material {
 
 	int mapFlags;
 	int type; //0 = Opaque, 1 = Cutout, 2 = Transparent
-	float shininess;
+	float roughness;
 	float metallic;
 };
 
@@ -57,7 +57,7 @@ void main() {
 	gNormalMet.a = (metaFlag == 1) ? texture(material.metal, textureCoordinates).r : material.metallic;
 
 	vec3 texColor = (diffFlag == 1) ? texture(material.diffuse, textureCoordinates).rgb : vec3(0.01f, 0.01f, 0.01f);
-	vec3 speColor = (specFlag == 1) ? texture(material.specular, textureCoordinates).rgb : vec3(0.1f, 0.1f, 0.1f); 
+	vec3 speColor = (specFlag == 1) ? texture(material.specular, textureCoordinates).rgb : vec3(material.roughness); 
     gDiffuseSpec.rgb = texColor;
     gDiffuseSpec.a = speColor.r;
 } 

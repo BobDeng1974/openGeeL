@@ -119,4 +119,11 @@ namespace geeL {
 		return originViewSpace;
 	}
 
+	unsigned int RenderScene::getSkyboxID() const {
+		if (skybox != nullptr)
+			return skybox->getID();
+
+		return 0;
+	}
+
 }

@@ -15,6 +15,7 @@
 #include "../renderer/transformation/transformfactory.h"
 
 #include "../renderer/materials/material.h"
+#include "../renderer/materials/defaultmaterial.h"
 #include "../renderer/materials/genericmaterial.h"
 #include "../renderer/materials/materialfactory.h"
 #include "../renderer/shader/shadermanager.h"
@@ -82,21 +83,21 @@ namespace {
 			
 			
 			geeL::Transform* lighTransi4 = new geeL::Transform(glm::vec3(7, 5, 5), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
-			light = &lightManager.addPointLight(*lighTransi4, glm::vec3(l * 2, l * 0.5, l * 0.5), glm::vec3(0.7f, 0.7f, 0.7f));
+			light = &lightManager.addPointLight(*lighTransi4, glm::vec3(l *0.996 , l *0.535 , l*0.379), glm::vec3(0.7f, 0.7f, 0.7f));
 				
 			l = 100.f;
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
 
 			geeL::Transform* lighTransi3 = new geeL::Transform(glm::vec3(-7, 5, 0), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
-			&lightManager.addSpotlight(*lighTransi3, glm::vec3(l, l * 2, l), glm::vec3(0.7f, 0.7f, 0.7f), angle, outerAngle);
+			&lightManager.addSpotlight(*lighTransi3, glm::vec3(l, l , l), glm::vec3(0.7f, 0.7f, 0.7f), angle, outerAngle);
 			
 			//geeL::Transform* lighTransi6 = new geeL::Transform(glm::vec3(-7, 5, -10), glm::vec3(-250.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
 			//&lightManager.addSpotlight(*lighTransi6, glm::vec3(l, l, l), glm::vec3(0.7f, 0.7f, 0.7f), angle, outerAngle);
 			
 			l = 5.f;
 			geeL::Transform* lighTransi2 = new geeL::Transform(glm::vec3(0.f, 0.f, 0.f), glm::vec3(75, 20, 10), glm::vec3(1.f, 1.f, 1.f));
-			dirLight = &lightManager.addDirectionalLight(*lighTransi2, glm::vec3(l, l, l), glm::vec3(0.7f, 0.7f, 0.7f));
+			//dirLight = &lightManager.addDirectionalLight(*lighTransi2, glm::vec3(l, l, l), glm::vec3(0.7f, 0.7f, 0.7f));
 			
 
 			float height = -2.f;
@@ -107,7 +108,16 @@ namespace {
 			scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront);
 
 			geeL::Transform* transi5 = new geeL::Transform(glm::vec3(0.0f, 5, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(5.2f, 1.2f, 5.2f));
-			scene.AddMeshRenderer("resources/primitives/cube.obj", *transi5, cullFront);
+			MeshRenderer& box1 = scene.AddMeshRenderer("resources/primitives/cube.obj", *transi5, cullFront);
+
+			for (auto it = box1.defaultMaterialsBegin(); it != box1.defaultMaterialsEnd(); it++) {
+				Material* mat = it->second;
+				DefaultMaterial* defmat = dynamic_cast<DefaultMaterial*>(mat);
+
+				if (defmat != nullptr)
+					defmat->setRoughness(0.35f);
+			}
+
 
 			geeL::Transform* transi3 = new geeL::Transform(glm::vec3(0.0f, 1, -2.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(5.2f, 2.2f, 1.2f));
 			scene.AddMeshRenderer("resources/primitives/cube.obj", *transi3, cullFront);
@@ -149,8 +159,8 @@ void a_shadows() {
 	PerspectiveCamera camera3 = PerspectiveCamera(transform3, 5.f, 15.f, 65.f, window->width, window->height, 0.1f, 100.f);
 
 	SimpleBlur blur = SimpleBlur(1);
-	SSAO ssao = SSAO(camera3, blur, 10.f);
-	DeferredRenderer renderer1 = DeferredRenderer(window, manager, &ssao);
+	SSAO ssao = SSAO(camera3, blur, 5.f);
+	DeferredRenderer& renderer1 = DeferredRenderer(window, manager, &ssao);
 	renderer1.init();
 
 	MaterialFactory materialFactory = MaterialFactory();
@@ -162,6 +172,12 @@ void a_shadows() {
 	
 	RenderScene scene = RenderScene(lightManager, camera3, meshFactory);
 
+	CubeMap map = CubeMap("resources/skybox2/right.jpg", "resources/skybox2/left.jpg", "resources/skybox2/top.jpg",
+		"resources/skybox2/bottom.jpg", "resources/skybox2/back.jpg", "resources/skybox2/front.jpg");
+
+	Skybox skybox = Skybox(map);
+	scene.setSkybox(skybox);
+
 	renderer1.setScene(scene);
 	renderer1.setShaderManager(shaderManager);
 
@@ -170,13 +186,6 @@ void a_shadows() {
 
 	renderer1.addObject(testObj);
 	renderer1.initObjects();
-
-	CubeMap map = CubeMap("resources/skybox2/right.jpg", "resources/skybox2/left.jpg", "resources/skybox2/top.jpg",
-		"resources/skybox2/bottom.jpg", "resources/skybox2/back.jpg", "resources/skybox2/front.jpg");
-
-	Skybox skybox = Skybox(map);
-	scene.setSkybox(skybox);
-
 	
 	//GodRay ray = GodRay(scene, glm::vec3(-40, 30, -50));
 	

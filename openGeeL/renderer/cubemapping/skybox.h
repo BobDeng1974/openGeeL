@@ -17,15 +17,18 @@ class Shader;
 class Skybox {
 
 public:
+	const CubeMap& cubeMap;
 
 	Skybox(CubeMap& cubeMap);
 
 	void draw(const Camera& camera) const;
 	void bind(const Shader& shader) const;
 
+	unsigned int getID() const;
+
 private:
 	unsigned int boxVAO;
-	CubeMap& cubeMap;
+	
 	Shader shader;
 
 	void initBox();

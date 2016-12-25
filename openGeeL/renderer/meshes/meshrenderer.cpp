@@ -145,4 +145,12 @@ namespace geeL{
 		return defaultMaterials.size() > 0;
 	}
 
+	std::map<unsigned int, Material*>::iterator MeshRenderer::defaultMaterialsBegin() {
+		return defaultMaterials.begin();
+	}
+
+	std::map<unsigned int, Material*>::iterator MeshRenderer::defaultMaterialsEnd() {
+		return defaultMaterials.end();
+	}
+
 }

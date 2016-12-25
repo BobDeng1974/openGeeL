@@ -58,6 +58,7 @@ public:
 	glm::vec3 TranslateToScreenSpace(glm::vec3 vector) const;
 	glm::vec3 TranslateToViewSpace(glm::vec3 vector) const;
 	const glm::vec3& GetOriginInViewSpace() const;
+	unsigned int getSkyboxID() const;
 
 private:
 	glm::vec3 originViewSpace;

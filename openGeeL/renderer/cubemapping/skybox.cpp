@@ -93,4 +93,8 @@ namespace geeL {
 		glBindVertexArray(0);
 	}
 
+	unsigned int Skybox::getID() const {
+		return cubeMap.getID();
+	}
+
 }

@@ -87,14 +87,14 @@ namespace geeL {
 			deferredShader->setInteger("useSSAO", 1);
 		}
 
-		deferredShader->bindMaps();
-
 		frameBuffer1.init(window->width, window->height);
 		frameBuffer2.init(window->width, window->height);
 		screen.init();
 	}
 
 	void DeferredRenderer::render() {
+
+		deferredShader->bindMaps();
 
 		//Init all post processing effects with two alternating framebuffers
 		//Current effect will then always read from one and write to the other
@@ -206,6 +206,12 @@ namespace geeL {
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {
 		effect.setScreen(screen);
 		effects.push_back(&effect);
+	}
+
+	void DeferredRenderer::setScene(RenderScene& scene) {
+		Renderer::setScene(scene);
+
+		deferredShader->addMap(scene.getSkyboxID(), "skybox", GL_TEXTURE_CUBE_MAP);
 	}
 
 }
