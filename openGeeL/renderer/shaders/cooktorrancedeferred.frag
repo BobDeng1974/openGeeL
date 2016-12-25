@@ -156,14 +156,14 @@ float calculateGeometryFunctionSmith(vec3 normal, vec3 viewDirection, vec3 light
 
 //Reflectance equation with Cook-Torrance BRDF
 vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection, 
-	vec3 lightPosition, vec3 lightDiffuse, vec3 albedo, vec3 kd, vec3 ks, float roughness, bool falloff) {
+	vec3 lightPosition, vec3 lightDiffuse, vec3 albedo, vec3 kd, vec3 ks, float roughness, bool directional) {
 	
-	vec3 dir = lightPosition - fragPosition;
+	vec3 dir = directional ? -lightPosition : lightPosition - fragPosition;
 	vec3 lightDirection   = normalize(dir);
 	vec3 halfwayDirection = normalize(lightDirection + viewDirection);
 
 	float lightDistance = length(dir);
-	float attenuation = falloff ? (1.0f / (lightDistance * lightDistance)) : 1.0f; //Inverse square law
+	float attenuation = directional ? 1.0f : (1.0f / (lightDistance * lightDistance)); //Inverse square law
 	vec3  radiance = lightDiffuse * attenuation;
 
 	//BRDF
@@ -185,7 +185,7 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal,
 	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness) {
 
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
-		viewDirection, light.position, light.diffuse, albedo, kd, ks, roughness, true);
+		viewDirection, light.position, light.diffuse, albedo, kd, ks, roughness, false);
 	float shadow = 1.0f - calculatePointLightShadows(index, normal, fragPosition);
 	
     return shadow * reflectance;
@@ -202,7 +202,7 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal,
     float intensity = clamp((theta - light.outerAngle) / epsilon, 0.0, 1.0);
 
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
-		viewDirection, light.position, light.diffuse, albedo, kd, ks, roughness, true);
+		viewDirection, light.position, light.diffuse, albedo, kd, ks, roughness, false);
 	float shadow = 1.0f - calculateSpotLightShadows(index, normal, fragPosition);
 
     return shadow * reflectance * intensity;
@@ -212,7 +212,7 @@ vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal,
 	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness) {
 	
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
-		viewDirection, light.direction, light.diffuse, albedo, kd, ks, roughness, false);
+		viewDirection, light.direction, light.diffuse, albedo, kd, ks, roughness, true);
 	float shadow = 1.0f - calculateDirectionalLightShadows(index, normal, fragPosition);
 	
     return shadow * reflectance;
@@ -311,7 +311,7 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition) {
 }
 
 float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
-	vec4 posLightSpace = spotLights[i].lightTransform * inverseView * vec4(fragPosition, 1.0f);
+	vec4 posLightSpace = directionalLights[i].lightTransform * inverseView * vec4(fragPosition, 1.0f);
 	vec3 coords = posLightSpace.xyz / posLightSpace.w;
 	coords = coords * 0.5f + 0.5f;
 

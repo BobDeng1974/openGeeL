@@ -21,7 +21,7 @@ namespace geeL {
 		Light::deferredBind(scene, shader, index, name);
 
 		string location = name + "[" + to_string(index) + "].";
-		shader.setVector3(location + "direction", scene.TranslateToViewSpace(transform.forward));
+		shader.setVector3(location + "direction", scene.GetOriginInViewSpace() - scene.TranslateToViewSpace(transform.forward));
 		shader.setMat4(location + "lightTransform", lightTransform);
 	}
 
@@ -36,9 +36,9 @@ namespace geeL {
 	}
 
 	void DirectionalLight::computeLightTransform() {
-		float a = shadowmapWidth / 100.f;
+		float a = shadowmapWidth / 300.f;
 		mat4 projection = ortho(-a, a, -a, a, 1.0f, 50.f);
-		mat4 view = lookAt(transform.forward, vec3(0.f, 0.f, 0.f), vec3(0.f, 1.f, 0.f));
+		mat4 view = lookAt(transform.forward, vec3(0), vec3(0.f, 1.f, 0.f));
 		
 		lightTransform = projection * view;
 	}

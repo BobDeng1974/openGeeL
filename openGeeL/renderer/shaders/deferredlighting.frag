@@ -174,7 +174,7 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal,
 vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, 
 	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float specularMat, bool blinn) {
 	
-	vec3 lightDirection = normalize(light.direction - fragPosition);
+	vec3 lightDirection = normalize(light.direction);
 
 	vec3 diffuse = calculateDiffuseLighting(normal, lightDirection, albedo, light.diffuse);
 
@@ -279,7 +279,7 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition) {
 }
 
 float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
-	vec4 posLightSpace = spotLights[i].lightTransform * inverseView * vec4(fragPosition, 1.0f);
+	vec4 posLightSpace = directionalLights[i].lightTransform * inverseView * vec4(fragPosition, 1.0f);
 	vec3 coords = posLightSpace.xyz / posLightSpace.w;
 	coords = coords * 0.5f + 0.5f;
 
