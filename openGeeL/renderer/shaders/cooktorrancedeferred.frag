@@ -171,7 +171,8 @@ vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection,
 	float geo = calculateGeometryFunctionSmith(normal, viewDirection, lightDirection, roughness);
 
 	vec3  nom   = ndf * geo * ks; //Fresnel term equivalent to kS
-	float denom =  4.0f * doto(viewDirection, normal) * doto(lightDirection, normal); 
+	//add small fraction to prevent ill behaviour when dividing by zero (shadows no longer additive)
+	float denom =  4.0f * doto(viewDirection, normal) * doto(lightDirection, normal) + 0.001f; 
 	vec3  brdf  = nom / denom;
 
 	//Lighting equation
