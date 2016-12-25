@@ -15,8 +15,9 @@ using namespace glm;
 
 namespace geeL {
 
-	LightManager::LightManager()
+	LightManager::LightManager(glm::vec3 ambient)
 		: 
+		ambient(ambient),
 		dlShader(new Shader("renderer/shaders/shadowmapping.vert", "renderer/shaders/empty.frag")),
 		plShader(new Shader("renderer/shaders/empty.vert", "renderer/shaders/shadowmapping.gs", 
 			"renderer/shaders/shadowmapping.frag"))
@@ -37,8 +38,8 @@ namespace geeL {
 			delete staticSLs[j];
 	}
 
-	DirectionalLight& LightManager::addDirectionalLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, float shadowBias) {
-		DirectionalLight* light = new DirectionalLight(transform, diffuse, specular, ambient, shadowBias);
+	DirectionalLight& LightManager::addDirectionalLight(Transform& transform, vec3 diffuse, vec3 specular, float shadowBias) {
+		DirectionalLight* light = new DirectionalLight(transform, diffuse, specular, shadowBias);
 		staticDLs.push_back(light);
 		light->initShadowmap();
 
@@ -46,21 +47,19 @@ namespace geeL {
 	}
 
 	
-	PointLight& LightManager::addPointLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient,
-		float shadowBias) {
+	PointLight& LightManager::addPointLight(Transform& transform, vec3 diffuse, vec3 specular, float shadowBias) {
 
-		PointLight* light = new PointLight(transform, diffuse, specular, ambient, shadowBias);
+		PointLight* light = new PointLight(transform, diffuse, specular, shadowBias);
 		staticPLs.push_back(light);
 		light->initShadowmap();
 		
 		return *light;
 	}
 
-	SpotLight& LightManager::addSpotlight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient,
+	SpotLight& LightManager::addSpotlight(Transform& transform, vec3 diffuse, vec3 specular,
 		float angle, float outerAngle, float shadowBias) {
 
-		SpotLight* light = new SpotLight(transform, diffuse, specular,
-			ambient, angle, outerAngle, shadowBias);
+		SpotLight* light = new SpotLight(transform, diffuse, specular, angle, outerAngle, shadowBias);
 		staticSLs.push_back(light);
 		light->initShadowmap();
 

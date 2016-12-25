@@ -14,10 +14,10 @@ using namespace glm;
 
 namespace geeL {
 
-	SpotLight::SpotLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, 
+	SpotLight::SpotLight(Transform& transform, vec3 diffuse, vec3 specular, 
 		float angle, float outerAngle, float shadowBias)
 		: 
-		Light(transform, diffuse, specular, ambient, shadowBias),
+		Light(transform, diffuse, specular, shadowBias),
 		angle(angle), outerAngle(outerAngle) {}
 
 

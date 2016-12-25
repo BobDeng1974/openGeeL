@@ -21,7 +21,6 @@ namespace geeL {
 
 		shader.setVector3(location + "diffuse", diffuse);
 		shader.setVector3(location + "specular", specular);
-		shader.setVector3(location + "ambient", ambient);
 
 		shader.setFloat(location + "bias", shadowBias);
 	}

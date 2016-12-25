@@ -14,8 +14,8 @@ using namespace glm;
 
 namespace geeL {
 
-	PointLight::PointLight(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, float shadowBias)
-		: Light(transform, diffuse, specular, ambient, shadowBias), farPlane(50.f) {
+	PointLight::PointLight(Transform& transform, vec3 diffuse, vec3 specular, float shadowBias)
+		: Light(transform, diffuse, specular, shadowBias), farPlane(50.f) {
 	
 		lightTransforms.reserve(6);
 		initLightTransform();

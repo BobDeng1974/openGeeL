@@ -21,12 +21,9 @@ class Light : public SceneObject {
 public:
 	vec3 diffuse;
 	vec3 specular;
-	vec3 ambient;
-	
 
-	Light(Transform& transform, vec3 diffuse, vec3 specular, vec3 ambient, float shadowBias) 
-		: SceneObject(transform), diffuse(diffuse), specular(specular), 
-		ambient(ambient), shadowBias(shadowBias) {}
+	Light(Transform& transform, vec3 diffuse, vec3 specular, float shadowBias) 
+		: SceneObject(transform), diffuse(diffuse), specular(specular), shadowBias(shadowBias) {}
 
 	virtual void deferredBind(const RenderScene& scene, const Shader& shader, int index, std::string name) const;
 	virtual void forwardBind(const Shader& shader, int index, std::string name) const;

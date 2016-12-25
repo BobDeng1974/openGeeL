@@ -4,11 +4,9 @@ const float PI = 3.14159265359;
 
 struct PointLight {
 	samplerCube shadowMap;
+
     vec3 position;
-  
-    //vec3 ambient;
     vec3 diffuse;
-    //vec3 specular;
 
 	float bias;
 	float farPlane;
@@ -20,14 +18,11 @@ struct SpotLight {
 
     vec3 position;
     vec3 direction;
+	vec3 diffuse;
 
     float angle;
     float outerAngle;
 	float bias;
-
-    //vec3 ambient;
-    vec3 diffuse;
-    //vec3 specular;    
 };
 
 
@@ -36,10 +31,7 @@ struct DirectionalLight {
 	mat4 lightTransform;
 
 	vec3 direction;
-  
-    //vec3 ambient;
     vec3 diffuse;
-    //vec3 specular;
 
 	float bias;
 };
@@ -62,6 +54,7 @@ uniform int useSSAO;
 
 uniform mat4 inverseView;
 uniform vec3 origin;
+uniform vec3 ambient;
 
 uniform PointLight pointLights[5];
 uniform DirectionalLight directionalLights[5];
@@ -91,18 +84,18 @@ void main() {
 	vec3 fragPosition = texture(gPositionDepth, textureCoordinates).rgb;
     vec3 normal		  = texture(gNormalMet, textureCoordinates).rgb;
     vec3 albedo		  = texture(gDiffuseSpec, textureCoordinates).rgb;
+
 	float roughness	  = texture(gDiffuseSpec, textureCoordinates).a;
 	float metallic    = texture(gNormalMet, textureCoordinates).a;
-
 	float occlusion   = (useSSAO == 1) ? texture(ssao, textureCoordinates).r : 1.f;
 
-	vec3 viewDirection = normalize(-fragPosition);
+	vec3  viewDirection = normalize(-fragPosition);
 	float theta = doto(normal, viewDirection);
-	vec3 fresnel = calculateFresnelTerm(theta, albedo, metallic, roughness);
+	vec3  fresnel = calculateFresnelTerm(theta, albedo, metallic, roughness);
 
 	vec3 ks = fresnel;
     vec3 kd = vec3(1.0f) - ks;
-    kd *= 1.0f - metallic; //metallic surfaces don't refract light => nullify kD when surface is metallic
+    kd *= 1.0f - metallic; //metallic surfaces don't refract light => nullify kD if metallic
 
 	vec3 irradiance = vec3(0.f, 0.f, 0.f);
 	for(int i = 0; i < plCount; i++)
@@ -114,12 +107,9 @@ void main() {
 	for(int i = 0; i < slCount; i++)
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness);
 
+	vec3 ambience = ambient * albedo * occlusion;
 
-
-	vec3 ambient = vec3(0.3f); //TODO: make this uniform variable
-	irradiance += ambient * albedo * occlusion; //Ambient occlusion
-
-	color = vec4(irradiance, 1.f);
+	color = vec4(irradiance + ambience, 1.f);
 }
 
 //Lighting.....................................................................................................................................

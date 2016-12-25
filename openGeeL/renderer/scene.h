@@ -21,10 +21,12 @@ enum CullingMode;
 class RenderScene {
 
 public:
+	
 	Camera& camera;
 	LightManager& lightManager;
 
 	RenderScene(LightManager& lightManager, Camera& camera, MeshFactory& meshFactory);
+	
 	~RenderScene();
 
 	void setSkybox(Skybox& skybox);

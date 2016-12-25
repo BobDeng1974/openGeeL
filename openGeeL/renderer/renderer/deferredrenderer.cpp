@@ -182,6 +182,7 @@ namespace geeL {
 			scene->lightManager.deferredBind(*scene, *deferredShader);
 			deferredShader->setMat4("inverseView", glm::inverse(scene->camera.getViewMatrix()));
 			deferredShader->setVector3("origin", scene->GetOriginInViewSpace());
+			deferredShader->setVector3("ambient", scene->lightManager.ambient);
 			screen.draw();
 
 			glClear(GL_DEPTH_BUFFER_BIT);

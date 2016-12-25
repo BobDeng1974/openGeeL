@@ -21,6 +21,7 @@ class Transform;
 class LightManager {
 
 public:
+	glm::vec3 ambient;
 	std::string plName = "pointLights";
 	std::string dlName = "directionalLights";
 	std::string slName = "spotLights";
@@ -28,22 +29,22 @@ public:
 	std::string dlCountName = "dlCount";
 	std::string slCountName = "slCount";
 
-	LightManager();
+	LightManager(glm::vec3 ambient = glm::vec3(0.3f, 0.3f, 0.3f));
 
 	//Manager is responsible for removing the lights
 	~LightManager();
 
 	//Add and create directional light
 	DirectionalLight& addDirectionalLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular, 
-		glm::vec3 ambient, float shadowBias = 0.0005f);
+		float shadowBias = 0.0005f);
 	
 	//Add and create point light
-	PointLight& addPointLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 ambient,
+	PointLight& addPointLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,
 		float shadowBias = 0.007f);
 	
 	//Add and create spotlight
 	SpotLight& addSpotlight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,
-		glm::vec3 ambient, float angle, float outerAngle, float shadowBias = 0.0005f);
+		float angle, float outerAngle, float shadowBias = 0.0005f);
 
 
 	void deferredBind(const RenderScene& scene, const Shader& shader) const;

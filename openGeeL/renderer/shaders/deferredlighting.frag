@@ -2,15 +2,10 @@
 
 struct PointLight {
 	samplerCube shadowMap;
+
     vec3 position;
-  
-    vec3 ambient;
     vec3 diffuse;
     vec3 specular;
-
-	float constant;
-	float linear;
-	float quadratic;
 
 	float bias;
 	float farPlane;
@@ -22,18 +17,12 @@ struct SpotLight {
 
     vec3 position;
     vec3 direction;
+	vec3 diffuse;
+    vec3 specular;    
 
     float angle;
     float outerAngle;
 	float bias;
-
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;    
-	
-	float constant;
-    float linear;
-    float quadratic;   
 };
 
 
@@ -42,8 +31,6 @@ struct DirectionalLight {
 	mat4 lightTransform;
 
 	vec3 direction;
-  
-    vec3 ambient;
     vec3 diffuse;
     vec3 specular;
 
@@ -68,19 +55,20 @@ uniform int useSSAO;
 
 uniform mat4 inverseView;
 uniform vec3 origin;
+uniform vec3 ambient;
 
 uniform PointLight pointLights[5];
 uniform DirectionalLight directionalLights[5];
 uniform SpotLight spotLights[5];
 
 vec3 calculatePointLight(int index, PointLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float specularMat, float occlusion, bool blinn);
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float specularMat, bool blinn);
 
 vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float specularMat, float occlusion, bool blinn);
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float specularMat, bool blinn);
 
 vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float specularMat, float occlusion, bool blinn);
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float specularMat, bool blinn);
 
 float random(vec3 seed, int i);
 float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition);
@@ -100,15 +88,17 @@ void main() {
 	bool blinn = true;	
 	vec3 result = vec3(0.f, 0.f, 0.f);
 	for(int i = 0; i < plCount; i++)
-        result += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, specular, occlusion, blinn);
+        result += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, specular, blinn);
 
 	for(int i = 0; i < dlCount; i++)
-        result += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo, specular, occlusion, blinn);
+        result += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo, specular, blinn);
 
 	for(int i = 0; i < slCount; i++)
-		result += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, specular, occlusion, blinn);
+		result += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, specular, blinn);
 
-	color = vec4(result * occlusion, 1.f);
+	vec3 ambience = ambient * albedo * occlusion;
+
+	color = vec4(result + ambience, 1.f);
 }
 
 //Lighting.....................................................................................................................................
@@ -137,7 +127,7 @@ vec3 calculateSpecularLighting(vec3 normal, vec3 lightDirection, vec3 viewDirect
 }
 
 vec3 calculatePointLight(int index, PointLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float specularMat, float occlusion, bool blinn) {
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float specularMat, bool blinn) {
 
 	vec3 dir = light.position - fragPosition;
 	float distance = length(dir);
@@ -151,15 +141,13 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal,
 	vec3 specular = calculateSpecularLighting(normal, lightDirection, 
 		viewDirection, specularMat, light.specular, blinn);
 	
-	vec3 ambient = light.ambient * albedo * occlusion;
 	float shadow = 1.0f - calculatePointLightShadows(index, normal, fragPosition);
 	
-    return (ambient + shadow * (diffuse + specular)) * attenuation;
-
+    return shadow * (diffuse + specular) * attenuation;
 }
 
 vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float specularMat, float occlusion, bool blinn) {
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float specularMat, bool blinn) {
 	
 	vec3 dir = light.position - fragPosition;
 	float distance = length(dir);
@@ -178,14 +166,13 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal,
 	vec3 specular = calculateSpecularLighting(normal, lightDirection, 
 		viewDirection, specularMat, light.specular, blinn) * intensity;
 
-	vec3 ambient = light.ambient * albedo * occlusion;
 	float shadow = 1.0f - calculateSpotLightShadows(index, normal, fragPosition);
 
-    return (ambient + shadow * (diffuse + specular)) * attenuation;
+    return shadow * (diffuse + specular) * attenuation;
 }
 
 vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float specularMat, float occlusion, bool blinn) {
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float specularMat, bool blinn) {
 	
 	vec3 lightDirection = normalize(light.direction - fragPosition);
 
@@ -194,10 +181,9 @@ vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal,
 	vec3 specular = calculateSpecularLighting(normal, lightDirection, 
 		viewDirection, specularMat, light.specular, blinn);	
 
-	vec3 ambient = light.ambient * albedo * occlusion;
 	float shadow = 1.0f - calculateDirectionalLightShadows(index, normal, fragPosition);
 	
-    return (ambient + shadow * (diffuse + specular));
+    return shadow * (diffuse + specular);
 }
 
 
