@@ -52,7 +52,7 @@ namespace geeL {
 	}
 
 	DeferredRenderer::~DeferredRenderer() {
-		delete effects.front();
+		delete effects.back();
 		delete deferredShader;
 
 		if (ssaoBuffer != nullptr)
@@ -97,16 +97,12 @@ namespace geeL {
 
 		deferredShader->bindMaps();
 
-		//Init all post processing effects with two alternating framebuffers
-		//Current effect will then always read from one and write to the other
-		bool chooseBuffer = true;
-		for (auto effect = effects.rbegin(); effect != effects.rend(); effect++) {
-			(*effect)->setBuffer(chooseBuffer ? frameBuffer1.color : frameBuffer2.color);
-			(*effect)->setParentFBO(chooseBuffer ? frameBuffer2.fbo : frameBuffer1.fbo);
-
-			chooseBuffer = !chooseBuffer;
-		}
-
+		//Set color buffer of default effect depending on the amount of added effects
+		if (effects.size() % 2 == 0)
+			effects.back()->setBuffer(frameBuffer2.color);
+		else
+			effects.back()->setBuffer(frameBuffer1.color);
+		
 		//Init SSAO (if added)
 		if (ssao != nullptr) {
 			linkWorldInformation(*ssao);
@@ -142,9 +138,9 @@ namespace geeL {
 			glDisable(GL_DEPTH_TEST);
 
 			//Post processing
-			chooseBuffer = true;
+			bool chooseBuffer = true;
 			//Draw all the post processing effects on top of each other. Ping pong style!
-			for (auto effect = effects.rbegin(); effect != prev(effects.rend()); effect++) {
+			for (auto effect = effects.begin(); effect != prev(effects.end()); effect++) {
 				if (chooseBuffer)
 					frameBuffer2.fill(**effect);
 				else
@@ -153,8 +149,9 @@ namespace geeL {
 				chooseBuffer = !chooseBuffer;
 			}
 			//Draw the last (default) effect to screen.
-			effects.front()->draw();
+			effects.back()->draw();
 
+			
 			window->swapBuffer();
 			Time::update();
 		}
@@ -209,15 +206,21 @@ namespace geeL {
 		deferredShader->addMap(scene.getSkyboxID(), "skybox", GL_TEXTURE_CUBE_MAP);
 	}
 
-
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {
 		effect.setScreen(screen);
-		effects.push_back(&effect);
+		effects.push_front(&effect);
+
+		//Init all post processing effects with two alternating framebuffers
+		//Current effect will then always read from one and write to the other
+		if (effects.size() % 2 == 0)
+			effect.setBuffer(frameBuffer1.color);
+		else
+			effect.setBuffer(frameBuffer2.color);
 	}
 
 	void DeferredRenderer::addEffect(WorldPostProcessingEffect& effect) {
 		effect.setScreen(screen);
-		effects.push_back(&effect);
+		effects.push_front(&effect);
 
 		linkWorldInformation(effect);
 	}
@@ -231,7 +234,10 @@ namespace geeL {
 		for (auto it = requiredMaps.begin(); it != requiredMaps.end(); it++) {
 			switch (*it) {
 				case WorldMaps::RenderedImage:
-					//TODO: can't link this here since image is rendered to alternating buffers
+					if (effects.size() % 2 == 0)
+						effect.setBuffer(frameBuffer1.color);
+					else
+						effect.setBuffer(frameBuffer2.color);
 					break;
 				case WorldMaps::DiffuseSpecular:
 					maps.push_back(gBuffer.diffuseSpec);

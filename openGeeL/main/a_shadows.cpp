@@ -199,15 +199,15 @@ void a_shadows() {
 	renderer1.addObject(testObj);
 	renderer1.initObjects();
 	
-	//GodRay ray = GodRay(scene, glm::vec3(-40, 30, -50));
+	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50));
 	
 	//GaussianBlur blur2 = GaussianBlur(1);
 	//Bloom bloom = Bloom(blur2);
-	//ColorCorrection cCorrect = ColorCorrection(0.5, 0.5, 0.5);
+	//ColorCorrection cCorrect = ColorCorrection(1, 1, 1, 1, 0);
 	//ToneMapping tone = ToneMapping(1.1);
 
-	//renderer1.addEffect(bloom);
-	//renderer1.addEffect(ray);
+	//renderer1.addEffect(cCorrect);
+	renderer1.addEffect(ray);
 	renderer1.render();
 
 	delete testObj;

@@ -9,9 +9,9 @@ namespace geeL {
 class Time {
 
 public:
-	static void update();
-
 	static float deltaTime;
+
+	static void update();
 
 private:
 	static float lastFrame;
