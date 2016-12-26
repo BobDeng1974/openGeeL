@@ -11,6 +11,9 @@
 
 #define pi 3.141592f
 
+using namespace std;
+using namespace glm;
+
 namespace geeL {
 
 	Camera::Camera(Transform& transform)
@@ -98,6 +101,14 @@ namespace geeL {
 		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
 		glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &transform.position);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	}
+
+	vec3 Camera::getPosition() const {
+		return transform.position;
+	}
+
+	vec3 Camera::getDirection() const {
+		return transform.forward;
 	}
 
 }

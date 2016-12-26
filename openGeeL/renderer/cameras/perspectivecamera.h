@@ -22,7 +22,7 @@ private:
 	float FOV, currentFOV, width, height, 
 		nearClip, farClip;
 
-	virtual mat4 computeProjectionMatrix() const;
+	virtual glm::mat4 computeProjectionMatrix() const;
 
 };
 

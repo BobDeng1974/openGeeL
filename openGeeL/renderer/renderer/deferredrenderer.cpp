@@ -16,6 +16,7 @@
 #include "../inputmanager.h"
 #include "../postprocessing/ssao.h"
 #include "../postprocessing/postprocessing.h"
+#include "../postprocessing/worldpostprocessing.h"
 #include "../cameras/camera.h"
 #include "../lighting/lightmanager.h"
 #include "../shader/shadermanager.h"
@@ -108,8 +109,7 @@ namespace geeL {
 
 		//Init SSAO (if added)
 		if (ssao != nullptr) {
-			list<unsigned int> ssaoMaps = { gBuffer.positionDepth, gBuffer.normalMet };
-			ssao->setBuffer(ssaoMaps);
+			linkWorldInformation(*ssao);
 			ssao->setParentFBO(ssaoBuffer->fbo);
 			ssao->setScreen(screen);
 		}
@@ -203,15 +203,76 @@ namespace geeL {
 		scene->camera.handleInput(*inputManager);
 	}
 
+	void DeferredRenderer::setScene(RenderScene& scene) {
+		Renderer::setScene(scene);
+
+		deferredShader->addMap(scene.getSkyboxID(), "skybox", GL_TEXTURE_CUBE_MAP);
+	}
+
+
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {
 		effect.setScreen(screen);
 		effects.push_back(&effect);
 	}
 
-	void DeferredRenderer::setScene(RenderScene& scene) {
-		Renderer::setScene(scene);
+	void DeferredRenderer::addEffect(WorldPostProcessingEffect& effect) {
+		effect.setScreen(screen);
+		effects.push_back(&effect);
 
-		deferredShader->addMap(scene.getSkyboxID(), "skybox", GL_TEXTURE_CUBE_MAP);
+		linkWorldInformation(effect);
+	}
+
+	void DeferredRenderer::linkWorldInformation(WorldPostProcessingEffect& effect) {
+		auto maps     = list<unsigned int>();
+		auto matrices = list<mat4>();
+		auto vectors  = list<vec3>();
+
+		auto requiredMaps = effect.requiredWorldMapsList();
+		for (auto it = requiredMaps.begin(); it != requiredMaps.end(); it++) {
+			switch (*it) {
+				case WorldMaps::RenderedImage:
+					//TODO: can't link this here since image is rendered to alternating buffers
+					break;
+				case WorldMaps::DiffuseSpecular:
+					maps.push_back(gBuffer.diffuseSpec);
+					break;
+				case WorldMaps::PositionDepth:
+					maps.push_back(gBuffer.positionDepth);
+					break;
+				case WorldMaps::NormalMetallic:
+					maps.push_back(gBuffer.normalMet);
+					break;
+			}
+		}
+
+		auto requiredMatrices = effect.requiredWorldMatricesList();
+		for (auto it = requiredMatrices.begin(); it != requiredMatrices.end(); it++) {
+			switch (*it) {
+				case WorldMatrices::View:
+					matrices.push_back(scene->camera.getViewMatrix());
+					break;
+				case WorldMatrices::Projection:
+					matrices.push_back(scene->camera.getViewMatrix());
+					break;
+			}
+		}
+
+		auto requiredVectors = effect.requiredWorldVectorsList();
+		for (auto it = requiredVectors.begin(); it != requiredVectors.end(); it++) {
+			switch (*it) {
+				case WorldVectors::CameraPosition:
+					vectors.push_back(scene->camera.getPosition());
+					break;
+				case WorldVectors::CameraDirection:
+					vectors.push_back(scene->camera.getDirection());
+					break;
+				case WorldVectors::OriginView:
+					vectors.push_back(scene->GetOriginInViewSpace());
+					break;
+			}
+		}
+
+		effect.addWorldInformation(maps, matrices, vectors);
 	}
 
 }

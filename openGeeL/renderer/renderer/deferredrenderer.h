@@ -13,6 +13,7 @@ class Camera;
 class Shader;
 class SSAO;
 class PostProcessingEffect;
+class WorldPostProcessingEffect;
 
 class DeferredRenderer : public Renderer {
 
@@ -30,6 +31,7 @@ public:
 	//Add new post processing effect to renderer. 
 	//Note: Effects will be drawn in reverse adding order
 	void addEffect(PostProcessingEffect& effect);
+	void addEffect(WorldPostProcessingEffect& effect);
 
 private:
 	bool geometryPass = true;
@@ -42,6 +44,9 @@ private:
 
 	SSAO* ssao = nullptr;
 	FrameBuffer* ssaoBuffer = nullptr;
+
+	//Link all world information to given post effect
+	void linkWorldInformation(WorldPostProcessingEffect& effect);
 };
 
 }

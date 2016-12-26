@@ -6,9 +6,6 @@
 #include <mat4x4.hpp>
 #include "../sceneobject.h"
 
-using namespace std;
-using glm::vec3;
-using glm::mat4;
 
 namespace geeL {
 
@@ -34,20 +31,23 @@ public:
 	void bindPosition(const Shader& shader, std::string name = "cameraPosition") const;
 	void uniformBind(int uniformID) const;
 
-	const mat4& getViewMatrix() const;
-	const mat4& getProjectionMatrix() const;
+	const glm::mat4& getViewMatrix() const;
+	const glm::mat4& getProjectionMatrix() const;
+
+	glm::vec3 getPosition() const;
+	glm::vec3 getDirection() const;
 
 protected:
 	float speed;
 	float sensitivity;
-	mat4 viewMatrix;
-	mat4 projectionMatrix;
+	glm::mat4 viewMatrix;
+	glm::mat4 projectionMatrix;
 
 	virtual void computeKeyboardInput(const InputManager& input);
 	virtual void computeMouseInput(const InputManager& input);
 
-	mat4 computeViewMatrix() const;
-	virtual mat4 computeProjectionMatrix() const = 0;
+	glm::mat4 computeViewMatrix() const;
+	virtual glm::mat4 computeProjectionMatrix() const = 0;
 
 };
 

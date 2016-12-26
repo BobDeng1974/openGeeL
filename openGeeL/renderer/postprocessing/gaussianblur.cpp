@@ -5,6 +5,8 @@
 #include "gaussianblur.h"
 #include <iostream>
 
+using namespace std;
+
 namespace geeL {
 
 	GaussianBlur::GaussianBlur(unsigned int strength)

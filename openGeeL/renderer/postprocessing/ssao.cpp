@@ -16,7 +16,7 @@ using namespace std;
 namespace geeL {
 
 	SSAO::SSAO(const Camera& camera, SimpleBlur& blur, float radius)
-		: PostProcessingEffect("renderer/postprocessing/ssao.frag"), 
+		: WorldPostProcessingEffect("renderer/postprocessing/ssao.frag"),
 		camera(camera), blur(blur), radius(radius) {
 	
 		uniform_real_distribution<GLfloat> random(0.f, 1.f);
@@ -92,5 +92,30 @@ namespace geeL {
 		shader.setMat4("projection", camera.getProjectionMatrix());
 
 		tempBuffer.fill(*this);
+	}
+
+	WorldMaps SSAO::requiredWorldMaps() const {
+		return (WorldMaps::PositionDepth | WorldMaps::NormalMetallic);
+	}
+
+	WorldMatrices SSAO::requiredWorldMatrices() const {
+		return WorldMatrices::None;
+	}
+
+	WorldVectors SSAO::requiredWorldVectors() const {
+		return WorldVectors::None;
+	}
+
+	list<WorldMaps> SSAO::requiredWorldMapsList() const {
+		return { WorldMaps::PositionDepth, WorldMaps::NormalMetallic };
+	}
+
+	void SSAO::addWorldInformation(std::list<unsigned int> maps,
+		std::list<glm::mat4> matrices, std::list<glm::vec3> vectors) {
+
+		if (maps.size() != 2)
+			throw "Wrong number of texture maps attached to SSAO";
+
+		setBuffer(maps);
 	}
 }

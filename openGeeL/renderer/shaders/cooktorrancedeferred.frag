@@ -115,6 +115,7 @@ void main() {
 	vec3 ambience = ambient * albedo * occlusion;
 
 	color = vec4(irradiance + ambience, 1.f);
+	//color = vec4(vec3(occlusion), 1.f);
 }
 
 //Lighting.....................................................................................................................................
@@ -181,7 +182,7 @@ vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection,
 	vec3  brdf  = nom / denom;
 
 	//Lighting equation
-	float NdotL = doto(normal, lightDirection);                
+	float NdotL = doto(normal, lightDirection);      
 
 	return (((kd * albedo / PI + brdf) * radiance) + reflection) * NdotL; 
 }

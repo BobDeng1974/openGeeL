@@ -4,6 +4,8 @@
 #include "../inputmanager.h"
 #include "../transformation/transform.h"
 
+using namespace glm;
+
 namespace geeL {
 
 	PerspectiveCamera::PerspectiveCamera(Transform& transform, 
@@ -16,7 +18,7 @@ namespace geeL {
 	}
 
 	mat4 PerspectiveCamera::computeProjectionMatrix() const {
-		return glm::perspective(currentFOV, width / height, nearClip, farClip);
+		return perspective(currentFOV, width / height, nearClip, farClip);
 	}
 
 	void PerspectiveCamera::handleInput(const InputManager& input) {

@@ -6,8 +6,6 @@
 #include "../renderer.h"
 #include "../shader/shader.h"
 
-using namespace std;
-
 typedef unsigned int GLuint;
 
 namespace geeL {
@@ -18,8 +16,8 @@ class ScreenQuad;
 class PostProcessingEffect : public Drawer {
 
 public:
-	PostProcessingEffect(string fragmentPath);
-	PostProcessingEffect(string vertexPath, string fragmentPath);
+	PostProcessingEffect(std::string fragmentPath);
+	PostProcessingEffect(std::string vertexPath, std::string fragmentPath);
 
 	//Set (first) buffer that will be used as base for post processing
 	void setBuffer(unsigned int buffer);

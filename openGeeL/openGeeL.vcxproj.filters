@@ -189,6 +189,9 @@
     <ClCompile Include="renderer\postprocessing\simpleblur.cpp">
       <Filter>renderer\postprocessing</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\postprocessing\worldpostprocessing.cpp">
+      <Filter>renderer\postprocessing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -339,6 +342,9 @@
       <Filter>renderer\postprocessing</Filter>
     </ClInclude>
     <ClInclude Include="renderer\postprocessing\simpleblur.h">
+      <Filter>renderer\postprocessing</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\postprocessing\worldpostprocessing.h">
       <Filter>renderer\postprocessing</Filter>
     </ClInclude>
   </ItemGroup>

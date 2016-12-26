@@ -118,6 +118,18 @@ namespace {
 					defmat->setRoughness(0.35f);
 			}
 
+			geeL::Transform* transi7 = new geeL::Transform(glm::vec3(8.f, 0.f, 4.f), glm::vec3(0.f), glm::vec3(1.f, 1.f, 1.f));
+			MeshRenderer& sphere1 = scene.AddMeshRenderer("resources/primitives/sphere.obj", *transi7, cullFront);
+
+			for (auto it = sphere1.defaultMaterialsBegin(); it != sphere1.defaultMaterialsEnd(); it++) {
+				Material* mat = it->second;
+				DefaultMaterial* defmat = dynamic_cast<DefaultMaterial*>(mat);
+
+				if (defmat != nullptr) {
+					defmat->setRoughness(0.f);
+					defmat->setMetallic(0.1f);
+				}
+			}
 
 			geeL::Transform* transi3 = new geeL::Transform(glm::vec3(0.0f, 1, -2.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(5.2f, 2.2f, 1.2f));
 			scene.AddMeshRenderer("resources/primitives/cube.obj", *transi3, cullFront);
@@ -127,8 +139,8 @@ namespace {
 			std::vector<Material*> materials;
 			materials.push_back(custom);
 
-			geeL::Transform* transi7 = new geeL::Transform(glm::vec3(4.f, -0.4f, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", *transi7, cullFront);
+			geeL::Transform* transi79 = new geeL::Transform(glm::vec3(4.f, -0.4f, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
+			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", *transi79, cullFront);
 		}
 
 		virtual void draw(const Camera& camera) {

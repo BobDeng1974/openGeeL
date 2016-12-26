@@ -4,6 +4,8 @@
 #include "../utility/screenquad.h"
 #include "postprocessing.h"
 
+using namespace std;
+
 namespace geeL {
 
 	PostProcessingEffect::PostProcessingEffect(string fragmentPath)
@@ -24,7 +26,7 @@ namespace geeL {
 	void PostProcessingEffect::setBuffer(std::list<unsigned int> buffers) {
 		this->buffers.clear();
 		int counter = 0;
-		for (std::list<unsigned int>::iterator it = buffers.begin(); it != buffers.end(); it++) {
+		for (auto it = buffers.begin(); it != buffers.end(); it++) {
 			this->buffers.push_back(*it);
 
 			counter++;
