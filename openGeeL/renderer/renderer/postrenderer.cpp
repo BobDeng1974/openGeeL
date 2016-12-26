@@ -69,12 +69,12 @@ namespace geeL {
 			glDisable(GL_DEPTH_TEST);
 
 			if (effect != nullptr) {
-				effect->setBuffer(frameBuffer.color);
+				effect->setBuffer(frameBuffer.getColorID());
 				effect->draw();
 			}
 			//Default rendering
 			else {
-				defaultEffect.setBuffer(frameBuffer.color);
+				defaultEffect.setBuffer(frameBuffer.getColorID());
 				defaultEffect.draw();
 			}
 			

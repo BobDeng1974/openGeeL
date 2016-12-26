@@ -52,10 +52,10 @@ namespace geeL {
 	void SSAO::setScreen(ScreenQuad& screen) {
 		PostProcessingEffect::setScreen(screen);
 
-		tempBuffer.init(screen.width, screen.height, false, Single, GL_NEAREST);
+		tempBuffer.init(screen.width, screen.height, 1, false, Single, GL_NEAREST);
 
 		blur.setScreen(screen);
-		blur.setBuffer(tempBuffer.color);
+		blur.setBuffer(tempBuffer.getColorID());
 		blur.setParentFBO(parentFBO);
 
 		buffers.push_back(noiseTexture.GetID());
@@ -110,8 +110,8 @@ namespace geeL {
 		return { WorldMaps::PositionDepth, WorldMaps::NormalMetallic };
 	}
 
-	void SSAO::addWorldInformation(std::list<unsigned int> maps,
-		std::list<glm::mat4> matrices, std::list<glm::vec3> vectors) {
+	void SSAO::addWorldInformation(list<unsigned int> maps,
+		list<glm::mat4> matrices, list<glm::vec3> vectors) {
 
 		if (maps.size() != 2)
 			throw "Wrong number of texture maps attached to SSAO";

@@ -192,6 +192,9 @@
     <ClCompile Include="renderer\postprocessing\worldpostprocessing.cpp">
       <Filter>renderer\postprocessing</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\postprocessing\ssrr.cpp">
+      <Filter>renderer\postprocessing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -347,6 +350,9 @@
     <ClInclude Include="renderer\postprocessing\worldpostprocessing.h">
       <Filter>renderer\postprocessing</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\postprocessing\ssrr.h">
+      <Filter>renderer\postprocessing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\simple.vert">
@@ -456,6 +462,9 @@
     </None>
     <None Include="renderer\shaders\cooktorrancedeferred.frag">
       <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\postprocessing\ssrr.frag">
+      <Filter>renderer\postprocessing</Filter>
     </None>
   </ItemGroup>
 </Project>

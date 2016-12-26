@@ -48,7 +48,7 @@ namespace geeL {
 			}
 			else {
 				//Then use the previously blurred image
-				currBuffer = frameBuffers[!horizontal].color;
+				currBuffer = frameBuffers[!horizontal].getColorID();
 			}
 
 			//Render Call

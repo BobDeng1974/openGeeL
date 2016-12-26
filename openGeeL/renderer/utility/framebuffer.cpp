@@ -11,7 +11,7 @@ namespace geeL {
 	FrameBuffer::FrameBuffer() {}
 
 
-	void FrameBuffer::init(int width, int height, bool useDepth, 
+	void FrameBuffer::init(int width, int height, int colorBufferAmount, bool useDepth,
 		ColorBufferType colorBufferType, unsigned int filterMode) {
 		
 		this->width = width;
@@ -20,9 +20,13 @@ namespace geeL {
 		glGenFramebuffers(1, &fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-		// Create a color attachment texture
-		color = generateTexture(colorBufferType, filterMode);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+		// Create color attachment textures
+		for (int i = 0; i < colorBufferAmount; i++) {
+			unsigned int color = generateTexture(colorBufferType, filterMode);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, color, 0);
+
+			colorBuffers.push_back(color);
+		}
 
 		if (useDepth) {
 			// Create a renderbuffer object for depth and stencil attachment
@@ -99,5 +103,12 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		return textureID;
+	}
+
+	unsigned int FrameBuffer::getColorID(unsigned int position) const {
+		if (position >= colorBuffers.size())
+			throw "Committed postion out of bounds";
+
+		return colorBuffers[position];
 	}
 }

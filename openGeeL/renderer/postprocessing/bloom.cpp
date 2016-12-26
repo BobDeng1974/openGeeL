@@ -42,7 +42,7 @@ namespace geeL {
 		blur.setParentFBO(blurBuffer.fbo);
 
 		//Assign buffer that the blurred and cutout bloom image will be rendered to
-		buffers.push_back(blurBuffer.color);
+		buffers.push_back(blurBuffer.getColorID());
 	}
 
 	void Bloom::bindValues() {
@@ -52,7 +52,7 @@ namespace geeL {
 		filter->setBuffer(buffers.front());
 		filterBuffer.fill(*filter);
 
-		blur.setBuffer(filterBuffer.color);
+		blur.setBuffer(filterBuffer.getColorID());
 		blurBuffer.fill(blur);
 
 		FrameBuffer::bind(parentFBO);

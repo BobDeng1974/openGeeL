@@ -12,6 +12,7 @@ namespace geeL {
 class Camera;
 class SimpleBlur;
 
+//Screen Space Ambient Occlusion Post Effect
 class SSAO : public WorldPostProcessingEffect {
 
 public:

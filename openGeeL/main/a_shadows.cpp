@@ -33,6 +33,7 @@
 #include "../renderer/postprocessing/bloom.h"
 #include "../renderer/postprocessing/godray.h"
 #include "../renderer/postprocessing/ssao.h"
+#include "../renderer/postprocessing/ssrr.h"
 #include "../renderer/postprocessing/simpleblur.h"
 
 #include "../renderer/cubemapping/cubemap.h"
@@ -172,7 +173,7 @@ void a_shadows() {
 
 	SimpleBlur blur = SimpleBlur(1);
 	SSAO ssao = SSAO(camera3, blur, 5.f);
-	DeferredRenderer& renderer1 = DeferredRenderer(window, manager, &ssao);
+	DeferredRenderer& renderer1 = DeferredRenderer(window, manager);
 	renderer1.init();
 
 	MaterialFactory materialFactory = MaterialFactory();
@@ -200,14 +201,16 @@ void a_shadows() {
 	renderer1.initObjects();
 	
 	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50));
+	SSRR& ssrr = SSRR(camera3);
 	
 	//GaussianBlur blur2 = GaussianBlur(1);
 	//Bloom bloom = Bloom(blur2);
-	//ColorCorrection cCorrect = ColorCorrection(1, 1, 1, 1, 0);
+	ColorCorrection cCorrect = ColorCorrection(1, 1, 1, 1, 0);
 	//ToneMapping tone = ToneMapping(1.1);
 
 	//renderer1.addEffect(cCorrect);
-	renderer1.addEffect(ray);
+	renderer1.addEffect(ssrr);
+	//renderer1.addEffect(ray);
 	renderer1.render();
 
 	delete testObj;

@@ -52,7 +52,7 @@ namespace geeL {
 	}
 
 	DeferredRenderer::~DeferredRenderer() {
-		delete effects.back();
+		delete effects.back(); //Default post effect
 		delete deferredShader;
 
 		if (ssaoBuffer != nullptr)
@@ -74,7 +74,7 @@ namespace geeL {
 
 		if (ssao != nullptr) {
 			ssaoBuffer = new FrameBuffer();
-			ssaoBuffer->init(window->width, window->height, false, Single, GL_NEAREST);
+			ssaoBuffer->init(window->width, window->height, 1, false, Single, GL_NEAREST);
 		}
 
 		deferredShader->use();
@@ -84,7 +84,7 @@ namespace geeL {
 		deferredShader->addMap(gBuffer.diffuseSpec, "gDiffuseSpec");
 		
 		if (ssao != nullptr) {
-			deferredShader->addMap(ssaoBuffer->color, "ssao");
+			deferredShader->addMap(ssaoBuffer->getColorID(), "ssao");
 			deferredShader->setInteger("useSSAO", 1);
 		}
 
@@ -99,10 +99,10 @@ namespace geeL {
 
 		//Set color buffer of default effect depending on the amount of added effects
 		if (effects.size() % 2 == 0)
-			effects.back()->setBuffer(frameBuffer2.color);
+			effects.back()->setBuffer(frameBuffer2.getColorID());
 		else
-			effects.back()->setBuffer(frameBuffer1.color);
-		
+			effects.back()->setBuffer(frameBuffer1.getColorID());
+
 		//Init SSAO (if added)
 		if (ssao != nullptr) {
 			linkWorldInformation(*ssao);
@@ -213,9 +213,9 @@ namespace geeL {
 		//Init all post processing effects with two alternating framebuffers
 		//Current effect will then always read from one and write to the other
 		if (effects.size() % 2 == 0)
-			effect.setBuffer(frameBuffer1.color);
+			effect.setBuffer(frameBuffer1.getColorID());
 		else
-			effect.setBuffer(frameBuffer2.color);
+			effect.setBuffer(frameBuffer2.getColorID());
 	}
 
 	void DeferredRenderer::addEffect(WorldPostProcessingEffect& effect) {
@@ -235,9 +235,11 @@ namespace geeL {
 			switch (*it) {
 				case WorldMaps::RenderedImage:
 					if (effects.size() % 2 == 0)
-						effect.setBuffer(frameBuffer1.color);
+						maps.push_back(frameBuffer1.getColorID());
 					else
-						effect.setBuffer(frameBuffer2.color);
+						maps.push_back(frameBuffer2.getColorID());
+
+					
 					break;
 				case WorldMaps::DiffuseSpecular:
 					maps.push_back(gBuffer.diffuseSpec);
