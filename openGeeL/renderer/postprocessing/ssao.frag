@@ -38,7 +38,7 @@ void main() {
 		samp = fragPos + samp * radius;
 
 		vec4 offset = vec4(samp, 1.f);
-		//Transform to screen space
+		//Transform to clip space
 		offset = projection * offset;
 		offset.xyz = offset.xyz / offset.w;
 		offset.xyz = offset.xyz * 0.5 + 0.5;

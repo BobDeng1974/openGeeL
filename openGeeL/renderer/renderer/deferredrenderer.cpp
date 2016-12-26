@@ -238,8 +238,6 @@ namespace geeL {
 						maps.push_back(frameBuffer1.getColorID());
 					else
 						maps.push_back(frameBuffer2.getColorID());
-
-					
 					break;
 				case WorldMaps::DiffuseSpecular:
 					maps.push_back(gBuffer.diffuseSpec);

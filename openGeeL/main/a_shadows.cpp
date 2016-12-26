@@ -173,7 +173,7 @@ void a_shadows() {
 
 	SimpleBlur blur = SimpleBlur(1);
 	SSAO ssao = SSAO(camera3, blur, 5.f);
-	DeferredRenderer& renderer1 = DeferredRenderer(window, manager);
+	DeferredRenderer& renderer1 = DeferredRenderer(window, manager, &ssao);
 	renderer1.init();
 
 	MaterialFactory materialFactory = MaterialFactory();
