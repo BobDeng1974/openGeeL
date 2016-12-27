@@ -25,8 +25,11 @@ public:
 
 	FrameBuffer();
 
-	void init(int width, int height, int colorBufferAmount = 1, bool useDepth = true, 
-		ColorBufferType colorBufferType = RGBA16, unsigned int filterMode = GL_LINEAR);
+	void init(int width, int height, int colorBufferAmount = 1, 
+		ColorBufferType colorBufferType = RGBA16, unsigned int filterMode = GL_LINEAR, bool useDepth = true);
+
+	void init(int width, int height, int colorBufferAmount, std::vector<ColorBufferType> bufferTypes, 
+		unsigned int filterMode = GL_LINEAR, bool useDepth = true);
 	
 	void fill(Drawer& drawer) const;
 	void copyDepth(unsigned int targetFBO) const;

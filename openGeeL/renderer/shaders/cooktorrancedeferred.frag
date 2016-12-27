@@ -39,7 +39,8 @@ struct DirectionalLight {
 in vec2 textureCoordinates;
 in mat3 TBN;
 
-out vec4 color;
+layout (location = 0) out vec4 color;
+layout (location = 1) out float gSpecular;
   
 uniform int plCount;
 uniform int dlCount;
@@ -80,7 +81,7 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition);
 //Return dot(a,b) >= 0
 float doto(vec3 a, vec3 b);
 float random(vec3 seed, int i);
-
+float luminance(vec3 color);
 
 void main() {
 	vec3 fragPosition = texture(gPositionDepth, textureCoordinates).rgb;
@@ -102,6 +103,7 @@ void main() {
 	vec4 reflectionDir = inverseView * vec4(origin + reflect(fragPosition, normal), 1.f);
 	vec3 reflection = texture(skybox, reflectionDir.rgb).rgb * ks * (1.0f - roughness);
 
+	gSpecular = 0.f;
 	vec3 irradiance = vec3(0.f, 0.f, 0.f);
 	for(int i = 0; i < plCount; i++)
         irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness, reflection);
@@ -182,7 +184,9 @@ vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection,
 	vec3  brdf  = nom / denom;
 
 	//Lighting equation
-	float NdotL = doto(normal, lightDirection);      
+	float NdotL = doto(normal, lightDirection);     
+	
+	gSpecular +=  luminance(ks) * (1.0f - roughness) * NdotL * luminance(radiance);
 
 	return (((kd * albedo / PI + brdf) * radiance) + reflection) * NdotL; 
 }
@@ -347,6 +351,10 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 
 
 //Helper functions......................................................................................................................
+
+float luminance(vec3 color) {
+	return (0.2126f * color.r + 0.7152f * color.g + 0.0722f * color.b);
+}
 
 float doto(vec3 a, vec3 b) {
 	return max(dot(a, b), 0.0f);

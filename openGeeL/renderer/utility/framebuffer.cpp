@@ -1,8 +1,11 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <array>
+#include <list>
 #include <iostream>
 #include "../renderer.h"
 #include "framebuffer.h"
+
 
 using namespace std;
 
@@ -11,9 +14,20 @@ namespace geeL {
 	FrameBuffer::FrameBuffer() {}
 
 
-	void FrameBuffer::init(int width, int height, int colorBufferAmount, bool useDepth,
-		ColorBufferType colorBufferType, unsigned int filterMode) {
+	void FrameBuffer::init(int width, int height, int colorBufferAmount,
+		ColorBufferType colorBufferType, unsigned int filterMode, bool useDepth) {
 		
+		int amount = min(3, colorBufferAmount);
+		vector<ColorBufferType> bufferTypes = vector<ColorBufferType>(amount, colorBufferType);
+		init(width, height, amount, bufferTypes, filterMode, useDepth);
+	}
+
+	void FrameBuffer::init(int width, int height, int colorBufferAmount, vector<ColorBufferType> bufferTypes,
+		unsigned int filterMode, bool useDepth) {
+
+		if (colorBufferAmount != bufferTypes.size())
+			throw "Committed amount of buffer types doesn't match amount of committed color buffers";
+
 		this->width = width;
 		this->height = height;
 
@@ -21,11 +35,29 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 		// Create color attachment textures
-		for (int i = 0; i < colorBufferAmount; i++) {
-			unsigned int color = generateTexture(colorBufferType, filterMode);
+		int amount = min(3, colorBufferAmount);
+		for (int i = 0; i < amount; i++) {
+			unsigned int color = generateTexture(bufferTypes[i], filterMode);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, color, 0);
-
 			colorBuffers.push_back(color);
+		}
+
+		switch (amount) {
+			case 1: {
+				GLuint attachments[1] = { GL_COLOR_ATTACHMENT0 };
+				glDrawBuffers(amount, attachments);
+			}
+					break;
+			case 2: {
+				GLuint attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+				glDrawBuffers(amount, attachments);
+			}
+					break;
+			case 3: {
+				GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+				glDrawBuffers(amount, attachments);
+			}
+			break;
 		}
 
 		if (useDepth) {

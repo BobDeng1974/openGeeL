@@ -12,9 +12,10 @@ namespace geeL {
 enum class WorldMaps {
 	None = 0,
 	RenderedImage = 1,
-	DiffuseSpecular = 2,
+	DiffuseRoughness = 2,
 	PositionDepth = 4,
-	NormalMetallic = 8
+	NormalMetallic = 8,
+	Specular = 16
 };
 
 enum class WorldMatrices {

@@ -18,7 +18,7 @@ namespace geeL {
 		list<WorldMaps> mapList = list<WorldMaps>();
 
 		if ((maps & WorldMaps::RenderedImage) == WorldMaps::RenderedImage) mapList.push_back(WorldMaps::RenderedImage);
-		if ((maps & WorldMaps::DiffuseSpecular) == WorldMaps::DiffuseSpecular) mapList.push_back(WorldMaps::DiffuseSpecular);
+		if ((maps & WorldMaps::DiffuseRoughness) == WorldMaps::DiffuseRoughness) mapList.push_back(WorldMaps::DiffuseRoughness);
 		if ((maps & WorldMaps::PositionDepth) == WorldMaps::PositionDepth) mapList.push_back(WorldMaps::PositionDepth);
 		if ((maps & WorldMaps::NormalMetallic) == WorldMaps::NormalMetallic) mapList.push_back(WorldMaps::NormalMetallic);
 		if (mapList.size() == 0) mapList.push_back(WorldMaps::None);

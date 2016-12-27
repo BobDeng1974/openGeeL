@@ -52,7 +52,7 @@ namespace geeL {
 	void SSAO::setScreen(ScreenQuad& screen) {
 		PostProcessingEffect::setScreen(screen);
 
-		tempBuffer.init(screen.width, screen.height, 1, false, Single, GL_NEAREST);
+		tempBuffer.init(screen.width, screen.height, 1, Single, GL_NEAREST, false);
 
 		blur.setScreen(screen);
 		blur.setBuffer(tempBuffer.getColorID());

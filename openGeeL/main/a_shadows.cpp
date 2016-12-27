@@ -116,7 +116,7 @@ namespace {
 				DefaultMaterial* defmat = dynamic_cast<DefaultMaterial*>(mat);
 
 				if (defmat != nullptr)
-					defmat->setRoughness(0.35f);
+					defmat->setRoughness(0.2f);
 			}
 
 			geeL::Transform* transi7 = new geeL::Transform(glm::vec3(8.f, 0.f, 4.f), glm::vec3(0.f), glm::vec3(1.f, 1.f, 1.f));

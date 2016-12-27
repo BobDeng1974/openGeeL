@@ -74,7 +74,7 @@ namespace geeL {
 
 		if (ssao != nullptr) {
 			ssaoBuffer = new FrameBuffer();
-			ssaoBuffer->init(window->width, window->height, 1, false, Single, GL_NEAREST);
+			ssaoBuffer->init(window->width, window->height, 1, Single, GL_NEAREST, false);
 		}
 
 		deferredShader->use();
@@ -88,8 +88,8 @@ namespace geeL {
 			deferredShader->setInteger("useSSAO", 1);
 		}
 
-		frameBuffer1.init(window->width, window->height);
-		frameBuffer2.init(window->width, window->height);
+		frameBuffer1.init(window->width, window->height, 2, { RGBA16, Single });
+		frameBuffer2.init(window->width, window->height, 2, { RGBA16, Single });
 		screen.init();
 	}
 
@@ -239,7 +239,7 @@ namespace geeL {
 					else
 						maps.push_back(frameBuffer2.getColorID());
 					break;
-				case WorldMaps::DiffuseSpecular:
+				case WorldMaps::DiffuseRoughness:
 					maps.push_back(gBuffer.diffuseSpec);
 					break;
 				case WorldMaps::PositionDepth:
@@ -247,6 +247,12 @@ namespace geeL {
 					break;
 				case WorldMaps::NormalMetallic:
 					maps.push_back(gBuffer.normalMet);
+					break;
+				case WorldMaps::Specular:
+					if (effects.size() % 2 == 0)
+						maps.push_back(frameBuffer1.getColorID(1));
+					else
+						maps.push_back(frameBuffer2.getColorID(1));
 					break;
 			}
 		}
