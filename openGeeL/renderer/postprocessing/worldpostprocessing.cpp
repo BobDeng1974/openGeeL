@@ -11,7 +11,6 @@ namespace geeL {
 		: PostProcessingEffect(vertexPath, fragmentPath) {}
 
 
-
 	list<WorldMaps> WorldPostProcessingEffect::requiredWorldMapsList() const {
 		WorldMaps maps = requiredWorldMaps();
 

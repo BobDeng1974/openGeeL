@@ -10,7 +10,6 @@
 #include "../shader/shader.h"
 #include "../postprocessing/drawdefault.h"
 #include "../texturing/simpletexture.h"
-#include "deferredrenderer.h"
 #include "../window.h"
 #include "../scripting/scenecontrolobject.h"
 #include "../inputmanager.h"
@@ -22,6 +21,7 @@
 #include "../shader/shadermanager.h"
 #include "../transformation/transform.h"
 #include "../scene.h"
+#include "deferredrenderer.h"
 
 #define fps 10
 
@@ -150,7 +150,6 @@ namespace geeL {
 			}
 			//Draw the last (default) effect to screen.
 			effects.back()->draw();
-
 			
 			window->swapBuffer();
 			Time::update();

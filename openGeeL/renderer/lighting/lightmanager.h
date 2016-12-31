@@ -29,7 +29,7 @@ public:
 	std::string dlCountName = "dlCount";
 	std::string slCountName = "slCount";
 
-	LightManager(glm::vec3 ambient = glm::vec3(0.15f));
+	LightManager(glm::vec3 ambient = glm::vec3(0.25f));
 
 	//Manager is responsible for removing the lights
 	~LightManager();

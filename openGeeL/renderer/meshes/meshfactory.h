@@ -5,7 +5,12 @@
 #include <string>
 #include <list>
 
-using namespace std;
+
+enum   aiTextureType;
+struct aiNode;
+struct aiMesh;
+struct aiMaterial;
+struct aiScene;
 
 namespace geeL {
 
@@ -22,20 +27,27 @@ public:
 
 	//Creates, initializes and returns a new model from given file path or 
 	//returns an existing model if it already uses this file
-	Model& CreateModel(string filePath);
+	Model& CreateModel(std::string filePath);
 
 	MeshRenderer& CreateMeshRenderer(Model& model, Transform& transform, CullingMode faceCulling);
 
-	map<string, Model>::iterator modelsBegin();
-	map<string, Model>::iterator modelsEnd();
+	std::map<std::string, Model>::iterator modelsBegin();
+	std::map<std::string, Model>::iterator modelsEnd();
 
-	list<MeshRenderer>::iterator rendererBegin();
-	list<MeshRenderer>::iterator rendererEnd();
+	std::list<MeshRenderer>::iterator rendererBegin();
+	std::list<MeshRenderer>::iterator rendererEnd();
 
 private:
 	MaterialFactory& factory;
-	map<string, Model> models;
-	list<MeshRenderer> meshRenderer;
+	std::map<std::string, Model> models;
+	std::list<MeshRenderer> meshRenderer;
+
+	void fillModel(Model& model, std::string path);
+	void processNode(Model& model, std::string directory, aiNode* node, const aiScene* scene);
+	Mesh processMesh(std::string directory, aiMesh* mesh, const aiScene* scene);
+
+	std::vector<SimpleTexture*> loadMaterialTextures(aiMaterial* mat,
+		aiTextureType aiType, TextureType type, std::string directory, bool linear);
 
 };
 
