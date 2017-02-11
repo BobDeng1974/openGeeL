@@ -5,3 +5,10 @@ x64/
 resources/
 *.sdf
 *.opendb
+openGeeL/GPATH4
+openGeeL/GRTAGS
+openGeeL/GTAGS
+openGeeL/resources
+openGeeL/openGeeL.vcxproj
+openGeeL/openGeeL.vcxproj.filters
+openGeeL/openGeeL.vcxproj.user

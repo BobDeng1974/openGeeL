@@ -17,22 +17,28 @@ void main() {
 
     if(horizontal) {
         for(int i = 1; i < 5; i++) {
+			float offset = tex_offset.x * i;
 
-			//Sample right pixel
-            result += texture(image, TexCoords + vec2(tex_offset.x * i, 0.0)).rgb * kernel[i];
+			if(offset >= 0.f) {
+				//Sample right pixel
+				result += texture(image, TexCoords + vec2(offset, 0.0)).rgb * kernel[i];
             
-			//Sample left pixel
-			result += texture(image, TexCoords - vec2(tex_offset.x * i, 0.0)).rgb * kernel[i];
+				//Sample left pixel
+				result += texture(image, TexCoords - vec2(offset, 0.0)).rgb * kernel[i];
+			}
         }
     }
     else {
         for(int i = 1; i < 5; i++) {
+			float offset = tex_offset.y * i;
 			
-			//Sample up pixel
-            result += texture(image, TexCoords + vec2(0.0, tex_offset.y * i)).rgb * kernel[i];
+			if(offset <= 1.f) {
+				//Sample up pixel
+				result += texture(image, TexCoords + vec2(0.0, offset)).rgb * kernel[i];
 
-			//Sample down pixel
-            result += texture(image, TexCoords - vec2(0.0, tex_offset.y * i)).rgb * kernel[i];
+				//Sample down pixel
+				result += texture(image, TexCoords - vec2(0.0, offset)).rgb * kernel[i];
+			}
         }
     }
 

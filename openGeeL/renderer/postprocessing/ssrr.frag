@@ -16,7 +16,7 @@ float border = 1.f;
 float absDistance(float a, float b);
 vec3 interpolate(vec3 a, vec3 b, float i);
 vec4 transformToClip(vec3 vector);
-vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal);
+vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal, float distanceMultiplier);
 
 void main() {
 	vec3 result   = texture(image, TexCoords).rgb; 
@@ -25,18 +25,20 @@ void main() {
 	vec3 normal   = normalize(texture(gNormalMet, TexCoords).rgb);
 	vec3 reflectionDir = normalize(reflect(fragPos, normal));
 
+	float distanceMultiplier = pow(length(fragPos), 0.5f);
+
 	float dotNF = dot(normal, normalize(-fragPos));
-	vec3 reflectionColor = specular * getReflection(fragPos, reflectionDir, normal);// * (1 - dotNF);
+	vec3 reflectionColor = specular * getReflection(fragPos, reflectionDir, normal, distanceMultiplier);
 
 	color = vec4(result + reflectionColor, 1.0f);
 	//color = vec4(vec3(specular), 1.0f);
 }
 
-vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal) {
-	int stepCount = 30;
-	float stepSize = 0.12f;
+vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal, float distanceMultiplier) {
+	int stepCount = 40;
+	float stepSize = 0.15f * distanceMultiplier;
 	float stepGain = 1.05f;
-	float maxDistance = 0.6f;
+	float maxDistance = 0.6f * distanceMultiplier;
 
 	vec3 reflectionColor = vec3(0.f);
 	vec3 currPosition = fragPos;
@@ -74,9 +76,16 @@ vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal) {
 				}
 			}
 
-			//vec3 reflectedNormal = normalize(texture(gNormalMet, currPosProj.xy).rgb);
-			//float dotNR = -dot(normal, reflectedNormal);
-			reflectionColor = texture(image, currPosProj.xy).rgb;
+			vec3 reflectedNormal = normalize(texture(gNormalMet, currPosProj.xy).rgb);
+			float dotNR = dot(normal, reflectedNormal);
+
+			//Discard if surface normal and reflected surface normal are too similar. In this case
+			//the backside of reflected surface should be used, but isn't visible to viewer
+			if(dotNR > 0.33f)
+				reflectionColor = vec3(0.f, 0.f, 0.f);
+			else
+				reflectionColor = texture(image, currPosProj.xy).rgb;
+
 			break;
 		}
 	}

@@ -29,9 +29,7 @@ class Mesh {
 
 public:
 	DefaultMaterial& material;
-	std::vector<Vertex> vertices;
-	std::vector<GLuint> indices;
-
+	
 	Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, DefaultMaterial& material);
 
 	void init();
@@ -40,6 +38,8 @@ public:
 
 private:
 	GLuint vao, vbo, ebo;
+	std::vector<Vertex> vertices;
+	std::vector<GLuint> indices;
 
 	void draw(Material& customMaterial, bool shade) const;
 

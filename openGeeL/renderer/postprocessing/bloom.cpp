@@ -17,9 +17,8 @@ namespace geeL {
 	}
 
 	Bloom::Bloom(GaussianBlur& blur, float scatter) 
-		: 
-		PostProcessingEffect("renderer/postprocessing/bloomcombine.frag"),
-		blur(blur), filter(new BloomFilter(scatter)) {}
+		: PostProcessingEffect("renderer/postprocessing/bloomcombine.frag"),
+			blur(blur), filter(new BloomFilter(scatter)) {}
 
 
 	Bloom::~Bloom() {

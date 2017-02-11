@@ -218,10 +218,11 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::addEffect(WorldPostProcessingEffect& effect) {
-		effect.setScreen(screen);
+		
 		effects.push_front(&effect);
 
 		linkWorldInformation(effect);
+		effect.setScreen(screen);
 	}
 
 	void DeferredRenderer::linkWorldInformation(WorldPostProcessingEffect& effect) {

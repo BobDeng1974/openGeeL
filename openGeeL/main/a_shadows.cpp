@@ -35,6 +35,7 @@
 #include "../renderer/postprocessing/ssao.h"
 #include "../renderer/postprocessing/ssrr.h"
 #include "../renderer/postprocessing/simpleblur.h"
+#include "../renderer/postprocessing/dof.h"
 
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/skybox.h"
@@ -203,13 +204,16 @@ void a_shadows() {
 	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50));
 	SSRR& ssrr = SSRR(camera3);
 	
-	//GaussianBlur blur2 = GaussianBlur(1);
+	GaussianBlur blur2 = GaussianBlur(3);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur2);
+
 	//Bloom bloom = Bloom(blur2);
-	ColorCorrection cCorrect = ColorCorrection(1, 1, 1, 1, 0);
+	//ColorCorrection cCorrect = ColorCorrection(1, 1, 1, 1, 0);
 	//ToneMapping tone = ToneMapping(1.1);
 
 	//renderer1.addEffect(cCorrect);
-	renderer1.addEffect(ssrr);
+	//renderer1.addEffect(ssrr);
+	renderer1.addEffect(dof);
 	//renderer1.addEffect(ray);
 	renderer1.render();
 

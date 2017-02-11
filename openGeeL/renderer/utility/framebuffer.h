@@ -1,6 +1,7 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
+#include <glew.h>
 #include <vector>
 
 namespace geeL {
