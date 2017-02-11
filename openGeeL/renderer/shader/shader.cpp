@@ -16,7 +16,7 @@ namespace geeL {
 		string cam, string skybox, string pointlight, string spotLights, string directionalLights)
 		:
 		useLight(useLight), useCamera(useCamera), useSkybox(useSkybox), cam("camera"), skybox(skybox),
-		point("pointLights"), spot("spotLights"), directional("directionalLights"), mapBindingPos(0) {
+		point("pointLights"), spot("spotLights"), directional("directionalLights"), name(fragmentPath), mapBindingPos(0) {
 
 		//Read code from file path
 		string vertexCode;
@@ -100,7 +100,7 @@ namespace geeL {
 		string cam, string skybox, string pointlight, string spotLights, string directionalLights)
 		: 
 		useLight(useLight), useCamera(useCamera), useSkybox(useSkybox), cam("camera"), skybox(skybox),
-		point("pointLights"), spot("spotLights"), directional("directionalLights"), mapBindingPos(0) {
+		point("pointLights"), spot("spotLights"), directional("directionalLights"), name(fragmentPath), mapBindingPos(0) {
 
 		//Read code from file path
 		string vertexCode;

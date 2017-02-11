@@ -52,7 +52,7 @@ namespace geeL {
 	}
 
 	DeferredRenderer::~DeferredRenderer() {
-		delete effects.back(); //Default post effect
+		delete effects.front(); //Default post effect
 		delete deferredShader;
 
 		if (ssaoBuffer != nullptr)
@@ -99,9 +99,9 @@ namespace geeL {
 
 		//Set color buffer of default effect depending on the amount of added effects
 		if (effects.size() % 2 == 0)
-			effects.back()->setBuffer(frameBuffer2.getColorID());
+			effects.front()->setBuffer(frameBuffer2.getColorID());
 		else
-			effects.back()->setBuffer(frameBuffer1.getColorID());
+			effects.front()->setBuffer(frameBuffer1.getColorID());
 
 		//Init SSAO (if added)
 		if (ssao != nullptr) {
@@ -139,17 +139,19 @@ namespace geeL {
 
 			//Post processing
 			bool chooseBuffer = true;
+			int counter = 0;
 			//Draw all the post processing effects on top of each other. Ping pong style!
-			for (auto effect = effects.begin(); effect != prev(effects.end()); effect++) {
+			for (auto effect = next(effects.begin()); effect != effects.end(); effect++) {
 				if (chooseBuffer)
 					frameBuffer2.fill(**effect);
 				else
 					frameBuffer1.fill(**effect);
 
 				chooseBuffer = !chooseBuffer;
+				counter++;
 			}
 			//Draw the last (default) effect to screen.
-			effects.back()->draw();
+			effects.front()->draw();
 			
 			window->swapBuffer();
 			Time::update();
@@ -207,7 +209,7 @@ namespace geeL {
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {
 		effect.setScreen(screen);
-		effects.push_front(&effect);
+		effects.push_back(&effect);
 
 		//Init all post processing effects with two alternating framebuffers
 		//Current effect will then always read from one and write to the other
@@ -218,8 +220,7 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::addEffect(WorldPostProcessingEffect& effect) {
-		
-		effects.push_front(&effect);
+		effects.push_back(&effect);
 
 		linkWorldInformation(effect);
 		effect.setScreen(screen);

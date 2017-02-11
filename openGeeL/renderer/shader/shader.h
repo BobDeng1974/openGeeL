@@ -30,7 +30,7 @@ public:
 	const bool useLight;
 	const bool useCamera;
 	const bool useSkybox;
-	std::string cam, skybox, point, spot, directional;
+	std::string cam, skybox, point, spot, directional, name;
 
 	Shader() : useLight(false), useCamera(false), useSkybox(false), cam("camera"), skybox("skybox"),
 		point(""), spot(""), directional(""), mapBindingPos(0) {}

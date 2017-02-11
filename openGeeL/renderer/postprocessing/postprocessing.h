@@ -29,6 +29,8 @@ public:
 
 	virtual void draw();
 
+	virtual std::string toString() const;
+
 protected:
 	std::list<unsigned int> buffers;
 	unsigned int maxBuffers = 4;

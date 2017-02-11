@@ -55,4 +55,8 @@ namespace geeL {
 	void PostProcessingEffect::bindValues() {
 		shader.setInteger("image", shader.mapOffset);
 	}
+
+	string PostProcessingEffect::toString() const {
+		return "Post effect with shader: " + shader.name;
+	}
 }

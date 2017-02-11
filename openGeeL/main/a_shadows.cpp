@@ -204,15 +204,10 @@ void a_shadows() {
 	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50));
 	SSRR& ssrr = SSRR(camera3);
 	
-	GaussianBlur blur2 = GaussianBlur(6);
+	GaussianBlur blur2 = GaussianBlur(3);
 	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur2, 5.f, 50.f);
 
-	//Bloom bloom = Bloom(blur2);
-	//ColorCorrection cCorrect = ColorCorrection(1, 1, 1, 1, 0);
-	//ToneMapping tone = ToneMapping(1.1);
-
-	//renderer1.addEffect(cCorrect);
-	//renderer1.addEffect(ssrr);
+	renderer1.addEffect(ssrr);
 	renderer1.addEffect(dof);
 	//renderer1.addEffect(ray);
 	renderer1.render();
