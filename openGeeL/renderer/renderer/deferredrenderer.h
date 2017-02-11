@@ -19,7 +19,7 @@ class DeferredRenderer : public Renderer {
 
 public:
 	DeferredRenderer(RenderWindow* window, InputManager* inputManager);
-	DeferredRenderer(RenderWindow* window, InputManager* inputManager, SSAO* ssao);
+	DeferredRenderer(RenderWindow* window, InputManager* inputManager, SSAO* ssao, float ssaoResolution = 1.f);
 	~DeferredRenderer();
 
 	virtual void init();
@@ -42,7 +42,9 @@ private:
 	FrameBuffer frameBuffer1;
 	FrameBuffer frameBuffer2;
 
+	float ssaoResolution;
 	SSAO* ssao = nullptr;
+	ScreenQuad* ssaoScreen = nullptr;
 	FrameBuffer* ssaoBuffer = nullptr;
 
 	//Link all world information to given post effect

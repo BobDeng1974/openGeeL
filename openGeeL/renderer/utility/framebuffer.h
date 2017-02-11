@@ -32,7 +32,7 @@ public:
 	void init(int width, int height, int colorBufferAmount, std::vector<ColorBufferType> bufferTypes, 
 		unsigned int filterMode = GL_LINEAR, bool useDepth = true);
 	
-	void fill(Drawer& drawer) const;
+	void fill(Drawer& drawer, bool setFBO = true) const;
 	void copyDepth(unsigned int targetFBO) const;
 	unsigned int getColorID(unsigned int position = 0) const;
 
@@ -40,6 +40,7 @@ public:
 
 	static void bind(unsigned int fbo);
 	static void unbind();
+	static void resetSize(int width, int height);
 
 private:
 	std::vector<unsigned int> colorBuffers;

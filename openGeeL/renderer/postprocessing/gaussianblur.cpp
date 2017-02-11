@@ -3,7 +3,6 @@
 #include "../shader/shader.h"
 #include "../utility/screenquad.h"
 #include "gaussianblur.h"
-#include <iostream>
 
 using namespace std;
 

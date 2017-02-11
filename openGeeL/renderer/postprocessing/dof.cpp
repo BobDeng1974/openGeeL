@@ -7,16 +7,26 @@ using namespace std;
 
 namespace geeL {
 
-	DepthOfFieldBlurred::DepthOfFieldBlurred(GaussianBlur& blur, float focalLength, float aperture, float farDistance)
-		: WorldPostProcessingEffect("renderer/postprocessing/dof.frag"), 
-			blur(blur), focalLength(focalLength), aperture(aperture), farDistance(farDistance) {}
+	DepthOfFieldBlurred::DepthOfFieldBlurred(GaussianBlur& blur, 
+		float focalLength, float aperture, float farDistance, float blurResolution)
+			: WorldPostProcessingEffect("renderer/postprocessing/dof.frag"), 
+				blur(blur), focalLength(focalLength), aperture(aperture), 
+				farDistance(farDistance), blurResolution(blurResolution), blurScreen(nullptr) {}
+
+	DepthOfFieldBlurred::~DepthOfFieldBlurred() {
+		if(blurScreen != nullptr)
+			delete blurScreen;
+	}
 
 
 	void DepthOfFieldBlurred::setScreen(ScreenQuad& screen) {
 		PostProcessingEffect::setScreen(screen);
 
-		blurBuffer.init(screen.width, screen.height);
-		blur.setScreen(screen);
+		blurScreen = new ScreenQuad(screen.width * blurResolution, screen.height * blurResolution);
+		blurScreen->init();
+
+		blurBuffer.init(blurScreen->width, blurScreen->height);
+		blur.setScreen(*blurScreen);
 		buffers.push_back(blurBuffer.getColorID());
 	}
 
@@ -32,6 +42,7 @@ namespace geeL {
 		blur.setBuffer(buffers.front());
 		blurBuffer.fill(blur);
 
+		FrameBuffer::resetSize(screen->width, screen->height);
 		FrameBuffer::bind(parentFBO);
 	}
 

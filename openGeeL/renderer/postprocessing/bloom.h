@@ -8,6 +8,7 @@ namespace geeL {
 
 class FrameBuffer;
 class GaussianBlur;
+class ScreenQuad;
 
 class BloomFilter : public PostProcessingEffect {
 
@@ -25,7 +26,7 @@ protected:
 class Bloom : public PostProcessingEffect {
 
 public:
-	Bloom(GaussianBlur& blur, float scatter = 0.6f);
+	Bloom(GaussianBlur& blur, float scatter = 0.6f, float blurResolution = 1.f);
 	~Bloom();
 
 	void setScatter(float scatter);
@@ -35,10 +36,13 @@ protected:
 	virtual void bindValues();
 
 private:
+	float blurResolution;
+
 	BloomFilter* filter;
 	GaussianBlur& blur;
 	FrameBuffer filterBuffer;
 	FrameBuffer blurBuffer;
+	ScreenQuad* blurScreen;
 
 };
 

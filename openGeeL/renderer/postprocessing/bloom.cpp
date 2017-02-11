@@ -16,13 +16,17 @@ namespace geeL {
 		shader.setFloat("scatter", scatter);
 	}
 
-	Bloom::Bloom(GaussianBlur& blur, float scatter) 
-		: PostProcessingEffect("renderer/postprocessing/bloomcombine.frag"),
-			blur(blur), filter(new BloomFilter(scatter)) {}
+	Bloom::Bloom(GaussianBlur& blur, float scatter, float blurResolution)
+		: PostProcessingEffect("renderer/postprocessing/bloomcombine.frag"), 
+			blurResolution(blurResolution), blur(blur), filter(new BloomFilter(scatter)), 
+			blurScreen(nullptr) {}
 
 
 	Bloom::~Bloom() {
 		delete filter;
+
+		if (blurScreen != nullptr)
+			delete blurScreen;
 	}
 
 	void Bloom::setScatter(float scatter) {
@@ -32,12 +36,14 @@ namespace geeL {
 	void Bloom::setScreen(ScreenQuad& screen) {
 		PostProcessingEffect::setScreen(screen);
 
+		blurScreen = new ScreenQuad(screen.width * blurResolution, screen.height * blurResolution);
+		blurScreen->init();
+
 		filterBuffer.init(screen.width, screen.height);
-		blurBuffer.init(screen.width, screen.height);
+		blurBuffer.init(blurScreen->width, blurScreen->height);
 
 		filter->setScreen(screen);
-		blur.setScreen(screen);
-
+		blur.setScreen(*blurScreen);
 		blur.setParentFBO(blurBuffer.fbo);
 
 		//Assign buffer that the blurred and cutout bloom image will be rendered to
@@ -54,8 +60,7 @@ namespace geeL {
 		blur.setBuffer(filterBuffer.getColorID());
 		blurBuffer.fill(blur);
 
+		FrameBuffer::resetSize(screen->width, screen->height);
 		FrameBuffer::bind(parentFBO);
 	}
-
-
 }

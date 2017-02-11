@@ -88,13 +88,19 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void FrameBuffer::fill(Drawer& drawer) const {
+	void FrameBuffer::resetSize(int width, int height) {
+		glViewport(0, 0, width, height);
+	}
+
+	void FrameBuffer::fill(Drawer& drawer, bool setFBO) const {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glViewport(0, 0, width, height);
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		drawer.setParentFBO(fbo);
+		if(setFBO)
+			drawer.setParentFBO(fbo);
+		
 		drawer.draw();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}

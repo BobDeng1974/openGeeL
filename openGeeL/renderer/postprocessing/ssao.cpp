@@ -40,8 +40,7 @@ namespace geeL {
 		//Sample noise
 		for (unsigned int i = 0; i < 16; ++i) {
 			vec3 sample = vec3(random(generator) * 2.f - 1.f,
-				random(generator) * 2.f - 1.f,
-				0.f);
+				random(generator) * 2.f - 1.f, 0.f);
 
 			noise.push_back(sample);
 		}
@@ -91,7 +90,7 @@ namespace geeL {
 
 		shader.setMat4("projection", camera.getProjectionMatrix());
 
-		tempBuffer.fill(*this);
+		tempBuffer.fill(*this, false);
 	}
 
 	WorldMaps SSAO::requiredWorldMaps() const {

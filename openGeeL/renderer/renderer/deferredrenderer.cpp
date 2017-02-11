@@ -32,12 +32,11 @@ namespace geeL {
 	DeferredRenderer::DeferredRenderer(RenderWindow* window, InputManager* inputManager) 
 		: DeferredRenderer(window, inputManager, nullptr) {}
 
-	DeferredRenderer::DeferredRenderer(RenderWindow* window, InputManager* inputManager, SSAO* ssao) 
+	DeferredRenderer::DeferredRenderer(RenderWindow* window, InputManager* inputManager, SSAO* ssao, float ssaoResolution)
 		:
 		Renderer(window, inputManager), ssao(ssao), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()),
-			gBuffer(GBuffer()), screen(ScreenQuad(window->width, window->height)),
+			gBuffer(GBuffer()), screen(ScreenQuad(window->width, window->height)), ssaoResolution(ssaoResolution),
 			deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
-				//"renderer/shaders/deferredlighting.frag")) {
 				"renderer/shaders/cooktorrancedeferred.frag")) {
 
 			glEnable(GL_DEPTH_TEST);
@@ -57,6 +56,9 @@ namespace geeL {
 
 		if (ssaoBuffer != nullptr)
 			delete ssaoBuffer;
+
+		if (ssaoScreen != nullptr)
+			delete ssaoScreen;
 	}
 
 
@@ -74,7 +76,8 @@ namespace geeL {
 
 		if (ssao != nullptr) {
 			ssaoBuffer = new FrameBuffer();
-			ssaoBuffer->init(window->width, window->height, 1, Single, GL_NEAREST, false);
+			ssaoBuffer->init(window->width * ssaoResolution, window->height * ssaoResolution, 
+				1, Single, GL_NEAREST, false);
 		}
 
 		deferredShader->use();
@@ -107,7 +110,11 @@ namespace geeL {
 		if (ssao != nullptr) {
 			linkWorldInformation(*ssao);
 			ssao->setParentFBO(ssaoBuffer->fbo);
-			ssao->setScreen(screen);
+
+			ssaoScreen = new ScreenQuad(screen.width * ssaoResolution, screen.height * ssaoResolution);
+			ssaoScreen->init();
+
+			ssao->setScreen(*ssaoScreen);
 		}
 
 		shaderManager->staticDeferredBind(*scene, *deferredShader);
@@ -128,8 +135,10 @@ namespace geeL {
 			gBuffer.fill(*this);
 
 			//SSAO pass
-			if (ssao != nullptr)
+			if (ssao != nullptr) {
 				ssaoBuffer->fill(*ssao);
+				FrameBuffer::resetSize(screen.width, screen.height);
+			}
 
 			//Lighting & forward pass
 			frameBuffer1.fill(*this);

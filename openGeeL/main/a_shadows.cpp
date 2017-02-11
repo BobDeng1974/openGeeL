@@ -173,8 +173,8 @@ void a_shadows() {
 	PerspectiveCamera camera3 = PerspectiveCamera(transform3, 5.f, 15.f, 65.f, window->width, window->height, 0.1f, 100.f);
 
 	SimpleBlur blur = SimpleBlur(1);
-	SSAO ssao = SSAO(camera3, blur, 5.f);
-	DeferredRenderer& renderer1 = DeferredRenderer(window, manager, &ssao);
+	SSAO ssao = SSAO(camera3, blur, 10.f);
+	DeferredRenderer& renderer1 = DeferredRenderer(window, manager, &ssao, 0.5f);
 	renderer1.init();
 
 	MaterialFactory materialFactory = MaterialFactory();
@@ -205,7 +205,7 @@ void a_shadows() {
 	SSRR& ssrr = SSRR(camera3);
 	
 	GaussianBlur blur2 = GaussianBlur(3);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur2, 5.f, 50.f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur2, 5.f, 50.f, 100.f, 0.6f);
 
 	renderer1.addEffect(ssrr);
 	renderer1.addEffect(dof);

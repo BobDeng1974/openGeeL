@@ -7,6 +7,7 @@
 namespace geeL {
 
 class GaussianBlur;
+class ScreenQuad;
 
 //Depth of field post effect that uses image blurring to achieve effect.
 //Cheap but not realistic since circe of confusion is neglected
@@ -14,7 +15,9 @@ class DepthOfFieldBlurred : public WorldPostProcessingEffect {
 
 public:
 	DepthOfFieldBlurred(GaussianBlur& blur, 
-		float focalLength = 5.f, float aperture = 10.f, float farDistance = 100.f);
+		float focalLength = 5.f, float aperture = 10.f, float farDistance = 100.f, float blurResolution = 1.f);
+
+	~DepthOfFieldBlurred();
 
 	virtual void setScreen(ScreenQuad& screen);
 
@@ -33,9 +36,11 @@ private:
 	float focalLength;
 	float aperture;
 	float farDistance;
+	float blurResolution;
 
 	GaussianBlur& blur;
 	FrameBuffer blurBuffer;
+	ScreenQuad* blurScreen;
 
 };
 

@@ -16,7 +16,7 @@ class SimpleBlur;
 class SSAO : public WorldPostProcessingEffect {
 
 public:
-	SSAO(const Camera& camera, SimpleBlur& blur, float radius = 1.f);
+	SSAO(const Camera& camera, SimpleBlur& blur, float radius = 5.f);
 
 	virtual void setScreen(ScreenQuad& screen);
 	virtual void draw();

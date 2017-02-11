@@ -117,7 +117,6 @@ void main() {
 	vec3 ambience = ambient * albedo * occlusion;
 
 	color = vec4(irradiance + ambience, 1.f);
-	//color = vec4(vec3(occlusion), 1.f);
 }
 
 //Lighting.....................................................................................................................................
