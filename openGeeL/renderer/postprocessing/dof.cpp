@@ -7,9 +7,9 @@ using namespace std;
 
 namespace geeL {
 
-	DepthOfFieldBlurred::DepthOfFieldBlurred(GaussianBlur& blur, float focalLength, float aperture)
+	DepthOfFieldBlurred::DepthOfFieldBlurred(GaussianBlur& blur, float focalLength, float aperture, float farDistance)
 		: WorldPostProcessingEffect("renderer/postprocessing/dof.frag"), 
-			blur(blur), focalLength(focalLength), aperture(aperture) {}
+			blur(blur), focalLength(focalLength), aperture(aperture), farDistance(farDistance) {}
 
 
 	void DepthOfFieldBlurred::setScreen(ScreenQuad& screen) {
@@ -27,6 +27,7 @@ namespace geeL {
 
 		shader.setFloat("focalDistance", focalLength);
 		shader.setFloat("aperture", aperture);
+		shader.setFloat("farDistance", farDistance);
 
 		blur.setBuffer(buffers.front());
 		blurBuffer.fill(blur);

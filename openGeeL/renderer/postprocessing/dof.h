@@ -13,7 +13,8 @@ class GaussianBlur;
 class DepthOfFieldBlurred : public WorldPostProcessingEffect {
 
 public:
-	DepthOfFieldBlurred(GaussianBlur& blur, float focalLength = 5.f, float aperture = 2.f);
+	DepthOfFieldBlurred(GaussianBlur& blur, 
+		float focalLength = 5.f, float aperture = 10.f, float farDistance = 100.f);
 
 	virtual void setScreen(ScreenQuad& screen);
 
@@ -31,6 +32,7 @@ protected:
 private:
 	float focalLength;
 	float aperture;
+	float farDistance;
 
 	GaussianBlur& blur;
 	FrameBuffer blurBuffer;
