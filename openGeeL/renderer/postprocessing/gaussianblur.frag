@@ -1,4 +1,4 @@
-#version 330 core
+#version 430 core
 
 in vec2 TexCoords;
 
@@ -12,7 +12,7 @@ uniform float kernel[5];
 void main() {             
 
 	//Size of single texel
-    vec2 tex_offset = 1.0f / textureSize(image, 0); 
+    vec2 tex_offset = 1.f / textureSize(image, 0); 
     vec3 result = texture(image, TexCoords).rgb * kernel[0]; 
 
     if(horizontal) {
@@ -21,10 +21,10 @@ void main() {
 
 			if(offset >= 0.f) {
 				//Sample right pixel
-				result += texture(image, TexCoords + vec2(offset, 0.0)).rgb * kernel[i];
+				result += texture(image, TexCoords + vec2(offset, 0.f)).rgb * kernel[i];
             
 				//Sample left pixel
-				result += texture(image, TexCoords - vec2(offset, 0.0)).rgb * kernel[i];
+				result += texture(image, TexCoords - vec2(offset, 0.f)).rgb * kernel[i];
 			}
         }
     }
@@ -34,13 +34,13 @@ void main() {
 			
 			if(offset <= 1.f) {
 				//Sample up pixel
-				result += texture(image, TexCoords + vec2(0.0, offset)).rgb * kernel[i];
+				result += texture(image, TexCoords + vec2(0.f, offset)).rgb * kernel[i];
 
 				//Sample down pixel
-				result += texture(image, TexCoords - vec2(0.0, offset)).rgb * kernel[i];
+				result += texture(image, TexCoords - vec2(0.f, offset)).rgb * kernel[i];
 			}
         }
     }
 
-    color = vec4(result, 1.0);
+    color = vec4(result, 1.f);
 }

@@ -205,7 +205,7 @@ void a_shadows() {
 	SSRR& ssrr = SSRR(camera3);
 	
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(3, 0.15f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, 5.f, 50.f, 100.f, 0.4f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, 5.f, 50.f, 100.f, 0.6f);
 
 	renderer1.addEffect(ssrr);
 	renderer1.addEffect(dof);
