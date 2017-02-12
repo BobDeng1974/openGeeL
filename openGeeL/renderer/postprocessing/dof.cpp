@@ -7,7 +7,27 @@ using namespace std;
 
 namespace geeL {
 
-	DepthOfFieldBlurred::DepthOfFieldBlurred(GaussianBlur& blur, 
+	DepthOfFieldBlur::DepthOfFieldBlur(unsigned int strength, float threshold)
+		: GaussianBlur(strength, "renderer/postprocessing/dofblur.frag"), threshold(threshold) {}
+
+	void DepthOfFieldBlur::bindValues() {
+		shader.setInteger("gPositionDepth", shader.mapOffset + 1);
+		shader.setFloat("threshold", threshold);
+
+		GaussianBlur::bindValues();
+	}
+
+	void DepthOfFieldBlur::bindDoFData(float focalLength, float aperture, float farDistance) {
+		shader.use();
+
+		shader.setFloat("focalDistance", focalLength);
+		shader.setFloat("aperture", aperture);
+		shader.setFloat("farDistance", farDistance);
+	}
+
+
+
+	DepthOfFieldBlurred::DepthOfFieldBlurred(DepthOfFieldBlur& blur,
 		float focalLength, float aperture, float farDistance, float blurResolution)
 			: WorldPostProcessingEffect("renderer/postprocessing/dof.frag"), 
 				blur(blur), focalLength(focalLength), aperture(aperture), 
@@ -39,7 +59,9 @@ namespace geeL {
 		shader.setFloat("aperture", aperture);
 		shader.setFloat("farDistance", farDistance);
 
-		blur.setBuffer(buffers.front());
+		//blur.setBuffer(buffers.front());
+		blur.setBuffer({ buffers.front(), *next(buffers.begin())});
+		blur.bindDoFData(focalLength, aperture, farDistance);
 		blurBuffer.fill(blur);
 
 		FrameBuffer::resetSize(screen->width, screen->height);

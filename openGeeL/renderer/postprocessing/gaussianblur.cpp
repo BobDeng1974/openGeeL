@@ -9,8 +9,11 @@ using namespace std;
 namespace geeL {
 
 	GaussianBlur::GaussianBlur(unsigned int strength)
-		: PostProcessingEffect("renderer/postprocessing/gaussianblur.frag") {
-		
+		: GaussianBlur(strength, "renderer/postprocessing/gaussianblur.frag") {}
+
+	GaussianBlur::GaussianBlur(unsigned int strength, string shaderPath)
+		: PostProcessingEffect(shaderPath) {
+
 		amount = 1 + 2 * strength;
 		if (amount > maxAmount)
 			amount = maxAmount;

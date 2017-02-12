@@ -11,6 +11,7 @@ class GaussianBlur : public PostProcessingEffect {
 
 public:
 	GaussianBlur(unsigned int strength = 1);
+	GaussianBlur(unsigned int strength, std::string shaderPath);
 
 	void setKernel(float newKernel[5]);
 	virtual void setScreen(ScreenQuad& screen);

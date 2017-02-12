@@ -17,8 +17,7 @@ void main() {
 	vec3 blurred = texture(blurredImage, TexCoords).rgb; 
 	float depth  = texture(gPositionDepth, TexCoords).w;
 
-	float focal = focalDistance;
-	float diff = (focal > depth) ? focal - depth : depth - focal;
+	float diff = (focalDistance > depth) ? focalDistance - depth : depth - focalDistance;
 	diff = (diff / farDistance) * aperture;
 	diff = min(diff, 1.f);
 

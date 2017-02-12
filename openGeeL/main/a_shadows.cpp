@@ -170,7 +170,7 @@ void a_shadows() {
 	TransformFactory transFactory = TransformFactory(world);
 
 	geeL::Transform& transform3 = transFactory.CreateTransform(glm::vec3(0.0f, 2.0f, 9.0f), vec3(-100.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera3 = PerspectiveCamera(transform3, 5.f, 15.f, 65.f, window->width, window->height, 0.1f, 100.f);
+	PerspectiveCamera camera3 = PerspectiveCamera(transform3, 5.f, 15.f, 55.f, window->width, window->height, 0.1f, 100.f);
 
 	SimpleBlur blur = SimpleBlur(1);
 	SSAO ssao = SSAO(camera3, blur, 10.f);
@@ -204,8 +204,8 @@ void a_shadows() {
 	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50));
 	SSRR& ssrr = SSRR(camera3);
 	
-	GaussianBlur blur2 = GaussianBlur(3);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur2, 5.f, 50.f, 100.f, 0.6f);
+	DepthOfFieldBlur blur3 = DepthOfFieldBlur(3, 0.15f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, 5.f, 50.f, 100.f, 0.4f);
 
 	renderer1.addEffect(ssrr);
 	renderer1.addEffect(dof);

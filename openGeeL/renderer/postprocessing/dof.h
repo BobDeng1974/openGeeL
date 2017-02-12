@@ -3,18 +3,37 @@
 
 #include "../utility/framebuffer.h"
 #include "worldpostprocessing.h"
+#include "gaussianblur.h"
 
 namespace geeL {
 
-class GaussianBlur;
+//class GaussianBlur;
 class ScreenQuad;
+
+//Special gaussian blur that takes distances between pixels into account
+class DepthOfFieldBlur : public GaussianBlur {
+
+public:
+	DepthOfFieldBlur(unsigned int strength = 1, float threshold = 0.1f);
+
+	void bindDoFData(float focalLength, float aperture, float farDistance);
+
+protected:
+	virtual void bindValues();
+
+private:
+	float threshold;
+
+};
+
+
 
 //Depth of field post effect that uses image blurring to achieve effect.
 //Cheap but not realistic since circe of confusion is neglected
 class DepthOfFieldBlurred : public WorldPostProcessingEffect {
 
 public:
-	DepthOfFieldBlurred(GaussianBlur& blur, 
+	DepthOfFieldBlurred(DepthOfFieldBlur& blur,
 		float focalLength = 5.f, float aperture = 10.f, float farDistance = 100.f, float blurResolution = 1.f);
 
 	~DepthOfFieldBlurred();
@@ -38,7 +57,7 @@ private:
 	float farDistance;
 	float blurResolution;
 
-	GaussianBlur& blur;
+	DepthOfFieldBlur& blur;
 	FrameBuffer blurBuffer;
 	ScreenQuad* blurScreen;
 
