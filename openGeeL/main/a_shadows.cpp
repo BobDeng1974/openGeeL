@@ -214,9 +214,9 @@ void a_shadows() {
 	FXAA fxaa = FXAA();
 	
 	//renderer1.addEffect(ssrr);
-	//renderer1.addEffect(dof);
+	renderer1.addEffect(dof);
 	renderer1.addEffect(raySmooth);
-	//renderer1.addEffect(fxaa);
+	renderer1.addEffect(fxaa);
 	renderer1.render();
 
 	delete testObj;

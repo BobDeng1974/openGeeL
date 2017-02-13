@@ -27,13 +27,13 @@ float getSharpness(float depth) {
 void main() {             
 
 	//Size of single texel
-    vec2 tex_offset = 1.f / textureSize(image, 0); 
+    vec2 texOffset = 1.f / textureSize(image, 0); 
 	vec3 baseColor = texture(image, TexCoords).rgb;
     vec3 result = baseColor * kernel[0]; 
 
     if(horizontal) {
         for(int i = 1; i < 5; i++) {
-			float offset = tex_offset.x * i;
+			float offset = texOffset.x * i;
 
 			//Sample right pixel
 			if(TexCoords.x + offset < 1.f) {
@@ -46,8 +46,8 @@ void main() {
 
 			//Sample left pixel
 			if(TexCoords.x - offset > 0.f) {
-				depth = texture(gPositionDepth, TexCoords - vec2(offset, 0.f)).w;
-				sharp = getSharpness(depth);
+				float depth = texture(gPositionDepth, TexCoords - vec2(offset, 0.f)).w;
+				float sharp = getSharpness(depth);
 
 				result += (texture(image, TexCoords - vec2(offset, 0.f)).rgb * sharp + 
 					baseColor * (1.f - sharp))* kernel[i];
@@ -56,10 +56,10 @@ void main() {
     }
     else {
         for(int i = 1; i < 5; i++) {
-			float offset = tex_offset.y * i;
+			float offset = texOffset.y * i;
 			
 			//Sample up pixel
-			if(TexCoords.y + offset > 1.f) {
+			if(TexCoords.y + offset < 1.f) {
 				float depth = texture(gPositionDepth, TexCoords + vec2(0.f, offset)).w;
 				float sharp = getSharpness(depth);
 
@@ -69,9 +69,9 @@ void main() {
 			}
 
 			//Sample down pixel
-			if(TexCoords.y - offset < 0.f) {
-				depth = texture(gPositionDepth, TexCoords - vec2(0.f, offset)).w;
-				sharp = getSharpness(depth);
+			if(TexCoords.y - offset > 0.f) {
+				float depth = texture(gPositionDepth, TexCoords - vec2(0.f, offset)).w;
+				float sharp = getSharpness(depth);
 
 				result += (texture(image, TexCoords - vec2(0.f, offset)).rgb * sharp + 
 					baseColor * (1.f - sharp))* kernel[i];
