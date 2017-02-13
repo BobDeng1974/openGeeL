@@ -162,7 +162,7 @@ namespace {
 
 
 void a_shadows() {
-	RenderWindow* window = new RenderWindow("geeL", 1920, 1080, true);
+	RenderWindow* window = new RenderWindow("geeL", 1440, 810, true);
 	InputManager* manager = new InputManager();
 	manager->defineButton("Forward", GLFW_KEY_W);
 	manager->defineButton("Forward", GLFW_KEY_A);
@@ -202,17 +202,20 @@ void a_shadows() {
 	renderer1.addObject(testObj);
 	renderer1.initObjects();
 	
-	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50));
+	GaussianBlur& blur2 = GaussianBlur(1);
+	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50), 15.f);
+	GodRaySmooth raySmooth = GodRaySmooth(ray, blur2, 0.3f);
+
 	SSRR& ssrr = SSRR(camera3);
 	
-	DepthOfFieldBlur blur3 = DepthOfFieldBlur(3, 0.99f);
+	DepthOfFieldBlur blur3 = DepthOfFieldBlur(3, 0.3f);
 	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, 5.f, 25.f, 100.f, 0.6f);
 
 	FXAA fxaa = FXAA();
 	
 	//renderer1.addEffect(ssrr);
-	//renderer1.addEffect(dof);
-	//renderer1.addEffect(ray);
+	renderer1.addEffect(dof);
+	renderer1.addEffect(raySmooth);
 	renderer1.addEffect(fxaa);
 	renderer1.render();
 

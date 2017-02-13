@@ -7,6 +7,7 @@ uniform sampler2D image;
 uniform vec3 lightPosition;
 uniform vec3 lightPositionView;
 uniform int samples;
+uniform int raysOnly;
 
 precision highp float;
 float random(vec2 co){
@@ -27,7 +28,7 @@ void main() {
 	deltaCoords *= 1.0f / (float(samples) * density);
 	
 	float currDecay = 1.0f;
-	vec3 result = texture(image, TexCoords).rgb;
+	vec3 result = (raysOnly == 0) ? texture(image, TexCoords).rgb : vec3(0.f);
 
 	float i = 0;
 	while(i < samples) {

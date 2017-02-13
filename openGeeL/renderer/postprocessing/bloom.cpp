@@ -17,7 +17,7 @@ namespace geeL {
 	}
 
 	Bloom::Bloom(GaussianBlur& blur, float scatter, float blurResolution)
-		: PostProcessingEffect("renderer/postprocessing/bloomcombine.frag"), 
+		: PostProcessingEffect("renderer/postprocessing/combine.frag"), 
 			blurResolution(blurResolution), blur(blur), filter(new BloomFilter(scatter)), 
 			blurScreen(nullptr) {}
 
@@ -52,7 +52,7 @@ namespace geeL {
 
 	void Bloom::bindValues() {
 		shader.setInteger("image", shader.mapOffset);
-		shader.setInteger("bloom", shader.mapOffset + 1);
+		shader.setInteger("image2", shader.mapOffset + 1);
 
 		filter->setBuffer(buffers.front());
 		filterBuffer.fill(*filter);
