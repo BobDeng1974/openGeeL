@@ -6,49 +6,47 @@
 
 namespace geeL {
 
-class Drawer;
+	class Drawer;
 
-enum ColorBufferType {
-	Single,
-	RGB,
-	RGBA,
-	RGB16,
-	RGBA16
-};
+	enum ColorBufferType {
+		Single,
+		RGB,
+		RGBA,
+		RGB16,
+		RGBA16
+	};
 
-class FrameBuffer {
+	class FrameBuffer {
 
-public:
-	unsigned int fbo;
+	public:
+		unsigned int fbo;
 	
-	int width;
-	int height;
+		int width;
+		int height;
 
-	FrameBuffer();
+		FrameBuffer();
 
-	void init(int width, int height, int colorBufferAmount = 1, 
-		ColorBufferType colorBufferType = RGBA16, unsigned int filterMode = GL_LINEAR, bool useDepth = true);
+		void init(int width, int height, int colorBufferAmount = 1, ColorBufferType colorBufferType = RGBA16, 
+			unsigned int filterMode = GL_LINEAR, bool useDepth = true);
 
-	void init(int width, int height, int colorBufferAmount, std::vector<ColorBufferType> bufferTypes, 
-		unsigned int filterMode = GL_LINEAR, bool useDepth = true);
+		void init(int width, int height, int colorBufferAmount, std::vector<ColorBufferType> bufferTypes, 
+			unsigned int filterMode = GL_LINEAR, bool useDepth = true);
 	
-	void fill(Drawer& drawer, bool setFBO = true) const;
-	void copyDepth(unsigned int targetFBO) const;
-	unsigned int getColorID(unsigned int position = 0) const;
+		void fill(Drawer& drawer, bool setFBO = true) const;
+		void copyDepth(unsigned int targetFBO) const;
+		unsigned int getColorID(unsigned int position = 0) const;
 
-	void bind() const;
+		void bind() const;
 
-	static void bind(unsigned int fbo);
-	static void unbind();
-	static void resetSize(int width, int height);
+		static void bind(unsigned int fbo);
+		static void unbind();
+		static void resetSize(int width, int height);
 
-private:
-	std::vector<unsigned int> colorBuffers;
+	private:
+		std::vector<unsigned int> colorBuffers;
 
-	unsigned int generateTexture(ColorBufferType colorBufferType, unsigned int filterMode);
-
-};
-
+		unsigned int generateTexture(ColorBufferType colorBufferType, unsigned int filterMode);
+	};
 }
 
 #endif

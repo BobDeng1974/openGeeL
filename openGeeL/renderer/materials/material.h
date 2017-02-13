@@ -6,29 +6,28 @@
 
 namespace geeL {
 
-class Shader;
+	class Shader;
 
-enum MaterialType {
-	Opaque = 0,
-	Cutout = 1,
-	Transparent = 2
-};
+	enum MaterialType {
+		Opaque = 0,
+		Cutout = 1,
+		Transparent = 2
+	};
 
-class Material {
+	class Material {
 
-public:
-	Shader& shader;
-	const MaterialType type;
-	const std::string name;
+	public:
+		Shader& shader;
+		const MaterialType type;
+		const std::string name;
 
-	Material(Shader& shader, std::string name = "material", MaterialType type = Opaque) 
-		: shader(shader), type(type), name(name) {}
+		Material(Shader& shader, std::string name = "material", MaterialType type = Opaque) 
+			: shader(shader), type(type), name(name) {}
 
-	virtual void bindTextures() const = 0;
-	virtual void bind() const = 0;
+		virtual void bindTextures() const = 0;
+		virtual void bind() const = 0;
 
-};
-
+	};
 }
 
 #endif

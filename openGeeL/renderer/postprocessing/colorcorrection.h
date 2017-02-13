@@ -5,20 +5,18 @@
 
 namespace geeL {
 
-class ColorCorrection : public PostProcessingEffect {
+	class ColorCorrection : public PostProcessingEffect {
 
-public:
-	float r, g , b, h, s, v;
+	public:
+		float r, g , b, h, s, v;
 
-	ColorCorrection(float red = 1.f, float green = 1.f, float blue = 1.f, 
-		float hue = 1.f, float saturation = 1.f, float brightness = 1.f);
+		ColorCorrection(float red = 1.f, float green = 1.f, float blue = 1.f, 
+			float hue = 1.f, float saturation = 1.f, float brightness = 1.f);
 
-protected:
-	virtual void bindValues();
+	protected:
+		virtual void bindValues();
 
-};
-
-
+	};
 }
 
 #endif

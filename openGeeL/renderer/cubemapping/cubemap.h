@@ -5,24 +5,23 @@
 
 namespace geeL {
 
-class Shader;
+	class Shader;
 
-class CubeMap {
+	class CubeMap {
 
-public:
+	public:
 
-	CubeMap(std::string rightPath, std::string leftPath, std::string topPath,
-		std::string bottomPath, std::string backPath, std::string frontPath);
+		CubeMap(std::string rightPath, std::string leftPath, std::string topPath,
+			std::string bottomPath, std::string backPath, std::string frontPath);
 
-	void draw(const Shader& shader, std::string name) const;
+		void draw(const Shader& shader, std::string name) const;
 
-	unsigned int getID() const;
+		unsigned int getID() const;
 
-private:
-	unsigned int id;
+	private:
+		unsigned int id;
 
-};
-
+	};
 }
 
 #endif

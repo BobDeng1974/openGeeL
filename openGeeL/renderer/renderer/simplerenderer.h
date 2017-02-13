@@ -5,26 +5,24 @@
 
 namespace geeL {
 
-class Camera;
+	class Camera;
 
-class SimpleRenderer : public Renderer {
+	class SimpleRenderer : public Renderer {
 
-public:
-	SimpleRenderer(RenderWindow* window, InputManager* inputManager);
+	public:
+		SimpleRenderer(RenderWindow* window, InputManager* inputManager);
 
-	virtual void init();
-	virtual void render();
-	virtual void draw();
-	virtual void handleInput();
+		virtual void init();
+		virtual void render();
+		virtual void draw();
+		virtual void handleInput();
 
-	void setCamera(Camera* camera);
+		void setCamera(Camera* camera);
 
-private:
-	Camera* currentCamera;
+	private:
+		Camera* currentCamera;
 
-};
-
+	};
 }
-
 
 #endif

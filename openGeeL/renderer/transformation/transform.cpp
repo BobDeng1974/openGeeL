@@ -4,6 +4,7 @@
 #include <gtc/type_ptr.hpp>
 #include <iostream>
 
+using namespace std;
 using glm::normalize;
 
 namespace geeL {

@@ -5,18 +5,17 @@
 
 namespace geeL {
 
-class GammaCorrection : public PostProcessingEffect {
+	class GammaCorrection : public PostProcessingEffect {
 
-public:
-	GammaCorrection(float gamma = 2.2f);
+	public:
+		GammaCorrection(float gamma = 2.2f);
 
-protected:
-	virtual void bindValues();
+	protected:
+		virtual void bindValues();
 
-private:
-	float gamma;
-};
-
+	private:
+		float gamma;
+	};
 }
 
 #endif

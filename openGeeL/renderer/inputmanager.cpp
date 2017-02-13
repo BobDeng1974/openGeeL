@@ -3,6 +3,8 @@
 #include "window.h"
 #include <iostream>
 
+using namespace std;
+
 namespace geeL {
 
 	void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mode) {

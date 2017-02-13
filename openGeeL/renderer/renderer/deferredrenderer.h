@@ -9,48 +9,46 @@
 
 namespace geeL {
 
-class Camera;
-class Shader;
-class SSAO;
-class PostProcessingEffect;
-class WorldPostProcessingEffect;
+	class Camera;
+	class Shader;
+	class SSAO;
+	class PostProcessingEffect;
+	class WorldPostProcessingEffect;
 
-class DeferredRenderer : public Renderer {
+	class DeferredRenderer : public Renderer {
 
-public:
-	DeferredRenderer(RenderWindow* window, InputManager* inputManager);
-	DeferredRenderer(RenderWindow* window, InputManager* inputManager, SSAO* ssao, float ssaoResolution = 1.f);
-	~DeferredRenderer();
+	public:
+		DeferredRenderer(RenderWindow* window, InputManager* inputManager);
+		DeferredRenderer(RenderWindow* window, InputManager* inputManager, SSAO* ssao, float ssaoResolution = 1.f);
+		~DeferredRenderer();
 
-	virtual void init();
-	virtual void render();
-	virtual void draw();
-	virtual void handleInput();
-	virtual void setScene(RenderScene& scene);
+		virtual void init();
+		virtual void render();
+		virtual void draw();
+		virtual void handleInput();
+		virtual void setScene(RenderScene& scene);
 
-	//Add new post processing effect to renderer. 
-	//Note: Effects will be drawn in reverse adding order
-	void addEffect(PostProcessingEffect& effect);
-	void addEffect(WorldPostProcessingEffect& effect);
+		//Add new post processing effect to renderer. 
+		void addEffect(PostProcessingEffect& effect);
+		void addEffect(WorldPostProcessingEffect& effect);
 
-private:
-	bool geometryPass = true;
-	Shader* deferredShader;
-	std::list<PostProcessingEffect*> effects;
-	ScreenQuad screen;
-	GBuffer gBuffer;
-	FrameBuffer frameBuffer1;
-	FrameBuffer frameBuffer2;
+	private:
+		bool geometryPass = true;
+		Shader* deferredShader;
+		std::list<PostProcessingEffect*> effects;
+		ScreenQuad screen;
+		GBuffer gBuffer;
+		FrameBuffer frameBuffer1;
+		FrameBuffer frameBuffer2;
 
-	float ssaoResolution;
-	SSAO* ssao = nullptr;
-	ScreenQuad* ssaoScreen = nullptr;
-	FrameBuffer* ssaoBuffer = nullptr;
+		float ssaoResolution;
+		SSAO* ssao = nullptr;
+		ScreenQuad* ssaoScreen = nullptr;
+		FrameBuffer* ssaoBuffer = nullptr;
 
-	//Link all world information to given post effect
-	void linkWorldInformation(WorldPostProcessingEffect& effect);
-};
-
+		//Link all world information to given post effect
+		void linkWorldInformation(WorldPostProcessingEffect& effect);
+	};
 }
 
 #endif

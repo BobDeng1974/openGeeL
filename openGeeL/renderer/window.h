@@ -3,26 +3,23 @@
 
 struct GLFWwindow;
 
-
 namespace geeL {
 
-class Camera;
+	class Camera;
 
-class RenderWindow {
+	class RenderWindow {
 
-public:
-	GLFWwindow* glWindow;
-	const char* name;
-	unsigned int width, height;
+	public:
+		GLFWwindow* glWindow;
+		const char* name;
+		unsigned int width, height;
 
-	RenderWindow(const char* name, unsigned int width, unsigned int height, bool resizable = false);
+		RenderWindow(const char* name, unsigned int width, unsigned int height, bool resizable = false);
 
-	void RenderWindow::swapBuffer();
-	bool RenderWindow::shouldClose();
-	void RenderWindow::close();
-	
-};
-
+		void RenderWindow::swapBuffer();
+		bool RenderWindow::shouldClose();
+		void RenderWindow::close();
+	};
 }
 
 #endif

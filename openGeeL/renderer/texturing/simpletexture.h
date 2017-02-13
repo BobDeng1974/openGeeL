@@ -13,55 +13,51 @@ typedef unsigned int GLuint;
 
 namespace geeL {
 
-enum TextureType {
-	Diffuse,
-	Specular,
-	Normal,
-	Reflection,
-	Metallic
-};
+	enum TextureType {
+		Diffuse,
+		Specular,
+		Normal,
+		Reflection,
+		Metallic
+	};
 
-enum ColorType {
-	ColorSingle,
-	ColorRGB,
-	ColorRGBA,
-};
+	enum ColorType {
+		ColorSingle,
+		ColorRGB,
+		ColorRGBA,
+	};
 
-enum FilterMode{
-	None,
-	Linear,
-	Bilinear,
-	Trilinear
-};
+	enum FilterMode{
+		None,
+		Linear,
+		Bilinear,
+		Trilinear
+	};
 
-class SimpleTexture : public Texture {
+	class SimpleTexture : public Texture {
 
-public:
-	TextureType type;
-	std::string path;
+	public:
+		TextureType type;
+		std::string path;
 
-	SimpleTexture() {}
-	SimpleTexture(const char* fileName, bool linear = false, 
-		TextureType textureTpe = Diffuse, ColorType colorType = ColorRGBA, 
-		int wrapMode = GL_REPEAT, FilterMode filterMode = None);
+		SimpleTexture() {}
+		SimpleTexture(const char* fileName, bool linear = false, 
+			TextureType textureTpe = Diffuse, ColorType colorType = ColorRGBA, 
+			int wrapMode = GL_REPEAT, FilterMode filterMode = None);
 
-	SimpleTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height, 
-		int wrapMode = GL_REPEAT, int filterMode = GL_LINEAR);
+		SimpleTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height, 
+			int wrapMode = GL_REPEAT, int filterMode = GL_LINEAR);
 
-	virtual void bind(const Shader& shader, std::string name, int texLayer = 0) const;
-	virtual void draw(const Shader& shader, int texLayer = 0) const;
+		virtual void bind(const Shader& shader, std::string name, int texLayer = 0) const;
+		virtual void draw(const Shader& shader, int texLayer = 0) const;
 
-	std::string GetTypeAsString() const;
-	const int GetID() const;
+		std::string GetTypeAsString() const;
+		const int GetID() const;
 
-private:
-	GLuint id;
+	private:
+		GLuint id;
 
-};
-
-
-
-
+	};
 }
 
 #endif

@@ -8,61 +8,56 @@
 using glm::vec3;
 using glm::mat4;
 
-using namespace std;
-
 namespace geeL {
 
-class Transform {
+	class Transform {
 
-public:
-	bool isStatic;
+	public:
+		bool isStatic;
 
-	vec3 position;
-	vec3 rotation;
-	vec3 scaling;
-	vec3 forward;
-	vec3 up;
-	vec3 right;
+		vec3 position;
+		vec3 rotation;
+		vec3 scaling;
+		vec3 forward;
+		vec3 up;
+		vec3 right;
 
-	mat4 matrix;
+		mat4 matrix;
 
-	Transform(Transform* parent = nullptr);
-	Transform(vec3 position, vec3 rotation, vec3 scaling, Transform* parent = nullptr);
-	~Transform();
+		Transform(Transform* parent = nullptr);
+		Transform(vec3 position, vec3 rotation, vec3 scaling, Transform* parent = nullptr);
+		~Transform();
 		
-	void translate(vec3 translation);
-	void rotate(vec3 axis, float angle);
-	void scale(vec3 scalar);
+		void translate(vec3 translation);
+		void rotate(vec3 axis, float angle);
+		void scale(vec3 scalar);
 
-	mat4 lookAt() const;
+		mat4 lookAt() const;
 
-	list<Transform>::iterator childrenStart();
-	list<Transform>::iterator childrenEnd();
+		std::list<Transform>::iterator childrenStart();
+		std::list<Transform>::iterator childrenEnd();
 
-	const Transform* GetParent() const;
+		const Transform* GetParent() const;
 
-	//Adds a copy of the given transform
-	//as a child to this transform and 
-	//returns a reference to it
-	Transform& AddChild(Transform child);
+		//Adds a copy of the given transform
+		//as a child to this transform and 
+		//returns a reference to it
+		Transform& AddChild(Transform child);
 
-	void RemoveChild(Transform& child);
-	void ChangeParent(Transform& newParent);
+		void RemoveChild(Transform& child);
+		void ChangeParent(Transform& newParent);
 
-	void computeMatrix();
+		void computeMatrix();
 
-	bool Transform::operator==(const Transform& b) const;
-	bool Transform::operator!=(const Transform& b) const;
+		bool Transform::operator==(const Transform& b) const;
+		bool Transform::operator!=(const Transform& b) const;
 
-private:
-	Transform* parent;
-	list<Transform> children;
+	private:
+		Transform* parent;
+		std::list<Transform> children;
 
-	void updateDirections();
-
-};
-
-
+		void updateDirections();
+	};
 }
 
 #endif

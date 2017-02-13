@@ -5,20 +5,19 @@
 
 namespace geeL {
 
-//Simple (evenly distributed) blur
-class SimpleBlur : public PostProcessingEffect {
+	//Simple (evenly distributed) blur
+	class SimpleBlur : public PostProcessingEffect {
 
-public:
-	SimpleBlur(unsigned int strength = 1);
+	public:
+		SimpleBlur(unsigned int strength = 1);
 
-protected:
-	virtual void bindValues();
+	protected:
+		virtual void bindValues();
 
-private:
-	unsigned int amount;
+	private:
+		unsigned int amount;
 
-};
-
+	};
 }
 
 #endif

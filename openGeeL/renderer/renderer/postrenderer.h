@@ -9,29 +9,27 @@ typedef unsigned int GLuint;
 
 namespace geeL {
 
-class Camera;
-class Shader;
-class PostProcessingEffect;
+	class Camera;
+	class Shader;
+	class PostProcessingEffect;
 
-class PostProcessingRenderer : public Renderer {
+	class PostProcessingRenderer : public Renderer {
 
-public:
-	PostProcessingRenderer(RenderWindow* window, InputManager* inputManager);
+	public:
+		PostProcessingRenderer(RenderWindow* window, InputManager* inputManager);
 
-	virtual void init();
-	virtual void render();
-	virtual void draw();
-	virtual void handleInput();
+		virtual void init();
+		virtual void render();
+		virtual void draw();
+		virtual void handleInput();
 
-	void setEffect(PostProcessingEffect& effect);
+		void setEffect(PostProcessingEffect& effect);
 
-private:
-	PostProcessingEffect* effect;
-	ScreenQuad screen;
-	FrameBuffer frameBuffer;
-};
-
+	private:
+		PostProcessingEffect* effect;
+		ScreenQuad screen;
+		FrameBuffer frameBuffer;
+	};
 }
-
 
 #endif

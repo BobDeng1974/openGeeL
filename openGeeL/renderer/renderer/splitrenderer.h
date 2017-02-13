@@ -8,34 +8,32 @@ using namespace std;
 
 namespace geeL {
 
-struct RenderViewport {
-	float x;
-	float y;
-	float width;
-	float height;
+	struct RenderViewport {
+		float x;
+		float y;
+		float width;
+		float height;
 
-	RenderViewport(float x, float y, float width, float height) : x(x), y(y), width(width), height(height) {}
-};
+		RenderViewport(float x, float y, float width, float height) : x(x), y(y), width(width), height(height) {}
+	};
 
-class SplitRenderer : public Renderer {
+	class SplitRenderer : public Renderer {
 
-public:
-	SplitRenderer(RenderWindow* window, InputManager* inputManagerz);
+	public:
+		SplitRenderer(RenderWindow* window, InputManager* inputManagerz);
 
-	virtual void init();
-	virtual void render();
-	virtual void draw();
-	virtual void handleInput();
+		virtual void init();
+		virtual void render();
+		virtual void draw();
+		virtual void handleInput();
 
-	void addRenderer(Renderer* renderer, RenderViewport view);
+		void addRenderer(Renderer* renderer, RenderViewport view);
 
-private:
-	vector<pair<Renderer*, RenderViewport>> renderers;
+	private:
+		vector<pair<Renderer*, RenderViewport>> renderers;
 
-};
-
+	};
 }
-
 
 #endif
 

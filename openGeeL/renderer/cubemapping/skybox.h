@@ -10,34 +10,28 @@ using glm::mat4;
 
 namespace geeL {
 
-class Camera;
-class CubeMap;
-class Shader;
+	class Camera;
+	class CubeMap;
+	class Shader;
 
-class Skybox {
+	class Skybox {
 
-public:
-	const CubeMap& cubeMap;
+	public:
+		const CubeMap& cubeMap;
 
-	Skybox(CubeMap& cubeMap);
+		Skybox(CubeMap& cubeMap);
 
-	void draw(const Camera& camera) const;
-	void bind(const Shader& shader) const;
+		void draw(const Camera& camera) const;
+		void bind(const Shader& shader) const;
 
-	unsigned int getID() const;
+		unsigned int getID() const;
 
-private:
-	unsigned int boxVAO;
-	
-	Shader shader;
+	private:
+		unsigned int boxVAO;
+		Shader shader;
 
-	void initBox();
-	
-
-};
-
-
+		void initBox();
+	};
 }
-
 
 #endif 

@@ -6,23 +6,22 @@
 
 namespace geeL {
 
-class DirectionalLight;
-class RenderScene;
+	class DirectionalLight;
+	class RenderScene;
 
-class GodRay : public PostProcessingEffect {
+	class GodRay : public PostProcessingEffect {
 
-public:
-	GodRay(const RenderScene& scene, glm::vec3 lightPosition, unsigned int samples = 20.f);
+	public:
+		GodRay(const RenderScene& scene, glm::vec3 lightPosition, unsigned int samples = 20.f);
 
-protected:
-	virtual void bindValues();
+	protected:
+		virtual void bindValues();
 
-private:
-	unsigned int samples;
-	glm::vec3 lightPosition;
-	const RenderScene& scene;
-};
-
+	private:
+		unsigned int samples;
+		glm::vec3 lightPosition;
+		const RenderScene& scene;
+	};
 }
 
 #endif

@@ -3,21 +3,19 @@
 
 #include <glfw3.h>
 
-
 namespace geeL {
 
-class Time {
+	class Time {
 
-public:
-	static float deltaTime;
+	public:
+		static float deltaTime;
 
-	static void update();
+		static void update();
 
-private:
-	static float lastFrame;
+	private:
+		static float lastFrame;
 
-};
-
+	};
 }
 
 #endif

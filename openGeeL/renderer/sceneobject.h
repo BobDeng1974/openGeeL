@@ -6,28 +6,26 @@
 
 namespace geeL {
 
-class Component;
-class Transform;
+	class Component;
+	class Transform;
 
-class SceneObject {
+	class SceneObject {
 
-public:
-	Transform& transform;
+	public:
+		Transform& transform;
 
-	SceneObject(Transform& transform);
+		SceneObject(Transform& transform);
 
-	//Update object and all its components
-	virtual void update();
+		//Update object and all its components
+		virtual void update();
 
-	//Add and init new component to scene object that will the be updated automatically
-	void addComponent(std::shared_ptr<Component> component);
+		//Add and init new component to scene object that will the be updated automatically
+		void addComponent(std::shared_ptr<Component> component);
 
-private:
-	std::list<std::shared_ptr<Component>> components;
+	private:
+		std::list<std::shared_ptr<Component>> components;
 
-
-};
-
+	};
 }
 
 #endif

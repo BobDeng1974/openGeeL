@@ -7,36 +7,35 @@ using glm::vec3;
 
 namespace geeL {
 
-class Transform;
+	class Transform;
 
-class TransformFactory {
+	class TransformFactory {
 
-public:
+	public:
 
-	TransformFactory(Transform world) : world(world) {}
+		TransformFactory(Transform world) : world(world) {}
 
-	//Creates and and returns an empty transform with
-	//world transform as parent
-	Transform& CreateTransform();
+		//Creates and and returns an empty transform with
+		//world transform as parent
+		Transform& CreateTransform();
 
-	//Creates and and returns an empty transform with
-	//committed transform as parent
-	Transform& CreateTransform(Transform& parent);
+		//Creates and and returns an empty transform with
+		//committed transform as parent
+		Transform& CreateTransform(Transform& parent);
 
-	//Creates and and returns a transform with
-	//world transform as parent
-	Transform& CreateTransform(vec3 position, vec3 rotation, vec3 scaling);
+		//Creates and and returns a transform with
+		//world transform as parent
+		Transform& CreateTransform(vec3 position, vec3 rotation, vec3 scaling);
 
-	//Creates and and returns a transform with
-	//committed transform as parent
-	Transform& CreateTransform(Transform& parent, 
-		vec3 position, vec3 rotation, vec3 scaling);
+		//Creates and and returns a transform with
+		//committed transform as parent
+		Transform& CreateTransform(Transform& parent, 
+			vec3 position, vec3 rotation, vec3 scaling);
 
-private:
-	Transform world;
+	private:
+		Transform world;
 
-};
-
+	};
 }
 
 #endif

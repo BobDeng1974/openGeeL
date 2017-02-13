@@ -9,31 +9,30 @@
 
 namespace geeL {
 
-class SimpleTexture;
-class Shader;
+	class SimpleTexture;
+	class Shader;
 
-//Material class with default shading
-class DefaultMaterial : public Material {
+	//Material class with default shading
+	class DefaultMaterial : public Material {
 
 
-public:
-	DefaultMaterial(Shader& defaultShader, MaterialType type = Opaque);
+	public:
+		DefaultMaterial(Shader& defaultShader, MaterialType type = Opaque);
 
-	void addTexture(std::string name, SimpleTexture& texture);
-	void addTextures(std::vector<SimpleTexture*> textures);
-	void setRoughness(float value);
-	void setMetallic(float value);
+		void addTexture(std::string name, SimpleTexture& texture);
+		void addTextures(std::vector<SimpleTexture*> textures);
+		void setRoughness(float value);
+		void setMetallic(float value);
 
-	virtual void bindTextures() const;
-	virtual void bind() const;
+		virtual void bindTextures() const;
+		virtual void bind() const;
 
-private:
-	float roughness;
-	float metallic;
-	LayeredTexture textureStack;
+	private:
+		float roughness;
+		float metallic;
+		LayeredTexture textureStack;
 
-};
-
+	};
 }
 
 #endif

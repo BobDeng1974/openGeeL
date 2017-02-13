@@ -7,26 +7,24 @@ class Transform;
 
 namespace geeL {
 
-class PerspectiveCamera : public Camera {
+	class PerspectiveCamera : public Camera {
 
-public:		
-	PerspectiveCamera(Transform& transform,
-		float fov, float width, float height, float nearClip, float farClip);
+	public:		
+		PerspectiveCamera(Transform& transform,
+			float fov, float width, float height, float nearClip, float farClip);
 
-	PerspectiveCamera(Transform& transform, float speed, float sensitivity,
-		float fov, float width, float height, float nearClip, float farClip);
+		PerspectiveCamera(Transform& transform, float speed, float sensitivity,
+			float fov, float width, float height, float nearClip, float farClip);
 
-	virtual void handleInput(const InputManager& input);
+		virtual void handleInput(const InputManager& input);
 
-private:
-	float FOV, currentFOV, width, height, 
-		nearClip, farClip;
+	private:
+		float FOV, currentFOV, width, height, 
+			nearClip, farClip;
 
-	virtual glm::mat4 computeProjectionMatrix() const;
+		virtual glm::mat4 computeProjectionMatrix() const;
 
-};
-
-
+	};
 }
 
 #endif

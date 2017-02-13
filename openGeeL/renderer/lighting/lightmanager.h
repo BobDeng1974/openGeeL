@@ -10,58 +10,57 @@
 
 namespace geeL {
 
-class Light;
-class PointLight;
-class DirectionalLight;
-class SpotLight;
-class Shader;
-class RenderScene;
-class Transform;
+	class Light;
+	class PointLight;
+	class DirectionalLight;
+	class SpotLight;
+	class Shader;
+	class RenderScene;
+	class Transform;
 
-class LightManager {
+	class LightManager {
 
-public:
-	glm::vec3 ambient;
-	std::string plName = "pointLights";
-	std::string dlName = "directionalLights";
-	std::string slName = "spotLights";
-	std::string plCountName = "plCount";
-	std::string dlCountName = "dlCount";
-	std::string slCountName = "slCount";
+	public:
+		glm::vec3 ambient;
+		std::string plName = "pointLights";
+		std::string dlName = "directionalLights";
+		std::string slName = "spotLights";
+		std::string plCountName = "plCount";
+		std::string dlCountName = "dlCount";
+		std::string slCountName = "slCount";
 
-	LightManager(glm::vec3 ambient = glm::vec3(0.25f));
+		LightManager(glm::vec3 ambient = glm::vec3(0.25f));
 
-	//Manager is responsible for removing the lights
-	~LightManager();
+		//Manager is responsible for removing the lights
+		~LightManager();
 
-	//Add and create directional light
-	DirectionalLight& addDirectionalLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular, 
-		float shadowBias = 0.0005f);
+		//Add and create directional light
+		DirectionalLight& addDirectionalLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular, 
+			float shadowBias = 0.0005f);
 	
-	//Add and create point light
-	PointLight& addPointLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,
-		float shadowBias = 0.007f);
+		//Add and create point light
+		PointLight& addPointLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,
+			float shadowBias = 0.007f);
 	
-	//Add and create spotlight
-	SpotLight& addSpotlight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,
-		float angle, float outerAngle, float shadowBias = 0.0005f);
+		//Add and create spotlight
+		SpotLight& addSpotlight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,
+			float angle, float outerAngle, float shadowBias = 0.0005f);
 
 
-	void deferredBind(const RenderScene& scene, const Shader& shader) const;
-	void forwardBind(const Shader& shader) const;
+		void deferredBind(const RenderScene& scene, const Shader& shader) const;
+		void forwardBind(const Shader& shader) const;
 
-	void bindShadowmaps(Shader& shader) const;
-	void drawShadowmaps(const RenderScene& scene) const;
+		void bindShadowmaps(Shader& shader) const;
+		void drawShadowmaps(const RenderScene& scene) const;
 	
 
-private:
-	//Shader for spotlights and directional lights
-	Shader* dlShader;
-	Shader* plShader;
+	private:
+		//Shader for spotlights and directional lights
+		Shader* dlShader;
+		Shader* plShader;
 
-	std::vector<Light*> staticPLs, staticDLs, staticSLs;
-};
-
+		std::vector<Light*> staticPLs, staticDLs, staticSLs;
+	};
 }
 
 #endif

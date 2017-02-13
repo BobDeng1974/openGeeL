@@ -1,25 +1,23 @@
 #ifndef DEFAULTPOST_H
 #define DEFAULTPOST_H
 
-
 #include "postprocessing.h"
 
 namespace geeL {
 
-class DefaultPostProcess : public PostProcessingEffect {
+	class DefaultPostProcess : public PostProcessingEffect {
 
-public:
-	float exposure;
+	public:
+		float exposure;
 
-	DefaultPostProcess(float exposure = 1.f);
+		DefaultPostProcess(float exposure = 1.f);
 
-	virtual void setScreen(ScreenQuad& screen);
+		virtual void setScreen(ScreenQuad& screen);
 
-protected:
-	virtual void bindValues();
+	protected:
+		virtual void bindValues();
 
-};
-
+	};
 }
 
 #endif

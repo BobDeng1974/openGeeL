@@ -3,22 +3,20 @@
 
 #include "postprocessing.h"
 
-
 namespace geeL {
 
-//Simple Reinhardt tone mapping
-class ToneMapping : public PostProcessingEffect {
+	//Simple Reinhardt tone mapping
+	class ToneMapping : public PostProcessingEffect {
 
-public:
-	float exposure;
+	public:
+		float exposure;
 
-	ToneMapping(float exposure);
+		ToneMapping(float exposure);
 
-protected:
-	virtual void bindValues();
+	protected:
+		virtual void bindValues();
 
-};
-
+	};
 }
 
 #endif
