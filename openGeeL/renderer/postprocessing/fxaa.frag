@@ -8,7 +8,7 @@ uniform sampler2D image;
 
 const float FXAA_CLAMP = 8.f;
 const float FXAA_MIN = 1.f / 128.f;
-const float BLUR_MIN = 0.025f;
+const float BLUR_MIN = 0.1f;
 const vec3  luminance = vec3(0.299f, 0.587f, 0.114f);
 
 void main() {
@@ -33,7 +33,8 @@ void main() {
 		return;
 	}
 
-	float minValue = max((lumaTL + lumaTR + lumaBL + lumaBR) * (0.25f * FXAA_MIN), 0.001f); //Scale min value with mean luminance
+	//Scale min value with mean luminance
+	float minValue = max((lumaTL + lumaTR + lumaBL + lumaBR) * (0.25f * FXAA_MIN), 0.001f); 
 	float normalize = 1.f / min(abs(blurDirection.x + minValue), abs(blurDirection.y) + minValue);
 
 	blurDirection = blurDirection * normalize;

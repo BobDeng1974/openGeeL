@@ -162,7 +162,7 @@ namespace {
 
 
 void a_shadows() {
-	RenderWindow* window = new RenderWindow("geeL", 1440, 810, true);
+	RenderWindow* window = new RenderWindow("geeL", 1920, 1080, true);
 	InputManager* manager = new InputManager();
 	manager->defineButton("Forward", GLFW_KEY_W);
 	manager->defineButton("Forward", GLFW_KEY_A);
@@ -214,9 +214,9 @@ void a_shadows() {
 	FXAA fxaa = FXAA();
 	
 	//renderer1.addEffect(ssrr);
-	renderer1.addEffect(dof);
+	//renderer1.addEffect(dof);
 	renderer1.addEffect(raySmooth);
-	renderer1.addEffect(fxaa);
+	//renderer1.addEffect(fxaa);
 	renderer1.render();
 
 	delete testObj;
