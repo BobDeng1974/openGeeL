@@ -5,12 +5,11 @@
 
 namespace geeL {
 
+	//Fast Approximate Anti-Aliasing post effect
 	class FXAA : public PostProcessingEffect {
 
 	public:
-		FXAA();
-
-
+		FXAA() : PostProcessingEffect("renderer/postprocessing/fxaa.frag") {}
 
 	};
 }

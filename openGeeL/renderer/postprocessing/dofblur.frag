@@ -18,8 +18,9 @@ uniform float kernel[5];
 float getSharpness(float depth) {
 	float diff = (focalDistance > depth) ? focalDistance - depth : depth - focalDistance;
 	diff = (diff / farDistance) * aperture;
+	diff = min(diff, 1.f);
 
-	return min(diff, 1.f);
+	return (diff < threshold) ? 0.f : diff;
 }
 
 

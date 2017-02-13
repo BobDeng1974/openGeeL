@@ -36,6 +36,7 @@
 #include "../renderer/postprocessing/ssrr.h"
 #include "../renderer/postprocessing/simpleblur.h"
 #include "../renderer/postprocessing/dof.h"
+#include "../renderer/postprocessing/fxaa.h"
 
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/skybox.h"
@@ -161,7 +162,7 @@ namespace {
 
 
 void a_shadows() {
-	RenderWindow* window = new RenderWindow("geeL", 1440, 810, true);
+	RenderWindow* window = new RenderWindow("geeL", 1920, 1080, true);
 	InputManager* manager = new InputManager();
 	manager->defineButton("Forward", GLFW_KEY_W);
 	manager->defineButton("Forward", GLFW_KEY_A);
@@ -204,12 +205,15 @@ void a_shadows() {
 	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50));
 	SSRR& ssrr = SSRR(camera3);
 	
-	DepthOfFieldBlur blur3 = DepthOfFieldBlur(3, 0.15f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, 5.f, 50.f, 100.f, 0.6f);
+	DepthOfFieldBlur blur3 = DepthOfFieldBlur(3, 0.99f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, 5.f, 25.f, 100.f, 0.6f);
 
-	renderer1.addEffect(ssrr);
-	renderer1.addEffect(dof);
+	FXAA fxaa = FXAA();
+	
+	//renderer1.addEffect(ssrr);
+	//renderer1.addEffect(dof);
 	//renderer1.addEffect(ray);
+	renderer1.addEffect(fxaa);
 	renderer1.render();
 
 	delete testObj;
