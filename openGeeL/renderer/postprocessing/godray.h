@@ -36,6 +36,7 @@ namespace geeL {
 
 	public:
 		GodRaySmooth(GodRay& godRay, GaussianBlur& blur, float resolution = 1.f);
+		~GodRaySmooth();
 
 		virtual void setScreen(ScreenQuad& screen);
 

@@ -33,11 +33,17 @@ namespace geeL {
 	}
 
 
+
 	GodRaySmooth::GodRaySmooth(GodRay& godRay, GaussianBlur& blur, float resolution)
 		: PostProcessingEffect("renderer/postprocessing/combine.frag"), 
 			godRay(godRay), blur(blur), resolution(resolution) {
 	
 		godRay.renderRaysOnly(true);
+	}
+
+	GodRaySmooth::~GodRaySmooth() {
+		if (rayScreen != nullptr)
+			delete rayScreen;
 	}
 
 
@@ -53,7 +59,6 @@ namespace geeL {
 		godRay.setScreen(*rayScreen);
 		blur.setScreen(*rayScreen);
 		blur.setParentFBO(blurBuffer.fbo);
-
 
 		buffers.push_back(blurBuffer.getColorID());
 	}
@@ -72,6 +77,4 @@ namespace geeL {
 		FrameBuffer::resetSize(screen->width, screen->height);
 		FrameBuffer::bind(parentFBO);
 	}
-
-
 }
