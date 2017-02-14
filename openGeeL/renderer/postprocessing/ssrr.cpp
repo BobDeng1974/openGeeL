@@ -16,6 +16,7 @@ namespace geeL {
 		shader.setInteger("gSpecular", shader.mapOffset + 3);
 
 		shader.setMat4("projection", camera.getProjectionMatrix());
+		shader.setInteger("effectOnly", onlyEffect);
 	}
 
 	WorldMaps SSRR::requiredWorldMaps() const {
@@ -42,4 +43,6 @@ namespace geeL {
 
 		setBuffer(maps);
 	}
+
+
 }

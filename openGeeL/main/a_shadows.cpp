@@ -37,6 +37,7 @@
 #include "../renderer/postprocessing/simpleblur.h"
 #include "../renderer/postprocessing/dof.h"
 #include "../renderer/postprocessing/fxaa.h"
+#include "../renderer/postprocessing/blurredeffect.h"
 
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/skybox.h"
@@ -204,18 +205,20 @@ void a_shadows() {
 	
 	GaussianBlur& blur2 = GaussianBlur(1);
 	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50), 15.f);
-	GodRaySmooth raySmooth = GodRaySmooth(ray, blur2, 0.3f);
-
+	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.3f);
+	
+	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR(camera3);
+	BlurredWorldPostEffect ssrrSmooth = BlurredWorldPostEffect(ssrr, blur4, 0.1f);
 	
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(3, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, 5.f, 25.f, 100.f, 0.6f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, 5.f, 5.f, 100.f, 0.8f);
 
 	FXAA fxaa = FXAA();
 	
-	//renderer1.addEffect(ssrr);
-	renderer1.addEffect(dof);
-	renderer1.addEffect(raySmooth);
+	renderer1.addEffect(ssrrSmooth);
+	//renderer1.addEffect(dof);
+	//renderer1.addEffect(raySmooth);
 	renderer1.addEffect(fxaa);
 	renderer1.render();
 

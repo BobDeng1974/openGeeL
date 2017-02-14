@@ -74,7 +74,7 @@ void main() {
 				float sharp = getSharpness(depth);
 
 				result += (texture(image, TexCoords - vec2(0.f, offset)).rgb * sharp + 
-					baseColor * (1.f - sharp))* kernel[i];
+					baseColor * (1.f - sharp)) * kernel[i];
 			}
         }
     }

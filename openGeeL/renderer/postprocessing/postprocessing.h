@@ -31,11 +31,16 @@ namespace geeL {
 
 		virtual std::string toString() const;
 
+		//Determine whether to draw only the effect or effect embed into scene.
+		//May not result in different rendering depending on effect;
+		virtual void effectOnly(bool only);
+
 	protected:
 		std::list<unsigned int> buffers;
 		unsigned int maxBuffers = 4;
 		Shader shader;
 		ScreenQuad* screen;
+		bool onlyEffect;
 
 		virtual void bindValues();
 		virtual void bindToScreen();

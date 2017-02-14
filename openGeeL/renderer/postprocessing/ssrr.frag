@@ -10,6 +10,7 @@ uniform sampler2D gNormalMet;
 uniform sampler2D gSpecular;
 
 uniform mat4 projection;
+uniform int effectOnly;
 
 float border = 1.f;
 
@@ -19,13 +20,13 @@ vec4 transformToClip(vec3 vector);
 vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal, float distanceMultiplier);
 
 void main() {
-	vec3 result   = texture(image, TexCoords).rgb; 
+	vec3 result    = (effectOnly == 0) ? texture(image, TexCoords).rgb : vec3(0.f);
 	float specular = texture(gSpecular, TexCoords).r; 
-	vec3 fragPos  = texture(gPositionDepth, TexCoords).xyz;
-	vec3 normal   = normalize(texture(gNormalMet, TexCoords).rgb);
+	vec3 fragPos   = texture(gPositionDepth, TexCoords).xyz;
+	vec3 normal    = normalize(texture(gNormalMet, TexCoords).rgb);
 	vec3 reflectionDir = normalize(reflect(fragPos, normal));
 
-	float distanceMultiplier = pow(length(fragPos), 0.5f);
+	float distanceMultiplier = 1.f;//pow(length(fragPos), 0.5f);
 
 	float dotNF = dot(normal, normalize(-fragPos));
 	vec3 reflectionColor = specular * getReflection(fragPos, reflectionDir, normal, distanceMultiplier);
@@ -35,7 +36,7 @@ void main() {
 }
 
 vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal, float distanceMultiplier) {
-	int stepCount = 40;
+	int stepCount = 60;
 	float stepSize = 0.15f * distanceMultiplier;
 	float stepGain = 1.05f;
 	float maxDistance = 0.6f * distanceMultiplier;
