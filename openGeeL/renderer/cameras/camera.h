@@ -16,6 +16,8 @@ namespace geeL {
 	class Camera : public SceneObject {
 
 	public:
+		float depth;
+
 		//Defines a static camera 
 		Camera(Transform& transform);
 
@@ -32,6 +34,7 @@ namespace geeL {
 		void uniformBind(int uniformID) const;
 
 		const glm::mat4& getViewMatrix() const;
+		const glm::mat4 getInverseViewMatrix() const;
 		const glm::mat4& getProjectionMatrix() const;
 
 		glm::vec3 getPosition() const;

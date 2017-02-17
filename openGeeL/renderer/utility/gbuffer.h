@@ -21,7 +21,11 @@ namespace geeL {
 		void init(int width, int height);
 		void fill(Drawer& drawer);
 
+		//Returns depth of current drawn image
+		float getDepth() const;
+
 	private:
+		float depthPos;
 		unsigned int generateTexture(unsigned int position, unsigned int type);
 
 	};

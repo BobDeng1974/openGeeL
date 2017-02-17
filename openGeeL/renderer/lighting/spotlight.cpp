@@ -6,7 +6,6 @@
 #include "../transformation/transform.h"
 #include "../scene.h"
 #include "spotlight.h"
-#include <iostream>
 
 using namespace std;
 using namespace glm;

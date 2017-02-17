@@ -8,7 +8,6 @@
 #include "../cameras/camera.h"
 #include "../scene.h"
 #include "pointlight.h"
-#include <iostream>
 
 using namespace std;
 using namespace glm;
@@ -108,7 +107,7 @@ namespace geeL {
 	}
 
 	bool PointLight::adaptShadowmapResolution(float distance) {
-		
+
 		bool changed = false;
 		if (distance < 5.f) {
 
@@ -138,7 +137,6 @@ namespace geeL {
 			}
 		}
 
-		cout << "ayy\n";
 		return changed;
 	}
 

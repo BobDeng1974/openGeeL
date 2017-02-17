@@ -2,6 +2,7 @@
 #include <glew.h>
 #include <glfw3.h>
 #include <gtc/type_ptr.hpp>
+#include <glm.hpp>
 #include "../shader/shader.h"
 #include "camera.h"
 #include "../inputmanager.h"
@@ -30,6 +31,10 @@ namespace geeL {
 
 	const mat4& Camera::getViewMatrix() const {
 		return viewMatrix;
+	}
+
+	const glm::mat4 Camera::getInverseViewMatrix() const {
+		return inverse(viewMatrix);
 	}
 
 	const mat4& Camera::getProjectionMatrix() const {

@@ -55,8 +55,17 @@ namespace geeL {
 		//Draw only the objects in the scene and all with given shader
 		void drawObjects(const Shader& shader) const;
 
+		void setCameraDepth(float depth);
+
+		//Translate vector from world to screen space
 		glm::vec3 TranslateToScreenSpace(glm::vec3 vector) const;
+
+		//Translate vector from world to view space
 		glm::vec3 TranslateToViewSpace(glm::vec3 vector) const;
+
+		//Transflate vector from view to world space
+		glm::vec3 TranslateToWorldSpace(glm::vec3 vector) const;
+
 		const glm::vec3& GetOriginInViewSpace() const;
 		unsigned int getSkyboxID() const;
 

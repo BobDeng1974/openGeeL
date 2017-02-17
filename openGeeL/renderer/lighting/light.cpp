@@ -8,7 +8,6 @@
 #include "../transformation/transform.h"
 #include "../scene.h"
 #include "light.h"
-#include <iostream>
 
 using namespace std;
 using namespace glm;
@@ -90,16 +89,17 @@ namespace geeL {
 
 
 	void Light::adaptShadowmap(const RenderScene& scene) {
+		Transform& trans = scene.camera.transform;
+		vec3 camPosition = trans.position;
 
-		vec3 camPosition = scene.camera.transform.position;
-		vec3 position = transform.position;
+		float depth = scene.camera.depth;
+		vec3 center = camPosition + trans.forward * depth;
+		float intensity = 1 - getIntensity(center);
 
-		//Very weak measurement for resolution check. Better way would be to check distance between
-		//camera and center pixel of camera and scale it with experienced intensity at center pixel.
-		//This is not right now because engine has no way of determining center pixel without any form
-		//of collision detection
-		float distance = length((camPosition - position));
-
+		//Check distance between camera and center pixel of camera 
+		//and scale it with experienced intensity at center pixel.
+		//Used as heuristic for adaptive resolution
+		float distance = intensity * depth;
 		bool changed = adaptShadowmapResolution(distance);
 
 		//Only update texture if resolution actually changed
@@ -132,5 +132,4 @@ namespace geeL {
 	const int Light::getShadowMapFBO() const {
 		return shadowmapFBO;
 	}
-
 }

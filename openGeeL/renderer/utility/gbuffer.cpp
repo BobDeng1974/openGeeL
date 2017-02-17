@@ -44,6 +44,12 @@ namespace geeL {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		drawer.draw();
+
+		//glReadBuffer(GL_COLOR_ATTACHMENT0);
+		float data[3];
+		glReadPixels(width / 2, height / 2, 1, 1, GL_RGBA, GL_FLOAT, data);
+		depthPos = -data[2];
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
@@ -59,6 +65,10 @@ namespace geeL {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, GL_TEXTURE_2D, textureID, 0);
 
 		return textureID;
+	}
+
+	float GBuffer::getDepth() const {
+		return depthPos;
 	}
 
 }

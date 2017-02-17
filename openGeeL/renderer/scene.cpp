@@ -105,6 +105,10 @@ namespace geeL {
 		return *renderer;
 	}
 
+	void RenderScene::setCameraDepth(float depth) {
+		camera.depth = depth;
+	}
+
 	glm::vec3 RenderScene::TranslateToScreenSpace(glm::vec3 vector) const {
 		glm::vec4 vec = camera.getProjectionMatrix() * camera.getViewMatrix() * glm::vec4(vector, 1.f);
 		return glm::vec3(vec.x / vec.w, vec.y / vec.w, vec.z / vec.w) * 0.5f + 0.5f;
@@ -112,6 +116,11 @@ namespace geeL {
 
 	glm::vec3 RenderScene::TranslateToViewSpace(glm::vec3 vector) const {
 		glm::vec4 vec = camera.getViewMatrix() * glm::vec4(vector, 1.f);
+		return glm::vec3(vec.x, vec.y, vec.z);
+	}
+
+	glm::vec3 RenderScene::TranslateToWorldSpace(glm::vec3 vector) const {
+		glm::vec4 vec = camera.getInverseViewMatrix() * glm::vec4(vector, 1.f);
 		return glm::vec3(vec.x, vec.y, vec.z);
 	}
 
