@@ -33,7 +33,7 @@ void main() {
 
 	int sampleCount = 30;
 	float occlusion = 0.f;
-	for(int i = 0; i < sampleCount; i++) {
+	for(int i = 0; i < 30; i++) {
 		vec3 samp = TBN * samples[i];
 		samp = fragPos + samp * radius;
 
@@ -44,8 +44,8 @@ void main() {
 		offset.xyz = offset.xyz * 0.5 + 0.5;
 
 		float depth = texture(gPositionDepth, offset.xy).z;
-		if(depth > samp.z)
-			occlusion += smoothstep(0.f, 1.f, radius / abs(fragPos.z - depth));
+		//Add to occlusion if depth > samp.z
+		occlusion += step(samp.z, depth) * smoothstep(0.f, 1.f, radius / abs(fragPos.z - depth));
 	}
 
 	color = 1.f - (occlusion / float(sampleCount));

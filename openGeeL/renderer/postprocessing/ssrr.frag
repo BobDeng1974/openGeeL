@@ -14,13 +14,12 @@ uniform int effectOnly;
 
 float border = 1.f;
 
-float absDistance(float a, float b);
 vec3 interpolate(vec3 a, vec3 b, float i);
 vec4 transformToClip(vec3 vector);
 vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal, float distanceMultiplier);
 
 void main() {
-	vec3 result    = (effectOnly == 0) ? texture(image, TexCoords).rgb : vec3(0.f);
+	vec3 result    = step(effectOnly, 0.f) * texture(image, TexCoords).rgb;
 	float specular = texture(gSpecular, TexCoords).r; 
 	vec3 fragPos   = texture(gPositionDepth, TexCoords).xyz;
 	vec3 normal    = normalize(texture(gNormalMet, TexCoords).rgb);
@@ -43,8 +42,8 @@ vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal, float distance
 
 	vec3 reflectionColor = vec3(0.f);
 	vec3 currPosition = fragPos;
-	for(int i = 0; i < stepCount; i++) {
-		
+	int i = 0;
+	while(i < stepCount) {
 		currPosition = currPosition + reflectionDir * stepSize;
 		float depth = currPosition.z;
 		stepSize *= stepGain;
@@ -53,11 +52,8 @@ vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal, float distance
 		float currDepth = texture(gPositionDepth, currPosProj.xy).z;
 
 		//Break when reaching border of image
-		if(currPosProj.x >= border || currPosProj.x <= (1.f - border) 
-			|| currPosProj.y >= border || currPosProj.y <= (1.f - border))
-			break; 
-
-		if(currDepth > depth && (currDepth - depth) < maxDistance * stepGain && currDepth < -1) {
+		if(!(currPosProj.x >= border || currPosProj.x <= (1.f - border) || currPosProj.y >= border || currPosProj.y <= (1.f - border))
+			&& currDepth > depth && (currDepth - depth) < maxDistance * stepGain && currDepth < -1) {
 			
 			vec3 left  = currPosition - reflectionDir * stepSize;
 			vec3 right = currPosition;
@@ -82,13 +78,12 @@ vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal, float distance
 
 			//Discard if surface normal and reflected surface normal are too similar. In this case
 			//the backside of reflected surface should be used, but isn't visible to viewer
-			if(dotNR > 0.33f)
-				reflectionColor = vec3(0.f, 0.f, 0.f);
-			else
-				reflectionColor = texture(image, currPosProj.xy).rgb;
+			reflectionColor = step(dotNR, 0.33f) * texture(image, currPosProj.xy).rgb;
 
 			break;
 		}
+
+		i++;
 	}
 
 	return reflectionColor;
@@ -102,13 +97,6 @@ vec4 transformToClip(vec3 vector) {
 	vecProj.xyz = vecProj.xyz * 0.5 + 0.5;
 
 	return vecProj;
-}
-
-float absDistance(float a, float b) {
-	if(a > b)
-		return a - b;
-	else 
-		return b - a;
 }
 
 vec3 interpolate(vec3 a, vec3 b, float i) {

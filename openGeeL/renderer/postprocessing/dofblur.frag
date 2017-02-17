@@ -31,52 +31,32 @@ void main() {
 	vec3 baseColor = texture(image, TexCoords).rgb;
     vec3 result = baseColor * kernel[0]; 
 
-    if(horizontal) {
-        for(int i = 1; i < 5; i++) {
-			float offset = texOffset.x * i;
+	float hor = step(1.f, float(horizontal));
+	float ver = 1 - hor;
 
-			//Sample right pixel
-			if(TexCoords.x + offset < 1.f) {
-				float depth = texture(gPositionDepth, TexCoords + vec2(offset, 0.f)).w;
-				float sharp = getSharpness(depth);
+	vec2 offset = texOffset * vec2(hor, ver);
+	for(int i = 1; i < 5; i++) {
+		vec2 off = offset * i;
 
-				result += (texture(image, TexCoords + vec2(offset, 0.f)).rgb * sharp + 
-					baseColor * (1 - sharp))* kernel[i];
-            }
+		//Check if image borders aren't crossed
+		float inBorders = step(TexCoords.x + off.x, 1.f) * 
+			step(0.f, TexCoords.x - off.x) * 
+			step(TexCoords.y + off.y, 1.f) * 
+			step(0.f, TexCoords.y - off.y);
 
-			//Sample left pixel
-			if(TexCoords.x - offset > 0.f) {
-				float depth = texture(gPositionDepth, TexCoords - vec2(offset, 0.f)).w;
-				float sharp = getSharpness(depth);
+		//Sample right / top pixel
+		float depth = texture(gPositionDepth, TexCoords + off).w;
+		float sharp = getSharpness(depth);
 
-				result += (texture(image, TexCoords - vec2(offset, 0.f)).rgb * sharp + 
-					baseColor * (1.f - sharp))* kernel[i];
-			}
-        }
-    }
-    else {
-        for(int i = 1; i < 5; i++) {
-			float offset = texOffset.y * i;
-			
-			//Sample up pixel
-			if(TexCoords.y + offset < 1.f) {
-				float depth = texture(gPositionDepth, TexCoords + vec2(0.f, offset)).w;
-				float sharp = getSharpness(depth);
+		result += inBorders * 
+			(texture(image, TexCoords + off).rgb * sharp + baseColor * (1 - sharp))* kernel[i];
+            
+		//Sample left / bottom pixel
+		depth = texture(gPositionDepth, TexCoords - off).w;
+		sharp = getSharpness(depth);
 
-				result += (texture(image, TexCoords + vec2(0.f, offset)).rgb * sharp + 
-					baseColor * (1.f - sharp))* kernel[i];
-		
-			}
-
-			//Sample down pixel
-			if(TexCoords.y - offset > 0.f) {
-				float depth = texture(gPositionDepth, TexCoords - vec2(0.f, offset)).w;
-				float sharp = getSharpness(depth);
-
-				result += (texture(image, TexCoords - vec2(0.f, offset)).rgb * sharp + 
-					baseColor * (1.f - sharp)) * kernel[i];
-			}
-        }
+		result += inBorders * 
+			(texture(image, TexCoords - off).rgb * sharp + baseColor * (1.f - sharp))* kernel[i];
     }
 
     color = vec4(result, 1.f);

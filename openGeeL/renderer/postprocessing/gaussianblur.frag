@@ -15,31 +15,26 @@ void main() {
     vec2 texOffset = 1.f / textureSize(image, 0); 
     vec3 result = texture(image, TexCoords).rgb * kernel[0]; 
 
-    if(horizontal) {
-        for(int i = 1; i < 5; i++) {
-			float offset = texOffset.x * i;
+	float hor = step(1.f, float(horizontal));
+	float ver = 1 - hor;
 
-			//Sample right pixel
-			if(TexCoords.x + offset < 1.f)
-				result += texture(image, TexCoords + vec2(offset, 0.f)).rgb * kernel[i];
+	vec2 offset = texOffset * vec2(hor, ver);
+	for(int i = 1; i < 5; i++) {
+		vec2 off = offset * i;
+
+		//Check if image borders aren't crossed
+		float inBorders = step(TexCoords.x + off.x, 1.f) * 
+			step(0.f, TexCoords.x - off.x) * 
+			step(TexCoords.y + off.y, 1.f) * 
+			step(0.f, TexCoords.y - off.y);
+
+		//Sample right / top pixel
+		result +=  inBorders * 
+			texture(image, TexCoords + off).rgb * kernel[i];
             
-			//Sample left pixel
-			if(TexCoords.x - offset > 0.f)
-				result += texture(image, TexCoords - vec2(offset, 0.f)).rgb * kernel[i];
-        }
-    }
-    else {
-        for(int i = 1; i < 5; i++) {
-			float offset = texOffset.y * i;
-			
-			//Sample up pixel
-			if(TexCoords.y + offset < 1.f)
-				result += texture(image, TexCoords + vec2(0.f, offset)).rgb * kernel[i];
-
-			//Sample down pixel
-			if(TexCoords.y - offset > 0.f)
-				result += texture(image, TexCoords - vec2(0.f, offset)).rgb * kernel[i];
-        }
+		//Sample left / bottom pixel
+		result += inBorders *
+			texture(image, TexCoords - off).rgb * kernel[i];
     }
 
     color = vec4(result, 1.f);

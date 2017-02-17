@@ -1,7 +1,6 @@
 #include "gaussianblur.h"
 #include "../utility/screenquad.h"
 #include "dof.h"
-#include <iostream>
 
 using namespace std;
 

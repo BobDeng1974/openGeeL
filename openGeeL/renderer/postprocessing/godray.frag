@@ -1,4 +1,4 @@
-#version 330 core
+#version 430 core
 
 in vec2 TexCoords;
 out vec4 color;
@@ -28,11 +28,11 @@ void main() {
 	deltaCoords *= 1.0f / (float(samples) * density);
 	
 	float currDecay = 1.0f;
-	vec3 result = (raysOnly == 0) ? texture(image, TexCoords).rgb : vec3(0.f);
+	vec3 result = step(raysOnly, 0.f) * texture(image, TexCoords).rgb;
 
 	float i = 0;
 	while(i < samples) {
-		float offset = (angle > 0.1) ? 0.5f + 0.5f * max(0.1f, random(coords)) : 0.5;
+		float offset = 0.5f + step(0.1f, angle) * 0.5f * max(0.1f, random(coords));
 		coords -= deltaCoords * offset;
 		result += texture(image, coords).rgb * currDecay * offset * falloff;
 		currDecay *= decay;
