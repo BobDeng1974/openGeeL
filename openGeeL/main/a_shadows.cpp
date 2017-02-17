@@ -235,13 +235,13 @@ void a_shadows() {
 	BlurredWorldPostEffect ssrrSmooth = BlurredWorldPostEffect(ssrr, blur4, 0.3f);
 	
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(3, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera3.depth, 5.f, 100.f, 0.4f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera3.depth, 3.f, 100.f, 0.4f);
 
 	FXAA fxaa = FXAA();
 	
-	renderer1.addEffect(ssrrSmooth);
-	renderer1.addEffect(dof);
-	renderer1.addEffect(raySmooth);
+	//renderer1.addEffect(ssrrSmooth);
+	//renderer1.addEffect(dof);
+	//renderer1.addEffect(raySmooth);
 	renderer1.addEffect(fxaa);
 	renderer1.render();
 

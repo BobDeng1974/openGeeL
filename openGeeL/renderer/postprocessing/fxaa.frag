@@ -32,29 +32,30 @@ void main() {
 		color = vec4(texture2D(image, TexCoords).rgb, 1.0f);
 		return;
 	}
+	else {
+		//Scale min value with mean luminance
+		float minValue = max((lumaTL + lumaTR + lumaBL + lumaBR) * (0.25f * FXAA_MIN), 0.001f); 
+		float normalize = 1.f / min(abs(blurDirection.x + minValue), abs(blurDirection.y) + minValue);
 
-	//Scale min value with mean luminance
-	float minValue = max((lumaTL + lumaTR + lumaBL + lumaBR) * (0.25f * FXAA_MIN), 0.001f); 
-	float normalize = 1.f / min(abs(blurDirection.x + minValue), abs(blurDirection.y) + minValue);
-
-	blurDirection = blurDirection * normalize;
-	blurDirection = clamp(blurDirection, vec2(-FXAA_CLAMP), vec2(FXAA_CLAMP));
-	blurDirection = blurDirection * texOffset;
+		blurDirection = blurDirection * normalize;
+		blurDirection = clamp(blurDirection, vec2(-FXAA_CLAMP), vec2(FXAA_CLAMP));
+		blurDirection = blurDirection * texOffset;
 
 
-	vec3 result1 = 0.5f * 
-		(texture2D(image, TexCoords + (vec2(-0.15f) * blurDirection)).rgb + 
-		texture2D(image, TexCoords + (vec2(0.15f) * blurDirection)).rgb);
+		vec3 result1 = 0.5f * 
+			(texture2D(image, TexCoords + (vec2(-0.15f) * blurDirection)).rgb + 
+			texture2D(image, TexCoords + (vec2(0.15f) * blurDirection)).rgb);
 
-	vec3 result2 = 0.5f * 
-		(texture2D(image, TexCoords + (vec2(-0.6f) * blurDirection)).rgb + 
-		texture2D(image, TexCoords + (vec2(0.6f) * blurDirection)).rgb);
+		vec3 result2 = 0.5f * 
+			(texture2D(image, TexCoords + (vec2(-0.6f) * blurDirection)).rgb + 
+			texture2D(image, TexCoords + (vec2(0.6f) * blurDirection)).rgb);
 
-	float lumaResult = dot(luminance, result2);
+		float lumaResult = dot(luminance, result2);
 
 	
-	if(lumaResult > lumaMin && lumaResult < lumaMax)
-		color = vec4(result2, 1.0f);
-	else
-		color = vec4(result1, 1.0f);
+		if(lumaResult > lumaMin && lumaResult < lumaMax)
+			color = vec4(result2, 1.0f);
+		else
+			color = vec4(result1, 1.0f);	
+	}
 }

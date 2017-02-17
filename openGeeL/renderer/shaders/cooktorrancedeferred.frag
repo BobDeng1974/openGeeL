@@ -163,15 +163,43 @@ float calculateGeometryFunctionSmith(vec3 normal, vec3 viewDirection, vec3 light
 
 //Reflectance equation with Cook-Torrance BRDF
 vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection, 
-	vec3 lightPosition, vec3 lightDiffuse, vec3 albedo, vec3 kd, vec3 ks, float roughness, bool directional, vec3 reflection) {
+	vec3 lightPosition, vec3 lightDiffuse, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection) {
 	
-	vec3 dir = directional ? -lightPosition : lightPosition - fragPosition;
+	vec3 dir = lightPosition - fragPosition;
 	vec3 lightDirection   = normalize(dir);
 	vec3 halfwayDirection = normalize(lightDirection + viewDirection);
 
 	float lightDistance = length(dir);
-	float attenuation = directional ? 1.0f : (1.0f / (lightDistance * lightDistance)); //Inverse square law
+	float attenuation = 1.0f / (lightDistance * lightDistance); //Inverse square law
 	vec3  radiance = lightDiffuse * attenuation;
+
+	//BRDF
+	float ndf = calculateNormalDistrubution(normal, halfwayDirection, roughness);
+	float geo = calculateGeometryFunctionSmith(normal, viewDirection, lightDirection, roughness);
+
+	vec3  nom   = ndf * geo * ks; //Fresnel term equivalent to kS
+	//add small fraction to prevent ill behaviour when dividing by zero (shadows no longer additive)
+	float denom =  4.0f * doto(viewDirection, normal) * doto(lightDirection, normal) + 0.001f; 
+	vec3  brdf  = nom / denom;
+
+	//Lighting equation
+	float NdotL = doto(normal, lightDirection);     
+	
+	gSpecular +=  luminance(ks) * (1.0f - roughness) * NdotL * luminance(radiance);
+
+	return (((kd * albedo / PI + brdf) * radiance) + reflection) * NdotL; 
+}
+
+//Reflectance equation with Cook-Torrance BRDF for directional light
+vec3 calculateReflectanceDirectional(vec3 fragPosition, vec3 normal, vec3 viewDirection, 
+	vec3 lightPosition, vec3 lightDiffuse, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection) {
+	
+	vec3 dir = -lightPosition;
+	vec3 lightDirection   = normalize(dir);
+	vec3 halfwayDirection = normalize(lightDirection + viewDirection);
+
+	float lightDistance = length(dir);
+	vec3  radiance = lightDiffuse;
 
 	//BRDF
 	float ndf = calculateNormalDistrubution(normal, halfwayDirection, roughness);
@@ -194,7 +222,7 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal,
 	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection) {
 
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
-		viewDirection, light.position, light.diffuse, albedo, kd, ks, roughness, false, reflection);
+		viewDirection, light.position, light.diffuse, albedo, kd, ks, roughness, reflection);
 	float shadow = 1.0f - calculatePointLightShadows(index, normal, fragPosition);
 	
     return shadow * reflectance;
@@ -211,7 +239,7 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal,
     float intensity = clamp((theta - light.outerAngle) / epsilon, 0.0, 1.0);
 
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
-		viewDirection, light.position, light.diffuse, albedo, kd, ks, roughness, false, reflection);
+		viewDirection, light.position, light.diffuse, albedo, kd, ks, roughness, reflection);
 	float shadow = 1.0f - calculateSpotLightShadows(index, normal, fragPosition);
 
     return shadow * reflectance * intensity;
@@ -220,8 +248,8 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal,
 vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, 
 	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection) {
 	
-	vec3 reflectance = calculateReflectance(fragPosition, normal, 
-		viewDirection, light.direction, light.diffuse, albedo, kd, ks, roughness, true, reflection);
+	vec3 reflectance = calculateReflectanceDirectional(fragPosition, normal, 
+		viewDirection, light.direction, light.diffuse, albedo, kd, ks, roughness, reflection);
 	float shadow = 1.0f - calculateDirectionalLightShadows(index, normal, fragPosition);
 	
     return shadow * reflectance;
@@ -267,25 +295,42 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 
 	//Dont' draw shadow when too far away from the viewer or from light
 	float camDistance = length(fragPosition) / pointLights[i].farPlane;
-	if(camDistance > 1.0f || curDepth > 0.5f)
+	if(camDistance > 10.0f || curDepth > 1.f)
 		return 0.0f;
+	else {
+		float minBias = pointLights[i].bias;
+		vec3 dir = normalize(pointLights[i].position - fragPosition);
+		float bias = max((minBias * 10.f) * (1.f - abs(dot(norm, dir))), minBias);
 
-	float minBias = pointLights[i].bias;
-	vec3 lightDir =  spotLights[i].position - fragPosition;
-	float bias = max((minBias * 10.0f) * (1.0f - dot(norm, lightDir)), minBias);
+		vec2 size = textureSize(pointLights[i].shadowMap, 0);
+		float mag = (size.x + size.y) * 0.035f;
+		float dist = length(fragPosition - pointLights[i].position);
+		float diskRadius = (1.f + (dist / 150.f)) / mag;
 
-	float shadow = 0.0f;
-	int samples = 5;
-	float diskRadius = 0.03f;
+		float testSamples = 4;
+		float testShadow = 0;
+		for(int j = 0; j < testSamples; j++) {
+			float depth = texture(pointLights[i].shadowMap, direction + sampleDirections3D[j] * diskRadius).r;
+			testShadow += curDepth - bias > depth ? 1 : 0;        
+		}  
 
-	for(int j = 0; j < samples; j++) {
-		int index = int(20.0f * random(floor(fragPosition.xyz * 1000.0f), j)) % 20;
+		testShadow = testShadow / float(testSamples);
 
-		float depth = texture(pointLights[i].shadowMap, direction + sampleDirections3D[index] * diskRadius).r;
-		shadow += curDepth - bias > depth ? 1.0f : 0.0f;        
-	}    
+		if(testShadow == 0.f || testShadow == 1.f)
+			return testShadow;
+		else {
+			float shadow = 0.0f;
+			int samples = 50;
+			for(int j = 0; j < samples; j++) {
+				int index = int(20.0f * random(floor(fragPosition.xyz * 1000.0f), j)) % 20;
 
-	return shadow / float(samples);
+				float depth = texture(pointLights[i].shadowMap, direction + sampleDirections3D[index] * diskRadius).r;
+				shadow += curDepth - bias > depth ? 1.0f : 0.0f;        
+			}    
+
+			return (shadow) / float(samples);
+		}
+	}
 }
 
 float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition) {
@@ -296,25 +341,24 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	//Don't draw shadow when outside of farPlane region.
     if(coords.z > 1.0f)
         return 0.0f;
-	
-	float minBias = spotLights[i].bias;
-	vec3 lightDir =  spotLights[i].position - fragPosition;
-	float bias = max((minBias * 10.0f) * (1.0f - dot(norm, lightDir)), minBias);
-	float curDepth = coords.z - bias;
+	else {
+		float minBias = spotLights[i].bias;
+		vec3 lightDir =  spotLights[i].position - fragPosition;
+		float bias = max((minBias * 10.0f) * (1.0f - dot(norm, lightDir)), minBias);
+		float curDepth = coords.z - bias;
 
-	float shadow = 0.0;
-	vec2 texelSize = 1.0f / textureSize(spotLights[i].shadowMap, 0);
-	//Interpolate shadow map in kernel around point
-	int kernel = 1;
-	for(int x = -kernel; x <= kernel; x++) {
-		for(int y = -kernel; y <= kernel; y++) {
-			float depth = texture(spotLights[i].shadowMap, coords.xy + vec2(x, y) * texelSize).r;
-			shadow += curDepth - bias > depth ? 1.0f : 0.0f;     
+		float shadow = 0.0;
+		vec2 texelSize = 1.0f / textureSize(spotLights[i].shadowMap, 0);
+		int samples = 8;
+		for(int j = 0; j < samples; j++) {
+			int index = int(20.0f * random(floor(fragPosition.xyz * 1000.0f), j)) % 20;
+
+			float depth = texture(spotLights[i].shadowMap, coords.xy + sampleDirections2D[index] * texelSize).r;
+			shadow += curDepth - bias > depth ? 1.0f : 0.0f;        
 		}    
-	}
 	
-	int kernelSize = 2 * kernel + 1; 
-	return shadow / (kernelSize * kernelSize);
+		return shadow / float(samples);
+	}
 }
 
 float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
@@ -325,25 +369,24 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	//Don't draw shadow when outside of farPlane region.
     if(coords.z > 1.0f)
         return 0.0f;
+	else {
+		float mapDepth = texture(directionalLights[i].shadowMap, coords.xy).r;
+		float bias = directionalLights[i].bias;
+		//float bias = max(0.05f * (1.0f - dot(norm, lightDir)), 0.005f);
+		float curDepth = coords.z - bias;
 
-	float mapDepth = texture(directionalLights[i].shadowMap, coords.xy).r;
-	float bias = directionalLights[i].bias;
-	//float bias = max(0.05f * (1.0f - dot(norm, lightDir)), 0.005f);
-	float curDepth = coords.z - bias;
+		float shadow = 0.0;
+		vec2 texelSize = 1.0f / textureSize(directionalLights[i].shadowMap, 0);
+		int samples = 8;
+		for(int j = 0; j < samples; j++) {
+			int index = int(20.0f * random(floor(fragPosition.xyz * 1000.0f), j)) % 20;
 
-	float shadow = 0.0;
-	vec2 texelSize = 1.0f / textureSize(directionalLights[i].shadowMap, 0);
-	//Interpolate shadow map in kernel around point
-	int kernel = 1;
-	for(int x = -kernel; x <= kernel; x++) {
-		for(int y = -kernel; y <= kernel; y++) {
-			float depth = texture(directionalLights[i].shadowMap, coords.xy + vec2(x, y) * texelSize).r; 
+			float depth = texture(directionalLights[i].shadowMap, coords.xy + sampleDirections2D[index] * texelSize).r;
 			shadow += curDepth - bias > depth ? 1.0f : 0.0f;        
 		}    
-	}
 	
-	int kernelSize = 2 * kernel + 1; 
-	return shadow / (kernelSize * kernelSize);
+		return shadow / float(samples);
+	}
 }
 
 

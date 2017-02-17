@@ -129,13 +129,13 @@ namespace geeL {
 			handleInput();
 
 			glEnable(GL_DEPTH_TEST);
-			scene->lightManager.drawShadowmaps(*scene);
-
+			
 			//Geometry pass
 			gBuffer.fill(*this);
 
 			//Hacky: Read camera depth from geometry pass and write it into the scene
 			scene->setCameraDepth(gBuffer.getDepth());
+			scene->lightManager.drawShadowmaps(*scene);
 
 			//SSAO pass
 			if (ssao != nullptr) {

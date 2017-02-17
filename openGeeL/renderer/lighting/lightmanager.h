@@ -40,7 +40,7 @@ namespace geeL {
 	
 		//Add and create point light
 		PointLight& addPointLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,
-			float shadowBias = 0.006f);
+			float shadowBias = 0.002f);
 	
 		//Add and create spotlight
 		SpotLight& addSpotlight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,

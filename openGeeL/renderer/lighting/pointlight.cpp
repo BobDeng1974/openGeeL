@@ -114,27 +114,27 @@ namespace geeL {
 			int resolution = 1024; //^= ShadowmapResolution::VeryHigh
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);
-				dynamicBias = shadowBias * 0.8f;
+				dynamicBias = shadowBias * 0.6f;
 				changed = true;
 			}
 		}
-		else if (distance < 10.f) {
+		else if (distance < 15.f) {
 
 			int resolution = 512; //^= ShadowmapResolution::High
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);
-				dynamicBias = shadowBias * 1.1f;
+				dynamicBias = shadowBias * 0.8f;
 				changed = true;
 			}
 		}
 		else {
-
 			int resolution = 256; //^= ShadowmapResolution::Medium
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);
-				dynamicBias = shadowBias * 2.f;
 				changed = true;
 			}
+
+			dynamicBias = (distance > 15.f) ? shadowBias * 2.f : shadowBias * 1.2f;
 		}
 
 		return changed;
