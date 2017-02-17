@@ -13,8 +13,10 @@ using namespace glm;
 namespace geeL {
 
 	DirectionalLight::DirectionalLight(Transform& transform, vec3 diffuse, vec3 ambient, 
-		float shadowBias)
-		: Light(transform, diffuse, ambient, shadowBias) {}
+		float shadowBias) : Light(transform, diffuse, ambient, shadowBias) {
+	
+		setResolution(ShadowmapResolution::Medium);
+	}
 
 
 	void DirectionalLight::deferredBind(const RenderScene& scene, const Shader& shader, int index, string name) const {
@@ -41,5 +43,15 @@ namespace geeL {
 		mat4 view = lookAt(transform.forward, vec3(0), vec3(0.f, 1.f, 0.f));
 		
 		lightTransform = projection * view;
+	}
+
+	float DirectionalLight::getIntensity(glm::vec3 point) const {
+		return 1.f;
+	}
+
+	bool DirectionalLight::adaptShadowmapResolution(float distance) {
+		//TODO: implement this
+
+		return false;
 	}
 }

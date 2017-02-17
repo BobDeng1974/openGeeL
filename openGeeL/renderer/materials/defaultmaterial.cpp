@@ -38,6 +38,10 @@ namespace geeL {
 		metallic = value;
 	}
 
+	void DefaultMaterial::setColor(glm::vec3 value) {
+		color = value;
+	}
+
 	void DefaultMaterial::bindTextures() const {
 		shader.use();
 		textureStack.bind(shader, "");
@@ -52,5 +56,6 @@ namespace geeL {
 		shader.setFloat("material.type", type);
 		shader.setFloat("material.roughness", roughness);
 		shader.setFloat("material.metallic", metallic);
+		shader.setVector3("material.color", color);
 	}
 }

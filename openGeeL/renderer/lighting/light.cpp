@@ -4,13 +4,21 @@
 #include <gtc/type_ptr.hpp>
 #include "../shader/shader.h"
 #include "../meshes/meshrenderer.h"
+#include "../cameras/camera.h"
+#include "../transformation/transform.h"
 #include "../scene.h"
 #include "light.h"
+#include <iostream>
 
 using namespace std;
 using namespace glm;
 
 namespace geeL {
+
+	Light::Light(Transform& transform, vec3 diffuse, vec3 specular, float shadowBias)
+		: SceneObject(transform), diffuse(diffuse), specular(specular), shadowBias(shadowBias), dynamicBias(shadowBias) {}
+
+
 
 	void Light::deferredBind(const RenderScene& scene, const Shader& shader, int index, string name) const {
 		forwardBind(shader, index, name);
@@ -21,12 +29,10 @@ namespace geeL {
 
 		shader.setVector3(location + "diffuse", diffuse);
 		shader.setVector3(location + "specular", specular);
-
-		shader.setFloat(location + "bias", shadowBias);
+		shader.setFloat(location + "bias", dynamicBias);
 	}
 
 	void Light::initShadowmap() {
-		shadowmapHeight = shadowmapWidth = 512;
 
 		//Generate depth map texture
 		glGenTextures(1, &shadowmapID);
@@ -62,12 +68,61 @@ namespace geeL {
 		computeLightTransform();
 		shader.setMat4("lightTransform", lightTransform);
 
+		if(resolution == ShadowmapResolution::Adaptive)
+			adaptShadowmap(scene);
+
 		glViewport(0, 0, shadowmapWidth, shadowmapHeight);
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowmapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		scene.drawObjects(shader);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	float Light::getIntensity(glm::vec3 point) const {
+		float distance = length(transform.position - point);
+
+		if (distance == 0.f)
+			return 0.f;
+		
+		return 1.f / (distance * distance);
+	}
+
+
+	void Light::adaptShadowmap(const RenderScene& scene) {
+
+		vec3 camPosition = scene.camera.transform.position;
+		vec3 position = transform.position;
+
+		//Very weak measurement for resolution check. Better way would be to check distance between
+		//camera and center pixel of camera and scale it with experienced intensity at center pixel.
+		//This is not right now because engine has no way of determining center pixel without any form
+		//of collision detection
+		float distance = length((camPosition - position));
+
+		bool changed = adaptShadowmapResolution(distance);
+
+		//Only update texture if resolution actually changed
+		if (changed)
+			bindShadowmapResolution();
+	}
+
+	void Light::bindShadowmapResolution() const {
+		glBindTexture(GL_TEXTURE_2D, shadowmapID);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+			shadowmapWidth, shadowmapHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	void Light::setResolution(ShadowmapResolution resolution) {
+		this->resolution = resolution;
+
+		setDimensions((int)resolution);
+	}
+
+	void Light::setDimensions(int resolution) {
+		shadowmapWidth = shadowmapHeight = resolution;
 	}
 
 	const int Light::getShadowMapID() const {
@@ -77,4 +132,5 @@ namespace geeL {
 	const int Light::getShadowMapFBO() const {
 		return shadowmapFBO;
 	}
+
 }

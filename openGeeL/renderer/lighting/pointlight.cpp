@@ -8,6 +8,7 @@
 #include "../cameras/camera.h"
 #include "../scene.h"
 #include "pointlight.h"
+#include <iostream>
 
 using namespace std;
 using namespace glm;
@@ -19,6 +20,8 @@ namespace geeL {
 	
 		lightTransforms.reserve(6);
 		initLightTransform();
+
+		setResolution(ShadowmapResolution::Adaptive);
 	}
 
 
@@ -39,7 +42,6 @@ namespace geeL {
 	}
 
 	void PointLight::initShadowmap() {
-		shadowmapHeight = shadowmapWidth = 512;
 
 		//Generate depth cube map texture
 		glGenTextures(1, &shadowmapID);
@@ -82,12 +84,62 @@ namespace geeL {
 
 		shader.setFloat("farPlane", farPlane);
 		shader.setVector3("lightPosition", transform.position);
+
+		if (resolution == ShadowmapResolution::Adaptive)
+			adaptShadowmap(scene);
+
 		glViewport(0, 0, shadowmapWidth, shadowmapHeight);
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowmapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		scene.drawObjects(shader);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void PointLight::bindShadowmapResolution() const {
+		glBindTexture(GL_TEXTURE_CUBE_MAP, shadowmapID);
+
+		//Write faces of the cubemap
+		for (int i = 0; i < 6; i++)
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
+				shadowmapWidth, shadowmapHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
+
+	bool PointLight::adaptShadowmapResolution(float distance) {
+		
+		bool changed = false;
+		if (distance < 5.f) {
+
+			int resolution = 1024; //^= ShadowmapResolution::VeryHigh
+			if (shadowmapWidth != resolution) {
+				setDimensions(resolution);
+				dynamicBias = shadowBias * 0.8f;
+				changed = true;
+			}
+		}
+		else if (distance < 10.f) {
+
+			int resolution = 512; //^= ShadowmapResolution::High
+			if (shadowmapWidth != resolution) {
+				setDimensions(resolution);
+				dynamicBias = shadowBias * 1.1f;
+				changed = true;
+			}
+		}
+		else {
+
+			int resolution = 256; //^= ShadowmapResolution::Medium
+			if (shadowmapWidth != resolution) {
+				setDimensions(resolution);
+				dynamicBias = shadowBias * 2.f;
+				changed = true;
+			}
+		}
+
+		cout << "ayy\n";
+		return changed;
 	}
 
 	
@@ -134,5 +186,4 @@ namespace geeL {
 		view = glm::lookAt(transform.position, transform.position + vec3(0.f, 0.f, -1.f), vec3(0.f, -1.f, 0.f));
 		lightTransforms[5] = projection * view;
 	}
-	
 }

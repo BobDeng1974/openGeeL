@@ -23,11 +23,13 @@ namespace geeL {
 		void addTextures(std::vector<SimpleTexture*> textures);
 		void setRoughness(float value);
 		void setMetallic(float value);
+		void setColor(glm::vec3 value);
 
 		virtual void bindTextures() const;
 		virtual void bind() const;
 
 	private:
+		glm::vec3 color;
 		float roughness;
 		float metallic;
 		LayeredTexture textureStack;

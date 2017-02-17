@@ -109,17 +109,29 @@ namespace {
 			nanoRenderer = &scene.AddMeshRenderer("resources/nanosuit/nanosuit.obj", *transi, cullFront);
 
 			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(100.2f, 0.2f, 100.2f));
-			scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront);
+			MeshRenderer& plane = scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront);
 
-			geeL::Transform* transi5 = new geeL::Transform(glm::vec3(0.0f, 5, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(5.2f, 1.2f, 5.2f));
-			MeshRenderer& box1 = scene.AddMeshRenderer("resources/primitives/cube.obj", *transi5, cullFront);
+			for (auto it = plane.defaultMaterialsBegin(); it != plane.defaultMaterialsEnd(); it++) {
+				Material* mat = it->second;
+				DefaultMaterial* defmat = dynamic_cast<DefaultMaterial*>(mat);
+
+				if (defmat != nullptr) {
+					defmat->setRoughness(0.2f);
+					defmat->setColor(vec3(0.4f, 0.4f, 0.4f));
+				}
+			}
+
+			geeL::Transform* transi5 = new geeL::Transform(glm::vec3(-30.0f, -4.f, 25.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.3f, 0.3f, 0.3f));
+			MeshRenderer& box1 = scene.AddMeshRenderer("resources/empire/EmpireState_lp.obj", *transi5, cullFront);
 
 			for (auto it = box1.defaultMaterialsBegin(); it != box1.defaultMaterialsEnd(); it++) {
 				Material* mat = it->second;
 				DefaultMaterial* defmat = dynamic_cast<DefaultMaterial*>(mat);
 
-				if (defmat != nullptr)
-					defmat->setRoughness(0.2f);
+				if (defmat != nullptr) {
+					defmat->setRoughness(0.9f);
+					defmat->setColor(vec3(0.5f, 0.5f, 0.5f));
+				}
 			}
 
 			geeL::Transform* transi7 = new geeL::Transform(glm::vec3(8.f, 0.f, 4.f), glm::vec3(0.f), glm::vec3(1.f, 1.f, 1.f));
@@ -136,7 +148,18 @@ namespace {
 			}
 
 			geeL::Transform* transi3 = new geeL::Transform(glm::vec3(0.0f, 1, -2.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(5.2f, 2.2f, 1.2f));
-			scene.AddMeshRenderer("resources/primitives/cube.obj", *transi3, cullFront);
+			MeshRenderer& box = scene.AddMeshRenderer("resources/primitives/cube.obj", *transi3, cullFront);
+
+			for (auto it = box.defaultMaterialsBegin(); it != box.defaultMaterialsEnd(); it++) {
+				Material* mat = it->second;
+				DefaultMaterial* defmat = dynamic_cast<DefaultMaterial*>(mat);
+
+				if (defmat != nullptr) {
+					defmat->setRoughness(0.f);
+					defmat->setMetallic(0.1f);
+					defmat->setColor(vec3(0.1f, 0.1f, 0.1f));
+				}
+			}
 
 			GenericMaterial* custom = &materialFactory.CreateMaterial(materialFactory.getForwardShader());
 			custom->addParameter("shininess", 64.f);
@@ -209,14 +232,14 @@ void a_shadows() {
 	
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR(camera3);
-	BlurredWorldPostEffect ssrrSmooth = BlurredWorldPostEffect(ssrr, blur4, 0.1f);
+	BlurredWorldPostEffect ssrrSmooth = BlurredWorldPostEffect(ssrr, blur4, 0.3f);
 	
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(3, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, 5.f, 5.f, 100.f, 0.8f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, 5.f, 10.f, 100.f, 0.8f);
 
 	FXAA fxaa = FXAA();
 	
-	renderer1.addEffect(ssrrSmooth);
+	//renderer1.addEffect(ssrrSmooth);
 	//renderer1.addEffect(dof);
 	//renderer1.addEffect(raySmooth);
 	renderer1.addEffect(fxaa);

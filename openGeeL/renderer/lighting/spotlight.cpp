@@ -16,9 +16,11 @@ namespace geeL {
 
 	SpotLight::SpotLight(Transform& transform, vec3 diffuse, vec3 specular, 
 		float angle, float outerAngle, float shadowBias)
-		: 
-		Light(transform, diffuse, specular, shadowBias),
-		angle(angle), outerAngle(outerAngle) {}
+			: Light(transform, diffuse, specular, shadowBias), 
+				angle(angle), outerAngle(outerAngle) {
+	
+		setResolution(ShadowmapResolution::Adaptive);
+	}
 
 
 	void SpotLight::deferredBind(const RenderScene& scene, const Shader& shader, int index, string name) const {
@@ -52,5 +54,48 @@ namespace geeL {
 		mat4 view = lookAt(transform.position, transform.position + transform.forward, transform.up);
 
 		lightTransform = projection * view;
+	}
+
+	bool SpotLight::adaptShadowmapResolution(float distance) {
+
+		bool changed = false;
+		if (distance < 5.f) {
+
+			int resolution = 1024; //^= ShadowmapResolution::VeryHigh
+			if (shadowmapWidth != resolution) {
+				setDimensions(resolution);
+				dynamicBias = shadowBias * 0.5f;
+				changed = true;
+			}
+		}
+		else if (distance < 10.f) {
+
+			int resolution = 512; //^= ShadowmapResolution::High
+			if (shadowmapWidth != resolution) {
+				setDimensions(resolution);
+				dynamicBias = shadowBias * 0.5f;
+				changed = true;
+			}
+		}
+		else if (distance < 15.f) {
+
+			int resolution = 256; //^= ShadowmapResolution::Medium
+			if (shadowmapWidth != resolution) {
+				setDimensions(resolution);
+				dynamicBias = shadowBias;
+				changed = true;
+			}
+		}
+		else {
+
+			int resolution = 128; //^= ShadowmapResolution::Small
+			if (shadowmapWidth != resolution) {
+				setDimensions(resolution);
+				dynamicBias = shadowBias * 2.f;
+				changed = true;
+			}
+		}
+
+		return changed;
 	}
 }

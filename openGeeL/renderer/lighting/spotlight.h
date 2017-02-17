@@ -11,11 +11,14 @@ namespace geeL {
 
 	public:
 		SpotLight(Transform& transform, vec3 diffuse, vec3 specular, 
-			float angle = 30.f, float outerAngle = 5.f, float shadowBias = 0.0005f);
+			float angle = 30.f, float outerAngle = 5.f, float shadowBias = 0.003f);
 
 		virtual void deferredBind(const RenderScene& scene, const Shader& shader, int index, std::string name) const;
 		virtual void forwardBind(const Shader& shader, int index, std::string name) const;
 		virtual void computeLightTransform();
+
+	protected:
+		virtual bool adaptShadowmapResolution(float distance);
 
 	private:
 		float angle, outerAngle;

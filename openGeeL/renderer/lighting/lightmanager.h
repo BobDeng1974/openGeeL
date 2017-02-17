@@ -40,11 +40,11 @@ namespace geeL {
 	
 		//Add and create point light
 		PointLight& addPointLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,
-			float shadowBias = 0.007f);
+			float shadowBias = 0.006f);
 	
 		//Add and create spotlight
 		SpotLight& addSpotlight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,
-			float angle, float outerAngle, float shadowBias = 0.0005f);
+			float angle, float outerAngle, float shadowBias = 0.0017f);
 
 
 		void deferredBind(const RenderScene& scene, const Shader& shader) const;

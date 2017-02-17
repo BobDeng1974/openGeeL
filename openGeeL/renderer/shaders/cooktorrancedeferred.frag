@@ -270,10 +270,9 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	if(camDistance > 1.0f || curDepth > 0.5f)
 		return 0.0f;
 
-	//float minBias = pointLights[i].bias;
-	float minBias = 0.006f;
+	float minBias = pointLights[i].bias;
 	vec3 lightDir =  spotLights[i].position - fragPosition;
-	float bias = max((minBias * 5.0f) * (1.0f - dot(norm, lightDir)), minBias);
+	float bias = max((minBias * 10.0f) * (1.0f - dot(norm, lightDir)), minBias);
 
 	float shadow = 0.0f;
 	int samples = 5;
@@ -298,8 +297,7 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition) {
     if(coords.z > 1.0f)
         return 0.0f;
 	
-	//float minBias = spotLights[i].bias;
-	float minBias = 0.001f;
+	float minBias = spotLights[i].bias;
 	vec3 lightDir =  spotLights[i].position - fragPosition;
 	float bias = max((minBias * 10.0f) * (1.0f - dot(norm, lightDir)), minBias);
 	float curDepth = coords.z - bias;
