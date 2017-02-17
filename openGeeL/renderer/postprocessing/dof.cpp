@@ -28,7 +28,7 @@ namespace geeL {
 
 
 	DepthOfFieldBlurred::DepthOfFieldBlurred(DepthOfFieldBlur& blur,
-		float focalLength, float aperture, float farDistance, float blurResolution)
+		const float& focalLength, float aperture, float farDistance, float blurResolution)
 			: WorldPostProcessingEffect("renderer/postprocessing/dof.frag"), 
 				blur(blur), focalLength(focalLength), aperture(aperture), 
 				farDistance(farDistance), blurResolution(blurResolution), blurScreen(nullptr) {}
@@ -55,13 +55,16 @@ namespace geeL {
 		shader.setInteger("gPositionDepth", shader.mapOffset + 1);
 		shader.setInteger("blurredImage", shader.mapOffset + 2);
 
-		shader.setFloat("focalDistance", focalLength);
+		//Clamp focal length with reasonable values
+		float dist = (focalLength < 0.f || focalLength > 30.f) ? 30.f : focalLength;
+
+		shader.setFloat("focalDistance", dist);
 		shader.setFloat("aperture", aperture);
 		shader.setFloat("farDistance", farDistance);
 
 		//blur.setBuffer(buffers.front());
 		blur.setBuffer({ buffers.front(), *next(buffers.begin())});
-		blur.bindDoFData(focalLength, aperture, farDistance);
+		blur.bindDoFData(dist, aperture, farDistance);
 		blurBuffer.fill(blur);
 
 		FrameBuffer::resetSize(screen->width, screen->height);

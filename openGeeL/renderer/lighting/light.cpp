@@ -94,7 +94,7 @@ namespace geeL {
 
 		float depth = scene.camera.depth;
 		vec3 center = camPosition + trans.forward * depth;
-		float intensity = 1 - getIntensity(center);
+		float intensity = 1.f - getIntensity(center);
 
 		//Check distance between camera and center pixel of camera 
 		//and scale it with experienced intensity at center pixel.

@@ -33,7 +33,7 @@ namespace geeL {
 
 	public:
 		DepthOfFieldBlurred(DepthOfFieldBlur& blur,
-			float focalLength = 5.f, float aperture = 10.f, float farDistance = 100.f, float blurResolution = 1.f);
+			const float& focalLength, float aperture = 10.f, float farDistance = 100.f, float blurResolution = 1.f);
 
 		~DepthOfFieldBlurred();
 
@@ -51,7 +51,7 @@ namespace geeL {
 		virtual void bindValues();
 
 	private:
-		float focalLength;
+		const float& focalLength;
 		float aperture;
 		float farDistance;
 		float blurResolution;
