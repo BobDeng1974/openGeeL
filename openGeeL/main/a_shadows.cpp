@@ -186,7 +186,7 @@ namespace {
 
 
 void a_shadows() {
-	RenderWindow* window = new RenderWindow("geeL", 1440, 810, true);
+	RenderWindow* window = new RenderWindow("geeL", 1920, 1080, true);
 	InputManager* manager = new InputManager();
 	manager->defineButton("Forward", GLFW_KEY_W);
 	manager->defineButton("Forward", GLFW_KEY_A);
@@ -232,15 +232,15 @@ void a_shadows() {
 	
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR(camera3);
-	//BlurredWorldPostEffect ssrrSmooth = BlurredWorldPostEffect(ssrr, blur4, 0.3f);
+	BlurredWorldPostEffect ssrrSmooth = BlurredWorldPostEffect(ssrr, blur4, 0.3f);
 	
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(3, 0.3f);
 	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera3.depth, 5.f, 100.f, 0.4f);
 
 	FXAA fxaa = FXAA();
 	
-	//renderer1.addEffect(blur4);
-	renderer1.addEffect(dof);
+	renderer1.addEffect(ssrrSmooth);
+	//renderer1.addEffect(dof);
 	renderer1.addEffect(raySmooth);
 	renderer1.addEffect(fxaa);
 	renderer1.render();
