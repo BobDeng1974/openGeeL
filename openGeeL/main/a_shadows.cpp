@@ -85,7 +85,6 @@ namespace {
 
 			float l = 200.f;
 			
-			
 			geeL::Transform* lighTransi4 = new geeL::Transform(glm::vec3(7, 5, 5), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
 			light = &lightManager.addPointLight(*lighTransi4, glm::vec3(l *0.996 , l *0.535 , l*0.379), glm::vec3(0.7f, 0.7f, 0.7f));
 				
@@ -94,14 +93,11 @@ namespace {
 			float outerAngle = glm::cos(glm::radians(27.5f));
 
 			geeL::Transform* lighTransi3 = new geeL::Transform(glm::vec3(-7, 5, 0), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
-			&lightManager.addSpotlight(*lighTransi3, glm::vec3(l, l , l), glm::vec3(0.7f, 0.7f, 0.7f), angle, outerAngle);
+			&lightManager.addSpotlight(*lighTransi3, glm::vec3(l, l, l * 2), glm::vec3(0.7f, 0.7f, 0.7f), angle, outerAngle);
 			
-			//geeL::Transform* lighTransi6 = new geeL::Transform(glm::vec3(-7, 5, -10), glm::vec3(-250.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
-			//&lightManager.addSpotlight(*lighTransi6, glm::vec3(l, l, l), glm::vec3(0.7f, 0.7f, 0.7f), angle, outerAngle);
-			
-			l = 5.f;
+			l = 0.5f;
 			geeL::Transform* lighTransi2 = new geeL::Transform(glm::vec3(0.f, 0.f, 0.f), glm::vec3(75, 20, 10), glm::vec3(1.f, 1.f, 1.f));
-			//dirLight = &lightManager.addDirectionalLight(*lighTransi2, glm::vec3(l, l, l), glm::vec3(0.7f, 0.7f, 0.7f));
+			dirLight = &lightManager.addDirectionalLight(*lighTransi2, glm::vec3(l, l, l), glm::vec3(0.7f, 0.7f, 0.7f));
 			
 
 			float height = -2.f;
@@ -199,7 +195,7 @@ void a_shadows() {
 
 	SimpleBlur blur = SimpleBlur(1);
 	SSAO ssao = SSAO(camera3, blur, 10.f);
-	DeferredRenderer& renderer1 = DeferredRenderer(window, manager, &ssao, 0.5f);
+	DeferredRenderer& renderer1 = DeferredRenderer(window, manager, &ssao, 0.6f);
 	renderer1.init();
 
 	MaterialFactory materialFactory = MaterialFactory();
@@ -235,12 +231,12 @@ void a_shadows() {
 	BlurredWorldPostEffect ssrrSmooth = BlurredWorldPostEffect(ssrr, blur4, 0.3f);
 	
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(3, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera3.depth, 5.f, 100.f, 0.4f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera3.depth, 2.f, 100.f, 0.4f);
 
 	FXAA fxaa = FXAA();
 	
 	renderer1.addEffect(ssrrSmooth);
-	//renderer1.addEffect(dof);
+	renderer1.addEffect(dof);
 	renderer1.addEffect(raySmooth);
 	renderer1.addEffect(fxaa);
 	renderer1.render();

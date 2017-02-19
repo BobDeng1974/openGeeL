@@ -36,7 +36,7 @@ namespace geeL {
 
 		//Add and create directional light
 		DirectionalLight& addDirectionalLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular, 
-			float shadowBias = 0.0005f);
+			float shadowBias = 0.00001f);
 	
 		//Add and create point light
 		PointLight& addPointLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,

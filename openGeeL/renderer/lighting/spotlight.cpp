@@ -58,9 +58,18 @@ namespace geeL {
 	bool SpotLight::adaptShadowmapResolution(float distance) {
 
 		bool changed = false;
-		if (distance < 5.f) {
+		if (distance < 1.f) {
 
 			int resolution = 1024; //^= ShadowmapResolution::VeryHigh
+			if (shadowmapWidth != resolution) {
+				setDimensions(resolution);
+				dynamicBias = shadowBias * 0.5f;
+				changed = true;
+			}
+		}
+		else if (distance < 6.f) {
+
+			int resolution = 768;
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);
 				dynamicBias = shadowBias * 0.5f;

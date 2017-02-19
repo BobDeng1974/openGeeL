@@ -15,7 +15,7 @@ namespace geeL {
 	DirectionalLight::DirectionalLight(Transform& transform, vec3 diffuse, vec3 ambient, 
 		float shadowBias) : Light(transform, diffuse, ambient, shadowBias) {
 	
-		setResolution(ShadowmapResolution::Medium);
+		setResolution(ShadowmapResolution::VeryHigh);
 	}
 
 
@@ -38,9 +38,10 @@ namespace geeL {
 	}
 
 	void DirectionalLight::computeLightTransform() {
-		float a = shadowmapWidth / 300.f;
-		mat4 projection = ortho(-a, a, -a, a, 1.0f, 50.f);
-		mat4 view = lookAt(transform.forward, vec3(0), vec3(0.f, 1.f, 0.f));
+		float far = 50.f;
+		float a = shadowmapWidth / 50.f;
+		mat4 projection = ortho(-a, a, -a, a, 1.0f, 2 * far);
+		mat4 view = lookAt(transform.forward * far, vec3(0.f), vec3(0.f, 1.f, 0.f));
 		
 		lightTransform = projection * view;
 	}
@@ -50,8 +51,6 @@ namespace geeL {
 	}
 
 	bool DirectionalLight::adaptShadowmapResolution(float distance) {
-		//TODO: implement this
-
 		return false;
 	}
 }

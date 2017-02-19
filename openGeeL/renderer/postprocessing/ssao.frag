@@ -31,9 +31,9 @@ void main() {
 	vec3 bitangent = cross(normal, tangent); 
 	mat3 TBN = mat3(tangent, bitangent, normal);
 
-	int sampleCount = 30;
+	int sampleCount = 25;
 	float occlusion = 0.f;
-	for(int i = 0; i < 30; i++) {
+	for(int i = 0; i < 25; i++) {
 		vec3 samp = TBN * samples[i];
 		samp = fragPos + samp * radius;
 

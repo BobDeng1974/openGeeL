@@ -18,9 +18,9 @@ namespace geeL {
 		: Light(transform, diffuse, specular, shadowBias), farPlane(50.f) {
 	
 		lightTransforms.reserve(6);
-		initLightTransform();
+initLightTransform();
 
-		setResolution(ShadowmapResolution::Adaptive);
+setResolution(ShadowmapResolution::Adaptive);
 	}
 
 
@@ -47,7 +47,7 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, shadowmapID);
 
 		//Write faces of the cubemap
-		for(int i = 0; i < 6; i++)
+		for (int i = 0; i < 6; i++)
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
 				shadowmapWidth, shadowmapHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
@@ -109,12 +109,21 @@ namespace geeL {
 	bool PointLight::adaptShadowmapResolution(float distance) {
 
 		bool changed = false;
-		if (distance < 5.f) {
+		if (distance < 2.f) {
 
 			int resolution = 1024; //^= ShadowmapResolution::VeryHigh
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);
 				dynamicBias = shadowBias * 0.6f;
+				changed = true;
+			}
+		}
+		else if (distance < 10.f) {
+
+			int resolution = 768;
+			if (shadowmapWidth != resolution) {
+				setDimensions(resolution);
+				dynamicBias = shadowBias * 0.7f;
 				changed = true;
 			}
 		}
@@ -124,6 +133,15 @@ namespace geeL {
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);
 				dynamicBias = shadowBias * 0.8f;
+				changed = true;
+			}
+		}
+		else if (distance < 20.f) {
+
+			int resolution = 386;
+			if (shadowmapWidth != resolution) {
+				setDimensions(resolution);
+				dynamicBias = shadowBias;
 				changed = true;
 			}
 		}

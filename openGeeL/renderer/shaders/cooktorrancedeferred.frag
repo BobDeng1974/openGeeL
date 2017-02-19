@@ -319,13 +319,13 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 		if(testShadow == 0.f || testShadow == 1.f)
 			return testShadow;
 		else {
-			float shadow = 0.0f;
+			float shadow = 0.f;
 			int samples = 50;
 			for(int j = 0; j < samples; j++) {
 				int index = int(20.0f * random(floor(fragPosition.xyz * 1000.0f), j)) % 20;
 
 				float depth = texture(pointLights[i].shadowMap, direction + sampleDirections3D[index] * diskRadius).r;
-				shadow += curDepth - bias > depth ? 1.0f : 0.0f;        
+				shadow += step(depth, curDepth - bias);
 			}    
 
 			return (shadow) / float(samples);
@@ -339,22 +339,22 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	coords = coords * 0.5f + 0.5f;
 
 	//Don't draw shadow when outside of farPlane region.
-    if(coords.z > 1.0f)
-        return 0.0f;
+    if(coords.z > 1.f)
+        return 0.f;
 	else {
 		float minBias = spotLights[i].bias;
 		vec3 lightDir =  spotLights[i].position - fragPosition;
 		float bias = max((minBias * 10.0f) * (1.0f - dot(norm, lightDir)), minBias);
 		float curDepth = coords.z - bias;
 
-		float shadow = 0.0;
+		float shadow = 0.f;
 		vec2 texelSize = 1.0f / textureSize(spotLights[i].shadowMap, 0);
 		int samples = 8;
 		for(int j = 0; j < samples; j++) {
 			int index = int(20.0f * random(floor(fragPosition.xyz * 1000.0f), j)) % 20;
 
 			float depth = texture(spotLights[i].shadowMap, coords.xy + sampleDirections2D[index] * texelSize).r;
-			shadow += curDepth - bias > depth ? 1.0f : 0.0f;        
+			shadow += step(depth, curDepth - bias);
 		}    
 	
 		return shadow / float(samples);
@@ -368,21 +368,21 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 
 	//Don't draw shadow when outside of farPlane region.
     if(coords.z > 1.0f)
-        return 0.0f;
+        return 0.f;
 	else {
 		float mapDepth = texture(directionalLights[i].shadowMap, coords.xy).r;
-		float bias = directionalLights[i].bias;
-		//float bias = max(0.05f * (1.0f - dot(norm, lightDir)), 0.005f);
+		float minBias = directionalLights[i].bias;
+		float bias = max(minBias * 100.f * (1.f - dot(norm, directionalLights[i].direction)), minBias);  
 		float curDepth = coords.z - bias;
 
-		float shadow = 0.0;
-		vec2 texelSize = 1.0f / textureSize(directionalLights[i].shadowMap, 0);
+		float shadow = 0.f;
+		vec2 texelSize = 0.8f / textureSize(directionalLights[i].shadowMap, 0);
 		int samples = 8;
 		for(int j = 0; j < samples; j++) {
 			int index = int(20.0f * random(floor(fragPosition.xyz * 1000.0f), j)) % 20;
 
 			float depth = texture(directionalLights[i].shadowMap, coords.xy + sampleDirections2D[index] * texelSize).r;
-			shadow += curDepth - bias > depth ? 1.0f : 0.0f;        
+			shadow += step(depth, curDepth - bias);      
 		}    
 	
 		return shadow / float(samples);
