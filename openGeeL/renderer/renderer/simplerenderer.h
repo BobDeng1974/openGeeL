@@ -22,6 +22,8 @@ namespace geeL {
 	private:
 		Camera* currentCamera;
 
+		void handleInput(GLFWwindow* window, int key, int scancode, int action, int mode);
+
 	};
 }
 

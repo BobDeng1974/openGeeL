@@ -37,7 +37,7 @@ namespace geeL {
 		Renderer(window, inputManager), ssao(ssao), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()),
 			gBuffer(GBuffer()), screen(ScreenQuad(window->width, window->height)), ssaoResolution(ssaoResolution),
 			deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
-				"renderer/shaders/cooktorrancedeferred.frag")) {
+				"renderer/shaders/cooktorrancedeferred.frag")), toggle(0) {
 
 			glEnable(GL_DEPTH_TEST);
 			glEnable(GL_CULL_FACE);
@@ -62,14 +62,11 @@ namespace geeL {
 	}
 
 
-	void exitCallbackkk(GLFWwindow* window, int key, int scancode, int action, int mode) {
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-			glfwSetWindowShouldClose(window, GL_TRUE);
-		}
-	}
-
 	void DeferredRenderer::init() {
-		inputManager->addCallback(exitCallbackkk);
+		auto func = [this](GLFWwindow* window, int key, int scancode, int action, int mode) 
+			{ this->handleInput(window, key, scancode, action, mode); };
+
+		inputManager->addCallback(func);
 		inputManager->init(window);
 
 		gBuffer.init(window->width, window->height);
@@ -298,6 +295,47 @@ namespace geeL {
 		}
 
 		effect.addWorldInformation(maps, matrices, vectors);
+	}
+
+
+	void DeferredRenderer::handleInput(GLFWwindow* window, int key, int scancode, int action, int mode) {
+		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+			glfwSetWindowShouldClose(window, GL_TRUE);
+		}
+
+		if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
+			toggleBuffer(false);
+		}
+		else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
+			toggleBuffer(true);
+		}
+
+	}
+
+	void DeferredRenderer::toggleBuffer(bool next) {
+
+		int i = next ? 1 : -1;
+		toggle = (toggle + i) % 5;
+
+		unsigned int currBuffer = 1;
+		switch (abs(toggle)) {
+			case 0:
+				currBuffer = ssaoBuffer->getColorID();
+				break;
+			case 1:
+				currBuffer = gBuffer.diffuseSpec;
+				break;
+			case 2:
+				currBuffer = frameBuffer1.getColorID();
+				break;
+			case 3:
+				currBuffer = frameBuffer2.getColorID();
+				break;
+			case 4:
+				currBuffer = gBuffer.normalMet;
+		}
+
+		effects.front()->setBuffer(currBuffer);
 	}
 
 }

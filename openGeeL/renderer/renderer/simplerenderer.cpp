@@ -33,15 +33,11 @@ namespace geeL {
 		glFrontFace(GL_CW);
 	}
 
-
-	void exitCallback(GLFWwindow* window, int key, int scancode, int action, int mode) {
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-			glfwSetWindowShouldClose(window, GL_TRUE);
-		}
-	}
-
 	void SimpleRenderer::init() {
-		inputManager->addCallback(exitCallback);
+		auto func = [this](GLFWwindow* window, int key, int scancode, int action, int mode)
+			{ this->handleInput(window, key, scancode, action, mode); };
+
+		inputManager->addCallback(func);
 		inputManager->init(window);
 	}
 
@@ -88,6 +84,12 @@ namespace geeL {
 	void SimpleRenderer::setCamera(Camera* camera) {
 		if (camera != nullptr)
 			currentCamera = camera;
+	}
+
+	void SimpleRenderer::handleInput(GLFWwindow* window, int key, int scancode, int action, int mode) {
+		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+			glfwSetWindowShouldClose(window, GL_TRUE);
+		}
 	}
 	
 

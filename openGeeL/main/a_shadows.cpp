@@ -97,7 +97,7 @@ namespace {
 			
 			l = 0.5f;
 			geeL::Transform* lighTransi2 = new geeL::Transform(glm::vec3(0.f, 0.f, 0.f), glm::vec3(75, 20, 10), glm::vec3(1.f, 1.f, 1.f));
-			dirLight = &lightManager.addDirectionalLight(*lighTransi2, glm::vec3(l, l, l), glm::vec3(0.7f, 0.7f, 0.7f));
+			//dirLight = &lightManager.addDirectionalLight(*lighTransi2, glm::vec3(l, l, l), glm::vec3(0.7f, 0.7f, 0.7f));
 			
 
 			float height = -2.f;
@@ -234,11 +234,14 @@ void a_shadows() {
 	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera3.depth, 2.f, 100.f, 0.4f);
 
 	FXAA fxaa = FXAA();
-	
+
 	renderer1.addEffect(ssrrSmooth);
-	renderer1.addEffect(dof);
 	renderer1.addEffect(raySmooth);
+	/*
+	renderer1.addEffect(dof);
+	
 	renderer1.addEffect(fxaa);
+	*/
 	renderer1.render();
 
 	delete testObj;

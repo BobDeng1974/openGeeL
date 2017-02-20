@@ -33,6 +33,7 @@ namespace geeL {
 		void addEffect(WorldPostProcessingEffect& effect);
 
 	private:
+		int toggle;
 		bool geometryPass = true;
 		Shader* deferredShader;
 		std::list<PostProcessingEffect*> effects;
@@ -48,6 +49,11 @@ namespace geeL {
 
 		//Link all world information to given post effect
 		void linkWorldInformation(WorldPostProcessingEffect& effect);
+
+		void handleInput(GLFWwindow* window, int key, int scancode, int action, int mode);
+
+		//Toggle through all framebuffers for screen display 
+		void toggleBuffer(bool next);
 	};
 }
 

@@ -34,14 +34,12 @@ namespace geeL {
 		glFrontFace(GL_CW);
 	}
 	
-	void exitCallbackk(GLFWwindow* window, int key, int scancode, int action, int mode) {
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-			glfwSetWindowShouldClose(window, GL_TRUE);
-		}
-	}
 
 	void PostProcessingRenderer::init() {
-		inputManager->addCallback(exitCallbackk);
+		auto func = [this](GLFWwindow* window, int key, int scancode, int action, int mode)
+			{ this->handleInput(window, key, scancode, action, mode); };
+
+		inputManager->addCallback(func);
 		inputManager->init(window);
 		
 		frameBuffer.init(window->width, window->height);
@@ -103,6 +101,12 @@ namespace geeL {
 	void PostProcessingRenderer::setEffect(PostProcessingEffect& effect) {
 		this->effect = &effect;
 		this->effect->setScreen(screen);
+	}
+
+	void PostProcessingRenderer::handleInput(GLFWwindow* window, int key, int scancode, int action, int mode) {
+		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+			glfwSetWindowShouldClose(window, GL_TRUE);
+		}
 	}
 
 }

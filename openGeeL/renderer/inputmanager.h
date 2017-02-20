@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <map>
+#include <functional>
 
 #define maxKeys 400
 #define mouseKeys 7
@@ -11,9 +12,30 @@ struct GLFWwindow;
 
 namespace geeL {
 
-	typedef void(*InputCallback)(GLFWwindow*, int, int, int, int);
-
 	class RenderWindow;
+
+	/*
+	template<class T>
+	class CallbackDelegate {
+
+	public:
+		typedef void(T::*Callback)(GLFWwindow*, int, int, int, int);
+
+		CallbackDelegate(T& obj, Callback callback) 
+			: obj(obj), callback(callback) {}
+
+
+		void Run(GLFWwindow* window, int key, int scancode, int action, int mode) {
+			obj.*callback(window, key, scancode, action, mode);
+		}
+
+	private:
+		CallbackDelegate();
+
+		T& obj;
+		Callback callback;
+	};
+	*/
 
 	class InputManager {
 
@@ -23,11 +45,14 @@ namespace geeL {
 
 		InputManager() {}
 
+		//Forwards the input manager (as user pointer) and the callbacks to GLFW 
 		void init(const RenderWindow* renderWindow);
 		void update();
 
-		void addCallback(InputCallback callback);
+		//Add a callback to to the input manager that will be called during runtime
+		void addCallback(std::function<void(GLFWwindow*, int, int, int, int)> function);
 
+		//Callback function that will call every registered callback and updates information about each key
 		void callKey(GLFWwindow* window, int key, int scancode, int action, int mode);
 		void callScroll(GLFWwindow* window, double x, double y);
 
@@ -54,7 +79,7 @@ namespace geeL {
 
 	private:
 		const RenderWindow* window;
-		std::vector<InputCallback> callbacks;
+		std::vector<std::function<void(GLFWwindow*, int, int, int, int)>> callbacks;
 		std::map<std::string, std::vector<int>> buttonMapping;
 
 		int keyboardBuffer1[maxKeys];

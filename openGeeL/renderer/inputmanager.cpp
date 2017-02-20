@@ -17,7 +17,6 @@ namespace geeL {
 		manager->callScroll(window, x, y);
 	}
 
-	//Forwards the input manager (as user pointer) and the callbacks to GLFW 
 	void InputManager::init(const RenderWindow* renderWindow) {
 		window = renderWindow;
 		mouseX = window->width * 0.5f;
@@ -33,31 +32,30 @@ namespace geeL {
 
 	void InputManager::update() {
 
-		//switch key buffers
+		//Switch key buffers
 		int* temp = currentKeys;
 		for (size_t i = 0; i < maxKeys; i++)
 			currentKeys[i] = temp[i];
 
 		previousKeys = temp;
 
-		//update mouse cursor information
+		//Update mouse cursor information
 		lastX = mouseX;
 		lastY = mouseY;
 		glfwGetCursorPos(window->glWindow, &mouseX, &mouseY);
 	}
 	
 
-	//Add a callback to to the input manager that will be called during runtime
-	void InputManager::addCallback(InputCallback callback) {
-		callbacks.push_back(callback);
+	void InputManager::addCallback(std::function<void(GLFWwindow*, int, int, int, int)> function) {
+		callbacks.push_back(function);
 	}
 
-	//Callback function that will call every registered callback and updates information about each key
+	
 	void InputManager::callKey(GLFWwindow* window, int key, int scancode, int action, int mode) {
 
 		for (size_t i = 0; i < callbacks.size(); i++) {
-			const GLFWkeyfun& callback = callbacks[i];
-			callback(window, key, scancode, action, mode);
+			auto func = callbacks[i];
+			func(window, key, scancode, action, mode);
 		}
 
 		if (key > 0 && key < maxKeys) {

@@ -29,6 +29,8 @@ namespace geeL {
 		PostProcessingEffect* effect;
 		ScreenQuad screen;
 		FrameBuffer frameBuffer;
+
+		void handleInput(GLFWwindow* window, int key, int scancode, int action, int mode);
 	};
 }
 
