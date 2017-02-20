@@ -11,12 +11,14 @@
 namespace geeL {
 
 	class Light;
+	class Camera;
 	class PointLight;
 	class DirectionalLight;
 	class SpotLight;
 	class Shader;
 	class RenderScene;
 	class Transform;
+	struct ScreenInfo;
 
 	class LightManager {
 
@@ -36,7 +38,7 @@ namespace geeL {
 
 		//Add and create directional light
 		DirectionalLight& addDirectionalLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular, 
-			float shadowBias = 0.00001f);
+			float shadowBias = 0.00002f);
 	
 		//Add and create point light
 		PointLight& addPointLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,
@@ -52,6 +54,8 @@ namespace geeL {
 
 		void bindShadowmaps(Shader& shader) const;
 		void drawShadowmaps(const RenderScene& scene) const;
+
+		void forwardScreenInfo(const ScreenInfo& info, const Camera& camera);
 	
 
 	private:
@@ -59,7 +63,9 @@ namespace geeL {
 		Shader* dlShader;
 		Shader* plShader;
 
-		std::vector<Light*> staticPLs, staticDLs, staticSLs;
+		std::vector<DirectionalLight*> staticDLs;
+		std::vector<SpotLight*> staticSLs;
+		std::vector<PointLight*> staticPLs;
 	};
 }
 

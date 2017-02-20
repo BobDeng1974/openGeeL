@@ -9,6 +9,8 @@
 #include "meshes\meshfactory.h"
 #include "cameras\camera.h"
 #include "cubemapping\skybox.h"
+#include "utility\gbuffer.h"
+#include "lighting\lightmanager.h"
 #include "scene.h"
 
 using namespace std;
@@ -105,8 +107,9 @@ namespace geeL {
 		return *renderer;
 	}
 
-	void RenderScene::setCameraDepth(float depth) {
-		camera.depth = depth;
+	void RenderScene::forwardScreenInfo(const ScreenInfo& info) {
+		camera.updateDepth(info.CTdepth);
+		lightManager.forwardScreenInfo(info, camera);
 	}
 
 	glm::vec3 RenderScene::TranslateToScreenSpace(glm::vec3 vector) const {

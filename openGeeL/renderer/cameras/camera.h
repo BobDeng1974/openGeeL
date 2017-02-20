@@ -17,6 +17,7 @@ namespace geeL {
 
 	public:
 		float depth;
+		glm::vec3 center;
 
 		//Defines a static camera 
 		Camera(Transform& transform);
@@ -32,6 +33,9 @@ namespace geeL {
 		void bind(const Shader& shader) const;
 		void bindPosition(const Shader& shader, std::string name = "cameraPosition") const;
 		void uniformBind(int uniformID) const;
+
+		//Update position and depth of center pixel of camera view
+		void updateDepth(float depth);
 
 		const glm::mat4& getViewMatrix() const;
 		const glm::mat4 getInverseViewMatrix() const;

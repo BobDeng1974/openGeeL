@@ -5,6 +5,8 @@
 #include "pointlight.h"
 #include "directionallight.h"
 #include "spotlight.h"
+#include "../cameras/camera.h"
+#include "../utility/gbuffer.h"
 #include "../transformation/transform.h"
 #include "../shader/shader.h"
 #include "../scene.h"
@@ -119,6 +121,13 @@ namespace geeL {
 		}
 
 		shader.bindMaps();
+	}
+
+	void LightManager::forwardScreenInfo(const ScreenInfo& info, const Camera& camera) {
+
+		for (size_t j = 0; j < staticDLs.size(); j++) {
+			staticDLs[j]->computeLightTransformExt(info, camera.center);
+		}
 	}
 
 	void LightManager::drawShadowmaps(const RenderScene& scene) const {

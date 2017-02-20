@@ -93,6 +93,12 @@ namespace geeL {
 		shader.setVector3(name, transform.position);
 	}
 
+	void Camera::updateDepth(float depth) {
+		this->depth = depth;
+
+		center = transform.position + transform.forward * depth;
+	}
+
 	void Camera::uniformBind(int uniformID) const {
 
 		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);

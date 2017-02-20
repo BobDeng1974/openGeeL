@@ -7,6 +7,7 @@
 
 namespace geeL {
 
+	
 	class Camera;
 	class LightManager;
 	class Skybox;
@@ -16,6 +17,8 @@ namespace geeL {
 	class Material;
 	class MeshFactory;
 	class Transform;
+
+	struct ScreenInfo;
 	enum CullingMode;
 
 	class RenderScene {
@@ -55,7 +58,7 @@ namespace geeL {
 		//Draw only the objects in the scene and all with given shader
 		void drawObjects(const Shader& shader) const;
 
-		void setCameraDepth(float depth);
+		void forwardScreenInfo(const ScreenInfo& info);
 
 		//Translate vector from world to screen space
 		glm::vec3 TranslateToScreenSpace(glm::vec3 vector) const;

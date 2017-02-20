@@ -5,6 +5,18 @@ namespace geeL {
 
 	class Drawer;
 
+
+	struct ScreenInfo {
+
+	public:
+		float CTdepth;
+		float TRdepth;
+		float TLdepth;
+		float BRdepth;
+		float BLdepth;
+	};
+
+
 	class GBuffer {
 
 	public:
@@ -12,7 +24,7 @@ namespace geeL {
 		unsigned int diffuseSpec;
 		unsigned int positionDepth;
 		unsigned int normalMet;
-		unsigned int depth;
+		ScreenInfo screenInfo;
 		int width;
 		int height;
 

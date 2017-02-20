@@ -61,7 +61,7 @@ namespace geeL {
 		void setDimensions(int resolution);
 
 		//Dynamically change shadow map resolution
-		void adaptShadowmap(const RenderScene& scene);
+		virtual void adaptShadowmap(const RenderScene& scene);
 
 		//Dynamically change resolution of shadow map 
 		//depending on distance to render camera. Returns true if 

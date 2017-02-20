@@ -63,12 +63,12 @@ namespace geeL {
 	void Light::renderShadowmap(const RenderScene& scene, const Shader& shader) {
 		shader.use();
 
+		if(resolution == ShadowmapResolution::Adaptive)
+			adaptShadowmap(scene);
+
 		//Write light transform into shader
 		computeLightTransform();
 		shader.setMat4("lightTransform", lightTransform);
-
-		if(resolution == ShadowmapResolution::Adaptive)
-			adaptShadowmap(scene);
 
 		glViewport(0, 0, shadowmapWidth, shadowmapHeight);
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowmapFBO);
@@ -89,11 +89,8 @@ namespace geeL {
 
 
 	void Light::adaptShadowmap(const RenderScene& scene) {
-		Transform& trans = scene.camera.transform;
-		vec3 camPosition = trans.position;
-
+		vec3 center = scene.camera.center;
 		float depth = scene.camera.depth;
-		vec3 center = camPosition + trans.forward * depth;
 		float intensity = 1.f - getIntensity(center);
 
 		//Check distance between camera and center pixel of camera 

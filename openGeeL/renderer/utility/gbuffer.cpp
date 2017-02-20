@@ -1,5 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <climits>
 #include <iostream>
 #include "../shader/shader.h"
 #include "../renderer.h"
@@ -48,7 +49,24 @@ namespace geeL {
 		//glReadBuffer(GL_COLOR_ATTACHMENT0);
 		float data[3];
 		glReadPixels(width / 2, height / 2, 1, 1, GL_RGBA, GL_FLOAT, data);
-		depthPos = -data[2];
+		screenInfo.CTdepth = -data[2];
+
+		int xOffset = width / 3;
+		int yOffset = height / 3;
+		float mini = 0.f;
+		int maxDistance = 100;
+
+		glReadPixels(xOffset, yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
+		screenInfo.TRdepth = (-data[2] < mini) ? maxDistance : -data[2];
+
+		glReadPixels(width - xOffset, yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
+		screenInfo.TLdepth = (-data[2] < mini) ? maxDistance : -data[2];
+
+		glReadPixels(xOffset, height - yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
+		screenInfo.BRdepth = (-data[2] < mini) ? maxDistance : -data[2];
+
+		glReadPixels(width - xOffset, height - yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
+		screenInfo.BLdepth = (-data[2] < mini) ? maxDistance : -data[2];
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}

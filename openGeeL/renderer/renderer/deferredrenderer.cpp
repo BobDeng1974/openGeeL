@@ -134,7 +134,7 @@ namespace geeL {
 			gBuffer.fill(*this);
 
 			//Hacky: Read camera depth from geometry pass and write it into the scene
-			scene->setCameraDepth(gBuffer.getDepth());
+			scene->forwardScreenInfo(gBuffer.screenInfo);
 			scene->lightManager.drawShadowmaps(*scene);
 
 			//SSAO pass
