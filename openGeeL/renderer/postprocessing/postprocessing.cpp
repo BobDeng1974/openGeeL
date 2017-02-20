@@ -18,6 +18,9 @@ namespace geeL {
 		buffers.push_back(0);
 	}
 
+	unsigned int PostProcessingEffect::getBuffer() const {
+		return buffers.front();
+	}
 
 	void PostProcessingEffect::setBuffer(unsigned int buffer) {
 		buffers.front() = buffer;
@@ -62,5 +65,9 @@ namespace geeL {
 
 	void PostProcessingEffect::effectOnly(bool only) {
 		onlyEffect = only;
+	}
+
+	bool PostProcessingEffect::getEffectOnly() const {
+		return onlyEffect;
 	}
 }

@@ -20,6 +20,6 @@ void main() {
 	//Gamma correction
 	result = pow(result.rgb, vec3(0.4545f));
 	
-	float dither = texture(noiseMap, TexCoords * noiseScale.xy).r * 0.003f;
+	float dither = texture(noiseMap, TexCoords * noiseScale.xy).r * 0.002f;
 	color = vec4(result + dither, 1.0f);
 }

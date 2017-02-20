@@ -1,7 +1,7 @@
 #ifndef DEFERREDRENDERER_H
 #define DEFERREDRENDERER_H
 
-#include <list>
+#include <vector>
 #include "../utility/screenquad.h"
 #include "../utility/framebuffer.h"
 #include "../utility/gbuffer.h"
@@ -36,16 +36,18 @@ namespace geeL {
 		int toggle;
 		bool geometryPass = true;
 		Shader* deferredShader;
-		std::list<PostProcessingEffect*> effects;
+		std::vector<PostProcessingEffect*> effects;
 		ScreenQuad screen;
 		GBuffer gBuffer;
 		FrameBuffer frameBuffer1;
 		FrameBuffer frameBuffer2;
 
+		unsigned int defaultBuffer;
 		float ssaoResolution;
 		SSAO* ssao = nullptr;
 		ScreenQuad* ssaoScreen = nullptr;
 		FrameBuffer* ssaoBuffer = nullptr;
+		PostProcessingEffect* isolatedEffect = nullptr;
 
 		//Link all world information to given post effect
 		void linkWorldInformation(WorldPostProcessingEffect& effect);

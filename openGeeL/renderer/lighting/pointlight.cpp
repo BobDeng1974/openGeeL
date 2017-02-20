@@ -18,9 +18,9 @@ namespace geeL {
 		: Light(transform, diffuse, specular, shadowBias), farPlane(50.f) {
 	
 		lightTransforms.reserve(6);
-initLightTransform();
+		initLightTransform();
 
-setResolution(ShadowmapResolution::Adaptive);
+		setResolution(ShadowmapResolution::Adaptive);
 	}
 
 
@@ -109,7 +109,7 @@ setResolution(ShadowmapResolution::Adaptive);
 	bool PointLight::adaptShadowmapResolution(float distance) {
 
 		bool changed = false;
-		if (distance < 2.f) {
+		if (distance < 4.f) {
 
 			int resolution = 1024; //^= ShadowmapResolution::VeryHigh
 			if (shadowmapWidth != resolution) {

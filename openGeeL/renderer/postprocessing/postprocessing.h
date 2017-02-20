@@ -19,6 +19,9 @@ namespace geeL {
 		PostProcessingEffect(std::string fragmentPath);
 		PostProcessingEffect(std::string vertexPath, std::string fragmentPath);
 
+		//Returns first (and main) buffer of this effect
+		unsigned int getBuffer() const;
+
 		//Set (first) buffer that will be used as base for post processing
 		void setBuffer(unsigned int buffer);
 
@@ -34,6 +37,9 @@ namespace geeL {
 		//Determine whether to draw only the effect or effect embed into scene.
 		//May not result in different rendering depending on effect;
 		virtual void effectOnly(bool only);
+
+		//Check if effect is currently set for drawing effect only or not
+		virtual bool getEffectOnly() const;
 
 	protected:
 		std::list<unsigned int> buffers;

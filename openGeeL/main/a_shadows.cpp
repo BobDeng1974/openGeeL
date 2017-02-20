@@ -237,11 +237,9 @@ void a_shadows() {
 
 	renderer1.addEffect(ssrrSmooth);
 	renderer1.addEffect(raySmooth);
-	/*
 	renderer1.addEffect(dof);
-	
 	renderer1.addEffect(fxaa);
-	*/
+
 	renderer1.render();
 
 	delete testObj;

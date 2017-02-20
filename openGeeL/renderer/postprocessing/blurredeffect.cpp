@@ -39,6 +39,7 @@ namespace geeL {
 	void BlurredPostEffect::bindValues() {
 		shader.setInteger("image", shader.mapOffset);
 		shader.setInteger("image2", shader.mapOffset + 1);
+		shader.setInteger("effectOnly", onlyEffect);
 
 		effect.setBuffer(buffers.front());
 		effectBuffer.fill(effect);
@@ -85,6 +86,7 @@ namespace geeL {
 	void BlurredWorldPostEffect::bindValues() {
 		shader.setInteger("image", shader.mapOffset);
 		shader.setInteger("image2", shader.mapOffset + 1);
+		shader.setInteger("effectOnly", onlyEffect);
 
 		effectBuffer.fill(effect);
 

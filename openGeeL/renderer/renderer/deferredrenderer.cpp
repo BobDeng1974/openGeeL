@@ -98,10 +98,11 @@ namespace geeL {
 		deferredShader->bindMaps();
 
 		//Set color buffer of default effect depending on the amount of added effects
-		if (effects.size() % 2 == 0)
-			effects.front()->setBuffer(frameBuffer2.getColorID());
-		else
-			effects.front()->setBuffer(frameBuffer1.getColorID());
+		defaultBuffer = (effects.size() % 2 == 0) 
+			? frameBuffer2.getColorID() 
+			: frameBuffer1.getColorID();
+
+		effects.front()->setBuffer(defaultBuffer);
 
 		//Init SSAO (if added)
 		if (ssao != nullptr) {
@@ -147,20 +148,43 @@ namespace geeL {
 			glDisable(GL_DEPTH_TEST);
 
 			//Post processing
-			bool chooseBuffer = true;
-			int counter = 0;
-			//Draw all the post processing effects on top of each other. Ping pong style!
-			for (auto effect = next(effects.begin()); effect != effects.end(); effect++) {
-				if (chooseBuffer)
-					frameBuffer2.fill(**effect);
-				else
-					frameBuffer1.fill(**effect);
+			//Draw single effect if wanted
+			if (isolatedEffect != nullptr) {
+				PostProcessingEffect* def = effects.front();
 
-				chooseBuffer = !chooseBuffer;
-				counter++;
+				//Save regular rendering settings
+				bool onlyEffect = isolatedEffect->getEffectOnly();
+				unsigned int buffer = isolatedEffect->getBuffer();
+
+				//Draw isolated effect
+				isolatedEffect->effectOnly(true);
+				isolatedEffect->setBuffer(frameBuffer1.getColorID());
+				frameBuffer2.fill(*isolatedEffect);
+
+				def->draw();
+
+				//Restore render settings
+				isolatedEffect->effectOnly(onlyEffect);
+				isolatedEffect->setBuffer(buffer);
 			}
-			//Draw the last (default) effect to screen.
-			effects.front()->draw();
+			//Draw all included post effects
+			else {
+				bool chooseBuffer = true;
+				int counter = 0;
+				//Draw all the post processing effects on top of each other. Ping pong style!
+				for (auto effect = next(effects.begin()); effect != effects.end(); effect++) {
+					if (chooseBuffer)
+						frameBuffer2.fill(**effect);
+					else
+						frameBuffer1.fill(**effect);
+
+					chooseBuffer = !chooseBuffer;
+					counter++;
+				}
+
+				//Draw the last (default) effect to screen.
+				effects.front()->draw();
+			}
 			
 			window->swapBuffer();
 			Time::update();
@@ -313,26 +337,35 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::toggleBuffer(bool next) {
-
+		int bufferSize = 4;
+		int max = bufferSize + effects.size();
 		int i = next ? 1 : -1;
-		toggle = (toggle + i) % 5;
+		toggle = abs((toggle + i) % max);
 
 		unsigned int currBuffer = 1;
-		switch (abs(toggle)) {
-			case 0:
-				currBuffer = ssaoBuffer->getColorID();
-				break;
-			case 1:
-				currBuffer = gBuffer.diffuseSpec;
-				break;
-			case 2:
-				currBuffer = frameBuffer1.getColorID();
-				break;
-			case 3:
-				currBuffer = frameBuffer2.getColorID();
-				break;
-			case 4:
-				currBuffer = gBuffer.normalMet;
+		if (toggle < bufferSize) {
+			switch (toggle) {
+				case 0:
+					currBuffer = defaultBuffer;
+					break;
+				case 1:
+					currBuffer = gBuffer.diffuseSpec;
+					break;
+				case 2:
+					currBuffer = gBuffer.normalMet;
+					break;
+				case 3:
+					currBuffer = ssaoBuffer->getColorID();
+					break;
+			}
+
+			isolatedEffect = nullptr;
+		}
+		else {
+			currBuffer = frameBuffer2.getColorID();
+
+			int index = toggle - bufferSize;
+			isolatedEffect = effects[index];
 		}
 
 		effects.front()->setBuffer(currBuffer);
