@@ -38,7 +38,7 @@ namespace geeL {
 		}
 	}
 
-	void PostProcessingEffect::setScreen(ScreenQuad& screen) {
+	void PostProcessingEffect::init(ScreenQuad& screen) {
 		this->screen = &screen;
 	}
 

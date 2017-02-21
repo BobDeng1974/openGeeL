@@ -46,7 +46,7 @@ namespace geeL {
 
 			//Default post processing with tone mapping and gamma correction
 			DefaultPostProcess* defaultEffect = new DefaultPostProcess();
-			defaultEffect->setScreen(screen);
+			defaultEffect->init(screen);
 			effects.push_back(defaultEffect);
 	}
 
@@ -112,7 +112,7 @@ namespace geeL {
 			ssaoScreen = new ScreenQuad(screen.width * ssaoResolution, screen.height * ssaoResolution);
 			ssaoScreen->init();
 
-			ssao->setScreen(*ssaoScreen);
+			ssao->init(*ssaoScreen);
 		}
 
 		shaderManager->staticDeferredBind(*scene, *deferredShader);
@@ -241,7 +241,7 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {
-		effect.setScreen(screen);
+		effect.init(screen);
 		effects.push_back(&effect);
 
 		//Init all post processing effects with two alternating framebuffers
@@ -256,13 +256,13 @@ namespace geeL {
 		effects.push_back(&effect);
 
 		linkWorldInformation(effect);
-		effect.setScreen(screen);
+		effect.init(screen);
 	}
 
 	void DeferredRenderer::linkWorldInformation(WorldPostProcessingEffect& effect) {
 		auto maps     = list<unsigned int>();
-		auto matrices = list<mat4>();
-		auto vectors  = list<vec3>();
+		auto matrices = list<const mat4*>();
+		auto vectors  = list<const vec3*>();
 
 		auto requiredMaps = effect.requiredWorldMapsList();
 		for (auto it = requiredMaps.begin(); it != requiredMaps.end(); it++) {
@@ -295,10 +295,13 @@ namespace geeL {
 		for (auto it = requiredMatrices.begin(); it != requiredMatrices.end(); it++) {
 			switch (*it) {
 				case WorldMatrices::View:
-					matrices.push_back(scene->camera.getViewMatrix());
+					matrices.push_back(&scene->camera.getViewMatrix());
 					break;
 				case WorldMatrices::Projection:
-					matrices.push_back(scene->camera.getViewMatrix());
+					matrices.push_back(&scene->camera.getViewMatrix());
+					break;
+				case WorldMatrices::InverseView:
+					matrices.push_back(&scene->camera.getInverseViewMatrix());
 					break;
 			}
 		}
@@ -307,13 +310,13 @@ namespace geeL {
 		for (auto it = requiredVectors.begin(); it != requiredVectors.end(); it++) {
 			switch (*it) {
 				case WorldVectors::CameraPosition:
-					vectors.push_back(scene->camera.getPosition());
+					vectors.push_back(&scene->camera.getPosition());
 					break;
 				case WorldVectors::CameraDirection:
-					vectors.push_back(scene->camera.getDirection());
+					vectors.push_back(&scene->camera.getDirection());
 					break;
 				case WorldVectors::OriginView:
-					vectors.push_back(scene->GetOriginInViewSpace());
+					vectors.push_back(&scene->GetOriginInViewSpace());
 					break;
 			}
 		}

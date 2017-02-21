@@ -26,6 +26,7 @@ namespace geeL {
 
 	void Camera::update() {
 		viewMatrix = computeViewMatrix();
+		inverseView = inverse(viewMatrix);
 		projectionMatrix = computeProjectionMatrix();
 	}
 
@@ -33,8 +34,8 @@ namespace geeL {
 		return viewMatrix;
 	}
 
-	const glm::mat4 Camera::getInverseViewMatrix() const {
-		return inverse(viewMatrix);
+	const mat4& Camera::getInverseViewMatrix() const {
+		return inverseView;
 	}
 
 	const mat4& Camera::getProjectionMatrix() const {
@@ -114,11 +115,11 @@ namespace geeL {
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
-	vec3 Camera::getPosition() const {
+	const glm::vec3& Camera::getPosition() const {
 		return transform.position;
 	}
 
-	vec3 Camera::getDirection() const {
+	const glm::vec3& Camera::getDirection() const {
 		return transform.forward;
 	}
 

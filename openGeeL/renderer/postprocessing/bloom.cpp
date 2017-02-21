@@ -33,8 +33,8 @@ namespace geeL {
 		filter->scatter = scatter;
 	}
 
-	void Bloom::setScreen(ScreenQuad& screen) {
-		PostProcessingEffect::setScreen(screen);
+	void Bloom::init(ScreenQuad& screen) {
+		PostProcessingEffect::init(screen);
 
 		blurScreen = new ScreenQuad(screen.width * blurResolution, screen.height * blurResolution);
 		blurScreen->init();
@@ -42,8 +42,8 @@ namespace geeL {
 		filterBuffer.init(screen.width, screen.height);
 		blurBuffer.init(blurScreen->width, blurScreen->height);
 
-		filter->setScreen(screen);
-		blur.setScreen(*blurScreen);
+		filter->init(screen);
+		blur.init(*blurScreen);
 		blur.setParentFBO(blurBuffer.fbo);
 
 		//Assign buffer that the blurred and cutout bloom image will be rendered to

@@ -12,7 +12,7 @@ namespace geeL {
 
 		DefaultPostProcess(float exposure = 1.f);
 
-		virtual void setScreen(ScreenQuad& screen);
+		virtual void init(ScreenQuad& screen);
 
 	protected:
 		virtual void bindValues();

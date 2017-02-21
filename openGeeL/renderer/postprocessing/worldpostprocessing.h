@@ -21,7 +21,8 @@ namespace geeL {
 	enum class WorldMatrices {
 		None = 0,
 		View = 1,
-		Projection = 2
+		Projection = 2,
+		InverseView = 3
 	};
 
 	enum class WorldVectors {
@@ -48,7 +49,7 @@ namespace geeL {
 		virtual std::list<WorldVectors> requiredWorldVectorsList() const;
 
 		virtual void addWorldInformation(std::list<unsigned int> maps, 
-			std::list<glm::mat4> matrices,std::list<glm::vec3> vectors) = 0;
+			std::list<const glm::mat4*> matrices, std::list<const glm::vec3*> vectors) = 0;
 
 	};
 

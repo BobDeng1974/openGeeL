@@ -30,7 +30,7 @@ namespace geeL {
 		~Bloom();
 
 		void setScatter(float scatter);
-		virtual void setScreen(ScreenQuad& screen);
+		virtual void init(ScreenQuad& screen);
 
 	protected:
 		virtual void bindValues();

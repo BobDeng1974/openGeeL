@@ -32,6 +32,7 @@ namespace geeL {
 
 		if ((matrices & WorldMatrices::View) == WorldMatrices::View) matrixList.push_back(WorldMatrices::View);
 		if ((matrices & WorldMatrices::Projection) == WorldMatrices::Projection) matrixList.push_back(WorldMatrices::Projection);
+		if ((matrices & WorldMatrices::InverseView) == WorldMatrices::InverseView) matrixList.push_back(WorldMatrices::InverseView);
 		if (matrixList.size() == 0) matrixList.push_back(WorldMatrices::None);
 
 		return matrixList;

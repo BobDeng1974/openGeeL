@@ -49,7 +49,7 @@ namespace geeL {
 	void PostProcessingRenderer::render() {
 
 		DefaultPostProcess defaultEffect = DefaultPostProcess();
-		defaultEffect.setScreen(screen);
+		defaultEffect.init(screen);
 		shaderManager->staticBind(*scene);
 
 		while (!window->shouldClose()) {
@@ -100,7 +100,7 @@ namespace geeL {
 
 	void PostProcessingRenderer::setEffect(PostProcessingEffect& effect) {
 		this->effect = &effect;
-		this->effect->setScreen(screen);
+		this->effect->init(screen);
 	}
 
 	void PostProcessingRenderer::handleInput(GLFWwindow* window, int key, int scancode, int action, int mode) {

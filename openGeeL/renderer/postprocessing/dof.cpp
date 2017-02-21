@@ -38,14 +38,14 @@ namespace geeL {
 	}
 
 
-	void DepthOfFieldBlurred::setScreen(ScreenQuad& screen) {
-		PostProcessingEffect::setScreen(screen);
+	void DepthOfFieldBlurred::init(ScreenQuad& screen) {
+		PostProcessingEffect::init(screen);
 
 		blurScreen = new ScreenQuad(screen.width * blurResolution, screen.height * blurResolution);
 		blurScreen->init();
 
 		blurBuffer.init(blurScreen->width, blurScreen->height);
-		blur.setScreen(*blurScreen);
+		blur.init(*blurScreen);
 		buffers.push_back(blurBuffer.getColorID());
 	}
 
@@ -87,7 +87,7 @@ namespace geeL {
 	}
 
 	void DepthOfFieldBlurred::addWorldInformation(list<unsigned int> maps,
-		list<glm::mat4> matrices, list<glm::vec3> vectors) {
+		list<const glm::mat4*> matrices, list<const glm::vec3*> vectors) {
 
 		if (maps.size() != 2)
 			throw "Wrong number of texture maps attached to SSAO";

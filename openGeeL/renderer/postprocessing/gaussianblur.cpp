@@ -19,8 +19,8 @@ namespace geeL {
 			amount = maxAmount;
 	}
 
-	void GaussianBlur::setScreen(ScreenQuad& screen) {
-		PostProcessingEffect::setScreen(screen);
+	void GaussianBlur::init(ScreenQuad& screen) {
+		PostProcessingEffect::init(screen);
 
 		frameBuffers[0].init(screen.width, screen.height);
 		frameBuffers[1].init(screen.width, screen.height);

@@ -48,12 +48,12 @@ namespace geeL {
 		noiseTexture = SimpleTexture(noise, 4, 4, GL_REPEAT, GL_NEAREST);
 	}
 
-	void SSAO::setScreen(ScreenQuad& screen) {
-		PostProcessingEffect::setScreen(screen);
+	void SSAO::init(ScreenQuad& screen) {
+		PostProcessingEffect::init(screen);
 
 		tempBuffer.init(screen.width, screen.height, 1, Single, GL_NEAREST, false);
 
-		blur.setScreen(screen);
+		blur.init(screen);
 		blur.setBuffer(tempBuffer.getColorID());
 		blur.setParentFBO(parentFBO);
 
@@ -110,7 +110,7 @@ namespace geeL {
 	}
 
 	void SSAO::addWorldInformation(list<unsigned int> maps,
-		list<glm::mat4> matrices, list<glm::vec3> vectors) {
+		list<const mat4*> matrices, list<const vec3*> vectors) {
 
 		if (maps.size() != 2)
 			throw "Wrong number of texture maps attached to SSAO";

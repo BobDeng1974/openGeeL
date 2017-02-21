@@ -36,10 +36,10 @@ namespace geeL {
 	}
 
 	void SSRR::addWorldInformation(list<unsigned int> maps,
-		list<glm::mat4> matrices, list<glm::vec3> vectors) {
+		list<const glm::mat4*> matrices, list<const glm::vec3*> vectors) {
 
 		if (maps.size() != 4)
-			throw "Wrong number of texture maps attached to SSAO";
+			throw "Wrong number of texture maps attached to SSRR";
 
 		setBuffer(maps);
 	}

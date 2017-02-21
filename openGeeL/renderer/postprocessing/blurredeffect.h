@@ -16,7 +16,7 @@ namespace geeL {
 		BlurredPostEffect(PostProcessingEffect& effect, GaussianBlur& blur, float resolution = 1.f);
 		~BlurredPostEffect();
 
-		virtual void setScreen(ScreenQuad& screen);
+		virtual void init(ScreenQuad& screen);
 
 	protected:
 		virtual void bindValues();
@@ -38,15 +38,17 @@ namespace geeL {
 		BlurredWorldPostEffect(WorldPostProcessingEffect& effect, GaussianBlur& blur, float resolution = 1.f);
 		~BlurredWorldPostEffect();
 
-		virtual void setScreen(ScreenQuad& screen);
+		virtual void init(ScreenQuad& screen);
 
 		virtual WorldMaps requiredWorldMaps() const;
 		virtual WorldMatrices requiredWorldMatrices() const;
 		virtual WorldVectors requiredWorldVectors() const;
+
 		virtual std::list<WorldMaps> requiredWorldMapsList() const;
+		virtual std::list<WorldMatrices> requiredWorldMatricesList() const;
 
 		virtual void addWorldInformation(std::list<unsigned int> maps,
-			std::list<glm::mat4> matrices, std::list<glm::vec3> vectors);
+			std::list<const glm::mat4*> matrices, std::list<const glm::vec3*> vectors);
 
 	protected:
 		virtual void bindValues();

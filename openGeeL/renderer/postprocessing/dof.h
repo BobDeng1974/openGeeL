@@ -37,7 +37,7 @@ namespace geeL {
 
 		~DepthOfFieldBlurred();
 
-		virtual void setScreen(ScreenQuad& screen);
+		virtual void init(ScreenQuad& screen);
 
 		virtual WorldMaps requiredWorldMaps() const;
 		virtual WorldMatrices requiredWorldMatrices() const;
@@ -45,7 +45,7 @@ namespace geeL {
 		virtual std::list<WorldMaps> requiredWorldMapsList() const;
 
 		virtual void addWorldInformation(std::list<unsigned int> maps,
-			std::list<glm::mat4> matrices, std::list<glm::vec3> vectors);
+			std::list<const glm::mat4*> matrices, std::list<const glm::vec3*> vectors);
 
 	protected:
 		virtual void bindValues();

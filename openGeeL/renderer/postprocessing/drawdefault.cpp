@@ -12,8 +12,8 @@ namespace geeL {
 		: PostProcessingEffect("renderer/postprocessing/drawdefault.frag"), exposure(exposure) {}
 
 
-	void DefaultPostProcess::setScreen(ScreenQuad& screen) {
-		PostProcessingEffect::setScreen(screen);
+	void DefaultPostProcess::init(ScreenQuad& screen) {
+		PostProcessingEffect::init(screen);
 
 		SimpleTexture noise = SimpleTexture("resources/textures/noise.png", true, Diffuse, ColorSingle);
 		buffers.push_back(noise.GetID());

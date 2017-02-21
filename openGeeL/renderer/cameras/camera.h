@@ -38,16 +38,17 @@ namespace geeL {
 		void updateDepth(float depth);
 
 		const glm::mat4& getViewMatrix() const;
-		const glm::mat4 getInverseViewMatrix() const;
+		const glm::mat4& getInverseViewMatrix() const;
 		const glm::mat4& getProjectionMatrix() const;
 
-		glm::vec3 getPosition() const;
-		glm::vec3 getDirection() const;
+		const glm::vec3& getPosition() const;
+		const glm::vec3& getDirection() const;
 
 	protected:
 		float speed;
 		float sensitivity;
 		glm::mat4 viewMatrix;
+		glm::mat4 inverseView;
 		glm::mat4 projectionMatrix;
 
 		virtual void computeKeyboardInput(const InputManager& input);

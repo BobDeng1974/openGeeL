@@ -18,7 +18,7 @@ namespace geeL {
 	public:
 		SSAO(const Camera& camera, SimpleBlur& blur, float radius = 5.f);
 
-		virtual void setScreen(ScreenQuad& screen);
+		virtual void init(ScreenQuad& screen);
 		virtual void draw();
 
 		virtual WorldMaps requiredWorldMaps() const;
@@ -27,7 +27,7 @@ namespace geeL {
 		virtual std::list<WorldMaps> requiredWorldMapsList() const;
 
 		virtual void addWorldInformation(std::list<unsigned int> maps,
-			std::list<glm::mat4> matrices, std::list<glm::vec3> vectors);
+			std::list<const glm::mat4*> matrices, std::list<const glm::vec3*> vectors);
 
 	protected:
 		virtual void bindValues();

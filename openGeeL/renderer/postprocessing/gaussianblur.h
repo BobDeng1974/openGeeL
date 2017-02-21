@@ -14,7 +14,7 @@ namespace geeL {
 		GaussianBlur(unsigned int strength, std::string shaderPath);
 
 		void setKernel(float newKernel[5]);
-		virtual void setScreen(ScreenQuad& screen);
+		virtual void init(ScreenQuad& screen);
 
 	protected:
 		virtual void bindValues();

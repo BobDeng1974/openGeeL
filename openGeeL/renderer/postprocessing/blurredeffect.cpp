@@ -19,8 +19,8 @@ namespace geeL {
 	}
 
 
-	void BlurredPostEffect::setScreen(ScreenQuad& screen) {
-		PostProcessingEffect::setScreen(screen);
+	void BlurredPostEffect::init(ScreenQuad& screen) {
+		PostProcessingEffect::init(screen);
 
 		effectScreen = new ScreenQuad(screen.width * resolution, screen.height * resolution);
 		effectScreen->init();
@@ -28,8 +28,8 @@ namespace geeL {
 		effectBuffer.init(effectScreen->width, effectScreen->height);
 		blurBuffer.init(effectScreen->width, effectScreen->height);
 
-		effect.setScreen(*effectScreen);
-		blur.setScreen(*effectScreen);
+		effect.init(*effectScreen);
+		blur.init(*effectScreen);
 		blur.setParentFBO(blurBuffer.fbo);
 
 		buffers.push_back(blurBuffer.getColorID());
@@ -66,8 +66,8 @@ namespace geeL {
 	}
 
 
-	void BlurredWorldPostEffect::setScreen(ScreenQuad& screen) {
-		PostProcessingEffect::setScreen(screen);
+	void BlurredWorldPostEffect::init(ScreenQuad& screen) {
+		PostProcessingEffect::init(screen);
 
 		effectScreen = new ScreenQuad(screen.width * resolution, screen.height * resolution);
 		effectScreen->init();
@@ -75,8 +75,8 @@ namespace geeL {
 		effectBuffer.init(effectScreen->width, effectScreen->height);
 		blurBuffer.init(effectScreen->width, effectScreen->height);
 
-		effect.setScreen(*effectScreen);
-		blur.setScreen(*effectScreen);
+		effect.init(*effectScreen);
+		blur.init(*effectScreen);
 		blur.setParentFBO(blurBuffer.fbo);
 
 		buffers.push_back(blurBuffer.getColorID());
@@ -114,8 +114,12 @@ namespace geeL {
 		return effect.requiredWorldMapsList();
 	}
 
+	list<WorldMatrices> BlurredWorldPostEffect::requiredWorldMatricesList() const {
+		return effect.requiredWorldMatricesList();
+	}
+
 	void BlurredWorldPostEffect::addWorldInformation(list<unsigned int> maps,
-		list<glm::mat4> matrices, list<glm::vec3> vectors) {
+		list<const glm::mat4*> matrices, list<const glm::vec3*> vectors) {
 
 		//Set own buffer to first map because it is assumed that 
 		//it is the 'main' one, e.g. the rendered image
