@@ -14,8 +14,8 @@ using namespace glm;
 
 namespace geeL {
 
-	PointLight::PointLight(Transform& transform, vec3 diffuse, vec3 specular, float shadowBias)
-		: Light(transform, diffuse, specular, shadowBias), farPlane(50.f) {
+	PointLight::PointLight(Transform& transform, vec3 diffuse, float shadowBias)
+		: Light(transform, diffuse, shadowBias), farPlane(50.f) {
 	
 		lightTransforms.reserve(6);
 		initLightTransform();
@@ -24,20 +24,18 @@ namespace geeL {
 	}
 
 
-	void PointLight::deferredBind(const RenderScene& scene, const Shader& shader, int index, string name) const {
-		Light::deferredBind(scene, shader, index, name);
+	void PointLight::deferredBind(const RenderScene& scene, const Shader& shader, string name) const {
+		Light::deferredBind(scene, shader, name);
 
-		std::string location = name + "[" + std::to_string(index) + "].";
-		shader.setVector3(location + "position", scene.TranslateToViewSpace(transform.position));
-		shader.setFloat(location + "farPlane", farPlane);
+		shader.setVector3(name + "position", scene.TranslateToViewSpace(transform.position));
+		shader.setFloat(name + "farPlane", farPlane);
 	}
 
-	void PointLight::forwardBind(const Shader& shader, int index, string name) const {
-		Light::forwardBind(shader, index, name);
+	void PointLight::forwardBind(const Shader& shader, string name, string transformName) const {
+		Light::forwardBind(shader, name, transformName);
 
-		std::string location = name + "[" + std::to_string(index) + "].";
-		shader.setVector3(location + "position", transform.position);
-		shader.setFloat(location + "farPlane", farPlane);
+		shader.setVector3(name + "position", transform.position);
+		shader.setFloat(name + "farPlane", farPlane);
 	}
 
 	void PointLight::initShadowmap() {

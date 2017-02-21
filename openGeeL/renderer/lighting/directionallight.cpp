@@ -15,29 +15,25 @@ using namespace glm;
 
 namespace geeL {
 
-	DirectionalLight::DirectionalLight(Transform& transform, vec3 diffuse, vec3 ambient, 
-		float shadowBias) : Light(transform, diffuse, ambient, shadowBias) {
+	DirectionalLight::DirectionalLight(Transform& transform, vec3 diffuse, float shadowBias) 
+		: Light(transform, diffuse, shadowBias) {
 	
 		setResolution(ShadowmapResolution::High);
 	}
 
 
-	void DirectionalLight::deferredBind(const RenderScene& scene, const Shader& shader, int index, string name) const {
-		Light::deferredBind(scene, shader, index, name);
+	void DirectionalLight::deferredBind(const RenderScene& scene, const Shader& shader, string name) const {
+		Light::deferredBind(scene, shader, name);
 
-		string location = name + "[" + to_string(index) + "].";
-		shader.setVector3(location + "direction", scene.GetOriginInViewSpace() - scene.TranslateToViewSpace(transform.forward));
-		shader.setMat4(location + "lightTransform", lightTransform);
+		shader.setVector3(name + "direction", scene.GetOriginInViewSpace() - scene.TranslateToViewSpace(transform.forward));
+		shader.setMat4(name + "lightTransform", lightTransform);
 	}
 
-	void DirectionalLight::forwardBind(const Shader& shader, int index, string name) const {
-		Light::forwardBind(shader, index, name);
+	void DirectionalLight::forwardBind(const Shader& shader, string name, string transformName) const {
+		Light::forwardBind(shader, name, transformName);
 
-		string location = name + "[" + to_string(index) + "].";
-		shader.setVector3(location + "direction", transform.forward);
-
-		location = "direLightMatrix[" + to_string(index) + "]";
-		shader.setMat4(location, lightTransform);
+		shader.setVector3(name + "direction", transform.forward);
+		shader.setMat4(transformName, lightTransform);
 	}
 
 	void DirectionalLight::renderShadowmap(const RenderScene& scene, const Shader& shader) {

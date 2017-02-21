@@ -37,15 +37,15 @@ namespace geeL {
 		~LightManager();
 
 		//Add and create directional light
-		DirectionalLight& addDirectionalLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular, 
+		DirectionalLight& addDirectionalLight(Transform& transform, glm::vec3 diffuse, 
 			float shadowBias = 0.00002f);
 	
 		//Add and create point light
-		PointLight& addPointLight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,
+		PointLight& addPointLight(Transform& transform, glm::vec3 diffuse,
 			float shadowBias = 0.002f);
 	
 		//Add and create spotlight
-		SpotLight& addSpotlight(Transform& transform, glm::vec3 diffuse, glm::vec3 specular,
+		SpotLight& addSpotlight(Transform& transform, glm::vec3 diffuse,
 			float angle, float outerAngle, float shadowBias = 0.0017f);
 
 

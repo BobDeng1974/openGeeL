@@ -40,8 +40,8 @@ namespace geeL {
 			delete staticSLs[j];
 	}
 
-	DirectionalLight& LightManager::addDirectionalLight(Transform& transform, vec3 diffuse, vec3 specular, float shadowBias) {
-		DirectionalLight* light = new DirectionalLight(transform, diffuse, specular, shadowBias);
+	DirectionalLight& LightManager::addDirectionalLight(Transform& transform, vec3 diffuse, float shadowBias) {
+		DirectionalLight* light = new DirectionalLight(transform, diffuse, shadowBias);
 		staticDLs.push_back(light);
 		light->initShadowmap();
 
@@ -49,19 +49,19 @@ namespace geeL {
 	}
 
 	
-	PointLight& LightManager::addPointLight(Transform& transform, vec3 diffuse, vec3 specular, float shadowBias) {
+	PointLight& LightManager::addPointLight(Transform& transform, vec3 diffuse, float shadowBias) {
 
-		PointLight* light = new PointLight(transform, diffuse, specular, shadowBias);
+		PointLight* light = new PointLight(transform, diffuse, shadowBias);
 		staticPLs.push_back(light);
 		light->initShadowmap();
 		
 		return *light;
 	}
 
-	SpotLight& LightManager::addSpotlight(Transform& transform, vec3 diffuse, vec3 specular,
+	SpotLight& LightManager::addSpotlight(Transform& transform, vec3 diffuse,
 		float angle, float outerAngle, float shadowBias) {
 
-		SpotLight* light = new SpotLight(transform, diffuse, specular, angle, outerAngle, shadowBias);
+		SpotLight* light = new SpotLight(transform, diffuse, angle, outerAngle, shadowBias);
 		staticSLs.push_back(light);
 		light->initShadowmap();
 
@@ -76,13 +76,13 @@ namespace geeL {
 		shader.setInteger(slCountName, staticSLs.size());
 
 		for (size_t j = 0; j < staticPLs.size(); j++)
-			staticPLs[j]->deferredBind(scene, shader, j, plName);
+			staticPLs[j]->deferredBind(scene, shader, plName + "[" + std::to_string(j) + "].");
 
 		for (size_t j = 0; j < staticDLs.size(); j++)
-			staticDLs[j]->deferredBind(scene, shader, j, dlName);
+			staticDLs[j]->deferredBind(scene, shader, dlName + "[" + std::to_string(j) + "].");
 
 		for (size_t j = 0; j < staticSLs.size(); j++)
-			staticSLs[j]->deferredBind(scene, shader, j, slName);
+			staticSLs[j]->deferredBind(scene, shader, slName + "[" + std::to_string(j) + "].");
 	}
 
 	void LightManager::forwardBind(const Shader& shader) const {
@@ -92,14 +92,21 @@ namespace geeL {
 		shader.setInteger(dlCountName, staticDLs.size());
 		shader.setInteger(slCountName, staticSLs.size());
 
-		for (size_t j = 0; j < staticPLs.size(); j++)
-			staticPLs[j]->forwardBind(shader, j, plName);
+		for (size_t j = 0; j < staticPLs.size(); j++) {
+			staticPLs[j]->forwardBind(shader, plName + "[" + std::to_string(j) + "].", "");
+		}
 
-		for (size_t j = 0; j < staticDLs.size(); j++)
-			staticDLs[j]->forwardBind(shader, j, dlName);
+		for (size_t j = 0; j < staticDLs.size(); j++) {
+			staticDLs[j]->forwardBind(shader, dlName + "[" + std::to_string(j) + "].", 
+				"direLightMatrix[" + to_string(j) + "]");
+		}
+			
 
-		for (size_t j = 0; j < staticSLs.size(); j++)
-			staticSLs[j]->forwardBind(shader, j, slName);
+		for (size_t j = 0; j < staticSLs.size(); j++) {
+			staticSLs[j]->forwardBind(shader, slName + "[" + std::to_string(j) + "].", 
+				"spotLightMatrix[" + to_string(j) + "]");
+		}
+			
 	}
 
 	void LightManager::bindShadowmaps(Shader& shader) const {

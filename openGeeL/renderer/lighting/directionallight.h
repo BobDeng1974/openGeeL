@@ -10,10 +10,10 @@ namespace geeL {
 	class DirectionalLight : public Light {
 
 	public:
-		DirectionalLight(Transform& transform, vec3 diffuse, vec3 specular, float shadowBias = 0.0005f);
+		DirectionalLight(Transform& transform, vec3 diffuse, float shadowBias = 0.0005f);
 
-		virtual void deferredBind(const RenderScene& scene, const Shader& shader, int index, std::string name) const;
-		virtual void forwardBind(const Shader& shader, int index, std::string name) const;
+		virtual void deferredBind(const RenderScene& scene, const Shader& shader, std::string name) const;
+		virtual void forwardBind(const Shader& shader, std::string name, std::string transformName) const;
 
 		virtual void renderShadowmap(const RenderScene& scene, const Shader& shader);
 		virtual void computeLightTransform();

@@ -9,10 +9,10 @@ namespace geeL {
 	class PointLight : public Light {
 
 	public:
-		PointLight(Transform& transform, vec3 diffuse, vec3 specular, float shadowBias = 0.006f);
+		PointLight(Transform& transform, vec3 diffuse, float shadowBias = 0.006f);
 
-		virtual void deferredBind(const RenderScene& scene, const Shader& shader, int index, std::string name) const;
-		virtual void forwardBind(const Shader& shader, int index, std::string name) const;
+		virtual void deferredBind(const RenderScene& scene, const Shader& shader, std::string name) const;
+		virtual void forwardBind(const Shader& shader, std::string name, std::string transformName) const;
 		virtual void initShadowmap();
 		virtual void renderShadowmap(const RenderScene& scene, const Shader& shader);
 		virtual void addShadowmap(Shader& shader, std::string name);

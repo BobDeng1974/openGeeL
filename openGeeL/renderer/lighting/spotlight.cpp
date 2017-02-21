@@ -13,38 +13,35 @@ using namespace glm;
 
 namespace geeL {
 
-	SpotLight::SpotLight(Transform& transform, vec3 diffuse, vec3 specular, 
+	SpotLight::SpotLight(Transform& transform, vec3 diffuse, 
 		float angle, float outerAngle, float shadowBias)
-			: Light(transform, diffuse, specular, shadowBias), 
+			: Light(transform, diffuse, shadowBias), 
 				angle(angle), outerAngle(outerAngle) {
 	
 		setResolution(ShadowmapResolution::Adaptive);
 	}
 
 
-	void SpotLight::deferredBind(const RenderScene& scene, const Shader& shader, int index, string name) const {
-		Light::deferredBind(scene, shader, index, name);
+	void SpotLight::deferredBind(const RenderScene& scene, const Shader& shader, string name) const {
+		Light::deferredBind(scene, shader, name);
 
-		string location = name + "[" + to_string(index) + "].";
-		shader.setVector3(location + "position", scene.TranslateToViewSpace(transform.position));
-		shader.setVector3(location + "direction", 
+		shader.setVector3(name + "position", scene.TranslateToViewSpace(transform.position));
+		shader.setVector3(name + "direction",
 			scene.TranslateToViewSpace(transform.forward) - scene.GetOriginInViewSpace());
-		shader.setFloat(location + "angle", angle);
-		shader.setFloat(location + "outerAngle", outerAngle);
-		shader.setMat4(location + "lightTransform", lightTransform);
+		shader.setFloat(name + "angle", angle);
+		shader.setFloat(name + "outerAngle", outerAngle);
+		shader.setMat4(name + "lightTransform", lightTransform);
 	}
 
-	void SpotLight::forwardBind(const Shader& shader, int index, string name) const {
-		Light::forwardBind(shader, index, name);
+	void SpotLight::forwardBind(const Shader& shader, string name, string transformName) const {
+		Light::forwardBind(shader, name, transformName);
 
-		string location = name + "[" + to_string(index) + "].";
-		shader.setVector3(location + "position", transform.position);
-		shader.setVector3(location + "direction", transform.forward);
-		shader.setFloat(location + "angle", angle);
-		shader.setFloat(location + "outerAngle", outerAngle);
+		shader.setVector3(name + "position", transform.position);
+		shader.setVector3(name + "direction", transform.forward);
+		shader.setFloat(name + "angle", angle);
+		shader.setFloat(name + "outerAngle", outerAngle);
 
-		location = "spotLightMatrix[" + to_string(index) + "]";
-		shader.setMat4(location, lightTransform);
+		shader.setMat4(transformName, lightTransform);
 	}
 
 	void SpotLight::computeLightTransform() {

@@ -14,21 +14,18 @@ using namespace glm;
 
 namespace geeL {
 
-	Light::Light(Transform& transform, vec3 diffuse, vec3 specular, float shadowBias)
-		: SceneObject(transform), diffuse(diffuse), specular(specular), shadowBias(shadowBias), dynamicBias(shadowBias) {}
+	Light::Light(Transform& transform, vec3 diffuse, float shadowBias)
+		: SceneObject(transform), diffuse(diffuse), shadowBias(shadowBias), dynamicBias(shadowBias) {}
 
 
 
-	void Light::deferredBind(const RenderScene& scene, const Shader& shader, int index, string name) const {
-		forwardBind(shader, index, name);
+	void Light::deferredBind(const RenderScene& scene, const Shader& shader, string name) const {
+		forwardBind(shader, name, "");
 	}
 
-	void Light::forwardBind(const Shader& shader, int index, string name) const {
-		string location = name + "[" + std::to_string(index) + "].";
-
-		shader.setVector3(location + "diffuse", diffuse);
-		shader.setVector3(location + "specular", specular);
-		shader.setFloat(location + "bias", dynamicBias);
+	void Light::forwardBind(const Shader& shader,  string name, string transformName) const {
+		shader.setVector3(name + "diffuse", diffuse);
+		shader.setFloat(name + "bias", dynamicBias);
 	}
 
 	void Light::initShadowmap() {
@@ -128,5 +125,9 @@ namespace geeL {
 
 	const int Light::getShadowMapFBO() const {
 		return shadowmapFBO;
+	}
+
+	const mat4& Light::getLightTransform() const {
+		return lightTransform;
 	}
 }

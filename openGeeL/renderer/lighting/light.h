@@ -28,12 +28,11 @@ namespace geeL {
 
 	public:
 		vec3 diffuse;
-		vec3 specular;
 
-		Light(Transform& transform, vec3 diffuse, vec3 specular, float shadowBias);
+		Light(Transform& transform, vec3 diffuse, float shadowBias);
 
-		virtual void deferredBind(const RenderScene& scene, const Shader& shader, int index, std::string name) const;
-		virtual void forwardBind(const Shader& shader, int index, std::string name) const;
+		virtual void deferredBind(const RenderScene& scene, const Shader& shader, std::string name) const;
+		virtual void forwardBind(const Shader& shader, std::string name, std::string transformName) const;
 
 		virtual void initShadowmap();
 		virtual void addShadowmap(Shader& shader, std::string name);
@@ -46,6 +45,7 @@ namespace geeL {
 		void setResolution(ShadowmapResolution resolution);
 		const int getShadowMapID() const;
 		const int getShadowMapFBO() const;
+		const glm::mat4& getLightTransform() const;
 
 	protected:
 		unsigned int shadowmapFBO;
