@@ -5,17 +5,28 @@
 
 namespace geeL {
 
-	//Simple (evenly distributed) blur
+	//Simple (evenly distributed) blur that only uses one color channel (red)
 	class SimpleBlur : public PostProcessingEffect {
 
 	public:
 		SimpleBlur(unsigned int strength = 1);
 
 	protected:
+		SimpleBlur(unsigned int strength, std::string shaderPath);
+
 		virtual void bindValues();
 
 	private:
 		unsigned int amount;
+
+	};
+
+
+	//Simple (evenly distributed) blur that uses all color channels
+	class SimpleBlur3D : public SimpleBlur {
+
+	public:
+		SimpleBlur3D(unsigned int strength = 1);
 
 	};
 }

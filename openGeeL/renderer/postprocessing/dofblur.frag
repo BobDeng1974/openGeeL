@@ -49,7 +49,7 @@ void main() {
 		float sharp = getSharpness(depth);
 
 		result += inBorders * 
-			(texture(image, TexCoords + off).rgb * sharp + baseColor * (1 - sharp))* kernel[i];
+			(texture(image, TexCoords + off).rgb * sharp + baseColor * (1 - sharp)) * kernel[i];
             
 		//Sample left / bottom pixel
 		depth = texture(gPositionDepth, TexCoords - off).w;

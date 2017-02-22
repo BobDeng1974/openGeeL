@@ -10,13 +10,12 @@
 namespace geeL {
 
 	class Camera;
-	class SimpleBlur;
 
 	//Screen Space Ambient Occlusion Post Effect
 	class SSAO : public WorldPostProcessingEffect {
 
 	public:
-		SSAO(const Camera& camera, SimpleBlur& blur, float radius = 5.f);
+		SSAO(const Camera& camera, PostProcessingEffect& blur, float radius = 5.f);
 
 		virtual void init(ScreenQuad& screen);
 		virtual void draw();
@@ -40,7 +39,7 @@ namespace geeL {
 		std::vector<glm::vec3> kernel;
 		std::vector<glm::vec3> noise;
 		const Camera& camera;
-		SimpleBlur& blur;
+		PostProcessingEffect& blur;
 		FrameBuffer tempBuffer;
 	};
 }

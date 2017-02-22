@@ -76,11 +76,12 @@ namespace geeL {
 	}
 
 
-	BilateralFilter::BilateralFilter(unsigned int strength) 
-		: GaussianBlur(strength, "renderer/postprocessing/bilateral.frag") {}
+	BilateralFilter::BilateralFilter(unsigned int strength, float factor)
+		: GaussianBlur(strength, "renderer/postprocessing/bilateral.frag"), sigma(sigma) {}
 
 
 	void BilateralFilter::bindValues() {
+		shader.setFloat("sigma", sigma);
 
 		GaussianBlur::bindValues();
 	}

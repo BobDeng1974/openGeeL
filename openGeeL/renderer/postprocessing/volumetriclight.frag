@@ -1,5 +1,7 @@
 #version 430 core
 
+const float PI = 3.14159265359;
+
 struct SpotLight {
 	sampler2D shadowMap;
 	mat4 lightTransform;
@@ -33,8 +35,9 @@ vec3 convertToLightSpace(vec3 fragPosition);
 float calculateSpotLightShadows(vec3 coords);
 
 void main() {
-	vec3 result = step(effectOnly, 0.f) * texture(image, TexCoords).rgb;
+	vec3 result = /*step(effectOnly, 0.f) * */texture(image, TexCoords).rgb;
 	vec3 fragPos = texture(gPositionDepth, TexCoords).xyz;
+	float depth = length(fragPos);
 
 	vec3 fragLightSpace = convertToLightSpace(fragPos);
 	vec3 origLightSpace = convertToLightSpace(vec3(0.f));
@@ -55,12 +58,14 @@ void main() {
 
 		float attenuation = 1.f / (lightDistance * lightDistance);
 
+		attenuation = (attenuation < 0.001f) ? 0.f : attenuation;
+
 		//Set intensity depending on if object is inside spotlights halo (or outer halo)
 		float theta = dot(lightDirection, normalize(-light.direction)); 
 		float epsilon = (light.angle - light.outerAngle);
 		float intensity = clamp((theta - light.outerAngle) / epsilon, 0.f, 1.f);
 
-		vec3 vol = light.diffuse * shadow * attenuation * intensity * density;
+		vec3 vol = light.diffuse * shadow * attenuation * density * intensity;
 
 		volume += vol;
 		stepi += 1.f;

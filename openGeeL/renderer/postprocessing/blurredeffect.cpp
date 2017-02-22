@@ -6,7 +6,7 @@ using namespace std;
 
 namespace geeL {
 
-	BlurredPostEffect::BlurredPostEffect(PostProcessingEffect& effect, GaussianBlur& blur, float resolution)
+	BlurredPostEffect::BlurredPostEffect(PostProcessingEffect& effect, PostProcessingEffect& blur, float resolution)
 		: PostProcessingEffect("renderer/postprocessing/combine.frag"),
 		effect(effect), blur(blur), resolution(resolution) {
 

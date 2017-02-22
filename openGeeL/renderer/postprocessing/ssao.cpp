@@ -3,10 +3,8 @@
 #include <random>
 #include <string>
 #include <glm.hpp>
-#include "../postprocessing/gaussianblur.h"
 #include "../utility/screenquad.h"
 #include "../cameras/camera.h"
-#include "simpleblur.h"
 #include "ssao.h"
 
 using namespace glm;
@@ -15,7 +13,7 @@ using namespace std;
 
 namespace geeL {
 
-	SSAO::SSAO(const Camera& camera, SimpleBlur& blur, float radius)
+	SSAO::SSAO(const Camera& camera, PostProcessingEffect& blur, float radius)
 		: WorldPostProcessingEffect("renderer/postprocessing/ssao.frag"),
 		camera(camera), blur(blur), radius(radius) {
 	

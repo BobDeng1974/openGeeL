@@ -7,13 +7,11 @@
 
 namespace geeL {
 
-	class GaussianBlur;
-
 	//Wrapper effect that can blur and scale another post processing effect
 	class BlurredPostEffect : public PostProcessingEffect {
 
 	public:
-		BlurredPostEffect(PostProcessingEffect& effect, GaussianBlur& blur, float resolution = 1.f);
+		BlurredPostEffect(PostProcessingEffect& effect, PostProcessingEffect& blur, float resolution = 1.f);
 		~BlurredPostEffect();
 
 		virtual void init(ScreenQuad& screen);
@@ -24,7 +22,7 @@ namespace geeL {
 	private:
 		float resolution;
 		PostProcessingEffect& effect;
-		GaussianBlur& blur;
+		PostProcessingEffect& blur;
 		FrameBuffer effectBuffer;
 		FrameBuffer blurBuffer;
 		ScreenQuad* effectScreen = nullptr;

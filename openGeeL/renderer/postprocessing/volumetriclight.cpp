@@ -2,6 +2,10 @@
 #include "../lighting/spotlight.h"
 #include "volumetriclight.h"
 
+#include "../scene.h"
+#include "../cameras/camera.h"
+
+
 using namespace glm;
 using namespace std;
 
@@ -9,7 +13,7 @@ namespace geeL {
 
 	VolumetricLight::VolumetricLight(const RenderScene& scene, const SpotLight& light, float density, int samples)
 		: WorldPostProcessingEffect("renderer/postprocessing/volumetriclight.frag"), 
-			scene(scene), light(light), density(density), samples(samples){}
+			scene(scene), light(light), density(density), samples(samples) {}
 
 
 	void VolumetricLight::init(ScreenQuad& screen) {
