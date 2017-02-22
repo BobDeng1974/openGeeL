@@ -78,6 +78,8 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition);
 float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition);
 float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition);
 
+vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightColor, float density);
+
 //Return dot(a,b) >= 0
 float doto(vec3 a, vec3 b);
 float random(vec3 seed, int i);
@@ -105,11 +107,15 @@ void main() {
 
 	gSpecular = 0.f;
 	vec3 irradiance = vec3(0.f, 0.f, 0.f);
-	for(int i = 0; i < plCount; i++)
-        irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness, reflection);
-
-	for(int i = 0; i < dlCount; i++)
+	for(int i = 0; i < plCount; i++) {
+		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness, reflection);
+		irradiance += calculateVolumetricLightColor(fragPosition, pointLights[i].position, pointLights[i].diffuse, 0.001f);
+	}
+        
+	for(int i = 0; i < dlCount; i++) {
         irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness, reflection);
+		irradiance += calculateVolumetricLightColor(fragPosition, directionalLights[i].direction * -100.f, directionalLights[i].diffuse, 150.f);
+	}
 
 	for(int i = 0; i < slCount; i++)
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness, reflection);
@@ -387,6 +393,30 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	
 		return shadow / float(samples);
 	}
+}
+
+
+//Volumetric light......................................................................................................................
+
+vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightColor, float density) {
+
+	float lightInView = step(lightPosition.z, 0.f);
+
+	//Find shortest path from light position to viewing vector
+	float depth = length(fragPos);
+	vec3 n = normalize(fragPos);
+	vec3 a_p = -lightPosition;
+	float projN = dot(a_p, n);
+	vec3 shortestPath = a_p - projN * n;
+
+	//Pick shortest path OR fragPosition if shortestPath is too far away
+	float mini = step(depth, -projN);
+	float a = (1.f - mini) * length(shortestPath);
+	float b =  mini * distance(fragPos, lightPosition);
+	float dist = a + b + 0.0001f;
+	float attenuation = 1.f / (dist * dist);
+
+	return lightColor * attenuation * density * lightInView;
 }
 
 
