@@ -74,4 +74,16 @@ namespace geeL {
 		for (int i = 0; i < 5; i++)
 			kernel[i] = newKernel[i];
 	}
+
+
+	BilateralFilter::BilateralFilter(unsigned int strength) 
+		: GaussianBlur(strength, "renderer/postprocessing/bilateral.frag") {}
+
+
+	void BilateralFilter::bindValues() {
+
+		GaussianBlur::bindValues();
+	}
+
+
 }
