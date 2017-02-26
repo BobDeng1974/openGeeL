@@ -106,13 +106,13 @@ namespace geeL {
 
 		//Init SSAO (if added)
 		if (ssao != nullptr) {
-			linkWorldInformation(*ssao);
 			ssao->setParentFBO(ssaoBuffer->fbo);
 
 			ssaoScreen = new ScreenQuad(screen.width * ssaoResolution, screen.height * ssaoResolution);
 			ssaoScreen->init();
 
 			ssao->init(*ssaoScreen);
+			linkWorldInformation(*ssao);
 		}
 
 		shaderManager->staticDeferredBind(*scene, *deferredShader);
@@ -259,12 +259,20 @@ namespace geeL {
 		effect.init(screen);
 	}
 
-	void DeferredRenderer::linkWorldInformation(WorldPostProcessingEffect& effect) {
+	void DeferredRenderer::addEffect(PostProcessingEffect& effect, WorldInformationRequester& requester) {
+		effects.push_back(&effect);
+
+		linkWorldInformation(requester);
+		effect.init(screen);
+	}
+
+
+	void DeferredRenderer::linkWorldInformation(WorldInformationRequester& requester) {
 		auto maps     = list<unsigned int>();
 		auto matrices = list<const mat4*>();
 		auto vectors  = list<const vec3*>();
 
-		auto requiredMaps = effect.requiredWorldMapsList();
+		auto requiredMaps = requester.requiredWorldMapsList();
 		for (auto it = requiredMaps.begin(); it != requiredMaps.end(); it++) {
 			switch (*it) {
 				case WorldMaps::RenderedImage:
@@ -291,7 +299,7 @@ namespace geeL {
 			}
 		}
 
-		auto requiredMatrices = effect.requiredWorldMatricesList();
+		auto requiredMatrices = requester.requiredWorldMatricesList();
 		for (auto it = requiredMatrices.begin(); it != requiredMatrices.end(); it++) {
 			switch (*it) {
 				case WorldMatrices::View:
@@ -306,7 +314,7 @@ namespace geeL {
 			}
 		}
 
-		auto requiredVectors = effect.requiredWorldVectorsList();
+		auto requiredVectors = requester.requiredWorldVectorsList();
 		for (auto it = requiredVectors.begin(); it != requiredVectors.end(); it++) {
 			switch (*it) {
 				case WorldVectors::CameraPosition:
@@ -321,7 +329,7 @@ namespace geeL {
 			}
 		}
 
-		effect.addWorldInformation(maps, matrices, vectors);
+		requester.addWorldInformation(maps, matrices, vectors);
 	}
 
 

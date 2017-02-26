@@ -13,6 +13,7 @@ namespace geeL {
 	class Shader;
 	class SSAO;
 	class PostProcessingEffect;
+	class WorldInformationRequester;
 	class WorldPostProcessingEffect;
 
 	class DeferredRenderer : public Renderer {
@@ -31,6 +32,7 @@ namespace geeL {
 		//Add new post processing effect to renderer. 
 		void addEffect(PostProcessingEffect& effect);
 		void addEffect(WorldPostProcessingEffect& effect);
+		void addEffect(PostProcessingEffect& effect, WorldInformationRequester& requester);
 
 	private:
 		int toggle;
@@ -50,7 +52,7 @@ namespace geeL {
 		PostProcessingEffect* isolatedEffect = nullptr;
 
 		//Link all world information to given post effect
-		void linkWorldInformation(WorldPostProcessingEffect& effect);
+		void linkWorldInformation(WorldInformationRequester& requester);
 
 		void handleInput(GLFWwindow* window, int key, int scancode, int action, int mode);
 

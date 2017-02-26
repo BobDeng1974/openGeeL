@@ -1,17 +1,10 @@
-#include "worldpostprocessing.h"
+#include "worldrequester.h"
 
 using namespace std;
 
 namespace geeL {
 
-	WorldPostProcessingEffect::WorldPostProcessingEffect(string fragmentPath) 
-		: PostProcessingEffect(fragmentPath) {}
-
-	WorldPostProcessingEffect::WorldPostProcessingEffect(string vertexPath, string fragmentPath)
-		: PostProcessingEffect(vertexPath, fragmentPath) {}
-
-
-	list<WorldMaps> WorldPostProcessingEffect::requiredWorldMapsList() const {
+	list<WorldMaps> WorldInformationRequester::requiredWorldMapsList() const {
 		WorldMaps maps = requiredWorldMaps();
 
 		list<WorldMaps> mapList = list<WorldMaps>();
@@ -25,7 +18,7 @@ namespace geeL {
 		return mapList;
 	}
 
-	list<WorldMatrices> WorldPostProcessingEffect::requiredWorldMatricesList() const {
+	list<WorldMatrices> WorldInformationRequester::requiredWorldMatricesList() const {
 		WorldMatrices matrices = requiredWorldMatrices();
 
 		list<WorldMatrices> matrixList = list<WorldMatrices>();
@@ -38,7 +31,7 @@ namespace geeL {
 		return matrixList;
 	}
 
-	list<WorldVectors> WorldPostProcessingEffect::requiredWorldVectorsList() const {
+	list<WorldVectors> WorldInformationRequester::requiredWorldVectorsList() const {
 		WorldVectors vectors = requiredWorldVectors();
 
 		list<WorldVectors> vectorList = list<WorldVectors>();
