@@ -76,7 +76,7 @@ namespace geeL {
 	}
 
 
-	BilateralFilter::BilateralFilter(unsigned int strength, float factor)
+	BilateralFilter::BilateralFilter(unsigned int strength, float sigma)
 		: GaussianBlur(strength, "renderer/postprocessing/bilateral.frag"), sigma(sigma) {}
 
 

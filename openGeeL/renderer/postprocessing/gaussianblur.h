@@ -34,7 +34,7 @@ namespace geeL {
 	class BilateralFilter : public GaussianBlur {
 
 	public:
-		BilateralFilter(unsigned int strength = 1, float sigma = 1.f);
+		BilateralFilter(unsigned int strength = 1, float sigma = 0.5f);
 
 	protected:
 		virtual void bindValues();

@@ -197,7 +197,7 @@ void a_shadows() {
 	geeL::Transform& transform3 = transFactory.CreateTransform(glm::vec3(0.0f, 2.0f, 9.0f), vec3(-100.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera camera3 = PerspectiveCamera(transform3, 5.f, 15.f, 55.f, window->width, window->height, 0.1f, 100.f);
 
-	SimpleBlur blur = SimpleBlur(1);
+	BilateralFilter blur = BilateralFilter(1, 0.2f);
 	SSAO ssao = SSAO(camera3, blur, 10.f);
 	DeferredRenderer& renderer1 = DeferredRenderer(window, manager, &ssao, 0.6f);
 	renderer1.init();
@@ -226,10 +226,10 @@ void a_shadows() {
 	renderer1.addObject(testObj);
 	renderer1.initObjects();
 	
-	GaussianBlur& blur2 = GaussianBlur(1);
+	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50), 15.f);
 	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.3f);
-	
+
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR(camera3);
 	BlurredWorldPostEffect ssrrSmooth = BlurredWorldPostEffect(ssrr, blur4, 0.3f);
@@ -243,16 +243,15 @@ void a_shadows() {
 	Bloom bloom = Bloom(blur5, 0.7f, 0.2f);
 
 	GaussianBlur& blur6 = GaussianBlur();
-	VolumetricLight vol = VolumetricLight(scene, *spotLight, 0.3f);
+	VolumetricLight vol = VolumetricLight(scene, *spotLight, 0.3f, 20);
 	BlurredWorldPostEffect volSmooth = BlurredWorldPostEffect(vol, blur6, 0.5f);
 
-	renderer1.addEffect(volSmooth);
-	
-	renderer1.addEffect(bloom);
-	renderer1.addEffect(ssrrSmooth);
+	//renderer1.addEffect(vol);
+	//renderer1.addEffect(bloom);
+	//renderer1.addEffect(ssrrSmooth);
 	renderer1.addEffect(raySmooth);
-	renderer1.addEffect(dof);
-	renderer1.addEffect(fxaa);
+	//renderer1.addEffect(dof);
+	//renderer1.addEffect(fxaa);
 	
 	renderer1.render();
 

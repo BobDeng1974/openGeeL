@@ -109,7 +109,7 @@ void main() {
 	vec3 irradiance = vec3(0.f, 0.f, 0.f);
 	for(int i = 0; i < plCount; i++) {
 		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness, reflection);
-		irradiance += calculateVolumetricLightColor(fragPosition, pointLights[i].position, pointLights[i].diffuse, 0.001f);
+		//irradiance += calculateVolumetricLightColor(fragPosition, pointLights[i].position, pointLights[i].diffuse, 0.001f);
 	}
         
 	for(int i = 0; i < dlCount; i++) {
