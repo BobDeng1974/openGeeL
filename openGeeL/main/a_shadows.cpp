@@ -39,6 +39,7 @@
 #include "../renderer/postprocessing/fxaa.h"
 #include "../renderer/postprocessing/blurredeffect.h"
 #include "../renderer/postprocessing/volumetriclight.h"
+#include "../renderer/postprocessing/sobel.h"
 
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/skybox.h"
@@ -242,16 +243,19 @@ void a_shadows() {
 	GaussianBlur& blur5 = GaussianBlur();
 	Bloom bloom = Bloom(blur5, 0.7f, 0.2f);
 
-	GaussianBlur& blur6 = GaussianBlur(1);
+	FXAA& fxaa2 = FXAA();
 	VolumetricLight vol = VolumetricLight(scene, *spotLight, 0.3f, 1.f, 160);
-	BlurredWorldPostEffect volSmooth = BlurredWorldPostEffect(vol, blur6, 0.5f);
+	BlurredWorldPostEffect volSmooth = BlurredWorldPostEffect(vol, fxaa2, 0.4f);
 
-	renderer1.addEffect(volSmooth);
+	SobelFilter sobel = SobelFilter();
+
+	renderer1.addEffect(sobel);
+	//renderer1.addEffect(volSmooth);
 	//renderer1.addEffect(bloom);
 	//renderer1.addEffect(ssrrSmooth);
 	//renderer1.addEffect(raySmooth);
 	//renderer1.addEffect(dof);
-	renderer1.addEffect(fxaa);
+	//renderer1.addEffect(fxaa);
 	
 	renderer1.render();
 

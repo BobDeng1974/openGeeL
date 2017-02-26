@@ -29,7 +29,7 @@ void main() {
 			step(0.f, TexCoords.y - off.y);
 
 		//Sample right / top pixel
-		result +=  inBorders * 
+		result += inBorders * 
 			texture(image, TexCoords + off).rgb * kernel[i];
             
 		//Sample left / bottom pixel

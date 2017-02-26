@@ -33,7 +33,7 @@ namespace geeL {
 	class BlurredWorldPostEffect : public WorldPostProcessingEffect {
 
 	public:
-		BlurredWorldPostEffect(WorldPostProcessingEffect& effect, GaussianBlur& blur, float resolution = 1.f);
+		BlurredWorldPostEffect(WorldPostProcessingEffect& effect, PostProcessingEffect& blur, float resolution = 1.f);
 		~BlurredWorldPostEffect();
 
 		virtual void init(ScreenQuad& screen);
@@ -54,7 +54,7 @@ namespace geeL {
 	private:
 		float resolution;
 		WorldPostProcessingEffect& effect;
-		GaussianBlur& blur;
+		PostProcessingEffect& blur;
 		FrameBuffer effectBuffer;
 		FrameBuffer blurBuffer;
 		ScreenQuad* effectScreen = nullptr;
