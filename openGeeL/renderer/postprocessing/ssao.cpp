@@ -5,6 +5,7 @@
 #include <glm.hpp>
 #include "../utility/screenquad.h"
 #include "../cameras/camera.h"
+#include "gaussianblur.h"
 #include "ssao.h"
 
 using namespace glm;
@@ -13,9 +14,9 @@ using namespace std;
 
 namespace geeL {
 
-	SSAO::SSAO(const Camera& camera, PostProcessingEffect& blur, float radius)
+	SSAO::SSAO(const Camera& camera, BilateralFilter& blur, float radius)
 		: WorldPostProcessingEffect("renderer/postprocessing/ssao.frag"),
-		camera(camera), blur(blur), radius(radius) {
+			camera(camera), blur(blur), radius(radius) {
 	
 		uniform_real_distribution<GLfloat> random(0.f, 1.f);
 		default_random_engine generator;
@@ -52,10 +53,8 @@ namespace geeL {
 		tempBuffer.init(screen.width, screen.height, 1, Single, GL_NEAREST, false);
 
 		blur.init(screen);
-		blur.setBuffer(tempBuffer.getColorID());
+		
 		blur.setParentFBO(parentFBO);
-
-		buffers.push_back(noiseTexture.GetID());
 	}
 
 	void SSAO::draw() {
@@ -113,6 +112,8 @@ namespace geeL {
 		if (maps.size() != 2)
 			throw "Wrong number of texture maps attached to SSAO";
 
+		blur.setBuffer({ tempBuffer.getColorID(), maps.front() });
 		setBuffer(maps);
+		buffers.push_back(noiseTexture.GetID());
 	}
 }

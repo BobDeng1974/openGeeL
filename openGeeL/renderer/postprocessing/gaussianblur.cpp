@@ -4,6 +4,7 @@
 #include "../utility/screenquad.h"
 #include "gaussianblur.h"
 
+using namespace glm;
 using namespace std;
 
 namespace geeL {
@@ -76,8 +77,12 @@ namespace geeL {
 	}
 
 
+
 	BilateralFilter::BilateralFilter(unsigned int strength, float sigma)
 		: GaussianBlur(strength, "renderer/postprocessing/bilateral.frag"), sigma(sigma) {}
+
+	BilateralFilter::BilateralFilter(string shaderPath, unsigned int strength, float sigma)
+		: GaussianBlur(strength, shaderPath), sigma(sigma) {}
 
 
 	void BilateralFilter::bindValues() {
@@ -87,4 +92,41 @@ namespace geeL {
 	}
 
 
+
+	BilateralDepthFilter::BilateralDepthFilter(unsigned int strength, float sigma)
+		: BilateralFilter("renderer/postprocessing/bilateraldepth.frag", strength, sigma) {}
+
+
+	void BilateralDepthFilter::bindValues() {
+		BilateralFilter::bindValues();
+
+		shader.setInteger("image", shader.mapOffset);
+		shader.setInteger("gPositionDepth", shader.mapOffset + 1);
+	}
+
+	WorldMaps BilateralDepthFilter::requiredWorldMaps() const {
+		return (WorldMaps::RenderedImage | WorldMaps::PositionDepth);
+	}
+
+	WorldMatrices BilateralDepthFilter::requiredWorldMatrices() const {
+		return WorldMatrices::None;
+	}
+
+	WorldVectors BilateralDepthFilter::requiredWorldVectors() const {
+		return WorldVectors::None;
+	}
+
+	list<WorldMaps> BilateralDepthFilter::requiredWorldMapsList() const {
+		return{ WorldMaps::RenderedImage, WorldMaps::PositionDepth };
+	}
+
+	void BilateralDepthFilter::addWorldInformation(list<unsigned int> maps,
+		list<const mat4*> matrices, list<const vec3*> vectors) {
+
+		if (maps.size() != 2)
+			throw "Wrong number of texture maps attached to bilateral depth filter";
+
+		setBuffer(maps);
+	}
+	
 }

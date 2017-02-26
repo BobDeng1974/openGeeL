@@ -2,6 +2,7 @@
 #define GAUSSIANBLUR_H
 
 #include "../utility/framebuffer.h"
+#include "../utility/worldrequester.h"
 #include "postprocessing.h"
 
 namespace geeL {
@@ -30,13 +31,15 @@ namespace geeL {
 	};
 
 
-	//Two pass gaussian blur that doesn't blur edges depending on given factor
+	//Two pass gaussian blur that blurs depending on color differences and scaled with given factor
 	class BilateralFilter : public GaussianBlur {
 
 	public:
 		BilateralFilter(unsigned int strength = 1, float sigma = 0.5f);
 
 	protected:
+		BilateralFilter(std::string shaderPath, unsigned int strength = 1, float sigma = 0.5f);
+
 		virtual void bindValues();
 
 	private:
@@ -44,6 +47,25 @@ namespace geeL {
 
 	};
 
+
+	//Two pass gaussian blur that blurs depending on depth differences and scaled with given factor
+	class BilateralDepthFilter : public BilateralFilter, public WorldInformationRequester {
+
+	public:
+		BilateralDepthFilter(unsigned int strength = 1, float sigma = 0.5f);
+
+		virtual WorldMaps requiredWorldMaps() const;
+		virtual WorldMatrices requiredWorldMatrices() const;
+		virtual WorldVectors requiredWorldVectors() const;
+		virtual std::list<WorldMaps> requiredWorldMapsList() const;
+
+		virtual void addWorldInformation(std::list<unsigned int> maps,
+			std::list<const glm::mat4*> matrices, std::list<const glm::vec3*> vectors);
+
+	protected:
+		virtual void bindValues();
+
+	};
 }
 
 #endif
