@@ -11,7 +11,8 @@ namespace geeL {
 	class VolumetricLight : public WorldPostProcessingEffect {
 
 	public:
-		VolumetricLight(const RenderScene& scene, const SpotLight& light, float density = 1.f, int samples = 30);
+		VolumetricLight(const RenderScene& scene, const SpotLight& light, 
+			float density = 1.f, float minDistance = 1.f, int samples = 30);
 
 		virtual void init(ScreenQuad& screen);
 
@@ -31,6 +32,7 @@ namespace geeL {
 	private:
 		int samples;
 		float density;
+		float minDistance;
 		const RenderScene& scene;
 		const SpotLight& light;
 		const glm::mat4* inverseView;

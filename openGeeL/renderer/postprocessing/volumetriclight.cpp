@@ -11,9 +11,9 @@ using namespace std;
 
 namespace geeL {
 
-	VolumetricLight::VolumetricLight(const RenderScene& scene, const SpotLight& light, float density, int samples)
+	VolumetricLight::VolumetricLight(const RenderScene& scene, const SpotLight& light, float density, float minDistance, int samples)
 		: WorldPostProcessingEffect("renderer/postprocessing/volumetriclight.frag"), 
-			scene(scene), light(light), density(density), samples(samples) {}
+			scene(scene), light(light), density(density), minDistance(minDistance), samples(samples) {}
 
 
 	void VolumetricLight::init(ScreenQuad& screen) {
@@ -29,6 +29,7 @@ namespace geeL {
 
 		shader.setInteger("effectOnly", onlyEffect);
 		shader.setMat4("inverseView", *inverseView);
+		shader.setFloat("minCutoff", minDistance);
 		shader.setFloat("density", density);
 		shader.setInteger("samples", samples);
 

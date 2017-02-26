@@ -242,16 +242,16 @@ void a_shadows() {
 	GaussianBlur& blur5 = GaussianBlur();
 	Bloom bloom = Bloom(blur5, 0.7f, 0.2f);
 
-	GaussianBlur& blur6 = GaussianBlur();
-	VolumetricLight vol = VolumetricLight(scene, *spotLight, 0.3f, 20);
+	GaussianBlur& blur6 = GaussianBlur(1);
+	VolumetricLight vol = VolumetricLight(scene, *spotLight, 0.3f, 1.f, 160);
 	BlurredWorldPostEffect volSmooth = BlurredWorldPostEffect(vol, blur6, 0.5f);
 
-	//renderer1.addEffect(vol);
+	renderer1.addEffect(volSmooth);
 	//renderer1.addEffect(bloom);
 	//renderer1.addEffect(ssrrSmooth);
-	renderer1.addEffect(raySmooth);
+	//renderer1.addEffect(raySmooth);
 	//renderer1.addEffect(dof);
-	//renderer1.addEffect(fxaa);
+	renderer1.addEffect(fxaa);
 	
 	renderer1.render();
 

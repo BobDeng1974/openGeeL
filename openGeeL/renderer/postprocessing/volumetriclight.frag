@@ -25,6 +25,7 @@ uniform sampler2D shadowMap;
 
 uniform SpotLight light;
 uniform float density;
+uniform float minCutoff;
 uniform int samples;
 uniform mat4 inverseView;
 
@@ -35,7 +36,7 @@ vec3 convertToLightSpace(vec3 fragPosition);
 float calculateSpotLightShadows(vec3 coords);
 
 void main() {
-	vec3 result = /*step(effectOnly, 0.f) * */texture(image, TexCoords).rgb;
+	vec3 result = step(effectOnly, 0.f) * texture(image, TexCoords).rgb;
 	vec3 fragPos = texture(gPositionDepth, TexCoords).xyz;
 	float depth = length(fragPos);
 
@@ -54,6 +55,7 @@ void main() {
 
 		vec3 lightDirection = light.position - fragView;
 		float lightDistance = length(lightDirection);
+		float cutOff = step(minCutoff, lightDistance);
 		lightDirection = normalize(lightDirection);
 
 		float attenuation = 1.f / (lightDistance * lightDistance);
@@ -65,7 +67,7 @@ void main() {
 		float epsilon = (light.angle - light.outerAngle);
 		float intensity = clamp((theta - light.outerAngle) / epsilon, 0.f, 1.f);
 
-		vec3 vol = light.diffuse * shadow * attenuation * density * intensity;
+		vec3 vol = light.diffuse * shadow * attenuation * density * intensity * cutOff;
 
 		volume += vol;
 		stepi += 1.f;
