@@ -26,13 +26,12 @@ void main() {
     vec2 texOffset = 1.f / textureSize(image, 0); 
     vec3 base = texture(image, TexCoords).rgb; 
 	float baseDepth = -texture(gPositionDepth, TexCoords).z;
-
-	vec3 result = vec3(0.f);//base * kernel[0];
+	vec3 result = base * kernel[0];
 
 	float hor = step(1.f, float(horizontal));
 	float ver = 1 - hor;
 
-	float weights = 0.0001f;
+	float weights = kernel[0];
 	vec2 offset = texOffset * vec2(hor, ver);
 	for(int i = 1; i < 5; i++) {
 		vec2 off = offset * i;

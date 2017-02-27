@@ -16,7 +16,7 @@ void main() {
     vec3 result = texture(image, TexCoords).rgb * kernel[0]; 
 
 	float hor = step(1.f, float(horizontal));
-	float ver = 1 - hor;
+	float ver = 1.f - hor;
 
 	vec2 offset = texOffset * vec2(hor, ver);
 	for(int i = 1; i < 5; i++) {

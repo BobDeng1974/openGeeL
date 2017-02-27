@@ -53,7 +53,6 @@ namespace geeL {
 		tempBuffer.init(screen.width, screen.height, 1, Single, GL_NEAREST, false);
 
 		blur.init(screen);
-		
 		blur.setParentFBO(parentFBO);
 	}
 

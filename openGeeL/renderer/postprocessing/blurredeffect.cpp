@@ -55,7 +55,7 @@ namespace geeL {
 
 	BlurredWorldPostEffect::BlurredWorldPostEffect(WorldPostProcessingEffect& effect, PostProcessingEffect& blur, float resolution)
 		: WorldPostProcessingEffect("renderer/postprocessing/combine.frag"),
-		effect(effect), blur(blur), resolution(resolution) {
+			effect(effect), blur(blur), resolution(resolution) {
 
 		effect.effectOnly(true);
 	}

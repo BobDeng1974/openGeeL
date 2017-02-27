@@ -248,6 +248,7 @@ void a_shadows() {
 	BlurredWorldPostEffect volSmooth = BlurredWorldPostEffect(vol, fxaa2, 0.4f);
 
 	SobelFilter sobel = SobelFilter();
+	SobelBlur sobelBlur = SobelBlur(sobel);
 
 	renderer1.addEffect(sobel);
 	//renderer1.addEffect(volSmooth);

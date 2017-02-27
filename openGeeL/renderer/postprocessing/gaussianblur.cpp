@@ -2,7 +2,9 @@
 #include <glew.h>
 #include "../shader/shader.h"
 #include "../utility/screenquad.h"
+#include "sobel.h"
 #include "gaussianblur.h"
+#include <iostream>
 
 using namespace glm;
 using namespace std;
@@ -128,5 +130,37 @@ namespace geeL {
 
 		setBuffer(maps);
 	}
-	
+
+
+
+	SobelBlur::SobelBlur(SobelFilter& sobel, unsigned int strength)
+		: GaussianBlur(strength, "renderer/postprocessing/sobelblur.frag"), sobel(sobel) {}
+
+
+	void SobelBlur::init(ScreenQuad & screen) {
+		GaussianBlur::init(screen);
+
+		sobelBuffer.init(screen.width, screen.height);
+		sobel.init(screen);
+		sobel.setParentFBO(sobelBuffer.fbo);
+
+		buffers.push_back(sobelBuffer.getColorID());
+	}
+
+	void SobelBlur::bindValues() {
+		sobel.setBuffer(buffers.front());
+		sobelBuffer.fill(sobel);
+
+		shader.use();
+		shader.setInteger("sobel", shader.mapOffset + 1);
+		GaussianBlur::bindValues();
+	}
+
+	void SobelBlur::bindToScreen() {
+		shader.use();
+
+		std::list<unsigned int> buffs = { currBuffer, sobelBuffer.getColorID() };
+		shader.loadMaps(buffs);
+		screen->draw();
+	}
 }

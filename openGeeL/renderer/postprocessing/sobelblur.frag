@@ -5,20 +5,13 @@ in vec2 TexCoords;
 out vec4 color;
 
 uniform sampler2D image;
+uniform sampler2D sobel;
+
 uniform bool horizontal;
 uniform float kernel[5];
-uniform float sigma;
 
 
-float bilateralCoeffient(vec3 baseColor, vec3 sampleColor) {
-	float diff = distance(baseColor, sampleColor);
-	float fac = sigma;
-
-	return exp(-(diff * diff) / (2.f * fac * fac));
-}
-
-
-void main() {             
+void main() {
 
 	//Size of single texel
     vec2 texOffset = 1.f / textureSize(image, 0); 
@@ -40,19 +33,21 @@ void main() {
 			step(0.f, TexCoords.y - off.y);
 
 		vec3 samp = texture(image, TexCoords + off).rgb;
-		float weight = bilateralCoeffient(base, samp) * kernel[i] * inBorders;
+		float weight = texture(sobel, TexCoords + off).r * kernel[i] * inBorders;
 		weights += weight;
 
 		//Sample right / top pixel
 		result += samp * weight;
 
 		samp = texture(image, TexCoords - off).rgb;
-		weight = bilateralCoeffient(base, samp) * kernel[i] * inBorders;
+		weight = texture(sobel, TexCoords - off).r * kernel[i] * inBorders;
 		weights += weight;
 
 		//Sample left / bottom pixel
 		result += samp * weight;
     }
 
+
     color = vec4(result / weights, 1.f);
 }
+
