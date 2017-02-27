@@ -59,7 +59,7 @@ namespace geeL {
 		//Initialize start of rendering process
 		void renderInit();
 
-		unsigned int linkImageBuffer() const;
+		void linkImageBuffer(PostProcessingEffect& effect) const;
 		void handleInput(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 		//Toggle through all framebuffers for screen display 

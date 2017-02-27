@@ -119,6 +119,12 @@ namespace geeL {
 		: GaussianBlur(strength, "renderer/postprocessing/sobelblur.frag"), sobel(sobel) {}
 
 
+	void SobelBlur::setBuffer(unsigned int buffer) {
+		PostProcessingEffect::setBuffer(buffer);
+
+		sobel.setBuffer(buffer);
+	}
+
 	void SobelBlur::init(ScreenQuad & screen) {
 		GaussianBlur::init(screen);
 
@@ -130,7 +136,6 @@ namespace geeL {
 	}
 
 	void SobelBlur::bindValues() {
-		sobel.setBuffer(buffers.front());
 		sobelBuffer.fill(sobel);
 
 		shader.use();

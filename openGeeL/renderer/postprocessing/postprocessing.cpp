@@ -2,6 +2,7 @@
 #include <glew.h>
 #include "../shader/shader.h"
 #include "../utility/screenquad.h"
+#include "../utility/framebuffer.h"
 #include "postprocessing.h"
 
 using namespace std;
@@ -20,6 +21,10 @@ namespace geeL {
 
 	unsigned int PostProcessingEffect::getBuffer() const {
 		return buffers.front();
+	}
+
+	void PostProcessingEffect::setBuffer(const FrameBuffer& buffer) {
+		setBuffer(buffer.getColorID());
 	}
 
 	void PostProcessingEffect::setBuffer(unsigned int buffer) {

@@ -74,6 +74,7 @@ namespace geeL {
 	public:
 		SobelBlur(SobelFilter& sobel, unsigned int strength = 1);
 
+		virtual void setBuffer(unsigned int buffer);
 		virtual void init(ScreenQuad& screen);
 
 	protected:

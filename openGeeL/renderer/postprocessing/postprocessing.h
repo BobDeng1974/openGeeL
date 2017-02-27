@@ -10,6 +10,7 @@ typedef unsigned int GLuint;
 
 namespace geeL {
 
+	class FrameBuffer;
 	class Shader;
 	class ScreenQuad;
 
@@ -22,8 +23,11 @@ namespace geeL {
 		//Returns first (and main) buffer of this effect
 		unsigned int getBuffer() const;
 
+		//Set main image buffer that will be used as base for post processing
+		virtual void setBuffer(const FrameBuffer& buffer);
+
 		//Set (first) buffer that will be used as base for post processing
-		void setBuffer(unsigned int buffer);
+		virtual void setBuffer(unsigned int buffer);
 
 		//Set multiple buffers for post processing that will be used in list order. Maximum of 4
 		void setBuffer(std::list<unsigned int> buffers);

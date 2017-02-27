@@ -61,8 +61,6 @@ namespace geeL {
 		shader.setFloat("aperture", aperture);
 		shader.setFloat("farDistance", farDistance);
 
-		//blur.setBuffer(buffers.front());
-		blur.setBuffer({ buffers.front(), *next(buffers.begin())});
 		blur.bindDoFData(dist, aperture, farDistance);
 		blurBuffer.fill(blur);
 
@@ -74,7 +72,7 @@ namespace geeL {
 		map<WorldMatrices, const glm::mat4*> matrices,
 		map<WorldVectors, const glm::vec3*> vectors) {
 
-
 		addBuffer( {maps[WorldMaps::PositionDepth]} );
+		blur.setBuffer({ buffers.front(), *next(buffers.begin()) });
 	}
 }

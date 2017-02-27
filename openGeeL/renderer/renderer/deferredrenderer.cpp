@@ -250,19 +250,19 @@ namespace geeL {
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {
 		effects.push_back(&effect);
-		effect.setBuffer(linkImageBuffer());
+		linkImageBuffer(effect);
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect, WorldInformationRequester& requester) {
 		effects.push_back(&effect);
-		effect.setBuffer(linkImageBuffer());
+		linkImageBuffer(effect);
 
 		addRequester(requester);
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect, list<WorldInformationRequester*> requester) {
 		effects.push_back(&effect);
-		effect.setBuffer(linkImageBuffer());
+		linkImageBuffer(effect);
 
 		for (auto it = requester.begin(); it != requester.end(); it++) {
 			WorldInformationRequester* req = *it;
@@ -298,14 +298,14 @@ namespace geeL {
 	}
 
 
-	unsigned int DeferredRenderer::linkImageBuffer() const {
+	void DeferredRenderer::linkImageBuffer(PostProcessingEffect& effect) const {
 
 		//Init all post processing effects with two alternating framebuffers
 		//Current effect will then always read from one and write to the other
 		if (effects.size() % 2 == 0)
-			return frameBuffer1.getColorID();
+			effect.setBuffer(frameBuffer1);
 		else
-			return frameBuffer2.getColorID();
+			effect.setBuffer(frameBuffer2);
 	}
 
 

@@ -1,4 +1,5 @@
 #include "../utility/screenquad.h"
+#include "../utility/framebuffer.h"
 #include "gaussianblur.h"
 #include "blurredeffect.h"
 
@@ -18,6 +19,13 @@ namespace geeL {
 			delete effectScreen;
 	}
 
+
+
+	void BlurredPostEffect::setBuffer(const FrameBuffer& buffer) {
+		PostProcessingEffect::setBuffer(buffer);
+
+		effect.setBuffer(buffer);
+	}
 
 	void BlurredPostEffect::init(ScreenQuad& screen) {
 		PostProcessingEffect::init(screen);
@@ -41,7 +49,6 @@ namespace geeL {
 		shader.setInteger("image2", shader.mapOffset + 1);
 		shader.setInteger("effectOnly", onlyEffect);
 
-		effect.setBuffer(buffers.front());
 		effectBuffer.fill(effect);
 
 		blur.setBuffer(effectBuffer.getColorID());

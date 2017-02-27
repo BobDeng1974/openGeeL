@@ -250,12 +250,12 @@ void a_shadows() {
 	SobelFilter sobel = SobelFilter();
 	SobelBlur sobelBlur = SobelBlur(sobel);
 
-	//renderer1.addEffect(sobel);
+	renderer1.addEffect(sobelBlur);
 	//renderer1.addEffect(volSmooth, vol);
 	//renderer1.addEffect(bloom);
 	//renderer1.addEffect(ssrrSmooth, ssrr);
 	//renderer1.addEffect(raySmooth);
-	//renderer1.addEffect(dof, dof);
+	renderer1.addEffect(dof, dof);
 	renderer1.addEffect(fxaa);
 	
 	renderer1.linkInformation();
