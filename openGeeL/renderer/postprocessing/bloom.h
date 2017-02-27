@@ -2,6 +2,7 @@
 #define BLOOM_H
 
 #include "../utility/framebuffer.h"
+#include "blurredeffect.h"
 #include "postprocessing.h"
 
 namespace geeL {
@@ -10,12 +11,13 @@ namespace geeL {
 	class GaussianBlur;
 	class ScreenQuad;
 
+	//Filter effect that filters bright colors / lights in image depending on given scatter
 	class BloomFilter : public PostProcessingEffect {
 
 	public:
 		float scatter;
 
-		BloomFilter(float scatter);
+		BloomFilter(float scatter = 0.6f);
 
 	protected:
 		virtual void bindValues();
@@ -23,27 +25,12 @@ namespace geeL {
 	};
 
 
-	class Bloom : public PostProcessingEffect {
+	//Post effect that introduces light bleeding into the scene
+	class Bloom : public BlurredPostEffect {
 
 	public:
-		Bloom(GaussianBlur& blur, float scatter = 0.6f, float blurResolution = 1.f);
-		~Bloom();
-
-		void setScatter(float scatter);
-		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
-
-	protected:
-		virtual void bindValues();
-
-	private:
-		float blurResolution;
-
-		BloomFilter* filter;
-		GaussianBlur& blur;
-		const FrameBufferInformation* screenInfo;
-		FrameBuffer filterBuffer;
-		FrameBuffer blurBuffer;
-		ScreenQuad* blurScreen;
+		Bloom(BloomFilter& filter, GaussianBlur& blur, 
+			float effectResolution = 1.0f, float blurResolution = 1.f);
 
 	};
 }

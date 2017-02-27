@@ -240,8 +240,9 @@ void a_shadows() {
 
 	FXAA fxaa = FXAA();
 
+	BloomFilter filter = BloomFilter();
 	GaussianBlur& blur5 = GaussianBlur();
-	Bloom bloom = Bloom(blur5, 0.7f, 0.2f);
+	Bloom bloom = Bloom(filter, blur5, 0.5f, 0.2f);
 
 	SobelFilter sobel = SobelFilter(15);
 	SobelBlur sobelBlur = SobelBlur(sobel);
