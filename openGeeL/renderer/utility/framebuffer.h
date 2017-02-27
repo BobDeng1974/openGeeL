@@ -16,13 +16,20 @@ namespace geeL {
 		RGBA16
 	};
 
-	class FrameBuffer {
+	struct FrameBufferInformation {
 
 	public:
 		unsigned int fbo;
-	
-		int width;
-		int height;
+		unsigned int width;
+		unsigned int height;
+
+	};
+
+
+	class FrameBuffer {
+
+	public:
+		FrameBufferInformation info;
 
 		FrameBuffer();
 
@@ -41,6 +48,11 @@ namespace geeL {
 		static void bind(unsigned int fbo);
 		static void unbind();
 		static void resetSize(int width, int height);
+
+		unsigned int getFBO() const;
+		unsigned int getWidth() const;
+		unsigned int getHeight() const;
+
 
 	private:
 		std::vector<unsigned int> colorBuffers;

@@ -35,7 +35,7 @@ namespace geeL {
 	DeferredRenderer::DeferredRenderer(RenderWindow* window, InputManager* inputManager, SSAO* ssao, float ssaoResolution)
 		:
 		Renderer(window, inputManager), ssao(ssao), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()),
-			gBuffer(GBuffer()), screen(ScreenQuad(window->width, window->height)), ssaoResolution(ssaoResolution),
+			gBuffer(GBuffer()), screen(ScreenQuad()), ssaoResolution(ssaoResolution),
 			deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
 				"renderer/shaders/cooktorrancedeferred.frag")), toggle(0) {
 
@@ -100,7 +100,7 @@ namespace geeL {
 
 		//Init all effects
 		for (auto effect = effects.begin(); effect != effects.end(); effect++)
-			(*effect)->init(screen);
+			(*effect)->init(screen, frameBuffer1.info);
 
 		//Set color buffer of default effect depending on the amount of added effects
 		defaultBuffer = (effects.size() % 2 == 0)
@@ -111,11 +111,11 @@ namespace geeL {
 
 		//Init SSAO (if added)
 		if (ssao != nullptr) {
-			ssao->setParentFBO(ssaoBuffer->fbo);
+			//ssao->setParentFBO(ssaoBuffer->getFBO());
 
-			ssaoScreen = new ScreenQuad(screen.width * ssaoResolution, screen.height * ssaoResolution);
+			ssaoScreen = new ScreenQuad();
 			ssaoScreen->init();
-			ssao->init(*ssaoScreen);
+			ssao->init(*ssaoScreen, ssaoBuffer->info);
 		}
 
 		shaderManager->staticDeferredBind(*scene, *deferredShader);
@@ -128,7 +128,7 @@ namespace geeL {
 
 		//Render loop
 		while (!window->shouldClose()) {
-			int currFPS = ceil(Time::deltaTime * 1000.f);
+			int currFPS = (int)ceil(Time::deltaTime * 1000.f);
 			this_thread::sleep_for(chrono::milliseconds(fps - currFPS));
 			glfwPollEvents();
 			inputManager->update();
@@ -146,7 +146,7 @@ namespace geeL {
 			//SSAO pass
 			if (ssao != nullptr) {
 				ssaoBuffer->fill(*ssao);
-				FrameBuffer::resetSize(screen.width, screen.height);
+				FrameBuffer::resetSize(window->width, window->height);
 			}
 
 			//Lighting & forward pass

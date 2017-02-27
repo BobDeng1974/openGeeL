@@ -28,11 +28,11 @@ namespace geeL {
 		if (colorBufferAmount != bufferTypes.size())
 			throw "Committed amount of buffer types doesn't match amount of committed color buffers";
 
-		this->width = width;
-		this->height = height;
+		info.width = width;
+		info.height = height;
 
-		glGenFramebuffers(1, &fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glGenFramebuffers(1, &info.fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 
 		// Create color attachment textures
 		int amount = min(3, colorBufferAmount);
@@ -77,7 +77,7 @@ namespace geeL {
 	}
 
 	void FrameBuffer::bind() const {
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 	}
 
 	void FrameBuffer::bind(unsigned int fbo) {
@@ -93,13 +93,13 @@ namespace geeL {
 	}
 
 	void FrameBuffer::fill(Drawer& drawer, bool setFBO) const {
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glViewport(0, 0, width, height);
+		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
+		glViewport(0, 0, info.width, info.height);
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		if(setFBO)
-			drawer.setParentFBO(fbo);
+			drawer.setParentFBO(info.fbo);
 		
 		drawer.draw();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -107,9 +107,9 @@ namespace geeL {
 
 	void FrameBuffer::copyDepth(unsigned int targetFBO) const {
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, targetFBO);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-		glBlitFramebuffer(0, 0, width, height, 0, 0,
-			width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, info.fbo);
+		glBlitFramebuffer(0, 0, info.width, info.height, 0, 0,
+			info.width, info.height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	}
 
 	unsigned int FrameBuffer::generateTexture(ColorBufferType colorBufferType, unsigned int filterMode) {
@@ -121,19 +121,19 @@ namespace geeL {
 
 		switch (colorBufferType) {
 			case Single:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RGB, GL_FLOAT, 0);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, info.width, info.height, 0, GL_RGB, GL_FLOAT, 0);
 				break;
 			case RGB:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_FLOAT, 0);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, info.width, info.height, 0, GL_RGB, GL_FLOAT, 0);
 				break;
 			case RGBA:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, 0);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, info.width, info.height, 0, GL_RGBA, GL_FLOAT, 0);
 				break;
 			case RGB16:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, 0);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, info.width, info.height, 0, GL_RGB, GL_FLOAT, 0);
 				break;
 			case RGBA16:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, info.width, info.height, 0, GL_RGBA, GL_FLOAT, 0);
 				break;
 		}
 
@@ -149,5 +149,17 @@ namespace geeL {
 			throw "Committed postion out of bounds";
 
 		return colorBuffers[position];
+	}
+
+	unsigned int FrameBuffer::getFBO() const {
+		return info.fbo;
+	}
+
+	unsigned int FrameBuffer::getWidth() const {
+		return info.width;
+	}
+
+	unsigned int FrameBuffer::getHeight() const {
+		return info.height;
 	}
 }

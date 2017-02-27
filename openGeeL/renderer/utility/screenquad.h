@@ -9,11 +9,6 @@ namespace geeL {
 	public:
 		unsigned int vbo;
 		unsigned int vao;
-		int width;
-		int height;
-
-		ScreenQuad(int width, int height)
-			: width(width), height(height) {}
 
 		void init();
 		void draw() const;

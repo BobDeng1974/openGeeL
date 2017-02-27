@@ -47,13 +47,13 @@ namespace geeL {
 		noiseTexture = SimpleTexture(noise, 4, 4, GL_REPEAT, GL_NEAREST);
 	}
 
-	void SSAO::init(ScreenQuad& screen) {
-		PostProcessingEffect::init(screen);
+	void SSAO::init(ScreenQuad& screen, const FrameBufferInformation& info) {
+		PostProcessingEffect::init(screen, info);
 
-		tempBuffer.init(screen.width, screen.height, 1, Single, GL_NEAREST, false);
+		screenInfo = &info;
+		tempBuffer.init(info.width, info.height, 1, Single, GL_NEAREST, false);
 
-		blur.init(screen);
-		blur.setParentFBO(parentFBO);
+		blur.init(screen, info);
 		blur.setBuffer(tempBuffer.getColorID());
 	}
 
@@ -78,8 +78,8 @@ namespace geeL {
 		shader.setInteger("gNormalMet", shader.mapOffset + 1);
 		shader.setInteger("noiseTexture", shader.mapOffset + 2);
 
-		shader.setFloat("screenWidth", screen->width);
-		shader.setFloat("screenHeight", screen->height);
+		shader.setFloat("screenWidth", screenInfo->width);
+		shader.setFloat("screenHeight", screenInfo->height);
 		shader.setFloat("radius", radius);
 
 		for (unsigned int i = 0; i < sampleCount; i++)

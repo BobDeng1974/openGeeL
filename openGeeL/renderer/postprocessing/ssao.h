@@ -19,7 +19,7 @@ namespace geeL {
 	public:
 		SSAO(const Camera& camera, PostProcessingEffect& blur, float radius = 5.f);
 
-		virtual void init(ScreenQuad& screen);
+		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 		virtual void draw();
 
 		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
@@ -39,6 +39,7 @@ namespace geeL {
 		const Camera& camera;
 		PostProcessingEffect& blur;
 		FrameBuffer tempBuffer;
+		const FrameBufferInformation* screenInfo;
 	};
 }
 

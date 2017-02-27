@@ -10,6 +10,7 @@ typedef unsigned int GLuint;
 
 namespace geeL {
 
+	struct FrameBufferInformation;
 	class FrameBuffer;
 	class Shader;
 	class ScreenQuad;
@@ -35,7 +36,7 @@ namespace geeL {
 		//Add multiple buffers for post processing that will be used in list order. Maximum of 4
 		void addBuffer(std::list<unsigned int> buffers);
 
-		virtual void init(ScreenQuad& screen);
+		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
 		virtual void draw();
 

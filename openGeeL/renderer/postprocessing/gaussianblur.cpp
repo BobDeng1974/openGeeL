@@ -22,11 +22,11 @@ namespace geeL {
 			amount = maxAmount;
 	}
 
-	void GaussianBlur::init(ScreenQuad& screen) {
-		PostProcessingEffect::init(screen);
+	void GaussianBlur::init(ScreenQuad& screen, const FrameBufferInformation& info) {
+		PostProcessingEffect::init(screen, info);
 
-		frameBuffers[0].init(screen.width, screen.height);
-		frameBuffers[1].init(screen.width, screen.height);
+		frameBuffers[0].init(info.width, info.height);
+		frameBuffers[1].init(info.width, info.height);
 	}
 
 	void GaussianBlur::bindValues() {
@@ -125,12 +125,11 @@ namespace geeL {
 		sobel.setBuffer(buffer);
 	}
 
-	void SobelBlur::init(ScreenQuad & screen) {
-		GaussianBlur::init(screen);
+	void SobelBlur::init(ScreenQuad & screen, const FrameBufferInformation& info) {
+		GaussianBlur::init(screen, info);
 
-		sobelBuffer.init(screen.width, screen.height);
-		sobel.init(screen);
-		sobel.setParentFBO(sobelBuffer.fbo);
+		sobelBuffer.init(info.width, info.height);
+		sobel.init(screen, sobelBuffer.info);
 
 		buffers.push_back(sobelBuffer.getColorID());
 	}

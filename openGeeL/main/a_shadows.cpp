@@ -229,11 +229,11 @@ void a_shadows() {
 	
 	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50), 15.f);
-	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.3f);
+	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.3f, 0.3f);
 
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR(camera3);
-	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.3f);
+	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.3f, 0.3f);
 	
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(3, 0.3f);
 	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera3.depth, 12.f, 100.f, 0.4f);
@@ -243,24 +243,18 @@ void a_shadows() {
 	GaussianBlur& blur5 = GaussianBlur();
 	Bloom bloom = Bloom(blur5, 0.7f, 0.2f);
 
-	FXAA& fxaa2 = FXAA();
 	SobelFilter sobel = SobelFilter(15);
 	SobelBlur sobelBlur = SobelBlur(sobel);
 	VolumetricLight vol = VolumetricLight(scene, *spotLight, 0.3f, 1.f, 160);
-	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f);
-
-	GaussianBlur& blur55 = GaussianBlur();
-	VolumetricLight vol5 = VolumetricLight(scene, *spotLight, 0.3f, 1.f, 160);
-	BlurredPostEffect volSmooth5 = BlurredPostEffect(vol5, blur55, 0.4f);
+	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.4f);
 
 	//renderer1.addEffect(sobelBlur, sobelBlur);
-	renderer1.addEffect(volSmooth, { &vol, &sobelBlur });
-	//renderer1.addEffect(volSmooth5, { &vol5 });
+	//renderer1.addEffect(volSmooth, { &vol, &sobelBlur });
 	//renderer1.addEffect(bloom);
 	//renderer1.addEffect(ssrrSmooth, ssrr);
 	//renderer1.addEffect(raySmooth);
 	//renderer1.addEffect(dof, dof);
-	//renderer1.addEffect(fxaa);
+	renderer1.addEffect(fxaa);
 	
 	renderer1.linkInformation();
 	renderer1.render();

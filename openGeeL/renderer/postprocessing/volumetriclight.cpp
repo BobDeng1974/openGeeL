@@ -16,8 +16,8 @@ namespace geeL {
 			scene(scene), light(light), density(density), minDistance(minDistance), samples(samples) {}
 
 
-	void VolumetricLight::init(ScreenQuad& screen) {
-		PostProcessingEffect::init(screen);
+	void VolumetricLight::init(ScreenQuad& screen, const FrameBufferInformation& info) {
+		PostProcessingEffect::init(screen, info);
 
 		buffers.push_back(light.getShadowMapID());
 	}

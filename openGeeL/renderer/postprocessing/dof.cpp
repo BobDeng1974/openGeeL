@@ -30,22 +30,16 @@ namespace geeL {
 		const float& focalLength, float aperture, float farDistance, float blurResolution)
 			: PostProcessingEffect("renderer/postprocessing/dof.frag"), 
 				blur(blur), focalLength(focalLength), aperture(aperture), 
-				farDistance(farDistance), blurResolution(blurResolution), blurScreen(nullptr) {}
-
-	DepthOfFieldBlurred::~DepthOfFieldBlurred() {
-		if(blurScreen != nullptr)
-			delete blurScreen;
-	}
+				farDistance(farDistance), blurResolution(blurResolution) {}
 
 
-	void DepthOfFieldBlurred::init(ScreenQuad& screen) {
-		PostProcessingEffect::init(screen);
+	void DepthOfFieldBlurred::init(ScreenQuad& screen, const FrameBufferInformation& info) {
+		PostProcessingEffect::init(screen, info);
 
-		blurScreen = new ScreenQuad(screen.width * blurResolution, screen.height * blurResolution);
-		blurScreen->init();
+		screenInfo = &info;
 
-		blurBuffer.init(blurScreen->width, blurScreen->height);
-		blur.init(*blurScreen);
+		blurBuffer.init(info.width * blurResolution, info.height * blurResolution);
+		blur.init(screen, blurBuffer.info);
 		buffers.push_back(blurBuffer.getColorID());
 	}
 
@@ -64,7 +58,7 @@ namespace geeL {
 		blur.bindDoFData(dist, aperture, farDistance);
 		blurBuffer.fill(blur);
 
-		FrameBuffer::resetSize(screen->width, screen->height);
+		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
 		FrameBuffer::bind(parentFBO);
 	}
 

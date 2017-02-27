@@ -2,6 +2,7 @@
 #include <glew.h>
 #include "gaussianblur.h"
 #include "../utility/screenquad.h"
+#include "../utility/framebuffer.h"
 #include "bloom.h"
 
 namespace geeL {
@@ -33,18 +34,16 @@ namespace geeL {
 		filter->scatter = scatter;
 	}
 
-	void Bloom::init(ScreenQuad& screen) {
-		PostProcessingEffect::init(screen);
+	void Bloom::init(ScreenQuad& screen, const FrameBufferInformation& info) {
+		PostProcessingEffect::init(screen, info);
 
-		blurScreen = new ScreenQuad(screen.width * blurResolution, screen.height * blurResolution);
-		blurScreen->init();
+		screenInfo = &info;
 
-		filterBuffer.init(screen.width, screen.height);
-		blurBuffer.init(blurScreen->width, blurScreen->height);
+		filterBuffer.init(info.width, info.height); //TODO: check if filter resolution can be lowered too
+		blurBuffer.init(info.width * blurResolution, info.height * blurResolution);
 
-		filter->init(screen);
-		blur.init(*blurScreen);
-		blur.setParentFBO(blurBuffer.fbo);
+		filter->init(screen, filterBuffer.info);
+		blur.init(screen, blurBuffer.info);
 
 		//Assign buffer that the blurred and cutout bloom image will be rendered to
 		buffers.push_back(blurBuffer.getColorID());
@@ -60,7 +59,7 @@ namespace geeL {
 		blur.setBuffer(filterBuffer.getColorID());
 		blurBuffer.fill(blur);
 
-		FrameBuffer::resetSize(screen->width, screen->height);
+		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
 		FrameBuffer::bind(parentFBO);
 	}
 }

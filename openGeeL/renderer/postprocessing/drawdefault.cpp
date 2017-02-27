@@ -1,6 +1,7 @@
 #include <vec3.hpp>
 #include "../shader/shader.h"
 #include "../utility/screenquad.h"
+#include "../utility/framebuffer.h"
 #include "../texturing/simpletexture.h"
 #include "drawdefault.h"
 
@@ -12,15 +13,15 @@ namespace geeL {
 		: PostProcessingEffect("renderer/postprocessing/drawdefault.frag"), exposure(exposure) {}
 
 
-	void DefaultPostProcess::init(ScreenQuad& screen) {
-		PostProcessingEffect::init(screen);
+	void DefaultPostProcess::init(ScreenQuad& screen, const FrameBufferInformation& info) {
+		PostProcessingEffect::init(screen, info);
 
 		SimpleTexture noise = SimpleTexture("resources/textures/noise.png", true, Diffuse, ColorSingle);
 		buffers.push_back(noise.GetID());
 
 		shader.use();
 		shader.setVector3("noiseScale",
-			vec3(float(screen.width) / 255.f, float(screen.height) / 255.f, 0.f));
+			vec3(float(info.width) / 255.f, float(info.height) / 255.f, 0.f));
 	}
 
 

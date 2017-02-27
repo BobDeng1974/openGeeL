@@ -26,7 +26,7 @@ namespace geeL {
 	PostProcessingRenderer::PostProcessingRenderer(RenderWindow* window, InputManager* inputManager)
 		: 
 		Renderer(window, inputManager), effect(nullptr), 
-		frameBuffer(FrameBuffer()), screen(ScreenQuad(window->width, window->height)) {
+		frameBuffer(FrameBuffer()), screen(ScreenQuad()) {
 
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
@@ -49,7 +49,7 @@ namespace geeL {
 	void PostProcessingRenderer::render() {
 
 		DefaultPostProcess defaultEffect = DefaultPostProcess();
-		defaultEffect.init(screen);
+		defaultEffect.init(screen, frameBuffer.info);
 		shaderManager->staticBind(*scene);
 
 		while (!window->shouldClose()) {
@@ -100,7 +100,7 @@ namespace geeL {
 
 	void PostProcessingRenderer::setEffect(PostProcessingEffect& effect) {
 		this->effect = &effect;
-		this->effect->init(screen);
+		this->effect->init(screen, frameBuffer.info);
 	}
 
 	void PostProcessingRenderer::handleInput(GLFWwindow* window, int key, int scancode, int action, int mode) {

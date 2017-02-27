@@ -10,22 +10,23 @@ namespace geeL {
 	class BlurredPostEffect : public PostProcessingEffect {
 
 	public:
-		BlurredPostEffect(PostProcessingEffect& effect, PostProcessingEffect& blur, float resolution = 1.f);
-		~BlurredPostEffect();
+		BlurredPostEffect(PostProcessingEffect& effect, PostProcessingEffect& blur, 
+			float effectResolution = 1.f, float blurResolution = 1.f);
 
 		virtual void setBuffer(const FrameBuffer& buffer);
-		virtual void init(ScreenQuad& screen);
+		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
 	protected:
 		virtual void bindValues();
 
 	private:
-		float resolution;
+		float effectResolution, blurResolution;
 		PostProcessingEffect& effect;
 		PostProcessingEffect& blur;
 		FrameBuffer effectBuffer;
 		FrameBuffer blurBuffer;
-		ScreenQuad* effectScreen = nullptr;
+		const FrameBufferInformation* screenInfo;
+
 	};
 }
 

@@ -54,8 +54,10 @@ namespace geeL {
 		}
 	}
 
-	void PostProcessingEffect::init(ScreenQuad& screen) {
+	void PostProcessingEffect::init(ScreenQuad& screen, const FrameBufferInformation& info) {
 		this->screen = &screen;
+
+		setParentFBO(info.fbo);
 	}
 
 	void PostProcessingEffect::draw() {

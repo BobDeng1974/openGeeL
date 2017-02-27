@@ -7,18 +7,13 @@ using namespace std;
 
 namespace geeL {
 
-	BlurredPostEffect::BlurredPostEffect(PostProcessingEffect& effect, PostProcessingEffect& blur, float resolution)
-		: PostProcessingEffect("renderer/postprocessing/combine.frag"),
-		effect(effect), blur(blur), resolution(resolution) {
+	BlurredPostEffect::BlurredPostEffect(PostProcessingEffect& effect, 
+		PostProcessingEffect& blur, float effectResolution, float blurResolution)
+			: PostProcessingEffect("renderer/postprocessing/combine.frag"),
+				effect(effect), blur(blur), effectResolution(effectResolution), blurResolution(blurResolution){
 
 		effect.effectOnly(true);
 	}
-
-	BlurredPostEffect::~BlurredPostEffect() {
-		if (effectScreen != nullptr)
-			delete effectScreen;
-	}
-
 
 
 	void BlurredPostEffect::setBuffer(const FrameBuffer& buffer) {
@@ -27,18 +22,16 @@ namespace geeL {
 		effect.setBuffer(buffer);
 	}
 
-	void BlurredPostEffect::init(ScreenQuad& screen) {
-		PostProcessingEffect::init(screen);
+	void BlurredPostEffect::init(ScreenQuad& screen, const FrameBufferInformation& info) {
+		PostProcessingEffect::init(screen, info);
 
-		effectScreen = new ScreenQuad(screen.width * resolution, screen.height * resolution);
-		effectScreen->init();
+		screenInfo = &info;
 
-		effectBuffer.init(effectScreen->width, effectScreen->height);
-		blurBuffer.init(effectScreen->width, effectScreen->height);
+		effectBuffer.init(info.width * effectResolution, info.height * effectResolution);
+		blurBuffer.init(info.width * blurResolution, info.height * blurResolution);
 
-		effect.init(*effectScreen);
-		blur.init(*effectScreen);
-		blur.setParentFBO(blurBuffer.fbo);
+		effect.init(screen, effectBuffer.info);
+		blur.init(screen, blurBuffer.info);
 
 		buffers.push_back(blurBuffer.getColorID());
 	}
@@ -54,7 +47,7 @@ namespace geeL {
 		blur.setBuffer(effectBuffer.getColorID());
 		blurBuffer.fill(blur);
 
-		FrameBuffer::resetSize(screen->width, screen->height);
+		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
 		FrameBuffer::bind(parentFBO);
 	}
 }

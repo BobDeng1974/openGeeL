@@ -17,7 +17,7 @@ namespace geeL {
 		GaussianBlur(unsigned int strength = 1);
 		
 		void setKernel(float newKernel[5]);
-		virtual void init(ScreenQuad& screen);
+		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
 	protected:
 		unsigned int currBuffer;
@@ -75,7 +75,7 @@ namespace geeL {
 		SobelBlur(SobelFilter& sobel, unsigned int strength = 1);
 
 		virtual void setBuffer(unsigned int buffer);
-		virtual void init(ScreenQuad& screen);
+		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
 		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
 			std::map<WorldMatrices, const glm::mat4*> matrices,

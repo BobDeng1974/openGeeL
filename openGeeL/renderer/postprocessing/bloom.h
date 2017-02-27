@@ -30,7 +30,7 @@ namespace geeL {
 		~Bloom();
 
 		void setScatter(float scatter);
-		virtual void init(ScreenQuad& screen);
+		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
 	protected:
 		virtual void bindValues();
@@ -40,6 +40,7 @@ namespace geeL {
 
 		BloomFilter* filter;
 		GaussianBlur& blur;
+		const FrameBufferInformation* screenInfo;
 		FrameBuffer filterBuffer;
 		FrameBuffer blurBuffer;
 		ScreenQuad* blurScreen;
