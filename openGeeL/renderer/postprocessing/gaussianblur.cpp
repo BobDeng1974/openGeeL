@@ -150,4 +150,11 @@ namespace geeL {
 		shader.loadMaps(buffs);
 		screen->draw();
 	}
+
+	void  SobelBlur::addWorldInformation(map<WorldMaps, unsigned int> maps,
+		map<WorldMatrices, const glm::mat4*> matrices,
+		map<WorldVectors, const glm::vec3*> vectors) {
+
+		sobel.setBuffer({ maps[WorldMaps::PositionDepth] });
+	}
 }

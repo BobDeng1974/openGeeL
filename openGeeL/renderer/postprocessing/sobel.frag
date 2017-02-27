@@ -5,6 +5,7 @@ in vec2 TexCoords;
 out vec4 color;
 
 uniform sampler2D image;
+uniform float scale;
 
 const vec3  luminance = vec3(0.299f, 0.587f, 0.114f);
 
@@ -31,7 +32,7 @@ void main() {
               (kernelY[1][0] * get(-1.f, 0.f, t))  + (kernelY[1][1] * get(0.f, 0.f, t))  + (kernelY[1][2] * get(1.f, 0.f, t)) +
               (kernelY[2][0] * get(-1.f, 1.f, t))  + (kernelY[2][1] * get(0.f, 1.f, t))  + (kernelY[2][2] * get(1.f, 1.f, t));
 
-	float sobel = sqrt((x * x) + (y * y));
+	float sobel = sqrt((x * x) + (y * y)) * scale;
 	color = vec4(vec3(sobel), 1.f);
 }
 

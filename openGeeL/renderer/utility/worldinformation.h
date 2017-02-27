@@ -9,10 +9,9 @@ namespace geeL {
 
 	enum class WorldMaps {
 		None = 0,
-		RenderedImage = 1,
-		DiffuseRoughness = 2,
-		PositionDepth = 4,
-		NormalMetallic = 8,
+		DiffuseRoughness = 1,
+		PositionDepth = 2,
+		NormalMetallic = 4,
 	};
 
 	enum class WorldMatrices {

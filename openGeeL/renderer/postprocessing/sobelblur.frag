@@ -15,13 +15,13 @@ void main() {
 
 	//Size of single texel
     vec2 texOffset = 1.f / textureSize(image, 0); 
-    vec3 base = texture(image, TexCoords).rgb; 
-	vec3 result = base * kernel[0];
+	vec3 base = texture(image, TexCoords).rgb;
+    vec3 result = base * kernel[0]; 
+	float blurStrength = min(1.f, texture(sobel, TexCoords).r);
 
 	float hor = step(1.f, float(horizontal));
-	float ver = 1 - hor;
+	float ver = 1.f - hor;
 
-	float weights = kernel[0];
 	vec2 offset = texOffset * vec2(hor, ver);
 	for(int i = 1; i < 5; i++) {
 		vec2 off = offset * i;
@@ -32,22 +32,16 @@ void main() {
 			step(TexCoords.y + off.y, 1.f) * 
 			step(0.f, TexCoords.y - off.y);
 
-		vec3 samp = texture(image, TexCoords + off).rgb;
-		float weight = texture(sobel, TexCoords + off).r * kernel[i] * inBorders;
-		weights += weight;
-
 		//Sample right / top pixel
-		result += samp * weight;
-
-		samp = texture(image, TexCoords - off).rgb;
-		weight = texture(sobel, TexCoords - off).r * kernel[i] * inBorders;
-		weights += weight;
-
+		result += inBorders * 
+			texture(image, TexCoords + off).rgb * kernel[i];
+            
 		//Sample left / bottom pixel
-		result += samp * weight;
+		result += inBorders *
+			texture(image, TexCoords - off).rgb * kernel[i];
     }
 
-
-    color = vec4(result / weights, 1.f);
+    color = vec4(result * blurStrength + base * (1.f - blurStrength) , 1.f);
+	//color = vec4(vec3(texture(sobel, TexCoords).r), 1.f);
 }
 

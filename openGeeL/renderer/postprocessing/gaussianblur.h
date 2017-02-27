@@ -69,13 +69,17 @@ namespace geeL {
 
 
 	//Two pass gaussian blur that blurs depending sobel edge detection
-	class SobelBlur : public GaussianBlur {
+	class SobelBlur : public GaussianBlur, public WorldInformationRequester {
 
 	public:
 		SobelBlur(SobelFilter& sobel, unsigned int strength = 1);
 
 		virtual void setBuffer(unsigned int buffer);
 		virtual void init(ScreenQuad& screen);
+
+		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
+			std::map<WorldMatrices, const glm::mat4*> matrices,
+			std::map<WorldVectors, const glm::vec3*> vectors);
 
 	protected:
 		virtual void bindValues();

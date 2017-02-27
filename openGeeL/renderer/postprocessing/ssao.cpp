@@ -14,7 +14,7 @@ using namespace std;
 
 namespace geeL {
 
-	SSAO::SSAO(const Camera& camera, BilateralFilter& blur, float radius)
+	SSAO::SSAO(const Camera& camera, PostProcessingEffect& blur, float radius)
 		: PostProcessingEffect("renderer/postprocessing/ssao.frag"),
 			camera(camera), blur(blur), radius(radius) {
 	

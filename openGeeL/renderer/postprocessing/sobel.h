@@ -9,8 +9,13 @@ namespace geeL {
 	class SobelFilter : public PostProcessingEffect {
 
 	public:
-		SobelFilter() : PostProcessingEffect("renderer/postprocessing/sobel.frag") {}
+		SobelFilter(float scale = 1.f);
 
+	protected:
+		virtual void bindValues();
+
+	private:
+		float scale;
 	};
 }
 
