@@ -38,6 +38,17 @@ namespace geeL {
 		}
 	}
 
+	void PostProcessingEffect::addBuffer(std::list<unsigned int> buffers) {
+		int counter = this->buffers.size();
+		for (auto it = buffers.begin(); it != buffers.end(); it++) {
+			this->buffers.push_back(*it);
+
+			counter++;
+			if (counter >= maxBuffers)
+				return;
+		}
+	}
+
 	void PostProcessingEffect::init(ScreenQuad& screen) {
 		this->screen = &screen;
 	}

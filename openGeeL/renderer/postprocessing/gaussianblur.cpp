@@ -106,29 +106,11 @@ namespace geeL {
 		shader.setInteger("gPositionDepth", shader.mapOffset + 1);
 	}
 
-	WorldMaps BilateralDepthFilter::requiredWorldMaps() const {
-		return (WorldMaps::RenderedImage | WorldMaps::PositionDepth);
-	}
+	void BilateralDepthFilter::addWorldInformation(map<WorldMaps, unsigned int> maps,
+		map<WorldMatrices, const glm::mat4*> matrices,
+		map<WorldVectors, const glm::vec3*> vectors) {
 
-	WorldMatrices BilateralDepthFilter::requiredWorldMatrices() const {
-		return WorldMatrices::None;
-	}
-
-	WorldVectors BilateralDepthFilter::requiredWorldVectors() const {
-		return WorldVectors::None;
-	}
-
-	list<WorldMaps> BilateralDepthFilter::requiredWorldMapsList() const {
-		return{ WorldMaps::RenderedImage, WorldMaps::PositionDepth };
-	}
-
-	void BilateralDepthFilter::addWorldInformation(list<unsigned int> maps,
-		list<const mat4*> matrices, list<const vec3*> vectors) {
-
-		if (maps.size() != 2)
-			throw "Wrong number of texture maps attached to bilateral depth filter";
-
-		setBuffer(maps);
+		addBuffer( { maps[WorldMaps::PositionDepth] });
 	}
 
 

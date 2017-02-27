@@ -1,14 +1,15 @@
 #ifndef VOLUMETRIC_H
 #define VOLUMETRIC_H
 
-#include "worldpostprocessing.h"
+#include "postprocessing.h"
+#include "../utility/worldinformation.h"
 
 namespace geeL {
 
 	class RenderScene;
 	class SpotLight;
 
-	class VolumetricLight : public WorldPostProcessingEffect {
+	class VolumetricLight : public PostProcessingEffect, public WorldInformationRequester {
 
 	public:
 		VolumetricLight(const RenderScene& scene, const SpotLight& light, 
@@ -16,15 +17,9 @@ namespace geeL {
 
 		virtual void init(ScreenQuad& screen);
 
-		virtual WorldMaps requiredWorldMaps() const;
-		virtual WorldMatrices requiredWorldMatrices() const;
-		virtual WorldVectors requiredWorldVectors() const;
-
-		virtual std::list<WorldMaps> requiredWorldMapsList() const;
-		virtual std::list<WorldMatrices> requiredWorldMatricesList() const;
-
-		virtual void addWorldInformation(std::list<unsigned int> maps,
-			std::list<const glm::mat4*> matrices, std::list<const glm::vec3*> vectors);
+		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
+			std::map<WorldMatrices, const glm::mat4*> matrices,
+			std::map<WorldVectors, const glm::vec3*> vectors) override;
 
 	protected:
 		virtual void bindValues();

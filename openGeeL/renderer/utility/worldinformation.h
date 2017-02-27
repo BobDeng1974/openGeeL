@@ -1,9 +1,10 @@
-#ifndef WORLDINFORMATIONREQUESTER_H
-#define WORLDINFORMATIONREQUESTER_H
+#ifndef WORLDINFORMATION_H
+#define WORLDINFORMATION_H
 
 #include <vec3.hpp>
 #include <mat4x4.hpp>
 #include <list>
+#include <map>
 
 namespace geeL {
 
@@ -13,7 +14,6 @@ namespace geeL {
 		DiffuseRoughness = 2,
 		PositionDepth = 4,
 		NormalMetallic = 8,
-		Specular = 16
 	};
 
 	enum class WorldMatrices {
@@ -36,16 +36,21 @@ namespace geeL {
 	public:
 		WorldInformationRequester() {}
 
-		virtual WorldMaps requiredWorldMaps() const = 0;
-		virtual WorldMatrices requiredWorldMatrices() const = 0;
-		virtual WorldVectors requiredWorldVectors() const = 0;
+		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
+			std::map<WorldMatrices, const glm::mat4*> matrices,
+			std::map<WorldVectors, const glm::vec3*> vectors) = 0;
 
-		virtual std::list<WorldMaps> requiredWorldMapsList() const;
-		virtual std::list<WorldMatrices> requiredWorldMatricesList() const;
-		virtual std::list<WorldVectors> requiredWorldVectorsList() const;
+	};
 
-		virtual void addWorldInformation(std::list<unsigned int> maps,
-			std::list<const glm::mat4*> matrices, std::list<const glm::vec3*> vectors) = 0;
+
+	class WorldInformationProvider {
+
+	public:
+		WorldInformationProvider() {}
+
+		virtual void addRequester(WorldInformationRequester& requester) = 0;
+		virtual void linkInformation() const = 0;
+
 	};
 
 

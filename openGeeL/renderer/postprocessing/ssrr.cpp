@@ -6,7 +6,7 @@ using namespace std;
 namespace geeL {
 
 	SSRR::SSRR(const Camera& camera) 
-		: WorldPostProcessingEffect("renderer/postprocessing/ssrr.frag"), camera(camera) {}
+		: PostProcessingEffect("renderer/postprocessing/ssrr.frag"), camera(camera) {}
 
 
 	void SSRR::bindValues() {
@@ -19,29 +19,11 @@ namespace geeL {
 		shader.setInteger("effectOnly", onlyEffect);
 	}
 
-	WorldMaps SSRR::requiredWorldMaps() const {
-		return (WorldMaps::RenderedImage | WorldMaps::PositionDepth | WorldMaps::NormalMetallic | WorldMaps::Specular);
-	}
+	void SSRR::addWorldInformation(map<WorldMaps, unsigned int> maps, map<WorldMatrices,
+		const glm::mat4*> matrices,
+		map<WorldVectors, const glm::vec3*> vectors) {
 
-	WorldMatrices SSRR::requiredWorldMatrices() const {
-		return WorldMatrices::None;
-	}
-
-	WorldVectors SSRR::requiredWorldVectors() const {
-		return WorldVectors::None;
-	}
-
-	list<WorldMaps> SSRR::requiredWorldMapsList() const {
-		return { WorldMaps::RenderedImage, WorldMaps::PositionDepth, WorldMaps::NormalMetallic, WorldMaps::Specular };
-	}
-
-	void SSRR::addWorldInformation(list<unsigned int> maps,
-		list<const glm::mat4*> matrices, list<const glm::vec3*> vectors) {
-
-		if (maps.size() != 4)
-			throw "Wrong number of texture maps attached to SSRR";
-
-		setBuffer(maps);
+		addBuffer({ maps[WorldMaps::PositionDepth], maps[WorldMaps::NormalMetallic] });
 	}
 
 

@@ -2,7 +2,7 @@
 #define GAUSSIANBLUR_H
 
 #include "../utility/framebuffer.h"
-#include "../utility/worldrequester.h"
+#include "../utility/worldinformation.h"
 #include "postprocessing.h"
 
 namespace geeL {
@@ -58,13 +58,9 @@ namespace geeL {
 	public:
 		BilateralDepthFilter(unsigned int strength = 1, float sigma = 0.5f);
 
-		virtual WorldMaps requiredWorldMaps() const;
-		virtual WorldMatrices requiredWorldMatrices() const;
-		virtual WorldVectors requiredWorldVectors() const;
-		virtual std::list<WorldMaps> requiredWorldMapsList() const;
-
-		virtual void addWorldInformation(std::list<unsigned int> maps,
-			std::list<const glm::mat4*> matrices, std::list<const glm::vec3*> vectors);
+		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
+			std::map<WorldMatrices, const glm::mat4*> matrices,
+			std::map<WorldVectors, const glm::vec3*> vectors);
 
 	protected:
 		virtual void bindValues();

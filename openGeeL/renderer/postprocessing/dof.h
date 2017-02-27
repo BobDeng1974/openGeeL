@@ -2,7 +2,8 @@
 #define  DOF_H
 
 #include "../utility/framebuffer.h"
-#include "worldpostprocessing.h"
+#include "postprocessing.h"
+#include "../utility/worldinformation.h"
 #include "gaussianblur.h"
 
 namespace geeL {
@@ -29,7 +30,7 @@ namespace geeL {
 
 	//Depth of field post effect that uses image blurring to achieve effect.
 	//Cheap but not realistic since circe of confusion is neglected
-	class DepthOfFieldBlurred : public WorldPostProcessingEffect {
+	class DepthOfFieldBlurred : public PostProcessingEffect, public WorldInformationRequester {
 
 	public:
 		DepthOfFieldBlurred(DepthOfFieldBlur& blur,
@@ -39,13 +40,9 @@ namespace geeL {
 
 		virtual void init(ScreenQuad& screen);
 
-		virtual WorldMaps requiredWorldMaps() const;
-		virtual WorldMatrices requiredWorldMatrices() const;
-		virtual WorldVectors requiredWorldVectors() const;
-		virtual std::list<WorldMaps> requiredWorldMapsList() const;
-
-		virtual void addWorldInformation(std::list<unsigned int> maps,
-			std::list<const glm::mat4*> matrices, std::list<const glm::vec3*> vectors);
+		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
+			std::map<WorldMatrices, const glm::mat4*> matrices,
+			std::map<WorldVectors, const glm::vec3*> vectors);
 
 	protected:
 		virtual void bindValues();

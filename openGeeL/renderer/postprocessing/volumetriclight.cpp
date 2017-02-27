@@ -4,7 +4,7 @@
 
 #include "../scene.h"
 #include "../cameras/camera.h"
-
+#include <iostream>
 
 using namespace glm;
 using namespace std;
@@ -12,7 +12,7 @@ using namespace std;
 namespace geeL {
 
 	VolumetricLight::VolumetricLight(const RenderScene& scene, const SpotLight& light, float density, float minDistance, int samples)
-		: WorldPostProcessingEffect("renderer/postprocessing/volumetriclight.frag"), 
+		: PostProcessingEffect("renderer/postprocessing/volumetriclight.frag"), 
 			scene(scene), light(light), density(density), minDistance(minDistance), samples(samples) {}
 
 
@@ -37,38 +37,10 @@ namespace geeL {
 	}
 
 
-	WorldMaps VolumetricLight::requiredWorldMaps() const {
-		return (WorldMaps::RenderedImage | WorldMaps::PositionDepth);
-	}
+	void VolumetricLight::addWorldInformation(map<WorldMaps, unsigned int> maps, map<WorldMatrices, const mat4*> matrices,
+		map<WorldVectors, const vec3*> vectors) {
 
-	WorldMatrices VolumetricLight::requiredWorldMatrices() const {
-		return WorldMatrices::InverseView;
-	}
-
-	WorldVectors VolumetricLight::requiredWorldVectors() const {
-		return WorldVectors::None;
-	}
-
-	std::list<WorldMaps> VolumetricLight::requiredWorldMapsList() const {
-		return{ WorldMaps::RenderedImage, WorldMaps::PositionDepth };
-	}
-
-	std::list<WorldMatrices> VolumetricLight::requiredWorldMatricesList() const {
-		return{ WorldMatrices::InverseView };
-	}
-
-
-	void VolumetricLight::addWorldInformation(list<unsigned int> maps,
-		list<const glm::mat4*> matrices, list<const vec3*> vectors) {
-
-		if (maps.size() != 2)
-			throw "Wrong number of texture maps attached to volumetric light";
-
-		setBuffer(maps);
-
-		if (matrices.size() != 1)
-			throw "Wrong numbers of matrices attached to volumetric light";
-
-		inverseView = matrices.front();
+		addBuffer( { maps[WorldMaps::PositionDepth] });
+		inverseView = matrices[WorldMatrices::InverseView];
 	}
 }

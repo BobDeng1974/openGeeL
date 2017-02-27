@@ -1,10 +1,12 @@
 #ifndef DEFERREDRENDERER_H
 #define DEFERREDRENDERER_H
 
+#include <list>
 #include <vector>
 #include "../utility/screenquad.h"
 #include "../utility/framebuffer.h"
 #include "../utility/gbuffer.h"
+#include "../utility/worldinformation.h"
 #include "../renderer.h"
 
 namespace geeL {
@@ -13,10 +15,9 @@ namespace geeL {
 	class Shader;
 	class SSAO;
 	class PostProcessingEffect;
-	class WorldInformationRequester;
 	class WorldPostProcessingEffect;
 
-	class DeferredRenderer : public Renderer {
+	class DeferredRenderer : public Renderer, public WorldInformationProvider {
 
 	public:
 		DeferredRenderer(RenderWindow* window, InputManager* inputManager);
@@ -31,14 +32,18 @@ namespace geeL {
 
 		//Add new post processing effect to renderer. 
 		void addEffect(PostProcessingEffect& effect);
-		void addEffect(WorldPostProcessingEffect& effect);
 		void addEffect(PostProcessingEffect& effect, WorldInformationRequester& requester);
+		void addEffect(PostProcessingEffect& effect, std::list<WorldInformationRequester*> requester);
+
+		virtual void addRequester(WorldInformationRequester& requester);
+		virtual void linkInformation() const;
 
 	private:
 		int toggle;
 		bool geometryPass = true;
 		Shader* deferredShader;
 		std::vector<PostProcessingEffect*> effects;
+		std::list<WorldInformationRequester*> requester;
 		ScreenQuad screen;
 		GBuffer gBuffer;
 		FrameBuffer frameBuffer1;
@@ -51,9 +56,10 @@ namespace geeL {
 		FrameBuffer* ssaoBuffer = nullptr;
 		PostProcessingEffect* isolatedEffect = nullptr;
 
-		//Link all world information to given post effect
-		void linkWorldInformation(WorldInformationRequester& requester);
+		//Initialize start of rendering process
+		void renderInit();
 
+		unsigned int linkImageBuffer() const;
 		void handleInput(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 		//Toggle through all framebuffers for screen display 

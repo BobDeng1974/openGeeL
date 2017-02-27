@@ -15,7 +15,7 @@ using namespace std;
 namespace geeL {
 
 	SSAO::SSAO(const Camera& camera, BilateralFilter& blur, float radius)
-		: WorldPostProcessingEffect("renderer/postprocessing/ssao.frag"),
+		: PostProcessingEffect("renderer/postprocessing/ssao.frag"),
 			camera(camera), blur(blur), radius(radius) {
 	
 		uniform_real_distribution<GLfloat> random(0.f, 1.f);
@@ -54,6 +54,7 @@ namespace geeL {
 
 		blur.init(screen);
 		blur.setParentFBO(parentFBO);
+		blur.setBuffer(tempBuffer.getColorID());
 	}
 
 	void SSAO::draw() {
@@ -89,30 +90,12 @@ namespace geeL {
 		tempBuffer.fill(*this, false);
 	}
 
-	WorldMaps SSAO::requiredWorldMaps() const {
-		return (WorldMaps::PositionDepth | WorldMaps::NormalMetallic);
-	}
+	void SSAO::addWorldInformation(map<WorldMaps, unsigned int> maps,
+		map<WorldMatrices, const glm::mat4*> matrices,
+		map<WorldVectors, const glm::vec3*> vectors) {
 
-	WorldMatrices SSAO::requiredWorldMatrices() const {
-		return WorldMatrices::None;
-	}
-
-	WorldVectors SSAO::requiredWorldVectors() const {
-		return WorldVectors::None;
-	}
-
-	list<WorldMaps> SSAO::requiredWorldMapsList() const {
-		return { WorldMaps::PositionDepth, WorldMaps::NormalMetallic };
-	}
-
-	void SSAO::addWorldInformation(list<unsigned int> maps,
-		list<const mat4*> matrices, list<const vec3*> vectors) {
-
-		if (maps.size() != 2)
-			throw "Wrong number of texture maps attached to SSAO";
-
-		blur.setBuffer({ tempBuffer.getColorID(), maps.front() });
-		setBuffer(maps);
+		//Set instead of add buffers to override the default image buffer since it isn't need for SSAO
+		setBuffer( {maps[WorldMaps::PositionDepth], maps[WorldMaps::NormalMetallic]} );
 		buffers.push_back(noiseTexture.GetID());
 	}
 }

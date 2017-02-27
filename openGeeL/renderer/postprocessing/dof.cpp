@@ -28,7 +28,7 @@ namespace geeL {
 
 	DepthOfFieldBlurred::DepthOfFieldBlurred(DepthOfFieldBlur& blur,
 		const float& focalLength, float aperture, float farDistance, float blurResolution)
-			: WorldPostProcessingEffect("renderer/postprocessing/dof.frag"), 
+			: PostProcessingEffect("renderer/postprocessing/dof.frag"), 
 				blur(blur), focalLength(focalLength), aperture(aperture), 
 				farDistance(farDistance), blurResolution(blurResolution), blurScreen(nullptr) {}
 
@@ -70,28 +70,11 @@ namespace geeL {
 		FrameBuffer::bind(parentFBO);
 	}
 
-	WorldMaps DepthOfFieldBlurred::requiredWorldMaps() const {
-		return (WorldMaps::RenderedImage | WorldMaps::PositionDepth);
-	}
+	void DepthOfFieldBlurred::addWorldInformation(map<WorldMaps, unsigned int> maps,
+		map<WorldMatrices, const glm::mat4*> matrices,
+		map<WorldVectors, const glm::vec3*> vectors) {
 
-	WorldMatrices DepthOfFieldBlurred::requiredWorldMatrices() const {
-		return WorldMatrices::None;
-	}
 
-	WorldVectors DepthOfFieldBlurred::requiredWorldVectors() const {
-		return WorldVectors::None;
-	}
-
-	list<WorldMaps> DepthOfFieldBlurred::requiredWorldMapsList() const {
-		return{ WorldMaps::RenderedImage, WorldMaps::PositionDepth };
-	}
-
-	void DepthOfFieldBlurred::addWorldInformation(list<unsigned int> maps,
-		list<const glm::mat4*> matrices, list<const glm::vec3*> vectors) {
-
-		if (maps.size() != 2)
-			throw "Wrong number of texture maps attached to SSAO";
-
-		setBuffer(maps);
+		addBuffer( {maps[WorldMaps::PositionDepth]} );
 	}
 }

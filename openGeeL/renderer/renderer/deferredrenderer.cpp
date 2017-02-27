@@ -4,6 +4,7 @@
 #include <thread>
 #include <chrono>
 #include <iostream>
+#include <map>
 #include <cmath>
 #include <gtc/matrix_transform.hpp>
 #include "../utility/rendertime.h"
@@ -15,7 +16,6 @@
 #include "../inputmanager.h"
 #include "../postprocessing/ssao.h"
 #include "../postprocessing/postprocessing.h"
-#include "../postprocessing/worldpostprocessing.h"
 #include "../cameras/camera.h"
 #include "../lighting/lightmanager.h"
 #include "../shader/shadermanager.h"
@@ -46,8 +46,9 @@ namespace geeL {
 
 			//Default post processing with tone mapping and gamma correction
 			DefaultPostProcess* defaultEffect = new DefaultPostProcess();
-			defaultEffect->init(screen);
 			effects.push_back(defaultEffect);
+
+			addRequester(*ssao);
 	}
 
 	DeferredRenderer::~DeferredRenderer() {
@@ -93,13 +94,17 @@ namespace geeL {
 		screen.init();
 	}
 
-	void DeferredRenderer::render() {
+	void DeferredRenderer::renderInit() {
 
 		deferredShader->bindMaps();
 
+		//Init all effects
+		for (auto effect = effects.begin(); effect != effects.end(); effect++)
+			(*effect)->init(screen);
+
 		//Set color buffer of default effect depending on the amount of added effects
-		defaultBuffer = (effects.size() % 2 == 0) 
-			? frameBuffer2.getColorID() 
+		defaultBuffer = (effects.size() % 2 == 0)
+			? frameBuffer2.getColorID()
 			: frameBuffer1.getColorID();
 
 		effects.front()->setBuffer(defaultBuffer);
@@ -110,13 +115,16 @@ namespace geeL {
 
 			ssaoScreen = new ScreenQuad(screen.width * ssaoResolution, screen.height * ssaoResolution);
 			ssaoScreen->init();
-
 			ssao->init(*ssaoScreen);
-			linkWorldInformation(*ssao);
 		}
 
 		shaderManager->staticDeferredBind(*scene, *deferredShader);
 		shaderManager->staticBind(*scene);
+	}
+
+	void DeferredRenderer::render() {
+
+		renderInit();
 
 		//Render loop
 		while (!window->shouldClose()) {
@@ -241,95 +249,63 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {
-		effect.init(screen);
 		effects.push_back(&effect);
-
-		//Init all post processing effects with two alternating framebuffers
-		//Current effect will then always read from one and write to the other
-		if (effects.size() % 2 == 0)
-			effect.setBuffer(frameBuffer1.getColorID());
-		else
-			effect.setBuffer(frameBuffer2.getColorID());
-	}
-
-	void DeferredRenderer::addEffect(WorldPostProcessingEffect& effect) {
-		effects.push_back(&effect);
-
-		linkWorldInformation(effect);
-		effect.init(screen);
+		effect.setBuffer(linkImageBuffer());
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect, WorldInformationRequester& requester) {
 		effects.push_back(&effect);
+		effect.setBuffer(linkImageBuffer());
 
-		linkWorldInformation(requester);
-		effect.init(screen);
+		addRequester(requester);
+	}
+
+	void DeferredRenderer::addEffect(PostProcessingEffect& effect, list<WorldInformationRequester*> requester) {
+		effects.push_back(&effect);
+		effect.setBuffer(linkImageBuffer());
+
+		for (auto it = requester.begin(); it != requester.end(); it++) {
+			WorldInformationRequester* req = *it;
+			addRequester(*req);
+		}
+	}
+
+	void DeferredRenderer::addRequester(WorldInformationRequester& requester) {
+		this->requester.push_back(&requester);
+	}
+
+	void DeferredRenderer::linkInformation() const {
+
+		map<WorldMaps, unsigned int> worldMaps;
+		worldMaps[WorldMaps::DiffuseRoughness] = gBuffer.diffuseSpec;
+		worldMaps[WorldMaps::PositionDepth]    = gBuffer.positionDepth;
+		worldMaps[WorldMaps::NormalMetallic]   = gBuffer.normalMet;
+
+		map<WorldMatrices, const mat4*> worldMatrices;
+		worldMatrices[WorldMatrices::View]        = &scene->camera.getViewMatrix();
+		worldMatrices[WorldMatrices::Projection]  = &scene->camera.getViewMatrix();
+		worldMatrices[WorldMatrices::InverseView] = &scene->camera.getInverseViewMatrix();
+
+		map<WorldVectors, const vec3*> worldVectors;
+		worldVectors[WorldVectors::CameraPosition]  = &scene->camera.getPosition();
+		worldVectors[WorldVectors::CameraDirection] = &scene->camera.getDirection();
+		worldVectors[WorldVectors::OriginView]      = &scene->GetOriginInViewSpace();
+
+		for (auto it = requester.begin(); it != requester.end(); it++) {
+			WorldInformationRequester* req = *it;
+			req->addWorldInformation(worldMaps, worldMatrices, worldVectors);
+		}
 	}
 
 
-	void DeferredRenderer::linkWorldInformation(WorldInformationRequester& requester) {
-		auto maps     = list<unsigned int>();
-		auto matrices = list<const mat4*>();
-		auto vectors  = list<const vec3*>();
+	unsigned int DeferredRenderer::linkImageBuffer() const {
 
-		auto requiredMaps = requester.requiredWorldMapsList();
-		for (auto it = requiredMaps.begin(); it != requiredMaps.end(); it++) {
-			switch (*it) {
-				case WorldMaps::RenderedImage:
-					if (effects.size() % 2 == 0)
-						maps.push_back(frameBuffer1.getColorID());
-					else
-						maps.push_back(frameBuffer2.getColorID());
-					break;
-				case WorldMaps::DiffuseRoughness:
-					maps.push_back(gBuffer.diffuseSpec);
-					break;
-				case WorldMaps::PositionDepth:
-					maps.push_back(gBuffer.positionDepth);
-					break;
-				case WorldMaps::NormalMetallic:
-					maps.push_back(gBuffer.normalMet);
-					break;
-				case WorldMaps::Specular:
-					if (effects.size() % 2 == 0)
-						maps.push_back(frameBuffer1.getColorID(1));
-					else
-						maps.push_back(frameBuffer2.getColorID(1));
-					break;
-			}
-		}
-
-		auto requiredMatrices = requester.requiredWorldMatricesList();
-		for (auto it = requiredMatrices.begin(); it != requiredMatrices.end(); it++) {
-			switch (*it) {
-				case WorldMatrices::View:
-					matrices.push_back(&scene->camera.getViewMatrix());
-					break;
-				case WorldMatrices::Projection:
-					matrices.push_back(&scene->camera.getViewMatrix());
-					break;
-				case WorldMatrices::InverseView:
-					matrices.push_back(&scene->camera.getInverseViewMatrix());
-					break;
-			}
-		}
-
-		auto requiredVectors = requester.requiredWorldVectorsList();
-		for (auto it = requiredVectors.begin(); it != requiredVectors.end(); it++) {
-			switch (*it) {
-				case WorldVectors::CameraPosition:
-					vectors.push_back(&scene->camera.getPosition());
-					break;
-				case WorldVectors::CameraDirection:
-					vectors.push_back(&scene->camera.getDirection());
-					break;
-				case WorldVectors::OriginView:
-					vectors.push_back(&scene->GetOriginInViewSpace());
-					break;
-			}
-		}
-
-		requester.addWorldInformation(maps, matrices, vectors);
+		//Init all post processing effects with two alternating framebuffers
+		//Current effect will then always read from one and write to the other
+		if (effects.size() % 2 == 0)
+			return frameBuffer1.getColorID();
+		else
+			return frameBuffer2.getColorID();
 	}
 
 
@@ -381,5 +357,4 @@ namespace geeL {
 
 		effects.front()->setBuffer(currBuffer);
 	}
-
 }

@@ -233,10 +233,10 @@ void a_shadows() {
 
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR(camera3);
-	BlurredWorldPostEffect ssrrSmooth = BlurredWorldPostEffect(ssrr, blur4, 0.3f);
+	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.3f);
 	
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(3, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera3.depth, 2.f, 100.f, 0.4f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera3.depth, 12.f, 100.f, 0.4f);
 
 	FXAA fxaa = FXAA();
 
@@ -245,19 +245,20 @@ void a_shadows() {
 
 	FXAA& fxaa2 = FXAA();
 	VolumetricLight vol = VolumetricLight(scene, *spotLight, 0.3f, 1.f, 160);
-	BlurredWorldPostEffect volSmooth = BlurredWorldPostEffect(vol, fxaa2, 0.4f);
+	BlurredPostEffect volSmooth = BlurredPostEffect(vol, fxaa2, 0.4f);
 
 	SobelFilter sobel = SobelFilter();
 	SobelBlur sobelBlur = SobelBlur(sobel);
 
-	renderer1.addEffect(sobel);
-	//renderer1.addEffect(volSmooth);
+	//renderer1.addEffect(sobel);
+	//renderer1.addEffect(volSmooth, vol);
 	//renderer1.addEffect(bloom);
-	//renderer1.addEffect(ssrrSmooth);
+	//renderer1.addEffect(ssrrSmooth, ssrr);
 	//renderer1.addEffect(raySmooth);
-	//renderer1.addEffect(dof);
-	//renderer1.addEffect(fxaa);
+	//renderer1.addEffect(dof, dof);
+	renderer1.addEffect(fxaa);
 	
+	renderer1.linkInformation();
 	renderer1.render();
 
 	delete testObj;

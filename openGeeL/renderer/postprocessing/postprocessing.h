@@ -28,6 +28,9 @@ namespace geeL {
 		//Set multiple buffers for post processing that will be used in list order. Maximum of 4
 		void setBuffer(std::list<unsigned int> buffers);
 
+		//Add multiple buffers for post processing that will be used in list order. Maximum of 4
+		void addBuffer(std::list<unsigned int> buffers);
+
 		virtual void init(ScreenQuad& screen);
 
 		virtual void draw();
