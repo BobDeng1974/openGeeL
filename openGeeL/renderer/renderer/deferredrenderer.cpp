@@ -99,8 +99,11 @@ namespace geeL {
 		deferredShader->bindMaps();
 
 		//Init all effects
-		for (auto effect = effects.begin(); effect != effects.end(); effect++)
-			(*effect)->init(screen, frameBuffer1.info);
+		bool chooseBuffer = true;
+		for (auto effect = effects.begin(); effect != effects.end(); effect++) {
+			(*effect)->init(screen, chooseBuffer ? frameBuffer1.info : frameBuffer2.info);
+			chooseBuffer = !chooseBuffer;
+		}
 
 		//Set color buffer of default effect depending on the amount of added effects
 		defaultBuffer = (effects.size() % 2 == 0)
@@ -111,8 +114,6 @@ namespace geeL {
 
 		//Init SSAO (if added)
 		if (ssao != nullptr) {
-			//ssao->setParentFBO(ssaoBuffer->getFBO());
-
 			ssaoScreen = new ScreenQuad();
 			ssaoScreen->init();
 			ssao->init(*ssaoScreen, ssaoBuffer->info);

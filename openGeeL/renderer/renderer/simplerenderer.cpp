@@ -43,9 +43,9 @@ namespace geeL {
 
 	void SimpleRenderer::render() {
 
-		GLfloat deltaTime = 0.f;
-		GLfloat lastFrame = 0.f;
-		GLfloat currentFrame = 0.f;
+		double deltaTime = 0.f;
+		double lastFrame = 0.f;
+		double currentFrame = 0.f;
 
 		while (!window->shouldClose()) {
 			int currFPS = ceil(deltaTime * 1000);

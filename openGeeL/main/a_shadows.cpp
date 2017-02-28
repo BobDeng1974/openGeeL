@@ -255,7 +255,7 @@ void a_shadows() {
 	//renderer1.addEffect(ssrrSmooth, ssrr);
 	//renderer1.addEffect(raySmooth);
 	//renderer1.addEffect(dof, dof);
-	renderer1.addEffect(fxaa);
+	//renderer1.addEffect(fxaa);
 	
 	renderer1.linkInformation();
 	renderer1.render();

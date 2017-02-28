@@ -33,7 +33,7 @@ namespace geeL {
 	}
 
 	bool RenderWindow::shouldClose() {
-	    return glfwWindowShouldClose(glWindow);
+	    return glfwWindowShouldClose(glWindow) != 0;
 	}
 
 	void RenderWindow::close() {

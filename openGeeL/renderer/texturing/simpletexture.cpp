@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <glfw3.h>
-#include <SOIL.h>
+#include "stb_image.h"
 #include "simpletexture.h"
 #include "../shader/shader.h"
 #include <iostream>
@@ -13,12 +13,15 @@ namespace geeL {
 	SimpleTexture::SimpleTexture(const char* fileName, bool linear, TextureType type, ColorType colorType, int wrapMode, FilterMode filterMode)
 		: type(type), path(fileName) {
 
+		
 		int imgWidth, imgHeight;
 
-		unsigned char* image = SOIL_load_image(fileName, &imgWidth, &imgHeight, 0, SOIL_LOAD_RGBA);
+		unsigned char* image = stbi_load(fileName, &imgWidth, &imgHeight, 0, STBI_rgb_alpha);
 
 		glGenTextures(1, &id);
 		glBindTexture(GL_TEXTURE_2D, id);
+
+		//stbi_set_flip_vertically_on_load(true);
 
 		if (linear) {
 			switch (colorType) {
@@ -59,7 +62,7 @@ namespace geeL {
 				break;
 		}
 
-		SOIL_free_image_data(image);
+		stbi_image_free(image);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 

@@ -70,9 +70,9 @@ namespace geeL {
 		textureStack.draw(shader);
 
 		shader.setInteger("material.mapFlags", textureStack.mapFlags);
-		shader.setFloat("material.type", type);
+		shader.setFloat("material.type", (float)type);
 
-		GLint location;
+		//GLint location;
 		for (list<pair<string, float>>::const_iterator it = floatParameters.begin(); it != floatParameters.end(); it++) {
 			pair<string, float> pair = *it;
 

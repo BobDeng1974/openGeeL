@@ -1,6 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include <SOIL.h>
+#include "stb_image.h"
 #include "../shader/shader.h"
 #include "cubemap.h"
 
@@ -16,25 +16,25 @@ namespace geeL {
 
 		int width, height;
 		unsigned char* image;
-
+		
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
-		image = SOIL_load_image(rightPath.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+		image = stbi_load(rightPath.c_str(), &width, &height, 0, STBI_rgb);
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
-		image = SOIL_load_image(leftPath.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+		image = stbi_load(leftPath.c_str(), &width, &height, 0, STBI_rgb);
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
-		image = SOIL_load_image(topPath.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+		image = stbi_load(topPath.c_str(), &width, &height, 0, STBI_rgb);
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
-		image = SOIL_load_image(bottomPath.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+		image = stbi_load(bottomPath.c_str(), &width, &height, 0, STBI_rgb);
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
-		image = SOIL_load_image(backPath.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+		image = stbi_load(backPath.c_str(), &width, &height, 0, STBI_rgb);
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
-		image = SOIL_load_image(frontPath.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+		image = stbi_load(frontPath.c_str(), &width, &height, 0, STBI_rgb);
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -43,6 +43,8 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		
+		stbi_image_free(image);
 	}
 
 
