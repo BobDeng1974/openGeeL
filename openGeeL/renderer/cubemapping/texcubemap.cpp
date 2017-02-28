@@ -48,7 +48,7 @@ namespace geeL {
 	}
 
 
-	void TexturedCubeMap::draw(const Shader& shader, string name) const {
+	void TexturedCubeMap::bind(const Shader& shader, string name) const {
 
 		glActiveTexture(GL_TEXTURE1);
 		glUniform1i(glGetUniformLocation(shader.program, name.c_str()), 1);

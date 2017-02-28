@@ -3,7 +3,6 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <glfw3.h>
-//#include <SOIL.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>

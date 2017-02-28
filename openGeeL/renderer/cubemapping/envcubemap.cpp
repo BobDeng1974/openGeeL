@@ -30,7 +30,17 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-		//convertEnvironmentMap();
+		//TODO: maybe use framebuffer object here
+		unsigned int captureRBO;
+		glGenFramebuffers(1, &fbo);
+		glGenRenderbuffers(1, &captureRBO);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolution, resolution);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
+
+		convertEnvironmentMap();
 	}
 
 	EnvironmentCubeMap::~EnvironmentCubeMap() {
@@ -69,16 +79,14 @@ namespace geeL {
 			SCREENCUBE.drawComplete();
 		}
 
-
 		FrameBuffer::unbind();
-
 	}
 
-	void EnvironmentCubeMap::draw(const Shader& shader, std::string name) const {
+	void EnvironmentCubeMap::bind(const Shader& shader, std::string name) const {
 
+		glActiveTexture(GL_TEXTURE1);
+		glUniform1i(glGetUniformLocation(shader.program, name.c_str()), 1);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 	}
 
-	unsigned int EnvironmentCubeMap::getID() const {
-		return id;
-	}
 }

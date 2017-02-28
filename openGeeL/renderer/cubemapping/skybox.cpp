@@ -3,9 +3,9 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 #include "../cameras/camera.h"
-#include "cubemap.h"
 #include "../shader/shader.h"
 #include "../primitives/screencube.h"
+#include "cubemap.h"
 #include "skybox.h"
 
 namespace geeL {
@@ -24,15 +24,14 @@ namespace geeL {
 		shader.setMat4("view", view);
 		shader.setMat4("projection", camera.getProjectionMatrix());
 		
-
-		cubeMap.draw(shader, "skybox");
+		cubeMap.bind(shader, "skybox");
 
 		SCREENCUBE.drawComplete();
 		glDepthFunc(GL_LESS);
 	}
 
 	void Skybox::bind(const Shader& shader) const {
-		cubeMap.draw(shader, shader.skybox);
+		cubeMap.bind(shader, shader.skybox);
 	}
 
 	unsigned int Skybox::getID() const {

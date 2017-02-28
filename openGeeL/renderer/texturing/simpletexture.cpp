@@ -12,7 +12,6 @@ namespace geeL {
 
 	SimpleTexture::SimpleTexture(const char* fileName, bool linear, TextureType type, ColorType colorType, int wrapMode, FilterMode filterMode)
 		: type(type), path(fileName) {
-
 		
 		int imgWidth, imgHeight;
 
@@ -20,8 +19,6 @@ namespace geeL {
 
 		glGenTextures(1, &id);
 		glBindTexture(GL_TEXTURE_2D, id);
-
-		//stbi_set_flip_vertically_on_load(true);
 
 		if (linear) {
 			switch (colorType) {

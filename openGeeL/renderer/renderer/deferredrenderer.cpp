@@ -33,22 +33,21 @@ namespace geeL {
 		: DeferredRenderer(window, inputManager, nullptr) {}
 
 	DeferredRenderer::DeferredRenderer(RenderWindow* window, InputManager* inputManager, SSAO* ssao, float ssaoResolution)
-		:
-		Renderer(window, inputManager), ssao(ssao), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()),
+		: Renderer(window, inputManager), ssao(ssao), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()),
 			gBuffer(GBuffer()), screen(ScreenQuad()), ssaoResolution(ssaoResolution),
 			deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
 				"renderer/shaders/cooktorrancedeferred.frag")), toggle(0) {
 
-			glEnable(GL_DEPTH_TEST);
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_FRONT);
-			glFrontFace(GL_CW);
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		glFrontFace(GL_CW);
 
-			//Default post processing with tone mapping and gamma correction
-			DefaultPostProcess* defaultEffect = new DefaultPostProcess();
-			effects.push_back(defaultEffect);
+		//Default post processing with tone mapping and gamma correction
+		DefaultPostProcess* defaultEffect = new DefaultPostProcess();
+		effects.push_back(defaultEffect);
 
-			addRequester(*ssao);
+		addRequester(*ssao);
 	}
 
 	DeferredRenderer::~DeferredRenderer() {

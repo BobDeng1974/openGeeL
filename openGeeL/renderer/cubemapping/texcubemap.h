@@ -15,7 +15,7 @@ namespace geeL {
 		TexturedCubeMap(std::string rightPath, std::string leftPath, std::string topPath,
 			std::string bottomPath, std::string backPath, std::string frontPath);
 
-		virtual void draw(const Shader& shader, std::string name) const;
+		virtual void bind(const Shader& shader, std::string name) const;
 
 	};
 }

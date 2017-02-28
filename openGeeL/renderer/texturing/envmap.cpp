@@ -29,6 +29,7 @@ namespace geeL {
 		else
 			cout << "Failed to load environment map image.\n";
 
+		stbi_set_flip_vertically_on_load(false);
 	}
 
 

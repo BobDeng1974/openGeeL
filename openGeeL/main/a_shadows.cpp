@@ -42,6 +42,10 @@
 #include "../renderer/postprocessing/sobel.h"
 
 #include "../renderer/cubemapping/cubemap.h"
+#include "../renderer/cubemapping/texcubemap.h"
+#include "../renderer/texturing/envmap.h"
+#include "../renderer/cubemapping/envcubemap.h"
+#include "../renderer/cubemapping/irrmap.h"
 #include "../renderer/cubemapping/skybox.h"
 #include "../renderer/scene.h"
 #include "../renderer/utility/rendertime.h"
@@ -212,10 +216,14 @@ void a_shadows() {
 	
 	RenderScene scene = RenderScene(lightManager, camera3, meshFactory);
 
-	CubeMap map = CubeMap("resources/skybox2/right.jpg", "resources/skybox2/left.jpg", "resources/skybox2/top.jpg",
+	TexturedCubeMap map = TexturedCubeMap("resources/skybox2/right.jpg", "resources/skybox2/left.jpg", "resources/skybox2/top.jpg",
 		"resources/skybox2/bottom.jpg", "resources/skybox2/back.jpg", "resources/skybox2/front.jpg");
 
-	Skybox skybox = Skybox(map);
+	EnvironmentMap envMap = EnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
+	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(envMap);
+	IrradianceMap irrMap = IrradianceMap(map, 1024);
+
+	Skybox skybox = Skybox(irrMap);
 	scene.setSkybox(skybox);
 
 	renderer1.setScene(scene);
@@ -256,7 +264,7 @@ void a_shadows() {
 	//renderer1.addEffect(raySmooth);
 	//renderer1.addEffect(dof, dof);
 	//renderer1.addEffect(fxaa);
-	
+
 	renderer1.linkInformation();
 	renderer1.render();
 
