@@ -52,10 +52,10 @@ namespace geeL {
 		virtual void draw(const Shader& shader, int texLayer = 0) const;
 
 		std::string GetTypeAsString() const;
-		const int GetID() const;
+		const unsigned int GetID() const;
 
 	private:
-		GLuint id;
+		unsigned int id;
 
 	};
 }

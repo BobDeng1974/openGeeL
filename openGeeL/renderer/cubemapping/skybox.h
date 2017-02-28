@@ -27,10 +27,8 @@ namespace geeL {
 		unsigned int getID() const;
 
 	private:
-		unsigned int boxVAO;
 		Shader shader;
 
-		void initBox();
 	};
 }
 

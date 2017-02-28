@@ -102,7 +102,7 @@ namespace geeL {
 		return "";
 	}
 
-	const int SimpleTexture::GetID() const {
+	const unsigned int SimpleTexture::GetID() const {
 		return id;
 	}
 

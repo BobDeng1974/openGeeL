@@ -3,7 +3,7 @@
 
 #include <list>
 #include <vector>
-#include "../utility/screenquad.h"
+#include "../primitives/screenquad.h"
 #include "../utility/framebuffer.h"
 #include "../utility/gbuffer.h"
 #include "../utility/worldinformation.h"

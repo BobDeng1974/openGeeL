@@ -2,13 +2,13 @@
 #include <glew.h>
 #include "stb_image.h"
 #include "../shader/shader.h"
-#include "cubemap.h"
+#include "texcubemap.h"
 
 using namespace std;
 
 namespace geeL {
 
-	CubeMap::CubeMap(string rightPath, string leftPath, string topPath,
+	TexturedCubeMap::TexturedCubeMap(string rightPath, string leftPath, string topPath,
 		string bottomPath, string backPath, string frontPath) {
 
 		glGenTextures(1, &id);
@@ -48,15 +48,11 @@ namespace geeL {
 	}
 
 
-	void CubeMap::draw(const Shader& shader, string name) const {
+	void TexturedCubeMap::draw(const Shader& shader, string name) const {
 
 		glActiveTexture(GL_TEXTURE1);
 		glUniform1i(glGetUniformLocation(shader.program, name.c_str()), 1);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-	}
-
-	unsigned int CubeMap::getID() const {
-		return id;
 	}
 
 }

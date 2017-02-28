@@ -7,18 +7,17 @@ namespace geeL {
 
 	class Shader;
 
+	//Cubemap that consists of six textures for each side
 	class CubeMap {
 
 	public:
+		virtual void draw(const Shader& shader, std::string name) const = 0;
 
-		CubeMap(std::string rightPath, std::string leftPath, std::string topPath,
-			std::string bottomPath, std::string backPath, std::string frontPath);
+		unsigned int getID() const {
+			return id;
+		}
 
-		void draw(const Shader& shader, std::string name) const;
-
-		unsigned int getID() const;
-
-	private:
+	protected:
 		unsigned int id;
 
 	};

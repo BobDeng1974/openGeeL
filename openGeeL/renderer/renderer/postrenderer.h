@@ -1,7 +1,7 @@
 #ifndef POSTRENDERER_H
 #define POSTRENDERER_H
 
-#include "../utility/screenquad.h"
+#include "../primitives/screenquad.h"
 #include "../utility/framebuffer.h"
 #include "../renderer.h"
 
