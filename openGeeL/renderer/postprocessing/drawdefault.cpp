@@ -1,6 +1,6 @@
 #include <vec3.hpp>
 #include "../shader/shader.h"
-#include "../utility/screenquad.h"
+#include "../primitives/screenquad.h"
 #include "../utility/framebuffer.h"
 #include "../texturing/simpletexture.h"
 #include "drawdefault.h"

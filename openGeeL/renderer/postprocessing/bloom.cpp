@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "gaussianblur.h"
-#include "../utility/screenquad.h"
+#include "../primitives/screenquad.h"
 #include "../utility/framebuffer.h"
 #include "bloom.h"
 

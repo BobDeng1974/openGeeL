@@ -3,7 +3,7 @@
 #include <gtc/matrix_transform.hpp>
 #include "../transformation/transform.h"
 #include "../lighting/directionallight.h"
-#include "../utility/screenquad.h"
+#include "../primitives/screenquad.h"
 #include "../scene.h"
 #include "gaussianblur.h"
 #include "godray.h"

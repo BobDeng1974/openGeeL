@@ -3,7 +3,7 @@
 #include <random>
 #include <string>
 #include <glm.hpp>
-#include "../utility/screenquad.h"
+#include "../primitives/screenquad.h"
 #include "../cameras/camera.h"
 #include "gaussianblur.h"
 #include "ssao.h"

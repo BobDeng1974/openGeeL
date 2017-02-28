@@ -1,5 +1,5 @@
 #include "gaussianblur.h"
-#include "../utility/screenquad.h"
+#include "../primitives/screenquad.h"
 #include "dof.h"
 
 using namespace std;

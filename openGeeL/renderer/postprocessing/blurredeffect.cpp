@@ -1,4 +1,4 @@
-#include "../utility/screenquad.h"
+#include "../primitives/screenquad.h"
 #include "../utility/framebuffer.h"
 #include "gaussianblur.h"
 #include "blurredeffect.h"

@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "../shader/shader.h"
-#include "../utility/screenquad.h"
+#include "../primitives/screenquad.h"
 #include "sobel.h"
 #include "gaussianblur.h"
 #include <iostream>
@@ -41,7 +41,7 @@ namespace geeL {
 			shader.setFloat(name, kernel[i]);
 		}
 		
-		for (int i = 0; i < amount; i++) {
+		for (unsigned int i = 0; i < amount; i++) {
 			frameBuffers[horizontal].bind();
 			shader.setInteger("horizontal", horizontal);
 
