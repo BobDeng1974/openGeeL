@@ -95,6 +95,7 @@ namespace geeL {
 
 	void DeferredRenderer::renderInit() {
 
+		scene->bindSkybox(*deferredShader);
 		deferredShader->bindMaps();
 
 		//Init all effects
@@ -240,12 +241,6 @@ namespace geeL {
 
 	void DeferredRenderer::handleInput() {
 		scene->camera.handleInput(*inputManager);
-	}
-
-	void DeferredRenderer::setScene(RenderScene& scene) {
-		Renderer::setScene(scene);
-
-		deferredShader->addMap(scene.getSkyboxID(), "skybox", GL_TEXTURE_CUBE_MAP);
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {

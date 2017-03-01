@@ -40,7 +40,7 @@ namespace geeL {
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolution, resolution);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
 
-		convertEnvironmentMap();
+		//convertEnvironmentMap();
 	}
 
 	EnvironmentCubeMap::~EnvironmentCubeMap() {

@@ -80,7 +80,7 @@ namespace geeL {
 			skybox->draw(camera);
 	}
 
-	void RenderScene::bindSkybox(const Shader& shader) const {
+	void RenderScene::bindSkybox(Shader& shader) const {
 		if (skybox != nullptr)
 			skybox->bind(shader);
 	}

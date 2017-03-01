@@ -10,10 +10,8 @@
 
 namespace geeL {
 
-	Skybox::Skybox(CubeMap& cubeMap) : cubeMap(cubeMap), 
-		shader(Shader("renderer/cubemapping/skybox.vert", "renderer/cubemapping/skybox.frag")) {
-
-	}
+	Skybox::Skybox(CubeMap& cubeMap) : cubeMap(cubeMap), irradianceMap(nullptr),
+		shader(Shader("renderer/cubemapping/skybox.vert", "renderer/cubemapping/skybox.frag")) {}
 
 
 	void Skybox::draw(const Camera& camera) const {
@@ -30,8 +28,15 @@ namespace geeL {
 		glDepthFunc(GL_LESS);
 	}
 
-	void Skybox::bind(const Shader& shader) const {
-		cubeMap.bind(shader, shader.skybox);
+	void Skybox::addIrradianceMap(CubeMap& irradianceMap) {
+		this->irradianceMap = &irradianceMap;
+	}
+
+	void Skybox::bind(Shader& shader) const {
+		cubeMap.add(shader, "skybox");
+
+		if (irradianceMap != nullptr)
+			irradianceMap->add(shader, "irradianceMap");
 	}
 
 	unsigned int Skybox::getID() const {

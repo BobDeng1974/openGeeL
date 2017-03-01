@@ -28,7 +28,6 @@ namespace geeL {
 		virtual void render();
 		virtual void draw();
 		virtual void handleInput();
-		virtual void setScene(RenderScene& scene);
 
 		//Add new post processing effect to renderer. 
 		void addEffect(PostProcessingEffect& effect);

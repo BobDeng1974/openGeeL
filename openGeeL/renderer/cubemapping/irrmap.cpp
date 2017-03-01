@@ -61,7 +61,6 @@ namespace geeL {
 		conversionShader->use();
 		conversionShader->setMat4("projection", projection);
 
-		
 		conversionShader->setInteger("environmentMap", conversionShader->mapOffset);
 
 		std::list<unsigned int> maps = { environmentMap.getID() };
@@ -74,7 +73,7 @@ namespace geeL {
 			conversionShader->setMat4("view", views[side]);
 
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, id, 0);
-			glClear(GL_DEPTH_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			SCREENCUBE.drawComplete();
 		}

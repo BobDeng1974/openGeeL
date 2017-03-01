@@ -31,7 +31,7 @@ namespace geeL {
 		~RenderScene();
 
 		void setSkybox(Skybox& skybox);
-		void bindSkybox(const Shader& shader) const;
+		void bindSkybox(Shader& shader) const;
 
 		//Create and add new mesh renderer to scene
 		MeshRenderer& AddMeshRenderer(std::string modelPath, Transform& transform, CullingMode faceCulling);

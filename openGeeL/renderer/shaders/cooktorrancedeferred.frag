@@ -54,6 +54,7 @@ uniform sampler2D ssao;
 uniform int useSSAO;
 
 uniform samplerCube skybox;
+uniform samplerCube irradianceMap;
 
 uniform mat4 inverseView;
 uniform vec3 origin;
@@ -62,6 +63,9 @@ uniform vec3 ambient;
 uniform PointLight pointLights[5];
 uniform DirectionalLight directionalLights[5];
 uniform SpotLight spotLights[5];
+
+vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection, 
+	vec3 lightPosition, vec3 lightDiffuse, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection);
 
 vec3 calculatePointLight(int index, PointLight light, vec3 normal, 
 	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection);
@@ -79,6 +83,8 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition);
 float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition);
 
 vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightColor, float density);
+
+vec3 calculateIndirectLight(vec3 normal, float theta, vec3 kd, vec3 ks, vec3 albedo, float occlusion);
 
 //Return dot(a,b) >= 0
 float doto(vec3 a, vec3 b);
@@ -120,7 +126,7 @@ void main() {
 	for(int i = 0; i < slCount; i++)
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness, reflection);
 
-	vec3 ambience = ambient * albedo * occlusion;
+	vec3 ambience = calculateIndirectLight(normal, theta, kd, ks, albedo, occlusion);
 
 	color = vec4(irradiance + ambience, 1.f);
 }
@@ -417,6 +423,20 @@ vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightC
 	float attenuation = 1.f / (dist * dist);
 
 	return lightColor * attenuation * density * lightInView;
+}
+
+
+vec3 calculateIndirectLight(vec3 normal, float theta, vec3 kd, vec3 ks, vec3 albedo, float occlusion) {
+
+	vec3 irradiance = texture(irradianceMap, normal).rgb;
+	float l = length(irradiance);
+	irradiance *= kd;
+
+	//Use ambient color if no 'real' value is read from irradiance map
+	float check = step(0.01f, l);
+	irradiance = check * irradiance + (1.f - check) * ambient;
+
+	return irradiance * albedo * occlusion;
 }
 
 

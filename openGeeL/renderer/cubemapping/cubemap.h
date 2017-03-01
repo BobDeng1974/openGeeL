@@ -13,9 +13,8 @@ namespace geeL {
 	public:
 		virtual void bind(const Shader& shader, std::string name) const = 0;
 
-		unsigned int getID() const {
-			return id;
-		}
+		virtual void add(Shader& shader, std::string name);
+		virtual unsigned int getID() const;
 
 	protected:
 		unsigned int id;

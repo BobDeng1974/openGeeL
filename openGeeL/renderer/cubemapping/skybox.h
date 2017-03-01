@@ -14,19 +14,22 @@ namespace geeL {
 	class CubeMap;
 	class Shader;
 
+	//Object that describes the static environment of the scene
 	class Skybox {
 
 	public:
-		const CubeMap& cubeMap;
-
 		Skybox(CubeMap& cubeMap);
 
+		void addIrradianceMap(CubeMap& irradianceMap);
+
 		void draw(const Camera& camera) const;
-		void bind(const Shader& shader) const;
+		void bind(Shader& shader) const;
 
 		unsigned int getID() const;
 
 	private:
+		CubeMap& cubeMap;
+		CubeMap* irradianceMap;
 		Shader shader;
 
 	};
