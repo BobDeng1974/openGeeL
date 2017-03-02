@@ -108,7 +108,7 @@ namespace geeL {
 	}
 
 	void RenderScene::forwardScreenInfo(const ScreenInfo& info) {
-		camera.updateDepth(info.CTdepth);
+		camera.updateDepth(info);
 		lightManager.forwardScreenInfo(info, camera);
 	}
 

@@ -211,7 +211,7 @@ void a_shadows() {
 	materialFactory.setDefaultShader(true);
 	MeshFactory meshFactory = MeshFactory(materialFactory);
 
-	LightManager lightManager = LightManager();
+	LightManager lightManager = LightManager(vec3(0.15f));
 	ShaderManager shaderManager = ShaderManager(materialFactory);
 	
 	RenderScene scene = RenderScene(lightManager, camera3, meshFactory);
@@ -221,9 +221,9 @@ void a_shadows() {
 
 	EnvironmentMap envMap = EnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
 	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(envMap);
-	IrradianceMap irrMap = IrradianceMap(map, 512);
+	IrradianceMap irrMap = IrradianceMap(map, 32);
 
-	Skybox skybox = Skybox(map);
+	Skybox skybox = Skybox(irrMap);
 	//skybox.addIrradianceMap(irrMap);
 	scene.setSkybox(skybox);
 
@@ -264,7 +264,7 @@ void a_shadows() {
 	//renderer1.addEffect(ssrrSmooth, ssrr);
 	//renderer1.addEffect(raySmooth);
 	//renderer1.addEffect(dof, dof);
-	//renderer1.addEffect(fxaa);
+	renderer1.addEffect(fxaa);
 
 	renderer1.linkInformation();
 	renderer1.render();

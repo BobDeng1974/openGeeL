@@ -9,6 +9,7 @@
 
 namespace geeL {
 
+	struct ScreenInfo;
 	class InputManager;
 	class Transform;
 	class Shader;
@@ -17,6 +18,7 @@ namespace geeL {
 
 	public:
 		float depth;
+		const ScreenInfo* info;
 		glm::vec3 center;
 
 		//Defines a static camera 
@@ -35,7 +37,7 @@ namespace geeL {
 		void uniformBind(int uniformID) const;
 
 		//Update position and depth of center pixel of camera view
-		void updateDepth(float depth);
+		void updateDepth(const ScreenInfo& info);
 
 		const glm::mat4& getViewMatrix() const;
 		const glm::mat4& getInverseViewMatrix() const;

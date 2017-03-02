@@ -6,6 +6,7 @@
 #include "../meshes/meshrenderer.h"
 #include "../cameras/camera.h"
 #include "../transformation/transform.h"
+#include "../utility/gbuffer.h"
 #include "../scene.h"
 #include "light.h"
 
@@ -87,7 +88,11 @@ namespace geeL {
 
 	void Light::adaptShadowmap(const RenderScene& scene) {
 		vec3 center = scene.camera.center;
-		float depth = scene.camera.depth;
+		//float depth = scene.camera.depth;
+		const ScreenInfo& info = *scene.camera.info;
+		float depth = fminf(info.CTdepth, fminf(info.BLdepth,
+			fminf(info.BRdepth, fminf(info.TLdepth, info.TRdepth))));
+
 		float intensity = 1.f - getIntensity(center);
 
 		//Check distance between camera and center pixel of camera 

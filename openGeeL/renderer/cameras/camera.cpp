@@ -7,6 +7,7 @@
 #include "camera.h"
 #include "../inputmanager.h"
 #include "../transformation/transform.h"
+#include "../utility/gbuffer.h"
 #include <iostream>
 #include "../utility/rendertime.h"
 
@@ -94,8 +95,9 @@ namespace geeL {
 		shader.setVector3(name, transform.position);
 	}
 
-	void Camera::updateDepth(float depth) {
-		this->depth = depth;
+	void Camera::updateDepth(const ScreenInfo& info) {
+		this->info = &info;
+		depth = info.CTdepth;
 
 		center = transform.position + transform.forward * depth;
 	}
