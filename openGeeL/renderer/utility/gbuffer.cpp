@@ -47,7 +47,7 @@ namespace geeL {
 		drawer.draw();
 
 		//glReadBuffer(GL_COLOR_ATTACHMENT0);
-		float data[3];
+		float data[4];
 		glReadPixels(width / 2, height / 2, 1, 1, GL_RGBA, GL_FLOAT, data);
 		screenInfo.CTdepth = -data[2];
 
@@ -56,6 +56,7 @@ namespace geeL {
 		float mini = 0.f;
 		int maxDistance = 100;
 
+		
 		glReadPixels(xOffset, yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
 		screenInfo.TRdepth = (-data[2] < mini) ? maxDistance : -data[2];
 
@@ -67,7 +68,7 @@ namespace geeL {
 
 		glReadPixels(width - xOffset, height - yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
 		screenInfo.BLdepth = (-data[2] < mini) ? maxDistance : -data[2];
-
+		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 

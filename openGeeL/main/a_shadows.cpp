@@ -220,7 +220,7 @@ void a_shadows() {
 		"resources/skybox2/bottom.jpg", "resources/skybox2/back.jpg", "resources/skybox2/front.jpg");
 
 	EnvironmentMap envMap = EnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
-	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(envMap);
+	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(envMap, 1024);
 	IrradianceMap irrMap = IrradianceMap(envCubeMap);
 
 	Skybox skybox = Skybox(irrMap);
@@ -260,7 +260,7 @@ void a_shadows() {
 	//renderer1.addEffect(sobelBlur, sobelBlur);
 	//renderer1.addEffect(volSmooth, { &vol, &sobelBlur });
 	//renderer1.addEffect(bloom);
-	//renderer1.addEffect(ssrrSmooth, ssrr);
+	renderer1.addEffect(ssrrSmooth, ssrr);
 	//renderer1.addEffect(raySmooth);
 	//renderer1.addEffect(dof, dof);
 	renderer1.addEffect(fxaa);
