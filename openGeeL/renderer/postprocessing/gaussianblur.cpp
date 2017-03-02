@@ -17,8 +17,10 @@ namespace geeL {
 	GaussianBlur::GaussianBlur(unsigned int strength, string shaderPath)
 		: PostProcessingEffect(shaderPath) {
 
-		amount = 1 + 2 * strength;
-		if (amount > maxAmount)
+		amount = 2 * strength - 1;
+		if (amount < 1)
+			amount = 1;
+		else if (amount > maxAmount)
 			amount = maxAmount;
 	}
 
@@ -61,7 +63,11 @@ namespace geeL {
 			bindToScreen();
 			horizontal = !horizontal;
 		}
-				
+		
+		//Set values for final blur call
+		shader.setInteger("horizontal", horizontal);
+		currBuffer = frameBuffers[!horizontal].getColorID();
+
 		FrameBuffer::bind(parentFBO);
 	}
 

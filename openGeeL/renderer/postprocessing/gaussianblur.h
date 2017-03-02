@@ -14,7 +14,7 @@ namespace geeL {
 	class GaussianBlur : public PostProcessingEffect {
 
 	public:
-		GaussianBlur(unsigned int strength = 1);
+		GaussianBlur(unsigned int strength = 0);
 		
 		void setKernel(float newKernel[5]);
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
