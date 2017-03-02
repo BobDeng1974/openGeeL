@@ -14,18 +14,37 @@ namespace geeL {
 		Transparent = 2
 	};
 
-	class Material {
+
+	class MaterialContainer {
 
 	public:
-		Shader& shader;
 		const MaterialType type;
 		const std::string name;
 
-		Material(Shader& shader, std::string name = "material", MaterialType type = Opaque) 
-			: shader(shader), type(type), name(name) {}
+		MaterialContainer(std::string name = "material", MaterialType type = Opaque)
+			: type(type), name(name) {}
 
-		virtual void bindTextures() const = 0;
-		virtual void bind() const = 0;
+		virtual void bindTextures(Shader& shader) const = 0;
+		virtual void bind(Shader& shader) const = 0;
+
+	};
+
+
+	class Material {
+		
+	public:
+		Shader& shader;
+		MaterialContainer& container;
+
+		Material(Shader& shader, MaterialContainer& container, bool deferred = true);
+
+		void bindTextures() const;
+		void bind() const;
+
+		bool rendersDeferred() const;
+
+	private:
+		bool deferred;
 
 	};
 }

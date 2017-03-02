@@ -7,9 +7,9 @@ using namespace std;
 
 namespace geeL {
 
-	void Model::draw(bool shade) const {
+	void Model::draw() const {
 		for (unsigned int i = 0; i < meshes.size(); i++)
-			meshes[i].draw(shade);
+			meshes[i].draw();
 	}
 
 	void Model::drawInstanced(bool shade) const {

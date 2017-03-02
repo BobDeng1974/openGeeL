@@ -92,11 +92,11 @@ namespace {
 
 		virtual void init() {
 
-			float l = 200.f;
+			float l = 100.f;
 			
 			geeL::Transform* lighTransi4 = new geeL::Transform(glm::vec3(7, 5, 5), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
 			light = &lightManager.addPointLight(*lighTransi4, glm::vec3(l *0.996 , l *0.535 , l*0.379));
-				
+
 			l = 100.f;
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
@@ -107,7 +107,6 @@ namespace {
 			l = 0.5f;
 			geeL::Transform* lighTransi2 = new geeL::Transform(glm::vec3(0.f, 0.f, 0.f), glm::vec3(75, 20, 10), glm::vec3(1.f, 1.f, 1.f));
 			//dirLight = &lightManager.addDirectionalLight(*lighTransi2, glm::vec3(l, l, l));
-			
 
 			float height = -2.f;
 			transi = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.2f, 0.2f, 0.2f));
@@ -116,9 +115,9 @@ namespace {
 			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(100.2f, 0.2f, 100.2f));
 			MeshRenderer& plane = scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront);
 
-			for (auto it = plane.defaultMaterialsBegin(); it != plane.defaultMaterialsEnd(); it++) {
+			for (auto it = plane.deferredMaterialsBegin(); it != plane.deferredMaterialsEnd(); it++) {
 				Material* mat = it->second;
-				DefaultMaterial* defmat = dynamic_cast<DefaultMaterial*>(mat);
+				DefaultMaterialContainer* defmat = dynamic_cast<DefaultMaterialContainer*>(&mat->container);
 
 				if (defmat != nullptr) {
 					defmat->setRoughness(0.2f);
@@ -129,9 +128,9 @@ namespace {
 			geeL::Transform* transi5 = new geeL::Transform(glm::vec3(-30.0f, -4.f, 25.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.3f, 0.3f, 0.3f));
 			MeshRenderer& box1 = scene.AddMeshRenderer("resources/empire/EmpireState_lp.obj", *transi5, cullFront);
 
-			for (auto it = box1.defaultMaterialsBegin(); it != box1.defaultMaterialsEnd(); it++) {
+			for (auto it = box1.deferredMaterialsBegin(); it != box1.deferredMaterialsEnd(); it++) {
 				Material* mat = it->second;
-				DefaultMaterial* defmat = dynamic_cast<DefaultMaterial*>(mat);
+				DefaultMaterialContainer* defmat = dynamic_cast<DefaultMaterialContainer*>(&mat->container);
 
 				if (defmat != nullptr) {
 					defmat->setRoughness(0.9f);
@@ -142,9 +141,9 @@ namespace {
 			geeL::Transform* transi7 = new geeL::Transform(glm::vec3(8.f, 0.f, 4.f), glm::vec3(0.f), glm::vec3(1.f, 1.f, 1.f));
 			MeshRenderer& sphere1 = scene.AddMeshRenderer("resources/primitives/sphere.obj", *transi7, cullFront);
 
-			for (auto it = sphere1.defaultMaterialsBegin(); it != sphere1.defaultMaterialsEnd(); it++) {
+			for (auto it = sphere1.deferredMaterialsBegin(); it != sphere1.deferredMaterialsEnd(); it++) {
 				Material* mat = it->second;
-				DefaultMaterial* defmat = dynamic_cast<DefaultMaterial*>(mat);
+				DefaultMaterialContainer* defmat = dynamic_cast<DefaultMaterialContainer*>(&mat->container);
 
 				if (defmat != nullptr) {
 					defmat->setRoughness(0.f);
@@ -155,9 +154,9 @@ namespace {
 			geeL::Transform* transi3 = new geeL::Transform(glm::vec3(0.0f, 1, -2.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(5.2f, 2.2f, 1.2f));
 			MeshRenderer& box = scene.AddMeshRenderer("resources/primitives/cube.obj", *transi3, cullFront);
 
-			for (auto it = box.defaultMaterialsBegin(); it != box.defaultMaterialsEnd(); it++) {
+			for (auto it = box.deferredMaterialsBegin(); it != box.deferredMaterialsEnd(); it++) {
 				Material* mat = it->second;
-				DefaultMaterial* defmat = dynamic_cast<DefaultMaterial*>(mat);
+				DefaultMaterialContainer* defmat = dynamic_cast<DefaultMaterialContainer*>(&mat->container);
 
 				if (defmat != nullptr) {
 					defmat->setRoughness(0.f);
@@ -166,13 +165,8 @@ namespace {
 				}
 			}
 
-			GenericMaterial* custom = &materialFactory.CreateMaterial(materialFactory.getForwardShader());
-			custom->addParameter("shininess", 64.f);
-			std::vector<Material*> materials;
-			materials.push_back(custom);
-
 			geeL::Transform* transi79 = new geeL::Transform(glm::vec3(4.f, -0.4f, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", *transi79, cullFront);
+			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", *transi79, cullFront, false);
 		}
 
 		virtual void draw(const Camera& camera) {
@@ -191,6 +185,7 @@ namespace {
 
 
 void a_shadows() {
+	
 	RenderWindow* window = new RenderWindow("geeL", 1920, 1080, true);
 	InputManager* manager = new InputManager();
 	manager->defineButton("Forward", GLFW_KEY_W);
@@ -225,7 +220,7 @@ void a_shadows() {
 
 	Skybox skybox = Skybox(irrMap);
 	scene.setSkybox(skybox);
-
+	
 	renderer1.setScene(scene);
 	renderer1.setShaderManager(shaderManager);
 
@@ -263,7 +258,7 @@ void a_shadows() {
 	//renderer1.addEffect(ssrrSmooth, ssrr);
 	//renderer1.addEffect(raySmooth);
 	//renderer1.addEffect(dof, dof);
-	renderer1.addEffect(fxaa);
+	//renderer1.addEffect(fxaa);
 
 	renderer1.linkInformation();
 	renderer1.render();

@@ -7,8 +7,7 @@
 
 namespace geeL {
 
-	MaterialFactory::MaterialFactory() 
-		: 
+	MaterialFactory::MaterialFactory() : 
 		forwardShader(new Shader("renderer/shaders/lighting.vert", "renderer/shaders/lighting.frag")),
 		deferredShader(new Shader("renderer/shaders/gbuffer.vert", "renderer/shaders/gbuffer.frag", false)) {
 	
@@ -17,14 +16,10 @@ namespace geeL {
 	}
 
 	MaterialFactory::~MaterialFactory() {
-		//delete defaultShader;
-		//delete forwardShader;
-		//delete deferredShader;
-
 		for (auto shader = shaders.begin(); shader != shaders.end(); shader++)
 			delete *shader;
 
-		for (auto material = materials.begin(); material != materials.end(); material++)
+		for (auto material = container.begin(); material != container.end(); material++)
 			delete *material;
 	}
 
@@ -37,16 +32,16 @@ namespace geeL {
 		return textures[filePath];
 	}
 
-	DefaultMaterial& MaterialFactory::CreateMaterial() {
-		DefaultMaterial* mat = new DefaultMaterial(*defaultShader);
-		materials.push_back(mat);
+	DefaultMaterialContainer& MaterialFactory::CreateMaterial() {
+		DefaultMaterialContainer* mat = new DefaultMaterialContainer();
+		container.push_back(mat);
 
 		return *mat;
 	}
 
-	GenericMaterial& MaterialFactory::CreateMaterial(Shader& shader) {
-		GenericMaterial* mat = new GenericMaterial(shader);
-		materials.push_back(mat);
+	GenericMaterialContainer& MaterialFactory::CreateMaterial(Shader& shader) {
+		GenericMaterialContainer* mat = new GenericMaterialContainer();
+		container.push_back(mat);
 
 		return *mat;
 	}
@@ -58,25 +53,24 @@ namespace geeL {
 
 	void MaterialFactory::setDefaultShader(bool deferred) {
 		defaultShader = deferred ? deferredShader : forwardShader;
-		//shaders.front() = defaultShader;
+	}
+	
+	list<MaterialContainer*>::iterator MaterialFactory::materialsBegin() {
+		return container.begin();
 	}
 
-	list<Material*>::iterator MaterialFactory::materialsBegin() {
-		return materials.begin();
+	list<MaterialContainer*>::iterator MaterialFactory::materialsEnd() {
+		return container.end();
 	}
 
-	list<Material*>::iterator MaterialFactory::materialsEnd() {
-		return materials.end();
+	list<MaterialContainer*>::const_iterator MaterialFactory::materialsBegin() const {
+		return container.begin();
 	}
 
-	list<Material*>::const_iterator MaterialFactory::materialsBegin() const {
-		return materials.begin();
+	list<MaterialContainer*>::const_iterator MaterialFactory::materialsEnd() const {
+		return container.end();
 	}
-
-	list<Material*>::const_iterator MaterialFactory::materialsEnd() const {
-		return materials.end();
-	}
-
+	
 	list<Shader*>::iterator MaterialFactory::shadersBegin() {
 		return shaders.begin();
 	}

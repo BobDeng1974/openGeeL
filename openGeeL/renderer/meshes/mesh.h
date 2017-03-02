@@ -13,8 +13,8 @@ typedef unsigned int GLuint;
 
 namespace geeL {
 
-	class DefaultMaterial;
 	class Material;
+	class MaterialContainer;
 
 	struct Vertex {
 		glm::vec3 position;
@@ -28,20 +28,22 @@ namespace geeL {
 	class Mesh {
 
 	public:
-		DefaultMaterial& material;
+		MaterialContainer& material;
 	
-		Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, DefaultMaterial& material);
+		Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, MaterialContainer& material);
 
 		void init();
-		void draw(bool shade = true) const;
+
+		//Draw mesh without materials
+		void draw() const;
+
+		//Draw mesh with given materials
 		void draw(Material& customMaterial) const;
 
 	private:
 		GLuint vao, vbo, ebo;
 		std::vector<Vertex> vertices;
 		std::vector<GLuint> indices;
-
-		void draw(Material& customMaterial, bool shade) const;
 
 	};
 }

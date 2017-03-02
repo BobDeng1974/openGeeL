@@ -8,7 +8,7 @@
 namespace geeL {
 
 	class Material;
-	class DefaultMaterial;
+	class DefaultMaterialContainer;
 	class Model;
 	class Transform;
 
@@ -25,13 +25,15 @@ namespace geeL {
 		const CullingMode faceCulling;
 
 		//Constructor for mesh renderer with no assigned model (since it will be drawn instanced)
-		MeshRenderer(Transform& transform, CullingMode faceCulling = cullFront);
+		MeshRenderer(Transform& transform, Shader& shader, 
+			CullingMode faceCulling = cullFront, bool deferred = true);
 
 		//Constructor for mesh renderer with an unique assigned model
-		MeshRenderer(Transform& transform, Model& model, CullingMode faceCulling = cullFront);
+		MeshRenderer(Transform& transform, Shader& shader, Model& model, 
+			CullingMode faceCulling = cullFront, bool deferred = true);
 
 
-		void draw(bool drawDefault = true) const;
+		void draw(bool deferred = true) const;
 		void draw(const Shader& shader) const;
 
 		//Transform given model with transformation data of this mesh renderer
@@ -43,21 +45,30 @@ namespace geeL {
 		//If i > j, then j materials will be change and the remaining (i - j) materials ignored
 		void customizeMaterials(std::vector<Material*> materials);
 
+		//Customize material at index i if present in mesh renderer
+		void customizeMaterials(Material* material, unsigned int index);
+
 		//Check if the meshes contain materials with non-default materials (meaning: with no default shading)
-		bool containsNonDefaultMaterials() const;
+		bool containsForwardMaterials() const;
 
 		//Check if the meshes contain default materials (meaning: with default shading)
-		bool containsDefaultMaterials() const;
+		bool containsDeferredMaterials() const;
 
-		std::map<unsigned int, Material*>::iterator defaultMaterialsBegin();
-		std::map<unsigned int, Material*>::iterator defaultMaterialsEnd();
+		std::map<unsigned int, Material*>::iterator deferredMaterialsBegin();
+		std::map<unsigned int, Material*>::iterator deferredMaterialsEnd();
+
+		std::map<unsigned int, Material*>::iterator forwardMaterialsBegin();
+		std::map<unsigned int, Material*>::iterator forwardMaterialsEnd();
+
 
 	private:
 		bool instanced;
-		std::map<unsigned int, Material*> defaultMaterials;
-		std::map<unsigned int, Material*> customMaterials;
+		std::map<unsigned int, Material*> deferredMaterials;
+		std::map<unsigned int, Material*> forwardMaterials;
 
-		void initMaterials();
+		//Init materials with data from the meshes material containers
+		void initMaterials(Shader& shader, bool deferred);
+
 		void transformMeshes(Model& model, const std::map<unsigned int, Material*>& materials, 
 			const Shader* shader = nullptr) const;
 

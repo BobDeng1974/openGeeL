@@ -85,10 +85,15 @@ namespace geeL {
 			skybox->bind(shader);
 	}
 
-	MeshRenderer& RenderScene::AddMeshRenderer(string modelPath, Transform& transform, CullingMode faceCulling) {
+	MeshRenderer& RenderScene::AddMeshRenderer(string modelPath, Transform& transform, 
+		CullingMode faceCulling, bool deferred) {
+		
 		Model& model = meshFactory.CreateModel(modelPath);
+		if(deferred)
+			deferredRenderObjects.push_back(meshFactory.CreateMeshRendererManual(model, transform, faceCulling, deferred));
+		else
+			forwardRenderObjects.push_back(meshFactory.CreateMeshRendererManual(model, transform, faceCulling, deferred));
 
-		deferredRenderObjects.push_back(new MeshRenderer(transform, model, faceCulling));
 		return *deferredRenderObjects.back();
 	}
 
@@ -96,12 +101,12 @@ namespace geeL {
 		std::vector<Material*> materials, CullingMode faceCulling) {
 
 		Model& model = meshFactory.CreateModel(modelPath);
-		MeshRenderer* renderer = new MeshRenderer(transform, model, faceCulling);
+		MeshRenderer* renderer = meshFactory.CreateMeshRendererManual(model, transform, faceCulling);
 		renderer->customizeMaterials(materials);
 
-		if (renderer->containsDefaultMaterials())
+		if (renderer->containsDeferredMaterials())
 			deferredRenderObjects.push_back(renderer);
-		if (renderer->containsNonDefaultMaterials())
+		if (renderer->containsForwardMaterials())
 			forwardRenderObjects.push_back(renderer);
 
 		return *renderer;

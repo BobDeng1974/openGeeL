@@ -78,6 +78,7 @@ namespace geeL {
 			SCREENCUBE.drawComplete();
 		}
 
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		FrameBuffer::unbind();
 	}
 

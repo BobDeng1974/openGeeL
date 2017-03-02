@@ -19,10 +19,10 @@ namespace geeL {
 	class Shader;
 
 	//A generic material class that allow a wide array of parameters
-	class GenericMaterial : public Material {
+	class GenericMaterialContainer : public MaterialContainer {
 
 	public:
-		GenericMaterial(Shader& shader, std::string name = "material", MaterialType type = Opaque);
+		GenericMaterialContainer(std::string name = "material", MaterialType type = Opaque);
 
 		void addTexture(std::string name, SimpleTexture& texture);
 		void addTextures(std::vector<SimpleTexture*> textures);
@@ -37,8 +37,8 @@ namespace geeL {
 		void addParameter(std::string name, const vec3* parameter);
 		void addParameter(std::string name, const mat4* parameter);
 
-		void bindTextures() const;
-		void bind() const;
+		void bindTextures(Shader& shader) const;
+		void bind(Shader& shader) const;
 
 	private:
 		LayeredTexture textureStack;

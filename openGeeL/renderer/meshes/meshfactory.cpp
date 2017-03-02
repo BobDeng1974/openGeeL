@@ -27,9 +27,16 @@ namespace geeL {
 	}
 
 	MeshRenderer& MeshFactory::CreateMeshRenderer(Model& model, Transform& transform, CullingMode faceCulling) {
-		meshRenderer.push_back(MeshRenderer(transform, model, faceCulling));
+		meshRenderer.push_back(MeshRenderer(transform, *factory.defaultShader, model, faceCulling));
 
 		return meshRenderer.back();
+	}
+
+	MeshRenderer* MeshFactory::CreateMeshRendererManual(Model& model, Transform& transform, 
+		CullingMode faceCulling, bool deferred) {
+		
+		return new MeshRenderer(transform, deferred ? factory.getDeferredShader() 
+			: factory.getForwardShader(), model, faceCulling, deferred);
 	}
 
 	map<string, Model>::iterator MeshFactory::modelsBegin() {
@@ -173,7 +180,8 @@ namespace geeL {
 			textures.insert(textures.end(), metallicnMaps.begin(), metallicnMaps.end());
 		}
 
-		DefaultMaterial& mat = factory.CreateMaterial();
+		DefaultMaterialContainer& mat = factory.CreateMaterial();
+
 		mat.addTextures(textures);
 		mat.setRoughness(0.4f);
 		mat.setMetallic(0.2f);

@@ -10,18 +10,18 @@ using namespace std;
 
 namespace geeL {
 
-	DefaultMaterial::DefaultMaterial(Shader& defaultShader, MaterialType type) 
-		: Material(defaultShader, "material", type) {
+	DefaultMaterialContainer::DefaultMaterialContainer(MaterialType type) 
+		: MaterialContainer("material", type) {
 		
 		textureStack = LayeredTexture();
 	}
 
 
-	void DefaultMaterial::addTexture(std::string name, SimpleTexture& texture) {
+	void DefaultMaterialContainer::addTexture(std::string name, SimpleTexture& texture) {
 		textureStack.addTexture(this->name + "." + name, texture);
 	}
 
-	void DefaultMaterial::addTextures(std::vector<SimpleTexture*> textures) {
+	void DefaultMaterialContainer::addTextures(std::vector<SimpleTexture*> textures) {
 		for (size_t i = 0; i < textures.size(); i++) {
 			SimpleTexture& texture = *textures[i];
 			string name = this->name + "." + texture.GetTypeAsString();
@@ -30,24 +30,24 @@ namespace geeL {
 		}
 	}
 
-	void DefaultMaterial::setRoughness(float value) {
+	void DefaultMaterialContainer::setRoughness(float value) {
 		roughness = value;
 	}
 
-	void DefaultMaterial::setMetallic(float value) {
+	void DefaultMaterialContainer::setMetallic(float value) {
 		metallic = value;
 	}
 
-	void DefaultMaterial::setColor(glm::vec3 value) {
+	void DefaultMaterialContainer::setColor(glm::vec3 value) {
 		color = value;
 	}
 
-	void DefaultMaterial::bindTextures() const {
+	void DefaultMaterialContainer::bindTextures(Shader& shader) const {
 		shader.use();
 		textureStack.bind(shader, "");
 	}
 
-	void DefaultMaterial::bind() const {
+	void DefaultMaterialContainer::bind(Shader& shader) const {
 		shader.use();
 		shader.loadMaps();
 		textureStack.draw(shader);

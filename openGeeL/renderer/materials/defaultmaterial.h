@@ -13,11 +13,11 @@ namespace geeL {
 	class Shader;
 
 	//Material class with default shading
-	class DefaultMaterial : public Material {
+	class DefaultMaterialContainer : public MaterialContainer {
 
 
 	public:
-		DefaultMaterial(Shader& defaultShader, MaterialType type = Opaque);
+		DefaultMaterialContainer(MaterialType type = Opaque);
 
 		void addTexture(std::string name, SimpleTexture& texture);
 		void addTextures(std::vector<SimpleTexture*> textures);
@@ -25,8 +25,8 @@ namespace geeL {
 		void setMetallic(float value);
 		void setColor(glm::vec3 value);
 
-		virtual void bindTextures() const;
-		virtual void bind() const;
+		virtual void bindTextures(Shader& shader) const;
+		virtual void bind(Shader& shader) const;
 
 	private:
 		glm::vec3 color;

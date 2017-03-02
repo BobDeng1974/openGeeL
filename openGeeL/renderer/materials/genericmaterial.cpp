@@ -10,15 +10,15 @@ using namespace std;
 
 namespace geeL {
 
-	GenericMaterial::GenericMaterial(Shader& shader, string name, MaterialType type) : Material(shader, name, type) {
+	GenericMaterialContainer::GenericMaterialContainer(string name, MaterialType type) : MaterialContainer(name, type) {
 		textureStack = LayeredTexture();
 	}
 
-	void GenericMaterial::addTexture(string name, SimpleTexture& texture) {
+	void GenericMaterialContainer::addTexture(string name, SimpleTexture& texture) {
 		textureStack.addTexture(this->name + "." + name, texture);
 	}
 
-	void GenericMaterial::addTextures(vector<SimpleTexture*> textures) {
+	void GenericMaterialContainer::addTextures(vector<SimpleTexture*> textures) {
 		for (size_t i = 0; i < textures.size(); i++) {
 			SimpleTexture& texture = *textures[i];
 			string name = this->name + "." + texture.GetTypeAsString();
@@ -27,44 +27,44 @@ namespace geeL {
 		}
 	}
 
-	void GenericMaterial::addParameter(string name, float parameter) {
+	void GenericMaterialContainer::addParameter(string name, float parameter) {
 		floatParameters.push_back(pair<string, float>(this->name + "." + name, parameter));
 	}
 
-	void GenericMaterial::addParameter(string name, int parameter) {
+	void GenericMaterialContainer::addParameter(string name, int parameter) {
 		intParameters.push_back(pair<string, int>(this->name + "." + name, parameter));
 	}
 
-	void GenericMaterial::addParameter(string name, vec3 parameter) {
+	void GenericMaterialContainer::addParameter(string name, vec3 parameter) {
 		vec3Parameters.push_back(pair<string, vec3>(this->name + "." + name, parameter));
 	}
 
-	void GenericMaterial::addParameter(string name, mat4 parameter) {
+	void GenericMaterialContainer::addParameter(string name, mat4 parameter) {
 		mat4Parameters.push_back(pair<string, mat4>(this->name + "." + name, parameter));
 	}
 
-	void GenericMaterial::addParameter(string name, const float* parameter) {
+	void GenericMaterialContainer::addParameter(string name, const float* parameter) {
 		unmanagedFloatParameters.push_back(pair<string, const float*>(this->name + "." + name, parameter));
 	}
 
-	void GenericMaterial::addParameter(string name, const int* parameter) {
+	void GenericMaterialContainer::addParameter(string name, const int* parameter) {
 		unmanagedIntParameters.push_back(pair<string, const int*>(this->name + "." + name, parameter));
 	}
 
-	void GenericMaterial::addParameter(string name, const vec3* parameter) {
+	void GenericMaterialContainer::addParameter(string name, const vec3* parameter) {
 		unmanagedVec3Parameters.push_back(pair<string, const vec3*>(this->name + "." + name, parameter));
 	}
 
-	void GenericMaterial::addParameter(string name, const mat4* parameter) {
+	void GenericMaterialContainer::addParameter(string name, const mat4* parameter) {
 		unmanagedMat4Parameters.push_back(pair<string, const mat4*>(this->name + "." + name, parameter));
 	}
 
-	void GenericMaterial::bindTextures() const {
+	void GenericMaterialContainer::bindTextures(Shader& shader) const {
 		shader.use();
 		textureStack.bind(shader, "");
 	}
 
-	void GenericMaterial::bind() const {
+	void GenericMaterialContainer::bind(Shader& shader) const {
 		shader.use();
 		shader.loadMaps();
 		textureStack.draw(shader);

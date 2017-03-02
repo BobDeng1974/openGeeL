@@ -11,8 +11,9 @@ using namespace std;
 namespace geeL {
 
 	class Material;
-	class DefaultMaterial;
-	class GenericMaterial;
+	class MaterialContainer;
+	class DefaultMaterialContainer;
+	class GenericMaterialContainer;
 	class Shader;
 
 	class MaterialFactory {
@@ -29,10 +30,10 @@ namespace geeL {
 			TextureType type = Diffuse, ColorType colorType = ColorRGBA, GLint wrapMode = GL_REPEAT, FilterMode filterMode = None);
 
 		//Creates and returns a new material with default shading
-		DefaultMaterial& CreateMaterial();
+		DefaultMaterialContainer& CreateMaterial();
 
 		//Creates and returns a new materials with given shading
-		GenericMaterial& CreateMaterial(Shader& shader);
+		GenericMaterialContainer& CreateMaterial(Shader& shader);
 
 		//Creates and returns a new shader program with given file paths
 		//for vertex and fragment shaders
@@ -40,13 +41,13 @@ namespace geeL {
 
 		//Decide whether default shader should use forward or deferred shading
 		void setDefaultShader(bool deferred);
+		
+		list<MaterialContainer*>::iterator materialsBegin();
+		list<MaterialContainer*>::iterator materialsEnd();
 
-		list<Material*>::iterator materialsBegin();
-		list<Material*>::iterator materialsEnd();
-
-		list<Material*>::const_iterator materialsBegin() const;
-		list<Material*>::const_iterator materialsEnd() const;
-
+		list<MaterialContainer*>::const_iterator materialsBegin() const;
+		list<MaterialContainer*>::const_iterator materialsEnd() const;
+		
 		list<Shader*>::iterator shadersBegin();
 		list<Shader*>::iterator shadersEnd();
 
@@ -62,7 +63,7 @@ namespace geeL {
 	private:
 		Shader* forwardShader;
 		Shader* deferredShader;
-		list<Material*> materials;
+		list<MaterialContainer*> container;
 		list<Shader*> shaders;
 		map<string, SimpleTexture> textures;
 

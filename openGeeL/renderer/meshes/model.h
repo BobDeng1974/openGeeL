@@ -26,8 +26,10 @@ namespace geeL {
 		Model::Model() {}
 		Model::Model(std::string path) : path(path) {}
 
-		void draw(bool shade = true) const;
+		//Draw model without materials
+		void draw() const;
 		void drawInstanced(bool shade = true) const;
+
 		void draw(std::vector<Material*> customMaterials) const;
 		void draw(std::map<unsigned int, Material*> customMaterials) const;
 

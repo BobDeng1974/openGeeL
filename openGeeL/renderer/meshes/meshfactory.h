@@ -30,6 +30,10 @@ namespace geeL {
 
 		MeshRenderer& CreateMeshRenderer(Model& model, Transform& transform, CullingMode faceCulling);
 
+		//Create mesh renderer on heap. Caller has to manage its memory manually
+		MeshRenderer* CreateMeshRendererManual(Model& model, Transform& transform, 
+			CullingMode faceCulling, bool deferred = true);
+
 		std::map<std::string, Model>::iterator modelsBegin();
 		std::map<std::string, Model>::iterator modelsEnd();
 

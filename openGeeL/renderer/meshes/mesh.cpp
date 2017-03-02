@@ -4,12 +4,13 @@
 #include "mesh.h"
 #include "../materials/defaultmaterial.h"
 #include "../materials/material.h"
+#include <iostream>
 
 using namespace std;
 
 namespace geeL {
 
-	Mesh::Mesh(vector<Vertex> vertices, vector<GLuint> indices, DefaultMaterial& material)
+	Mesh::Mesh(vector<Vertex> vertices, vector<GLuint> indices, MaterialContainer& material)
 		: vertices(vertices), indices(indices), material(material) {
 	
 		init();
@@ -46,22 +47,16 @@ namespace geeL {
 		glBindVertexArray(0);
 	}
 
-	void Mesh::draw(bool shade) const {
-		draw(material, shade);
-	}
-
-	void Mesh::draw(Material& customMaterial) const {
-		draw(customMaterial, true);
-	}
-
-	void Mesh::draw(Material& customMaterial, bool shade) const {
-		if (shade) {
-			customMaterial.bindTextures();
-			customMaterial.bind();
-		}
-
+	void Mesh::draw() const {
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
+	}
+
+	void Mesh::draw(Material& customMaterial) const {
+		customMaterial.bindTextures();
+		customMaterial.bind();
+
+		draw();
 	}
 }
