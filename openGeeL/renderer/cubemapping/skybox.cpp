@@ -5,13 +5,18 @@
 #include "../cameras/camera.h"
 #include "../shader/shader.h"
 #include "../primitives/screencube.h"
+#include "irrmap.h"
 #include "cubemap.h"
 #include "skybox.h"
 
 namespace geeL {
 
-	Skybox::Skybox(CubeMap& cubeMap) : cubeMap(cubeMap), irradianceMap(nullptr),
+	Skybox::Skybox(const CubeMap& cubeMap) : cubeMap(cubeMap), irradianceMap(nullptr),
 		shader(Shader("renderer/cubemapping/skybox.vert", "renderer/cubemapping/skybox.frag")) {}
+
+	Skybox::Skybox(const IrradianceMap& irradianceMap) 
+		: cubeMap(irradianceMap.environmentMap), irradianceMap(&irradianceMap),
+			shader(Shader("renderer/cubemapping/skybox.vert", "renderer/cubemapping/skybox.frag")) {}
 
 
 	void Skybox::draw(const Camera& camera) const {
@@ -28,7 +33,7 @@ namespace geeL {
 		glDepthFunc(GL_LESS);
 	}
 
-	void Skybox::addIrradianceMap(CubeMap& irradianceMap) {
+	void Skybox::addIrradianceMap(const CubeMap& irradianceMap) {
 		this->irradianceMap = &irradianceMap;
 	}
 

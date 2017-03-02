@@ -37,5 +37,5 @@ void main() {
 	float div = 1.f / float(sampleCount);
 	irradiance = PI * irradiance * div;
 
-	color = vec4(texture(environmentMap, localPos).rgb , 1.f);
+	color = vec4(irradiance, 1.f);
 }

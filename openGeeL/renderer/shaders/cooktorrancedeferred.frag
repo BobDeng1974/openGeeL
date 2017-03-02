@@ -428,7 +428,8 @@ vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightC
 
 vec3 calculateIndirectLight(vec3 normal, float theta, vec3 kd, vec3 ks, vec3 albedo, float occlusion) {
 
-	vec3 irradiance = texture(irradianceMap, normal).rgb;
+	vec4 normalWorld = inverseView * vec4(origin + normal, 1.f);
+	vec3 irradiance = texture(irradianceMap, normalWorld.xyz).rgb;
 	float l = length(irradiance);
 	irradiance *= kd;
 

@@ -5,7 +5,7 @@
 
 namespace geeL {
 
-	void CubeMap::add(Shader& shader, std::string name) {
+	void CubeMap::add(Shader& shader, std::string name) const {
 		shader.addMap(id, name, GL_TEXTURE_CUBE_MAP);
 	}
 

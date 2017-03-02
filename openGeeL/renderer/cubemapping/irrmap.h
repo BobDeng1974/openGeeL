@@ -11,13 +11,14 @@ namespace geeL {
 	class IrradianceMap : public CubeMap {
 
 	public:
+		const CubeMap& environmentMap;
+
 		IrradianceMap(const CubeMap& environmentMap, unsigned int resolution = 32);
 		~IrradianceMap();
 
 		virtual void bind(const Shader& shader, std::string name) const;
 
 	private:
-		const CubeMap& environmentMap;
 		Shader* conversionShader;
 		unsigned int resolution;
 		unsigned int fbo;

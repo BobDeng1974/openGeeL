@@ -221,10 +221,9 @@ void a_shadows() {
 
 	EnvironmentMap envMap = EnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
 	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(envMap);
-	IrradianceMap irrMap = IrradianceMap(map, 32);
+	IrradianceMap irrMap = IrradianceMap(envCubeMap);
 
 	Skybox skybox = Skybox(irrMap);
-	//skybox.addIrradianceMap(irrMap);
 	scene.setSkybox(skybox);
 
 	renderer1.setScene(scene);
