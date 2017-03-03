@@ -84,7 +84,9 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition);
 
 vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightColor, float density);
 
-vec3 calculateIndirectLight(vec3 normal, float theta, vec3 kd, vec3 ks, vec3 albedo, float occlusion);
+vec3 calculateIndirectDiffuse(vec3 normal, float theta, vec3 kd, vec3 albedo, float occlusion);
+vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, inout vec3 ks, float roughness, float metallic);
+
 
 //Return dot(a,b) >= 0
 float doto(vec3 a, vec3 b);
@@ -109,7 +111,7 @@ void main() {
     kd *= 1.0f - metallic; //metallic surfaces don't refract light => nullify kD if metallic
 
 	vec4 reflectionDir = inverseView * vec4(origin + reflect(fragPosition, normal), 1.f);
-	vec3 reflection = texture(skybox, reflectionDir.rgb).rgb * ks * (1.0f - roughness);
+	vec3 reflection = vec3(0.f);//texture(skybox, reflectionDir.rgb).rgb * ks * (1.0f - roughness);
 
 	gSpecular = 0.f;
 	vec3 irradiance = vec3(0.f, 0.f, 0.f);
@@ -126,9 +128,13 @@ void main() {
 	for(int i = 0; i < slCount; i++)
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness, reflection);
 
-	vec3 ambience = calculateIndirectLight(normal, theta, kd, ks, albedo, occlusion);
+	vec3 ambienceDiffuse = calculateIndirectDiffuse(normal, theta, kd, albedo, occlusion); 
+	vec3 ambienceSpecular = calculateIndirectSpecular(normal, viewDirection, albedo, ks, roughness, metallic);
 
-	color = vec4(irradiance + ambience, 1.f);
+	gSpecular *= luminance(ks);
+	//gSpecular = min(gSpecular, 1.f);
+
+	color = vec4(irradiance + ambienceDiffuse + ambienceSpecular, 1.f);
 }
 
 //Lighting.....................................................................................................................................
@@ -197,7 +203,7 @@ vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection,
 	//Lighting equation
 	float NdotL = doto(normal, lightDirection);     
 	
-	gSpecular +=  luminance(ks) * (1.0f - roughness) * NdotL * luminance(radiance);
+	gSpecular += (1.0f - roughness) * NdotL * luminance(radiance);
 
 	return (((kd * albedo / PI + brdf) * radiance) + reflection) * NdotL; 
 }
@@ -266,6 +272,70 @@ vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal,
 	
     return shadow * reflectance;
 }
+
+vec3 calculateIndirectDiffuse(vec3 normal, float theta, vec3 kd, vec3 albedo, float occlusion) {
+
+	vec4 normalWorld = inverseView * vec4(origin + normal, 1.f);
+	vec3 irradiance = texture(irradianceMap, normalWorld.xyz).rgb;
+	float l = length(irradiance);
+	irradiance *= kd;
+
+	//Use ambient color if no 'real' value is read from irradiance map
+	float check = step(0.01f, l);
+	irradiance = check * irradiance + (1.f - check) * ambient;
+
+	return irradiance * albedo * occlusion;
+}
+
+
+vec3 generateSampledVector(float roughness, float e1, float e2) {
+
+	float theta = atan((roughness * sqrt(e1)) / sqrt(1.f - e2));
+	float phi   = 2.f * PI * e2;
+
+	return vec3(sin(theta) * cos(phi),
+				sin(theta) * sin(phi),
+			    cos(theta));
+}
+
+
+vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, inout vec3 ks, float roughness, float metallic) {
+
+	vec3 viewWorld = (inverseView * vec4(origin + view, 1.f)).xyz;
+
+	vec3 normalWorld = normalize((inverseView * vec4(origin + normal, 1.f)).xyz);
+	vec3 right = cross(vec3(0.f, 1.f, 0.f), normalWorld);
+	vec3 up = cross(normalWorld, right);
+
+	float NoV = doto(normalWorld, viewWorld);
+
+	vec3 irradiance = vec3(0.f);
+	int sampleCount = 5;
+	for(int i = 0; i < sampleCount; i++) {
+		
+		vec3 sampleVector = generateSampledVector(roughness, i, sampleCount);
+		sampleVector = sampleVector.x * right + sampleVector.y * up + sampleVector.z * normalWorld; //To world coordinates
+
+		vec3 halfway = normalize(sampleVector + viewWorld);
+		float cosT = doto(halfway, normalWorld);
+		float sinT = sqrt(1.f - cosT * cosT);
+
+		float theta = doto(halfway, viewWorld);
+		vec3  fresnel = calculateFresnelTerm(theta, albedo, metallic, roughness);
+		float geo = calculateGeometryFunctionSmith(normalWorld, viewWorld, halfway, roughness);
+
+		ks += fresnel;
+		float denom =  4.f * NoV * doto(halfway, normalWorld) + 0.001f; 
+
+		irradiance += texture(skybox, sampleVector).rgb * geo * fresnel * sinT;
+
+	}
+	
+	float samp = 1.f / float(sampleCount);
+	ks = ks * samp;
+	return irradiance * samp;
+}
+
 
 
 //Shadows...................................................................................................................
@@ -423,21 +493,6 @@ vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightC
 	float attenuation = 1.f / (dist * dist);
 
 	return lightColor * attenuation * density * lightInView;
-}
-
-
-vec3 calculateIndirectLight(vec3 normal, float theta, vec3 kd, vec3 ks, vec3 albedo, float occlusion) {
-
-	vec4 normalWorld = inverseView * vec4(origin + normal, 1.f);
-	vec3 irradiance = texture(irradianceMap, normalWorld.xyz).rgb;
-	float l = length(irradiance);
-	irradiance *= kd;
-
-	//Use ambient color if no 'real' value is read from irradiance map
-	float check = step(0.01f, l);
-	irradiance = check * irradiance + (1.f - check) * ambient;
-
-	return irradiance * albedo * occlusion;
 }
 
 
