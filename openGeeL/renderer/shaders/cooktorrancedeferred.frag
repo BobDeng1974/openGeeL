@@ -65,16 +65,16 @@ uniform DirectionalLight directionalLights[5];
 uniform SpotLight spotLights[5];
 
 vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection, 
-	vec3 lightPosition, vec3 lightDiffuse, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection);
+	vec3 lightPosition, vec3 lightDiffuse, vec3 albedo, float roughness, float metallic);
 
 vec3 calculatePointLight(int index, PointLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection);
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float roughness, float metallic);
 
 vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection);
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float roughness, float metallic);
 
 vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection);
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float roughness, float metallic);
 
 vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness);
 
@@ -84,7 +84,7 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition);
 
 vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightColor, float density);
 
-vec3 calculateIndirectDiffuse(vec3 normal, float theta, vec3 kd, vec3 albedo, float occlusion);
+vec3 calculateIndirectDiffuse(vec3 normal, vec3 kd, vec3 albedo, float occlusion);
 vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, inout vec3 ks, float roughness, float metallic);
 
 
@@ -103,36 +103,28 @@ void main() {
 	float occlusion   = (useSSAO == 1) ? texture(ssao, textureCoordinates).r : 1.f;
 
 	vec3  viewDirection = normalize(-fragPosition);
-	float theta = doto(normal, viewDirection);
-	vec3  fresnel = calculateFresnelTerm(theta, albedo, metallic, roughness);
 
-	vec3 ks = fresnel;
+	vec3 ks = calculateFresnelTerm(doto(normal, viewDirection), albedo, metallic, roughness);
     vec3 kd = vec3(1.0f) - ks;
     kd *= 1.0f - metallic; //metallic surfaces don't refract light => nullify kD if metallic
-
-	vec4 reflectionDir = inverseView * vec4(origin + reflect(fragPosition, normal), 1.f);
-	vec3 reflection = vec3(0.f);//texture(skybox, reflectionDir.rgb).rgb * ks * (1.0f - roughness);
 
 	gSpecular = 0.f;
 	vec3 irradiance = vec3(0.f, 0.f, 0.f);
 	for(int i = 0; i < plCount; i++) {
-		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness, reflection);
+		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
 		//irradiance += calculateVolumetricLightColor(fragPosition, pointLights[i].position, pointLights[i].diffuse, 0.001f);
 	}
         
 	for(int i = 0; i < dlCount; i++) {
-        irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness, reflection);
+        irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
 		irradiance += calculateVolumetricLightColor(fragPosition, directionalLights[i].direction * -100.f, directionalLights[i].diffuse, 150.f);
 	}
 
 	for(int i = 0; i < slCount; i++)
-		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, kd, ks, roughness, reflection);
+		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
 
-	vec3 ambienceDiffuse = calculateIndirectDiffuse(normal, theta, kd, albedo, occlusion); 
-	vec3 ambienceSpecular = calculateIndirectSpecular(normal, viewDirection, albedo, ks, roughness, metallic);
-
-	gSpecular *= luminance(ks);
-	//gSpecular = min(gSpecular, 1.f);
+	vec3 ambienceDiffuse = calculateIndirectDiffuse(normal, kd, albedo, occlusion); 
+	vec3 ambienceSpecular = calculateIndirectSpecular(normal, viewDirection, albedo, ks, roughness, metallic) * (1.f - roughness);
 
 	color = vec4(irradiance + ambienceDiffuse + ambienceSpecular, 1.f);
 }
@@ -181,11 +173,12 @@ float calculateGeometryFunctionSmith(vec3 normal, vec3 viewDirection, vec3 light
 
 //Reflectance equation with Cook-Torrance BRDF
 vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection, 
-	vec3 lightPosition, vec3 lightDiffuse, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection) {
+	vec3 lightPosition, vec3 lightDiffuse, vec3 albedo, float roughness, float metallic) {
 	
 	vec3 dir = lightPosition - fragPosition;
 	vec3 lightDirection   = normalize(dir);
 	vec3 halfwayDirection = normalize(lightDirection + viewDirection);
+	float NdotL = doto(normal, lightDirection);     
 
 	float lightDistance = length(dir);
 	float attenuation = 1.0f / (lightDistance * lightDistance); //Inverse square law
@@ -194,27 +187,31 @@ vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection,
 	//BRDF
 	float ndf = calculateNormalDistrubution(normal, halfwayDirection, roughness);
 	float geo = calculateGeometryFunctionSmith(normal, viewDirection, lightDirection, roughness);
+	vec3 fres = calculateFresnelTerm(doto(halfwayDirection, viewDirection), albedo, metallic, roughness);
 
-	vec3  nom   = ndf * geo * ks; //Fresnel term equivalent to kS
-	//add small fraction to prevent ill behaviour when dividing by zero (shadows no longer additive)
-	float denom =  4.0f * doto(viewDirection, normal) * doto(lightDirection, normal) + 0.001f; 
-	vec3  brdf  = nom / denom;
+	vec3 ks = fres;
+    vec3 kd = vec3(1.0f) - ks;
+    kd *= 1.0f - metallic;
 
 	//Lighting equation
-	float NdotL = doto(normal, lightDirection);     
-	
-	gSpecular += (1.0f - roughness) * NdotL * luminance(radiance);
+	vec3  nom   = ndf * geo * fres; //Fresnel term equivalent to kS
+	//add small fraction to prevent ill behaviour when dividing by zero (shadows no longer additive)
+	float denom =  4.0f * doto(viewDirection, normal) * NdotL + 0.001f; 
+	vec3  brdf  = nom / denom;
 
-	return (((kd * albedo / PI + brdf) * radiance) + reflection) * NdotL; 
+	gSpecular += luminance(ks) * (1.f - metallic) * attenuation;
+
+	return (((kd * albedo / PI + brdf) * radiance)) * NdotL; 
 }
 
 //Reflectance equation with Cook-Torrance BRDF for directional light
 vec3 calculateReflectanceDirectional(vec3 fragPosition, vec3 normal, vec3 viewDirection, 
-	vec3 lightPosition, vec3 lightDiffuse, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection) {
+	vec3 lightPosition, vec3 lightDiffuse, vec3 albedo, float roughness, float metallic) {
 	
 	vec3 dir = -lightPosition;
 	vec3 lightDirection   = normalize(dir);
 	vec3 halfwayDirection = normalize(lightDirection + viewDirection);
+	float NdotL = doto(normal, lightDirection);     
 
 	float lightDistance = length(dir);
 	vec3  radiance = lightDiffuse;
@@ -222,58 +219,61 @@ vec3 calculateReflectanceDirectional(vec3 fragPosition, vec3 normal, vec3 viewDi
 	//BRDF
 	float ndf = calculateNormalDistrubution(normal, halfwayDirection, roughness);
 	float geo = calculateGeometryFunctionSmith(normal, viewDirection, lightDirection, roughness);
+	vec3 fres = calculateFresnelTerm(doto(halfwayDirection, viewDirection), albedo, metallic, roughness);
 
-	vec3  nom   = ndf * geo * ks; //Fresnel term equivalent to kS
-	//add small fraction to prevent ill behaviour when dividing by zero (shadows no longer additive)
-	float denom =  4.0f * doto(viewDirection, normal) * doto(lightDirection, normal) + 0.001f; 
-	vec3  brdf  = nom / denom;
+	vec3 ks = fres;
+    vec3 kd = vec3(1.0f) - ks;
+    kd *= 1.0f - metallic;
 
 	//Lighting equation
-	float NdotL = doto(normal, lightDirection);     
-	
+	vec3  nom   = ndf * geo * fres; //Fresnel term equivalent to kS
+	//add small fraction to prevent ill behaviour when dividing by zero (shadows no longer additive)
+	float denom =  4.0f * doto(viewDirection, normal) * NdotL + 0.001f; 
+	vec3  brdf  = nom / denom;
+
 	gSpecular +=  luminance(ks) * (1.0f - roughness) * NdotL * luminance(radiance);
 
-	return (((kd * albedo / PI + brdf) * radiance) + reflection) * NdotL; 
+	return (((kd * albedo / PI + brdf) * radiance)) * NdotL; 
 }
 
 vec3 calculatePointLight(int index, PointLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection) {
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float roughness, float metallic) {
 
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
-		viewDirection, light.position, light.diffuse, albedo, kd, ks, roughness, reflection);
+		viewDirection, light.position, light.diffuse, albedo, roughness, metallic);
 	float shadow = 1.0f - calculatePointLightShadows(index, normal, fragPosition);
 	
     return shadow * reflectance;
 }
 
 vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection) {
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float roughness, float metallic) {
 	
 	vec3 lightDirection = normalize(light.position - fragPosition);
 
 	//Set intensity depending on if object is inside spotlights halo (or outer halo)
 	float theta = dot(lightDirection, normalize(-light.direction)); 
     float epsilon = (light.angle - light.outerAngle);
-    float intensity = clamp((theta - light.outerAngle) / epsilon, 0.0, 1.0);
+    float intensity = clamp((theta - light.outerAngle) / epsilon, 0.f, 1.f);
 
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
-		viewDirection, light.position, light.diffuse, albedo, kd, ks, roughness, reflection);
+		viewDirection, light.position, light.diffuse, albedo, roughness, metallic);
 	float shadow = 1.0f - calculateSpotLightShadows(index, normal, fragPosition);
 
     return shadow * reflectance * intensity;
 }
 
 vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, vec3 kd, vec3 ks, float roughness, vec3 reflection) {
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float roughness, float metallic) {
 	
 	vec3 reflectance = calculateReflectanceDirectional(fragPosition, normal, 
-		viewDirection, light.direction, light.diffuse, albedo, kd, ks, roughness, reflection);
-	float shadow = 1.0f - calculateDirectionalLightShadows(index, normal, fragPosition);
+		viewDirection, light.direction, light.diffuse, albedo, roughness, metallic);
+	float shadow = 1.f - calculateDirectionalLightShadows(index, normal, fragPosition);
 	
     return shadow * reflectance;
 }
 
-vec3 calculateIndirectDiffuse(vec3 normal, float theta, vec3 kd, vec3 albedo, float occlusion) {
+vec3 calculateIndirectDiffuse(vec3 normal, vec3 kd, vec3 albedo, float occlusion) {
 
 	vec4 normalWorld = inverseView * vec4(origin + normal, 1.f);
 	vec3 irradiance = texture(irradianceMap, normalWorld.xyz).rgb;
@@ -288,54 +288,52 @@ vec3 calculateIndirectDiffuse(vec3 normal, float theta, vec3 kd, vec3 albedo, fl
 }
 
 
-vec3 generateSampledVector(float roughness, float e1, float e2) {
+vec3 generateSampledVector(float roughness, float i, float count) {
+	float e1 = i / count;
+	float e2 = e1 * 0.5f;
 
 	float theta = atan((roughness * sqrt(e1)) / sqrt(1.f - e2));
 	float phi   = 2.f * PI * e2;
 
-	return vec3(sin(theta) * cos(phi),
-				sin(theta) * sin(phi),
-			    cos(theta));
+	return vec3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
 }
 
 
 vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, inout vec3 ks, float roughness, float metallic) {
 
-	vec3 viewWorld = (inverseView * vec4(origin + view, 1.f)).xyz;
-
 	vec3 normalWorld = normalize((inverseView * vec4(origin + normal, 1.f)).xyz);
-	vec3 right = cross(vec3(0.f, 1.f, 0.f), normalWorld);
-	vec3 up = cross(normalWorld, right);
+	vec3 viewWorld = normalize((inverseView * vec4(origin + view, 1.f)).xyz);
+	vec3 reflection = normalize(reflect(-viewWorld, normalWorld));
+	vec3 right = cross(reflection, normalWorld);
+	vec3 up = cross(reflection, right);
 
 	float NoV = doto(normalWorld, viewWorld);
 
 	vec3 irradiance = vec3(0.f);
-	int sampleCount = 5;
+	int sampleCount = 10;
 	for(int i = 0; i < sampleCount; i++) {
-		
 		vec3 sampleVector = generateSampledVector(roughness, i, sampleCount);
-		sampleVector = sampleVector.x * right + sampleVector.y * up + sampleVector.z * normalWorld; //To world coordinates
+		sampleVector = sampleVector.x * right + sampleVector.y * up + sampleVector.z * reflection; //To world coordinates
+		sampleVector = normalize(sampleVector);
 
 		vec3 halfway = normalize(sampleVector + viewWorld);
-		float cosT = doto(halfway, normalWorld);
+		float cosT = doto(sampleVector, normalWorld);
 		float sinT = sqrt(1.f - cosT * cosT);
 
 		float theta = doto(halfway, viewWorld);
 		vec3  fresnel = calculateFresnelTerm(theta, albedo, metallic, roughness);
-		float geo = calculateGeometryFunctionSmith(normalWorld, viewWorld, halfway, roughness);
+		float geo = calculateGeometryFunctionSmith(normalWorld, viewWorld, sampleVector, roughness);
 
 		ks += fresnel;
-		float denom =  4.f * NoV * doto(halfway, normalWorld) + 0.001f; 
+		float denom =  1.f / (4.f * NoV * doto(halfway, normalWorld) + 0.001f); 
 
-		irradiance += texture(skybox, sampleVector).rgb * geo * fresnel * sinT;
-
+		irradiance += texture(skybox, sampleVector).rgb * geo * fresnel * sinT * denom;
 	}
 	
 	float samp = 1.f / float(sampleCount);
 	ks = ks * samp;
 	return irradiance * samp;
 }
-
 
 
 //Shadows...................................................................................................................

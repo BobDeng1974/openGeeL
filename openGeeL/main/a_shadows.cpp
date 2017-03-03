@@ -120,7 +120,8 @@ namespace {
 				DefaultMaterialContainer* defmat = dynamic_cast<DefaultMaterialContainer*>(&mat->container);
 
 				if (defmat != nullptr) {
-					defmat->setRoughness(0.2f);
+					defmat->setRoughness(1.f);
+					defmat->setMetallic(0.f);
 					defmat->setColor(vec3(0.4f, 0.4f, 0.4f));
 				}
 			}
@@ -133,7 +134,7 @@ namespace {
 				DefaultMaterialContainer* defmat = dynamic_cast<DefaultMaterialContainer*>(&mat->container);
 
 				if (defmat != nullptr) {
-					defmat->setRoughness(0.9f);
+					defmat->setRoughness(0.5f);
 					defmat->setColor(vec3(0.5f, 0.5f, 0.5f));
 				}
 			}
@@ -147,7 +148,8 @@ namespace {
 
 				if (defmat != nullptr) {
 					defmat->setRoughness(0.f);
-					defmat->setMetallic(0.1f);
+					defmat->setMetallic(0.5f);
+					//defmat->setColor(vec3(0.1f, 0.1f, 0.1f));
 				}
 			}
 
@@ -159,7 +161,7 @@ namespace {
 				DefaultMaterialContainer* defmat = dynamic_cast<DefaultMaterialContainer*>(&mat->container);
 
 				if (defmat != nullptr) {
-					defmat->setRoughness(0.f);
+					defmat->setRoughness(0.4f);
 					defmat->setMetallic(0.1f);
 					defmat->setColor(vec3(0.1f, 0.1f, 0.1f));
 				}
