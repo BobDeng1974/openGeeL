@@ -26,6 +26,18 @@ namespace geeL{
 		initMaterials(shader, deferred);
 	}
 
+	MeshRenderer::~MeshRenderer() {
+		for (auto it = deferredMaterials.begin(); it != deferredMaterials.end(); it++) {
+			Material* mat = (*it).second;
+			delete mat;
+		}
+
+		for (auto it = forwardMaterials.begin(); it != forwardMaterials.end(); it++) {
+			Material* mat = (*it).second;
+			delete mat;
+		}
+	}
+
 
 	void MeshRenderer::draw(bool deferred) const {
 

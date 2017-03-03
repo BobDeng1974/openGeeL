@@ -97,7 +97,7 @@ void main() {
 	if(normFlag == 1) {
 		norm = texture(material.normal, textureCoordinates).rgb;
 		norm = normalize(norm * 2.0f - 1.0f);
-		//norm = normalize(TBN * norm);
+		norm = normalize(TBN * norm);
 	}
 
 	vec3 viewDirection = normalize(cameraPosition - fragPosition);
@@ -113,7 +113,6 @@ void main() {
 	for(int i = 0; i < slCount; i++)
 		result += calculateSpotLight(i, spotLights[i], norm, fragPosition, viewDirection, texColor, speColor, blinn);
 
-	result = pow(result.rgb, vec3(0.4545f));
 	color = vec4(result, 1.f);
 }
 

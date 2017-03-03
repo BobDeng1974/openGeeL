@@ -166,7 +166,7 @@ namespace {
 			}
 
 			geeL::Transform* transi79 = new geeL::Transform(glm::vec3(4.f, -0.4f, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", *transi79, cullFront, false);
+			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", *transi79, cullFront);
 		}
 
 		virtual void draw(const Camera& camera) {
@@ -186,20 +186,20 @@ namespace {
 
 void a_shadows() {
 	
-	RenderWindow* window = new RenderWindow("geeL", 1920, 1080, true);
-	InputManager* manager = new InputManager();
-	manager->defineButton("Forward", GLFW_KEY_W);
-	manager->defineButton("Forward", GLFW_KEY_A);
+	RenderWindow window = RenderWindow("geeL", 1920, 1080, true);
+	InputManager manager = InputManager();
+	manager.defineButton("Forward", GLFW_KEY_W);
+	manager.defineButton("Forward", GLFW_KEY_A);
 
 	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	TransformFactory transFactory = TransformFactory(world);
 
 	geeL::Transform& transform3 = transFactory.CreateTransform(glm::vec3(0.0f, 2.0f, 9.0f), vec3(-100.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera3 = PerspectiveCamera(transform3, 5.f, 15.f, 55.f, window->width, window->height, 0.1f, 100.f);
+	PerspectiveCamera camera3 = PerspectiveCamera(transform3, 5.f, 15.f, 55.f, window.width, window.height, 0.1f, 100.f);
 
-	BilateralFilter blur = BilateralFilter(1, 0.5f);
+	BilateralFilter blur = BilateralFilter(1, 0.3f);
 	SSAO ssao = SSAO(camera3, blur, 10.f);
-	DeferredRenderer& renderer1 = DeferredRenderer(window, manager, &ssao, 0.6f);
+	DeferredRenderer& renderer1 = DeferredRenderer(&window, &manager, &ssao, 0.6f);
 	renderer1.init();
 
 	MaterialFactory materialFactory = MaterialFactory();
@@ -238,7 +238,7 @@ void a_shadows() {
 	SSRR& ssrr = SSRR(camera3);
 	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.3f, 0.3f);
 	
-	DepthOfFieldBlur blur3 = DepthOfFieldBlur(3, 0.3f);
+	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.3f);
 	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera3.depth, 12.f, 100.f, 0.4f);
 
 	FXAA fxaa = FXAA();
@@ -252,7 +252,6 @@ void a_shadows() {
 	VolumetricLight vol = VolumetricLight(scene, *spotLight, 0.3f, 1.f, 160);
 	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.4f);
 
-	//renderer1.addEffect(sobelBlur, sobelBlur);
 	//renderer1.addEffect(volSmooth, { &vol, &sobelBlur });
 	//renderer1.addEffect(bloom);
 	//renderer1.addEffect(ssrrSmooth, ssrr);
@@ -264,7 +263,4 @@ void a_shadows() {
 	renderer1.render();
 
 	delete testObj;
-	delete window;
-	delete manager;
-
 }

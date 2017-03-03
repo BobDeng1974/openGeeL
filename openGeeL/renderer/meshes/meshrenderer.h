@@ -32,6 +32,8 @@ namespace geeL {
 		MeshRenderer(Transform& transform, Shader& shader, Model& model, 
 			CullingMode faceCulling = cullFront, bool deferred = true);
 
+		~MeshRenderer();
+
 
 		void draw(bool deferred = true) const;
 		void draw(const Shader& shader) const;
