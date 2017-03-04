@@ -85,7 +85,7 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition);
 vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightColor, float density);
 
 vec3 calculateIndirectDiffuse(vec3 normal, vec3 kd, vec3 albedo, float occlusion);
-vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, inout vec3 ks, float roughness, float metallic);
+vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, vec3 ks, float roughness, float metallic);
 
 
 //Return dot(a,b) >= 0
@@ -138,7 +138,8 @@ vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughn
 
 	//Simplified term withouth roughness included
     //return F0 + (1.0f - F0) * pow(1.0f - theta, 5.0f);
-	return F0 + (max(vec3(1.0f - roughness), F0) - F0) * pow(1.0f - theta, 5.0f);
+	vec3 fres = F0 + (max(vec3(1.0f - roughness), F0) - F0) * pow(1.0f - theta, 5.0f);
+	return clamp(fres, 0.f, 1.f);
 }
 
 //Trowbridge-Reitz GGX normal distribution function
@@ -194,7 +195,7 @@ vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection,
     kd *= 1.0f - metallic;
 
 	//Lighting equation
-	vec3  nom   = ndf * geo * fres; //Fresnel term equivalent to kS
+	vec3  nom   = ndf * geo * ks; //Fresnel term equivalent to kS
 	//add small fraction to prevent ill behaviour when dividing by zero (shadows no longer additive)
 	float denom =  4.0f * doto(viewDirection, normal) * NdotL + 0.001f; 
 	vec3  brdf  = nom / denom;
@@ -299,7 +300,7 @@ vec3 generateSampledVector(float roughness, float i, float count) {
 }
 
 
-vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, inout vec3 ks, float roughness, float metallic) {
+vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, vec3 ks, float roughness, float metallic) {
 
 	vec3 normalWorld = normalize((inverseView * vec4(origin + normal, 1.f)).xyz);
 	vec3 viewWorld = normalize((inverseView * vec4(origin + view, 1.f)).xyz);
@@ -447,7 +448,7 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	coords = coords * 0.5f + 0.5f;
 
 	//Don't draw shadow when outside of farPlane region.
-    if(coords.z > 1.0f)
+    if(coords.z > 1.f)
         return 0.f;
 	else {
 		float mapDepth = texture(directionalLights[i].shadowMap, coords.xy).r;

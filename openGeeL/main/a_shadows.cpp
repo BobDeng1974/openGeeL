@@ -120,7 +120,7 @@ namespace {
 				DefaultMaterialContainer* defmat = dynamic_cast<DefaultMaterialContainer*>(&mat->container);
 
 				if (defmat != nullptr) {
-					defmat->setRoughness(1.f);
+					defmat->setRoughness(0.f);
 					defmat->setMetallic(0.f);
 					defmat->setColor(vec3(0.4f, 0.4f, 0.4f));
 				}
@@ -255,11 +255,11 @@ void a_shadows() {
 	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.4f);
 
 	//renderer1.addEffect(volSmooth, { &vol, &sobelBlur });
-	//renderer1.addEffect(bloom);
-	//renderer1.addEffect(ssrrSmooth, ssrr);
-	//renderer1.addEffect(raySmooth);
-	//renderer1.addEffect(dof, dof);
-	//renderer1.addEffect(fxaa);
+	renderer1.addEffect(bloom);
+	renderer1.addEffect(ssrrSmooth, ssrr);
+	renderer1.addEffect(raySmooth);
+	renderer1.addEffect(dof, dof);
+	renderer1.addEffect(fxaa);
 
 	renderer1.linkInformation();
 	renderer1.render();

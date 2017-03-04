@@ -15,11 +15,12 @@ uniform int effectOnly;
 float border = 1.f;
 
 vec3 interpolate(vec3 a, vec3 b, float i);
+float interpolatei(vec3 a, vec3 b, vec3 v);
 vec4 transformToClip(vec3 vector);
 vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal);
 
 void main() {
-	vec3 result    = step(effectOnly, 0.f) * texture(image, TexCoords).rgb;
+	vec3 result = step(effectOnly, 0.f) * texture(image, TexCoords).rgb;
 	vec3 fragPos = texture(gPositionDepth, TexCoords).xyz;
 	float depth = -fragPos.z;
 	float specular = texture(gSpecular, TexCoords).r; 
@@ -112,4 +113,8 @@ vec4 transformToClip(vec3 vector) {
 
 vec3 interpolate(vec3 a, vec3 b, float i) {
 	return a * (1.f - i) + b * i;
+}
+
+float interpolatei(vec3 a, vec3 b, vec3 v) {
+	return length((v - a) / (b - a));
 }
