@@ -319,10 +319,12 @@ vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, vec3 ks, flo
 
 		vec3 halfway = normalize(sampleVector + viewWorld);
 		float cosT = doto(sampleVector, normalWorld);
+		cosT = clamp(cosT, 0.f, 1.f);
 		float sinT = sqrt(1.f - cosT * cosT);
 
 		float theta = doto(halfway, viewWorld);
 		vec3  fresnel = calculateFresnelTerm(theta, albedo, metallic, roughness);
+
 		float geo = calculateGeometryFunctionSmith(normalWorld, viewWorld, sampleVector, roughness);
 
 		ks += fresnel;

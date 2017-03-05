@@ -120,7 +120,7 @@ namespace {
 				DefaultMaterialContainer* defmat = dynamic_cast<DefaultMaterialContainer*>(&mat->container);
 
 				if (defmat != nullptr) {
-					defmat->setRoughness(0.f);
+					defmat->setRoughness(1.f);
 					defmat->setMetallic(0.f);
 					defmat->setColor(vec3(0.4f, 0.4f, 0.4f));
 				}
@@ -233,21 +233,21 @@ void a_shadows() {
 	renderer1.initObjects();
 	
 	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
-	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50), 15.f);
-	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.3f, 0.3f);
+	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50), 10.f);
+	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
 
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR(camera3);
 	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.3f, 0.3f);
 	
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera3.depth, 12.f, 100.f, 0.4f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera3.depth, 12.f, 100.f, 0.3f);
 
 	FXAA fxaa = FXAA();
 
 	BloomFilter filter = BloomFilter();
 	GaussianBlur& blur5 = GaussianBlur();
-	Bloom bloom = Bloom(filter, blur5, 0.5f, 0.2f);
+	Bloom bloom = Bloom(filter, blur5, 0.4f, 0.2f);
 
 	SobelFilter sobel = SobelFilter(15);
 	SobelBlur sobelBlur = SobelBlur(sobel);

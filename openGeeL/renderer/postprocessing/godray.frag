@@ -30,7 +30,6 @@ void main() {
 	float currDecay = 1.0f;
 	vec3 result = step(raysOnly, 0.f) * texture(image, TexCoords).rgb;
 
-	/*
 	float offset = random(coords);
 	for(int i = 0; i < samples; i++) {
 		coords = TexCoords - deltaCoords * offset;
@@ -39,8 +38,8 @@ void main() {
 
 		offset ++;
 	}
-	*/
 	
+	/*
 	float i = 0;
 	while(i < samples) {
 		float offset = 0.5f + step(0.1f, angle) * 0.5f * max(0.1f, random(coords));
@@ -49,7 +48,7 @@ void main() {
 		currDecay *= decay;
 
 		i += offset;
-	}
+	}*/
 	
 	color = vec4(result, 1.0f);
 }
