@@ -16,8 +16,6 @@ namespace geeL {
 		EnvironmentCubeMap(const EnvironmentMap& map, unsigned int resolution = 512);
 		~EnvironmentCubeMap();
 
-		void bind(const Shader& shader, std::string name) const;
-
 	private:
 		const EnvironmentMap& map;
 		Shader* conversionShader;

@@ -21,6 +21,7 @@
 #include "../shader/shadermanager.h"
 #include "../transformation/transform.h"
 #include "../scene.h"
+#include "../../interface/guirenderer.h"
 #include "deferredrenderer.h"
 
 #define fps 10
@@ -29,20 +30,16 @@ using namespace std;
 
 namespace geeL {
 
-	DeferredRenderer::DeferredRenderer(RenderWindow* window, InputManager* inputManager) 
-		: DeferredRenderer(window, inputManager, nullptr) {}
+	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, RenderContext& context)
+		: DeferredRenderer(window, inputManager, context, nullptr) {}
 
-	DeferredRenderer::DeferredRenderer(RenderWindow* window, InputManager* inputManager, SSAO* ssao, float ssaoResolution)
-		: Renderer(window, inputManager), ssao(ssao), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()),
+	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, RenderContext& context, SSAO* ssao, float ssaoResolution)
+		: Renderer(window, inputManager, context), ssao(ssao), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()),
 			gBuffer(GBuffer()), screen(ScreenQuad()), ssaoResolution(ssaoResolution),
 			deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
 				"renderer/shaders/cooktorrancedeferred.frag")), toggle(0) {
 
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_FRONT);
-		glFrontFace(GL_CW);
-
+		
 		//Default post processing with tone mapping and gamma correction
 		DefaultPostProcess* defaultEffect = new DefaultPostProcess();
 		effects.push_back(defaultEffect);
@@ -91,6 +88,8 @@ namespace geeL {
 		frameBuffer1.init(window->width, window->height, 2, { RGBA16, Single });
 		frameBuffer2.init(window->width, window->height, 2, { RGBA16, Single });
 		screen.init();
+
+		
 	}
 
 	void DeferredRenderer::renderInit() {
@@ -194,6 +193,10 @@ namespace geeL {
 				//Draw the last (default) effect to screen.
 				effects.front()->draw();
 			}
+
+			//Render GUI overlay on top of final image
+			if (gui != nullptr)
+				gui->draw();
 			
 			window->swapBuffer();
 			Time::update();

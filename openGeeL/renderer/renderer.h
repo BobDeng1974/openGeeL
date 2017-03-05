@@ -5,6 +5,7 @@
 
 namespace geeL {
 
+	class RenderContext;
 	class RenderWindow;
 	class RenderScene;
 	class SceneControlObject;
@@ -12,6 +13,7 @@ namespace geeL {
 	class LightManager;
 	class MeshDrawer;
 	class ShaderManager;
+	class GUIRenderer;
 
 
 	//Basic interface for rendering classes
@@ -34,7 +36,7 @@ namespace geeL {
 	class Renderer : public Drawer {
 
 	public:
-		Renderer(RenderWindow* window, InputManager* inputManager);
+		Renderer(RenderWindow& window, InputManager& inputManager, RenderContext& context);
 
 		virtual void init() = 0;
 
@@ -46,6 +48,7 @@ namespace geeL {
 
 		virtual void handleInput() = 0;
 
+		virtual void addGUIRenderer(GUIRenderer* renderer);
 		virtual void addObject(SceneControlObject* obj);
 		virtual void initObjects();
 	
@@ -54,8 +57,10 @@ namespace geeL {
 
 
 	protected:
+		RenderContext* context;
 		RenderWindow* window;
 		InputManager* inputManager;
+		GUIRenderer*  gui;
 
 		RenderScene* scene;
 		const ShaderManager* shaderManager;

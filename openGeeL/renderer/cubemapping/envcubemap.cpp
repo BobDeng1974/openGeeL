@@ -1,5 +1,4 @@
-#define GLEW_STATIC
-#include <glew.h>
+
 #include <list>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
@@ -81,13 +80,6 @@ namespace geeL {
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		FrameBuffer::unbind();
-	}
-
-	void EnvironmentCubeMap::bind(const Shader& shader, std::string name) const {
-
-		glActiveTexture(GL_TEXTURE1);
-		glUniform1i(glGetUniformLocation(shader.program, name.c_str()), 1);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 	}
 
 }

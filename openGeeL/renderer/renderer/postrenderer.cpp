@@ -23,16 +23,9 @@
 
 namespace geeL {
 
-	PostProcessingRenderer::PostProcessingRenderer(RenderWindow* window, InputManager* inputManager)
-		: 
-		Renderer(window, inputManager), effect(nullptr), 
-		frameBuffer(FrameBuffer()), screen(ScreenQuad()) {
-
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_FRONT);
-		glFrontFace(GL_CW);
-	}
+	PostProcessingRenderer::PostProcessingRenderer(RenderWindow& window, InputManager& inputManager, RenderContext& context)
+		: Renderer(window, inputManager, context), effect(nullptr), 
+			frameBuffer(FrameBuffer()), screen(ScreenQuad()) {}
 	
 
 	void PostProcessingRenderer::init() {

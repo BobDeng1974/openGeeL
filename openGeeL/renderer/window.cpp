@@ -43,15 +43,15 @@ namespace geeL {
 	}
 
 
-	void RenderWindow::swapBuffer() {
+	void RenderWindow::swapBuffer() const {
 	    glfwSwapBuffers(glWindow);
 	}
 
-	bool RenderWindow::shouldClose() {
+	bool RenderWindow::shouldClose() const {
 	    return glfwWindowShouldClose(glWindow) != 0;
 	}
 
-	void RenderWindow::close() {
+	void RenderWindow::close() const {
 	    glfwTerminate();
 	}
 }

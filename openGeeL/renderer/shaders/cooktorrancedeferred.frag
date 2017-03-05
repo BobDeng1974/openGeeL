@@ -202,7 +202,7 @@ vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection,
 
 	gSpecular += luminance(ks) * (1.f - metallic) * attenuation;
 
-	return (((kd * albedo / PI + brdf) * radiance)) * NdotL; 
+	return ((kd * albedo / PI + brdf) * radiance) * NdotL; 
 }
 
 //Reflectance equation with Cook-Torrance BRDF for directional light
@@ -234,7 +234,7 @@ vec3 calculateReflectanceDirectional(vec3 fragPosition, vec3 normal, vec3 viewDi
 
 	gSpecular +=  luminance(ks) * (1.0f - roughness) * NdotL * luminance(radiance);
 
-	return (((kd * albedo / PI + brdf) * radiance)) * NdotL; 
+	return ((kd * albedo / PI + brdf) * radiance) * NdotL; 
 }
 
 vec3 calculatePointLight(int index, PointLight light, vec3 normal, 
@@ -311,7 +311,7 @@ vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, vec3 ks, flo
 	float NoV = doto(normalWorld, viewWorld);
 
 	vec3 irradiance = vec3(0.f);
-	int sampleCount = 10;
+	int sampleCount = 1;
 	for(int i = 0; i < sampleCount; i++) {
 		vec3 sampleVector = generateSampledVector(roughness, i, sampleCount);
 		sampleVector = sampleVector.x * right + sampleVector.y * up + sampleVector.z * reflection; //To world coordinates

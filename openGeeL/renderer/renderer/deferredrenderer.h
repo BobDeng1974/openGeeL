@@ -20,8 +20,8 @@ namespace geeL {
 	class DeferredRenderer : public Renderer, public WorldInformationProvider {
 
 	public:
-		DeferredRenderer(RenderWindow* window, InputManager* inputManager);
-		DeferredRenderer(RenderWindow* window, InputManager* inputManager, SSAO* ssao, float ssaoResolution = 1.f);
+		DeferredRenderer(RenderWindow& window, InputManager& inputManager, RenderContext& context);
+		DeferredRenderer(RenderWindow& window, InputManager& inputManager, RenderContext& context, SSAO* ssao, float ssaoResolution = 1.f);
 		~DeferredRenderer();
 
 		virtual void init();

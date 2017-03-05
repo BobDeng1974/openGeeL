@@ -16,7 +16,7 @@ namespace geeL {
 	class PostProcessingRenderer : public Renderer {
 
 	public:
-		PostProcessingRenderer(RenderWindow* window, InputManager* inputManager);
+		PostProcessingRenderer(RenderWindow& window, InputManager& inputManager, RenderContext& context);
 
 		virtual void init();
 		virtual void render();

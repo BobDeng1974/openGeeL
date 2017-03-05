@@ -136,7 +136,7 @@ namespace geeL {
 	}
 
 	bool InputManager::getMouseKey(int key) const {
-		int state = glfwGetMouseButton(window->glWindow, GLFW_MOUSE_BUTTON_LEFT);
+		int state = glfwGetMouseButton(window->glWindow, GLFW_MOUSE_BUTTON_LEFT + key);
 		return state == GLFW_PRESS;
 	}
 

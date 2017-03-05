@@ -18,9 +18,9 @@ namespace geeL {
 		RenderWindow(const char* name, unsigned int width, unsigned int height, bool resizable = false);
 		~RenderWindow();
 
-		void RenderWindow::swapBuffer();
-		bool RenderWindow::shouldClose();
-		void RenderWindow::close();
+		void RenderWindow::swapBuffer() const;
+		bool RenderWindow::shouldClose() const;
+		void RenderWindow::close() const;
 
 	private:
 		Debugger* debugger;

@@ -73,7 +73,7 @@ namespace geeL {
 
 	void Camera::computeMouseInput(const InputManager& input) {
 
-		if (input.getMouseKey(GLFW_MOUSE_BUTTON_2)) {
+		if (input.getMouseKey(1)) {
 			GLfloat xoffset = input.getMouseXOffset() * sensitivity;
 			GLfloat yoffset = input.getMouseYOffset() * sensitivity;
 

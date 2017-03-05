@@ -15,15 +15,15 @@
 
 namespace geeL {
 
-	SplitRenderer::SplitRenderer(RenderWindow* window, InputManager* inputManager)
-		: Renderer(window, inputManager) {
+	SplitRenderer::SplitRenderer(RenderWindow& window, InputManager& inputManager, RenderContext& context)
+		: Renderer(window, inputManager, context) {
 	
 		glewExperimental = GL_TRUE;
 		if (glewInit() != GLEW_OK) {
 			std::cout << "Failed to initialize GLEW" << std::endl;
 		}
 
-		glViewport(0, 0, window->width, window->height);
+		glViewport(0, 0, window.width, window.height);
 		glEnable(GL_DEPTH_TEST);
 	}
 

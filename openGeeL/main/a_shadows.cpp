@@ -1,7 +1,22 @@
-#include "a_shadows.h"
-
+#define GLEW_STATIC
+#include <glew.h>
+#include <glfw3.h>
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
 #include <iostream>
 #include <vector>
+#include "../renderer/shader/shader.h"
+#include "../renderer/renderer/splitrenderer.h"
+#include "../renderer/renderer/rendercontext.h"
+
+#include "../renderer/scripting/scenecontrolobject.h"
+#include "../renderer/inputmanager.h"
+#include "../renderer/window.h"
+#include "../renderer/texturing/texture.h"
+#include "../renderer/texturing/simpletexture.h"
+#include "../renderer/texturing/layeredtexture.h"
+
 #include "../renderer/cameras/camera.h"
 #include "../renderer/cameras/perspectivecamera.h"
 #include "../renderer/lighting/light.h"
@@ -50,7 +65,14 @@
 #include "../renderer/scene.h"
 #include "../renderer/utility/rendertime.h"
 
+#include "../interface/guirenderer.h"
+#include "../interface/elements/testelement.h"
+
 #include <glm.hpp>
+#include "a_shadows.h"
+
+
+using namespace geeL;
 
 #define pi 3.141592f
 
@@ -201,7 +223,8 @@ void a_shadows() {
 
 	BilateralFilter blur = BilateralFilter(1, 0.3f);
 	SSAO ssao = SSAO(camera3, blur, 10.f);
-	DeferredRenderer& renderer1 = DeferredRenderer(&window, &manager, &ssao, 0.6f);
+	RenderContext context = RenderContext();
+	DeferredRenderer& renderer1 = DeferredRenderer(window, manager, context, &ssao, 0.6f);
 	renderer1.init();
 
 	MaterialFactory materialFactory = MaterialFactory();
@@ -231,6 +254,12 @@ void a_shadows() {
 
 	renderer1.addObject(testObj);
 	renderer1.initObjects();
+
+	GUIRenderer gui = GUIRenderer(window, context);
+	GUITestElement guiTest = GUITestElement("Element 1");
+	gui.addElement(guiTest);
+
+	renderer1.addGUIRenderer(&gui);
 	
 	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50), 10.f);
@@ -255,10 +284,10 @@ void a_shadows() {
 	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.4f);
 
 	//renderer1.addEffect(volSmooth, { &vol, &sobelBlur });
-	renderer1.addEffect(bloom);
-	renderer1.addEffect(ssrrSmooth, ssrr);
-	renderer1.addEffect(raySmooth);
-	renderer1.addEffect(dof, dof);
+	//renderer1.addEffect(bloom);
+	//nderer1.addEffect(ssrrSmooth, ssrr);
+	//renderer1.addEffect(raySmooth);
+	//renderer1.addEffect(dof, dof);
 	renderer1.addEffect(fxaa);
 
 	renderer1.linkInformation();

@@ -3,13 +3,18 @@
 #include "scripting\scenecontrolobject.h"
 #include "inputmanager.h"
 #include "cameras/camera.h"
+#include "renderer\rendercontext.h"
 
 
 namespace geeL{
 
-	Renderer::Renderer(RenderWindow* window, InputManager* inputManager)
-		: window(window), inputManager(inputManager) {}
+	Renderer::Renderer(RenderWindow& window, InputManager& inputManager, RenderContext& context)
+		: window(&window), inputManager(&inputManager), context(&context), gui(nullptr) {}
 
+
+	void Renderer::addGUIRenderer(GUIRenderer* renderer) {
+		gui = renderer;
+	}
 
 	void Renderer::addObject(SceneControlObject* obj) {
 		objects.push_back(obj);

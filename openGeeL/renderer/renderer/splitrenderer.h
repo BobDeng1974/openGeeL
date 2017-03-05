@@ -20,7 +20,7 @@ namespace geeL {
 	class SplitRenderer : public Renderer {
 
 	public:
-		SplitRenderer(RenderWindow* window, InputManager* inputManagerz);
+		SplitRenderer(RenderWindow& window, InputManager& inputManagerz, RenderContext& context);
 
 		virtual void init();
 		virtual void render();
