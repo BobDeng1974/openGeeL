@@ -16,6 +16,12 @@ namespace geeL {
 		virtual void setBuffer(const FrameBuffer& buffer);
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
+		void resizeEffectResolution(float effectResolution);
+
+		float getEffectResolution() const;
+		float getBlurResolution() const;
+
+
 	protected:
 		virtual void bindValues();
 

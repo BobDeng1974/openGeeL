@@ -19,6 +19,9 @@ namespace geeL {
 
 		BloomFilter(float scatter = 0.6f);
 
+		void setScatter(float scatter);
+		float getScatter() const;
+
 	protected:
 		virtual void bindValues();
 
@@ -31,6 +34,12 @@ namespace geeL {
 	public:
 		Bloom(BloomFilter& filter, GaussianBlur& blur, 
 			float effectResolution = 1.0f, float blurResolution = 1.f);
+
+		void setScatter(float scatter);
+		float getScatter() const;
+
+	private:
+		BloomFilter& filter;
 
 	};
 }

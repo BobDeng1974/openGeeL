@@ -17,6 +17,13 @@ namespace geeL {
 	public:
 		GodRay(const RenderScene& scene, glm::vec3 lightPosition, unsigned int samples = 20.f);
 
+		glm::vec3 getLightPosition() const;
+		void setLightPosition(glm::vec3 position);
+
+		unsigned int getSampleCount() const;
+		void setSampleCount(unsigned int samples);
+
+
 	protected:
 		virtual void bindValues();
 

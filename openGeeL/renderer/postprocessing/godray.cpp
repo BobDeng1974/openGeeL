@@ -27,4 +27,22 @@ namespace geeL {
 		shader.setVector3("lightPositionView", viewPos);
 		shader.setInteger("raysOnly", onlyEffect);
 	}
+
+	glm::vec3 GodRay::getLightPosition() const {
+		return lightPosition;
+	}
+
+	void GodRay::setLightPosition(glm::vec3 position) {
+		lightPosition = position;
+	}
+
+	unsigned int GodRay::getSampleCount() const {
+		return samples;
+	}
+
+	void GodRay::setSampleCount(unsigned int samples) {
+		if (samples < 200)
+			this->samples = samples;
+	}
+
 }

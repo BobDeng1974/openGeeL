@@ -11,7 +11,7 @@ using namespace std;
 
 namespace geeL {
 
-	VolumetricLight::VolumetricLight(const RenderScene& scene, const SpotLight& light, float density, float minDistance, int samples)
+	VolumetricLight::VolumetricLight(const RenderScene& scene, const SpotLight& light, float density, float minDistance, unsigned int samples)
 		: PostProcessingEffect("renderer/postprocessing/volumetriclight.frag"), 
 			scene(scene), light(light), density(density), minDistance(minDistance), samples(samples) {}
 
@@ -43,4 +43,33 @@ namespace geeL {
 		addBuffer( { maps[WorldMaps::PositionDepth] });
 		inverseView = matrices[WorldMatrices::InverseView];
 	}
+
+	unsigned int VolumetricLight::getSampleCount() const {
+		return samples;
+	}
+
+	void VolumetricLight::setSampleCount(unsigned int samples) {
+		if (samples < 500)
+			this->samples = samples;
+	}
+
+	float VolumetricLight::getDensity() const {
+		return density;
+	}
+
+	void VolumetricLight::setDensity(float density) {
+		if (density > 0.f)
+			this->density = density;
+	}
+
+
+	float VolumetricLight::getMinDistance() const {
+		return minDistance;
+	}
+
+	void VolumetricLight::setMinDistance(float distance) {
+		if (distance > 0.f)
+			minDistance = distance;
+	}
+
 }

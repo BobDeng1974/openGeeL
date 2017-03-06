@@ -62,7 +62,6 @@ namespace geeL {
 
 		if (useDepth) {
 			// Create a renderbuffer object for depth and stencil attachment
-			GLuint rbo;
 			glGenRenderbuffers(1, &rbo);
 			glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
@@ -90,6 +89,22 @@ namespace geeL {
 
 	void FrameBuffer::resetSize(int width, int height) {
 		glViewport(0, 0, width, height);
+	}
+
+	void FrameBuffer::resize(int width, int height) {
+		if (width > 0 && height > 0) {
+			info.width = width;
+			info.height = height;
+
+			//TODO: make this more orderly
+			glBindTexture(GL_TEXTURE_2D, colorBuffers[0]);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, info.width, info.height, 0, GL_RGBA, GL_FLOAT, 0);
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+			glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, info.width, info.height);
+			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		}
 	}
 
 	void FrameBuffer::fill(Drawer& drawer, bool setFBO) const {

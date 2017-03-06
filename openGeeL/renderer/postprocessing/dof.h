@@ -42,6 +42,12 @@ namespace geeL {
 			std::map<WorldMatrices, const glm::mat4*> matrices,
 			std::map<WorldVectors, const glm::vec3*> vectors);
 
+		void resizeBlurResolution(float blurResolution);
+		float getBlurResolution() const;
+
+		float getAperture() const;
+		void setAperture(float aperture);
+
 	protected:
 		virtual void bindValues();
 

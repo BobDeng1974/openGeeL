@@ -30,25 +30,22 @@ using namespace std;
 
 namespace geeL {
 
-	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, RenderContext& context)
-		: DeferredRenderer(window, inputManager, context, nullptr) {}
+	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, 
+		RenderContext& context, DefaultPostProcess& def)
+			: DeferredRenderer(window, inputManager, context, def, nullptr) {}
 
-	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, RenderContext& context, SSAO* ssao, float ssaoResolution)
-		: Renderer(window, inputManager, context), ssao(ssao), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()),
-			gBuffer(GBuffer()), screen(ScreenQuad()), ssaoResolution(ssaoResolution),
-			deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
-				"renderer/shaders/cooktorrancedeferred.frag")), toggle(0) {
+	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, 
+		RenderContext& context, DefaultPostProcess& def, SSAO* ssao, float ssaoResolution)
+			: Renderer(window, inputManager, context), ssao(ssao), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()),
+				gBuffer(GBuffer()), screen(ScreenQuad()), ssaoResolution(ssaoResolution),
+				deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
+					"renderer/shaders/cooktorrancedeferred.frag")), toggle(0) {
 
-		
-		//Default post processing with tone mapping and gamma correction
-		DefaultPostProcess* defaultEffect = new DefaultPostProcess();
-		effects.push_back(defaultEffect);
-
+		effects.push_back(&def);
 		addRequester(*ssao);
 	}
 
 	DeferredRenderer::~DeferredRenderer() {
-		delete effects.front(); //Default post effect
 		delete deferredShader;
 
 		if (ssaoBuffer != nullptr)

@@ -8,13 +8,17 @@ namespace geeL {
 	class DefaultPostProcess : public PostProcessingEffect {
 
 	public:
-		float exposure;
-
 		DefaultPostProcess(float exposure = 1.f);
 
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
+		float getExposure() const;
+		void setExposure(float exposure);
+
+
 	protected:
+		float exposure;
+
 		virtual void bindValues();
 
 	};

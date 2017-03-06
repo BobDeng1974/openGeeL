@@ -60,8 +60,5 @@ namespace geeL {
 		}
 
 		nk_end(context);
-		
 	}
-
-
 }

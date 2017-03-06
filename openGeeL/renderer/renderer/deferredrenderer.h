@@ -12,6 +12,7 @@
 namespace geeL {
 
 	class Camera;
+	class DefaultPostProcess;
 	class Shader;
 	class SSAO;
 	class PostProcessingEffect;
@@ -20,8 +21,12 @@ namespace geeL {
 	class DeferredRenderer : public Renderer, public WorldInformationProvider {
 
 	public:
-		DeferredRenderer(RenderWindow& window, InputManager& inputManager, RenderContext& context);
-		DeferredRenderer(RenderWindow& window, InputManager& inputManager, RenderContext& context, SSAO* ssao, float ssaoResolution = 1.f);
+		DeferredRenderer(RenderWindow& window, InputManager& inputManager, 
+			RenderContext& context, DefaultPostProcess& def);
+
+		DeferredRenderer(RenderWindow& window, InputManager& inputManager, 
+			RenderContext& context, DefaultPostProcess& def, SSAO* ssao, float ssaoResolution = 1.f);
+
 		~DeferredRenderer();
 
 		virtual void init();

@@ -48,6 +48,7 @@ namespace geeL {
 		static void bind(unsigned int fbo);
 		static void unbind();
 		static void resetSize(int width, int height);
+		void resize(int width, int height);
 
 		unsigned int getFBO() const;
 		unsigned int getWidth() const;
@@ -55,6 +56,7 @@ namespace geeL {
 
 
 	private:
+		unsigned int rbo;
 		std::vector<unsigned int> colorBuffers;
 
 		unsigned int generateTexture(ColorBufferType colorBufferType, unsigned int filterMode);

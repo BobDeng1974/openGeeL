@@ -32,4 +32,13 @@ namespace geeL {
 		shader.setFloat("exposure", exposure);
 	}
 
+	float DefaultPostProcess::getExposure() const {
+		return exposure;
+	}
+
+	void DefaultPostProcess::setExposure(float exposure) {
+		if (exposure > 0.f)
+			this->exposure = exposure;
+	}
+
 }

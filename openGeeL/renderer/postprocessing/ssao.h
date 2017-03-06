@@ -26,12 +26,15 @@ namespace geeL {
 			std::map<WorldMatrices, const glm::mat4*> matrices,
 			std::map<WorldVectors, const glm::vec3*> vectors);
 
+		float getRadius() const;
+		void setRadius(float radius);
+
 	protected:
 		virtual void bindValues();
 
 	private:
 		bool ssaoPass = false;
-		const float radius;
+		float radius;
 		unsigned int sampleCount = 64;
 		SimpleTexture noiseTexture;
 		std::vector<glm::vec3> kernel;

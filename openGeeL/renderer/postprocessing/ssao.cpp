@@ -98,4 +98,14 @@ namespace geeL {
 		setBuffer( {maps[WorldMaps::PositionDepth], maps[WorldMaps::NormalMetallic]} );
 		buffers.push_back(noiseTexture.GetID());
 	}
+
+	float SSAO::getRadius() const {
+		return radius;
+	}
+
+	void SSAO::setRadius(float radius) {
+		if (radius > 0.f)
+			this->radius = radius;
+	}
 }
+

@@ -13,7 +13,7 @@ namespace geeL {
 
 	public:
 		VolumetricLight(const RenderScene& scene, const SpotLight& light, 
-			float density = 1.f, float minDistance = 1.f, int samples = 30);
+			float density = 1.f, float minDistance = 1.f, unsigned int samples = 30);
 
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
@@ -21,11 +21,21 @@ namespace geeL {
 			std::map<WorldMatrices, const glm::mat4*> matrices,
 			std::map<WorldVectors, const glm::vec3*> vectors) override;
 
+		unsigned int getSampleCount() const;
+		void setSampleCount(unsigned int samples);
+
+		float getDensity() const;
+		void setDensity(float density);
+
+		float getMinDistance() const;
+		void setMinDistance(float distance);
+
+
 	protected:
 		virtual void bindValues();
 
 	private:
-		int samples;
+		unsigned int samples;
 		float density;
 		float minDistance;
 		const RenderScene& scene;

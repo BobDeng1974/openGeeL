@@ -55,6 +55,7 @@
 #include "../renderer/postprocessing/blurredeffect.h"
 #include "../renderer/postprocessing/volumetriclight.h"
 #include "../renderer/postprocessing/sobel.h"
+#include "../renderer/postprocessing/drawdefault.h"
 
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/texcubemap.h"
@@ -67,6 +68,8 @@
 
 #include "../interface/guirenderer.h"
 #include "../interface/elements/objectlister.h"
+#include "../interface/elements/postsnippets.h"
+#include "../interface/elements/posteffectlister.h"
 #include "../interface/elements/testelement.h"
 
 
@@ -224,9 +227,10 @@ void a_shadows() {
 	PerspectiveCamera camera3 = PerspectiveCamera(transform3, 5.f, 15.f, 55.f, window.width, window.height, 0.1f, 100.f);
 
 	BilateralFilter blur = BilateralFilter(1, 0.3f);
+	DefaultPostProcess def = DefaultPostProcess();
 	SSAO ssao = SSAO(camera3, blur, 10.f);
 	RenderContext context = RenderContext();
-	DeferredRenderer& renderer1 = DeferredRenderer(window, manager, context, &ssao, 0.6f);
+	DeferredRenderer& renderer1 = DeferredRenderer(window, manager, context, def, &ssao, 0.6f);
 	renderer1.init();
 
 	MaterialFactory materialFactory = MaterialFactory();
@@ -260,6 +264,8 @@ void a_shadows() {
 	GUIRenderer gui = GUIRenderer(window, context);
 	ObjectLister objectLister = ObjectLister(scene);
 	gui.addElement(objectLister);
+	PostProcessingEffectLister postLister = PostProcessingEffectLister();
+	gui.addElement(postLister);
 
 	renderer1.addGUIRenderer(&gui);
 	
@@ -285,11 +291,30 @@ void a_shadows() {
 	VolumetricLight vol = VolumetricLight(scene, *spotLight, 0.3f, 1.f, 160);
 	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.4f);
 
-	//renderer1.addEffect(volSmooth, { &vol, &sobelBlur });
-	//renderer1.addEffect(bloom);
+	ColorCorrection colorCorrect = ColorCorrection();
+
+	postLister.addDefaultEffect(def);
+	postLister.addSSAO(ssao);
+
+	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
+	renderer1.addEffect(volSmooth, { &vol, &sobelBlur });
+	postLister.addBlurredEffect(volSmooth, lightSnippet);
+
+	renderer1.addEffect(bloom);
+	postLister.addBloom(bloom);
+
+	GodRaySnippet godRaySnippet = GodRaySnippet(ray);
+	renderer1.addEffect(raySmooth);
+	postLister.addBlurredEffect(raySmooth, godRaySnippet);
+
 	//nderer1.addEffect(ssrrSmooth, ssrr);
-	//renderer1.addEffect(raySmooth);
-	//renderer1.addEffect(dof, dof);
+	
+	renderer1.addEffect(dof, dof);
+	postLister.addDepthOfField(dof);
+
+	renderer1.addEffect(colorCorrect);
+	postLister.addColorCorrection(colorCorrect);
+
 	renderer1.addEffect(fxaa);
 
 	renderer1.linkInformation();

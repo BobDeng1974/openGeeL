@@ -50,4 +50,21 @@ namespace geeL {
 		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
 		FrameBuffer::bind(parentFBO);
 	}
+
+	void BlurredPostEffect::resizeEffectResolution(float effectResolution) {
+		if (effectResolution > 0.f && effectResolution < 1.f) {
+			this->effectResolution = effectResolution;
+
+			effectBuffer.resize(screenInfo->width * effectResolution, 
+				screenInfo->height * effectResolution);
+		}
+	}
+
+	float BlurredPostEffect::getEffectResolution() const {
+		return effectResolution;
+	}
+
+	float BlurredPostEffect::getBlurResolution() const {
+		return blurResolution;
+	}
 }

@@ -69,4 +69,26 @@ namespace geeL {
 		addBuffer( {maps[WorldMaps::PositionDepth]} );
 		blur.setBuffer({ buffers.front(), *next(buffers.begin()) });
 	}
+
+	void DepthOfFieldBlurred::resizeBlurResolution(float blurResolution) {
+		if (blurResolution > 0.f && blurResolution < 1.f) {
+			this->blurResolution = blurResolution;
+
+			blurBuffer.resize(screenInfo->width * blurResolution,
+				screenInfo->height * blurResolution);
+		}
+	}
+
+	float DepthOfFieldBlurred::getBlurResolution() const {
+		return blurResolution;
+	}
+
+	float DepthOfFieldBlurred::getAperture() const {
+		return aperture;
+	}
+
+	void DepthOfFieldBlurred::setAperture(float aperture) {
+		if (aperture > 0.f)
+			this->aperture = aperture;
+	}
 }
