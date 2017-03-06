@@ -28,6 +28,10 @@ namespace geeL {
 		Transform(vec3 position, vec3 rotation, vec3 scaling, Transform* parent = nullptr);
 		~Transform();
 		
+		void setPosition(vec3 position);
+		void setRotation(vec3 rotation);
+		void setScale(vec3 scaling);
+
 		void translate(vec3 translation);
 		void rotate(vec3 axis, float angle);
 		void scale(vec3 scalar);
@@ -52,7 +56,11 @@ namespace geeL {
 		bool Transform::operator==(const Transform& b) const;
 		bool Transform::operator!=(const Transform& b) const;
 
+		unsigned int getID() const;
+
 	private:
+		
+		unsigned int id;
 		Transform* parent;
 		std::list<Transform> children;
 

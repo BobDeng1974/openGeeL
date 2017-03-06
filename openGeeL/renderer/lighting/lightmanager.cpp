@@ -150,4 +150,28 @@ namespace geeL {
 			staticSLs[j]->renderShadowmap(scene, *dlShader);
 		}
 	}
+
+	std::vector<DirectionalLight*>::iterator LightManager::directionalLightsBegin() {
+		return staticDLs.begin();
+	}
+
+	std::vector<DirectionalLight*>::iterator LightManager::directionalLightsEnd() {
+		return staticDLs.end();
+	}
+
+	std::vector<SpotLight*>::iterator LightManager::spotLightsBegin() {
+		return staticSLs.begin();
+	}
+
+	std::vector<SpotLight*>::iterator LightManager::spotLightsEnd() {
+		return staticSLs.end();
+	}
+
+	std::vector<PointLight*>::iterator LightManager::pointLightsBegin() {
+		return staticPLs.begin();
+	}
+
+	std::vector<PointLight*>::iterator LightManager::pointLightsEnd() {
+		return staticPLs.end();
+	}
 }

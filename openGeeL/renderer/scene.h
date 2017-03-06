@@ -73,6 +73,10 @@ namespace geeL {
 		const glm::vec3& GetOriginInViewSpace() const;
 		unsigned int getSkyboxID() const;
 
+		std::list<MeshRenderer*>::iterator renderObjectsBegin();
+		std::list<MeshRenderer*>::iterator renderObjectsEnd();
+
+
 	private:
 		glm::vec3 originViewSpace;
 		Skybox* skybox;

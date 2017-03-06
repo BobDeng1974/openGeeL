@@ -143,4 +143,12 @@ namespace geeL {
 		return 0;
 	}
 
+	std::list<MeshRenderer*>::iterator RenderScene::renderObjectsBegin() {
+		return deferredRenderObjects.begin();
+	}
+
+	std::list<MeshRenderer*>::iterator RenderScene::renderObjectsEnd() {
+		return deferredRenderObjects.end();
+	}
+
 }

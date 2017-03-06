@@ -66,7 +66,9 @@
 #include "../renderer/utility/rendertime.h"
 
 #include "../interface/guirenderer.h"
+#include "../interface/elements/objectlister.h"
 #include "../interface/elements/testelement.h"
+
 
 #include <glm.hpp>
 #include "a_shadows.h"
@@ -256,8 +258,8 @@ void a_shadows() {
 	renderer1.initObjects();
 
 	GUIRenderer gui = GUIRenderer(window, context);
-	GUITestElement guiTest = GUITestElement("Element 1");
-	gui.addElement(guiTest);
+	ObjectLister objectLister = ObjectLister(scene);
+	gui.addElement(objectLister);
 
 	renderer1.addGUIRenderer(&gui);
 	

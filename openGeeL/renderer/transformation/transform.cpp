@@ -9,9 +9,14 @@ using glm::normalize;
 
 namespace geeL {
 
+	unsigned int idCounter = 0;
+
 	Transform::Transform(Transform* parent) : parent(parent) {
 		matrix = mat4();
 		isStatic = true;
+
+		id = idCounter;
+		idCounter++;
 	}
 
 	Transform::Transform(vec3 position, vec3 rotation, vec3 scaling, Transform* parent) 
@@ -31,9 +36,41 @@ namespace geeL {
 		matrix = glm::translate(matrix, position);
 		
 		updateDirections();
+
+		id = idCounter;
+		idCounter++;
 	}
 
 	Transform::~Transform() {}
+
+
+	void Transform::setPosition(vec3 position) {
+		vec3 translation = position - this->position;
+		this->position = position;
+
+		matrix = glm::translate(matrix, translation);
+	}
+
+	void Transform::setRotation(vec3 rotation) {
+		float pitch = rotation.x - this->rotation.x;
+		float yaw = rotation.y - this->rotation.y;
+		float roll = rotation.z - this->rotation.z;
+
+		this->rotation += vec3(pitch, yaw, roll);
+
+		matrix = glm::rotate(matrix, pitch, vec3(1.f, 0.f, 0.f));
+		matrix = glm::rotate(matrix, yaw, vec3(0.f, 1.f, 0.f));
+		matrix = glm::rotate(matrix, roll, vec3(0.f, 0.f, 1.f));
+
+		updateDirections();
+	}
+
+	void Transform::setScale(vec3 scaling) {
+		vec3 scalar = scaling - this->scaling;
+		this->scaling = scaling;
+
+		matrix = glm::scale(matrix, scalar);
+	}
 
 	void Transform::translate(vec3 translation) {
 		position += translation;
@@ -108,6 +145,10 @@ namespace geeL {
 		right =   normalize(vec3(matrix[0][0], matrix[0][1], matrix[0][2]));
 		forward = normalize(vec3(matrix[1][0], matrix[1][1], matrix[1][2]));
 		up =      normalize(vec3(matrix[2][0], matrix[2][1], matrix[2][2]));
+	}
+
+	unsigned int Transform::getID() const {
+		return id;
 	}
 
 }

@@ -56,6 +56,15 @@ namespace geeL {
 		void drawShadowmaps(const RenderScene& scene) const;
 
 		void forwardScreenInfo(const ScreenInfo& info, const Camera& camera);
+
+		std::vector<DirectionalLight*>::iterator directionalLightsBegin();
+		std::vector<DirectionalLight*>::iterator directionalLightsEnd();
+
+		std::vector<SpotLight*>::iterator spotLightsBegin();
+		std::vector<SpotLight*>::iterator spotLightsEnd();
+
+		std::vector<PointLight*>::iterator pointLightsBegin();
+		std::vector<PointLight*>::iterator pointLightsEnd();
 	
 
 	private:

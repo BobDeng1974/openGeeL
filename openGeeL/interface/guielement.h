@@ -1,12 +1,13 @@
 #ifndef GUIELEMENT_H
 #define GUIELEMENT_H
 
-#include "../interface/guiwrapper.h"
+struct nk_context;
 
 namespace geeL {
 
 	typedef nk_context GUIContext;
 
+	//Object that represents one GUI element on the canvas
 	class GUIElement {
 
 	public:

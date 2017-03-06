@@ -27,6 +27,7 @@ namespace geeL {
 	class Light : public SceneObject {
 
 	public:
+		float dynamicBias;
 		vec3 diffuse;
 
 		Light(Transform& transform, vec3 diffuse, float shadowBias);
@@ -42,6 +43,9 @@ namespace geeL {
 		//Computes experienced intensity at given point. Ranges between 0 and 1
 		virtual float getIntensity(glm::vec3 point) const;
 
+		float getShadowBias() const;
+		void setShadowBias(float bias);
+
 		void setResolution(ShadowmapResolution resolution);
 		const int getShadowMapID() const;
 		const int getShadowMapFBO() const;
@@ -53,7 +57,7 @@ namespace geeL {
 		ShadowmapResolution resolution;
 		int shadowmapHeight;
 		int shadowmapWidth;
-		float shadowBias, dynamicBias;
+		float shadowBias;
 		glm::mat4 lightTransform;
 
 		//Set width and height of shadow map without

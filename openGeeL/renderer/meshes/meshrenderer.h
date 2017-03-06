@@ -10,6 +10,7 @@ namespace geeL {
 	class Material;
 	class DefaultMaterialContainer;
 	class Model;
+	class Shader;
 	class Transform;
 
 	enum CullingMode {

@@ -114,6 +114,15 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
+	float Light::getShadowBias() const {
+		return dynamicBias;
+	}
+
+	void Light::setShadowBias(float bias) {
+		if(bias > 0.f)
+			dynamicBias = bias;
+	}
+
 	void Light::setResolution(ShadowmapResolution resolution) {
 		this->resolution = resolution;
 

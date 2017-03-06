@@ -2,19 +2,27 @@
 #define GUITESTELEMENT_H
 
 #include <stdio.h>
+#include <vec3.hpp>
+#include "../../renderer/lighting/light.h"
+#include "../../renderer/transformation/transform.h"
 #include "../guielement.h"
+#include "../interface/guiwrapper.h"
+#include "../guisnippets.h"
 
 namespace geeL {
 
 	class GUITestElement : public GUIElement {
 
 	public:
-		GUITestElement(std::string name) {
+		GUITestElement(std::string name, Light& light) : light(light) {
 			this->name = name;
 		}
 
+
+		glm::vec3 position = glm::vec3(0.f, 1.f, 0.f);
+
 		virtual void draw(GUIContext* context) {
-			if (nk_begin(context, name.c_str(), nk_rect(50, 50, 230, 250),
+			if (nk_begin(context, name.c_str(), nk_rect(100, 50, 230, 250),
 				NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
 				NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
 			{
@@ -32,19 +40,9 @@ namespace geeL {
 				nk_layout_row_dynamic(context, 25, 1);
 				nk_property_int(context, "Compression:", 0, &property, 100, 10, 1);
 
-				nk_layout_row_dynamic(context, 20, 1);
-				nk_label(context, "background:", NK_TEXT_LEFT);
-				nk_layout_row_dynamic(context, 25, 1);
-				if (nk_combo_begin_color(context, background, nk_vec2(nk_widget_width(context), 400))) {
-					nk_layout_row_dynamic(context, 120, 1);
-					background = nk_color_picker(context, background, NK_RGBA);
-					nk_layout_row_dynamic(context, 25, 1);
-					background.r = (nk_byte)nk_propertyi(context, "#R:", 0, background.r, 255, 1, 1);
-					background.g = (nk_byte)nk_propertyi(context, "#G:", 0, background.g, 255, 1, 1);
-					background.b = (nk_byte)nk_propertyi(context, "#B:", 0, background.b, 255, 1, 1);
-					background.a = (nk_byte)nk_propertyi(context, "#A:", 0, background.a, 255, 1, 1);
-					nk_combo_end(context);
-				}
+				
+				GUISnippets::drawLight(context, light);
+
 			}
 
 			nk_end(context);
@@ -52,6 +50,7 @@ namespace geeL {
 
 
 	private:
+		Light& light;
 		std::string name;
 		struct nk_color background;
 
