@@ -15,7 +15,8 @@ namespace geeL {
 	class ObjectLister : public GUIElement {
 
 	public:
-		ObjectLister(RenderScene& scene);
+		ObjectLister(RenderScene& scene, RenderWindow& window, 
+			float x = 0.1f, float y = 0.1f, float width = 0.2f, float height = 0.2f);
 		~ObjectLister();
 
 		virtual void draw(GUIContext* context);

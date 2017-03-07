@@ -70,6 +70,7 @@
 #include "../interface/elements/objectlister.h"
 #include "../interface/snippets/postsnippets.h"
 #include "../interface/elements/posteffectlister.h"
+#include "../interface/elements/systeminformation.h"
 
 #include <glm.hpp>
 #include "a_shadows.h"
@@ -260,10 +261,12 @@ void a_shadows() {
 	renderer1.initObjects();
 
 	GUIRenderer gui = GUIRenderer(window, context);
-	ObjectLister objectLister = ObjectLister(scene);
+	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.3f);
 	gui.addElement(objectLister);
-	PostProcessingEffectLister postLister = PostProcessingEffectLister();
+	PostProcessingEffectLister postLister = PostProcessingEffectLister(window, 0.01f, 0.35f, 0.17f, 0.3f);
 	gui.addElement(postLister);
+	SystemInformation sysInfo = SystemInformation(renderer1.getRenderTime(), window, 0.01f, 0.7f, 0.17f);
+	gui.addElement(sysInfo);
 
 	renderer1.addGUIRenderer(&gui);
 	

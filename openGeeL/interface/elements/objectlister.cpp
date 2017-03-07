@@ -13,7 +13,9 @@
 
 namespace geeL {
 
-	ObjectLister::ObjectLister(RenderScene& scene) : scene(scene) {
+	ObjectLister::ObjectLister(RenderScene& scene, RenderWindow& window, 
+		float x, float y, float width, float height) 
+			: GUIElement(window, x, y, width, height), scene(scene) {
 	
 		for (auto it = scene.renderObjectsBegin(); it != scene.renderObjectsEnd(); it++) {
 			MeshRenderer* renderer = *it;
@@ -48,7 +50,7 @@ namespace geeL {
 
 	void ObjectLister::draw(GUIContext* context) {
 
-		if (nk_begin(context, "Scene", nk_rect(20, 20, 350, 350),
+		if (nk_begin(context, "Scene", nk_rect(x, y, width, height),
 			NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
 			NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE)) {
 

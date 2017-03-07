@@ -7,6 +7,7 @@
 #include "../utility/framebuffer.h"
 #include "../utility/gbuffer.h"
 #include "../utility/worldinformation.h"
+#include "../utility/rendertime.h"
 #include "../renderer.h"
 
 namespace geeL {
@@ -42,6 +43,8 @@ namespace geeL {
 		virtual void addRequester(WorldInformationRequester& requester);
 		virtual void linkInformation() const;
 
+		const RenderTime& getRenderTime() const;
+
 	private:
 		int toggle;
 		bool geometryPass = true;
@@ -52,6 +55,7 @@ namespace geeL {
 		GBuffer gBuffer;
 		FrameBuffer frameBuffer1;
 		FrameBuffer frameBuffer2;
+		RenderTime renderTime;
 
 		unsigned int defaultBuffer;
 		float ssaoResolution;

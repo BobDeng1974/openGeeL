@@ -7,7 +7,6 @@
 #include <map>
 #include <cmath>
 #include <gtc/matrix_transform.hpp>
-#include "../utility/rendertime.h"
 #include "../shader/shader.h"
 #include "../postprocessing/drawdefault.h"
 #include "../texturing/simpletexture.h"
@@ -130,24 +129,29 @@ namespace geeL {
 			glfwPollEvents();
 			inputManager->update();
 			handleInput();
+			renderTime.reset();
 
 			glEnable(GL_DEPTH_TEST);
 			
 			//Geometry pass
 			gBuffer.fill(*this);
+			renderTime.update(RenderPass::Geometry);
 
 			//Hacky: Read camera depth from geometry pass and write it into the scene
 			scene->forwardScreenInfo(gBuffer.screenInfo);
 			scene->lightManager.drawShadowmaps(*scene);
+			renderTime.update(RenderPass::Shadow);
 
 			//SSAO pass
 			if (ssao != nullptr) {
 				ssaoBuffer->fill(*ssao);
 				FrameBuffer::resetSize(window->width, window->height);
+				renderTime.update(RenderPass::SSAO);
 			}
 
 			//Lighting & forward pass
 			frameBuffer1.fill(*this);
+			renderTime.update(RenderPass::Lighting);
 
 			glClear(GL_COLOR_BUFFER_BIT);
 			glDisable(GL_DEPTH_TEST);
@@ -191,9 +195,13 @@ namespace geeL {
 				effects.front()->draw();
 			}
 
+			renderTime.update(RenderPass::PostProcessing);
+
 			//Render GUI overlay on top of final image
-			if (gui != nullptr)
+			if (gui != nullptr) {
 				gui->draw();
+				renderTime.update(RenderPass::GUI);
+			}
 			
 			window->swapBuffer();
 			Time::update();
@@ -351,5 +359,9 @@ namespace geeL {
 		}
 
 		effects.front()->setBuffer(currBuffer);
+	}
+
+	const RenderTime& DeferredRenderer::getRenderTime() const {
+		return renderTime;
 	}
 }

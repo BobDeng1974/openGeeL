@@ -6,6 +6,10 @@
 
 namespace geeL {
 
+	PostProcessingEffectLister::PostProcessingEffectLister(RenderWindow& window, 
+		float x, float y, float width, float height)
+			: GUIElement(window, x, y, width, height) {}
+
 	PostProcessingEffectLister::~PostProcessingEffectLister() {
 		for (auto it = snippets.begin(); it != snippets.end(); it++) {
 			delete *it;
@@ -15,7 +19,7 @@ namespace geeL {
 
 	void PostProcessingEffectLister::draw(GUIContext* context) {
 		
-		if (nk_begin(context, "Post Processing", nk_rect(20, 400, 350, 350),
+		if (nk_begin(context, "Post Processing", nk_rect(x, y, width, height),
 			NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
 			NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE)) {
 

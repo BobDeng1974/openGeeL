@@ -20,6 +20,9 @@ namespace geeL {
 	class PostProcessingEffectLister : public GUIElement {
 
 	public:
+		PostProcessingEffectLister(RenderWindow& window,
+			float x = 0.1f, float y = 0.1f, float width = 0.2f, float height = 0.2f);
+
 		~PostProcessingEffectLister();
 
 		virtual void draw(GUIContext* context);
