@@ -71,42 +71,70 @@ namespace geeL {
 	void LightManager::deferredBind(const RenderScene& scene, const Shader& shader) const {
 		shader.use();
 
-		shader.setInteger(plCountName, staticPLs.size());
-		shader.setInteger(dlCountName, staticDLs.size());
-		shader.setInteger(slCountName, staticSLs.size());
+		int plCount = 0;
+		int dlCount = 0;
+		int slCount = 0;
 
-		for (size_t j = 0; j < staticPLs.size(); j++)
-			staticPLs[j]->deferredBind(scene, shader, plName + "[" + std::to_string(j) + "].");
+		for (size_t j = 0; j < staticPLs.size(); j++) {
+			if (staticPLs[j]->isActive()) {
+				staticPLs[j]->deferredBind(scene, shader, plName + "[" + std::to_string(j) + "].");
+				plCount++;
+			}
+		}
+			
 
-		for (size_t j = 0; j < staticDLs.size(); j++)
-			staticDLs[j]->deferredBind(scene, shader, dlName + "[" + std::to_string(j) + "].");
-
-		for (size_t j = 0; j < staticSLs.size(); j++)
-			staticSLs[j]->deferredBind(scene, shader, slName + "[" + std::to_string(j) + "].");
+		for (size_t j = 0; j < staticDLs.size(); j++) {
+			if (staticDLs[j]->isActive()) {
+				staticDLs[j]->deferredBind(scene, shader, dlName + "[" + std::to_string(j) + "].");
+				dlCount++;
+			}
+		}
+			
+		for (size_t j = 0; j < staticSLs.size(); j++) {
+			if (staticSLs[j]->isActive()) {
+				staticSLs[j]->deferredBind(scene, shader, slName + "[" + std::to_string(j) + "].");
+				slCount++;
+			}
+		}
+		
+		shader.setInteger(plCountName, plCount);
+		shader.setInteger(dlCountName, dlCount);
+		shader.setInteger(slCountName, slCount);
 	}
 
 	void LightManager::forwardBind(const Shader& shader) const {
 		shader.use();
 
-		shader.setInteger(plCountName, staticPLs.size());
-		shader.setInteger(dlCountName, staticDLs.size());
-		shader.setInteger(slCountName, staticSLs.size());
+		int plCount = 0;
+		int dlCount = 0;
+		int slCount = 0;
+		
 
 		for (size_t j = 0; j < staticPLs.size(); j++) {
-			staticPLs[j]->forwardBind(shader, plName + "[" + std::to_string(j) + "].", "");
+			if (staticPLs[j]->isActive()) {
+				staticPLs[j]->forwardBind(shader, plName + "[" + std::to_string(j) + "].", "");
+				plCount++;
+			}
 		}
 
 		for (size_t j = 0; j < staticDLs.size(); j++) {
-			staticDLs[j]->forwardBind(shader, dlName + "[" + std::to_string(j) + "].", 
-				"direLightMatrix[" + to_string(j) + "]");
+			if (staticDLs[j]->isActive()) {
+				staticDLs[j]->forwardBind(shader, dlName + "[" + std::to_string(j) + "].",
+					"direLightMatrix[" + to_string(j) + "]");
+			}
 		}
-			
 
 		for (size_t j = 0; j < staticSLs.size(); j++) {
-			staticSLs[j]->forwardBind(shader, slName + "[" + std::to_string(j) + "].", 
-				"spotLightMatrix[" + to_string(j) + "]");
+			if (staticSLs[j]->isActive()) {
+				staticSLs[j]->forwardBind(shader, slName + "[" + std::to_string(j) + "].",
+					"spotLightMatrix[" + to_string(j) + "]");
+				slCount++;
+			}
 		}
 			
+		shader.setInteger(plCountName, plCount);
+		shader.setInteger(dlCountName, dlCount);
+		shader.setInteger(slCountName, slCount);
 	}
 
 	void LightManager::bindShadowmaps(Shader& shader) const {
@@ -139,16 +167,19 @@ namespace geeL {
 
 	void LightManager::drawShadowmaps(const RenderScene& scene) const {
 		for (size_t j = 0; j < staticPLs.size(); j++) {
-			staticPLs[j]->renderShadowmap(scene, *plShader);
+			if (staticPLs[j]->isActive())
+				staticPLs[j]->renderShadowmap(scene, *plShader);
 		}
 
 		for (size_t j = 0; j < staticDLs.size(); j++) {
-			staticDLs[j]->renderShadowmap(scene, *dlShader);
+			if (staticDLs[j]->isActive())
+				staticDLs[j]->renderShadowmap(scene, *dlShader);
 		}
 
 		for (size_t j = 0; j < staticSLs.size(); j++) {
-			staticSLs[j]->renderShadowmap(scene, *dlShader);
-		}
+			if (staticSLs[j]->isActive())
+				staticSLs[j]->renderShadowmap(scene, *dlShader);
+		}	
 	}
 
 	std::vector<DirectionalLight*>::iterator LightManager::directionalLightsBegin() {

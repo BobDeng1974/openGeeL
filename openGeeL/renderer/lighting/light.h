@@ -27,7 +27,6 @@ namespace geeL {
 	class Light : public SceneObject {
 
 	public:
-		float dynamicBias;
 		vec3 diffuse;
 
 		Light(Transform& transform, vec3 diffuse, float shadowBias);
@@ -57,7 +56,7 @@ namespace geeL {
 		ShadowmapResolution resolution;
 		int shadowmapHeight;
 		int shadowmapWidth;
-		float shadowBias;
+		float shadowBias, dynamicBias;
 		glm::mat4 lightTransform;
 
 		//Set width and height of shadow map without

@@ -22,7 +22,11 @@ namespace geeL {
 		//Add and init new component to scene object that will the be updated automatically
 		void addComponent(std::shared_ptr<Component> component);
 
+		bool isActive() const;
+		void setActive(bool active);
+
 	private:
+		bool active;
 		std::list<std::shared_ptr<Component>> components;
 
 	};

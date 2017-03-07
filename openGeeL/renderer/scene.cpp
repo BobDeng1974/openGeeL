@@ -49,7 +49,8 @@ namespace geeL {
 
 	void RenderScene::drawObjects(const std::list<MeshRenderer*>& objects, bool deferred) const {
 		for_each(objects.begin(), objects.end(), [&](MeshRenderer* object) {
-			object->draw(deferred);
+			if(object->isActive())
+				object->draw(deferred);
 		});
 	}
 
@@ -63,11 +64,13 @@ namespace geeL {
 		shader.use();
 
 		for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), [&](MeshRenderer* object) {
-			object->draw(shader);
+			if (object->isActive())
+				object->draw(shader);
 		});
 
 		for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), [&](MeshRenderer* object) {
-			object->draw(shader);
+			if (object->isActive())
+				object->draw(shader);
 		});
 	}
 
