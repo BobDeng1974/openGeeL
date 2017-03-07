@@ -24,14 +24,14 @@ namespace geeL {
 
 		virtual void draw(GUIContext* context);
 
-		void addDefaultEffect(DefaultPostProcess& def);
-		void addBlurredEffect(BlurredPostEffect& effect, GUISnippet& effectSnippet);
-		void addBloom(Bloom& bloom);
-		void addColorCorrection(ColorCorrection& color);
-		void addDepthOfField(DepthOfFieldBlurred& dof);
-		void addGodRay(GodRay& ray);
-		void addVolumetricLight(VolumetricLight& light);
-		void addSSAO(SSAO& ssao);
+		void add(DefaultPostProcess& def);
+		void add(BlurredPostEffect& effect, GUISnippet& effectSnippet);
+		void add(Bloom& bloom);
+		void add(ColorCorrection& color);
+		void add(DepthOfFieldBlurred& dof);
+		void add(GodRay& ray);
+		void add(VolumetricLight& light);
+		void add(SSAO& ssao);
 
 	private:
 		std::list<GUISnippet*> snippets;

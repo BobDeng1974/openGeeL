@@ -31,7 +31,7 @@ namespace geeL {
 
 
 	void DefaultSnippet::draw(GUIContext* context) {
-		float exposure = GUISnippets::drawBarFloat(context, def.getExposure(), 0.f, 50.f, 0.1f, "Exposure");
+		float exposure = GUISnippets::drawBarFloat(context, def.getExposure(), 0.f, 25.f, 0.1f, "Exposure");
 		def.setExposure(exposure);
 	}
 
@@ -109,7 +109,7 @@ namespace geeL {
 		glm::vec3 position = GUISnippets::drawVector2(context, ray.getLightPosition(), "", 100, 0.1f);
 		ray.setLightPosition(position);
 
-		int samples = GUISnippets::drawBarInteger(context, ray.getSampleCount(), 0, 50, 1, "Samples");
+		int samples = GUISnippets::drawBarInteger(context, ray.getSampleCount(), 0, 25, 1, "Samples");
 		ray.setSampleCount(samples);
 	}
 

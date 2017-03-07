@@ -1,6 +1,6 @@
 #include "../guiwrapper.h"
-#include "../guisnippets.h"
-#include "postsnippets.h"
+#include "../snippets/guisnippets.h"
+#include "../snippets/postsnippets.h"
 #include "posteffectlister.h"
 
 
@@ -15,7 +15,7 @@ namespace geeL {
 
 	void PostProcessingEffectLister::draw(GUIContext* context) {
 		
-		if (nk_begin(context, "Post processing", nk_rect(20, 400, 350, 350),
+		if (nk_begin(context, "Post Processing", nk_rect(20, 400, 350, 350),
 			NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
 			NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE)) {
 
@@ -41,42 +41,42 @@ namespace geeL {
 		nk_end(context);
 	}
 
-	void PostProcessingEffectLister::addDefaultEffect(DefaultPostProcess& def) {
+	void PostProcessingEffectLister::add(DefaultPostProcess& def) {
 		DefaultSnippet* snippet = new DefaultSnippet(def);
 		snippets.push_back(snippet);
 	}
 
-	void PostProcessingEffectLister::addBlurredEffect(BlurredPostEffect& effect, GUISnippet& effectSnippet) {
+	void PostProcessingEffectLister::add(BlurredPostEffect& effect, GUISnippet& effectSnippet) {
 		BlurredEffectSnippet* snippet = new BlurredEffectSnippet(effect, effectSnippet);
 		snippets.push_back(snippet);
 	}
 
-	void PostProcessingEffectLister::addBloom(Bloom& bloom) {
+	void PostProcessingEffectLister::add(Bloom& bloom) {
 		BloomSnippet* snippet = new BloomSnippet(bloom);
 		snippets.push_back(snippet);
 	}
 
-	void PostProcessingEffectLister::addColorCorrection(ColorCorrection& color) {
+	void PostProcessingEffectLister::add(ColorCorrection& color) {
 		ColorCorrectionSnippet* snippet = new ColorCorrectionSnippet(color);
 		snippets.push_back(snippet);
 	}
 
-	void PostProcessingEffectLister::addDepthOfField(DepthOfFieldBlurred& dof) {
+	void PostProcessingEffectLister::add(DepthOfFieldBlurred& dof) {
 		DepthOfFieldBlurredSnippet* snippet = new DepthOfFieldBlurredSnippet(dof);
 		snippets.push_back(snippet);
 	}
 
-	void PostProcessingEffectLister::addGodRay(GodRay& ray) {
+	void PostProcessingEffectLister::add(GodRay& ray) {
 		GodRaySnippet* snippet = new GodRaySnippet(ray);
 		snippets.push_back(snippet);
 	}
 
-	void PostProcessingEffectLister::addVolumetricLight(VolumetricLight& light) {
+	void PostProcessingEffectLister::add(VolumetricLight& light) {
 		VolumetricLightSnippet* snippet = new VolumetricLightSnippet(light);
 		snippets.push_back(snippet);
 	}
 
-	void PostProcessingEffectLister::addSSAO(SSAO& ssao) {
+	void PostProcessingEffectLister::add(SSAO& ssao) {
 		SSAOSnippet* snippet = new SSAOSnippet(ssao);
 		snippets.push_back(snippet);
 	}

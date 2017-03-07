@@ -68,10 +68,8 @@
 
 #include "../interface/guirenderer.h"
 #include "../interface/elements/objectlister.h"
-#include "../interface/elements/postsnippets.h"
+#include "../interface/snippets/postsnippets.h"
 #include "../interface/elements/posteffectlister.h"
-#include "../interface/elements/testelement.h"
-
 
 #include <glm.hpp>
 #include "a_shadows.h"
@@ -130,7 +128,7 @@ namespace {
 
 			geeL::Transform* lighTransi3 = new geeL::Transform(glm::vec3(-7, 5, 0), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
 			spotLight = &lightManager.addSpotlight(*lighTransi3, glm::vec3(l, l, l * 2), angle, outerAngle);
-			
+
 			l = 0.5f;
 			geeL::Transform* lighTransi2 = new geeL::Transform(glm::vec3(0.f, 0.f, 0.f), glm::vec3(75, 20, 10), glm::vec3(1.f, 1.f, 1.f));
 			//dirLight = &lightManager.addDirectionalLight(*lighTransi2, glm::vec3(l, l, l));
@@ -293,27 +291,27 @@ void a_shadows() {
 
 	ColorCorrection colorCorrect = ColorCorrection();
 
-	postLister.addDefaultEffect(def);
-	postLister.addSSAO(ssao);
+	postLister.add(def);
+	postLister.add(ssao);
 
 	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
 	renderer1.addEffect(volSmooth, { &vol, &sobelBlur });
-	postLister.addBlurredEffect(volSmooth, lightSnippet);
+	postLister.add(volSmooth, lightSnippet);
 
 	renderer1.addEffect(bloom);
-	postLister.addBloom(bloom);
+	postLister.add(bloom);
 
 	GodRaySnippet godRaySnippet = GodRaySnippet(ray);
 	renderer1.addEffect(raySmooth);
-	postLister.addBlurredEffect(raySmooth, godRaySnippet);
+	postLister.add(raySmooth, godRaySnippet);
 
 	//nderer1.addEffect(ssrrSmooth, ssrr);
 	
 	renderer1.addEffect(dof, dof);
-	postLister.addDepthOfField(dof);
+	postLister.add(dof);
 
 	renderer1.addEffect(colorCorrect);
-	postLister.addColorCorrection(colorCorrect);
+	postLister.add(colorCorrect);
 
 	renderer1.addEffect(fxaa);
 

@@ -35,7 +35,6 @@ namespace geeL {
 		static void drawTransform(GUIContext* context, Transform& transform);
 		static void drawTransformTree(GUIContext* context, Transform& transform);
 		static void drawColor(GUIContext* context, glm::vec3& color);
-		static void drawLight(GUIContext* context, Light& light);
 
 	};
 }

@@ -1,6 +1,6 @@
-#include "../renderer/lighting/light.h"
-#include "../renderer/transformation/transform.h"
-#include "guiwrapper.h"
+#include "../../renderer/lighting/light.h"
+#include "../../renderer/transformation/transform.h"
+#include "../guiwrapper.h"
 #include "guisnippets.h"
 
 namespace geeL {
@@ -97,8 +97,6 @@ namespace geeL {
 	void GUISnippets::drawColor(GUIContext* context, glm::vec3& color) {
 
 		nk_color c = nk_rgb(color.r, color.g, color.b);
-
-		nk_layout_row_dynamic(context, 25, 1);
 		if (nk_combo_begin_color(context, c, nk_vec2(nk_widget_width(context), 400))) {
 			nk_layout_row_dynamic(context, 120, 1);
 			c = nk_color_picker(context, c, NK_RGB);
@@ -110,22 +108,4 @@ namespace geeL {
 		}
 	}
 
-	void GUISnippets::drawLight(GUIContext* context, Light& light) {
-
-		std::string id = "Light #" + std::to_string(light.transform.getID());
-
-		if (nk_tree_push(context, NK_TREE_NODE, id.c_str(), NK_MINIMIZED)) {
-
-			drawColor(context, light.diffuse);
-			drawTransform(context, light.transform);
-
-			nk_layout_row_dynamic(context, 30, 2);
-			nk_label(context, "Shadow Bias", NK_TEXT_LEFT);
-			nk_slider_float(context, 0.f, &light.dynamicBias, 0.01f, 0.0001f);
-
-			nk_tree_pop(context);
-		}
-	}
-
-	
 }

@@ -1,7 +1,7 @@
 #ifndef POSTEFFECTSNIPPETS_H
 #define POSTEFFECTSNIPPETS_H
 
-#include "../guisnippets.h"
+#include "guisnippets.h"
 
 namespace geeL {
 
