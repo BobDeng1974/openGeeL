@@ -22,8 +22,7 @@ namespace geeL {
 		ambient(ambient),
 		dlShader(new Shader("renderer/shaders/shadowmapping.vert", "renderer/shaders/empty.frag")),
 		plShader(new Shader("renderer/shaders/empty.vert", "renderer/shaders/shadowmapping.gs", 
-			"renderer/shaders/shadowmapping.frag"))
-		{}
+			"renderer/shaders/shadowmapping.frag")) {}
 
 
 	LightManager::~LightManager() {

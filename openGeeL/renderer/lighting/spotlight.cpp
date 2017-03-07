@@ -14,9 +14,9 @@ using namespace glm;
 namespace geeL {
 
 	SpotLight::SpotLight(Transform& transform, vec3 diffuse, 
-		float angle, float outerAngle, float shadowBias)
+		float angle, float outerAngle, float shadowBias, float farPlane)
 			: Light(transform, diffuse, shadowBias), 
-				angle(angle), outerAngle(outerAngle) {
+				angle(angle), outerAngle(outerAngle), farPlane(farPlane) {
 	
 		setResolution(ShadowmapResolution::Adaptive);
 	}
@@ -46,7 +46,7 @@ namespace geeL {
 
 	void SpotLight::computeLightTransform() {
 		float fov = glm::degrees(angle);
-		mat4 projection = glm::perspective(fov, 1.f, 1.0f, 50.f);
+		mat4 projection = glm::perspective(fov, 1.f, 1.0f, farPlane);
 		mat4 view = lookAt(transform.position, transform.position + transform.forward, transform.up);
 
 		lightTransform = projection * view;

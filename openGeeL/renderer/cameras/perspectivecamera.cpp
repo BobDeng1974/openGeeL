@@ -26,4 +26,8 @@ namespace geeL {
 
 		currentFOV = FOV + input.getMouseScroll();
 	}
+
+	const float& PerspectiveCamera::getFarPlane() const {
+		return farClip;
+	}
 }

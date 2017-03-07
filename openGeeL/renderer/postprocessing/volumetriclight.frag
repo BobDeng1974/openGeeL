@@ -60,8 +60,6 @@ void main() {
 
 		float attenuation = 1.f / (lightDistance * lightDistance);
 
-		attenuation = (attenuation < 0.001f) ? 0.f : attenuation;
-
 		//Set intensity depending on if object is inside spotlights halo (or outer halo)
 		float theta = dot(lightDirection, normalize(-light.direction)); 
 		float epsilon = (light.angle - light.outerAngle);

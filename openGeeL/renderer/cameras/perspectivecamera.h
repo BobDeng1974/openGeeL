@@ -18,6 +18,8 @@ namespace geeL {
 
 		virtual void handleInput(const InputManager& input);
 
+		const float& getFarPlane() const;
+
 	private:
 		float FOV, currentFOV, width, height, 
 			nearClip, farClip;

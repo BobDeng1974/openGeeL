@@ -127,7 +127,7 @@ namespace {
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
 
-			geeL::Transform* lighTransi3 = new geeL::Transform(glm::vec3(-7, 5, 0), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
+			geeL::Transform* lighTransi3 = new geeL::Transform(glm::vec3(-9, 5, 0), glm::vec3(-264.0f, 0, -5), glm::vec3(1.f, 1.f, 1.f));
 			spotLight = &lightManager.addSpotlight(*lighTransi3, glm::vec3(l, l, l * 2), angle, outerAngle);
 
 			l = 0.5f;
@@ -271,7 +271,7 @@ void a_shadows() {
 	renderer1.addGUIRenderer(&gui);
 	
 	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
-	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50), 10.f);
+	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50), 15.f);
 	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
 
 	GaussianBlur& blur4 = GaussianBlur();
@@ -279,7 +279,7 @@ void a_shadows() {
 	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.3f, 0.3f);
 	
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera3.depth, 12.f, 100.f, 0.3f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera3.depth, 2.f, 100.f, 0.3f);
 
 	FXAA fxaa = FXAA();
 
