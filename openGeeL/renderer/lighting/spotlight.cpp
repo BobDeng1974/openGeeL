@@ -96,7 +96,7 @@ namespace geeL {
 			int resolution = 128; //^= ShadowmapResolution::Small
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);
-				dynamicBias = shadowBias * 2.f;
+				dynamicBias = shadowBias * 1.5f;
 				changed = true;
 			}
 		}

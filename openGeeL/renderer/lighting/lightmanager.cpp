@@ -107,7 +107,6 @@ namespace geeL {
 		int plCount = 0;
 		int dlCount = 0;
 		int slCount = 0;
-		
 
 		for (size_t j = 0; j < staticPLs.size(); j++) {
 			if (staticPLs[j]->isActive()) {

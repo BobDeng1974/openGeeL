@@ -112,7 +112,7 @@ namespace geeL {
 			int resolution = 1024; //^= ShadowmapResolution::VeryHigh
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);
-				dynamicBias = shadowBias * 0.6f;
+				dynamicBias = shadowBias * 0.2f;
 				changed = true;
 			}
 		}
@@ -121,7 +121,7 @@ namespace geeL {
 			int resolution = 768;
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);
-				dynamicBias = shadowBias * 0.7f;
+				dynamicBias = shadowBias * 0.3f;
 				changed = true;
 			}
 		}
@@ -130,7 +130,7 @@ namespace geeL {
 			int resolution = 512; //^= ShadowmapResolution::High
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);
-				dynamicBias = shadowBias * 0.8f;
+				dynamicBias = shadowBias * 0.4f;
 				changed = true;
 			}
 		}
@@ -139,7 +139,7 @@ namespace geeL {
 			int resolution = 386;
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);
-				dynamicBias = shadowBias;
+				dynamicBias = shadowBias * 0.7f;
 				changed = true;
 			}
 		}
