@@ -15,8 +15,8 @@ using namespace glm;
 
 namespace geeL {
 
-	Light::Light(Transform& transform, vec3 diffuse, float shadowBias)
-		: SceneObject(transform), diffuse(diffuse), shadowBias(shadowBias), dynamicBias(shadowBias) {}
+	Light::Light(Transform& transform, vec3 diffuse, float shadowBias, std::string name)
+		: SceneObject(transform, name), diffuse(diffuse), shadowBias(shadowBias), dynamicBias(shadowBias) {}
 
 
 

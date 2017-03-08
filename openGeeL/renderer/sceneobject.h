@@ -1,6 +1,7 @@
 #ifndef SCENEOBJECT_H
 #define SCENEOBJECT_H
 
+#include <string>
 #include <list>
 #include <memory>
 
@@ -14,7 +15,7 @@ namespace geeL {
 	public:
 		Transform& transform;
 
-		SceneObject(Transform& transform);
+		SceneObject(Transform& transform, std::string name = "Scene Object");
 
 		//Update object and all its components
 		virtual void update();
@@ -25,8 +26,12 @@ namespace geeL {
 		bool isActive() const;
 		void setActive(bool active);
 
+		std::string getName() const;
+		void setName(std::string name);
+
 	private:
 		bool active;
+		std::string name;
 		std::list<std::shared_ptr<Component>> components;
 
 	};

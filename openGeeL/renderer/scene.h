@@ -35,11 +35,11 @@ namespace geeL {
 
 		//Create and add new mesh renderer to scene
 		MeshRenderer& AddMeshRenderer(std::string modelPath, Transform& transform, 
-			CullingMode faceCulling, bool deferred = true);
+			CullingMode faceCulling, bool deferred = true, std::string name = "MeshRenderer");
 
 		//Create and add new mesh renderer with custom materials to scene
 		MeshRenderer& AddMeshRenderer(std::string modelPath, Transform& transform, 
-			std::vector<Material*> materials, CullingMode faceCulling);
+			std::vector<Material*> materials, CullingMode faceCulling, std::string name = "MeshRenderer");
 
 		//Update scene information. Should be called once at beginning of frame
 		void update();

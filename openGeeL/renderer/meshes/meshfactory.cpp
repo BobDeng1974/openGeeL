@@ -26,17 +26,17 @@ namespace geeL {
 		return models[filePath];
 	}
 
-	MeshRenderer& MeshFactory::CreateMeshRenderer(Model& model, Transform& transform, CullingMode faceCulling) {
-		meshRenderer.push_back(MeshRenderer(transform, *factory.defaultShader, model, faceCulling));
+	MeshRenderer& MeshFactory::CreateMeshRenderer(Model& model, Transform& transform, CullingMode faceCulling, string name) {
+		meshRenderer.push_back(MeshRenderer(transform, *factory.defaultShader, model, faceCulling, true, name));
 
 		return meshRenderer.back();
 	}
 
 	MeshRenderer* MeshFactory::CreateMeshRendererManual(Model& model, Transform& transform, 
-		CullingMode faceCulling, bool deferred) {
+		CullingMode faceCulling, bool deferred, string name) {
 		
 		return new MeshRenderer(transform, deferred ? factory.getDeferredShader() 
-			: factory.getForwardShader(), model, faceCulling, deferred);
+			: factory.getForwardShader(), model, faceCulling, deferred, name);
 	}
 
 	map<string, Model>::iterator MeshFactory::modelsBegin() {

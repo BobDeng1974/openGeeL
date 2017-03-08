@@ -14,14 +14,16 @@ using namespace std;
 
 namespace geeL{
 
-	MeshRenderer::MeshRenderer(Transform& transform, Shader& shader, CullingMode faceCulling, bool deferred)
-		: SceneObject(transform), model(nullptr), faceCulling(faceCulling), instanced(true) {
+	MeshRenderer::MeshRenderer(Transform& transform, Shader& shader, 
+		CullingMode faceCulling, bool deferred, std::string name)
+			: SceneObject(transform, name), model(nullptr), faceCulling(faceCulling), instanced(true) {
 	
 		initMaterials(shader, deferred);
 	}
 
-	MeshRenderer::MeshRenderer(Transform& transform, Shader& shader, Model& model, CullingMode faceCulling, bool deferred)
-		: SceneObject(transform), model(&model), faceCulling(faceCulling), instanced(false) {
+	MeshRenderer::MeshRenderer(Transform& transform, Shader& shader, Model& model, 
+		CullingMode faceCulling, bool deferred, std::string name)
+			: SceneObject(transform, name), model(&model), faceCulling(faceCulling), instanced(false) {
 	
 		initMaterials(shader, deferred);
 	}

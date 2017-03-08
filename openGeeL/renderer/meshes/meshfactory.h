@@ -28,11 +28,12 @@ namespace geeL {
 		//returns an existing model if it already uses this file
 		Model& CreateModel(std::string filePath);
 
-		MeshRenderer& CreateMeshRenderer(Model& model, Transform& transform, CullingMode faceCulling);
+		MeshRenderer& CreateMeshRenderer(Model& model, Transform& transform, 
+			CullingMode faceCulling, std::string name = "MeshRenderer");
 
 		//Create mesh renderer on heap. Caller has to manage its memory manually
 		MeshRenderer* CreateMeshRendererManual(Model& model, Transform& transform, 
-			CullingMode faceCulling, bool deferred = true);
+			CullingMode faceCulling, bool deferred = true, std::string name = "MeshRenderer");
 
 		std::map<std::string, Model>::iterator modelsBegin();
 		std::map<std::string, Model>::iterator modelsEnd();

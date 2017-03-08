@@ -6,7 +6,8 @@ using namespace std;
 
 namespace geeL {
 
-	SceneObject::SceneObject(Transform& transform) : transform(transform), active(true) {}
+	SceneObject::SceneObject(Transform& transform, std::string name) 
+		: transform(transform), name(name), active(true) {}
 
 
 	void SceneObject::update() {
@@ -26,6 +27,14 @@ namespace geeL {
 
 	void SceneObject::setActive(bool active) {
 		this->active = active;
+	}
+
+	std::string SceneObject::getName() const {
+		return name;
+	}
+
+	void SceneObject::setName(std::string name) {
+		this->name = name;
 	}
 
 }

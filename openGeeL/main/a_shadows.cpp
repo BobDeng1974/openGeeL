@@ -136,10 +136,10 @@ namespace {
 
 			float height = -2.f;
 			transi = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.2f, 0.2f, 0.2f));
-			nanoRenderer = &scene.AddMeshRenderer("resources/nanosuit/nanosuit.obj", *transi, cullFront);
+			nanoRenderer = &scene.AddMeshRenderer("resources/nanosuit/nanosuit.obj", *transi, cullFront, true, "Nanosuit");
 
 			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(100.2f, 0.2f, 100.2f));
-			MeshRenderer& plane = scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront);
+			MeshRenderer& plane = scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront, true, "Floor");
 
 			for (auto it = plane.deferredMaterialsBegin(); it != plane.deferredMaterialsEnd(); it++) {
 				Material* mat = it->second;
@@ -153,7 +153,7 @@ namespace {
 			}
 
 			geeL::Transform* transi5 = new geeL::Transform(glm::vec3(-30.0f, -4.f, 25.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.3f, 0.3f, 0.3f));
-			MeshRenderer& box1 = scene.AddMeshRenderer("resources/empire/EmpireState_lp.obj", *transi5, cullFront);
+			MeshRenderer& box1 = scene.AddMeshRenderer("resources/empire/EmpireState_lp.obj", *transi5, cullFront, true, "Empire State");
 
 			for (auto it = box1.deferredMaterialsBegin(); it != box1.deferredMaterialsEnd(); it++) {
 				Material* mat = it->second;
@@ -166,7 +166,7 @@ namespace {
 			}
 
 			geeL::Transform* transi7 = new geeL::Transform(glm::vec3(8.f, 0.f, 4.f), glm::vec3(0.f), glm::vec3(1.f, 1.f, 1.f));
-			MeshRenderer& sphere1 = scene.AddMeshRenderer("resources/primitives/sphere.obj", *transi7, cullFront);
+			MeshRenderer& sphere1 = scene.AddMeshRenderer("resources/primitives/sphere.obj", *transi7, cullFront, true, "Sphere");
 
 			for (auto it = sphere1.deferredMaterialsBegin(); it != sphere1.deferredMaterialsEnd(); it++) {
 				Material* mat = it->second;
@@ -180,7 +180,7 @@ namespace {
 			}
 
 			geeL::Transform* transi3 = new geeL::Transform(glm::vec3(0.0f, 1, -2.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(5.2f, 2.2f, 1.2f));
-			MeshRenderer& box = scene.AddMeshRenderer("resources/primitives/cube.obj", *transi3, cullFront);
+			MeshRenderer& box = scene.AddMeshRenderer("resources/primitives/cube.obj", *transi3, cullFront, true, "Box");
 
 			for (auto it = box.deferredMaterialsBegin(); it != box.deferredMaterialsEnd(); it++) {
 				Material* mat = it->second;
@@ -194,7 +194,7 @@ namespace {
 			}
 
 			geeL::Transform* transi79 = new geeL::Transform(glm::vec3(4.f, -0.4f, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", *transi79, cullFront);
+			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", *transi79, cullFront, true, "Cyborg");
 		}
 
 		virtual void draw(const Camera& camera) {

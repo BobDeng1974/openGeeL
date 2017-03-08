@@ -26,12 +26,12 @@ namespace geeL {
 		const CullingMode faceCulling;
 
 		//Constructor for mesh renderer with no assigned model (since it will be drawn instanced)
-		MeshRenderer(Transform& transform, Shader& shader, 
-			CullingMode faceCulling = cullFront, bool deferred = true);
+		MeshRenderer(Transform& transform, Shader& shader,
+			CullingMode faceCulling = cullFront, bool deferred = true, std::string name = "MeshRenderer");
 
 		//Constructor for mesh renderer with an unique assigned model
 		MeshRenderer(Transform& transform, Shader& shader, Model& model, 
-			CullingMode faceCulling = cullFront, bool deferred = true);
+			CullingMode faceCulling = cullFront, bool deferred = true, std::string name = "MeshRenderer");
 
 		~MeshRenderer();
 

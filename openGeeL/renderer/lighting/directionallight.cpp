@@ -15,8 +15,8 @@ using namespace glm;
 
 namespace geeL {
 
-	DirectionalLight::DirectionalLight(Transform& transform, vec3 diffuse, float shadowBias) 
-		: Light(transform, diffuse, shadowBias) {
+	DirectionalLight::DirectionalLight(Transform& transform, vec3 diffuse, float shadowBias, std::string name)
+		: Light(transform, diffuse, shadowBias, name) {
 	
 		setResolution(ShadowmapResolution::High);
 	}

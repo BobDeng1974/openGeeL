@@ -33,7 +33,7 @@ namespace geeL {
 	void MeshRendererSnippet::draw(GUIContext* context) {
 
 		std::string number = "#" + std::to_string(mesh.transform.getID());
-		std::string id = "Mesh " + number;
+		std::string id = mesh.getName() + " " + number;
 		if (nk_tree_push(context, NK_TREE_NODE, id.c_str(), NK_MINIMIZED)) {
 			SceneObjectSnippet::draw(context);
 
@@ -77,7 +77,7 @@ namespace geeL {
 
 	void LightSnippet::draw(GUIContext* context) {
 
-		std::string id = "Light #" + std::to_string(light.transform.getID());
+		std::string id = light.getName() + " #" + std::to_string(light.transform.getID());
 		if (nk_tree_push(context, NK_TREE_NODE, id.c_str(), NK_MINIMIZED)) {
 			SceneObjectSnippet::draw(context);
 			GUISnippets::drawColor(context, light.diffuse);

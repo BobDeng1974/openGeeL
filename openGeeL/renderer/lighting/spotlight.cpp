@@ -14,8 +14,8 @@ using namespace glm;
 namespace geeL {
 
 	SpotLight::SpotLight(Transform& transform, vec3 diffuse, 
-		float angle, float outerAngle, float shadowBias, float farPlane)
-			: Light(transform, diffuse, shadowBias), 
+		float angle, float outerAngle, float shadowBias, float farPlane, std::string name)
+			: Light(transform, diffuse, shadowBias, name), 
 				angle(angle), outerAngle(outerAngle), farPlane(farPlane) {
 	
 		setResolution(ShadowmapResolution::Adaptive);
