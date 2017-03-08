@@ -14,8 +14,6 @@ class Camera;
 	public:
 		SSRR(const Camera& camera);
 
-		virtual void setBuffer(const FrameBuffer& buffer);
-
 		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
 			std::map<WorldMatrices, const glm::mat4*> matrices,
 			std::map<WorldVectors, const glm::vec3*> vectors);

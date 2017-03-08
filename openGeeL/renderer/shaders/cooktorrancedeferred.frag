@@ -40,7 +40,6 @@ in vec2 textureCoordinates;
 in mat3 TBN;
 
 layout (location = 0) out vec4 color;
-layout (location = 1) out float gSpecular;
   
 uniform int plCount;
 uniform int dlCount;
@@ -85,7 +84,7 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition);
 vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightColor, float density);
 
 vec3 calculateIndirectDiffuse(vec3 normal, vec3 kd, vec3 albedo, float occlusion);
-vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, vec3 ks, float roughness, float metallic);
+vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, float roughness, float metallic);
 
 
 //Return dot(a,b) >= 0
@@ -108,7 +107,6 @@ void main() {
     vec3 kd = vec3(1.0f) - ks;
     kd *= 1.0f - metallic; //metallic surfaces don't refract light => nullify kD if metallic
 
-	gSpecular = 0.f;
 	vec3 irradiance = vec3(0.f, 0.f, 0.f);
 	for(int i = 0; i < plCount; i++) {
 		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
@@ -124,7 +122,7 @@ void main() {
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
 
 	vec3 ambienceDiffuse = calculateIndirectDiffuse(normal, kd, albedo, occlusion); 
-	vec3 ambienceSpecular = calculateIndirectSpecular(normal, viewDirection, albedo, ks, roughness, metallic) * (1.f - roughness);
+	vec3 ambienceSpecular = calculateIndirectSpecular(normal, viewDirection, albedo, roughness, metallic);
 
 	color = vec4(irradiance + ambienceDiffuse + ambienceSpecular, 1.f);
 }
@@ -200,8 +198,6 @@ vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection,
 	float denom =  4.0f * doto(viewDirection, normal) * NdotL + 0.001f; 
 	vec3  brdf  = nom / denom;
 
-	gSpecular += luminance(ks) * (1.f - metallic) * attenuation;
-
 	return ((kd * albedo / PI + brdf) * radiance) * NdotL; 
 }
 
@@ -214,7 +210,6 @@ vec3 calculateReflectanceDirectional(vec3 fragPosition, vec3 normal, vec3 viewDi
 	vec3 halfwayDirection = normalize(lightDirection + viewDirection);
 	float NdotL = doto(normal, lightDirection);     
 
-	float lightDistance = length(dir);
 	vec3  radiance = lightDiffuse;
 
 	//BRDF
@@ -231,8 +226,6 @@ vec3 calculateReflectanceDirectional(vec3 fragPosition, vec3 normal, vec3 viewDi
 	//add small fraction to prevent ill behaviour when dividing by zero (shadows no longer additive)
 	float denom =  4.0f * doto(viewDirection, normal) * NdotL + 0.001f; 
 	vec3  brdf  = nom / denom;
-
-	gSpecular +=  luminance(ks) * (1.0f - roughness) * NdotL * luminance(radiance);
 
 	return ((kd * albedo / PI + brdf) * radiance) * NdotL; 
 }
@@ -300,7 +293,7 @@ vec3 generateSampledVector(float roughness, float i, float count) {
 }
 
 
-vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, vec3 ks, float roughness, float metallic) {
+vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, float roughness, float metallic) {
 
 	vec3 normalWorld = normalize((inverseView * vec4(origin + normal, 1.f)).xyz);
 	vec3 viewWorld = normalize((inverseView * vec4(origin + view, 1.f)).xyz);
@@ -327,15 +320,18 @@ vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, vec3 ks, flo
 
 		float geo = calculateGeometryFunctionSmith(normalWorld, viewWorld, sampleVector, roughness);
 
-		ks += fresnel;
 		float denom =  1.f / (4.f * NoV * doto(halfway, normalWorld) + 0.001f); 
 
 		irradiance += texture(skybox, sampleVector).rgb * geo * fresnel * sinT * denom;
 	}
 	
 	float samp = 1.f / float(sampleCount);
-	ks = ks * samp;
-	return irradiance * samp;
+	irradiance *= samp;
+
+	//Factor in pseudo NDF if only one sample is taken
+	float single = step(sampleCount, 2);
+	return irradiance * (1.f - single) + 
+		irradiance * single * (1.f - roughness);
 }
 
 

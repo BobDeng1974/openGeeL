@@ -1,5 +1,7 @@
 #version 430 core
 
+const float PI = 3.14159265359;
+
 in vec2 TexCoords;
 
 out vec4 color;
@@ -14,28 +16,50 @@ uniform int effectOnly;
 
 float border = 1.f;
 
+vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal);
+vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness);
+float calculateNormalDistrubution(vec3 normal, vec3 halfway, float roughness);
+float calculateGeometryFunctionSmith(vec3 normal, vec3 viewDirection, vec3 lightDirection, float roughness);
+
+//Return dot(a,b) >= 0
+float doto(vec3 a, vec3 b);
 vec3 interpolate(vec3 a, vec3 b, float i);
 float interpolatei(vec3 a, vec3 b, vec3 v);
 vec4 transformToClip(vec3 vector);
-vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal);
+
 
 void main() {
 	vec3 result = step(effectOnly, 0.f) * texture(image, TexCoords).rgb;
 	vec3 fragPos = texture(gPositionDepth, TexCoords).xyz;
 	float depth = -fragPos.z;
-	float specular = texture(gSpecular, TexCoords).r; 
+	float roughness = texture(gSpecular, TexCoords).w; 
 	
 	vec3 normal = normalize(texture(gNormalMet, TexCoords).rgb);
-	vec3 reflectionDir = normalize(reflect(fragPos, normal));
-	float dotNF = dot(normal, normalize(-fragPos));
+	vec3 reflectionDirection = normalize(reflect(fragPos, normal));
 
 	//DBranch to filter out large bunch of pixels
-	if(depth > 0.1f && specular > 0.02f) {
-		vec3 reflectionColor = specular * getReflection(fragPos, reflectionDir, normal);
-		color = vec4(result + reflectionColor, 1.0f);
+	if(depth > 0.1f && roughness < 0.99f) {
+		vec3 viewDirection = normalize(-fragPos);
+		float metallic = texture(gNormalMet, TexCoords).w;
+		vec3 reflectionColor = getReflection(fragPos, reflectionDirection, normal);
+
+		vec3 halfwayDirection = normalize(reflectionDirection + viewDirection);
+		float NdotL = dot(normal, viewDirection);
+
+		//BRDF
+		float ndf = calculateNormalDistrubution(normal, halfwayDirection, roughness);
+		float geo = calculateGeometryFunctionSmith(normal, viewDirection, reflectionDirection, roughness);
+		vec3 fres = calculateFresnelTerm(doto(halfwayDirection, viewDirection), reflectionColor, metallic, roughness);
+
+		//Lighting equation
+		vec3  nom   = geo * fres * clamp(ndf, 0.f, 1.f);
+		float denom =  4.f * doto(viewDirection, normal) * NdotL + 0.001f; 
+		vec3  brdf  = nom / denom;
+
+		color = vec4(result + reflectionColor * brdf * NdotL , 1.f);
 	}
 	else 
-		color = vec4(result, 1.0f);
+		color = vec4(result, 1.f);
 }
 
 vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal) {
@@ -101,6 +125,48 @@ vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal) {
 	return reflectionColor;
 }
 
+//Compute fresnel term with Fresnel-Schlick approximation
+vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness) {
+	vec3 F0 = vec3(0.04);
+    F0 = mix(F0, albedo, metallic);
+
+	vec3 fres = F0 + (max(vec3(1.0f - roughness), F0) - F0) * pow(1.0f - theta, 5.0f);
+	return clamp(fres, 0.f, 1.f);
+}
+
+//Trowbridge-Reitz GGX normal distribution function
+float calculateNormalDistrubution(vec3 normal, vec3 halfway, float roughness) {
+	//TODO: Fix problems in ndf and remove this cop out
+	float copOut = step(roughness, 0.1f);
+
+    float a = roughness * roughness;
+    float NdotH  = doto(normal, halfway);
+    float NdotH2 = NdotH * NdotH;
+	
+    float denom  = (NdotH2 * (a - 1.0f) + 1.0f);
+    denom = PI * denom * denom + 0.0001f;
+    return (a / denom) * (1.f - copOut) + (copOut);
+}
+
+float calculateGeometryFunctionSchlick(float NdotV, float roughness) {
+    float r = (roughness + 1.0f);
+    float k = (r * r) / 8.0f;
+
+    float nom   = NdotV;
+    float denom = NdotV * (1.0f - k) + k;
+	
+    return nom / denom;
+}
+
+float calculateGeometryFunctionSmith(vec3 normal, vec3 viewDirection, vec3 lightDirection, float roughness) {
+    float NdotV = doto(normal, viewDirection);
+    float NdotL = doto(normal, lightDirection);
+    float ggx2  = calculateGeometryFunctionSchlick(NdotV, roughness);
+    float ggx1  = calculateGeometryFunctionSchlick(NdotL, roughness);
+	
+    return ggx1 * ggx2;
+}
+
 //Transform to clip space
 vec4 transformToClip(vec3 vector) {
 	vec4 vecProj = vec4(vector, 1.f);
@@ -117,4 +183,8 @@ vec3 interpolate(vec3 a, vec3 b, float i) {
 
 float interpolatei(vec3 a, vec3 b, vec3 v) {
 	return length((v - a) / (b - a));
+}
+
+float doto(vec3 a, vec3 b) {
+	return max(dot(a, b), 0.0f);
 }

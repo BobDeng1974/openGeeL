@@ -89,7 +89,7 @@ float calculateSpotLightShadows(vec3 coords) {
 }
 
 vec3 convertToLightSpace(vec3 fragPosition) {
-	vec4 posLightSpace = light.lightTransform * inverseView * vec4(fragPosition, 1.0f);
+	vec4 posLightSpace = light.lightTransform * inverseView * vec4(fragPosition, 1.f);
 	vec3 coords = posLightSpace.xyz / posLightSpace.w;
 	coords = coords * 0.5f + 0.5f;
 

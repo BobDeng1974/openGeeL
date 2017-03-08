@@ -11,11 +11,6 @@ namespace geeL {
 		: PostProcessingEffect("renderer/postprocessing/ssrr.frag"), camera(camera) {}
 
 
-	void SSRR::setBuffer(const FrameBuffer& buffer) {
-		buffers.front() = buffer.getColorID();
-		buffers.push_back(buffer.getColorID(1));
-	}
-
 	void SSRR::bindValues() {
 		shader.setInteger("image", shader.mapOffset);
 		shader.setInteger("gSpecular", shader.mapOffset + 1);
@@ -30,7 +25,7 @@ namespace geeL {
 		const glm::mat4*> matrices,
 		map<WorldVectors, const glm::vec3*> vectors) {
 
-		addBuffer({ maps[WorldMaps::PositionDepth], maps[WorldMaps::NormalMetallic] });
+		addBuffer({ maps[WorldMaps::DiffuseRoughness], maps[WorldMaps::PositionDepth], maps[WorldMaps::NormalMetallic] });
 	}
 
 
