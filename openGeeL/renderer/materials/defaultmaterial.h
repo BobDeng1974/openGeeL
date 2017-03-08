@@ -17,10 +17,17 @@ namespace geeL {
 
 
 	public:
+		glm::vec3 color;
+
 		DefaultMaterialContainer(MaterialType type = Opaque);
 
 		void addTexture(std::string name, SimpleTexture& texture);
 		void addTextures(std::vector<SimpleTexture*> textures);
+
+		float getRoughness() const;
+		float getMetallic() const;
+		glm::vec3 getColor() const;
+
 		void setRoughness(float value);
 		void setMetallic(float value);
 		void setColor(glm::vec3 value);
@@ -29,7 +36,7 @@ namespace geeL {
 		virtual void bind(Shader& shader) const;
 
 	private:
-		glm::vec3 color;
+		
 		float roughness;
 		float metallic;
 		LayeredTexture textureStack;

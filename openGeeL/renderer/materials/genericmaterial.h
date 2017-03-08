@@ -2,8 +2,7 @@
 #define GENERICMATERIAL_H
 
 #include <utility>
-#include <vector>
-#include <list>
+#include <map>
 #include <string>
 #include <vec3.hpp>
 #include <mat4x4.hpp>
@@ -32,26 +31,28 @@ namespace geeL {
 		void addParameter(std::string name, vec3 parameter);
 		void addParameter(std::string name, mat4 parameter);
 
-		void addParameter(std::string name, const float* parameter);
-		void addParameter(std::string name, const int* parameter);
-		void addParameter(std::string name, const vec3* parameter);
-		void addParameter(std::string name, const mat4* parameter);
-
 		void bindTextures(Shader& shader) const;
 		void bind(Shader& shader) const;
+
+		float getFloatValue(std::string name) const;
+		int   getIntValue(std::string name) const;
+		vec3  getVectorValue(std::string name) const;
+		mat4  getMatrixValue(std::string name) const;
+
+		void getFloatValue(std::string name, float value) ;
+		void setIntValue(std::string name, int value);
+		void setVectorValue(std::string name, vec3 value);
+		void setMatrixValue(std::string name, mat4 value);
+
 
 	private:
 		LayeredTexture textureStack;
 
-		std::list<std::pair<std::string, float>> floatParameters;
-		std::list<std::pair<std::string, int>> intParameters;
-		std::list<std::pair<std::string, vec3>> vec3Parameters;
-		std::list<std::pair<std::string, mat4>> mat4Parameters;
+		std::map<std::string, float> floatParameters;
+		std::map<std::string, int> intParameters;
+		std::map<std::string, vec3> vec3Parameters;
+		std::map<std::string, mat4> mat4Parameters;
 
-		std::list<std::pair<std::string, const float*>> unmanagedFloatParameters;
-		std::list<std::pair<std::string, const int*>> unmanagedIntParameters;
-		std::list<std::pair<std::string, const vec3*>> unmanagedVec3Parameters;
-		std::list<std::pair<std::string, const mat4*>> unmanagedMat4Parameters;
 	};
 }
 

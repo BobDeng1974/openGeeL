@@ -1,7 +1,10 @@
+#include "../../renderer/materials/defaultmaterial.h"
+#include "../../renderer/materials/genericmaterial.h"
 #include "../../renderer/lighting/light.h"
 #include "../../renderer/transformation/transform.h"
 #include "../guiwrapper.h"
 #include "guisnippets.h"
+#include <iostream>
 
 namespace geeL {
 
@@ -106,6 +109,26 @@ namespace geeL {
 			color.b = (nk_byte)nk_propertyi(context, "#B:", 0, c.b, 255, 1, 1);
 			nk_combo_end(context);
 		}
+	}
+
+	void GUISnippets::drawMaterial(GUIContext* context, GenericMaterialContainer* material) {
+		nk_layout_row_dynamic(context, 30, 1);
+		nk_label(context, "Generic material not supported in GUI", NK_TEXT_LEFT);
+	}
+
+	void GUISnippets::drawMaterial(GUIContext* context, DefaultMaterialContainer* material) {
+		float roughness = drawBarFloat(context, material->getRoughness(), 0.f, 1.0f, 0.001f, "Roughness");
+		material->setRoughness(roughness);
+
+		float metallic = drawBarFloat(context, material->getMetallic(), 0.f, 1.0f, 0.001f, "Metallic");
+		material->setMetallic(metallic);
+
+		nk_layout_row_dynamic(context, 20, 1);
+		glm::vec3 color = material->getColor();
+		color = glm::vec3(color.r * 255.f, color.g * 255.f, color.b * 255.f);
+
+		drawColor(context, color);
+		material->setColor(glm::vec3(color.r / 255.f, color.g / 255.f, color.b / 255.f));
 	}
 
 }

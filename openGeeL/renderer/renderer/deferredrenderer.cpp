@@ -81,11 +81,12 @@ namespace geeL {
 			deferredShader->setInteger("useSSAO", 1);
 		}
 
-		frameBuffer1.init(window->width, window->height, 2, { RGBA16, Single });
-		frameBuffer2.init(window->width, window->height, 2, { RGBA16, Single });
+		//frameBuffer1.init(window->width, window->height, 2, { RGBA16, Single });
+		//frameBuffer2.init(window->width, window->height, 2, { RGBA16, Single });
+		frameBuffer1.init(window->width, window->height, 1, RGBA16);
+		frameBuffer2.init(window->width, window->height, 1, RGBA16);
 		screen.init();
-
-		
+		screen.init();
 	}
 
 	void DeferredRenderer::renderInit() {

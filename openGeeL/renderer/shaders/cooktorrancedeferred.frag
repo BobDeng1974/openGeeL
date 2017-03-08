@@ -427,7 +427,7 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition) {
 		float curDepth = coords.z - bias;
 
 		float shadow = 0.f;
-		vec2 texelSize = 1.0f / textureSize(spotLights[i].shadowMap, 0);
+		vec2 texelSize = 0.5f / textureSize(spotLights[i].shadowMap, 0);
 		int samples = 8;
 		for(int j = 0; j < samples; j++) {
 			int index = int(20.0f * random(floor(fragPosition.xyz * 1000.0f), j)) % 20;

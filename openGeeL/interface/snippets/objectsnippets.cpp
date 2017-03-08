@@ -1,4 +1,7 @@
 #include "../../renderer/transformation/transform.h"
+#include "../../renderer/materials/material.h"
+#include "../../renderer/materials/defaultmaterial.h"
+#include "../../renderer/materials/genericmaterial.h"
 #include "../../renderer/meshes/meshrenderer.h"
 #include "../../renderer/lighting/light.h"
 #include  "../../renderer/sceneobject.h"
@@ -29,9 +32,37 @@ namespace geeL {
 
 	void MeshRendererSnippet::draw(GUIContext* context) {
 
-		std::string id = "Mesh #" + std::to_string(mesh.transform.getID());
+		std::string number = "#" + std::to_string(mesh.transform.getID());
+		std::string id = "Mesh " + number;
 		if (nk_tree_push(context, NK_TREE_NODE, id.c_str(), NK_MINIMIZED)) {
 			SceneObjectSnippet::draw(context);
+
+			std::string materials = "Materials " + number;
+			if (nk_tree_push(context, NK_TREE_NODE, materials.c_str(), NK_MINIMIZED)) {
+				
+				unsigned int counter = 0;
+				for (auto it = mesh.deferredMaterialsBegin(); it != mesh.deferredMaterialsEnd(); it++) {
+					MaterialContainer* cont = &(*it).second->container;
+
+					std::string name = "Material " + std::to_string(counter);
+					nk_layout_row_dynamic(context, 30, 1);
+					nk_label(context, name.c_str(), NK_TEXT_LEFT);
+
+					//TODO: Make this less horrible and remove casts
+					DefaultMaterialContainer* def = static_cast<DefaultMaterialContainer*>(cont);
+					if(def != nullptr)
+						GUISnippets::drawMaterial(context, def);
+					else {
+						GenericMaterialContainer* gen = static_cast<GenericMaterialContainer*>(cont);
+						if(gen != nullptr)
+							GUISnippets::drawMaterial(context, gen);
+					}
+
+					counter++;
+				}
+				
+				nk_tree_pop(context);
+			}
 
 			nk_tree_pop(context);
 		}

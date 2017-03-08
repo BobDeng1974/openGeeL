@@ -3,6 +3,9 @@
 
 #include <string>
 #include <vec3.hpp>
+#include "../../renderer/materials/material.h"
+#include "../../renderer/materials/material.h"
+#include "../../renderer/materials/material.h"
 
 struct nk_context;
 
@@ -12,6 +15,8 @@ namespace geeL {
 
 	class Transform;
 	class Light;
+	class GenericMaterialContainer;
+	class DefaultMaterialContainer;
 
 
 	class GUISnippet {
@@ -35,6 +40,9 @@ namespace geeL {
 		static void drawTransform(GUIContext* context, Transform& transform);
 		static void drawTransformTree(GUIContext* context, Transform& transform);
 		static void drawColor(GUIContext* context, glm::vec3& color);
+
+		static void drawMaterial(GUIContext* context, GenericMaterialContainer* material);
+		static void drawMaterial(GUIContext* context, DefaultMaterialContainer* material);
 
 	};
 }

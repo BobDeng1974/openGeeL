@@ -146,7 +146,7 @@ namespace {
 				DefaultMaterialContainer* defmat = dynamic_cast<DefaultMaterialContainer*>(&mat->container);
 
 				if (defmat != nullptr) {
-					defmat->setRoughness(1.f);
+					defmat->setRoughness(0.9f);
 					defmat->setMetallic(0.f);
 					defmat->setColor(vec3(0.4f, 0.4f, 0.4f));
 				}
@@ -187,7 +187,7 @@ namespace {
 				DefaultMaterialContainer* defmat = dynamic_cast<DefaultMaterialContainer*>(&mat->container);
 
 				if (defmat != nullptr) {
-					defmat->setRoughness(0.4f);
+					defmat->setRoughness(0.0f);
 					defmat->setMetallic(0.1f);
 					defmat->setColor(vec3(0.1f, 0.1f, 0.1f));
 				}
@@ -297,21 +297,21 @@ void a_shadows() {
 	postLister.add(def);
 	postLister.add(ssao);
 
-	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
-	renderer1.addEffect(volSmooth, { &vol, &sobelBlur });
-	postLister.add(volSmooth, lightSnippet);
+	//VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
+	//renderer1.addEffect(volSmooth, { &vol, &sobelBlur });
+	//postLister.add(volSmooth, lightSnippet);
 
-	renderer1.addEffect(bloom);
-	postLister.add(bloom);
+	//renderer1.addEffect(bloom);
+	//postLister.add(bloom);
 
-	GodRaySnippet godRaySnippet = GodRaySnippet(ray);
-	renderer1.addEffect(raySmooth);
-	postLister.add(raySmooth, godRaySnippet);
+	//GodRaySnippet godRaySnippet = GodRaySnippet(ray);
+	//renderer1.addEffect(raySmooth);
+	//postLister.add(raySmooth, godRaySnippet);
 
-	//nderer1.addEffect(ssrrSmooth, ssrr);
+	renderer1.addEffect(ssrrSmooth, ssrr);
 	
-	renderer1.addEffect(dof, dof);
-	postLister.add(dof);
+	//renderer1.addEffect(dof, dof);
+	//postLister.add(dof);
 
 	renderer1.addEffect(colorCorrect);
 	postLister.add(colorCorrect);

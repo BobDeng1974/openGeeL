@@ -53,7 +53,7 @@ void main() {
 
 		//Lighting equation
 		vec3  nom   = geo * fres * clamp(ndf, 0.f, 1.f);
-		float denom =  4.f * doto(viewDirection, normal) * NdotL + 0.001f; 
+		float denom = 4.f * doto(viewDirection, normal) * NdotL + 0.001f; 
 		vec3  brdf  = nom / denom;
 
 		color = vec4(result + reflectionColor * brdf * NdotL , 1.f);

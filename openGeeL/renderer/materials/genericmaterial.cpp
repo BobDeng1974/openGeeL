@@ -2,6 +2,7 @@
 #include <glew.h>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
+#include <iostream>
 #include "genericmaterial.h"
 #include "../shader/shader.h"
 #include "../texturing/simpletexture.h"
@@ -28,36 +29,21 @@ namespace geeL {
 	}
 
 	void GenericMaterialContainer::addParameter(string name, float parameter) {
-		floatParameters.push_back(pair<string, float>(this->name + "." + name, parameter));
+		floatParameters[this->name + "." + name] = parameter;
 	}
 
 	void GenericMaterialContainer::addParameter(string name, int parameter) {
-		intParameters.push_back(pair<string, int>(this->name + "." + name, parameter));
+		intParameters[this->name + "." + name] = parameter;
 	}
 
 	void GenericMaterialContainer::addParameter(string name, vec3 parameter) {
-		vec3Parameters.push_back(pair<string, vec3>(this->name + "." + name, parameter));
+		vec3Parameters[this->name + "." + name] = parameter;
 	}
 
 	void GenericMaterialContainer::addParameter(string name, mat4 parameter) {
-		mat4Parameters.push_back(pair<string, mat4>(this->name + "." + name, parameter));
+		mat4Parameters[this->name + "." + name] = parameter;
 	}
 
-	void GenericMaterialContainer::addParameter(string name, const float* parameter) {
-		unmanagedFloatParameters.push_back(pair<string, const float*>(this->name + "." + name, parameter));
-	}
-
-	void GenericMaterialContainer::addParameter(string name, const int* parameter) {
-		unmanagedIntParameters.push_back(pair<string, const int*>(this->name + "." + name, parameter));
-	}
-
-	void GenericMaterialContainer::addParameter(string name, const vec3* parameter) {
-		unmanagedVec3Parameters.push_back(pair<string, const vec3*>(this->name + "." + name, parameter));
-	}
-
-	void GenericMaterialContainer::addParameter(string name, const mat4* parameter) {
-		unmanagedMat4Parameters.push_back(pair<string, const mat4*>(this->name + "." + name, parameter));
-	}
 
 	void GenericMaterialContainer::bindTextures(Shader& shader) const {
 		shader.use();
@@ -73,46 +59,76 @@ namespace geeL {
 		shader.setFloat("material.type", (float)type);
 
 		//GLint location;
-		for (list<pair<string, float>>::const_iterator it = floatParameters.begin(); it != floatParameters.end(); it++) {
+		for (auto it = floatParameters.begin(); it != floatParameters.end(); it++) {
 			pair<string, float> pair = *it;
 
 			shader.setFloat(pair.first, pair.second);
 		}
 
-		for (list<pair<string, const float*>>::const_iterator it = unmanagedFloatParameters.begin(); it != unmanagedFloatParameters.end(); it++) {
-			pair<string, const float*> pair = *it;
-			shader.setFloat(pair.first, *pair.second);
-		}
-
-		for (list<pair<string, int>>::const_iterator it = intParameters.begin(); it != intParameters.end(); it++) {
+		for (auto it = intParameters.begin(); it != intParameters.end(); it++) {
 			pair<string, int> pair = *it;
 			shader.setInteger(pair.first, pair.second);
 		}
 
-		for (list<pair<string, const int*>>::const_iterator it = unmanagedIntParameters.begin(); it != unmanagedIntParameters.end(); it++) {
-			pair<string, const int*> pair = *it;
-			shader.setInteger(pair.first, *pair.second);
-		}
-
-		for (list<pair<string, vec3>>::const_iterator it = vec3Parameters.begin(); it != vec3Parameters.end(); it++) {
+		for (auto it = vec3Parameters.begin(); it != vec3Parameters.end(); it++) {
 			pair<string, vec3> pair = *it;
 			shader.setVector3(pair.first, pair.second);
 		}
 
-		for (list<pair<string, const vec3*>>::const_iterator it = unmanagedVec3Parameters.begin(); it != unmanagedVec3Parameters.end(); it++) {
-			pair<string, const vec3*> pair = *it;
-			shader.setVector3(pair.first, *pair.second);
-		}
-
-		for (list<pair<string, mat4>>::const_iterator it = mat4Parameters.begin(); it != mat4Parameters.end(); it++) {
+		for (auto it = mat4Parameters.begin(); it != mat4Parameters.end(); it++) {
 			pair<string, mat4> pair = *it;
 			shader.setMat4(pair.first, pair.second);
 		}
 
-		for (list<pair<string, const mat4*>>::const_iterator it = unmanagedMat4Parameters.begin(); it != unmanagedMat4Parameters.end(); it++) {
-			pair<string, const mat4*> pair = *it;
-			shader.setMat4(pair.first, *pair.second);
-		}
 	}
+
+	float GenericMaterialContainer::getFloatValue(std::string name) const {
+		if (floatParameters.count(name))
+			return floatParameters.at(name);
+		
+		cout << "Value '" + name + "' not present in material\n";
+		return 0.f;
+	}
+
+	int GenericMaterialContainer::getIntValue(std::string name) const {
+		if (intParameters.count(name))
+			return floatParameters.at(name);
+
+		cout << "Value '" + name + "' not present in material\n";
+		return 0;
+	}
+
+	vec3 GenericMaterialContainer::getVectorValue(std::string name) const {
+		if (vec3Parameters.count(name))
+			return vec3Parameters.at(name);
+
+		cout << "Value '" + name + "' not present in material\n";
+		return vec3(0.f);
+	}
+
+	mat4 GenericMaterialContainer::getMatrixValue(std::string name) const {
+		if (mat4Parameters.count(name))
+			return mat4Parameters.at(name);
+
+		cout << "Value '" + name + "' not present in material\n";
+		return mat4(0.f);
+	}
+
+	void GenericMaterialContainer::getFloatValue(std::string name, float value) {
+		floatParameters[name] = value;
+	}
+
+	void GenericMaterialContainer::setIntValue(std::string name, int value) {
+		intParameters[name] = value;
+	}
+
+	void GenericMaterialContainer::setVectorValue(std::string name, vec3 value) {
+		vec3Parameters[name] = value;
+	}
+
+	void GenericMaterialContainer::setMatrixValue(std::string name, mat4 value) {
+		mat4Parameters[name] = value;
+	}
+
 
 }

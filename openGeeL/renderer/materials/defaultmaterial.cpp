@@ -5,6 +5,7 @@
 #include "../shader/shader.h"
 #include "../texturing/simpletexture.h"
 #include "defaultmaterial.h"
+#include <iostream>
 
 using namespace std;
 
@@ -28,6 +29,18 @@ namespace geeL {
 
 			textureStack.addTexture(name, texture);
 		}
+	}
+
+	float DefaultMaterialContainer::getRoughness() const {
+		return roughness;
+	}
+
+	float DefaultMaterialContainer::getMetallic() const {
+		return metallic;
+	}
+
+	glm::vec3 DefaultMaterialContainer::getColor() const {
+		return color;
 	}
 
 	void DefaultMaterialContainer::setRoughness(float value) {
