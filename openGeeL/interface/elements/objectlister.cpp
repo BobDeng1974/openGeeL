@@ -1,5 +1,7 @@
 #include "../../renderer/transformation/transform.h"
 #include "../../renderer/meshes/meshrenderer.h"
+#include "../../renderer/cameras/camera.h"
+#include "../../renderer/cameras/perspectivecamera.h"
 #include "../../renderer/lighting/light.h"
 #include "../../renderer/lighting/directionallight.h"
 #include "../../renderer/lighting/spotlight.h"
@@ -45,6 +47,9 @@ namespace geeL {
 		
 		for (auto it = objectSnippets.begin(); it != objectSnippets.end(); it++)
 			delete *it;
+
+		for (auto it = cameraSnippets.begin(); it != cameraSnippets.end(); it++)
+			delete *it;
 	}
 
 
@@ -54,6 +59,15 @@ namespace geeL {
 			NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
 			NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE)) {
 
+			if (nk_tree_push(context, NK_TREE_NODE, "Cameras", NK_MAXIMIZED)) {
+
+				for (auto it = cameraSnippets.begin(); it != cameraSnippets.end(); it++) {
+					GUISnippet& snippet = **it;
+					snippet.draw(context);
+				}
+
+				nk_tree_pop(context);
+			}
 			
 			if (nk_tree_push(context, NK_TREE_NODE, "Lights", NK_MAXIMIZED)) {
 
@@ -65,7 +79,7 @@ namespace geeL {
 				nk_tree_pop(context);
 			}
 			
-			if (nk_tree_push(context, NK_TREE_NODE, "Objects", NK_MINIMIZED)) {
+			if (nk_tree_push(context, NK_TREE_NODE, "Objects", NK_MAXIMIZED)) {
 				for (auto it = objectSnippets.begin(); it != objectSnippets.end(); it++) {
 					GUISnippet& snippet = **it;
 					snippet.draw(context);
@@ -83,6 +97,16 @@ namespace geeL {
 	void ObjectLister::add(SceneObject& obj) {
 		SceneObjectSnippet* snippet = new SceneObjectSnippet(obj);
 		objectSnippets.push_back(snippet);
+	}
+
+	void ObjectLister::add(Camera& cam) {
+		CameraSnippet* snippet = new CameraSnippet(cam);
+		cameraSnippets.push_back(snippet);
+	}
+
+	void ObjectLister::add(PerspectiveCamera& cam) {
+		PerspectiveCameraSnippet* snippet = new PerspectiveCameraSnippet(cam);
+		cameraSnippets.push_back(snippet);
 	}
 
 	void ObjectLister::add(MeshRenderer& mesh) {

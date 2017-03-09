@@ -281,10 +281,13 @@ vec3 calculateIndirectDiffuse(vec3 normal, vec3 kd, vec3 albedo, float occlusion
 	return irradiance * albedo * occlusion;
 }
 
+float random2(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
 
 vec3 generateSampledVector(float roughness, float i, float count) {
 	float e1 = i / count;
-	float e2 = e1 * 0.5f;
+	float e2 = random2(vec2(i, count));
 
 	float theta = atan((roughness * sqrt(e1)) / sqrt(1.f - e2));
 	float phi   = 2.f * PI * e2;

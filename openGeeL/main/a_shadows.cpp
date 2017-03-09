@@ -223,7 +223,7 @@ void a_shadows() {
 	TransformFactory transFactory = TransformFactory(world);
 
 	geeL::Transform& transform3 = transFactory.CreateTransform(glm::vec3(0.0f, 2.0f, 9.0f), vec3(-100.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera3 = PerspectiveCamera(transform3, 5.f, 15.f, 55.f, window.width, window.height, 0.1f, 100.f);
+	PerspectiveCamera camera3 = PerspectiveCamera(transform3, 5.f, 15.f, 60.f, window.width, window.height, 0.1f, 100.f);
 
 	BilateralFilter blur = BilateralFilter(1, 0.3f);
 	DefaultPostProcess def = DefaultPostProcess();
@@ -262,6 +262,7 @@ void a_shadows() {
 
 	GUIRenderer gui = GUIRenderer(window, context);
 	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.3f);
+	objectLister.add(camera3);
 	gui.addElement(objectLister);
 	PostProcessingEffectLister postLister = PostProcessingEffectLister(window, 0.01f, 0.35f, 0.17f, 0.3f);
 	gui.addElement(postLister);
@@ -297,9 +298,9 @@ void a_shadows() {
 	postLister.add(def);
 	postLister.add(ssao);
 
-	//VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
-	//renderer1.addEffect(volSmooth, { &vol, &sobelBlur });
-	//postLister.add(volSmooth, lightSnippet);
+	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
+	renderer1.addEffect(volSmooth, { &vol, &sobelBlur });
+	postLister.add(volSmooth, lightSnippet);
 
 	//renderer1.addEffect(bloom);
 	//postLister.add(bloom);
@@ -310,8 +311,8 @@ void a_shadows() {
 
 	renderer1.addEffect(ssrrSmooth, ssrr);
 	
-	//renderer1.addEffect(dof, dof);
-	//postLister.add(dof);
+	renderer1.addEffect(dof, dof);
+	postLister.add(dof);
 
 	renderer1.addEffect(colorCorrect);
 	postLister.add(colorCorrect);

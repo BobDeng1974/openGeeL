@@ -1,4 +1,6 @@
 #include "../../renderer/transformation/transform.h"
+#include "../../renderer/cameras/camera.h"
+#include "../../renderer/cameras/perspectivecamera.h"
 #include "../../renderer/materials/material.h"
 #include "../../renderer/materials/defaultmaterial.h"
 #include "../../renderer/materials/genericmaterial.h"
@@ -91,5 +93,48 @@ namespace geeL {
 
 	std::string LightSnippet::toString() const {
 		return "Light";
+	}
+
+
+	CameraSnippet::CameraSnippet(Camera& cam) : SceneObjectSnippet(cam), cam(cam) {}
+
+	void CameraSnippet::draw(GUIContext* context) {
+
+		float speed = GUISnippets::drawBarFloat(context, cam.getSpeed(), 0.f, 30.f, 0.1f, "Speed");
+		cam.setSpeed(speed);
+
+		float sensitivity = GUISnippets::drawBarFloat(context, cam.getSensitivity(), 0.f, 30.f, 0.1f, "Sensitivity");
+		cam.setSensitivity(sensitivity);
+	}
+
+	std::string CameraSnippet::toString() const {
+		return "Camera";
+	}
+
+
+	PerspectiveCameraSnippet::PerspectiveCameraSnippet(PerspectiveCamera& pcam) 
+		: CameraSnippet(pcam), pcam(pcam) {}
+
+	void PerspectiveCameraSnippet::draw(GUIContext* context) {
+
+		std::string id = pcam.getName() + " #" + std::to_string(pcam.transform.getID());
+		if (nk_tree_push(context, NK_TREE_NODE, id.c_str(), NK_MINIMIZED)) {
+			CameraSnippet::draw(context);
+
+			float fov = GUISnippets::drawBarFloat(context, pcam.getFieldOfView(), 1.f, 170.f, 1.f, "FoV");
+			pcam.setFieldOfView(fov);
+
+			float near = GUISnippets::drawBarFloat(context, pcam.getNearPlane(), 0.1f, 100.f, 0.1f, "Near");
+			pcam.setNearPlane(near);
+
+			float far = GUISnippets::drawBarFloat(context, pcam.getFarPlane(), 10.f, 1000.f, 1.f, "Far");
+			pcam.setFarPlane(far);
+
+			nk_tree_pop(context);
+		}
+	}
+
+	std::string PerspectiveCameraSnippet::toString() const {
+		return "Perspective Camera";
 	}
 }

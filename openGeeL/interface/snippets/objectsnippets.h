@@ -4,10 +4,13 @@
 #include "guisnippets.h"
 
 namespace geeL {
-
-	class SceneObject;
-	class MeshRenderer;
+	
+	class Camera;
 	class Light;
+	class MeshRenderer;
+	class PerspectiveCamera;
+	class SceneObject;
+
 
 	class SceneObjectSnippet : public GUISnippet {
 
@@ -47,6 +50,33 @@ namespace geeL {
 
 	private:
 		Light& light;
+
+	};
+
+
+	class CameraSnippet : public SceneObjectSnippet {
+
+	public:
+		CameraSnippet(Camera& cam);
+
+		virtual void draw(GUIContext* context);
+		virtual std::string toString() const;
+
+	private:
+		Camera& cam;
+
+	};
+
+	class PerspectiveCameraSnippet : public CameraSnippet {
+
+	public:
+		PerspectiveCameraSnippet(PerspectiveCamera& pcam);
+
+		virtual void draw(GUIContext* context);
+		virtual std::string toString() const;
+
+	private:
+		PerspectiveCamera& pcam;
 
 	};
 

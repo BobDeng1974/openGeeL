@@ -51,8 +51,10 @@ void main() {
 		float geo = calculateGeometryFunctionSmith(normal, viewDirection, reflectionDirection, roughness);
 		vec3 fres = calculateFresnelTerm(doto(halfwayDirection, viewDirection), reflectionColor, metallic, roughness);
 
+		
+
 		//Lighting equation
-		vec3  nom   = geo * fres * clamp(ndf, 0.f, 1.f);
+		vec3  nom   = geo * fres * ndf;
 		float denom = 4.f * doto(viewDirection, normal) * NdotL + 0.001f; 
 		vec3  brdf  = nom / denom;
 
@@ -127,17 +129,19 @@ vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal) {
 
 //Compute fresnel term with Fresnel-Schlick approximation
 vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness) {
-	vec3 F0 = vec3(0.04);
+	vec3 F0 = vec3(0.04f);
     F0 = mix(F0, albedo, metallic);
 
-	vec3 fres = F0 + (max(vec3(1.0f - roughness), F0) - F0) * pow(1.0f - theta, 5.0f);
+	vec3 fres = F0 + (max(vec3(1.f - roughness), F0) - F0) * pow(1.f - theta, 5.f);
 	return clamp(fres, 0.f, 1.f);
 }
 
 //Trowbridge-Reitz GGX normal distribution function
 float calculateNormalDistrubution(vec3 normal, vec3 halfway, float roughness) {
+	
 	//TODO: Fix problems in ndf and remove this cop out
-	float copOut = step(roughness, 0.1f);
+	float offset = 3.f;
+	float copOut = step(roughness, 0.2f);
 
     float a = roughness * roughness;
     float NdotH  = doto(normal, halfway);
@@ -145,15 +149,20 @@ float calculateNormalDistrubution(vec3 normal, vec3 halfway, float roughness) {
 	
     float denom  = (NdotH2 * (a - 1.0f) + 1.0f);
     denom = PI * denom * denom + 0.0001f;
-    return (a / denom) * (1.f - copOut) + (copOut);
+
+    float ndf = (a / denom) * (1.f - copOut) + (copOut * offset);
+	ndf = clamp(ndf, 0.f, offset);
+	ndf /= offset;
+
+	return ndf;
 }
 
 float calculateGeometryFunctionSchlick(float NdotV, float roughness) {
-    float r = (roughness + 1.0f);
-    float k = (r * r) / 8.0f;
+    float r = (roughness + 1.f);
+    float k = (r * r) / 8.f;
 
     float nom   = NdotV;
-    float denom = NdotV * (1.0f - k) + k;
+    float denom = NdotV * (1.f - k) + k;
 	
     return nom / denom;
 }

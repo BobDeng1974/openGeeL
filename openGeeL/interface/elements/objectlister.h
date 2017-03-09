@@ -8,6 +8,8 @@ namespace geeL {
 
 	class GUISnippet;
 	class SceneObject;
+	class Camera;
+	class PerspectiveCamera;
 	class MeshRenderer;
 	class Light;
 	class RenderScene;
@@ -22,12 +24,15 @@ namespace geeL {
 		virtual void draw(GUIContext* context);
 
 		void add(SceneObject& obj);
+		void add(Camera& cam);
+		void add(PerspectiveCamera& cam);
 		void add(MeshRenderer& mesh);
 		void add(Light& light);
 
 	private:
 		std::list<GUISnippet*> lightSnippets;
 		std::list<GUISnippet*> objectSnippets;
+		std::list<GUISnippet*> cameraSnippets;
 		RenderScene& scene;
 
 	};

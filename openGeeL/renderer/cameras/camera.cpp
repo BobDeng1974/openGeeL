@@ -18,11 +18,11 @@ using namespace glm;
 
 namespace geeL {
 
-	Camera::Camera(Transform& transform)
-		: SceneObject(transform), speed(0), sensitivity(0) {}
+	Camera::Camera(Transform& transform, std::string name)
+		: SceneObject(transform, name), speed(0), sensitivity(0) {}
 
-	Camera::Camera(Transform& transform, float speed, float sensitivity)
-		: SceneObject(transform), speed(speed), sensitivity(sensitivity) {}
+	Camera::Camera(Transform& transform, float speed, float sensitivity, std::string name)
+		: SceneObject(transform, name), speed(speed), sensitivity(sensitivity) {}
 
 
 	void Camera::update() {
@@ -123,6 +123,24 @@ namespace geeL {
 
 	const glm::vec3& Camera::getDirection() const {
 		return transform.forward;
+	}
+
+	float Camera::getSpeed() const {
+		return speed;
+	}
+
+	float Camera::getSensitivity() const {
+		return sensitivity;
+	}
+
+	void Camera::setSpeed(float speed) {
+		if (speed > 0.f)
+			this->speed = speed;
+	}
+
+	void Camera::setSensitivity(float sensitivity) {
+		if (sensitivity > 0.f)
+			this->sensitivity = sensitivity;
 	}
 
 }
