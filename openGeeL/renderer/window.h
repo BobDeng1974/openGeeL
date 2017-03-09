@@ -8,6 +8,15 @@ namespace geeL {
 	class Camera;
 	class Debugger;
 
+
+	enum class WindowMode {
+		Windowed,
+		ResizableWindow,
+		BorderlessWindow,
+		Fullscreen
+	};
+
+
 	class RenderWindow {
 
 	public:
@@ -15,7 +24,7 @@ namespace geeL {
 		const char* name;
 		unsigned int width, height;
 
-		RenderWindow(const char* name, unsigned int width, unsigned int height, bool resizable = false);
+		RenderWindow(const char* name, unsigned int width, unsigned int height, WindowMode mode = WindowMode::Windowed);
 		~RenderWindow();
 
 		void RenderWindow::swapBuffer() const;

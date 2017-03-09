@@ -8,14 +8,14 @@
 
 namespace geeL {
 
-	RenderWindow::RenderWindow(const char* name, unsigned int width, unsigned int height, bool resizable) 
+	RenderWindow::RenderWindow(const char* name, unsigned int width, unsigned int height, WindowMode mode)
 		: name(name), width(width), height(height), debugger(nullptr) {
 	    
 		glfwInit();
 	    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	    glfwWindowHint(GLFW_RESIZABLE, resizable);
+	    
 
 #ifdef _DEBUG
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
@@ -23,17 +23,42 @@ namespace geeL {
 		debugger->init();
 #endif
 
-	    glWindow = glfwCreateWindow(width, height, name, nullptr, nullptr);
+		switch (mode) {
+			case WindowMode::Windowed: 
+				glfwWindowHint(GLFW_RESIZABLE, false);
+				glWindow = glfwCreateWindow(width, height, name, nullptr, nullptr);
+				break;
+			case WindowMode::ResizableWindow:
+				glfwWindowHint(GLFW_RESIZABLE, true);
+				glWindow = glfwCreateWindow(width, height, name, nullptr, nullptr);
+				break;
+			case WindowMode::BorderlessWindow: {
+				auto monitor = glfwGetPrimaryMonitor();
+
+				const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+				glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+				glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+				glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+				glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+				glWindow = glfwCreateWindow(width, height, name, monitor, nullptr);
+			}
+				break;
+			case WindowMode::Fullscreen:
+				glWindow = glfwCreateWindow(width, height, name, glfwGetPrimaryMonitor(), nullptr);
+				break;
+		}
+
 	    if (glWindow == nullptr) {
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
+			std::cout << "Failed to create GLFW window" << std::endl;
+			glfwTerminate();
 	    }
 
 	    glfwMakeContextCurrent(glWindow);
 
 	    glewExperimental = GL_TRUE;
 	    if (glewInit() != GLEW_OK) {
-		std::cout << "Failed to initialize GLEW" << std::endl;
+			std::cout << "Failed to initialize GLEW" << std::endl;
 	    }
 	}
 

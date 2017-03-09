@@ -214,7 +214,7 @@ namespace {
 
 void a_shadows() {
 	
-	RenderWindow window = RenderWindow("geeL", 1920, 1080, true);
+	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Fullscreen);
 	InputManager manager = InputManager();
 	manager.defineButton("Forward", GLFW_KEY_W);
 	manager.defineButton("Forward", GLFW_KEY_A);
@@ -241,8 +241,8 @@ void a_shadows() {
 	
 	RenderScene scene = RenderScene(lightManager, camera3, meshFactory);
 
-	TexturedCubeMap map = TexturedCubeMap("resources/skybox2/right.jpg", "resources/skybox2/left.jpg", "resources/skybox2/top.jpg",
-		"resources/skybox2/bottom.jpg", "resources/skybox2/back.jpg", "resources/skybox2/front.jpg");
+	//TexturedCubeMap map = TexturedCubeMap("resources/skybox2/right.jpg", "resources/skybox2/left.jpg", "resources/skybox2/top.jpg",
+	//	"resources/skybox2/bottom.jpg", "resources/skybox2/back.jpg", "resources/skybox2/front.jpg");
 
 	EnvironmentMap envMap = EnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
 	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(envMap, 1024);
@@ -261,12 +261,12 @@ void a_shadows() {
 	renderer1.initObjects();
 
 	GUIRenderer gui = GUIRenderer(window, context);
-	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.3f);
+	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
 	objectLister.add(camera3);
 	gui.addElement(objectLister);
-	PostProcessingEffectLister postLister = PostProcessingEffectLister(window, 0.01f, 0.35f, 0.17f, 0.3f);
+	PostProcessingEffectLister postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
 	gui.addElement(postLister);
-	SystemInformation sysInfo = SystemInformation(renderer1.getRenderTime(), window, 0.01f, 0.7f, 0.17f);
+	SystemInformation sysInfo = SystemInformation(renderer1.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
 	gui.addElement(sysInfo);
 
 	renderer1.addGUIRenderer(&gui);
