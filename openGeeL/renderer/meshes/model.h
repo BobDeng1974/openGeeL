@@ -40,6 +40,9 @@ namespace geeL {
 		std::vector<Mesh>::iterator meshesBegin();
 		std::vector<Mesh>::iterator meshesEnd();
 
+		std::vector<Mesh>::const_iterator meshesBeginConst() const;
+		std::vector<Mesh>::const_iterator meshesEndConst() const;
+
 	private:
 		std::string path;
 		std::vector<Mesh> meshes;

@@ -41,7 +41,7 @@ namespace geeL {
 				glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 				glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-				glWindow = glfwCreateWindow(width, height, name, monitor, nullptr);
+				glWindow = glfwCreateWindow(mode->width, mode->height, name, monitor, nullptr);
 			}
 				break;
 			case WindowMode::Fullscreen:

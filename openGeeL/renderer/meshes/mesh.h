@@ -40,6 +40,16 @@ namespace geeL {
 		//Draw mesh with given materials
 		void draw(Material& customMaterial) const;
 
+		unsigned int getIndicesCount() const;
+		unsigned int getVerticesCount() const;
+
+		//Returns vertex at index i or emptry Vertex if i is not present
+		const Vertex& getVertex(unsigned int i) const;
+
+		//Returns vertex index at index i or 0 if i is not present
+		unsigned int getIndex(unsigned int i) const;
+
+
 	private:
 		GLuint vao, vbo, ebo;
 		std::vector<Vertex> vertices;

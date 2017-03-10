@@ -10,15 +10,17 @@
 #include "cameras\camera.h"
 #include "cubemapping\skybox.h"
 #include "utility\gbuffer.h"
+#include "physics\physics.h"
 #include "lighting\lightmanager.h"
 #include "scene.h"
+#include <iostream>
 
 using namespace std;
 
 namespace geeL {
 
 	RenderScene::RenderScene(LightManager& lightManager, Camera& camera, MeshFactory& meshFactory) 
-		: lightManager(lightManager), camera(camera), meshFactory(meshFactory) {}
+		: lightManager(lightManager), camera(camera), meshFactory(meshFactory), physics(nullptr) {}
 
 	
 	RenderScene::~RenderScene() {
@@ -36,6 +38,9 @@ namespace geeL {
 		camera.update();
 
 		originViewSpace = TranslateToViewSpace(vec3(0.f, 0.f, 0.f));
+
+		if (physics != nullptr)
+			physics->update();
 	}
 
 
@@ -144,6 +149,10 @@ namespace geeL {
 			return skybox->getID();
 
 		return 0;
+	}
+
+	void RenderScene::setPhysics(Physics* physics) {
+		this->physics = physics;
 	}
 
 	std::list<MeshRenderer*>::iterator RenderScene::renderObjectsBegin() {

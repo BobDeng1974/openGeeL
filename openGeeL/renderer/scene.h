@@ -16,6 +16,7 @@ namespace geeL {
 	class Model;
 	class Material;
 	class MeshFactory;
+	class Physics;
 	class Transform;
 
 	struct ScreenInfo;
@@ -73,6 +74,8 @@ namespace geeL {
 		const glm::vec3& GetOriginInViewSpace() const;
 		unsigned int getSkyboxID() const;
 
+		void setPhysics(Physics* physics);
+
 		std::list<MeshRenderer*>::iterator renderObjectsBegin();
 		std::list<MeshRenderer*>::iterator renderObjectsEnd();
 
@@ -80,6 +83,7 @@ namespace geeL {
 	private:
 		glm::vec3 originViewSpace;
 		Skybox* skybox;
+		Physics* physics;
 		MeshFactory& meshFactory;
 		std::list<MeshRenderer*> deferredRenderObjects;
 		std::list<MeshRenderer*> forwardRenderObjects;

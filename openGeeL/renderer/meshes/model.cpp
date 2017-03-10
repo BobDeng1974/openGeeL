@@ -52,6 +52,14 @@ namespace geeL {
 		return meshes.end();
 	}
 
+	vector<Mesh>::const_iterator Model::meshesBeginConst() const {
+		return meshes.begin();
+	}
+
+	vector<Mesh>::const_iterator Model::meshesEndConst() const {
+		return meshes.end();
+	}
+
 	const Mesh& Model::getMesh(unsigned int index) {
 		if (index < meshes.size()) {
 			return meshes[index];

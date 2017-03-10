@@ -59,4 +59,26 @@ namespace geeL {
 
 		draw();
 	}
+
+	unsigned int Mesh::getIndicesCount() const {
+		return indices.size();
+	}
+
+	unsigned int Mesh::getVerticesCount() const {
+		return vertices.size();
+	}
+
+	const Vertex& Mesh::getVertex(unsigned int i) const {
+		if (i < vertices.size())
+			return vertices[i];
+
+		return Vertex();
+	}
+
+	unsigned int Mesh::getIndex(unsigned int i) const {
+		if (i < indices.size())
+			return indices[i];
+
+		return 0;
+	}
 }

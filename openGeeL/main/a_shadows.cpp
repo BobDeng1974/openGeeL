@@ -72,6 +72,10 @@
 #include "../interface/elements/posteffectlister.h"
 #include "../interface/elements/systeminformation.h"
 
+#include "../renderer/physics/physics.h"
+#include "../renderer/physics/worldphysics.h"
+#include "../renderer/physics/rigidbody.h"
+
 #include <glm.hpp>
 #include "a_shadows.h"
 
@@ -98,6 +102,7 @@ namespace {
 		MeshFactory& meshFactory;
 		Light* light;
 		DirectionalLight* dirLight;
+		Physics* physics;
 
 		Material* material;
 
@@ -105,14 +110,15 @@ namespace {
 
 
 		ShadowTestObject(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
-			ShaderManager& shaderManager, RenderScene& scene, TransformFactory& transformFactory) 
+			ShaderManager& shaderManager, RenderScene& scene, TransformFactory& transformFactory, Physics* physics)
 			: 
 			SceneControlObject(scene),
 			materialFactory(materialFactory),
 			meshFactory(meshFactory), 
 			lightManager(lightManager),
 			shaderManager(shaderManager),
-			transformFactory(transformFactory)
+			transformFactory(transformFactory),
+			physics(physics)
 			{}
 
 
@@ -141,6 +147,8 @@ namespace {
 			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(100.2f, 0.2f, 100.2f));
 			MeshRenderer& plane = scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront, true, "Floor");
 
+			if(physics != nullptr) physics->addPlane(vec3(0.f, 1.f, 0.f), *transi2, RigidbodyProperties(0.f, false));
+
 			for (auto it = plane.deferredMaterialsBegin(); it != plane.deferredMaterialsEnd(); it++) {
 				Material* mat = it->second;
 				DefaultMaterialContainer* defmat = dynamic_cast<DefaultMaterialContainer*>(&mat->container);
@@ -165,8 +173,14 @@ namespace {
 				}
 			}
 
-			geeL::Transform* transi7 = new geeL::Transform(glm::vec3(8.f, 0.f, 4.f), glm::vec3(0.f), glm::vec3(1.f, 1.f, 1.f));
+			geeL::Transform* transi7 = new geeL::Transform(glm::vec3(8.f, 20.f, 4.f), glm::vec3(0.f), glm::vec3(1.f, 1.f, 1.f));
 			MeshRenderer& sphere1 = scene.AddMeshRenderer("resources/primitives/sphere.obj", *transi7, cullFront, true, "Sphere");
+			if (physics != nullptr) physics->addSphere(1.f, *transi7, RigidbodyProperties(10.f, false));
+			//if (physics != nullptr) physics->addMesh(*sphere1.model, *transi7, RigidbodyProperties(10.f, false));
+
+			geeL::Transform* transi17 = new geeL::Transform(glm::vec3(7.f, 5.f, 4.f), glm::vec3(0.f), glm::vec3(1.f, 1.f, 1.f));
+			MeshRenderer& sphere11 = scene.AddMeshRenderer("resources/primitives/sphere.obj", *transi17, cullFront, true, "Sphere2");
+			if (physics != nullptr) physics->addSphere(1.f, *transi17, RigidbodyProperties(10.f, true));
 
 			for (auto it = sphere1.deferredMaterialsBegin(); it != sphere1.deferredMaterialsEnd(); it++) {
 				Material* mat = it->second;
@@ -199,8 +213,6 @@ namespace {
 
 		virtual void draw(const Camera& camera) {
 			nanoRenderer->transform.rotate(vec3(0, 1, 0), 2000 * Time::deltaTime);
-			//light->transform.rotate(vec3(0, 0, 1), -3);
-			//light->transform.translate(vec3(-0.01, 0, 0));
 		}
 
 		virtual void quit() {}
@@ -240,9 +252,8 @@ void a_shadows() {
 	ShaderManager shaderManager = ShaderManager(materialFactory);
 	
 	RenderScene scene = RenderScene(lightManager, camera3, meshFactory);
-
-	//TexturedCubeMap map = TexturedCubeMap("resources/skybox2/right.jpg", "resources/skybox2/left.jpg", "resources/skybox2/top.jpg",
-	//	"resources/skybox2/bottom.jpg", "resources/skybox2/back.jpg", "resources/skybox2/front.jpg");
+	WorldPhysics physics = WorldPhysics();
+	scene.setPhysics(&physics);
 
 	EnvironmentMap envMap = EnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
 	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(envMap, 1024);
@@ -255,7 +266,7 @@ void a_shadows() {
 	renderer1.setShaderManager(shaderManager);
 
 	ShadowTestObject* testObj = new ShadowTestObject(materialFactory, meshFactory, 
-		lightManager, shaderManager, scene, transFactory);
+		lightManager, shaderManager, scene, transFactory, &physics);
 
 	renderer1.addObject(testObj);
 	renderer1.initObjects();
