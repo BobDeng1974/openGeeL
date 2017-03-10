@@ -2,7 +2,6 @@
 #include "../meshes/model.h"
 #include "../meshes/mesh.h"
 #include "collider.h"
-#include <iostream>
 
 namespace geeL {
 

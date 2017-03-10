@@ -2,7 +2,6 @@
 #include "collider.h"
 #include "rigidbody.h"
 #include "worldphysics.h"
-#include <iostream>
 
 namespace geeL {
 
@@ -53,6 +52,23 @@ namespace geeL {
 			Rigidbody& body = **it;
 			
 			body.update();
+		}
+	}
+
+	void WorldPhysics::intersect(glm::vec3 start, glm::vec3 end, RayCastHit& hit) const {
+		btVector3 s = btVector3(start.x, start.y, start.z);
+		btVector3 e = btVector3(end.x, end.y, end.z);
+
+		btCollisionWorld::ClosestRayResultCallback callback(s, e);
+		world->rayTest(s, e, callback);
+
+		if (callback.hasHit()) {
+			btVector3 p = callback.m_hitPointWorld;
+			btVector3 n = callback.m_hitNormalWorld;
+
+			hit.point = glm::vec3(p.getX(), p.getY(), p.getZ());
+			hit.normal = glm::vec3(n.getX(), n.getY(), n.getZ());
+			hit.hit = true;
 		}
 	}
 

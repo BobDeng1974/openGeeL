@@ -25,6 +25,8 @@ namespace geeL {
 
 		virtual void update();
 
+		virtual void intersect(glm::vec3 start, glm::vec3 end, RayCastHit& hit) const;
+
 		virtual void addSphere(float radius, Transform& transform, RigidbodyProperties properties);
 		virtual void addPlane(const glm::vec3 normal, Transform& transform, RigidbodyProperties properties);
 		virtual void addBox(const glm::vec3 magnitude, Transform& transform, RigidbodyProperties properties);
