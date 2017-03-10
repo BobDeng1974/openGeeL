@@ -147,7 +147,7 @@ namespace {
 			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(100.2f, 0.2f, 100.2f));
 			MeshRenderer& plane = scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront, true, "Floor");
 
-			if(physics != nullptr) physics->addPlane(vec3(0.f, 1.f, 0.f), *transi2, RigidbodyProperties(0.f, true));
+			if(physics != nullptr) physics->addPlane(vec3(0.f, 1.f, 0.f), *transi2, RigidbodyProperties(0.f, false));
 
 			for (auto it = plane.deferredMaterialsBegin(); it != plane.deferredMaterialsEnd(); it++) {
 				Material* mat = it->second;
@@ -175,9 +175,12 @@ namespace {
 
 			geeL::Transform* transi7 = new geeL::Transform(glm::vec3(8.f, 20.f, 4.f), glm::vec3(0.f), glm::vec3(1.f, 1.f, 1.f));
 			MeshRenderer& sphere1 = scene.AddMeshRenderer("resources/primitives/sphere.obj", *transi7, cullFront, true, "Sphere");
-			if (physics != nullptr) physics->addSphere(1.f, *transi7, RigidbodyProperties(10.f, false));
+			//if (physics != nullptr) physics->addSphere(1.f, *transi7, RigidbodyProperties(10.f, false));
 			//if (physics != nullptr) physics->addMesh(*sphere1.model, *transi7, RigidbodyProperties(10.f, false));
 
+			geeL::Transform* transi27 = new geeL::Transform(glm::vec3(18.f, 20.f, 4.f), glm::vec3(0.f), glm::vec3(1.f, 1.f, 1.f));
+			MeshRenderer& sphere21 = scene.AddMeshRenderer("resources/primitives/sphere.obj", *transi27, cullFront, true, "Sphere");
+			if (physics != nullptr) physics->addSphere(1.f, *transi27, RigidbodyProperties(10.f, true));
 
 			for (auto it = sphere1.deferredMaterialsBegin(); it != sphere1.deferredMaterialsEnd(); it++) {
 				Material* mat = it->second;

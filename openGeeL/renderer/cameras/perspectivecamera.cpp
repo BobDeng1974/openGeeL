@@ -63,7 +63,7 @@ namespace geeL {
 	void PerspectiveCamera::removeViewingPlaneChangeListener(
 		std::function<void(float, float)> listener) {
 
-		//callbacks.remove(listener);
+		//TODO: implement this
 	}
 
 	void  PerspectiveCamera::onViewingPlaneChange() {

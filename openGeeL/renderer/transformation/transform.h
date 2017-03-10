@@ -3,6 +3,7 @@
 
 #include <vec3.hpp>
 #include <mat4x4.hpp>
+#include <functional>
 #include <list>
 
 using glm::vec3;
@@ -58,13 +59,18 @@ namespace geeL {
 
 		unsigned int getID() const;
 
+		void addChangeListener(std::function<void(const Transform&)> listener);
+		void removeChangeListener(std::function<void(const Transform&)> listener);
+
 	private:
-		
 		unsigned int id;
 		Transform* parent;
 		std::list<Transform> children;
+		std::list<std::function<void(const Transform&)>> changeListener;
 
 		void updateDirections();
+		void onChange();
+
 	};
 }
 

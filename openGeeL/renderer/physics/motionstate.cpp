@@ -38,8 +38,13 @@ namespace geeL {
 
 
 	KinematicMotionState::KinematicMotionState(Transform& transform) 
-		: MotionState(transform) {}
+		: MotionState(transform) {
+	
+		auto callback = [this](const Transform& transform) { this->update(); };
+		transform.addChangeListener(callback);
+	}
 
 
 	void KinematicMotionState::setWorldTransform(const btTransform& trans) {}
+
 }

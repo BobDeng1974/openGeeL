@@ -43,7 +43,6 @@ namespace geeL {
 			physics->update();
 	}
 
-
 	void RenderScene::drawDeferred() const {
 		drawObjects(deferredRenderObjects, true);
 	}

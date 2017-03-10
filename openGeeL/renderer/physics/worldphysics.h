@@ -37,7 +37,6 @@ namespace geeL {
 
 	private:
 		std::list<Rigidbody*> rigidbodies;
-		std::list<Rigidbody*> kinematicRigidbodies;
 
 		btBroadphaseInterface* broadPhase;
 		btDefaultCollisionConfiguration* collisionConfiguration;

@@ -1,7 +1,8 @@
-#include "transform.h"
 #include <geometric.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
+#include "../utility/vector3.h"
+#include "transform.h"
 #include <iostream>
 
 using namespace std;
@@ -45,36 +46,46 @@ namespace geeL {
 
 
 	void Transform::setPosition(vec3 position) {
-		vec3 translation = position - this->position;
-		this->position = position;
+		if (!Vector::equals(this->position, position)) {
+			vec3 translation = position - this->position;
+			this->position = position;
 
-		matrix = glm::translate(matrix, translation);
+			matrix = glm::translate(matrix, translation);
+			onChange();
+		}
 	}
 
 	void Transform::setRotation(vec3 rotation) {
-		float pitch = rotation.x - this->rotation.x;
-		float yaw = rotation.y - this->rotation.y;
-		float roll = rotation.z - this->rotation.z;
+		if (!Vector::equals(this->rotation, rotation)) {
+			float pitch = rotation.x - this->rotation.x;
+			float yaw = rotation.y - this->rotation.y;
+			float roll = rotation.z - this->rotation.z;
 
-		this->rotation += vec3(pitch, yaw, roll);
+			this->rotation += vec3(pitch, yaw, roll);
 
-		matrix = glm::rotate(matrix, pitch, vec3(1.f, 0.f, 0.f));
-		matrix = glm::rotate(matrix, yaw, vec3(0.f, 1.f, 0.f));
-		matrix = glm::rotate(matrix, roll, vec3(0.f, 0.f, 1.f));
+			matrix = glm::rotate(matrix, pitch, vec3(1.f, 0.f, 0.f));
+			matrix = glm::rotate(matrix, yaw, vec3(0.f, 1.f, 0.f));
+			matrix = glm::rotate(matrix, roll, vec3(0.f, 0.f, 1.f));
 
-		updateDirections();
+			updateDirections();
+			onChange();
+		}
 	}
 
 	void Transform::setScale(vec3 scaling) {
-		vec3 scalar = scaling - this->scaling;
-		this->scaling = scaling;
+		if (!Vector::equals(this->scaling, scaling)) {
+			vec3 scalar = scaling - this->scaling;
+			this->scaling = scaling;
 
-		matrix = glm::scale(matrix, scalar);
+			matrix = glm::scale(matrix, scalar);
+			onChange();
+		}
 	}
 
 	void Transform::translate(vec3 translation) {
 		position += translation;
 		matrix = glm::translate(matrix, translation);
+		onChange();
 	}
 
 	void Transform::rotate(vec3 axis, float angle) {
@@ -86,11 +97,13 @@ namespace geeL {
 		matrix = glm::rotate(matrix, glm::radians(angle), axis);
 
 		updateDirections();
+		onChange();
 	}
 
 	void Transform::scale(vec3 scalar) {
 		scaling += scalar;
 		matrix = glm::scale(matrix, scalar);
+		onChange();
 	}
 
 	mat4 Transform::lookAt() const {
@@ -131,6 +144,8 @@ namespace geeL {
 			Transform& transform = *it;
 			transform.computeMatrix();
 		}
+
+		onChange();
 	}
 
 	bool Transform::operator==(const Transform& b) const {
@@ -149,6 +164,21 @@ namespace geeL {
 
 	unsigned int Transform::getID() const {
 		return id;
+	}
+
+	void Transform::addChangeListener(function<void(const Transform&)> listener) {
+		changeListener.push_back(listener);
+	}
+
+	void Transform::removeChangeListener(function<void(const Transform&)> listener) {
+		//TODO: implement this
+	}
+
+	void Transform::onChange() {
+		for (auto it = changeListener.begin(); it != changeListener.end(); it++) {
+			auto func = *it;
+			func(*this);
+		}
 	}
 
 }

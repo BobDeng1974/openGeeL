@@ -18,13 +18,6 @@ namespace geeL {
 			delete body;
 		}
 
-		for (auto it = kinematicRigidbodies.begin(); it != kinematicRigidbodies.end(); it++) {
-			Rigidbody* body = *it;
-
-			world->removeRigidBody(&body->getRigidbody());
-			delete body;
-		}
-
 		delete broadPhase;
 		delete collisionConfiguration;
 		delete dispatcher;
@@ -46,13 +39,6 @@ namespace geeL {
 
 	void WorldPhysics::update() {
 		world->stepSimulation(1.f / 30.f, 10);
-
-		//Only update kinematic rigidbodies since their are the only ones that can be moved manually in application
-		for (auto it = kinematicRigidbodies.begin(); it != kinematicRigidbodies.end(); it++) {
-			Rigidbody& body = **it;
-			
-			body.update();
-		}
 	}
 
 	void WorldPhysics::intersect(glm::vec3 start, glm::vec3 end, RayCastHit& hit) const {
@@ -111,11 +97,7 @@ namespace geeL {
 	void WorldPhysics::addRigidbody(Collider* collider, Transform& transform, RigidbodyProperties properties) {
 		Rigidbody* body = new Rigidbody(collider, transform, properties);
 
-		if (properties.isKinematic)
-			kinematicRigidbodies.push_back(body);
-		else
-			rigidbodies.push_back(body);
-
+		rigidbodies.push_back(body);
 		world->addRigidBody(&body->getRigidbody());
 	}
 }
