@@ -65,12 +65,24 @@ namespace geeL {
 	};
 
 
+	//Dynamic mesh collider that uses convex hull as shape
 	class MeshCollider : public Collider {
 
 	public:
 		MeshCollider(const Model& model);
 
 	};
+
+
+	//Static mesh colldider that uses meshes triangles as shape.
+	//Important: Collisions are not allowed and can cause errors (Not handled)
+	class StaticMeshCollider : public Collider {
+
+	public:
+		StaticMeshCollider(const Model& model);
+
+	};
+
 
 }
 

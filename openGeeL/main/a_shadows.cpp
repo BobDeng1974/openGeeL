@@ -147,7 +147,7 @@ namespace {
 			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(100.2f, 0.2f, 100.2f));
 			MeshRenderer& plane = scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront, true, "Floor");
 
-			if(physics != nullptr) physics->addPlane(vec3(0.f, 1.f, 0.f), *transi2, RigidbodyProperties(0.f, false));
+			if(physics != nullptr) physics->addPlane(vec3(0.f, 1.f, 0.f), *transi2, RigidbodyProperties(0.f, true));
 
 			for (auto it = plane.deferredMaterialsBegin(); it != plane.deferredMaterialsEnd(); it++) {
 				Material* mat = it->second;
@@ -178,9 +178,6 @@ namespace {
 			if (physics != nullptr) physics->addSphere(1.f, *transi7, RigidbodyProperties(10.f, false));
 			//if (physics != nullptr) physics->addMesh(*sphere1.model, *transi7, RigidbodyProperties(10.f, false));
 
-			geeL::Transform* transi17 = new geeL::Transform(glm::vec3(7.f, 5.f, 4.f), glm::vec3(0.f), glm::vec3(1.f, 1.f, 1.f));
-			MeshRenderer& sphere11 = scene.AddMeshRenderer("resources/primitives/sphere.obj", *transi17, cullFront, true, "Sphere2");
-			if (physics != nullptr) physics->addSphere(1.f, *transi17, RigidbodyProperties(10.f, true));
 
 			for (auto it = sphere1.deferredMaterialsBegin(); it != sphere1.deferredMaterialsEnd(); it++) {
 				Material* mat = it->second;
@@ -226,7 +223,7 @@ namespace {
 
 void a_shadows() {
 	
-	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Fullscreen);
+	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
 	InputManager manager = InputManager();
 	manager.defineButton("Forward", GLFW_KEY_W);
 	manager.defineButton("Forward", GLFW_KEY_A);

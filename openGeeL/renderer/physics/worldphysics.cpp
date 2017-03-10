@@ -102,6 +102,11 @@ namespace geeL {
 		addRigidbody(coll, transform, properties);
 	}
 
+	void WorldPhysics::addStaticMesh(const Model& model, Transform& transform, RigidbodyProperties properties) {
+		StaticMeshCollider* coll = new StaticMeshCollider(model);
+		addRigidbody(coll, transform, properties);
+	}
+
 
 	void WorldPhysics::addRigidbody(Collider* collider, Transform& transform, RigidbodyProperties properties) {
 		Rigidbody* body = new Rigidbody(collider, transform, properties);
