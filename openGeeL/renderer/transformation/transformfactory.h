@@ -3,8 +3,6 @@
 
 #include <vec3.hpp>
 
-using glm::vec3;
-
 namespace geeL {
 
 	class Transform;
@@ -12,7 +10,6 @@ namespace geeL {
 	class TransformFactory {
 
 	public:
-
 		TransformFactory(Transform world) : world(world) {}
 
 		//Creates and and returns an empty transform with
@@ -25,12 +22,12 @@ namespace geeL {
 
 		//Creates and and returns a transform with
 		//world transform as parent
-		Transform& CreateTransform(vec3 position, vec3 rotation, vec3 scaling);
+		Transform& CreateTransform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling);
 
 		//Creates and and returns a transform with
 		//committed transform as parent
 		Transform& CreateTransform(Transform& parent, 
-			vec3 position, vec3 rotation, vec3 scaling);
+			glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling);
 
 	private:
 		Transform world;

@@ -76,139 +76,105 @@
 #include "../renderer/physics/worldphysics.h"
 #include "../renderer/physics/rigidbody.h"
 
-#include <glm.hpp>
-#include "a_shadows.h"
-
-
-using namespace geeL;
+#include "testscene.h"
 
 #define pi 3.141592f
+
+using namespace geeL;
 
 
 SpotLight* spotLight = nullptr;
 
 namespace {
 
-	class ShadowTestObject : public SceneControlObject {
+	class TestScene : public SceneControlObject {
 
 	public:
-
 		LightManager& lightManager;
 		MaterialFactory& materialFactory;
 		ShaderManager& shaderManager;
 		TransformFactory transformFactory;
-
-		MeshRenderer* nanoRenderer;
 		MeshFactory& meshFactory;
-		Light* light;
-		DirectionalLight* dirLight;
 		Physics* physics;
 
-		Material* material;
-
-		geeL::Transform* transi;
+		MeshRenderer* nanoRenderer;
 
 
-		ShadowTestObject(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
+		TestScene(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
 			ShaderManager& shaderManager, RenderScene& scene, TransformFactory& transformFactory, Physics* physics)
-			: 
-			SceneControlObject(scene),
-			materialFactory(materialFactory),
-			meshFactory(meshFactory), 
-			lightManager(lightManager),
-			shaderManager(shaderManager),
-			transformFactory(transformFactory),
-			physics(physics)
-			{}
+				: SceneControlObject(scene),
+					materialFactory(materialFactory),
+					meshFactory(meshFactory), 
+					lightManager(lightManager),
+					shaderManager(shaderManager),
+					transformFactory(transformFactory),
+					physics(physics) {}
 
 
 		virtual void init() {
 
-			float l = 100.f;
-			
-			geeL::Transform* lighTransi4 = new geeL::Transform(glm::vec3(7, 5, 5), glm::vec3(-180.0f, 0, -50), glm::vec3(1.f, 1.f, 1.f));
-			light = &lightManager.addPointLight(*lighTransi4, glm::vec3(l *0.996 , l *0.535 , l*0.379));
+			float lightIntensity = 100.f;
 
-			l = 100.f;
+			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(7, 5, 5), vec3(-180.0f, 0, -50), vec3(1.f, 1.f, 1.f));
+			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996 , lightIntensity *0.535 , lightIntensity*0.379));
+
+			lightIntensity = 100.f;
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
+			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-9, 5, 0), vec3(-264.0f, 0, -5), vec3(1.f, 1.f, 1.f));
+			spotLight = &lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle);
 
-			geeL::Transform* lighTransi3 = new geeL::Transform(glm::vec3(-9, 5, 0), glm::vec3(-264.0f, 0, -5), glm::vec3(1.f, 1.f, 1.f));
-			spotLight = &lightManager.addSpotlight(*lighTransi3, glm::vec3(l, l, l * 2), angle, outerAngle);
-
-			l = 0.5f;
-			geeL::Transform* lighTransi2 = new geeL::Transform(glm::vec3(0.f, 0.f, 0.f), glm::vec3(75, 20, 10), glm::vec3(1.f, 1.f, 1.f));
-			//dirLight = &lightManager.addDirectionalLight(*lighTransi2, glm::vec3(l, l, l));
+			lightIntensity = 0.5f;
+			//geeL::Transform& lightTransform3 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(75, 20, 10), vec3(1.f, 1.f, 1.f));
+			//&lightManager.addDirectionalLight(lightTransform3, glm::vec3(l, l, l));
 
 			float height = -2.f;
-			transi = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.2f, 0.2f, 0.2f));
-			nanoRenderer = &scene.AddMeshRenderer("resources/nanosuit/nanosuit.obj", *transi, cullFront, true, "Nanosuit");
+			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.2f, 0.2f, 0.2f));
+			nanoRenderer = &scene.AddMeshRenderer("resources/nanosuit/nanosuit.obj", meshTransform1, cullFront, true, "Nanosuit");
 
-			geeL::Transform* transi2 = new geeL::Transform(glm::vec3(0.0f, height, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(100.2f, 0.2f, 100.2f));
-			MeshRenderer& plane = scene.AddMeshRenderer("resources/primitives/plane.obj", *transi2, cullFront, true, "Floor");
-
-			if(physics != nullptr) physics->addPlane(vec3(0.f, 1.f, 0.f), *transi2, RigidbodyProperties(0.f, false));
+			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(100.2f, 0.2f, 100.2f));
+			MeshRenderer& plane = scene.AddMeshRenderer("resources/primitives/plane.obj", meshTransform2, cullFront, true, "Floor");
+			if(physics != nullptr) physics->addPlane(vec3(0.f, 1.f, 0.f), meshTransform2, RigidbodyProperties(0.f, false));
 
 			for (auto it = plane.deferredMaterialsBegin(); it != plane.deferredMaterialsEnd(); it++) {
-				Material* mat = it->second;
-				DefaultMaterialContainer* defmat = dynamic_cast<DefaultMaterialContainer*>(&mat->container);
-
-				if (defmat != nullptr) {
-					defmat->setRoughness(0.9f);
-					defmat->setMetallic(0.f);
-					defmat->setColor(vec3(0.4f, 0.4f, 0.4f));
-				}
+				MaterialContainer& container = it->second->container;
+				container.setFloatValue("Roughness", 0.1f);
+				container.setFloatValue("Metallic", 0.f);
+				container.setVectorValue("Color", vec3(0.4f, 0.4f, 0.4f));
 			}
 
-			geeL::Transform* transi5 = new geeL::Transform(glm::vec3(-30.0f, -4.f, 25.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.3f, 0.3f, 0.3f));
-			MeshRenderer& box1 = scene.AddMeshRenderer("resources/empire/EmpireState_lp.obj", *transi5, cullFront, true, "Empire State");
+			Transform& meshTransform3 = transformFactory.CreateTransform(vec3(-30.0f, -4.f, 25.0f), vec3(0.5f, 0.5f, 0.5f), vec3(0.3f, 0.3f, 0.3f));
+			MeshRenderer& box1 = scene.AddMeshRenderer("resources/empire/EmpireState_lp.obj", meshTransform3, cullFront, true, "Empire State");
 
 			for (auto it = box1.deferredMaterialsBegin(); it != box1.deferredMaterialsEnd(); it++) {
-				Material* mat = it->second;
-				DefaultMaterialContainer* defmat = dynamic_cast<DefaultMaterialContainer*>(&mat->container);
-
-				if (defmat != nullptr) {
-					defmat->setRoughness(0.5f);
-					defmat->setColor(vec3(0.5f, 0.5f, 0.5f));
-				}
+				MaterialContainer& container = it->second->container;
+				container.setFloatValue("Roughness", 0.5f);
+				container.setVectorValue("Color", vec3(0.5f, 0.5f, 0.5f));
 			}
 
-			geeL::Transform* transi7 = new geeL::Transform(glm::vec3(8.f, 20.f, 4.f), glm::vec3(0.f), glm::vec3(1.f, 1.f, 1.f));
-			MeshRenderer& sphere1 = scene.AddMeshRenderer("resources/primitives/sphere.obj", *transi7, cullFront, true, "Sphere");
-			//if (physics != nullptr) physics->addSphere(1.f, *transi7, RigidbodyProperties(10.f, false));
-			//if (physics != nullptr) physics->addMesh(*sphere1.model, *transi7, RigidbodyProperties(10.f, false));
-
-			geeL::Transform* transi27 = new geeL::Transform(glm::vec3(18.f, 20.f, 4.f), glm::vec3(0.f), glm::vec3(1.f, 1.f, 1.f));
-			MeshRenderer& sphere21 = scene.AddMeshRenderer("resources/primitives/sphere.obj", *transi27, cullFront, true, "Sphere");
-			if (physics != nullptr) physics->addSphere(1.f, *transi27, RigidbodyProperties(10.f, true));
+			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 20.f, 4.f), vec3(0.f), vec3(1.f, 1.f, 1.f));
+			MeshRenderer& sphere1 = scene.AddMeshRenderer("resources/primitives/sphere.obj", meshTransform4, cullFront, true, "Sphere");
+			//if (physics != nullptr) physics->addSphere(1.f, meshTransform4, RigidbodyProperties(10.f, false));
+			//if (physics != nullptr) physics->addMesh(*sphere1.model, meshTransform4, RigidbodyProperties(10.f, false));
 
 			for (auto it = sphere1.deferredMaterialsBegin(); it != sphere1.deferredMaterialsEnd(); it++) {
-				Material* mat = it->second;
-				DefaultMaterialContainer* defmat = dynamic_cast<DefaultMaterialContainer*>(&mat->container);
-
-				if (defmat != nullptr) {
-					defmat->setRoughness(0.f);
-					defmat->setMetallic(0.5f);
-					//defmat->setColor(vec3(0.1f, 0.1f, 0.1f));
-				}
+				MaterialContainer& container = it->second->container;
+				container.setFloatValue("Roughness", 0.f);
+				container.setFloatValue("Metallic", 0.5f);
 			}
 
-			geeL::Transform* transi3 = new geeL::Transform(glm::vec3(0.0f, 1, -2.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(5.2f, 2.2f, 1.2f));
-			MeshRenderer& box = scene.AddMeshRenderer("resources/primitives/cube.obj", *transi3, cullFront, true, "Box");
+			Transform& meshTransform5 = transformFactory.CreateTransform(vec3(0.0f, 1, -2.0f), vec3(0.5f, 0.5f, 0.5f), vec3(5.2f, 2.2f, 1.2f));
+			MeshRenderer& box = scene.AddMeshRenderer("resources/primitives/cube.obj", meshTransform5, cullFront, true, "Box");
 
 			for (auto it = box.deferredMaterialsBegin(); it != box.deferredMaterialsEnd(); it++) {
-				Material* mat = it->second;
-				DefaultMaterialContainer* defmat = dynamic_cast<DefaultMaterialContainer*>(&mat->container);
-
-				if (defmat != nullptr) {
-					defmat->setRoughness(0.0f);
-					defmat->setMetallic(0.1f);
-					defmat->setColor(vec3(0.1f, 0.1f, 0.1f));
-				}
+				MaterialContainer& container = it->second->container;
+				container.setFloatValue("Roughness", 0.f);
+				container.setFloatValue("Metallic", 0.1f);
+				container.setVectorValue("Color", vec3(0.1f, 0.1f, 0.1f));
 			}
 
-			geeL::Transform* transi79 = new geeL::Transform(glm::vec3(4.f, -0.4f, 0.0f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", *transi79, cullFront, true, "Cyborg");
+			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -0.4f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", meshTransform6, cullFront, true, "Cyborg");
 		}
 
 		virtual void draw(const Camera& camera) {
@@ -220,11 +186,9 @@ namespace {
 
 }
 
-#include "../renderer/lighting/lightmanager.h"
-#include "../renderer/cameras/perspectivecamera.h"
 
 
-void a_shadows() {
+void draw() {
 	
 	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
 	InputManager manager = InputManager();
@@ -234,15 +198,15 @@ void a_shadows() {
 	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	TransformFactory transFactory = TransformFactory(world);
 
-	geeL::Transform& transform3 = transFactory.CreateTransform(glm::vec3(0.0f, 2.0f, 9.0f), vec3(-100.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera3 = PerspectiveCamera(transform3, 5.f, 15.f, 60.f, window.width, window.height, 0.1f, 100.f);
+	geeL::Transform& cameraTransform = transFactory.CreateTransform(vec3(0.0f, 2.0f, 9.0f), vec3(-100.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 15.f, 60.f, window.width, window.height, 0.1f, 100.f);
 
 	BilateralFilter blur = BilateralFilter(1, 0.3f);
 	DefaultPostProcess def = DefaultPostProcess();
-	SSAO ssao = SSAO(camera3, blur, 10.f);
+	SSAO ssao = SSAO(camera, blur, 10.f);
 	RenderContext context = RenderContext();
-	DeferredRenderer& renderer1 = DeferredRenderer(window, manager, context, def, &ssao, 0.6f);
-	renderer1.init();
+	DeferredRenderer& renderer = DeferredRenderer(window, manager, context, def, &ssao, 0.6f);
+	renderer.init();
 
 	MaterialFactory materialFactory = MaterialFactory();
 	materialFactory.setDefaultShader(true);
@@ -251,7 +215,7 @@ void a_shadows() {
 	LightManager lightManager = LightManager(vec3(0.15f));
 	ShaderManager shaderManager = ShaderManager(materialFactory);
 	
-	RenderScene scene = RenderScene(lightManager, camera3, meshFactory);
+	RenderScene scene = RenderScene(lightManager, camera, meshFactory);
 	WorldPhysics physics = WorldPhysics();
 	scene.setPhysics(&physics);
 
@@ -262,36 +226,36 @@ void a_shadows() {
 	Skybox skybox = Skybox(irrMap);
 	scene.setSkybox(skybox);
 	
-	renderer1.setScene(scene);
-	renderer1.setShaderManager(shaderManager);
+	renderer.setScene(scene);
+	renderer.setShaderManager(shaderManager);
 
-	ShadowTestObject* testObj = new ShadowTestObject(materialFactory, meshFactory, 
+	TestScene testScene = TestScene(materialFactory, meshFactory, 
 		lightManager, shaderManager, scene, transFactory, &physics);
 
-	renderer1.addObject(testObj);
-	renderer1.initObjects();
+	renderer.addObject(&testScene);
+	renderer.initObjects();
 
 	GUIRenderer gui = GUIRenderer(window, context);
 	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
-	objectLister.add(camera3);
+	objectLister.add(camera);
 	gui.addElement(objectLister);
 	PostProcessingEffectLister postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
 	gui.addElement(postLister);
-	SystemInformation sysInfo = SystemInformation(renderer1.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
+	SystemInformation sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
 	gui.addElement(sysInfo);
 
-	renderer1.addGUIRenderer(&gui);
+	renderer.addGUIRenderer(&gui);
 	
 	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50), 15.f);
 	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
 
 	GaussianBlur& blur4 = GaussianBlur();
-	SSRR& ssrr = SSRR(camera3);
+	SSRR& ssrr = SSRR(camera);
 	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.3f, 0.3f);
 	
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera3.depth, 2.f, 100.f, 0.3f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 2.f, 100.f, 0.3f);
 
 	FXAA fxaa = FXAA();
 
@@ -310,7 +274,7 @@ void a_shadows() {
 	postLister.add(ssao);
 
 	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
-	renderer1.addEffect(volSmooth, { &vol, &sobelBlur });
+	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
 	postLister.add(volSmooth, lightSnippet);
 
 	//renderer1.addEffect(bloom);
@@ -320,18 +284,16 @@ void a_shadows() {
 	//renderer1.addEffect(raySmooth);
 	//postLister.add(raySmooth, godRaySnippet);
 
-	renderer1.addEffect(ssrrSmooth, ssrr);
+	renderer.addEffect(ssrrSmooth, ssrr);
 	
-	renderer1.addEffect(dof, dof);
+	renderer.addEffect(dof, dof);
 	postLister.add(dof);
 
-	renderer1.addEffect(colorCorrect);
+	renderer.addEffect(colorCorrect);
 	postLister.add(colorCorrect);
 
-	renderer1.addEffect(fxaa);
+	renderer.addEffect(fxaa);
 
-	renderer1.linkInformation();
-	renderer1.render();
-
-	delete testObj;
+	renderer.linkInformation();
+	renderer.render();
 }

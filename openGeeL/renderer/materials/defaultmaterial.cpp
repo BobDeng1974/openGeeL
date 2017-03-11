@@ -2,10 +2,10 @@
 #include <glew.h>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
+#include <iostream>
 #include "../shader/shader.h"
 #include "../texturing/simpletexture.h"
 #include "defaultmaterial.h"
-#include <iostream>
 
 using namespace std;
 
@@ -54,6 +54,50 @@ namespace geeL {
 	void DefaultMaterialContainer::setColor(glm::vec3 value) {
 		color = value;
 	}
+
+	float DefaultMaterialContainer::getFloatValue(std::string name) const {
+		if (name == "Roughness")
+			return roughness;
+		if (name == "Metallic")
+			return metallic;
+
+		cout << "Value '" + name + "' not present in material\n";
+		return 0.f;
+	}
+
+	int DefaultMaterialContainer::getIntValue(std::string name) const {
+		cout << "Value '" + name + "' not present in material\n";
+		return 0;
+	}
+
+	glm::vec3 DefaultMaterialContainer::getVectorValue(std::string name) const {
+		if (name == "Color")
+			return color;
+
+		cout << "Value '" + name + "' not present in material\n";
+		return glm::vec3();
+	}
+
+	void  DefaultMaterialContainer::setFloatValue(std::string name, float value) {
+		if (name == "Roughness")
+			roughness = value;
+		else if (name == "Metallic")
+			metallic = value;
+		else
+			cout << "Value '" + name + "' not present in material\n";
+	}
+
+	void  DefaultMaterialContainer::setIntValue(std::string name, int value) {
+		cout << "Value '" + name + "' not present in material\n";
+	}
+
+	void  DefaultMaterialContainer::setVectorValue(std::string name, const glm::vec3& value) {
+		if (name == "Color")
+			color = value;
+		else 
+			cout << "Value '" + name + "' not present in material\n";
+	}
+
 
 	void DefaultMaterialContainer::bindTextures(Shader& shader) const {
 		shader.use();

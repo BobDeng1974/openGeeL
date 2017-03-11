@@ -34,15 +34,15 @@ namespace geeL {
 		void bindTextures(Shader& shader) const;
 		void bind(Shader& shader) const;
 
-		float getFloatValue(std::string name) const;
-		int   getIntValue(std::string name) const;
-		vec3  getVectorValue(std::string name) const;
-		mat4  getMatrixValue(std::string name) const;
+		virtual float getFloatValue(std::string name) const;
+		virtual int   getIntValue(std::string name) const;
+		virtual vec3  getVectorValue(std::string name) const;
+		virtual mat4  getMatrixValue(std::string name) const;
 
-		void getFloatValue(std::string name, float value) ;
-		void setIntValue(std::string name, int value);
-		void setVectorValue(std::string name, vec3 value);
-		void setMatrixValue(std::string name, mat4 value);
+		virtual void setFloatValue(std::string name, float value) ;
+		virtual void setIntValue(std::string name, int value);
+		virtual void setVectorValue(std::string name, const glm::vec3& value);
+		virtual void setMatrixValue(std::string name, mat4 value);
 
 
 	private:

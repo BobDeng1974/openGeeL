@@ -92,7 +92,7 @@ namespace geeL {
 
 	int GenericMaterialContainer::getIntValue(std::string name) const {
 		if (intParameters.count(name))
-			return floatParameters.at(name);
+			return intParameters.at(name);
 
 		cout << "Value '" + name + "' not present in material\n";
 		return 0;
@@ -114,7 +114,7 @@ namespace geeL {
 		return mat4(0.f);
 	}
 
-	void GenericMaterialContainer::getFloatValue(std::string name, float value) {
+	void GenericMaterialContainer::setFloatValue(std::string name, float value) {
 		floatParameters[name] = value;
 	}
 
@@ -122,7 +122,7 @@ namespace geeL {
 		intParameters[name] = value;
 	}
 
-	void GenericMaterialContainer::setVectorValue(std::string name, vec3 value) {
+	void GenericMaterialContainer::setVectorValue(std::string name, const glm::vec3& value) {
 		vec3Parameters[name] = value;
 	}
 

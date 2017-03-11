@@ -29,6 +29,7 @@ namespace geeL {
 	struct Bone {
 		unsigned int id;
 		glm::mat4 offsetMatrix;
+		glm::mat4 transform;
 
 	};
 

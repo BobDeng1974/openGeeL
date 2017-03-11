@@ -1,8 +1,8 @@
 #include <iostream>
-#include "a_shadows.h"
+#include "testscene.h"
 
 int main() {
-	a_shadows();
+	draw();
 
 	return 0;
 }
