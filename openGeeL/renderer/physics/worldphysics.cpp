@@ -22,7 +22,6 @@ namespace geeL {
 		delete collisionConfiguration;
 		delete dispatcher;
 		delete solver;
-
 		delete world;
 	}
 

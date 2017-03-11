@@ -18,6 +18,10 @@ namespace geeL {
 		glm::vec3 normal;
 		bool hit = false;
 
+		operator bool() const {
+			return hit;
+		}
+
 	};
 
 

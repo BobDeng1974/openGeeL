@@ -50,10 +50,10 @@ namespace geeL {
 
 		btConvexHullShape* temp = new btConvexHullShape();
 		for (auto it = model.meshesBeginConst(); it != model.meshesEndConst(); it++) {
-			const Mesh& mesh = *it;
+			const Mesh& mesh = **it;
 
 			for (unsigned int i = 0; i < mesh.getVerticesCount(); i++) {
-				glm::vec3 p1 = mesh.getVertex(i).position;
+				glm::vec3 p1 = mesh.getVertexPosition(i);
 				temp->addPoint(btVector3(p1.x, p1.y, p1.z));
 			}
 		}
@@ -66,16 +66,16 @@ namespace geeL {
 
 		btTriangleMesh tri = btTriangleMesh();
 		for (auto it = model.meshesBeginConst(); it != model.meshesEndConst(); it++) {
-		const Mesh& mesh = *it;
+		const Mesh& mesh = **it;
 
 			for (unsigned int i = 0; i < mesh.getIndicesCount(); i += 3) {
 				unsigned int i1 = mesh.getIndex(i);
 				unsigned int i2 = mesh.getIndex(i + 1);
 				unsigned int i3 = mesh.getIndex(i + 2);
 
-				glm::vec3 p1 = mesh.getVertex(i1).position;
-				glm::vec3 p2 = mesh.getVertex(i2).position;
-				glm::vec3 p3 = mesh.getVertex(i3).position;
+				glm::vec3 p1 = mesh.getVertexPosition(i1);
+				glm::vec3 p2 = mesh.getVertexPosition(i2);
+				glm::vec3 p3 = mesh.getVertexPosition(i3);
 
 				tri.addTriangle(btVector3(p1.x, p1.y, p1.z), btVector3(p2.x, p2.y, p2.z), btVector3(p3.x, p3.y, p3.z));
 			}

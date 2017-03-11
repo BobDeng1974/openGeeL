@@ -9,6 +9,8 @@
 #include "meshrenderer.h"
 #include "meshfactory.h"
 
+#include <mat4x4.hpp>
+
 using namespace glm;
 using namespace std;
 
@@ -74,22 +76,62 @@ namespace geeL {
 
 		for (unsigned int i = 0; i < node->mNumMeshes; i++) {
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			model.addMesh(processMesh(directory, mesh, scene));
+			model.addMesh(processStaticMesh(directory, mesh, scene));
 		}
 
 		for (unsigned int i = 0; i < node->mNumChildren; i++)
 			processNode(model, directory, node->mChildren[i], scene);
 	}
 
-	Mesh MeshFactory::processMesh(string directory, aiMesh* mesh, const aiScene* scene) {
+
+	StaticMesh* MeshFactory::processStaticMesh(string directory, aiMesh* mesh, const aiScene* scene) {
 
 		vector<Vertex> vertices;
 		vector<unsigned int> indices;
 		vector<SimpleTexture*> textures;
 
+		vertices.reserve(mesh->mNumVertices);
+		
+		processVertices(vertices, mesh);
+		processIndices(indices, mesh);
+		processTextures(textures, directory, mesh, scene);
+
+		DefaultMaterialContainer& mat = factory.CreateMaterial();
+		mat.addTextures(textures);
+		mat.setRoughness(0.4f);
+		mat.setMetallic(0.2f);
+
+		return new StaticMesh(vertices, indices, mat);
+	}
+
+	SkinnedMesh* MeshFactory::processSkinnedMesh(std::string directory, aiMesh* mesh, const aiScene* scene) {
+
+		vector<SkinnedVertex> vertices;
+		vector<unsigned int> indices;
+		map<string, Bone> bones;
+		vector<SimpleTexture*> textures;
+
+		vertices.reserve(mesh->mNumVertices);
+
+		processVertices(vertices, mesh);
+		processIndices(indices, mesh);
+		processBones(vertices, bones, mesh);
+		processTextures(textures, directory, mesh, scene);
+
+		DefaultMaterialContainer& mat = factory.CreateMaterial();
+		mat.addTextures(textures);
+		mat.setRoughness(0.4f);
+		mat.setMetallic(0.2f);
+
+		return new SkinnedMesh(vertices, indices, bones, mat);
+	}
+
+	template <class V>
+	void MeshFactory::processVertices(std::vector<V>& vertices, aiMesh* mesh) {
+
 		//Walk through meshes vertices
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-			Vertex vertex;
+			V vertex;
 			vec3 vector;
 
 			vector.x = mesh->mVertices[i].x;
@@ -106,7 +148,7 @@ namespace geeL {
 				vertex.normal = vector;
 			}
 			else
-				vertex.normal = vec3(0, 0, 0);
+				vertex.normal = vec3(0.f, 0.f, 0.f);
 
 			if (mesh->mTangents != nullptr) {
 				vector.x = mesh->mTangents[i].x;
@@ -116,7 +158,7 @@ namespace geeL {
 				vertex.tangent = vector;
 			}
 			else
-				vertex.tangent = vec3(0, 0, 0);
+				vertex.tangent = vec3(0.f, 0.f, 0.f);
 
 			if (mesh->mBitangents != nullptr) {
 				vector.x = mesh->mBitangents[i].x;
@@ -126,7 +168,7 @@ namespace geeL {
 				vertex.bitangent = vector;
 			}
 			else
-				vertex.bitangent = vec3(0, 0, 0);
+				vertex.bitangent = vec3(0.f, 0.f, 0.f);
 
 			//Check for texture coordinates
 			if (mesh->mTextureCoords[0]) {
@@ -143,56 +185,72 @@ namespace geeL {
 
 			vertices.push_back(vertex);
 		}
+	}
+
+
+	void MeshFactory::processIndices(vector<unsigned int>& indices, aiMesh* mesh) {
 
 		//Walk through each of the meshes faces
 		for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
 			aiFace face = mesh->mFaces[i];
-			
+
 			//Retrieve indices of the face and store them in indices vector
 			for (unsigned int j = 0; j < face.mNumIndices; j++)
 				indices.push_back(face.mIndices[j]);
 		}
+	}
 
-		//Process materials
+
+	void MeshFactory::processBones(vector<SkinnedVertex>& vertices, std::map<std::string, Bone>& bones, aiMesh* mesh) {
+
+		unsigned int boneCount = 0;
+		for (unsigned int i = 0; i < mesh->mNumBones; i++) {
+			aiBone* bone = mesh->mBones[i];
+			string name = bone->mName.data;
+			unsigned int index = 0;
+
+			//Search for bone in bone map and add if not present
+			if (bones.find(name) == bones.end()) {
+				index = boneCount;
+
+				auto mat = bone->mOffsetMatrix;
+				//mat.Transpose();
+
+				bones[name].offsetMatrix = *reinterpret_cast<mat4*>(&mat);
+				bones[name].id = index;
+				boneCount++;
+			}
+
+			//Iterate over all vertices that are affected by this bone
+			for (unsigned int j = 0; j < bone->mNumWeights; j++) {
+				aiVertexWeight weight = bone->mWeights[j];
+
+				//Populate vertices with bone weights
+				VertexBoneData& boneData = vertices[weight.mVertexId].bones;
+				boneData.addBone(weight.mVertexId, weight.mWeight);
+			}
+		}
+	}
+
+
+	void MeshFactory::processTextures(vector<SimpleTexture*>& textures, std::string directory, aiMesh* mesh, const aiScene* scene) {
 		if (mesh->mMaterialIndex >= 0) {
 
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-			vector<SimpleTexture*> diffuseMaps = loadMaterialTextures(material,
-				aiTextureType_DIFFUSE, Diffuse, directory, false);
-			textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-
-			vector<SimpleTexture*> specularMaps = loadMaterialTextures(material,
-				aiTextureType_SPECULAR, Specular, directory, true);
-			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-
-			vector<SimpleTexture*> normalMaps = loadMaterialTextures(material,
-				aiTextureType_HEIGHT, Normal, directory, true);
-			textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-
-			vector<SimpleTexture*> reflectionMaps = loadMaterialTextures(material,
-				aiTextureType_AMBIENT, Reflection, directory, true);
-			textures.insert(textures.end(), reflectionMaps.begin(), reflectionMaps.end());
+			loadMaterialTextures(textures, material, aiTextureType_DIFFUSE, Diffuse, directory, false);
+			loadMaterialTextures(textures, material, aiTextureType_SPECULAR, Specular, directory, true);
+			loadMaterialTextures(textures, material, aiTextureType_HEIGHT, Normal, directory, true);
+			loadMaterialTextures(textures, material, aiTextureType_AMBIENT, Reflection, directory, true);
 
 			//TODO: choose a better texture type than Emmissive
-			vector<SimpleTexture*> metallicnMaps = loadMaterialTextures(material,
-				aiTextureType_EMISSIVE, Metallic, directory, true);
-			textures.insert(textures.end(), metallicnMaps.begin(), metallicnMaps.end());
+			loadMaterialTextures(textures, material, aiTextureType_EMISSIVE, Metallic, directory, true);
 		}
-
-		DefaultMaterialContainer& mat = factory.CreateMaterial();
-
-		mat.addTextures(textures);
-		mat.setRoughness(0.4f);
-		mat.setMetallic(0.2f);
-
-		return Mesh(vertices, indices, mat);
 	}
 
-	vector<SimpleTexture*> MeshFactory::loadMaterialTextures(aiMaterial* mat,
-		aiTextureType aiType, TextureType type, string directory, bool linear) {
 
-		vector<SimpleTexture*> textures;
+	void MeshFactory::loadMaterialTextures(vector<SimpleTexture*>& textures, aiMaterial* mat,
+		aiTextureType aiType, TextureType type, string directory, bool linear) {
 
 		for (unsigned int i = 0; i < mat->GetTextureCount(aiType); i++) {
 			aiString str;
@@ -202,8 +260,6 @@ namespace geeL {
 			SimpleTexture& texture = factory.CreateTexture(fileName, linear, type, ColorRGBA, GL_REPEAT, Bilinear);
 			textures.push_back(&texture);
 		}
-
-		return textures;
 	}
 
 }

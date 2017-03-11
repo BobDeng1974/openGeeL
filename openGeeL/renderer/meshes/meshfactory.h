@@ -16,6 +16,8 @@ namespace geeL {
 	class MaterialFactory;
 	class Model;
 	class MeshRenderer;
+	class StaticMesh;
+	class SkinnedMesh;
 	enum CullingMode;
 
 	class MeshFactory {
@@ -48,9 +50,17 @@ namespace geeL {
 
 		void fillModel(Model& model, std::string path);
 		void processNode(Model& model, std::string directory, aiNode* node, const aiScene* scene);
-		Mesh processMesh(std::string directory, aiMesh* mesh, const aiScene* scene);
 
-		std::vector<SimpleTexture*> loadMaterialTextures(aiMaterial* mat,
+		template<class V>
+		void processVertices(std::vector<V>& vertices, aiMesh* mesh);
+		void processIndices(std::vector<unsigned int>& indices, aiMesh* mesh);
+		void processBones(std::vector<SkinnedVertex>& vertices, std::map<std::string, Bone>& bones, aiMesh* mesh);
+		void processTextures(std::vector<SimpleTexture*>& textures, std::string directory, aiMesh* mesh, const aiScene* scene);
+
+		StaticMesh* processStaticMesh(std::string directory, aiMesh* mesh, const aiScene* scene);
+		SkinnedMesh* processSkinnedMesh(std::string directory, aiMesh* mesh, const aiScene* scene);
+
+		void loadMaterialTextures(std::vector<SimpleTexture*>& textures, aiMaterial* mat,
 			aiTextureType aiType, TextureType type, std::string directory, bool linear);
 
 	};

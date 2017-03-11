@@ -37,7 +37,7 @@ namespace geeL {
 	void RenderScene::update() {
 		camera.update();
 
-		originViewSpace = TranslateToViewSpace(vec3(0.f, 0.f, 0.f));
+		originViewSpace = TranslateToViewSpace(glm::vec3(0.f, 0.f, 0.f));
 
 		if (physics != nullptr)
 			physics->update();

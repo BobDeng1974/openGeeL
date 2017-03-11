@@ -12,6 +12,7 @@ namespace geeL {
 	enum TextureType;
 
 	class Mesh;
+	class StaticMesh;
 	class Texture;
 	class SimpleTexture;
 	class Material;
@@ -25,6 +26,7 @@ namespace geeL {
 	public:
 		Model::Model() {}
 		Model::Model(std::string path) : path(path) {}
+		~Model();
 
 		//Draw model without materials
 		void draw() const;
@@ -33,19 +35,19 @@ namespace geeL {
 		void draw(std::vector<Material*> customMaterials) const;
 		void draw(std::map<unsigned int, Material*> customMaterials) const;
 
-		void addMesh(Mesh mesh);
+		void addMesh(Mesh* mesh);
 		const Mesh& getMesh(unsigned int index);
 		int meshCount() const;
 
-		std::vector<Mesh>::iterator meshesBegin();
-		std::vector<Mesh>::iterator meshesEnd();
+		std::vector<Mesh*>::iterator meshesBegin();
+		std::vector<Mesh*>::iterator meshesEnd();
 
-		std::vector<Mesh>::const_iterator meshesBeginConst() const;
-		std::vector<Mesh>::const_iterator meshesEndConst() const;
+		std::vector<Mesh*>::const_iterator meshesBeginConst() const;
+		std::vector<Mesh*>::const_iterator meshesEndConst() const;
 
 	private:
 		std::string path;
-		std::vector<Mesh> meshes;
+		std::vector<Mesh*> meshes;
 		std::string directory;
 	};
 }

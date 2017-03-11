@@ -128,14 +128,14 @@ namespace geeL{
 		int counter = 0;
 
 		if (deferred) {
-			for (vector<Mesh>::iterator it = model->meshesBegin(); it != model->meshesEnd(); it++) {
-				deferredMaterials[counter] = new Material(shader, it->material);
+			for (auto it = model->meshesBegin(); it != model->meshesEnd(); it++) {
+				deferredMaterials[counter] = new Material(shader, (*it)->material);
 				counter++;
 			}
 		}
 		else {
-			for (vector<Mesh>::iterator it = model->meshesBegin(); it != model->meshesEnd(); it++) {
-				forwardMaterials[counter] = new Material(shader, it->material);
+			for (auto it = model->meshesBegin(); it != model->meshesEnd(); it++) {
+				forwardMaterials[counter] = new Material(shader, (*it)->material);
 				counter++;
 			}
 		}
