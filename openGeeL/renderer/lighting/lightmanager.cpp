@@ -10,16 +10,13 @@
 #include "../transformation/transform.h"
 #include "../shader/shader.h"
 #include "../scene.h"
-#include <iostream>
 
 using namespace std;
 using namespace glm;
 
 namespace geeL {
 
-	LightManager::LightManager(glm::vec3 ambient)
-		: 
-		ambient(ambient),
+	LightManager::LightManager(glm::vec3 ambient) : ambient(ambient),
 		dlShader(new Shader("renderer/shaders/shadowmapping.vert", "renderer/shaders/empty.frag")),
 		plShader(new Shader("renderer/shaders/empty.vert", "renderer/shaders/shadowmapping.gs", 
 			"renderer/shaders/shadowmapping.frag")) {}

@@ -8,7 +8,6 @@
 #include "mesh.h"
 #include "model.h"
 #include "meshrenderer.h"
-#include <iostream>
 
 using namespace std;
 
@@ -128,14 +127,18 @@ namespace geeL{
 		int counter = 0;
 
 		if (deferred) {
-			for (auto it = model->meshesBegin(); it != model->meshesEnd(); it++) {
-				deferredMaterials[counter] = new Material(shader, (*it)->material);
+			std::vector<MaterialContainer*> mats = model->getMaterials();
+			for (auto it = mats.begin(); it != mats.end(); it++) {
+				MaterialContainer& container = **it;
+				deferredMaterials[counter] = new Material(shader, container);
 				counter++;
 			}
 		}
 		else {
-			for (auto it = model->meshesBegin(); it != model->meshesEnd(); it++) {
-				forwardMaterials[counter] = new Material(shader, (*it)->material);
+			std::vector<MaterialContainer*> mats = model->getMaterials();
+			for (auto it = mats.begin(); it != mats.end(); it++) {
+				MaterialContainer& container = **it;
+				forwardMaterials[counter] = new Material(shader, container);
 				counter++;
 			}
 		}
@@ -148,7 +151,7 @@ namespace geeL{
 		transformMeshes(model, forwardMaterials, shader);
 	}
 
-	void MeshRenderer::transformMeshes(Model& model, 
+	void MeshRenderer::transformMeshes(Model& model,
 		const map<unsigned int, Material*>& materials, const Shader* shader) const {
 
 		for (map<unsigned int, Material*>::const_iterator it = materials.begin(); 
@@ -191,5 +194,9 @@ namespace geeL{
 	map<unsigned int, Material*>::iterator MeshRenderer::forwardMaterialsEnd() {
 		return forwardMaterials.end();
 	}
+
+
+
+
 
 }

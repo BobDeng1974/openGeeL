@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 
-#include "../materials/material.h"
+#include "mesh.h"
 
 namespace geeL {
 
@@ -13,6 +13,7 @@ namespace geeL {
 
 	class Mesh;
 	class StaticMesh;
+	class SkinnedMesh;
 	class Texture;
 	class SimpleTexture;
 	class Material;
@@ -20,36 +21,90 @@ namespace geeL {
 	class LightManager;
 	class MaterialFactory;
 	class Transform;
+	class Material;
 
+
+	//Class that represents a single 3D model in memory
 	class Model {
+
+	public:
+		Model() {}
+		Model(std::string path) : path(path) {}
+
+		virtual void draw() const = 0;
+		virtual void drawInstanced(bool shade = true) const = 0;
+
+		virtual void draw(const std::vector<Material*>& customMaterials) const = 0;
+		virtual void draw(const std::map<unsigned int, Material*>& customMaterials) const = 0;
+
+		virtual const Mesh& getMesh(unsigned int index) = 0;
+		virtual unsigned int meshCount() const = 0;
+
+		virtual std::vector<MaterialContainer*> getMaterials() const = 0;
+
+
+	protected:
+		std::string path;
+	};
+
+
+	//Special model that is intended for static drawing
+	class StaticModel : public Model {
 	
 	public:
-		Model::Model() {}
-		Model::Model(std::string path) : path(path) {}
-		~Model();
+		StaticModel() : Model() {}
+		StaticModel::StaticModel(std::string path) : Model(path) {}
 
 		//Draw model without materials
-		void draw() const;
-		void drawInstanced(bool shade = true) const;
+		virtual void draw() const;
+		virtual void drawInstanced(bool shade = true) const {}
 
-		void draw(std::vector<Material*> customMaterials) const;
-		void draw(std::map<unsigned int, Material*> customMaterials) const;
+		virtual void draw(const std::vector<Material*>& customMaterials) const;
+		virtual void draw(const std::map<unsigned int, Material*>& customMaterials) const;
 
-		void addMesh(Mesh* mesh);
-		const Mesh& getMesh(unsigned int index);
-		int meshCount() const;
+		StaticMesh& addMesh(StaticMesh mesh);
+		virtual const Mesh& getMesh(unsigned int index);
+		virtual unsigned int meshCount() const;
 
-		std::vector<Mesh*>::iterator meshesBegin();
-		std::vector<Mesh*>::iterator meshesEnd();
+		std::vector<StaticMesh>::iterator meshesBegin();
+		std::vector<StaticMesh>::iterator meshesEnd();
 
-		std::vector<Mesh*>::const_iterator meshesBeginConst() const;
-		std::vector<Mesh*>::const_iterator meshesEndConst() const;
+		std::vector<StaticMesh>::const_iterator meshesBeginConst() const;
+		std::vector<StaticMesh>::const_iterator meshesEndConst() const;
+
+		virtual std::vector<MaterialContainer*> getMaterials() const;
 
 	private:
-		std::string path;
-		std::vector<Mesh*> meshes;
-		std::string directory;
+		std::vector<StaticMesh> meshes;
+		
 	};
+
+
+	//Special model that is intented for animated drawing
+	class SkinnedModel : public Model {
+
+	public:
+		SkinnedModel() : Model() {}
+		SkinnedModel::SkinnedModel(std::string path) : Model(path) {}
+
+		virtual void draw() const;
+		virtual void drawInstanced(bool shade = true) const {}
+
+		virtual void draw(const std::vector<Material*>& customMaterials) const;
+		virtual void draw(const std::map<unsigned int, Material*>& customMaterials) const;
+
+		SkinnedMesh& addMesh(SkinnedMesh mesh);
+		virtual const Mesh& getMesh(unsigned int index);
+		virtual unsigned int meshCount() const;
+
+		virtual std::vector<MaterialContainer*> getMaterials() const;
+
+	private:
+		std::vector<SkinnedMesh> meshes;
+
+	};
+
+
 }
 
 #endif

@@ -95,7 +95,7 @@ namespace geeL {
 	MeshRenderer& RenderScene::AddMeshRenderer(string modelPath, Transform& transform, 
 		CullingMode faceCulling, bool deferred, string name) {
 		
-		Model& model = meshFactory.CreateModel(modelPath);
+		StaticModel& model = meshFactory.CreateStaticModel(modelPath);
 		if(deferred)
 			deferredRenderObjects.push_back(meshFactory.CreateMeshRendererManual(model, transform, faceCulling, deferred, name));
 		else
@@ -107,7 +107,7 @@ namespace geeL {
 	MeshRenderer& RenderScene::AddMeshRenderer(std::string modelPath, Transform& transform,
 		std::vector<Material*> materials, CullingMode faceCulling, string name) {
 
-		Model& model = meshFactory.CreateModel(modelPath);
+		StaticModel& model = meshFactory.CreateStaticModel(modelPath);
 		MeshRenderer* renderer = meshFactory.CreateMeshRendererManual(model, transform, faceCulling, true, name);
 		renderer->customizeMaterials(materials);
 

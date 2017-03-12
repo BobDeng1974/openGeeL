@@ -138,7 +138,7 @@ namespace {
 
 			for (auto it = plane.deferredMaterialsBegin(); it != plane.deferredMaterialsEnd(); it++) {
 				MaterialContainer& container = it->second->container;
-				container.setFloatValue("Roughness", 0.1f);
+				container.setFloatValue("Roughness", 0.9f);
 				container.setFloatValue("Metallic", 0.f);
 				container.setVectorValue("Color", vec3(0.4f, 0.4f, 0.4f));
 			}
@@ -152,7 +152,7 @@ namespace {
 				container.setVectorValue("Color", vec3(0.5f, 0.5f, 0.5f));
 			}
 
-			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 20.f, 4.f), vec3(0.f), vec3(1.f, 1.f, 1.f));
+			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 5.f, 4.f), vec3(0.f), vec3(1.f, 1.f, 1.f));
 			MeshRenderer& sphere1 = scene.AddMeshRenderer("resources/primitives/sphere.obj", meshTransform4, cullFront, true, "Sphere");
 			//if (physics != nullptr) physics->addSphere(1.f, meshTransform4, RigidbodyProperties(10.f, false));
 			//if (physics != nullptr) physics->addMesh(*sphere1.model, meshTransform4, RigidbodyProperties(10.f, false));
@@ -175,6 +175,10 @@ namespace {
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -0.4f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", meshTransform6, cullFront, true, "Cyborg");
+
+			float scale = 0.05f;
+			Transform& meshTransform7 = transformFactory.CreateTransform(vec3(2.f, -100.4f, -8.0f), vec3(-90.f, 0.f, 0.f), vec3(scale, scale, scale));
+			scene.AddMeshRenderer("resources/guard/boblampclean.md5mesh", meshTransform7, cullFront, true, "Dude");
 		}
 
 		virtual void draw(const Camera& camera) {
@@ -273,9 +277,9 @@ void draw() {
 	postLister.add(def);
 	postLister.add(ssao);
 
-	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
-	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
-	postLister.add(volSmooth, lightSnippet);
+	//VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
+	//renderer.addEffect(volSmooth, { &vol, &sobelBlur });
+	//postLister.add(volSmooth, lightSnippet);
 
 	//renderer1.addEffect(bloom);
 	//postLister.add(bloom);
@@ -284,10 +288,10 @@ void draw() {
 	//renderer1.addEffect(raySmooth);
 	//postLister.add(raySmooth, godRaySnippet);
 
-	renderer.addEffect(ssrrSmooth, ssrr);
+	//renderer.addEffect(ssrrSmooth, ssrr);
 	
-	renderer.addEffect(dof, dof);
-	postLister.add(dof);
+	//renderer.addEffect(dof, dof);
+	//postLister.add(dof);
 
 	renderer.addEffect(colorCorrect);
 	postLister.add(colorCorrect);

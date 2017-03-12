@@ -20,8 +20,13 @@ namespace geeL {
 	}
 
 
+	MaterialContainer& Mesh::getMaterialContainer() const {
+		return *material;
+	}
 
-	StaticMesh::StaticMesh(vector<Vertex> vertices, vector<unsigned int> indices, MaterialContainer& material)
+
+
+	StaticMesh::StaticMesh(vector<Vertex>& vertices, vector<unsigned int>& indices, MaterialContainer& material)
 		: Mesh(material), vertices(vertices), indices(indices) {
 	
 		init();
@@ -96,8 +101,8 @@ namespace geeL {
 
 
 
-	SkinnedMesh::SkinnedMesh(vector<SkinnedVertex> vertices, vector<unsigned int> indices, 
-		std::map<std::string, Bone> bones, MaterialContainer& material)
+	SkinnedMesh::SkinnedMesh(vector<SkinnedVertex>& vertices, vector<unsigned int>& indices, 
+		std::map<std::string, MeshBoneData>& bones, MaterialContainer& material)
 			: Mesh(material), vertices(vertices), indices(indices), bones(bones) {
 
 		init();

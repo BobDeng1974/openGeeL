@@ -26,7 +26,7 @@ namespace geeL {
 	};
 
 	//Single bone in meshes skeleton
-	struct Bone {
+	struct MeshBoneData {
 		unsigned int id;
 		glm::mat4 offsetMatrix;
 		glm::mat4 transform;
@@ -69,9 +69,8 @@ namespace geeL {
 	class Mesh {
 
 	public:
-		MaterialContainer& material;
-
-		Mesh(MaterialContainer& material) : material(material) {}
+		Mesh() {}
+		Mesh(MaterialContainer& material) : material(&material) {}
 
 		virtual void draw() const = 0;
 
@@ -86,6 +85,11 @@ namespace geeL {
 		//Returns vertex index at index i or 0 if i is not present
 		virtual unsigned int getIndex(unsigned int i) const = 0;
 
+		MaterialContainer& getMaterialContainer() const;
+
+	protected:
+		MaterialContainer* material;
+
 	};
 
 
@@ -94,7 +98,8 @@ namespace geeL {
 	class StaticMesh : public Mesh {
 
 	public:
-		StaticMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, MaterialContainer& material);
+		StaticMesh() : Mesh() {}
+		StaticMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, MaterialContainer& material);
 
 		virtual void draw() const;
 
@@ -119,8 +124,8 @@ namespace geeL {
 	class SkinnedMesh : public Mesh {
 
 	public:
-		SkinnedMesh(std::vector<SkinnedVertex> vertices, std::vector<unsigned int> indices, 
-			std::map<std::string, Bone> bones, MaterialContainer& material);
+		SkinnedMesh(std::vector<SkinnedVertex>& vertices, std::vector<unsigned int>& indices, 
+			std::map<std::string, MeshBoneData>& bones, MaterialContainer& material);
 
 		virtual void draw() const;
 
@@ -136,7 +141,7 @@ namespace geeL {
 		unsigned int vao, vbo, ebo;
 		std::vector<SkinnedVertex> vertices;
 		std::vector<unsigned int> indices;
-		std::map<std::string, Bone> bones;
+		std::map<std::string, MeshBoneData> bones;
 
 		void init();
 	};

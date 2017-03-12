@@ -46,11 +46,11 @@ namespace geeL {
 	}
 
 
-	MeshCollider::MeshCollider(const Model& model) {
+	MeshCollider::MeshCollider(const StaticModel& model) {
 
 		btConvexHullShape* temp = new btConvexHullShape();
 		for (auto it = model.meshesBeginConst(); it != model.meshesEndConst(); it++) {
-			const Mesh& mesh = **it;
+			const Mesh& mesh = *it;
 
 			for (unsigned int i = 0; i < mesh.getVerticesCount(); i++) {
 				glm::vec3 p1 = mesh.getVertexPosition(i);
@@ -62,11 +62,11 @@ namespace geeL {
 	}
 
 
-	StaticMeshCollider::StaticMeshCollider(const Model& model) {
+	StaticMeshCollider::StaticMeshCollider(const StaticModel& model) {
 
 		btTriangleMesh tri = btTriangleMesh();
 		for (auto it = model.meshesBeginConst(); it != model.meshesEndConst(); it++) {
-		const Mesh& mesh = **it;
+		const Mesh& mesh = *it;
 
 			for (unsigned int i = 0; i < mesh.getIndicesCount(); i += 3) {
 				unsigned int i1 = mesh.getIndex(i);

@@ -7,9 +7,12 @@
 
 namespace geeL {
 
+	class Animator;
 	class Material;
 	class DefaultMaterialContainer;
 	class Model;
+	class StaticModel;
+	class SkinnedModel;
 	class Shader;
 	class Transform;
 
@@ -19,6 +22,8 @@ namespace geeL {
 		cullBack
 	};
 
+
+	//Represents a drawn model in a render scene. Independent from actual model
 	class MeshRenderer : public SceneObject {
 
 	public:
@@ -64,7 +69,7 @@ namespace geeL {
 		std::map<unsigned int, Material*>::iterator forwardMaterialsEnd();
 
 
-	private:
+	protected:
 		bool instanced;
 		std::map<unsigned int, Material*> deferredMaterials;
 		std::map<unsigned int, Material*> forwardMaterials;
@@ -72,10 +77,29 @@ namespace geeL {
 		//Init materials with data from the meshes material containers
 		void initMaterials(Shader& shader, bool deferred);
 
-		void transformMeshes(Model& model, const std::map<unsigned int, Material*>& materials, 
+		void transformMeshes(Model& model, const std::map<unsigned int, Material*>& materials,
 			const Shader* shader = nullptr) const;
 
 	};
+
+
+	//Special mesh renderer that is intended for use with animated/skinned models
+	class SkinnedMeshRenderer : public MeshRenderer {
+
+	public:
+		SkinnedMeshRenderer(Transform& transform, Shader& shader,
+			CullingMode faceCulling = cullFront, bool deferred = true, std::string name = "SkinnedMeshRenderer");
+
+		SkinnedMeshRenderer(Transform& transform, Shader& shader, SkinnedModel& model,
+			CullingMode faceCulling = cullFront, bool deferred = true, std::string name = "SkinnedMeshRenderer");
+
+
+	private:
+		Animator* animator;
+		SkinnedModel* skinnedModel;
+
+	};
+
 }
 
 #endif

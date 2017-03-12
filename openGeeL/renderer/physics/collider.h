@@ -7,7 +7,7 @@ class btCollisionShape;
 
 namespace geeL {
 
-	class Model;
+	class StaticModel;
 
 	//Objects that defines a collision shape
 	class Collider {
@@ -69,7 +69,7 @@ namespace geeL {
 	class MeshCollider : public Collider {
 
 	public:
-		MeshCollider(const Model& model);
+		MeshCollider(const StaticModel& model);
 
 	};
 
@@ -79,7 +79,7 @@ namespace geeL {
 	class StaticMeshCollider : public Collider {
 
 	public:
-		StaticMeshCollider(const Model& model);
+		StaticMeshCollider(const StaticModel& model);
 
 	};
 

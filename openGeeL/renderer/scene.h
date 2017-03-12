@@ -13,7 +13,7 @@ namespace geeL {
 	class Skybox;
 	class Shader;
 	class MeshRenderer;
-	class Model;
+	class StaticModel;
 	class Material;
 	class MeshFactory;
 	class Physics;
