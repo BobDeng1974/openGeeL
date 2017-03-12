@@ -10,7 +10,7 @@ using namespace std;
 
 namespace geeL {
 
-	void LayeredTexture::addTexture(string name, SimpleTexture& texture) {
+	void LayeredTexture::addTexture(string name, TextureMap& texture) {
 		switch (texture.type) {
 			case Diffuse:
 				mapFlags += 1;
@@ -29,14 +29,14 @@ namespace geeL {
 				break;
 		}
 
-		textures.push_back(pair<string, SimpleTexture*>(name, &texture));
+		textures.push_back(pair<string, TextureMap*>(name, &texture));
 	}
 
 	void LayeredTexture::bind(const Shader& shader, std::string name, int texLayer) const {
 
 		int counter = 0;
-		for_each(textures.begin(), textures.end(), [&](pair<std::string, SimpleTexture*> tex) {
-			SimpleTexture* texture = tex.second;
+		for_each(textures.begin(), textures.end(), [&](pair<std::string, TextureMap*> tex) {
+			TextureMap* texture = tex.second;
 
 			texture->bind(shader, tex.first, counter + shader.mapBindingPos);
 			counter++;
@@ -47,13 +47,17 @@ namespace geeL {
 		int layer = GL_TEXTURE0 + texLayer;
 
 		int counter = 0;
-		for_each(textures.begin(), textures.end(), [&](pair<std::string, SimpleTexture*> tex) {
-			SimpleTexture* texture = tex.second;
+		for_each(textures.begin(), textures.end(), [&](pair<std::string, TextureMap*> tex) {
+			TextureMap* texture = tex.second;
 
 			glActiveTexture(layer + counter + shader.mapBindingPos);
 			texture->draw(shader);
 			counter++;
 		});
+	}
+
+	unsigned int LayeredTexture::getID() const {
+		return 0;
 	}
 
 }

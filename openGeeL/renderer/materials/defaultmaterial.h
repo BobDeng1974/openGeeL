@@ -9,7 +9,7 @@
 
 namespace geeL {
 
-	class SimpleTexture;
+	class TextureMap;
 	class Shader;
 
 	//Material class with default shading
@@ -21,8 +21,8 @@ namespace geeL {
 
 		DefaultMaterialContainer(MaterialType type = Opaque);
 
-		void addTexture(std::string name, SimpleTexture& texture);
-		void addTextures(std::vector<SimpleTexture*> textures);
+		void addTexture(std::string name, TextureMap& texture);
+		void addTextures(std::vector<TextureMap*> textures);
 
 		float getRoughness() const;
 		float getMetallic() const;

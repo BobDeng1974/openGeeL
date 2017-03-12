@@ -5,8 +5,7 @@
 #include <map>
 #include <string>
 #include "../texturing/simpletexture.h"
-
-using namespace std;
+#include "../texturing/envmap.h"
 
 namespace geeL {
 
@@ -24,10 +23,13 @@ namespace geeL {
 		MaterialFactory();
 		~MaterialFactory();
 
-		//Creates and returns a new texture from given file path or 
+		//Creates and returns a new texture map from given file path or 
 		//returns an existing texture if it already uses this file
-		SimpleTexture& CreateTexture(string filePath, bool linear = false, 
+		TextureMap& CreateTexture(std::string filePath, bool linear = false,
 			TextureType type = Diffuse, ColorType colorType = ColorRGBA, GLint wrapMode = GL_REPEAT, FilterMode filterMode = None);
+
+		//Create and returns new environment map or returns existing one if file is already in use
+		EnvironmentMap& CreateEnvironmentMap(std::string filePath);
 
 		//Creates and returns a new material with default shading
 		DefaultMaterialContainer& CreateMaterial();
@@ -37,22 +39,22 @@ namespace geeL {
 
 		//Creates and returns a new shader program with given file paths
 		//for vertex and fragment shaders
-		Shader& CreateShader(string vertexPath, string fragmentPath);
+		Shader& CreateShader(std::string vertexPath, std::string fragmentPath);
 
 		//Decide whether default shader should use forward or deferred shading
 		void setDefaultShader(bool deferred);
 		
-		list<MaterialContainer*>::iterator materialsBegin();
-		list<MaterialContainer*>::iterator materialsEnd();
+		std::list<MaterialContainer*>::iterator materialsBegin();
+		std::list<MaterialContainer*>::iterator materialsEnd();
 
-		list<MaterialContainer*>::const_iterator materialsBegin() const;
-		list<MaterialContainer*>::const_iterator materialsEnd() const;
+		std::list<MaterialContainer*>::const_iterator materialsBegin() const;
+		std::list<MaterialContainer*>::const_iterator materialsEnd() const;
 		
-		list<Shader*>::iterator shadersBegin();
-		list<Shader*>::iterator shadersEnd();
+		std::list<Shader*>::iterator shadersBegin();
+		std::list<Shader*>::iterator shadersEnd();
 
-		map<string, SimpleTexture>::const_iterator texturesBegin() const;
-		map<string, SimpleTexture>::const_iterator texturesEnd() const;
+		std::map<std::string, TextureMap>::const_iterator texturesBegin() const;
+		std::map<std::string, TextureMap>::const_iterator texturesEnd() const;
 
 		//Returns default shader for forward rendering
 		Shader& getForwardShader() const;
@@ -63,9 +65,10 @@ namespace geeL {
 	private:
 		Shader* forwardShader;
 		Shader* deferredShader;
-		list<MaterialContainer*> container;
-		list<Shader*> shaders;
-		map<string, SimpleTexture> textures;
+		std::list<MaterialContainer*> container;
+		std::list<Shader*> shaders;
+		std::map<std::string, TextureMap> textures;
+		std::map<std::string, EnvironmentMap> envMaps;
 
 	};
 }

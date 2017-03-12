@@ -4,6 +4,7 @@
 #include "material.h"
 #include "materialfactory.h"
 
+using namespace std;
 
 namespace geeL {
 
@@ -23,13 +24,20 @@ namespace geeL {
 			delete *material;
 	}
 
-	SimpleTexture& MaterialFactory::CreateTexture(string filePath, 
+	TextureMap& MaterialFactory::CreateTexture(string filePath, 
 		bool linear, TextureType type, ColorType colorType, GLint wrapMode, FilterMode filterMode) {
 		
 		if (textures.find(filePath) == textures.end())
-			textures[filePath] = SimpleTexture(filePath.c_str(), linear, type, colorType, wrapMode, filterMode);
+			textures[filePath] = TextureMap(filePath.c_str(), linear, type, colorType, wrapMode, filterMode);
 
 		return textures[filePath];
+	}
+
+	EnvironmentMap& MaterialFactory::CreateEnvironmentMap(string filePath) {
+		if (envMaps.find(filePath) == envMaps.end())
+			envMaps[filePath] = EnvironmentMap(filePath);
+
+		return envMaps[filePath];
 	}
 
 	DefaultMaterialContainer& MaterialFactory::CreateMaterial() {
@@ -79,11 +87,11 @@ namespace geeL {
 		return shaders.end();
 	}
 
-	map<string, SimpleTexture>::const_iterator MaterialFactory::texturesBegin() const {
+	map<string, TextureMap>::const_iterator MaterialFactory::texturesBegin() const {
 		return textures.begin();
 	}
 
-	map<string, SimpleTexture>::const_iterator MaterialFactory::texturesEnd() const {
+	map<string, TextureMap>::const_iterator MaterialFactory::texturesEnd() const {
 		return textures.end();
 	}
 

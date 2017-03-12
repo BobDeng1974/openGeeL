@@ -14,7 +14,7 @@ using glm::mat4;
 
 namespace geeL {
 
-	class SimpleTexture;
+	class TextureMap;
 	class Shader;
 
 	//A generic material class that allow a wide array of parameters
@@ -23,8 +23,8 @@ namespace geeL {
 	public:
 		GenericMaterialContainer(std::string name = "material", MaterialType type = Opaque);
 
-		void addTexture(std::string name, SimpleTexture& texture);
-		void addTextures(std::vector<SimpleTexture*> textures);
+		void addTexture(std::string name, TextureMap& texture);
+		void addTextures(std::vector<TextureMap*> textures);
 
 		void addParameter(std::string name, float parameter);
 		void addParameter(std::string name, int parameter);

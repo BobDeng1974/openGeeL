@@ -34,30 +34,45 @@ namespace geeL {
 		Trilinear
 	};
 
-	class SimpleTexture : public Texture {
+
+	//Simple 2D Texutre
+	class SimpleTexture : Texture {
 
 	public:
-		TextureType type;
 		std::string path;
 
 		SimpleTexture() {}
-		SimpleTexture(const char* fileName, bool linear = false, 
-			TextureType textureTpe = Diffuse, ColorType colorType = ColorRGBA, 
+		SimpleTexture(const char* fileName, bool linear = false, ColorType colorType = ColorRGBA,
 			int wrapMode = GL_REPEAT, FilterMode filterMode = None);
 
-		SimpleTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height, 
+		SimpleTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height,
 			int wrapMode = GL_REPEAT, int filterMode = GL_LINEAR);
+
+		virtual unsigned int getID() const;
+
+	protected:
+		unsigned int id;
+
+	};
+
+
+	//Texture for mapping purposes (like diffuse, normal mapping) that can be directly bound to a shader
+	class TextureMap : public SimpleTexture {
+
+	public:
+		TextureType type;
+		
+		TextureMap() {}
+		TextureMap(const char* fileName, bool linear = false, 
+			TextureType textureTpe = Diffuse, ColorType colorType = ColorRGBA, 
+			int wrapMode = GL_REPEAT, FilterMode filterMode = None);
 
 		virtual void bind(const Shader& shader, std::string name, int texLayer = 0) const;
 		virtual void draw(const Shader& shader, int texLayer = 0) const;
 
-		std::string GetTypeAsString() const;
-		const unsigned int GetID() const;
-
-	private:
-		unsigned int id;
-
+		std::string getTypeAsString() const;
 	};
+
 }
 
 #endif

@@ -10,8 +10,8 @@ using namespace std;
 
 namespace geeL {
 
-	SimpleTexture::SimpleTexture(const char* fileName, bool linear, TextureType type, ColorType colorType, int wrapMode, FilterMode filterMode)
-		: type(type), path(fileName) {
+	SimpleTexture::SimpleTexture(const char* fileName, bool linear, ColorType colorType, int wrapMode, FilterMode filterMode)
+		:  path(fileName) {
 		
 		int imgWidth, imgHeight;
 
@@ -76,15 +76,25 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void SimpleTexture::bind(const Shader& shader, std::string name, int texLayer) const {
+	unsigned int SimpleTexture::getID() const {
+		return id;
+	}
+
+
+
+	TextureMap::TextureMap(const char* fileName, bool linear, TextureType type, ColorType colorType, int wrapMode, FilterMode filterMode)
+		: SimpleTexture(fileName, linear, colorType, wrapMode, filterMode), type(type) {}
+
+
+	void TextureMap::bind(const Shader& shader, std::string name, int texLayer) const {
 		glUniform1i(glGetUniformLocation(shader.program, name.c_str()), texLayer);
 	}
 
-	void SimpleTexture::draw(const Shader& shader, int texLayer) const {
+	void TextureMap::draw(const Shader& shader, int texLayer) const {
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 
-	string SimpleTexture::GetTypeAsString() const {
+	string TextureMap::getTypeAsString() const {
 		switch (type) {
 			case Diffuse:
 				return "diffuse";
@@ -97,10 +107,6 @@ namespace geeL {
 		}
 
 		return "";
-	}
-
-	const unsigned int SimpleTexture::GetID() const {
-		return id;
 	}
 
 }

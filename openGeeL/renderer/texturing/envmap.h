@@ -2,16 +2,18 @@
 #define ENVIRONMENTMAP_H
 
 #include <string>
+#include "texture.h"
 
 namespace geeL {
 
 	//2D equirectangular map of an 3D environment with HDR
-	class EnvironmentMap {
+	class EnvironmentMap : public Texture {
 
 	public:
+		EnvironmentMap() {}
 		EnvironmentMap(std::string fileName);
 		
-		const unsigned int GetID() const;
+		virtual unsigned int getID() const;
 
 	private:
 		unsigned int id;

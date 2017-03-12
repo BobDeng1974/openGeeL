@@ -15,14 +15,14 @@ namespace geeL {
 		textureStack = LayeredTexture();
 	}
 
-	void GenericMaterialContainer::addTexture(string name, SimpleTexture& texture) {
+	void GenericMaterialContainer::addTexture(string name, TextureMap& texture) {
 		textureStack.addTexture(this->name + "." + name, texture);
 	}
 
-	void GenericMaterialContainer::addTextures(vector<SimpleTexture*> textures) {
+	void GenericMaterialContainer::addTextures(vector<TextureMap*> textures) {
 		for (size_t i = 0; i < textures.size(); i++) {
-			SimpleTexture& texture = *textures[i];
-			string name = this->name + "." + texture.GetTypeAsString();
+			TextureMap& texture = *textures[i];
+			string name = this->name + "." + texture.getTypeAsString();
 
 			textureStack.addTexture(name, texture);
 		}

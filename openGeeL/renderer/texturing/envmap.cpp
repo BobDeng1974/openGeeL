@@ -33,7 +33,7 @@ namespace geeL {
 	}
 
 
-	const unsigned int EnvironmentMap::GetID() const {
+	unsigned int EnvironmentMap::getID() const {
 		return id;
 	}
 
