@@ -13,13 +13,20 @@ namespace geeL {
 	class MaterialContainer;
 	class DefaultMaterialContainer;
 	class GenericMaterialContainer;
-	class Shader;
+	class SceneShader;
+
+
+	enum class DefaultShading {
+		DeferredStatic,
+		DeferredSkinned,
+		ForwardStatic,
+		ForwardSkinned
+	};
+
 
 	class MaterialFactory {
 
 	public:
-		Shader* defaultShader;
-
 		MaterialFactory();
 		~MaterialFactory();
 
@@ -39,34 +46,33 @@ namespace geeL {
 
 		//Creates and returns a new shader program with given file paths
 		//for vertex and fragment shaders
-		Shader& CreateShader(std::string vertexPath, std::string fragmentPath);
+		SceneShader& CreateShader(std::string vertexPath, std::string fragmentPath);
 
-		//Decide whether default shader should use forward or deferred shading
-		void setDefaultShader(bool deferred);
-		
 		std::list<MaterialContainer*>::iterator materialsBegin();
 		std::list<MaterialContainer*>::iterator materialsEnd();
 
 		std::list<MaterialContainer*>::const_iterator materialsBegin() const;
 		std::list<MaterialContainer*>::const_iterator materialsEnd() const;
 		
-		std::list<Shader*>::iterator shadersBegin();
-		std::list<Shader*>::iterator shadersEnd();
+		std::list<SceneShader*>::iterator shadersBegin();
+		std::list<SceneShader*>::iterator shadersEnd();
 
 		std::map<std::string, TextureMap>::const_iterator texturesBegin() const;
 		std::map<std::string, TextureMap>::const_iterator texturesEnd() const;
 
-		//Returns default shader for forward rendering
-		Shader& getForwardShader() const;
+		SceneShader& getDefaultShader(DefaultShading shading) const;
 
-		//Returns default shader for deferred rendering
-		Shader& getDeferredShader() const;
+		//Returns default shader for static forward rendering
+		SceneShader& getForwardShader() const;
+
+		//Returns default shader for static deferred rendering
+		SceneShader& getDeferredShader() const;
 
 	private:
-		Shader* forwardShader;
-		Shader* deferredShader;
+		SceneShader* forwardShader;
+		SceneShader* deferredShader;
 		std::list<MaterialContainer*> container;
-		std::list<Shader*> shaders;
+		std::list<SceneShader*> shaders;
 		std::map<std::string, TextureMap> textures;
 		std::map<std::string, EnvironmentMap> envMaps;
 

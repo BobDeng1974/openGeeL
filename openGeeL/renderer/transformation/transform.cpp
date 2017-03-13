@@ -20,6 +20,12 @@ namespace geeL {
 		idCounter++;
 	}
 
+	Transform::Transform(mat4& matrix, Transform* parent) : matrix(matrix) {
+		isStatic = true;
+		id = idCounter;
+		idCounter++;
+	}
+
 	Transform::Transform(vec3 position, vec3 rotation, vec3 scaling, Transform* parent) 
 		: position(position), rotation(rotation), scaling(scaling), parent(parent) {
 		
@@ -42,11 +48,14 @@ namespace geeL {
 		idCounter++;
 	}
 
-	Transform::~Transform() {}
+	Transform::~Transform() {
+		for (auto it = children.begin(); it != children.end(); it++)
+			delete *it;
+	}
 
 
 	void Transform::setPosition(vec3 position) {
-		if (!Vector::equals(this->position, position)) {
+		if (!AlgebraHelper::equals(this->position, position)) {
 			vec3 translation = position - this->position;
 			this->position = position;
 
@@ -56,7 +65,7 @@ namespace geeL {
 	}
 
 	void Transform::setRotation(vec3 rotation) {
-		if (!Vector::equals(this->rotation, rotation)) {
+		if (!AlgebraHelper::equals(this->rotation, rotation)) {
 			float pitch = rotation.x - this->rotation.x;
 			float yaw = rotation.y - this->rotation.y;
 			float roll = rotation.z - this->rotation.z;
@@ -73,7 +82,7 @@ namespace geeL {
 	}
 
 	void Transform::setScale(vec3 scaling) {
-		if (!Vector::equals(this->scaling, scaling)) {
+		if (!AlgebraHelper::equals(this->scaling, scaling)) {
 			vec3 scalar = scaling - this->scaling;
 			this->scaling = scaling;
 
@@ -110,11 +119,11 @@ namespace geeL {
 		return glm::lookAt(position, position + forward, up);
 	}
 
-	list<Transform>::iterator Transform::childrenStart() {
+	list<Transform*>::iterator Transform::childrenStart() {
 		return children.begin();
 	}
 
-	list<Transform>::iterator Transform::childrenEnd() {
+	list<Transform*>::iterator Transform::childrenEnd() {
 		return children.end();
 	}
 
@@ -122,13 +131,18 @@ namespace geeL {
 		return parent;
 	}
 
-	Transform& Transform::AddChild(Transform child) {
+	Transform& Transform::AddChild(const Transform& child) {
+		children.push_back(new Transform(child));
+		return *children.back();
+	}
+
+	Transform& Transform::AddChild(Transform* child) {
 		children.push_back(child);
-		return children.back();
+		return *children.back();
 	}
 
 	void Transform::RemoveChild(Transform& child) {
-		children.remove(child);
+		children.remove(&child);
 	}
 
 	void Transform::ChangeParent(Transform& newParent) {
@@ -140,8 +154,8 @@ namespace geeL {
 		if (parent != nullptr)
 			matrix = matrix * parent->matrix;
 
-		for (list<Transform>::iterator it = children.begin(); it != children.end(); it++) {
-			Transform& transform = *it;
+		for (auto it = children.begin(); it != children.end(); it++) {
+			Transform& transform = **it;
 			transform.computeMatrix();
 		}
 

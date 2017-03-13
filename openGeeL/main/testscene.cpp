@@ -178,7 +178,7 @@ namespace {
 
 			float scale = 0.05f;
 			Transform& meshTransform7 = transformFactory.CreateTransform(vec3(2.f, -100.4f, -8.0f), vec3(-90.f, 0.f, 0.f), vec3(scale, scale, scale));
-			scene.AddMeshRenderer("resources/guard/boblampclean.md5mesh", meshTransform7, cullFront, true, "Dude");
+			scene.AddSkinnedMeshRenderer("resources/guard/boblampclean.md5mesh", meshTransform7, cullFront, true, "Dude");
 		}
 
 		virtual void draw(const Camera& camera) {
@@ -202,7 +202,7 @@ void draw() {
 	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	TransformFactory transFactory = TransformFactory(world);
 
-	geeL::Transform& cameraTransform = transFactory.CreateTransform(vec3(0.0f, 2.0f, 9.0f), vec3(-100.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	geeL::Transform& cameraTransform = Transform(vec3(0.0f, 2.0f, 9.0f), vec3(-100.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 15.f, 60.f, window.width, window.height, 0.1f, 100.f);
 
 	BilateralFilter blur = BilateralFilter(1, 0.3f);
@@ -213,7 +213,6 @@ void draw() {
 	renderer.init();
 
 	MaterialFactory materialFactory = MaterialFactory();
-	materialFactory.setDefaultShader(true);
 	MeshFactory meshFactory = MeshFactory(materialFactory);
 
 	LightManager lightManager = LightManager(vec3(0.15f));
@@ -223,7 +222,7 @@ void draw() {
 	WorldPhysics physics = WorldPhysics();
 	scene.setPhysics(&physics);
 
-	EnvironmentMap envMap = EnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
+	EnvironmentMap& envMap = materialFactory.CreateEnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
 	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(envMap, 1024);
 	IrradianceMap irrMap = IrradianceMap(envCubeMap);
 
@@ -300,4 +299,5 @@ void draw() {
 
 	renderer.linkInformation();
 	renderer.render();
+
 }

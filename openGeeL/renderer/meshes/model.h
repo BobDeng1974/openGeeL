@@ -4,24 +4,24 @@
 #include <string>
 #include <vector>
 #include <map>
-
 #include "mesh.h"
 
 namespace geeL {
 
 	enum TextureType;
 
-	class Mesh;
-	class StaticMesh;
-	class SkinnedMesh;
-	class Texture;
-	class SimpleTexture;
-	class Material;
+	class Animation;
 	class Camera;
 	class LightManager;
-	class MaterialFactory;
-	class Transform;
 	class Material;
+	class MaterialFactory;
+	class Mesh;
+	class TextureMap;
+	class Skeleton;
+	class SkinnedMesh;
+	class StaticMesh;
+	class Texture;
+	class Transform;
 
 
 	//Class that represents a single 3D model in memory
@@ -54,6 +54,7 @@ namespace geeL {
 	public:
 		StaticModel() : Model() {}
 		StaticModel::StaticModel(std::string path) : Model(path) {}
+		~StaticModel();
 
 		//Draw model without materials
 		virtual void draw() const;
@@ -62,20 +63,21 @@ namespace geeL {
 		virtual void draw(const std::vector<Material*>& customMaterials) const;
 		virtual void draw(const std::map<unsigned int, Material*>& customMaterials) const;
 
-		StaticMesh& addMesh(StaticMesh mesh);
+		//Add static mesh. Memory will be managed by this model
+		StaticMesh& addMesh(StaticMesh* mesh);
 		virtual const Mesh& getMesh(unsigned int index);
 		virtual unsigned int meshCount() const;
 
-		std::vector<StaticMesh>::iterator meshesBegin();
-		std::vector<StaticMesh>::iterator meshesEnd();
+		std::vector<StaticMesh*>::iterator meshesBegin();
+		std::vector<StaticMesh*>::iterator meshesEnd();
 
-		std::vector<StaticMesh>::const_iterator meshesBeginConst() const;
-		std::vector<StaticMesh>::const_iterator meshesEndConst() const;
+		std::vector<StaticMesh*>::const_iterator meshesBeginConst() const;
+		std::vector<StaticMesh*>::const_iterator meshesEndConst() const;
 
 		virtual std::vector<MaterialContainer*> getMaterials() const;
 
 	private:
-		std::vector<StaticMesh> meshes;
+		std::vector<StaticMesh*> meshes;
 		
 	};
 
@@ -85,7 +87,8 @@ namespace geeL {
 
 	public:
 		SkinnedModel() : Model() {}
-		SkinnedModel::SkinnedModel(std::string path) : Model(path) {}
+		SkinnedModel(std::string path) : Model(path) {}
+		~SkinnedModel();
 
 		virtual void draw() const;
 		virtual void drawInstanced(bool shade = true) const {}
@@ -93,17 +96,23 @@ namespace geeL {
 		virtual void draw(const std::vector<Material*>& customMaterials) const;
 		virtual void draw(const std::map<unsigned int, Material*>& customMaterials) const;
 
-		SkinnedMesh& addMesh(SkinnedMesh mesh);
+		//Add animation. Memory will be managed by this model
+		void addAnimation(Animation* animation);
+
+		//Add static mesh. Memory will be managed by this model
+		SkinnedMesh& addMesh(SkinnedMesh* mesh);
+
 		virtual const Mesh& getMesh(unsigned int index);
 		virtual unsigned int meshCount() const;
 
 		virtual std::vector<MaterialContainer*> getMaterials() const;
 
 	private:
-		std::vector<SkinnedMesh> meshes;
+		Skeleton* skeleton;
+		std::vector<SkinnedMesh*> meshes;
+		std::vector<Animation*> animations;
 
 	};
-
 
 }
 

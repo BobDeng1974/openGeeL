@@ -11,12 +11,8 @@ using namespace std;
 
 namespace geeL {
 
-	Shader::Shader(const char* vertexPath, const char* fragmentPath,
-		bool useLight, bool useCamera, bool useSkybox,
-		string cam, string skybox, string pointlight, string spotLights, string directionalLights)
-		:
-		useLight(useLight), useCamera(useCamera), useSkybox(useSkybox), cam("camera"), skybox(skybox),
-		point("pointLights"), spot("spotLights"), directional("directionalLights"), name(fragmentPath), mapBindingPos(0) {
+	Shader::Shader(const char* vertexPath, const char* fragmentPath)
+		: name(fragmentPath), mapBindingPos(0) {
 
 		//Read code from file path
 		string vertexCode;
@@ -95,12 +91,8 @@ namespace geeL {
 	}
 
 
-	Shader::Shader(const char* vertexPath, const char* geometryPath, const char* fragmentPath,
-		bool useLight, bool useCamera, bool useSkybox, 
-		string cam, string skybox, string pointlight, string spotLights, string directionalLights)
-		: 
-		useLight(useLight), useCamera(useCamera), useSkybox(useSkybox), cam("camera"), skybox(skybox),
-		point("pointLights"), spot("spotLights"), directional("directionalLights"), name(fragmentPath), mapBindingPos(0) {
+	Shader::Shader(const char* vertexPath, const char* geometryPath, const char* fragmentPath)
+		: name(fragmentPath), mapBindingPos(0) {
 
 		//Read code from file path
 		string vertexCode;

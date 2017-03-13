@@ -21,29 +21,20 @@ namespace geeL {
 	};
 
 
+	//Container class that creates and forwards information to linked GLSL shaders
 	class Shader {
 
 	public:
 		int program;
 		int mapBindingPos;
 		int mapOffset = 0;
-		const bool useLight;
-		const bool useCamera;
-		const bool useSkybox;
-		std::string cam, skybox, point, spot, directional, name;
+		std::string name;
 
-		Shader() : useLight(false), useCamera(false), useSkybox(false), cam("camera"), skybox("skybox"),
-			point(""), spot(""), directional(""), mapBindingPos(0) {}
+		Shader() : mapBindingPos(0) {}
 
-		Shader(const char* vertexPath, const char* fragmentPath, bool useLight = true, bool useCamera = true, 
-			bool useSkybox = true, std::string cam = "camera", std::string skybox = "skybox", 
-			std::string pointLight = "pointLights", std::string spotLights = "spotLights", 
-			std::string directionalLights = "directionalLights");
+		Shader(const char* vertexPath, const char* fragmentPath);
+		Shader(const char* vertexPath, const char* geometryPath, const char* fragmentPath);
 
-		Shader(const char* vertexPath, const char* geometryPath, const char* fragmentPath, bool useLight = true, 
-			bool useCamera = true, bool useSkybox = true, std::string cam = "camera", std::string skybox = "skybox", 
-			std::string pointLight = "pointLights", std::string spotLights = "spotLights", 
-			std::string directionalLights = "directionalLights");
 
 		void use() const;
 
@@ -70,6 +61,33 @@ namespace geeL {
 		std::list<TextureBinding> maps;
 
 	};
+
+
+	//Special shader container that is intented for the use in scene drawing.
+	//It therefore holds additional scene information.
+	class SceneShader : public Shader {
+
+	public:
+		const bool deferred;
+		const bool useLight;
+		const bool useCamera;
+		const bool useSkybox;
+		std::string cameraName, skyboxName;
+
+
+		SceneShader();
+
+		SceneShader(const char* vertexPath, const char* fragmentPath, bool deferred = false, bool useLight = true, bool useCamera = true,
+			bool useSkybox = true, std::string cameraName = "camera", std::string skyboxName = "skybox");
+
+		SceneShader(const char* vertexPath, const char* geometryPath, const char* fragmentPath, bool deferred = false, bool useLight = true,
+			bool useCamera = true, bool useSkybox = true, std::string cameraName = "camera", std::string skyboxName = "skybox");
+
+
+
+	};
+
+
 }
 
 #endif

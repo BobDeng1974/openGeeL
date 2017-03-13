@@ -96,7 +96,7 @@ namespace geeL {
 
 		//Set instead of add buffers to override the default image buffer since it isn't need for SSAO
 		setBuffer( {maps[WorldMaps::PositionDepth], maps[WorldMaps::NormalMetallic]} );
-		buffers.push_back(noiseTexture.GetID());
+		buffers.push_back(noiseTexture.getID());
 	}
 
 	float SSAO::getRadius() const {

@@ -1,17 +1,17 @@
 #include <iostream>
+#include <mat4x4.hpp>
 #include "../../dependencies/assimp/Importer.hpp"
 #include "../../dependencies/assimp/scene.h"
 #include "../../dependencies/assimp/postprocess.h"
 #include "../materials/materialfactory.h"
 #include "../materials/defaultmaterial.h"
+#include "../animation/skeleton.h"
 #include "../animation/animation.h"
 #include "../utility/vector3.h"
 #include "mesh.h"
 #include "model.h"
 #include "meshrenderer.h"
 #include "meshfactory.h"
-
-#include <mat4x4.hpp>
 
 using namespace glm;
 using namespace std;
@@ -21,8 +21,8 @@ namespace geeL {
 	MeshFactory::MeshFactory(MaterialFactory& factory) : factory(factory) {}
 
 
-	MeshRenderer& MeshFactory::CreateMeshRenderer(StaticModel& model, Transform& transform, CullingMode faceCulling, string name) {
-		meshRenderer.push_back(MeshRenderer(transform, *factory.defaultShader, model, faceCulling, true, name));
+	MeshRenderer& MeshFactory::CreateMeshRenderer(StaticModel& model, Transform& transform, DefaultShading shading, CullingMode faceCulling, string name) {
+		meshRenderer.push_back(MeshRenderer(transform, factory.getDefaultShader(shading), model, faceCulling, name));
 
 		return meshRenderer.back();
 	}
@@ -30,14 +30,14 @@ namespace geeL {
 	MeshRenderer* MeshFactory::CreateMeshRendererManual(StaticModel& model, Transform& transform,
 		CullingMode faceCulling, bool deferred, string name) {
 
-		return new MeshRenderer(transform, deferred ? factory.getDeferredShader()
-			: factory.getForwardShader(), model, faceCulling, deferred, name);
+		DefaultShading shading = deferred ?  DefaultShading::DeferredStatic : DefaultShading::ForwardStatic;
+		return new MeshRenderer(transform, factory.getDefaultShader(shading), model, faceCulling, name);
 	}
 
-	MeshRenderer& MeshFactory::CreateSkinnedMeshRenderer(SkinnedModel& model, Transform& transform,
+	MeshRenderer& MeshFactory::CreateSkinnedMeshRenderer(SkinnedModel& model, Transform& transform, DefaultShading shading,
 		CullingMode faceCulling, std::string name) {
 
-		meshRenderer.push_back(SkinnedMeshRenderer(transform, *factory.defaultShader, model, faceCulling, true, name));
+		meshRenderer.push_back(SkinnedMeshRenderer(transform, factory.getDefaultShader(shading), model, faceCulling, name));
 		return meshRenderer.back();
 	}
 
@@ -45,8 +45,8 @@ namespace geeL {
 	SkinnedMeshRenderer* MeshFactory::CreateSkinnedMeshRendererManual(SkinnedModel& model, Transform& transform,
 		CullingMode faceCulling, bool deferred, std::string name) {
 
-		return new SkinnedMeshRenderer(transform, deferred ? factory.getDeferredShader()
-			: factory.getForwardShader(), model, faceCulling, deferred, name);
+		DefaultShading shading = deferred ? DefaultShading::DeferredSkinned : DefaultShading::ForwardSkinned;
+		return new SkinnedMeshRenderer(transform, factory.getDefaultShader(shading), model, faceCulling, name);
 	}
 
 
@@ -91,7 +91,7 @@ namespace geeL {
 
 			vector<Vertex> vertices;
 			vector<unsigned int> indices;
-			vector<SimpleTexture*> textures;
+			vector<TextureMap*> textures;
 
 			vertices.reserve(mesh->mNumVertices);
 
@@ -104,7 +104,7 @@ namespace geeL {
 			mat.setRoughness(0.4f);
 			mat.setMetallic(0.2f);
 
-			model.addMesh(StaticMesh(vertices, indices, mat));
+			model.addMesh(new StaticMesh(vertices, indices, mat));
 		}
 
 		//Traverse node tree
@@ -123,11 +123,18 @@ namespace geeL {
 			return;
 		}
 
+		std::list<Animation*> animations;
+		processAnimations(model, scene);
+
+		Transform* rootBone = new Transform(AlgebraHelper::convertMatrix(scene->mRootNode->mTransformation));
+
 		string directory = path.substr(0, path.find_last_of('/'));
-		processSkinnedNode(model, directory, scene->mRootNode, scene);
+		processSkinnedNode(model, *rootBone, directory, scene->mRootNode, scene);
 	}
 
-	void MeshFactory::processSkinnedNode(SkinnedModel& model, std::string directory, aiNode* node, const aiScene* scene) {
+	void MeshFactory::processSkinnedNode(SkinnedModel& model, Transform& bone, 
+		string directory, aiNode* node, const aiScene* scene) {
+
 
 		//Add mesh if current node contains one
 		for (unsigned int i = 0; i < node->mNumMeshes; i++) {
@@ -136,7 +143,7 @@ namespace geeL {
 			vector<SkinnedVertex> vertices;
 			vector<unsigned int> indices;
 			map<string, MeshBoneData> bones;
-			vector<SimpleTexture*> textures;
+			vector<TextureMap*> textures;
 
 			vertices.reserve(mesh->mNumVertices);
 
@@ -150,12 +157,19 @@ namespace geeL {
 			mat.setRoughness(0.4f);
 			mat.setMetallic(0.2f);
 
-			model.addMesh(SkinnedMesh(vertices, indices, bones, mat));
+			model.addMesh(new SkinnedMesh(vertices, indices, bones, mat));
 		}
 
 		//Traverse node tree
-		for (unsigned int i = 0; i < node->mNumChildren; i++)
-			processSkinnedNode(model, directory, node->mChildren[i], scene);
+		for (unsigned int i = 0; i < node->mNumChildren; i++) {
+			aiNode* child = node->mChildren[i];
+			aiMatrix4x4& mat = child->mTransformation;
+			Transform trans = AlgebraHelper::convertMatrix(mat);
+			bone.AddChild(trans);
+
+			processSkinnedNode(model, trans, directory, child, scene);
+		}
+			
 	}
 
 
@@ -266,7 +280,7 @@ namespace geeL {
 	}
 
 
-	void MeshFactory::processTextures(vector<SimpleTexture*>& textures, std::string directory, aiMesh* mesh, const aiScene* scene) {
+	void MeshFactory::processTextures(vector<TextureMap*>& textures, std::string directory, aiMesh* mesh, const aiScene* scene) {
 		if (mesh->mMaterialIndex >= 0) {
 
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
@@ -280,7 +294,7 @@ namespace geeL {
 	}
 
 
-	void MeshFactory::loadMaterialTextures(vector<SimpleTexture*>& textures, aiMaterial* mat,
+	void MeshFactory::loadMaterialTextures(vector<TextureMap*>& textures, aiMaterial* mat,
 		aiTextureType aiType, TextureType type, string directory, bool linear) {
 
 		for (unsigned int i = 0; i < mat->GetTextureCount(aiType); i++) {
@@ -288,12 +302,12 @@ namespace geeL {
 			mat->GetTexture(aiType, i, &str);
 
 			string fileName = directory + "/" + string(str.C_Str());
-			SimpleTexture& texture = factory.CreateTexture(fileName, linear, type, ColorRGBA, GL_REPEAT, Bilinear);
+			TextureMap& texture = factory.CreateTexture(fileName, linear, type, ColorRGBA, GL_REPEAT, Bilinear);
 			textures.push_back(&texture);
 		}
 	}
 
-	void MeshFactory::processAnimations(std::list<Animation*>& animations, aiMesh* mesh, const aiScene* scene) {
+	void MeshFactory::processAnimations(SkinnedModel& model, const aiScene* scene) {
 
 		for (unsigned int i = 0; i < scene->mNumAnimations; i++) {
 			aiAnimation* anim = scene->mAnimations[i];
@@ -304,7 +318,7 @@ namespace geeL {
 			for (unsigned int j = 0; j < anim->mNumChannels; j++) {
 				aiNodeAnim* node = anim->mChannels[j];
 				string name = string(node->mNodeName.C_Str());
-				AnimationBoneData* data;
+				AnimationBoneData* data = new AnimationBoneData();
 
 				//Add position key frames to data
 				for (unsigned int i = 0; i < node->mNumPositionKeys; i++) {
@@ -319,7 +333,7 @@ namespace geeL {
 					aiQuatKey key = node->mRotationKeys[i];
 					aiQuaternion& r = key.mValue;
 					
-					data->positions.push_back(KeyFrame(Vector::quatToEuler(r.x, r.y, r.z, r.w), key.mTime));
+					data->positions.push_back(KeyFrame(AlgebraHelper::quatToEuler(r.x, r.y, r.z, r.w), key.mTime));
 				}
 
 				//Add scaling key frames to data
@@ -333,7 +347,7 @@ namespace geeL {
 				animation->addBoneData(name, data);
 			}
 
-			animations.push_back(animation);
+			model.addAnimation(animation);
 		}
 	}
 

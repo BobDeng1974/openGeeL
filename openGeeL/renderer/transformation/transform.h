@@ -26,6 +26,7 @@ namespace geeL {
 		mat4 matrix;
 
 		Transform(Transform* parent = nullptr);
+		Transform(mat4& matrix, Transform* parent = nullptr);
 		Transform(vec3 position, vec3 rotation, vec3 scaling, Transform* parent = nullptr);
 		~Transform();
 		
@@ -39,15 +40,19 @@ namespace geeL {
 
 		mat4 lookAt() const;
 
-		std::list<Transform>::iterator childrenStart();
-		std::list<Transform>::iterator childrenEnd();
+		std::list<Transform*>::iterator childrenStart();
+		std::list<Transform*>::iterator childrenEnd();
 
 		const Transform* GetParent() const;
 
 		//Adds a copy of the given transform
 		//as a child to this transform and 
 		//returns a reference to it
-		Transform& AddChild(Transform child);
+		Transform& AddChild(const Transform& child);
+
+		//Add the child to this transform. Memory of child will be 
+		//managed by this transform.
+		Transform& AddChild(Transform* child);
 
 		void RemoveChild(Transform& child);
 		void ChangeParent(Transform& newParent);
@@ -65,7 +70,7 @@ namespace geeL {
 	private:
 		unsigned int id;
 		Transform* parent;
-		std::list<Transform> children;
+		std::list<Transform*> children;
 		std::list<std::function<void(const Transform&)>> changeListener;
 
 		void updateDirections();

@@ -9,11 +9,11 @@ using namespace std;
 namespace geeL {
 
 	MaterialFactory::MaterialFactory() : 
-		forwardShader(new Shader("renderer/shaders/lighting.vert", "renderer/shaders/lighting.frag")),
-		deferredShader(new Shader("renderer/shaders/gbuffer.vert", "renderer/shaders/gbuffer.frag", false)) {
+		forwardShader(new SceneShader("renderer/shaders/lighting.vert", "renderer/shaders/lighting.frag")),
+		deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", "renderer/shaders/gbuffer.frag", true, false)) {
 	
-		defaultShader = forwardShader;
 		shaders.push_back(forwardShader);
+		shaders.push_back(deferredShader);
 	}
 
 	MaterialFactory::~MaterialFactory() {
@@ -54,13 +54,9 @@ namespace geeL {
 		return *mat;
 	}
 
-	Shader& MaterialFactory::CreateShader(string vertexPath, string fragmentPath) {
-		shaders.push_back(new Shader(vertexPath.c_str(), fragmentPath.c_str()));
+	SceneShader& MaterialFactory::CreateShader(string vertexPath, string fragmentPath) {
+		shaders.push_back(new SceneShader(vertexPath.c_str(), fragmentPath.c_str()));
 		return *shaders.back();
-	}
-
-	void MaterialFactory::setDefaultShader(bool deferred) {
-		defaultShader = deferred ? deferredShader : forwardShader;
 	}
 	
 	list<MaterialContainer*>::iterator MaterialFactory::materialsBegin() {
@@ -79,11 +75,11 @@ namespace geeL {
 		return container.end();
 	}
 	
-	list<Shader*>::iterator MaterialFactory::shadersBegin() {
+	list<SceneShader*>::iterator MaterialFactory::shadersBegin() {
 		return shaders.begin();
 	}
 
-	list<Shader*>::iterator MaterialFactory::shadersEnd()  {
+	list<SceneShader*>::iterator MaterialFactory::shadersEnd()  {
 		return shaders.end();
 	}
 
@@ -95,11 +91,24 @@ namespace geeL {
 		return textures.end();
 	}
 
-	Shader& MaterialFactory::getForwardShader() const {
+	SceneShader& MaterialFactory::getDefaultShader(DefaultShading shading) const {
+		switch (shading) {
+			case DefaultShading::DeferredStatic:
+				return *deferredShader;
+			case DefaultShading::DeferredSkinned:
+				return *deferredShader;
+			case DefaultShading::ForwardStatic:
+				return *forwardShader;
+			case DefaultShading::ForwardSkinned:
+				return *forwardShader;
+		}
+	}
+
+	SceneShader& MaterialFactory::getForwardShader() const {
 		return *forwardShader;
 	}
 
-	Shader& MaterialFactory::getDeferredShader() const {
+	SceneShader& MaterialFactory::getDeferredShader() const {
 		return *deferredShader;
 	}
 

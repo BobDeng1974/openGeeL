@@ -13,6 +13,7 @@ namespace geeL {
 	class Model;
 	class StaticModel;
 	class SkinnedModel;
+	class SceneShader;
 	class Shader;
 	class Transform;
 
@@ -31,12 +32,12 @@ namespace geeL {
 		const CullingMode faceCulling;
 
 		//Constructor for mesh renderer with no assigned model (since it will be drawn instanced)
-		MeshRenderer(Transform& transform, Shader& shader,
-			CullingMode faceCulling = cullFront, bool deferred = true, std::string name = "MeshRenderer");
+		MeshRenderer(Transform& transform, SceneShader& shader,
+			CullingMode faceCulling = cullFront, std::string name = "MeshRenderer");
 
 		//Constructor for mesh renderer with an unique assigned model
-		MeshRenderer(Transform& transform, Shader& shader, Model& model, 
-			CullingMode faceCulling = cullFront, bool deferred = true, std::string name = "MeshRenderer");
+		MeshRenderer(Transform& transform, SceneShader& shader, Model& model,
+			CullingMode faceCulling = cullFront, std::string name = "MeshRenderer");
 
 		~MeshRenderer();
 
@@ -75,7 +76,7 @@ namespace geeL {
 		std::map<unsigned int, Material*> forwardMaterials;
 
 		//Init materials with data from the meshes material containers
-		void initMaterials(Shader& shader, bool deferred);
+		void initMaterials(SceneShader& shader);
 
 		void transformMeshes(Model& model, const std::map<unsigned int, Material*>& materials,
 			const Shader* shader = nullptr) const;
@@ -87,11 +88,11 @@ namespace geeL {
 	class SkinnedMeshRenderer : public MeshRenderer {
 
 	public:
-		SkinnedMeshRenderer(Transform& transform, Shader& shader,
-			CullingMode faceCulling = cullFront, bool deferred = true, std::string name = "SkinnedMeshRenderer");
+		SkinnedMeshRenderer(Transform& transform, SceneShader& shader,
+			CullingMode faceCulling = cullFront, std::string name = "SkinnedMeshRenderer");
 
-		SkinnedMeshRenderer(Transform& transform, Shader& shader, SkinnedModel& model,
-			CullingMode faceCulling = cullFront, bool deferred = true, std::string name = "SkinnedMeshRenderer");
+		SkinnedMeshRenderer(Transform& transform, SceneShader& shader, SkinnedModel& model,
+			CullingMode faceCulling = cullFront, std::string name = "SkinnedMeshRenderer");
 
 
 	private:

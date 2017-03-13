@@ -13,18 +13,16 @@ using namespace std;
 
 namespace geeL{
 
-	MeshRenderer::MeshRenderer(Transform& transform, Shader& shader, 
-		CullingMode faceCulling, bool deferred, std::string name)
-			: SceneObject(transform, name), model(nullptr), faceCulling(faceCulling), instanced(true) {
+	MeshRenderer::MeshRenderer(Transform& transform, SceneShader& shader, CullingMode faceCulling, std::string name)
+		: SceneObject(transform, name), model(nullptr), faceCulling(faceCulling), instanced(true) {
 	
-		initMaterials(shader, deferred);
+		initMaterials(shader);
 	}
 
-	MeshRenderer::MeshRenderer(Transform& transform, Shader& shader, Model& model, 
-		CullingMode faceCulling, bool deferred, std::string name)
-			: SceneObject(transform, name), model(&model), faceCulling(faceCulling), instanced(false) {
+	MeshRenderer::MeshRenderer(Transform& transform, SceneShader& shader, Model& model, CullingMode faceCulling, std::string name)
+		: SceneObject(transform, name), model(&model), faceCulling(faceCulling), instanced(false) {
 	
-		initMaterials(shader, deferred);
+		initMaterials(shader);
 	}
 
 	MeshRenderer::~MeshRenderer() {
@@ -121,12 +119,12 @@ namespace geeL{
 		}
 	}
 
-	void MeshRenderer::initMaterials(Shader& shader, bool deferred) {
+	void MeshRenderer::initMaterials(SceneShader& shader) {
 
 		//Load the default materials of the models meshes as materials of this mesh renderer
 		int counter = 0;
 
-		if (deferred) {
+		if (shader.deferred) {
 			std::vector<MaterialContainer*> mats = model->getMaterials();
 			for (auto it = mats.begin(); it != mats.end(); it++) {
 				MaterialContainer& container = **it;
@@ -194,9 +192,4 @@ namespace geeL{
 	map<unsigned int, Material*>::iterator MeshRenderer::forwardMaterialsEnd() {
 		return forwardMaterials.end();
 	}
-
-
-
-
-
 }

@@ -8,23 +8,16 @@
 
 namespace geeL {
 
-
-	class SkeletonBone {
-
-	private:
-		Transform transform;
-		std::list<SkeletonBone> children;
-	};
-
-
 	class Skeleton {
 
-
+	public:
+		Skeleton(Transform* root);
+		~Skeleton();
 
 
 	private:
-		SkeletonBone rootBone;
-		std::map<std::string, SkeletonBone*> bones;
+		Transform* rootBone;
+		//std::map<std::string, SkeletonBone*> bones;
 
 	};
 

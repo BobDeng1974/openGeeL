@@ -92,6 +92,7 @@ namespace geeL {
 			skybox->bind(shader);
 	}
 
+
 	MeshRenderer& RenderScene::AddMeshRenderer(string modelPath, Transform& transform, 
 		CullingMode faceCulling, bool deferred, string name) {
 		
@@ -118,6 +119,34 @@ namespace geeL {
 
 		return *renderer;
 	}
+
+	MeshRenderer& RenderScene::AddSkinnedMeshRenderer(string modelPath, Transform& transform,
+		CullingMode faceCulling, bool deferred, string name) {
+
+		SkinnedModel& model = meshFactory.CreateSkinnedModel(modelPath);
+		if (deferred)
+			deferredRenderObjects.push_back(meshFactory.CreateSkinnedMeshRendererManual(model, transform, faceCulling, deferred, name));
+		else
+			forwardRenderObjects.push_back(meshFactory.CreateSkinnedMeshRendererManual(model, transform, faceCulling, deferred, name));
+
+		return *deferredRenderObjects.back();
+	}
+
+	MeshRenderer& RenderScene::AddSkinnedMeshRenderer(std::string modelPath, Transform& transform,
+		std::vector<Material*> materials, CullingMode faceCulling, string name) {
+
+		SkinnedModel& model = meshFactory.CreateSkinnedModel(modelPath);
+		MeshRenderer* renderer = meshFactory.CreateSkinnedMeshRendererManual(model, transform, faceCulling, true, name);
+		renderer->customizeMaterials(materials);
+
+		if (renderer->containsDeferredMaterials())
+			deferredRenderObjects.push_back(renderer);
+		if (renderer->containsForwardMaterials())
+			forwardRenderObjects.push_back(renderer);
+
+		return *renderer;
+	}
+
 
 	void RenderScene::forwardScreenInfo(const ScreenInfo& info) {
 		camera.updateDepth(info);

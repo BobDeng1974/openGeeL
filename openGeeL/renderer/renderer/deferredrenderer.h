@@ -15,6 +15,7 @@ namespace geeL {
 	class Camera;
 	class DefaultPostProcess;
 	class Shader;
+	class SceneShader;
 	class SSAO;
 	class PostProcessingEffect;
 	class WorldPostProcessingEffect;
@@ -48,7 +49,7 @@ namespace geeL {
 	private:
 		int toggle;
 		bool geometryPass = true;
-		Shader* deferredShader;
+		SceneShader* deferredShader;
 		std::vector<PostProcessingEffect*> effects;
 		std::list<WorldInformationRequester*> requester;
 		ScreenQuad screen;

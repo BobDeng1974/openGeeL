@@ -18,13 +18,13 @@ namespace geeL {
 	}
 
 	void ShaderManager::staticBind(const RenderScene& scene) const {
-		for (list<Shader*>::iterator it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
-			Shader& shader = **it;
+		for (auto it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
+			SceneShader& shader = **it;
 			staticForwardBind(scene, shader);
 		}
 	}
 
-	void ShaderManager::staticForwardBind(const RenderScene& scene, Shader& shader) const {
+	void ShaderManager::staticForwardBind(const RenderScene& scene, SceneShader& shader) const {
 		shader.use();
 
 		if (shader.useLight) {
@@ -41,7 +41,7 @@ namespace geeL {
 		}
 	}
 
-	void ShaderManager::staticDeferredBind(const RenderScene& scene, Shader& shader) const {
+	void ShaderManager::staticDeferredBind(const RenderScene& scene, SceneShader& shader) const {
 		shader.use();
 
 		if (shader.useLight) {
@@ -61,8 +61,8 @@ namespace geeL {
 	void ShaderManager::dynamicBind(const RenderScene& scene) const {
 		bindCamera(scene);
 
-		for (list<Shader*>::const_iterator it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
-			const Shader& shader = **it;
+		for (auto it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
+			const SceneShader& shader = **it;
 
 			shader.use();
 			if (shader.useLight) scene.lightManager.forwardBind(shader);

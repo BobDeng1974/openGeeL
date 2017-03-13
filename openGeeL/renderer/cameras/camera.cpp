@@ -82,10 +82,10 @@ namespace geeL {
 		}
 	}
 
-	void Camera::bind(const Shader& shader) const {
+	void Camera::bind(const SceneShader& shader) const {
 		shader.use();
 
-		shader.setVector3(shader.cam + ".position", transform.position);
+		shader.setVector3(shader.cameraName + ".position", transform.position);
 		shader.setMat4("view", viewMatrix);
 		shader.setMat4("projection", projectionMatrix);
 	}

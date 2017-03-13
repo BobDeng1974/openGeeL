@@ -63,7 +63,7 @@ namespace geeL {
 		conversionShader->setMat4("projection", projection);
 		conversionShader->setInteger("environmentMap", conversionShader->mapOffset);
 
-		std::list<unsigned int> maps = { map.GetID() };
+		std::list<unsigned int> maps = { map.getID() };
 		conversionShader->loadMaps(maps);
 
 		glViewport(0, 0, resolution, resolution);
