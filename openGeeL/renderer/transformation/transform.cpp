@@ -195,4 +195,12 @@ namespace geeL {
 		}
 	}
 
+	const string& Transform::getName() const {
+		return name;
+	}
+
+	void Transform::setName(string& name) {
+		this->name = name;
+	}
+
 }

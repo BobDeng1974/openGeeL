@@ -1,8 +1,9 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
-#include <list>
 #include <map>
+#include <string>
+#include <vector>
 #include <vec3.hpp>
 #include "skeleton.h"
 
@@ -18,9 +19,9 @@ namespace geeL{
 
 	struct AnimationBoneData {
 
-		std::list<KeyFrame> positions;
-		std::list<KeyFrame> rotations;
-		std::list<KeyFrame> scalings;
+		std::vector<KeyFrame> positions;
+		std::vector<KeyFrame> rotations;
+		std::vector<KeyFrame> scalings;
 	};
 
 
@@ -31,6 +32,13 @@ namespace geeL{
 		~Animation();
 
 		void addBoneData(std::string name, AnimationBoneData* data);
+		Transform getFrame(const std::string& bone, double time) const;
+
+		double getDuration() const;
+		double getFPS() const;
+
+		std::map<std::string, AnimationBoneData*>::const_iterator bonesStart() const;
+		std::map<std::string, AnimationBoneData*>::const_iterator bonesEnd() const;
 
 	private:
 		std::string name;
@@ -38,6 +46,7 @@ namespace geeL{
 		double fps;
 		std::map<std::string, AnimationBoneData*> bones;
 
+		glm::vec3 getVector(std::vector<KeyFrame>& list, double time) const;
 	};
 
 }

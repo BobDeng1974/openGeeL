@@ -31,7 +31,6 @@ namespace geeL {
 		std::string name;
 
 		Shader() : mapBindingPos(0) {}
-
 		Shader(const char* vertexPath, const char* fragmentPath);
 		Shader(const char* vertexPath, const char* geometryPath, const char* fragmentPath);
 
@@ -83,11 +82,7 @@ namespace geeL {
 		SceneShader(const char* vertexPath, const char* geometryPath, const char* fragmentPath, bool deferred = false, bool useLight = true,
 			bool useCamera = true, bool useSkybox = true, std::string cameraName = "camera", std::string skyboxName = "skybox");
 
-
-
 	};
-
-
 }
 
 #endif

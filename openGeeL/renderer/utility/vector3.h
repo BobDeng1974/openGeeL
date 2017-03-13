@@ -16,6 +16,10 @@ namespace geeL {
 			return (v1.x == v2.x) && (v1.y == v2.y) && (v1.z == v2.z);
 		}
 
+		inline static glm::vec3 lerp(const glm::vec3& v1, const glm::vec3& v2, float factor) {
+			return v1 * factor + v2 * (1.f - factor);
+		}
+
 		inline static glm::vec3 quatToEuler(float x, float y, float z, float w) {
 			float nx = atan2(2.f * (x * y + z * w), 1.f - 2.f * (y * y + z * z));
 			float ny = asin(2.f * (x * z - w * y));

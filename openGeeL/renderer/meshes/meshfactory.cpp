@@ -126,10 +126,12 @@ namespace geeL {
 		std::list<Animation*> animations;
 		processAnimations(model, scene);
 
-		Transform* rootBone = new Transform(AlgebraHelper::convertMatrix(scene->mRootNode->mTransformation));
+		aiNode* node = scene->mRootNode;
+		Transform* rootBone = new Transform(AlgebraHelper::convertMatrix(node->mTransformation));
+		rootBone->setName(string(node->mName.C_Str()));
 
 		string directory = path.substr(0, path.find_last_of('/'));
-		processSkinnedNode(model, *rootBone, directory, scene->mRootNode, scene);
+		processSkinnedNode(model, *rootBone, directory, node, scene);
 	}
 
 	void MeshFactory::processSkinnedNode(SkinnedModel& model, Transform& bone, 
@@ -164,10 +166,11 @@ namespace geeL {
 		for (unsigned int i = 0; i < node->mNumChildren; i++) {
 			aiNode* child = node->mChildren[i];
 			aiMatrix4x4& mat = child->mTransformation;
-			Transform trans = AlgebraHelper::convertMatrix(mat);
+			Transform* trans = new Transform(AlgebraHelper::convertMatrix(mat));
+			trans->setName(string(child->mName.C_Str()));
 			bone.AddChild(trans);
 
-			processSkinnedNode(model, trans, directory, child, scene);
+			processSkinnedNode(model, *trans, directory, child, scene);
 		}
 			
 	}

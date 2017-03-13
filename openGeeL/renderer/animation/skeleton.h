@@ -14,13 +14,16 @@ namespace geeL {
 		Skeleton(Transform* root);
 		~Skeleton();
 
+		const Transform* getBone(std::string name) const;
+		void setBone(std::string name, const Transform& transform);
 
 	private:
 		Transform* rootBone;
-		//std::map<std::string, SkeletonBone*> bones;
+		std::map<std::string, Transform*> bones;
+
+		void addBone(Transform* transform);
 
 	};
-
 
 }
 

@@ -107,8 +107,7 @@ namespace geeL {
 		for (auto it = meshes.begin(); it != meshes.end(); it++)
 			delete *it;
 
-		for (auto it = animations.begin(); it != animations.end(); it++)
-			delete *it;
+		
 	}
 
 	void SkinnedModel::draw() const {
@@ -148,10 +147,6 @@ namespace geeL {
 			const Mesh& mesh = *meshes[i];
 			mesh.draw(mat);
 		}
-	}
-
-	void SkinnedModel::addAnimation(Animation* animation) {
-		animations.push_back(animation);
 	}
 
 	SkinnedMesh& SkinnedModel::addMesh(SkinnedMesh* mesh) {

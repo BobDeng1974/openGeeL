@@ -5,6 +5,7 @@
 #include <mat4x4.hpp>
 #include <functional>
 #include <list>
+#include <string>
 
 using glm::vec3;
 using glm::mat4;
@@ -67,7 +68,11 @@ namespace geeL {
 		void addChangeListener(std::function<void(const Transform&)> listener);
 		void removeChangeListener(std::function<void(const Transform&)> listener);
 
+		const std::string& getName() const;
+		void setName(std::string& name);
+
 	private:
+		std::string name;
 		unsigned int id;
 		Transform* parent;
 		std::list<Transform*> children;
@@ -77,6 +82,7 @@ namespace geeL {
 		void onChange();
 
 	};
+
 }
 
 #endif

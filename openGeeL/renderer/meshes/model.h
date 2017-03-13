@@ -4,20 +4,19 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "../animation/animatedobject.h"
 #include "mesh.h"
 
 namespace geeL {
 
 	enum TextureType;
 
-	class Animation;
 	class Camera;
 	class LightManager;
 	class Material;
 	class MaterialFactory;
 	class Mesh;
 	class TextureMap;
-	class Skeleton;
 	class SkinnedMesh;
 	class StaticMesh;
 	class Texture;
@@ -83,7 +82,7 @@ namespace geeL {
 
 
 	//Special model that is intented for animated drawing
-	class SkinnedModel : public Model {
+	class SkinnedModel : public Model, public AnimatedObject {
 
 	public:
 		SkinnedModel() : Model() {}
@@ -96,9 +95,6 @@ namespace geeL {
 		virtual void draw(const std::vector<Material*>& customMaterials) const;
 		virtual void draw(const std::map<unsigned int, Material*>& customMaterials) const;
 
-		//Add animation. Memory will be managed by this model
-		void addAnimation(Animation* animation);
-
 		//Add static mesh. Memory will be managed by this model
 		SkinnedMesh& addMesh(SkinnedMesh* mesh);
 
@@ -108,9 +104,7 @@ namespace geeL {
 		virtual std::vector<MaterialContainer*> getMaterials() const;
 
 	private:
-		Skeleton* skeleton;
 		std::vector<SkinnedMesh*> meshes;
-		std::vector<Animation*> animations;
 
 	};
 
