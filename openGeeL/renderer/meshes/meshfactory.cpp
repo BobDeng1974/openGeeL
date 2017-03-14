@@ -3,6 +3,7 @@
 #include "../../dependencies/assimp/Importer.hpp"
 #include "../../dependencies/assimp/scene.h"
 #include "../../dependencies/assimp/postprocess.h"
+#include "../transformation/transform.h"
 #include "../materials/materialfactory.h"
 #include "../materials/defaultmaterial.h"
 #include "../animation/skeleton.h"
@@ -288,24 +289,25 @@ namespace geeL {
 
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-			loadMaterialTextures(textures, material, aiTextureType_DIFFUSE, Diffuse, directory, false);
-			loadMaterialTextures(textures, material, aiTextureType_SPECULAR, Specular, directory, true);
-			loadMaterialTextures(textures, material, aiTextureType_HEIGHT, Normal, directory, true);
-			loadMaterialTextures(textures, material, aiTextureType_AMBIENT, Reflection, directory, true);
-			loadMaterialTextures(textures, material, aiTextureType_EMISSIVE, Metallic, directory, true);
+			loadMaterialTextures(textures, material, aiTextureType_DIFFUSE, MapType::Diffuse, directory, ColorType::GammaSpace);
+			loadMaterialTextures(textures, material, aiTextureType_SPECULAR, MapType::Specular, directory, ColorType::RGBA);
+			loadMaterialTextures(textures, material, aiTextureType_HEIGHT, MapType::Normal, directory, ColorType::RGBA);
+			loadMaterialTextures(textures, material, aiTextureType_AMBIENT, MapType::Reflection, directory, ColorType::RGBA);
+			loadMaterialTextures(textures, material, aiTextureType_EMISSIVE, MapType::Metallic, directory, ColorType::RGBA);
 		}
 	}
 
 
 	void MeshFactory::loadMaterialTextures(vector<TextureMap*>& textures, aiMaterial* mat,
-		aiTextureType aiType, TextureType type, string directory, bool linear) {
+		aiTextureType aiType, MapType type, string directory, ColorType colorType) {
 
 		for (unsigned int i = 0; i < mat->GetTextureCount(aiType); i++) {
 			aiString str;
 			mat->GetTexture(aiType, i, &str);
 
 			string fileName = directory + "/" + string(str.C_Str());
-			TextureMap& texture = factory.CreateTexture(fileName, linear, type, ColorRGBA, GL_REPEAT, Bilinear);
+			TextureMap& texture = factory.CreateTextureMap(fileName, type, 
+				colorType, WrapMode::Repeat, FilterMode::Bilinear);
 			textures.push_back(&texture);
 		}
 	}

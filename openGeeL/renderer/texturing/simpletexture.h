@@ -13,25 +13,12 @@ typedef unsigned int GLuint;
 
 namespace geeL {
 
-	enum TextureType {
+	enum class MapType {
 		Diffuse,
 		Specular,
 		Normal,
 		Reflection,
 		Metallic
-	};
-
-	enum ColorType {
-		ColorSingle,
-		ColorRGB,
-		ColorRGBA,
-	};
-
-	enum FilterMode{
-		None,
-		Linear,
-		Bilinear,
-		Trilinear
 	};
 
 
@@ -42,11 +29,11 @@ namespace geeL {
 		std::string path;
 
 		SimpleTexture() {}
-		SimpleTexture(const char* fileName, bool linear = false, ColorType colorType = ColorRGBA,
-			int wrapMode = GL_REPEAT, FilterMode filterMode = None);
+		SimpleTexture(const char* fileName, ColorType colorType = ColorType::RGBA,
+			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest);
 
 		SimpleTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height,
-			int wrapMode = GL_REPEAT, int filterMode = GL_LINEAR);
+			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest);
 
 		virtual unsigned int getID() const;
 
@@ -60,12 +47,12 @@ namespace geeL {
 	class TextureMap : public SimpleTexture {
 
 	public:
-		TextureType type;
+		MapType type;
 		
 		TextureMap() {}
-		TextureMap(const char* fileName, bool linear = false, 
-			TextureType textureTpe = Diffuse, ColorType colorType = ColorRGBA, 
-			int wrapMode = GL_REPEAT, FilterMode filterMode = None);
+		TextureMap(const char* fileName, 
+			MapType textureTpe = MapType::Diffuse, ColorType colorType = ColorType::RGBA,
+			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest);
 
 		virtual void bind(const Shader& shader, std::string name, int texLayer = 0) const;
 		virtual void draw(const Shader& shader, int texLayer = 0) const;

@@ -3,18 +3,12 @@
 
 #include <glew.h>
 #include <vector>
+#include "../texturing/texture.h"
 
 namespace geeL {
 
 	class Drawer;
 
-	enum ColorBufferType {
-		Single,
-		RGB,
-		RGBA,
-		RGB16,
-		RGBA16
-	};
 
 	struct FrameBufferInformation {
 
@@ -33,11 +27,11 @@ namespace geeL {
 
 		FrameBuffer();
 
-		void init(int width, int height, int colorBufferAmount = 1, ColorBufferType colorBufferType = RGBA16, 
-			unsigned int filterMode = GL_LINEAR, bool useDepth = true);
+		void init(int width, int height, int colorBufferAmount = 1, ColorType colorType = ColorType::RGBA16,
+			FilterMode filterMode = FilterMode::Nearest, WrapMode wrapMode = WrapMode::ClampBorder, bool useDepth = true);
 
-		void init(int width, int height, int colorBufferAmount, std::vector<ColorBufferType> bufferTypes, 
-			unsigned int filterMode = GL_LINEAR, bool useDepth = true);
+		void init(int width, int height, int colorBufferAmount, std::vector<ColorType> bufferTypes,
+			FilterMode filterMode = FilterMode::Nearest, WrapMode wrapMode = WrapMode::ClampBorder, bool useDepth = true);
 	
 		void fill(Drawer& drawer, bool setFBO = true) const;
 		void copyDepth(unsigned int targetFBO) const;
@@ -59,7 +53,7 @@ namespace geeL {
 		unsigned int rbo;
 		std::vector<unsigned int> colorBuffers;
 
-		unsigned int generateTexture(ColorBufferType colorBufferType, unsigned int filterMode);
+		unsigned int generateTexture(ColorType colorType, FilterMode filterMode, WrapMode wrapMode);
 	};
 }
 

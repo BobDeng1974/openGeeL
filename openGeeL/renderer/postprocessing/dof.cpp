@@ -37,8 +37,9 @@ namespace geeL {
 		PostProcessingEffect::init(screen, info);
 
 		screenInfo = &info;
+		blurBuffer.init(info.width * blurResolution, info.height * blurResolution, 
+			1, ColorType::RGB16, FilterMode::Linear);
 
-		blurBuffer.init(info.width * blurResolution, info.height * blurResolution);
 		blur.init(screen, blurBuffer.info);
 		buffers.push_back(blurBuffer.getColorID());
 	}

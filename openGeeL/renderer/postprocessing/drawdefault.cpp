@@ -16,7 +16,7 @@ namespace geeL {
 	void DefaultPostProcess::init(ScreenQuad& screen, const FrameBufferInformation& info) {
 		PostProcessingEffect::init(screen, info);
 
-		TextureMap noise = TextureMap("resources/textures/noise.png", true, Diffuse, ColorSingle);
+		SimpleTexture noise = SimpleTexture("resources/textures/noise.png", ColorType::Single);
 		buffers.push_back(noise.getID());
 
 		shader.use();

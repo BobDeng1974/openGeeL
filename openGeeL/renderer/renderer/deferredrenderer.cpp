@@ -67,7 +67,7 @@ namespace geeL {
 		if (ssao != nullptr) {
 			ssaoBuffer = new FrameBuffer();
 			ssaoBuffer->init(window->width * ssaoResolution, window->height * ssaoResolution, 
-				1, Single, GL_NEAREST, false);
+				1, ColorType::Single, FilterMode::Nearest, WrapMode::Repeat, false);
 		}
 
 		deferredShader->use();
@@ -83,8 +83,8 @@ namespace geeL {
 
 		//frameBuffer1.init(window->width, window->height, 2, { RGBA16, Single });
 		//frameBuffer2.init(window->width, window->height, 2, { RGBA16, Single });
-		frameBuffer1.init(window->width, window->height, 1, RGBA16);
-		frameBuffer2.init(window->width, window->height, 1, RGBA16);
+		frameBuffer1.init(window->width, window->height, 1, ColorType::RGBA16);
+		frameBuffer2.init(window->width, window->height, 1, ColorType::RGBA16);
 		screen.init();
 		screen.init();
 	}

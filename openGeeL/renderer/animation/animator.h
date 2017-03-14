@@ -41,9 +41,7 @@ namespace geeL {
 		const Animation* currentAnimation;
 		double currentTime;
 
-
 	};
-
 
 }
 

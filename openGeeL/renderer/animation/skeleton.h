@@ -4,9 +4,10 @@
 #include <list>
 #include <map>
 #include <string>
-#include "../transformation/transform.h"
 
 namespace geeL {
+
+	class Transform;
 
 	class Skeleton {
 
@@ -24,7 +25,6 @@ namespace geeL {
 		void addBone(Transform* transform);
 
 	};
-
 }
 
 #endif

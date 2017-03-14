@@ -44,14 +44,15 @@ namespace geeL {
 			noise.push_back(sample);
 		}
 
-		noiseTexture = SimpleTexture(noise, 4, 4, GL_REPEAT, GL_NEAREST);
+		noiseTexture = SimpleTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::Nearest);
 	}
 
 	void SSAO::init(ScreenQuad& screen, const FrameBufferInformation& info) {
 		PostProcessingEffect::init(screen, info);
 
 		screenInfo = &info;
-		tempBuffer.init(info.width, info.height, 1, Single, GL_NEAREST, false);
+		tempBuffer.init(info.width, info.height, 1, ColorType::Single, 
+			FilterMode::Nearest, WrapMode::Repeat, false);
 
 		blur.init(screen, info);
 		blur.setBuffer(tempBuffer.getColorID());

@@ -24,13 +24,23 @@ namespace geeL {
 			delete *material;
 	}
 
-	TextureMap& MaterialFactory::CreateTexture(string filePath, 
-		bool linear, TextureType type, ColorType colorType, GLint wrapMode, FilterMode filterMode) {
-		
+
+	SimpleTexture& MaterialFactory::CreateTexture(std::string filePath, ColorType colorType,
+		WrapMode wrapMode, FilterMode filterMode) {
+
 		if (textures.find(filePath) == textures.end())
-			textures[filePath] = TextureMap(filePath.c_str(), linear, type, colorType, wrapMode, filterMode);
+			textures[filePath] = SimpleTexture(filePath.c_str(), colorType, wrapMode, filterMode);
 
 		return textures[filePath];
+	}
+
+	TextureMap& MaterialFactory::CreateTextureMap(string filePath, MapType type, ColorType colorType, 
+		WrapMode wrapMode, FilterMode filterMode) {
+		
+		if (textureMaps.find(filePath) == textureMaps.end())
+			textureMaps[filePath] = TextureMap(filePath.c_str(),  type, colorType, wrapMode, filterMode);
+
+		return textureMaps[filePath];
 	}
 
 	EnvironmentMap& MaterialFactory::CreateEnvironmentMap(string filePath) {
@@ -84,11 +94,11 @@ namespace geeL {
 	}
 
 	map<string, TextureMap>::const_iterator MaterialFactory::texturesBegin() const {
-		return textures.begin();
+		return textureMaps.begin();
 	}
 
 	map<string, TextureMap>::const_iterator MaterialFactory::texturesEnd() const {
-		return textures.end();
+		return textureMaps.end();
 	}
 
 	SceneShader& MaterialFactory::getDefaultShader(DefaultShading shading) const {

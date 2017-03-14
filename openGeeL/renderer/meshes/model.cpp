@@ -4,7 +4,6 @@
 #include "mesh.h"
 #include "model.h"
 
-
 using namespace std;
 
 namespace geeL {

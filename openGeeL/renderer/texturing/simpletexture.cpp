@@ -10,7 +10,7 @@ using namespace std;
 
 namespace geeL {
 
-	SimpleTexture::SimpleTexture(const char* fileName, bool linear, ColorType colorType, int wrapMode, FilterMode filterMode)
+	SimpleTexture::SimpleTexture(const char* fileName, ColorType colorType, WrapMode wrapMode, FilterMode filterMode)
 		:  path(fileName) {
 		
 		int imgWidth, imgHeight;
@@ -20,59 +20,27 @@ namespace geeL {
 		glGenTextures(1, &id);
 		glBindTexture(GL_TEXTURE_2D, id);
 
-		if (linear) {
-			switch (colorType) {
-				case ColorSingle:
-					glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, imgWidth, imgHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-					break;
-				case ColorRGB:
-					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-					break;
-				case ColorRGBA:
-					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imgWidth, imgHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-					break;
-			}
-		}
-		else
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA, imgWidth, imgHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+		Texture::initColorType(colorType, imgWidth, imgHeight, image);
 
 		glGenerateMipmap(GL_TEXTURE_2D);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
 
-		switch (filterMode) {
-			case None:
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-				break;
-			case Linear:
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				break;
-			case Bilinear:
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				break;
-			case Trilinear:
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				break;
-		}
+		Texture::initWrapMode(wrapMode);
+		Texture::initFilterMode(filterMode);
 
 		stbi_image_free(image);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	SimpleTexture::SimpleTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height,
-		int wrapMode, int filterMode) {
+		WrapMode wrapMode, FilterMode filterMode) {
 
 		glGenTextures(1, &id);
 		glBindTexture(GL_TEXTURE_2D, id);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, &colors[0]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMode);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterMode);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
+
+		Texture::initFilterMode(filterMode);
+		Texture::initWrapMode(wrapMode),
+
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
@@ -82,8 +50,8 @@ namespace geeL {
 
 
 
-	TextureMap::TextureMap(const char* fileName, bool linear, TextureType type, ColorType colorType, int wrapMode, FilterMode filterMode)
-		: SimpleTexture(fileName, linear, colorType, wrapMode, filterMode), type(type) {}
+	TextureMap::TextureMap(const char* fileName, MapType type, ColorType colorType, WrapMode wrapMode, FilterMode filterMode)
+		: SimpleTexture(fileName, colorType, wrapMode, filterMode), type(type) {}
 
 
 	void TextureMap::bind(const Shader& shader, std::string name, int texLayer) const {
@@ -96,13 +64,13 @@ namespace geeL {
 
 	string TextureMap::getTypeAsString() const {
 		switch (type) {
-			case Diffuse:
+			case MapType::Diffuse:
 				return "diffuse";
-			case Specular:
+			case MapType::Specular:
 				return "specular";
-			case Normal:
+			case MapType::Normal:
 				return "normal";
-			case Reflection:
+			case MapType::Reflection:
 				return "reflection";
 		}
 

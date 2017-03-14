@@ -30,10 +30,16 @@ namespace geeL {
 		MaterialFactory();
 		~MaterialFactory();
 
+		//Creates and returns a new texture from given file path or 
+		//returns an existing texture if it already uses this file
+		SimpleTexture& CreateTexture(std::string filePath, ColorType colorType = ColorType::RGBA,
+			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest);
+
 		//Creates and returns a new texture map from given file path or 
 		//returns an existing texture if it already uses this file
-		TextureMap& CreateTexture(std::string filePath, bool linear = false,
-			TextureType type = Diffuse, ColorType colorType = ColorRGBA, GLint wrapMode = GL_REPEAT, FilterMode filterMode = None);
+		TextureMap& CreateTextureMap(std::string filePath,
+			MapType type = MapType::Diffuse, ColorType colorType = ColorType::RGBA,
+			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest);
 
 		//Create and returns new environment map or returns existing one if file is already in use
 		EnvironmentMap& CreateEnvironmentMap(std::string filePath);
@@ -73,7 +79,8 @@ namespace geeL {
 		SceneShader* deferredShader;
 		std::list<MaterialContainer*> container;
 		std::list<SceneShader*> shaders;
-		std::map<std::string, TextureMap> textures;
+		std::map<std::string, SimpleTexture> textures;
+		std::map<std::string, TextureMap> textureMaps;
 		std::map<std::string, EnvironmentMap> envMaps;
 
 	};

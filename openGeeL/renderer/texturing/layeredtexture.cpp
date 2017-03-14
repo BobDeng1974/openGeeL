@@ -12,19 +12,19 @@ namespace geeL {
 
 	void LayeredTexture::addTexture(string name, TextureMap& texture) {
 		switch (texture.type) {
-			case Diffuse:
+			case MapType::Diffuse:
 				mapFlags += 1;
 				break;
-			case Specular:
+			case MapType::Specular:
 				mapFlags += 10;
 				break;
-			case Normal:
+			case MapType::Normal:
 				mapFlags += 100;
 				break;
-			case Metallic:
+			case MapType::Metallic:
 				mapFlags += 1000;
 				break;
-			case Reflection:
+			case MapType::Reflection:
 				mapFlags += 10000;
 				break;
 		}

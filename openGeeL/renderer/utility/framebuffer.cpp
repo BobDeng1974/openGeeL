@@ -15,18 +15,18 @@ namespace geeL {
 
 
 	void FrameBuffer::init(int width, int height, int colorBufferAmount,
-		ColorBufferType colorBufferType, unsigned int filterMode, bool useDepth) {
+		ColorType colorType, FilterMode filterMode, WrapMode wrapMode, bool useDepth) {
 		
 		int amount = min(3, colorBufferAmount);
-		vector<ColorBufferType> bufferTypes = vector<ColorBufferType>(amount, colorBufferType);
-		init(width, height, amount, bufferTypes, filterMode, useDepth);
+		vector<ColorType> bufferTypes = vector<ColorType>(amount, colorType);
+		init(width, height, amount, bufferTypes, filterMode, wrapMode, useDepth);
 	}
 
-	void FrameBuffer::init(int width, int height, int colorBufferAmount, vector<ColorBufferType> bufferTypes,
-		unsigned int filterMode, bool useDepth) {
+	void FrameBuffer::init(int width, int height, int colorBufferAmount, vector<ColorType> bufferTypes,
+		FilterMode filterMode, WrapMode wrapMode, bool useDepth) {
 
 		if (colorBufferAmount != bufferTypes.size())
-			throw "Committed amount of buffer types doesn't match amount of committed color buffers";
+			throw "Given amount of buffer types doesn't match amount of given color buffers";
 
 		info.width = width;
 		info.height = height;
@@ -37,7 +37,7 @@ namespace geeL {
 		// Create color attachment textures
 		int amount = min(3, colorBufferAmount);
 		for (int i = 0; i < amount; i++) {
-			unsigned int color = generateTexture(bufferTypes[i], filterMode);
+			unsigned int color = generateTexture(bufferTypes[i], filterMode, wrapMode);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, color, 0);
 			colorBuffers.push_back(color);
 		}
@@ -127,33 +127,16 @@ namespace geeL {
 			info.width, info.height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	}
 
-	unsigned int FrameBuffer::generateTexture(ColorBufferType colorBufferType, unsigned int filterMode) {
+	unsigned int FrameBuffer::generateTexture(ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
 
 		//Generate texture ID and load texture data 
-		GLuint textureID;
+		unsigned int textureID;
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
-		switch (colorBufferType) {
-			case Single:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, info.width, info.height, 0, GL_RGB, GL_FLOAT, 0);
-				break;
-			case RGB:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, info.width, info.height, 0, GL_RGB, GL_FLOAT, 0);
-				break;
-			case RGBA:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, info.width, info.height, 0, GL_RGBA, GL_FLOAT, 0);
-				break;
-			case RGB16:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, info.width, info.height, 0, GL_RGB, GL_FLOAT, 0);
-				break;
-			case RGBA16:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, info.width, info.height, 0, GL_RGBA, GL_FLOAT, 0);
-				break;
-		}
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMode);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterMode);
+		Texture::initColorType(colorType, info.width, info.height, 0);
+		Texture::initWrapMode(wrapMode);
+		Texture::initFilterMode(filterMode);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		return textureID;

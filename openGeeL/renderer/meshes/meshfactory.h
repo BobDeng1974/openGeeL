@@ -17,6 +17,7 @@ namespace geeL {
 
 	enum CullingMode;
 	enum class DefaultShading;
+	enum class ColorType;
 
 	struct SkinnedVertex;
 	struct MeshBoneData;
@@ -89,7 +90,7 @@ namespace geeL {
 
 
 		void loadMaterialTextures(std::vector<TextureMap*>& textures, aiMaterial* mat,
-			aiTextureType aiType, TextureType type, std::string directory, bool linear);
+			aiTextureType aiType, MapType type, std::string directory, ColorType colorType);
 
 	};
 }

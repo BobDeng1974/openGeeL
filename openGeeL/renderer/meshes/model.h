@@ -9,7 +9,7 @@
 
 namespace geeL {
 
-	enum TextureType;
+	enum class MapType;
 
 	class Camera;
 	class LightManager;

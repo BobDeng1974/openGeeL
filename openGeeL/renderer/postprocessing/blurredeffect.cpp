@@ -27,8 +27,10 @@ namespace geeL {
 
 		screenInfo = &info;
 
-		effectBuffer.init(info.width * effectResolution, info.height * effectResolution);
-		blurBuffer.init(info.width * blurResolution, info.height * blurResolution);
+		effectBuffer.init(info.width * effectResolution, info.height * effectResolution, 
+			1, ColorType::RGB16, FilterMode::Linear);
+		blurBuffer.init(info.width * blurResolution, info.height * blurResolution, 
+			1, ColorType::RGB16, FilterMode::Linear);
 
 		effect.init(screen, effectBuffer.info);
 		blur.init(screen, blurBuffer.info);
