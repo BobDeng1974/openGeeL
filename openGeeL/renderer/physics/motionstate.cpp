@@ -25,13 +25,13 @@ namespace geeL {
 	}
 
 	void MotionState::update() {
-		btQuaternion rotation = btQuaternion(transform.rotation.x,
-			transform.rotation.y,
-			transform.rotation.z);
+		btQuaternion rotation = btQuaternion(transform.getRotation().x,
+			transform.getRotation().y,
+			transform.getRotation().z);
 
-		btVector3 position = btVector3(transform.position.x,
-			transform.position.y,
-			transform.position.z);
+		btVector3 position = btVector3(transform.getPosition().x,
+			transform.getPosition().y,
+			transform.getPosition().z);
 
 		initTransform = btTransform(rotation, position);
 	}

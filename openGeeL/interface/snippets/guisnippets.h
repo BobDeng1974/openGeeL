@@ -35,7 +35,7 @@ namespace geeL {
 		static float drawBarFloat(GUIContext* context, float value, float min, float max, float step, std::string name);
 
 		static void drawVector(GUIContext* context, glm::vec3& vector, std::string prefix, float border, float step);
-		static glm::vec3 drawVector2(GUIContext* context, glm::vec3& vector, std::string prefix, float border, float step);
+		static glm::vec3 drawVector2(GUIContext* context, const glm::vec3& vector, std::string prefix, float border, float step);
 
 		static void drawTransform(GUIContext* context, Transform& transform);
 		static void drawTransformTree(GUIContext* context, Transform& transform);

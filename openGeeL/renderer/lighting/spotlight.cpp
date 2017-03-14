@@ -26,9 +26,9 @@ namespace geeL {
 	void SpotLight::deferredBind(const RenderScene& scene, const Shader& shader, string name) const {
 		Light::deferredBind(scene, shader, name);
 
-		shader.setVector3(name + "position", scene.TranslateToViewSpace(transform.position));
+		shader.setVector3(name + "position", scene.TranslateToViewSpace(transform.getPosition()));
 		shader.setVector3(name + "direction",
-			scene.TranslateToViewSpace(transform.forward) - scene.GetOriginInViewSpace());
+			scene.TranslateToViewSpace(transform.getForwardDirection()) - scene.GetOriginInViewSpace());
 		shader.setFloat(name + "angle", angle);
 		shader.setFloat(name + "outerAngle", outerAngle);
 		shader.setMat4(name + "lightTransform", lightTransform);
@@ -38,8 +38,8 @@ namespace geeL {
 	void SpotLight::forwardBind(const Shader& shader, string name, string transformName) const {
 		Light::forwardBind(shader, name, transformName);
 
-		shader.setVector3(name + "position", transform.position);
-		shader.setVector3(name + "direction", transform.forward);
+		shader.setVector3(name + "position", transform.getPosition());
+		shader.setVector3(name + "direction", transform.getForwardDirection());
 		shader.setFloat(name + "angle", angle);
 		shader.setFloat(name + "outerAngle", outerAngle);
 		shader.setFloat(name + "useCookie", (lightCookie != nullptr));
@@ -66,7 +66,8 @@ namespace geeL {
 	void SpotLight::computeLightTransform() {
 		float fov = glm::degrees(angle);
 		mat4 projection = glm::perspective(fov, 1.f, 1.0f, farPlane);
-		mat4 view = lookAt(transform.position, transform.position + transform.forward, transform.up);
+		mat4 view = lookAt(transform.getPosition(), transform.getPosition() + 
+			transform.getForwardDirection(), transform.getUpDirection());
 
 		lightTransform = projection * view;
 	}

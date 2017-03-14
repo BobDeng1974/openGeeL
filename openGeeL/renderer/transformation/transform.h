@@ -17,27 +17,26 @@ namespace geeL {
 	public:
 		bool isStatic;
 
-		vec3 position;
-		vec3 rotation;
-		vec3 scaling;
-		vec3 forward;
-		vec3 up;
-		vec3 right;
-
-		mat4 matrix;
-
 		Transform(Transform* parent = nullptr);
 		Transform(mat4& matrix, Transform* parent = nullptr);
 		Transform(vec3 position, vec3 rotation, vec3 scaling, Transform* parent = nullptr);
 		~Transform();
 		
-		void setPosition(vec3 position);
-		void setRotation(vec3 rotation);
-		void setScale(vec3 scaling);
+		const glm::vec3& getPosition() const;
+		const glm::vec3& getRotation() const;
+		const glm::vec3& getScaling() const;
+		const glm::vec3& getForwardDirection() const;
+		const glm::vec3& getRightDirection() const;
+		const glm::vec3& getUpDirection() const;
+		const glm::mat4& getMatrix() const;
 
-		void translate(vec3 translation);
-		void rotate(vec3 axis, float angle);
-		void scale(vec3 scalar);
+		void setPosition(const vec3& position);
+		void setRotation(const vec3& rotation);
+		void setScaling(const vec3& scaling);
+
+		void translate(const vec3& translation);
+		void rotate(const vec3& axis, float angle);
+		void scale(const vec3& scalar);
 
 		mat4 lookAt() const;
 
@@ -72,11 +71,22 @@ namespace geeL {
 		void setName(std::string& name);
 
 	private:
+		vec3 position;
+		vec3 rotation;
+		vec3 scaling;
+		vec3 forward;
+		vec3 up;
+		vec3 right;
+
+		mat4 matrix;
+
 		std::string name;
 		unsigned int id;
 		Transform* parent;
 		std::list<Transform*> children;
 		std::list<std::function<void(const Transform&)>> changeListener;
+
+		void resetMatrix();
 
 		void updateDirections();
 		void onChange();

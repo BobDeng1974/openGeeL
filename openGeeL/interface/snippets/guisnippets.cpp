@@ -50,7 +50,7 @@ namespace geeL {
 		nk_property_float(context, z.c_str(), -border, &vector.z, border, 1, step);
 	}
 
-	glm::vec3 GUISnippets::drawVector2(GUIContext* context, glm::vec3& vector, std::string prefix, float border, float step) {
+	glm::vec3 GUISnippets::drawVector2(GUIContext* context, const glm::vec3& vector, std::string prefix, float border, float step) {
 
 		nk_layout_row_dynamic(context, 30, 3);
 
@@ -72,14 +72,14 @@ namespace geeL {
 		std::string name = "Transform(" + std::to_string(transform.getID()) + "):";
 		if (nk_combo_begin_label(context, name.c_str(), nk_vec2(nk_widget_width(context), 400))) {
 
-			glm::vec3 pos = drawVector2(context, transform.position, "P", 100.f, 0.1f);
+			glm::vec3 pos = drawVector2(context, transform.getPosition(), "P", 100.f, 0.1f);
 			transform.setPosition(pos);
 
-			glm::vec3 rot = drawVector2(context, transform.rotation, "R", 360.f, 0.1f);
+			glm::vec3 rot = drawVector2(context, transform.getRotation(), "R", 360.f, 0.1f);
 			transform.setRotation(rot);
 
-			//glm::vec3 scale = drawVector2(context, transform.scaling, "S", 100.f, 0.1f);
-			//transform.setScale(scale);
+			glm::vec3 scale = drawVector2(context, transform.getScaling(), "S", 100.f, 0.1f);
+			transform.setScaling(scale);
 
 			nk_combo_end(context);
 		}
@@ -90,9 +90,15 @@ namespace geeL {
 		std::string name = "Transform(" + std::to_string(transform.getID()) + "):";
 		if (nk_tree_push(context, NK_TREE_NODE, name.c_str(), NK_MINIMIZED)) {
 
-			drawVector(context, transform.position, "P", 100.f, 0.1f);
-			drawVector(context, transform.rotation, "R", 100.f, 0.1f);
-			drawVector(context, transform.scaling, "S", 100.f, 0.1f);
+			glm::vec3 position = drawVector2(context, transform.getPosition(), "P", 100.f, 0.1f);
+			transform.setPosition(position);
+
+			glm::vec3 rotation = drawVector2(context, transform.getRotation(), "R", 100.f, 0.1f);
+			transform.setRotation(rotation);
+
+			glm::vec3 scaling = drawVector2(context, transform.getScaling(), "S", 100.f, 0.1f);
+			transform.setScaling(scaling);
+
 			nk_tree_pop(context);
 		}
 	}

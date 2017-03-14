@@ -148,7 +148,7 @@ namespace {
 				container.setVectorValue("Color", vec3(0.4f, 0.4f, 0.4f));
 			}
 
-			Transform& meshTransform3 = transformFactory.CreateTransform(vec3(-30.0f, -4.f, 25.0f), vec3(0.5f, 0.5f, 0.5f), vec3(0.3f, 0.3f, 0.3f));
+			Transform& meshTransform3 = transformFactory.CreateTransform(vec3(-9.f, -3.f, 11.0f), vec3(0.5f, 0.5f, 0.5f), vec3(0.3f, 0.3f, 0.3f));
 			MeshRenderer& box1 = scene.AddMeshRenderer("resources/empire/EmpireState_lp.obj", meshTransform3, cullFront, true, "Empire State");
 
 			for (auto it = box1.deferredMaterialsBegin(); it != box1.deferredMaterialsEnd(); it++) {
@@ -168,7 +168,7 @@ namespace {
 				container.setFloatValue("Metallic", 0.5f);
 			}
 
-			Transform& meshTransform5 = transformFactory.CreateTransform(vec3(0.0f, 1, -2.0f), vec3(0.5f, 0.5f, 0.5f), vec3(5.2f, 2.2f, 1.2f));
+			Transform& meshTransform5 = transformFactory.CreateTransform(vec3(0.0f, 0.5f, -2.0f), vec3(0.5f, 0.5f, 0.5f), vec3(5.2f, 2.2f, 1.2f));
 			MeshRenderer& box = scene.AddMeshRenderer("resources/primitives/cube.obj", meshTransform5, cullFront, true, "Box");
 
 			for (auto it = box.deferredMaterialsBegin(); it != box.deferredMaterialsEnd(); it++) {
@@ -178,7 +178,7 @@ namespace {
 				container.setVectorValue("Color", vec3(0.1f, 0.1f, 0.1f));
 			}
 
-			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -0.4f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", meshTransform6, cullFront, true, "Cyborg");
 
 			float scale = 0.05f;
@@ -187,7 +187,7 @@ namespace {
 		}
 
 		virtual void draw(const Camera& camera) {
-			nanoRenderer->transform.rotate(vec3(0, 1, 0), 2000 * Time::deltaTime);
+			nanoRenderer->transform.rotate(vec3(0.f, 1.f, 0.f), 80.f * Time::deltaTime);
 		}
 
 		virtual void quit() {}
@@ -199,7 +199,7 @@ namespace {
 
 void draw() {
 	
-	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
+	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Fullscreen);
 	InputManager manager = InputManager();
 	manager.defineButton("Forward", GLFW_KEY_W);
 	manager.defineButton("Forward", GLFW_KEY_A);
@@ -207,8 +207,8 @@ void draw() {
 	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	TransformFactory transFactory = TransformFactory(world);
 
-	geeL::Transform& cameraTransform = Transform(vec3(0.0f, 2.0f, 9.0f), vec3(-100.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 15.f, 60.f, window.width, window.height, 0.1f, 100.f);
+	geeL::Transform& cameraTransform = Transform(vec3(0.0f, 2.0f, 9.0f), vec3(-90.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.35f, 60.f, window.width, window.height, 0.1f, 100.f);
 
 	BilateralFilter blur = BilateralFilter(1, 0.3f);
 	DefaultPostProcess def = DefaultPostProcess();

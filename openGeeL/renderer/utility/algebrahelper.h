@@ -4,7 +4,8 @@
 #include <cmath>
 #include <vec3.hpp>
 #include <mat4x4.hpp>
-#include "../../dependencies/assimp/scene.h"
+#include <iostream>
+//#include "../../dependencies/assimp/scene.h"
 
 namespace geeL {
 
@@ -14,6 +15,10 @@ namespace geeL {
 
 		inline static bool equals(const glm::vec3& v1, const glm::vec3& v2) {
 			return (v1.x == v2.x) && (v1.y == v2.y) && (v1.z == v2.z);
+		}
+
+		inline static void printVector(const glm::vec3 vector) {
+			std::cout << "(" << vector.x << ", " << vector.y << ", " << vector.z << ")\n";
 		}
 
 		inline static glm::vec3 lerp(const glm::vec3& v1, const glm::vec3& v2, float factor) {
@@ -28,6 +33,7 @@ namespace geeL {
 			return glm::vec3(nx, ny, nz);
 		}
 
+		/*
 		inline static glm::mat4 convertMatrix(aiMatrix4x4& from) {
 			glm::mat4 matrix;
 
@@ -53,7 +59,7 @@ namespace geeL {
 
 			return matrix;
 		}
-
+		*/
 	};
 }
 

@@ -8,7 +8,6 @@
 #include "../inputmanager.h"
 #include "../transformation/transform.h"
 #include "../utility/gbuffer.h"
-#include <iostream>
 #include "../utility/rendertime.h"
 
 #define pi 3.141592f
@@ -62,67 +61,70 @@ namespace geeL {
 			cameraSpeed *= 0.5f;
 		
 		if (input.getKeyHold(GLFW_KEY_W) || input.getKey(GLFW_KEY_W))
-			transform.translate(cameraSpeed * transform.forward);
+			transform.translate(cameraSpeed * transform.getForwardDirection());
 		if (input.getKeyHold(GLFW_KEY_S) || input.getKey(GLFW_KEY_S))
-			transform.translate(-cameraSpeed * transform.forward);
+			transform.translate(-cameraSpeed * transform.getForwardDirection());
 		if (input.getKeyHold(GLFW_KEY_A) || input.getKey(GLFW_KEY_A))
-			transform.translate(-cameraSpeed * transform.right);
+			transform.translate(-cameraSpeed * transform.getRightDirection());
 		if (input.getKeyHold(GLFW_KEY_D) || input.getKey(GLFW_KEY_D))
-			transform.translate(cameraSpeed * transform.right);
+			transform.translate(cameraSpeed * transform.getRightDirection());
 	}
+
 
 	void Camera::computeMouseInput(const InputManager& input) {
 
 		if (input.getMouseKey(1)) {
-			GLfloat xoffset = input.getMouseXOffset() * sensitivity;
-			GLfloat yoffset = input.getMouseYOffset() * sensitivity;
+			const vec3& rot = transform.getRotation();
+			float pitch = rot.x;
+			float yaw = rot.z;
 
-			transform.rotate(vec3(0.f, 0.f, -1.f), xoffset);
-			transform.rotate(vec3(1.f, 0.f, 0.f), yoffset);
+			float xOffset = input.getMouseYOffset() * sensitivity;
+			yaw -= input.getMouseXOffset() * sensitivity;
+
+			transform.setRotation(vec3(rot.x + xOffset * cos(glm::radians(yaw)), 
+				rot.y + xOffset * sin(glm::radians(yaw)), yaw));
 		}
 	}
 
 	void Camera::bind(const SceneShader& shader) const {
 		shader.use();
 
-		shader.setVector3(shader.cameraName + ".position", transform.position);
+		shader.setVector3(shader.cameraName + ".position", transform.getPosition());
 		shader.setMat4("view", viewMatrix);
 		shader.setMat4("projection", projectionMatrix);
 	}
 
 	void Camera::bindPosition(const Shader& shader, std::string name) const {
 		shader.use();
-		shader.setVector3(name, transform.position);
+		shader.setVector3(name, transform.getPosition());
 	}
 
 	void Camera::updateDepth(const ScreenInfo& info) {
 		this->info = &info;
 		depth = info.CTdepth;
 
-		center = transform.position + transform.forward * depth;
+		center = transform.getPosition() + transform.getForwardDirection() * depth;
 	}
 
 	void Camera::uniformBind(int uniformID) const {
 
 		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projectionMatrix));
-		//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
 		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(viewMatrix));
-		//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
-		glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &transform.position);
+		glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &transform.getPosition());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
 	const glm::vec3& Camera::getPosition() const {
-		return transform.position;
+		return transform.getPosition();
 	}
 
 	const glm::vec3& Camera::getDirection() const {
-		return transform.forward;
+		return transform.getForwardDirection();
 	}
 
 	float Camera::getSpeed() const {

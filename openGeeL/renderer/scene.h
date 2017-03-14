@@ -71,13 +71,13 @@ namespace geeL {
 		void forwardScreenInfo(const ScreenInfo& info);
 
 		//Translate vector from world to screen space
-		glm::vec3 TranslateToScreenSpace(glm::vec3 vector) const;
+		glm::vec3 TranslateToScreenSpace(const glm::vec3& vector) const;
 
 		//Translate vector from world to view space
-		glm::vec3 TranslateToViewSpace(glm::vec3 vector) const;
+		glm::vec3 TranslateToViewSpace(const glm::vec3& vector) const;
 
 		//Transflate vector from view to world space
-		glm::vec3 TranslateToWorldSpace(glm::vec3 vector) const;
+		glm::vec3 TranslateToWorldSpace(const glm::vec3& vector) const;
 
 		const glm::vec3& GetOriginInViewSpace() const;
 		unsigned int getSkyboxID() const;

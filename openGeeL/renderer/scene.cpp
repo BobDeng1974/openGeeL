@@ -153,17 +153,17 @@ namespace geeL {
 		lightManager.forwardScreenInfo(info, camera);
 	}
 
-	glm::vec3 RenderScene::TranslateToScreenSpace(glm::vec3 vector) const {
+	glm::vec3 RenderScene::TranslateToScreenSpace(const glm::vec3& vector) const {
 		glm::vec4 vec = camera.getProjectionMatrix() * camera.getViewMatrix() * glm::vec4(vector, 1.f);
 		return glm::vec3(vec.x / vec.w, vec.y / vec.w, vec.z / vec.w) * 0.5f + 0.5f;
 	}
 
-	glm::vec3 RenderScene::TranslateToViewSpace(glm::vec3 vector) const {
+	glm::vec3 RenderScene::TranslateToViewSpace(const glm::vec3& vector) const {
 		glm::vec4 vec = camera.getViewMatrix() * glm::vec4(vector, 1.f);
 		return glm::vec3(vec.x, vec.y, vec.z);
 	}
 
-	glm::vec3 RenderScene::TranslateToWorldSpace(glm::vec3 vector) const {
+	glm::vec3 RenderScene::TranslateToWorldSpace(const glm::vec3& vector) const {
 		glm::vec4 vec = camera.getInverseViewMatrix() * glm::vec4(vector, 1.f);
 		return glm::vec3(vec.x, vec.y, vec.z);
 	}

@@ -1,4 +1,4 @@
-#include "../utility/vector3.h"
+#include "../utility/algebrahelper.h"
 #include "../transformation/transform.h"
 #include "animation.h"
 

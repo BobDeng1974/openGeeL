@@ -24,7 +24,7 @@ namespace geeL {
 		auto it = bones.find(name);
 		if (it != bones.end()) {
 			Transform* trans = it->second;
-			trans->matrix = transform.matrix;
+			//trans->matrix = transform.matrix;
 		}
 	}
 

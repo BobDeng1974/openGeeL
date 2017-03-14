@@ -8,7 +8,7 @@
 #include "../materials/defaultmaterial.h"
 #include "../animation/skeleton.h"
 #include "../animation/animation.h"
-#include "../utility/vector3.h"
+#include "../utility/algebrahelper.h"
 #include "mesh.h"
 #include "model.h"
 #include "meshrenderer.h"
@@ -128,7 +128,7 @@ namespace geeL {
 		processAnimations(model, scene);
 
 		aiNode* node = scene->mRootNode;
-		Transform* rootBone = new Transform(AlgebraHelper::convertMatrix(node->mTransformation));
+		Transform* rootBone = new Transform(/*AlgebraHelper::convertMatrix(node->mTransformation)*/);
 		rootBone->setName(string(node->mName.C_Str()));
 
 		string directory = path.substr(0, path.find_last_of('/'));
@@ -167,7 +167,7 @@ namespace geeL {
 		for (unsigned int i = 0; i < node->mNumChildren; i++) {
 			aiNode* child = node->mChildren[i];
 			aiMatrix4x4& mat = child->mTransformation;
-			Transform* trans = new Transform(AlgebraHelper::convertMatrix(mat));
+			Transform* trans = new Transform(/*AlgebraHelper::convertMatrix(mat)*/);
 			trans->setName(string(child->mName.C_Str()));
 			bone.AddChild(trans);
 

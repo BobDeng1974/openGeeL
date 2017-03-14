@@ -165,7 +165,7 @@ namespace geeL{
 				sha = shader;
 
 			sha->use();
-			sha->setMat4("model", transform.matrix);
+			sha->setMat4("model", transform.getMatrix());
 		}
 	}
 

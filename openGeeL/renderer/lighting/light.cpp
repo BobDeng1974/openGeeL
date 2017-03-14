@@ -77,7 +77,7 @@ namespace geeL {
 	}
 
 	float Light::getIntensity(glm::vec3 point) const {
-		float distance = length(transform.position - point);
+		float distance = length(transform.getPosition() - point);
 
 		if (distance == 0.f)
 			return 0.f;
