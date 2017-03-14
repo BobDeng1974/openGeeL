@@ -14,6 +14,7 @@ struct PointLight {
 
 struct SpotLight {
 	sampler2D shadowMap;
+	sampler2D cookie;
 	mat4 lightTransform;
 
     vec3 position;
@@ -23,6 +24,7 @@ struct SpotLight {
     float angle;
     float outerAngle;
 	float bias;
+	float useCookie;
 };
 
 
@@ -78,7 +80,7 @@ vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal,
 vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness);
 
 float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition);
-float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition);
+float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 coords);
 float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition);
 
 vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightColor, float density);
@@ -252,9 +254,12 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal,
 
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
 		viewDirection, light.position, light.diffuse, albedo, roughness, metallic);
-	float shadow = 1.0f - calculateSpotLightShadows(index, normal, fragPosition);
 
-    return shadow * reflectance * intensity;
+	vec3 coords = vec3(0.f);
+	float shadow = 1.0f - calculateSpotLightShadows(index, normal, fragPosition, coords);
+	float cookie = texture(light.cookie, coords.xy).r * light.useCookie;
+
+    return shadow * reflectance * intensity * cookie;
 }
 
 vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, 
@@ -415,9 +420,9 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	}
 }
 
-float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition) {
+float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 coords) {
 	vec4 posLightSpace = spotLights[i].lightTransform * inverseView * vec4(fragPosition, 1.0f);
-	vec3 coords = posLightSpace.xyz / posLightSpace.w;
+	coords = posLightSpace.xyz / posLightSpace.w;
 	coords = coords * 0.5f + 0.5f;
 
 	//Don't draw shadow when outside of farPlane region.

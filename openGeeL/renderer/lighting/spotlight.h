@@ -5,6 +5,7 @@
 
 namespace geeL {
 
+	class SimpleTexture;
 	class Transform;
 
 	class SpotLight : public Light {
@@ -18,10 +19,18 @@ namespace geeL {
 		virtual void forwardBind(const Shader& shader, std::string name, std::string transformName) const;
 		virtual void computeLightTransform();
 
+		//Set light cookie for this spotlight
+		void setLightCookie(SimpleTexture& cookie);
+		unsigned int getLightCookieID() const;
+
+		//Add light cookie of this spotlight to given shader.
+		void addLightCookie(Shader& shader, std::string name);
+
 	protected:
 		virtual bool adaptShadowmapResolution(float distance);
 
 	private:
+		SimpleTexture* lightCookie;
 		float farPlane;
 		float angle, outerAngle;
 

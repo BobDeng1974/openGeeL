@@ -3,6 +3,7 @@
 #include <string>
 #include <gtc/matrix_transform.hpp>
 #include "../shader/shader.h"
+#include "../texturing/simpletexture.h"
 #include "../transformation/transform.h"
 #include "../scene.h"
 #include "spotlight.h"
@@ -16,7 +17,7 @@ namespace geeL {
 	SpotLight::SpotLight(Transform& transform, vec3 diffuse, 
 		float angle, float outerAngle, float shadowBias, float farPlane, std::string name)
 			: Light(transform, diffuse, shadowBias, name), 
-				angle(angle), outerAngle(outerAngle), farPlane(farPlane) {
+				angle(angle), outerAngle(outerAngle), farPlane(farPlane), lightCookie(nullptr) {
 	
 		setResolution(ShadowmapResolution::Adaptive);
 	}
@@ -31,6 +32,7 @@ namespace geeL {
 		shader.setFloat(name + "angle", angle);
 		shader.setFloat(name + "outerAngle", outerAngle);
 		shader.setMat4(name + "lightTransform", lightTransform);
+		shader.setFloat(name + "useCookie", (lightCookie != nullptr));
 	}
 
 	void SpotLight::forwardBind(const Shader& shader, string name, string transformName) const {
@@ -40,8 +42,25 @@ namespace geeL {
 		shader.setVector3(name + "direction", transform.forward);
 		shader.setFloat(name + "angle", angle);
 		shader.setFloat(name + "outerAngle", outerAngle);
+		shader.setFloat(name + "useCookie", (lightCookie != nullptr));
 
 		shader.setMat4(transformName, lightTransform);
+	}
+
+	void SpotLight::setLightCookie(SimpleTexture& cookie) {
+		lightCookie = &cookie;
+	}
+
+	unsigned int SpotLight::getLightCookieID() const {
+		if (lightCookie != nullptr)
+			return lightCookie->getID();
+
+		return 0;
+	}
+
+	void SpotLight::addLightCookie(Shader& shader, string name) {
+		if(lightCookie != nullptr)
+			shader.addMap(lightCookie->getID(), name, GL_TEXTURE_2D);
 	}
 
 	void SpotLight::computeLightTransform() {

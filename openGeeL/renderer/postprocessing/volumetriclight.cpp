@@ -20,12 +20,17 @@ namespace geeL {
 		PostProcessingEffect::init(screen, info);
 
 		buffers.push_back(light.getShadowMapID());
+
+		unsigned int cookieID = light.getLightCookieID();
+		if(cookieID != 0)
+			buffers.push_back(cookieID);
 	}
 
 	void VolumetricLight::bindValues() {
 		shader.setInteger("image", shader.mapOffset);
 		shader.setInteger("gPositionDepth", shader.mapOffset + 1);
 		shader.setInteger("shadowMap", shader.mapOffset + 2);
+		shader.setInteger("lightCookie", shader.mapOffset + 3);
 
 		shader.setInteger("effectOnly", onlyEffect);
 		shader.setMat4("inverseView", *inverseView);

@@ -49,8 +49,8 @@ namespace geeL {
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
 				shadowmapWidth, shadowmapHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
@@ -139,7 +139,7 @@ namespace geeL {
 			int resolution = 386;
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);
-				dynamicBias = shadowBias * 0.7f;
+				dynamicBias = shadowBias * 0.5f;
 				changed = true;
 			}
 		}
@@ -150,7 +150,7 @@ namespace geeL {
 				changed = true;
 			}
 
-			dynamicBias = (distance > 15.f) ? shadowBias * 2.f : shadowBias * 1.2f;
+			dynamicBias = (distance > 15.f) ? shadowBias * 0.8f : shadowBias * 0.6f;
 		}
 
 		return changed;

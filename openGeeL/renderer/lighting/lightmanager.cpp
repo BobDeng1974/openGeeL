@@ -148,6 +148,9 @@ namespace geeL {
 		for (size_t j = 0; j < staticSLs.size(); j++) {
 			string name = slName + "[" + to_string(j) + "].shadowMap";
 			staticSLs[j]->addShadowmap(shader, name);
+
+			name = slName + "[" + to_string(j) + "].cookie";
+			staticSLs[j]->addLightCookie(shader, name);
 		}
 
 		shader.bindMaps();
