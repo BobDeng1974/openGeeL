@@ -7,8 +7,7 @@ using namespace std;
 
 namespace geeL {
 
-	SSRR::SSRR(const Camera& camera) 
-		: PostProcessingEffect("renderer/postprocessing/ssrr.frag"), camera(camera) {}
+	SSRR::SSRR() : PostProcessingEffect("renderer/postprocessing/ssrr.frag"){}
 
 
 	void SSRR::bindValues() {
@@ -17,7 +16,7 @@ namespace geeL {
 		shader.setInteger("gPositionDepth", shader.mapOffset + 2);
 		shader.setInteger("gNormalMet", shader.mapOffset + 3);
 
-		shader.setMat4("projection", camera.getProjectionMatrix());
+		shader.setMat4("projection", *projectionMatrix);
 		shader.setInteger("effectOnly", onlyEffect);
 	}
 
@@ -26,6 +25,7 @@ namespace geeL {
 		map<WorldVectors, const glm::vec3*> vectors) {
 
 		addBuffer({ maps[WorldMaps::DiffuseRoughness], maps[WorldMaps::PositionDepth], maps[WorldMaps::NormalMetallic] });
+		projectionMatrix = matrices[WorldMatrices::Projection];
 	}
 
 

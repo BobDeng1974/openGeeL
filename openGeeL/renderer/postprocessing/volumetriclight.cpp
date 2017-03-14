@@ -34,6 +34,7 @@ namespace geeL {
 
 		shader.setInteger("effectOnly", onlyEffect);
 		shader.setMat4("inverseView", *inverseView);
+		shader.setMat4("projection", *projectionMatrix);
 		shader.setFloat("minCutoff", minDistance);
 		shader.setFloat("density", density);
 		shader.setInteger("samples", samples);
@@ -47,6 +48,7 @@ namespace geeL {
 
 		addBuffer( { maps[WorldMaps::PositionDepth] });
 		inverseView = matrices[WorldMatrices::InverseView];
+		projectionMatrix = matrices[WorldMatrices::Projection];
 	}
 
 	unsigned int VolumetricLight::getSampleCount() const {

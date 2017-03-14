@@ -121,8 +121,13 @@ namespace {
 			lightIntensity = 100.f;
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
+
+			SimpleTexture& texture = materialFactory.CreateTexture("resources/textures/cookie.png", 
+				ColorType::GammaSpace, WrapMode::Repeat, FilterMode::Linear);
+
 			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-9, 5, 0), vec3(-264.0f, 0, -5), vec3(1.f, 1.f, 1.f));
 			spotLight = &lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle);
+			spotLight->setLightCookie(texture);
 
 			lightIntensity = 0.5f;
 			//geeL::Transform& lightTransform3 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(75, 20, 10), vec3(1.f, 1.f, 1.f));
@@ -177,8 +182,8 @@ namespace {
 			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", meshTransform6, cullFront, true, "Cyborg");
 
 			float scale = 0.05f;
-			Transform& meshTransform7 = transformFactory.CreateTransform(vec3(2.f, -100.4f, -8.0f), vec3(-90.f, 0.f, 0.f), vec3(scale, scale, scale));
-			scene.AddSkinnedMeshRenderer("resources/guard/boblampclean.md5mesh", meshTransform7, cullFront, true, "Dude");
+			//Transform& meshTransform7 = transformFactory.CreateTransform(vec3(2.f, -100.4f, -8.0f), vec3(-90.f, 0.f, 0.f), vec3(scale, scale, scale));
+			//scene.AddSkinnedMeshRenderer("resources/guard/boblampclean.md5mesh", meshTransform7, cullFront, true, "Dude");
 		}
 
 		virtual void draw(const Camera& camera) {
@@ -207,7 +212,7 @@ void draw() {
 
 	BilateralFilter blur = BilateralFilter(1, 0.3f);
 	DefaultPostProcess def = DefaultPostProcess();
-	SSAO ssao = SSAO(camera, blur, 10.f);
+	SSAO ssao = SSAO(blur, 10.f);
 	RenderContext context = RenderContext();
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, context, def, &ssao, 0.6f);
 	renderer.init();
@@ -254,11 +259,11 @@ void draw() {
 	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
 
 	GaussianBlur& blur4 = GaussianBlur();
-	SSRR& ssrr = SSRR(camera);
+	SSRR& ssrr = SSRR();
 	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.3f, 0.3f);
 	
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 2.f, 100.f, 0.3f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 4.f, 100.f, 0.3f);
 
 	FXAA fxaa = FXAA();
 
@@ -276,24 +281,24 @@ void draw() {
 	postLister.add(def);
 	postLister.add(ssao);
 
-	//VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
-	//renderer.addEffect(volSmooth, { &vol, &sobelBlur });
-	//postLister.add(volSmooth, lightSnippet);
+	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
+	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
+	postLister.add(volSmooth, lightSnippet);
 
-	//renderer1.addEffect(bloom);
+	//renderer.addEffect(bloom);
 	//postLister.add(bloom);
 
 	//GodRaySnippet godRaySnippet = GodRaySnippet(ray);
-	//renderer1.addEffect(raySmooth);
+	//renderer.addEffect(raySmooth);
 	//postLister.add(raySmooth, godRaySnippet);
 
-	//renderer.addEffect(ssrrSmooth, ssrr);
+	renderer.addEffect(ssrrSmooth, ssrr);
 	
 	//renderer.addEffect(dof, dof);
 	//postLister.add(dof);
 
-	renderer.addEffect(colorCorrect);
-	postLister.add(colorCorrect);
+	//renderer.addEffect(colorCorrect);
+	//postLister.add(colorCorrect);
 
 	renderer.addEffect(fxaa);
 

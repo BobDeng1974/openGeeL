@@ -41,6 +41,7 @@ namespace geeL {
 		const RenderScene& scene;
 		const SpotLight& light;
 		const glm::mat4* inverseView;
+		const glm::mat4x4* projectionMatrix;
 
 	};
 }

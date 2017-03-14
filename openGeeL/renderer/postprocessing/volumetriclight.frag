@@ -28,17 +28,25 @@ uniform float density;
 uniform float minCutoff;
 uniform int samples;
 uniform mat4 inverseView;
+uniform mat4 projection;
 
 uniform int effectOnly;
 
 float random(vec2 co);
 vec3 convertToLightSpace(vec3 fragPosition);
+//Convert current pixel to view space coordiantes
+vec3 convertToViewSpace();
 float calculateSpotLightShadows(vec3 coords);
 
 void main() {
 	vec3 result = step(effectOnly, 0.f) * texture(image, TexCoords).rgb;
 	vec3 fragPos = texture(gPositionDepth, TexCoords).xyz;
 	float depth = length(fragPos);
+
+	//Detect pixels that aren't present in gbuffer
+	float noFrag = step(depth, 0.1f);
+	//Try to reconstruct view space coordinates from texture coordinates for those pixels
+	fragPos = (1.f - noFrag) * fragPos + noFrag * convertToViewSpace();
 
 	vec3 fragLightSpace = convertToLightSpace(fragPos);
 	vec3 origLightSpace = convertToLightSpace(vec3(0.f));
@@ -72,7 +80,8 @@ void main() {
 	}
 
 	volume *= (1.f / stepi);
-	color = vec4(result + volume, 1.0f);
+	//color = vec4(result + volume, 1.0f);
+	color = vec4(volume, 1.0f);
 }
 
 
@@ -94,6 +103,13 @@ vec3 convertToLightSpace(vec3 fragPosition) {
 	coords = coords * 0.5f + 0.5f;
 
 	return coords;
+}
+
+vec3 convertToViewSpace() {
+	vec4 screen = vec4(TexCoords, 1.f, 1.f);
+	vec4 eye = inverse(projection) * 2.f * (screen - vec4(0.5f));
+
+	return eye.xyz / eye.w; //Transfer from homogeneous coordinates
 }
 
 float random(vec2 co) {

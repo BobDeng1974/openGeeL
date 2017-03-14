@@ -6,13 +6,11 @@
 
 namespace geeL {
 
-class Camera;
-
 	//Screen Space Raycasted Reflections post effect
 	class SSRR : public PostProcessingEffect, public WorldInformationRequester {
 
 	public:
-		SSRR(const Camera& camera);
+		SSRR();
 
 		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
 			std::map<WorldMatrices, const glm::mat4*> matrices,
@@ -22,7 +20,7 @@ class Camera;
 		virtual void bindValues();
 
 	private:
-		const Camera& camera;
+		const glm::mat4x4* projectionMatrix;
 
 	};
 }

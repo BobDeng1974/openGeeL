@@ -4,7 +4,6 @@
 #include <string>
 #include <glm.hpp>
 #include "../primitives/screenquad.h"
-#include "../cameras/camera.h"
 #include "gaussianblur.h"
 #include "ssao.h"
 
@@ -14,9 +13,8 @@ using namespace std;
 
 namespace geeL {
 
-	SSAO::SSAO(const Camera& camera, PostProcessingEffect& blur, float radius)
-		: PostProcessingEffect("renderer/postprocessing/ssao.frag"),
-			camera(camera), blur(blur), radius(radius) {
+	SSAO::SSAO(PostProcessingEffect& blur, float radius)
+		: PostProcessingEffect("renderer/postprocessing/ssao.frag"), blur(blur), radius(radius) {
 	
 		uniform_real_distribution<GLfloat> random(0.f, 1.f);
 		default_random_engine generator;
@@ -86,7 +84,7 @@ namespace geeL {
 		for (unsigned int i = 0; i < sampleCount; i++)
 			shader.setVector3("samples[" + to_string(i) + "]", kernel[i]);
 
-		shader.setMat4("projection", camera.getProjectionMatrix());
+		shader.setMat4("projection", *projectionMatrix);
 
 		tempBuffer.fill(*this, false);
 	}
@@ -98,6 +96,8 @@ namespace geeL {
 		//Set instead of add buffers to override the default image buffer since it isn't need for SSAO
 		setBuffer( {maps[WorldMaps::PositionDepth], maps[WorldMaps::NormalMetallic]} );
 		buffers.push_back(noiseTexture.getID());
+
+		projectionMatrix = matrices[WorldMatrices::Projection];
 	}
 
 	float SSAO::getRadius() const {

@@ -285,9 +285,10 @@ namespace geeL {
 		worldMaps[WorldMaps::PositionDepth]    = gBuffer.positionDepth;
 		worldMaps[WorldMaps::NormalMetallic]   = gBuffer.normalMet;
 
+		//ISSUE: If scene camera changes, everything is fucked
 		map<WorldMatrices, const mat4*> worldMatrices;
 		worldMatrices[WorldMatrices::View]        = &scene->camera.getViewMatrix();
-		worldMatrices[WorldMatrices::Projection]  = &scene->camera.getViewMatrix();
+		worldMatrices[WorldMatrices::Projection]  = &scene->camera.getProjectionMatrix();
 		worldMatrices[WorldMatrices::InverseView] = &scene->camera.getInverseViewMatrix();
 
 		map<WorldVectors, const vec3*> worldVectors;

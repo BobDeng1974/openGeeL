@@ -11,13 +11,12 @@
 namespace geeL {
 
 	class BilateralFilter;
-	class Camera;
 
 	//Screen Space Ambient Occlusion Post Effect
 	class SSAO : public PostProcessingEffect, public WorldInformationRequester {
 
 	public:
-		SSAO(const Camera& camera, PostProcessingEffect& blur, float radius = 5.f);
+		SSAO(PostProcessingEffect& blur, float radius = 5.f);
 
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 		virtual void draw();
@@ -39,10 +38,10 @@ namespace geeL {
 		SimpleTexture noiseTexture;
 		std::vector<glm::vec3> kernel;
 		std::vector<glm::vec3> noise;
-		const Camera& camera;
 		PostProcessingEffect& blur;
 		FrameBuffer tempBuffer;
 		const FrameBufferInformation* screenInfo;
+		const glm::mat4x4* projectionMatrix;
 	};
 }
 
