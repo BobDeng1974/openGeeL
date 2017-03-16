@@ -74,15 +74,11 @@ namespace geeL {
 	void Camera::computeMouseInput(const InputManager& input) {
 
 		if (input.getMouseKey(1)) {
-			const vec3& rot = transform.getRotation();
-			float pitch = rot.x;
-			float yaw = rot.z;
+			float yOffset = input.getMouseYOffset() * sensitivity * 0.01;
+			float xOffset = -input.getMouseXOffset() * sensitivity * 0.01f;
 
-			float xOffset = input.getMouseYOffset() * sensitivity;
-			yaw -= input.getMouseXOffset() * sensitivity;
-
-			transform.setRotation(vec3(rot.x + xOffset * cos(glm::radians(yaw)), 
-				rot.y + xOffset * sin(glm::radians(yaw)), yaw));
+			transform.rotate(transform.getRightDirection(), yOffset);
+			transform.rotate(transform.getUpDirection(), xOffset);
 		}
 	}
 

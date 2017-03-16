@@ -8,13 +8,13 @@
 #include "../materials/defaultmaterial.h"
 #include "../animation/skeleton.h"
 #include "../animation/animation.h"
-#include "../utility/algebrahelper.h"
+#include "../utility/vectorextension.h"
+#include "../utility/matrixextension.h"
 #include "mesh.h"
 #include "model.h"
 #include "meshrenderer.h"
 #include "meshfactory.h"
 
-using namespace glm;
 using namespace std;
 
 namespace geeL {
@@ -22,9 +22,10 @@ namespace geeL {
 	MeshFactory::MeshFactory(MaterialFactory& factory) : factory(factory) {}
 
 
-	MeshRenderer& MeshFactory::CreateMeshRenderer(StaticModel& model, Transform& transform, DefaultShading shading, CullingMode faceCulling, string name) {
+	MeshRenderer& MeshFactory::CreateMeshRenderer(StaticModel& model, Transform& transform, 
+		DefaultShading shading, CullingMode faceCulling, string name) {
+		
 		meshRenderer.push_back(MeshRenderer(transform, factory.getDefaultShader(shading), model, faceCulling, name));
-
 		return meshRenderer.back();
 	}
 
@@ -60,7 +61,7 @@ namespace geeL {
 		return staticModels[filePath];
 	}
 
-	SkinnedModel& MeshFactory::CreateSkinnedModel(std::string filePath) {
+	SkinnedModel& MeshFactory::CreateSkinnedModel(string filePath) {
 		if (skinnedModels.find(filePath) == skinnedModels.end()) {
 			skinnedModels[filePath] = SkinnedModel(filePath);
 			fillSkinnedModel(skinnedModels[filePath], filePath);
@@ -128,7 +129,7 @@ namespace geeL {
 		processAnimations(model, scene);
 
 		aiNode* node = scene->mRootNode;
-		Transform* rootBone = new Transform(/*AlgebraHelper::convertMatrix(node->mTransformation)*/);
+		Transform* rootBone = new Transform(MatrixExtension::convertMatrix(node->mTransformation));
 		rootBone->setName(string(node->mName.C_Str()));
 
 		string directory = path.substr(0, path.find_last_of('/'));
@@ -167,7 +168,7 @@ namespace geeL {
 		for (unsigned int i = 0; i < node->mNumChildren; i++) {
 			aiNode* child = node->mChildren[i];
 			aiMatrix4x4& mat = child->mTransformation;
-			Transform* trans = new Transform(/*AlgebraHelper::convertMatrix(mat)*/);
+			Transform* trans = new Transform(MatrixExtension::convertMatrix(mat));
 			trans->setName(string(child->mName.C_Str()));
 			bone.AddChild(trans);
 
@@ -183,7 +184,7 @@ namespace geeL {
 		//Walk through meshes vertices
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
 			V vertex;
-			vec3 vector;
+			glm::vec3 vector;
 
 			vector.x = mesh->mVertices[i].x;
 			vector.y = mesh->mVertices[i].y;
@@ -199,7 +200,7 @@ namespace geeL {
 				vertex.normal = vector;
 			}
 			else
-				vertex.normal = vec3(0.f, 0.f, 0.f);
+				vertex.normal = glm::vec3(0.f, 0.f, 0.f);
 
 			if (mesh->mTangents != nullptr) {
 				vector.x = mesh->mTangents[i].x;
@@ -209,7 +210,7 @@ namespace geeL {
 				vertex.tangent = vector;
 			}
 			else
-				vertex.tangent = vec3(0.f, 0.f, 0.f);
+				vertex.tangent = glm::vec3(0.f, 0.f, 0.f);
 
 			if (mesh->mBitangents != nullptr) {
 				vector.x = mesh->mBitangents[i].x;
@@ -219,11 +220,11 @@ namespace geeL {
 				vertex.bitangent = vector;
 			}
 			else
-				vertex.bitangent = vec3(0.f, 0.f, 0.f);
+				vertex.bitangent = glm::vec3(0.f, 0.f, 0.f);
 
 			//Check for texture coordinates
 			if (mesh->mTextureCoords[0]) {
-				vec2 vec;
+				glm::vec2 vec;
 
 				//We make the assumption that vertices don't have more than 
 				//one texture coordinate and therefore use first (0)
@@ -232,7 +233,7 @@ namespace geeL {
 				vertex.texCoords = vec;
 			}
 			else
-				vertex.texCoords = vec2(0.0f, 0.0f);
+				vertex.texCoords = glm::vec2(0.0f, 0.0f);
 
 			vertices.push_back(vertex);
 		}
@@ -338,7 +339,7 @@ namespace geeL {
 					aiQuatKey key = node->mRotationKeys[i];
 					aiQuaternion& r = key.mValue;
 					
-					data->positions.push_back(KeyFrame(AlgebraHelper::quatToEuler(r.x, r.y, r.z, r.w), key.mTime));
+					data->positions.push_back(KeyFrame(VectorExtension::quatToEuler(r.x, r.y, r.z, r.w), key.mTime));
 				}
 
 				//Add scaling key frames to data

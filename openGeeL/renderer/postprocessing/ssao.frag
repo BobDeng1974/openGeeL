@@ -30,10 +30,10 @@ void main() {
 	vec3 tangent   = cross(random, normal);
 	vec3 bitangent = cross(normal, tangent); 
 	mat3 TBN = mat3(tangent, bitangent, normal);
-
-	int sampleCount = 25;
+	
+	int sampleCount = 15;
 	float occlusion = 0.f;
-	for(int i = 0; i < 25; i++) {
+	for(int i = 0; i < sampleCount; i++) {
 		vec3 samp = TBN * samples[i];
 		samp = fragPos + samp * radius;
 
@@ -41,12 +41,12 @@ void main() {
 		//Transform to clip space
 		offset = projection * offset;
 		offset.xyz = offset.xyz / offset.w;
-		offset.xyz = offset.xyz * 0.5 + 0.5;
+		offset.xyz = offset.xyz * 0.5f + 0.5f;
 
 		float depth = texture(gPositionDepth, offset.xy).z;
 		//Add to occlusion if depth > samp.z
 		occlusion += step(samp.z, depth) * smoothstep(0.f, 1.f, radius / abs(fragPos.z - depth));
 	}
-
+	
 	color = 1.f - (occlusion / float(sampleCount));
 }

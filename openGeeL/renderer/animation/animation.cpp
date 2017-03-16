@@ -1,4 +1,4 @@
-#include "../utility/algebrahelper.h"
+#include "../utility/vectorextension.h"
 #include "../transformation/transform.h"
 #include "animation.h"
 
@@ -63,7 +63,7 @@ namespace geeL {
 		double factor = (time - list[start].time) 
 			/ (list[end].time - list[start].time);
 
-		return AlgebraHelper::lerp(startVec, endVec, factor);
+		return VectorExtension::lerp(startVec, endVec, factor);
 	}
 
 	double Animation::getDuration() const {

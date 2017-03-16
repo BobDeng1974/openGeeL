@@ -41,7 +41,9 @@ namespace geeL {
 					"renderer/shaders/cooktorrancedeferred.frag")), toggle(0) {
 
 		effects.push_back(&def);
-		addRequester(*ssao);
+
+		if(ssao != nullptr)
+			addRequester(*ssao);
 	}
 
 	DeferredRenderer::~DeferredRenderer() {

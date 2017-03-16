@@ -12,6 +12,7 @@
 #include "utility\gbuffer.h"
 #include "physics\physics.h"
 #include "lighting\lightmanager.h"
+#include "transformation\transform.h"
 #include "scene.h"
 #include <iostream>
 
@@ -19,8 +20,8 @@ using namespace std;
 
 namespace geeL {
 
-	RenderScene::RenderScene(LightManager& lightManager, Camera& camera, MeshFactory& meshFactory) 
-		: lightManager(lightManager), camera(camera), meshFactory(meshFactory), physics(nullptr) {}
+	RenderScene::RenderScene(LightManager& lightManager, Camera& camera, MeshFactory& meshFactory, Transform& world)
+		: lightManager(lightManager), camera(camera), meshFactory(meshFactory), physics(nullptr), worldTransform(world) {}
 
 	
 	RenderScene::~RenderScene() {
@@ -35,6 +36,7 @@ namespace geeL {
 
 
 	void RenderScene::update() {
+		worldTransform.update();
 		camera.update();
 
 		originViewSpace = TranslateToViewSpace(glm::vec3(0.f, 0.f, 0.f));

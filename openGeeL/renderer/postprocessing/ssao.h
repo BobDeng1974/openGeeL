@@ -34,7 +34,7 @@ namespace geeL {
 	private:
 		bool ssaoPass = false;
 		float radius;
-		unsigned int sampleCount = 64;
+		unsigned int sampleCount = 32;
 		SimpleTexture noiseTexture;
 		std::vector<glm::vec3> kernel;
 		std::vector<glm::vec3> noise;

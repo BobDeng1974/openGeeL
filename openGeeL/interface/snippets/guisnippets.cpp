@@ -75,8 +75,8 @@ namespace geeL {
 			glm::vec3 pos = drawVector2(context, transform.getPosition(), "P", 100.f, 0.1f);
 			transform.setPosition(pos);
 
-			glm::vec3 rot = drawVector2(context, transform.getRotation(), "R", 360.f, 0.1f);
-			transform.setRotation(rot);
+			glm::vec3 rot = drawVector2(context, transform.getEulerAngles(), "R", 360.f, 0.1f);
+			transform.setEulerAngles(rot);
 
 			glm::vec3 scale = drawVector2(context, transform.getScaling(), "S", 100.f, 0.1f);
 			transform.setScaling(scale);
@@ -93,8 +93,8 @@ namespace geeL {
 			glm::vec3 position = drawVector2(context, transform.getPosition(), "P", 100.f, 0.1f);
 			transform.setPosition(position);
 
-			glm::vec3 rotation = drawVector2(context, transform.getRotation(), "R", 100.f, 0.1f);
-			transform.setRotation(rotation);
+			glm::vec3 rotation = drawVector2(context, transform.getEulerAngles(), "R", 100.f, 0.1f);
+			transform.setEulerAngles(rotation);
 
 			glm::vec3 scaling = drawVector2(context, transform.getScaling(), "S", 100.f, 0.1f);
 			transform.setScaling(scaling);

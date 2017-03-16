@@ -21,7 +21,7 @@ namespace geeL {
 		float yaw, pitch, roll;
 		r.getEulerZYX(yaw, pitch, roll);
 
-		transform.setRotation(glm::vec3(yaw, pitch, roll));
+		transform.setEulerAngles(glm::vec3(yaw, pitch, roll));
 	}
 
 	void MotionState::update() {

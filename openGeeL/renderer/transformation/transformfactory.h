@@ -10,7 +10,7 @@ namespace geeL {
 	class TransformFactory {
 
 	public:
-		TransformFactory(Transform world) : world(world) {}
+		TransformFactory(Transform& world);
 
 		//Creates and and returns an empty transform with
 		//world transform as parent
@@ -29,8 +29,14 @@ namespace geeL {
 		Transform& CreateTransform(Transform& parent, 
 			glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling);
 
+		Transform& getWorldTransform();
+
+		//Update transformation tree with all made to internal positions,
+		//rotations and scalings
+		void update();
+
 	private:
-		Transform world;
+		Transform& world;
 
 	};
 }

@@ -7,7 +7,6 @@
 
 namespace geeL {
 
-	
 	class Camera;
 	class LightManager;
 	class Skybox;
@@ -28,7 +27,7 @@ namespace geeL {
 		Camera& camera;
 		LightManager& lightManager;
 
-		RenderScene(LightManager& lightManager, Camera& camera, MeshFactory& meshFactory);
+		RenderScene(LightManager& lightManager, Camera& camera, MeshFactory& meshFactory, Transform& world);
 		~RenderScene();
 
 		void setSkybox(Skybox& skybox);
@@ -89,6 +88,7 @@ namespace geeL {
 
 
 	private:
+		Transform& worldTransform;
 		glm::vec3 originViewSpace;
 		Skybox* skybox;
 		Physics* physics;

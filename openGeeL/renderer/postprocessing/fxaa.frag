@@ -8,7 +8,7 @@ uniform sampler2D image;
 
 const float FXAA_CLAMP = 8.f;
 const float FXAA_MIN = 1.f / 128.f;
-const float BLUR_MIN = 0.1f;
+const float BLUR_MIN = 0.005f;
 const vec3  luminance = vec3(0.299f, 0.587f, 0.114f);
 
 void main() {

@@ -3,6 +3,7 @@
 
 #include <vec3.hpp>
 #include <mat4x4.hpp>
+#include <gtc/quaternion.hpp>
 #include <functional>
 #include <list>
 #include <string>
@@ -12,6 +13,13 @@ using glm::mat4;
 
 namespace geeL {
 
+	enum class TransformUpdateStatus {
+		None,
+		NeedsUpdate,
+		HasUpdated
+	};
+
+
 	class Transform {
 
 	public:
@@ -19,11 +27,12 @@ namespace geeL {
 
 		Transform(Transform* parent = nullptr);
 		Transform(mat4& matrix, Transform* parent = nullptr);
+		Transform(vec3 position, glm::quat rotation, vec3 scaling, Transform* parent = nullptr);
 		Transform(vec3 position, vec3 rotation, vec3 scaling, Transform* parent = nullptr);
 		~Transform();
 		
 		const glm::vec3& getPosition() const;
-		const glm::vec3& getRotation() const;
+		const glm::quat& getRotation() const;
 		const glm::vec3& getScaling() const;
 		const glm::vec3& getForwardDirection() const;
 		const glm::vec3& getRightDirection() const;
@@ -31,8 +40,11 @@ namespace geeL {
 		const glm::mat4& getMatrix() const;
 
 		void setPosition(const vec3& position);
-		void setRotation(const vec3& rotation);
+		void setRotation(const glm::quat& quaternion);
 		void setScaling(const vec3& scaling);
+
+		vec3 getEulerAngles() const;
+		void setEulerAngles(const vec3& eulerAngles);
 
 		void translate(const vec3& translation);
 		void rotate(const vec3& axis, float angle);
@@ -57,7 +69,13 @@ namespace geeL {
 		void RemoveChild(Transform& child);
 		void ChangeParent(Transform& newParent);
 
-		void computeMatrix();
+		//Updates transformation matrix with recent changes to position, rotation and scale.
+		//Needs therefore only to be called when actual changes were made.
+		void update();
+
+		//Returns true if the transform has changed during the 
+		//current cycle (since last 'update' call)
+		bool hasUpdated() const;
 
 		bool Transform::operator==(const Transform& b) const;
 		bool Transform::operator!=(const Transform& b) const;
@@ -71,26 +89,31 @@ namespace geeL {
 		void setName(std::string& name);
 
 	private:
+		unsigned int id;
+		std::string name;
+
+		glm::quat rotation;
 		vec3 position;
-		vec3 rotation;
 		vec3 scaling;
 		vec3 forward;
 		vec3 up;
 		vec3 right;
 
 		mat4 matrix;
+		mat4 translationMatrix;
+		mat4 rotationMatrix;
+		mat4 scaleMatrix;
 
-		std::string name;
-		unsigned int id;
 		Transform* parent;
 		std::list<Transform*> children;
 		std::list<std::function<void(const Transform&)>> changeListener;
+		TransformUpdateStatus status;
+
+		void setEulerAnglesInternal(const vec3& eulerAngles);
 
 		void resetMatrix();
-
 		void updateDirections();
 		void onChange();
-
 	};
 
 }

@@ -182,12 +182,12 @@ namespace {
 			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", meshTransform6, cullFront, true, "Cyborg");
 
 			float scale = 0.05f;
-			//Transform& meshTransform7 = transformFactory.CreateTransform(vec3(2.f, -100.4f, -8.0f), vec3(-90.f, 0.f, 0.f), vec3(scale, scale, scale));
-			//scene.AddSkinnedMeshRenderer("resources/guard/boblampclean.md5mesh", meshTransform7, cullFront, true, "Dude");
+			Transform& meshTransform7 = transformFactory.CreateTransform(vec3(2.f, -100.4f, -8.0f), vec3(-90.f, 0.f, 0.f), vec3(scale, scale, scale));
+			scene.AddSkinnedMeshRenderer("resources/guard/boblampclean.md5mesh", meshTransform7, cullFront, true, "Dude");
 		}
 
 		virtual void draw(const Camera& camera) {
-			nanoRenderer->transform.rotate(vec3(0.f, 1.f, 0.f), 80.f * Time::deltaTime);
+			nanoRenderer->transform.rotate(vec3(0.f, 1.f, 0.f), 1.5f * Time::deltaTime);
 		}
 
 		virtual void quit() {}
@@ -199,22 +199,24 @@ namespace {
 
 void draw() {
 	
-	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Fullscreen);
+	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
 	InputManager manager = InputManager();
 	manager.defineButton("Forward", GLFW_KEY_W);
 	manager.defineButton("Forward", GLFW_KEY_A);
 
-	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	geeL::Transform world = new geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	std::string ayy = "World";
+	world.setName(ayy);
 	TransformFactory transFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(0.0f, 2.0f, 9.0f), vec3(-90.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.35f, 60.f, window.width, window.height, 0.1f, 100.f);
+	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
 
-	BilateralFilter blur = BilateralFilter(1, 0.3f);
+	BilateralFilter blur = BilateralFilter(1, 0.5f);
 	DefaultPostProcess def = DefaultPostProcess();
 	SSAO ssao = SSAO(blur, 10.f);
 	RenderContext context = RenderContext();
-	DeferredRenderer& renderer = DeferredRenderer(window, manager, context, def, &ssao, 0.6f);
+	DeferredRenderer& renderer = DeferredRenderer(window, manager, context, def, &ssao, 0.5f);
 	renderer.init();
 
 	MaterialFactory materialFactory = MaterialFactory();
@@ -223,7 +225,7 @@ void draw() {
 	LightManager lightManager = LightManager(vec3(0.15f));
 	ShaderManager shaderManager = ShaderManager(materialFactory);
 	
-	RenderScene scene = RenderScene(lightManager, camera, meshFactory);
+	RenderScene scene = RenderScene(lightManager, camera, meshFactory, transFactory.getWorldTransform());
 	WorldPhysics physics = WorldPhysics();
 	scene.setPhysics(&physics);
 
@@ -292,7 +294,7 @@ void draw() {
 	//renderer.addEffect(raySmooth);
 	//postLister.add(raySmooth, godRaySnippet);
 
-	renderer.addEffect(ssrrSmooth, ssrr);
+	//renderer.addEffect(ssrrSmooth, ssrr);
 	
 	//renderer.addEffect(dof, dof);
 	//postLister.add(dof);
@@ -304,5 +306,4 @@ void draw() {
 
 	renderer.linkInformation();
 	renderer.render();
-
 }

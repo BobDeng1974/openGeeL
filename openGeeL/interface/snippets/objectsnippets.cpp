@@ -119,7 +119,6 @@ namespace geeL {
 
 		std::string id = pcam.getName() + " #" + std::to_string(pcam.transform.getID());
 		if (nk_tree_push(context, NK_TREE_NODE, id.c_str(), NK_MINIMIZED)) {
-			SceneObjectSnippet::draw(context);
 			CameraSnippet::draw(context);
 
 			float fov = GUISnippets::drawBarFloat(context, pcam.getFieldOfView(), 1.f, 170.f, 1.f, "FoV");

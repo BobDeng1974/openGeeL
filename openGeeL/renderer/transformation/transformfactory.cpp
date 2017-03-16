@@ -3,6 +3,9 @@
 
 namespace geeL {
 
+	TransformFactory::TransformFactory(Transform& world) : world(world) {}
+
+
 	Transform& TransformFactory::CreateTransform() {
 		return CreateTransform(world);
 	}
@@ -17,6 +20,14 @@ namespace geeL {
 
 	Transform& TransformFactory::CreateTransform(Transform& parent, vec3 position, vec3 rotation, vec3 scaling) {
 		return parent.AddChild(new Transform(position, rotation, scaling, &parent));
+	}
+
+	Transform& TransformFactory::getWorldTransform() {
+		return world;
+	}
+
+	void TransformFactory::update() {
+		world.update();
 	}
 
 }
