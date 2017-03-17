@@ -12,7 +12,12 @@ namespace geeL {
 		delete rootBone;
 	}
 
-	const Transform* Skeleton::getBone(std::string name) const {
+
+	Transform* const Skeleton::getRootBone() {
+		return rootBone;
+	}
+
+	Transform* const Skeleton::getBone(std::string name) {
 		auto it = bones.find(name);
 		if (it != bones.end())
 			return it->second;
@@ -24,7 +29,7 @@ namespace geeL {
 		auto it = bones.find(name);
 		if (it != bones.end()) {
 			Transform* trans = it->second;
-			//trans->matrix = transform.matrix;
+			trans->setMatrix(transform.getMatrix());
 		}
 	}
 

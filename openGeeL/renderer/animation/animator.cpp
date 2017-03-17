@@ -7,34 +7,41 @@
 
 namespace geeL {
 
-	Animator::Animator(const AnimatedObject& object) 
-		: object(object), skeleton(new Skeleton(object.getSkeleton())) {}
+	Animator::Animator(const AnimatedObject& object, Transform& modelTransform)
+		: object(object), skeleton(new Skeleton(object.getSkeleton())), modelTransform(modelTransform) {
+	
+		//Add transform of skeleton to the transform of the actual model
+		//and therefore into the whole scene structure. Thus, updating 
+		//transform information will be taken care off
+		modelTransform.AddChild(skeleton->getRootBone());
+	}
 
 	Animator::~Animator() {
 		delete skeleton;
 	}
 
 	void Animator::resetSkeleton() {
+		modelTransform.RemoveChild(*skeleton->getRootBone());
+
 		delete skeleton;
 		skeleton = new Skeleton(object.getSkeleton());
+		modelTransform.AddChild(*skeleton->getRootBone());
 	}
 
 
-	SimpleAnimator::SimpleAnimator(const AnimatedObject& object) 
-		: Animator(object), currentAnimation(nullptr), currentTime(0.) {}
+	SimpleAnimator::SimpleAnimator(const AnimatedObject& object, Transform& modelTransform)
+		: Animator(object, modelTransform), currentAnimation(nullptr), currentTime(0.) {}
 
 
 	void SimpleAnimator::update() {
-		if (currentAnimation != nullptr) {
-			currentTime = currentAnimation->getFPS() * Time::deltaTime;
+		if (currentAnimation != nullptr && currentTime < currentAnimation->getDuration()) {
+			currentTime += currentAnimation->getFPS() * Time::deltaTime;
 
 			for (auto it = currentAnimation->bonesStart(); it != currentAnimation->bonesEnd(); it++) {
 				const std::string& name = (*it).first;
 
-				Transform transform = currentAnimation->getFrame(name, currentTime);
-				skeleton->setBone(name, transform);
-
-				//TODO: incooperate parent transform
+				Transform& bone = *skeleton->getBone(name);
+				currentAnimation->updateBone(name, bone, currentTime);
 			}
 		}
 	}
@@ -46,7 +53,7 @@ namespace geeL {
 	void SimpleAnimator::stop() {
 		currentAnimation = nullptr;
 		currentTime = 0.;
-		resetSkeleton();
+		//resetSkeleton();
 	}
 
 }

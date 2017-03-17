@@ -19,7 +19,7 @@ namespace geeL {
 	}
 
 	Transform& TransformFactory::CreateTransform(Transform& parent, vec3 position, vec3 rotation, vec3 scaling) {
-		return parent.AddChild(new Transform(position, rotation, scaling, &parent));
+		return parent.AddChild(new Transform(position, rotation, scaling));
 	}
 
 	Transform& TransformFactory::getWorldTransform() {

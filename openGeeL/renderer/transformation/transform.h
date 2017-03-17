@@ -25,10 +25,10 @@ namespace geeL {
 	public:
 		bool isStatic;
 
-		Transform(Transform* parent = nullptr);
-		Transform(mat4& matrix, Transform* parent = nullptr);
-		Transform(vec3 position, glm::quat rotation, vec3 scaling, Transform* parent = nullptr);
-		Transform(vec3 position, vec3 rotation, vec3 scaling, Transform* parent = nullptr);
+		Transform();
+		Transform(mat4& matrix);
+		Transform(vec3 position, glm::quat rotation, vec3 scaling);
+		Transform(vec3 position, vec3 rotation, vec3 scaling);
 		~Transform();
 		
 		const glm::vec3& getPosition() const;
@@ -42,6 +42,7 @@ namespace geeL {
 		void setPosition(const vec3& position);
 		void setRotation(const glm::quat& quaternion);
 		void setScaling(const vec3& scaling);
+		void setMatrix(const mat4& matrix);
 
 		vec3 getEulerAngles() const;
 		void setEulerAngles(const vec3& eulerAngles);
@@ -66,7 +67,10 @@ namespace geeL {
 		//managed by this transform.
 		Transform& AddChild(Transform* child);
 
+		//Remove child from transform. Memory of child will no longer
+		//be taken care off and needs to be managed by caller
 		void RemoveChild(Transform& child);
+
 		void ChangeParent(Transform& newParent);
 
 		//Updates transformation matrix with recent changes to position, rotation and scale.

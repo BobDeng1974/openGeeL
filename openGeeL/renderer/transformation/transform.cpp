@@ -14,58 +14,24 @@ namespace geeL {
 
 	unsigned int idCounter = 0;
 
-	Transform::Transform(Transform* parent) : matrix(mat4()), parent(parent), status(TransformUpdateStatus::None) {
+	Transform::Transform() : matrix(mat4()), parent(nullptr), status(TransformUpdateStatus::None) {
 		isStatic = true;
 
 		id = idCounter;
 		idCounter++;
 	}
 
-	Transform::Transform(mat4& matrix, Transform* parent) : matrix(matrix), status(TransformUpdateStatus::None) {
-
-		//Extract position from matrix and remove it
-		position.x = matrix[3][0];
-		position.y = matrix[3][1];
-		position.z = matrix[3][2];
-
-		mat3 m = mat3(matrix);
-
-		//Extract scale and normalize span vectors
-		vec3 r = vec3(m[0][0], m[0][1], m[0][2]);
-		vec3 f = vec3(m[1][0], m[1][1], m[1][2]);
-		vec3 u = vec3(m[2][0], m[2][1], m[2][2]);
-
-		scaling.x = glm::length(r);
-		scaling.y = glm::length(f);
-		scaling.z = glm::length(u);
-
-		m[0][0] /= scaling.x;
-		m[0][1] /= scaling.x;
-		m[0][2] /= scaling.x;
-
-		m[1][0] /= scaling.y;
-		m[1][1] /= scaling.y;
-		m[1][2] /= scaling.y;
-
-		m[2][0] /= scaling.z;
-		m[2][1] /= scaling.z;
-		m[2][2] /= scaling.z;
-
-		//Convert remaining rotation matrix to quaternion
-		rotation = glm::quat_cast(m);
-
-		translationMatrix = glm::translate(glm::mat4(1.f), position);
-		rotationMatrix = glm::toMat4(this->rotation); //Maybe use m here directly
-		scaleMatrix = glm::scale(glm::mat4(1.f), scaling);
-		updateDirections();
+	Transform::Transform(mat4& matrix) : matrix(matrix), parent(nullptr) {
+		setMatrix(matrix);
+		status = TransformUpdateStatus::None; //Set status here since 'setMatrix' already changed it
 
 		isStatic = true;
 		id = idCounter;
 		idCounter++;
 	}
 
-	Transform::Transform(vec3 position, glm::quat rotation, vec3 scaling, Transform* parent) 
-		: position(position), rotation(rotation), scaling(scaling), parent(parent), status(TransformUpdateStatus::None) {
+	Transform::Transform(vec3 position, glm::quat rotation, vec3 scaling) 
+		: position(position), rotation(rotation), scaling(scaling), parent(nullptr), status(TransformUpdateStatus::None) {
 
 		translationMatrix = glm::translate(glm::mat4(1.f), position);
 		rotationMatrix = glm::toMat4(this->rotation);
@@ -78,8 +44,8 @@ namespace geeL {
 		idCounter++;
 	}
 
-	Transform::Transform(vec3 position, vec3 rotation, vec3 scaling, Transform* parent)
-		: position(position), scaling(scaling), parent(parent), status(TransformUpdateStatus::None) {
+	Transform::Transform(vec3 position, vec3 rotation, vec3 scaling)
+		: position(position), scaling(scaling), parent(nullptr), status(TransformUpdateStatus::None) {
 		
 		setEulerAnglesInternal(rotation);
 		translationMatrix = glm::translate(glm::mat4(1.f), position);
@@ -153,6 +119,47 @@ namespace geeL {
 
 			status = TransformUpdateStatus::NeedsUpdate;
 		}
+	}
+
+	void Transform::setMatrix(const mat4& matrix) {
+
+		//Extract position from matrix and remove it
+		position.x = matrix[3][0];
+		position.y = matrix[3][1];
+		position.z = matrix[3][2];
+
+		mat3 m = mat3(matrix);
+
+		//Extract scale and normalize span vectors
+		vec3 r = vec3(m[0][0], m[0][1], m[0][2]);
+		vec3 f = vec3(m[1][0], m[1][1], m[1][2]);
+		vec3 u = vec3(m[2][0], m[2][1], m[2][2]);
+
+		scaling.x = glm::length(r);
+		scaling.y = glm::length(f);
+		scaling.z = glm::length(u);
+
+		m[0][0] /= scaling.x;
+		m[0][1] /= scaling.x;
+		m[0][2] /= scaling.x;
+
+		m[1][0] /= scaling.y;
+		m[1][1] /= scaling.y;
+		m[1][2] /= scaling.y;
+
+		m[2][0] /= scaling.z;
+		m[2][1] /= scaling.z;
+		m[2][2] /= scaling.z;
+
+		//Convert remaining rotation matrix to quaternion
+		rotation = glm::quat_cast(m);
+
+		translationMatrix = glm::translate(glm::mat4(1.f), position);
+		rotationMatrix = glm::toMat4(this->rotation); //Maybe use m here directly
+		scaleMatrix = glm::scale(glm::mat4(1.f), scaling);
+		updateDirections();
+
+		status = TransformUpdateStatus::NeedsUpdate;
 	}
 
 	void Transform::setEulerAnglesInternal(const vec3& eulerAngles) {
@@ -234,10 +241,7 @@ namespace geeL {
 	}
 
 
-	void Transform::ChangeParent(Transform& newParent) {
-		parent->RemoveChild(*this);
-		parent = &newParent;
-	}
+	
 
 	void Transform::resetMatrix() {
 		matrix = translationMatrix * rotationMatrix * scaleMatrix;
@@ -321,17 +325,35 @@ namespace geeL {
 	}
 
 	Transform& Transform::AddChild(const Transform& child) {
-		children.push_back(new Transform(child));
-		return *children.back();
+		Transform* newChild = new Transform(child);
+		children.push_back(newChild);
+		newChild->ChangeParent(*this);
+
+		return *newChild;
 	}
 
 	Transform& Transform::AddChild(Transform* child) {
 		children.push_back(child);
-		return *children.back();
+		child->ChangeParent(*this);
+
+		return *child;
 	}
 
 	void Transform::RemoveChild(Transform& child) {
 		children.remove(&child);
+	}
+
+	void Transform::ChangeParent(Transform& newParent) {
+		if (&newParent != parent) {
+			if (parent != nullptr)
+				parent->RemoveChild(*this);
+
+			parent = &newParent;
+			status = TransformUpdateStatus::NeedsUpdate;
+
+			//TODO: change local transform to match old local 
+			//transform relative to old parent
+		}
 	}
 
 }

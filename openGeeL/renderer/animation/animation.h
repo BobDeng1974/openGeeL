@@ -34,6 +34,9 @@ namespace geeL{
 		void addBoneData(std::string name, AnimationBoneData* data);
 		Transform getFrame(const std::string& bone, double time) const;
 
+		//Updates bone with transformational data from given time code
+		void updateBone(const std::string& name, Transform& bone, double time) const;
+
 		double getDuration() const;
 		double getFPS() const;
 
@@ -46,7 +49,7 @@ namespace geeL{
 		double fps;
 		std::map<std::string, AnimationBoneData*> bones;
 
-		glm::vec3 getVector(std::vector<KeyFrame>& list, double time) const;
+		glm::vec3 getVector(const std::vector<KeyFrame>& list, double time) const;
 	};
 
 }

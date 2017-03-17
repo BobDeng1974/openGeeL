@@ -7,7 +7,7 @@ namespace geeL {
 	class AnimatedObject;
 	class Animation;
 	class Skeleton;
-	
+	class Transform;
 
 	//Abstract base class for all animating objects
 	class Animator {
@@ -17,13 +17,14 @@ namespace geeL {
 		virtual void update() = 0;
 
 	protected:
-		Animator(const AnimatedObject& object);
+		Animator(const AnimatedObject& object, Transform& modelTransform);
 		~Animator();
 		
 		virtual void resetSkeleton();
 
 		const AnimatedObject& object;
 		Skeleton* skeleton;
+		Transform& modelTransform;
 	};
 
 
@@ -31,7 +32,7 @@ namespace geeL {
 	class SimpleAnimator : public Animator {
 
 	public:
-		SimpleAnimator(const AnimatedObject& object);
+		SimpleAnimator(const AnimatedObject& object, Transform& modelTransform);
 
 		virtual void update();
 		void playAnimation(unsigned int index);

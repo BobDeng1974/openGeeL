@@ -15,7 +15,9 @@ namespace geeL {
 		Skeleton(Transform* root);
 		~Skeleton();
 
-		const Transform* getBone(std::string name) const;
+		Transform* const getRootBone();
+		Transform* const getBone(std::string name);
+
 		void setBone(std::string name, const Transform& transform);
 
 	private:
