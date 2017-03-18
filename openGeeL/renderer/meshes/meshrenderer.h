@@ -7,13 +7,15 @@
 
 namespace geeL {
 
-	class Material;
+	class Animator;
 	class DefaultMaterialContainer;
+	class Material;
 	class Model;
-	class StaticModel;
-	class SkinnedModel;
 	class SceneShader;
 	class Shader;
+	class Skeleton;
+	class SkinnedModel;
+	class StaticModel;
 	class Transform;
 
 	enum class CullingMode {
@@ -41,11 +43,10 @@ namespace geeL {
 		~MeshRenderer();
 
 
-		void draw(bool deferred = true) const;
-		void draw(const Shader& shader) const;
+		virtual void draw(bool deferred = true) const;
+		virtual void draw(const Shader& shader) const;
 
-		//Transform given model with transformation data of this mesh renderer
-		void transformMeshes(Model& model, const Shader* shader = nullptr) const;
+		
 
 		//Change materials of mesh renderer in numerical order. For clarification:
 		//Let materials hold i materials and default materials hold j materials
@@ -77,9 +78,9 @@ namespace geeL {
 		//Init materials with data from the meshes material containers
 		void initMaterials(SceneShader& shader);
 
-		void transformMeshes(Model& model, const std::map<unsigned int, Material*>& materials,
-			const Shader* shader = nullptr) const;
-
+		//Transform given model with transformation data of this mesh renderer
+		virtual void transformMeshes(Model& model, const std::map<unsigned int, Material*>& materials) const;
+		virtual void transformMeshes(const Shader* shader) const;
 
 		void cullFaces() const;
 		void uncullFaces() const;
@@ -97,9 +98,23 @@ namespace geeL {
 		SkinnedMeshRenderer(Transform& transform, SceneShader& shader, SkinnedModel& model,
 			CullingMode faceCulling = CullingMode::cullFront, std::string name = "SkinnedMeshRenderer");
 
+		~SkinnedMeshRenderer();
+		
+		Skeleton& getSkeleton();
+		SkinnedModel& getSkinnedModel();
+
+		//Add copy of given animator to scene object that will be updated automatically
+		template<class T>
+		T& addAnimatorComponent(const T& animator);
 
 	private:
+		Skeleton* skeleton;
+		Animator* animator;
 		SkinnedModel* skinnedModel;
+
+		//Load skeleton into shaders of materials
+		virtual void transformMeshes(Model& model, const std::map<unsigned int, Material*>& materials) const;
+		virtual void transformMeshes(const Shader* shader) const;
 
 	};
 

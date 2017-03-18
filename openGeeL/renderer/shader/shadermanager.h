@@ -12,6 +12,7 @@ namespace geeL {
 	class MaterialFactory;
 	class SceneShader;
 
+	//Class that forwards scene information into all registered shaders
 	class ShaderManager {
 
 	public:

@@ -39,7 +39,6 @@
 #include "../renderer/meshes/meshrenderer.h"
 #include "../renderer/meshes/meshfactory.h"
 
-#include "../renderer/renderer/postrenderer.h"
 #include "../renderer/postprocessing/postprocessing.h"
 #include "../renderer/postprocessing/colorcorrection.h"
 #include "../renderer/postprocessing/gammacorrection.h"
@@ -75,6 +74,8 @@
 #include "../renderer/physics/physics.h"
 #include "../renderer/physics/worldphysics.h"
 #include "../renderer/physics/rigidbody.h"
+#include "../renderer/animation/animator.h"
+#include "../renderer/animation/skeleton.h"
 
 #include "testscene.h"
 
@@ -135,10 +136,10 @@ namespace {
 
 			float height = -2.f;
 			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.2f, 0.2f, 0.2f));
-			nanoRenderer = &scene.AddMeshRenderer("resources/nanosuit/nanosuit.obj", meshTransform1, cullFront, true, "Nanosuit");
+			nanoRenderer = &scene.AddMeshRenderer("resources/nanosuit/nanosuit.obj", meshTransform1, CullingMode::cullFront, true, "Nanosuit");
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(100.2f, 0.2f, 100.2f));
-			MeshRenderer& plane = scene.AddMeshRenderer("resources/primitives/plane.obj", meshTransform2, cullFront, true, "Floor");
+			MeshRenderer& plane = scene.AddMeshRenderer("resources/primitives/plane.obj", meshTransform2, CullingMode::cullFront, true, "Floor");
 			if(physics != nullptr) physics->addPlane(vec3(0.f, 1.f, 0.f), meshTransform2, RigidbodyProperties(0.f, false));
 
 			for (auto it = plane.deferredMaterialsBegin(); it != plane.deferredMaterialsEnd(); it++) {
@@ -149,7 +150,7 @@ namespace {
 			}
 
 			Transform& meshTransform3 = transformFactory.CreateTransform(vec3(-9.f, -3.f, 11.0f), vec3(0.5f, 0.5f, 0.5f), vec3(0.3f, 0.3f, 0.3f));
-			MeshRenderer& box1 = scene.AddMeshRenderer("resources/empire/EmpireState_lp.obj", meshTransform3, cullFront, true, "Empire State");
+			MeshRenderer& box1 = scene.AddMeshRenderer("resources/empire/EmpireState_lp.obj", meshTransform3, CullingMode::cullFront, true, "Empire State");
 
 			for (auto it = box1.deferredMaterialsBegin(); it != box1.deferredMaterialsEnd(); it++) {
 				MaterialContainer& container = it->second->container;
@@ -158,7 +159,7 @@ namespace {
 			}
 
 			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 5.f, 4.f), vec3(0.f), vec3(1.f, 1.f, 1.f));
-			MeshRenderer& sphere1 = scene.AddMeshRenderer("resources/primitives/sphere.obj", meshTransform4, cullFront, true, "Sphere");
+			MeshRenderer& sphere1 = scene.AddMeshRenderer("resources/primitives/sphere.obj", meshTransform4, CullingMode::cullFront, true, "Sphere");
 			//if (physics != nullptr) physics->addSphere(1.f, meshTransform4, RigidbodyProperties(10.f, false));
 			//if (physics != nullptr) physics->addMesh(*sphere1.model, meshTransform4, RigidbodyProperties(10.f, false));
 
@@ -169,7 +170,7 @@ namespace {
 			}
 
 			Transform& meshTransform5 = transformFactory.CreateTransform(vec3(0.0f, 0.5f, -2.0f), vec3(0.5f, 0.5f, 0.5f), vec3(5.2f, 2.2f, 1.2f));
-			MeshRenderer& box = scene.AddMeshRenderer("resources/primitives/cube.obj", meshTransform5, cullFront, true, "Box");
+			MeshRenderer& box = scene.AddMeshRenderer("resources/primitives/cube.obj", meshTransform5, CullingMode::cullFront, true, "Box");
 
 			for (auto it = box.deferredMaterialsBegin(); it != box.deferredMaterialsEnd(); it++) {
 				MaterialContainer& container = it->second->container;
@@ -179,11 +180,15 @@ namespace {
 			}
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", meshTransform6, cullFront, true, "Cyborg");
+			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", meshTransform6, CullingMode::cullFront, true, "Cyborg");
 
 			float scale = 0.05f;
-			Transform& meshTransform7 = transformFactory.CreateTransform(vec3(2.f, -100.4f, -8.0f), vec3(-90.f, 0.f, 0.f), vec3(scale, scale, scale));
-			scene.AddSkinnedMeshRenderer("resources/guard/boblampclean.md5mesh", meshTransform7, cullFront, true, "Dude");
+			Transform& meshTransform7 = transformFactory.CreateTransform(vec3(2.f, -2.f, 4.0f), vec3(-90.f, 0.f, 0.f), vec3(scale, scale, scale));
+			SkinnedMeshRenderer& dude = scene.AddSkinnedMeshRenderer("resources/guard/boblampclean.md5mesh", meshTransform7, CullingMode::cullFront, true, "Dude");
+
+			SimpleAnimator* dudeAnim = new SimpleAnimator(dude.getSkinnedModel(), dude.getSkeleton());
+			//dude.addComponent<Animator>();
+
 		}
 
 		virtual void draw(const Camera& camera) {
@@ -300,7 +305,7 @@ void draw() {
 	//renderer.addEffect(colorCorrect);
 	//postLister.add(colorCorrect);
 
-	renderer.addEffect(fxaa);
+	//renderer.addEffect(fxaa);
 
 	renderer.linkInformation();
 	renderer.render();

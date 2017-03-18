@@ -10,13 +10,16 @@ namespace geeL {
 
 	MaterialFactory::MaterialFactory() : 
 		forwardShader(new SceneShader("renderer/shaders/lighting.vert", "renderer/shaders/lighting.frag")),
-		deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", "renderer/shaders/gbuffer.frag", true, false)) {
+		deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", "renderer/shaders/gbuffer.frag", true, false)),
+		deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", "renderer/shaders/gbuffer.frag", true, false)) {
 	
 		shaders.push_back(forwardShader);
-		shaders.push_back(deferredShader);
 	}
 
 	MaterialFactory::~MaterialFactory() {
+		delete deferredShader;
+		delete deferredAnimatedShader;
+
 		for (auto shader = shaders.begin(); shader != shaders.end(); shader++)
 			delete *shader;
 
@@ -106,10 +109,11 @@ namespace geeL {
 			case DefaultShading::DeferredStatic:
 				return *deferredShader;
 			case DefaultShading::DeferredSkinned:
-				return *deferredShader;
+				return *deferredAnimatedShader;
 			case DefaultShading::ForwardStatic:
 				return *forwardShader;
 			case DefaultShading::ForwardSkinned:
+				//TODO: implement animated forward shader
 				return *forwardShader;
 		}
 	}

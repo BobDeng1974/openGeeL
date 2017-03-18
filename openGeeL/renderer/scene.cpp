@@ -121,23 +121,25 @@ namespace geeL {
 		return *renderer;
 	}
 
-	MeshRenderer& RenderScene::AddSkinnedMeshRenderer(string modelPath, Transform& transform,
+	SkinnedMeshRenderer& RenderScene::AddSkinnedMeshRenderer(string modelPath, Transform& transform,
 		CullingMode faceCulling, bool deferred, string name) {
 
 		SkinnedModel& model = meshFactory.CreateSkinnedModel(modelPath);
-		if (deferred)
-			deferredRenderObjects.push_back(meshFactory.CreateSkinnedMeshRendererManual(model, transform, faceCulling, deferred, name));
-		else
-			forwardRenderObjects.push_back(meshFactory.CreateSkinnedMeshRendererManual(model, transform, faceCulling, deferred, name));
+		SkinnedMeshRenderer* renderer = meshFactory.CreateSkinnedMeshRendererManual(model, transform, faceCulling, deferred, name);
 
-		return *deferredRenderObjects.back();
+		if (deferred)
+			deferredRenderObjects.push_back(renderer);
+		else
+			forwardRenderObjects.push_back(renderer);
+
+		return *renderer;
 	}
 
-	MeshRenderer& RenderScene::AddSkinnedMeshRenderer(std::string modelPath, Transform& transform,
+	SkinnedMeshRenderer& RenderScene::AddSkinnedMeshRenderer(std::string modelPath, Transform& transform,
 		std::vector<Material*> materials, CullingMode faceCulling, string name) {
 
 		SkinnedModel& model = meshFactory.CreateSkinnedModel(modelPath);
-		MeshRenderer* renderer = meshFactory.CreateSkinnedMeshRendererManual(model, transform, faceCulling, true, name);
+		SkinnedMeshRenderer* renderer = meshFactory.CreateSkinnedMeshRendererManual(model, transform, faceCulling, true, name);
 		renderer->customizeMaterials(materials);
 
 		bool containsDeferred = renderer->containsDeferredMaterials();

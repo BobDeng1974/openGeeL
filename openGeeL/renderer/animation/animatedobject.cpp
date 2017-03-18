@@ -4,7 +4,12 @@
 
 namespace geeL {
 
+	AnimatedObject::AnimatedObject() : skeleton(nullptr) {}
+
 	AnimatedObject::~AnimatedObject() {
+		if (skeleton != nullptr)
+			delete skeleton;
+
 		for (auto it = animations.begin(); it != animations.end(); it++)
 			delete *it;
 	}
@@ -22,6 +27,11 @@ namespace geeL {
 
 	const Skeleton& AnimatedObject::getSkeleton() const {
 		return *skeleton;
+	}
+
+	void AnimatedObject::setSkeleton(Skeleton* const skeleton) {
+		if (skeleton != nullptr)
+			this->skeleton = skeleton;
 	}
 
 }

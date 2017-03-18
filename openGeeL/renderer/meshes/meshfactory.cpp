@@ -131,6 +131,8 @@ namespace geeL {
 		aiNode* node = scene->mRootNode;
 		Transform* rootBone = new Transform(MatrixExtension::convertMatrix(node->mTransformation));
 		rootBone->setName(string(node->mName.C_Str()));
+		Skeleton* skeleton = new Skeleton(rootBone);
+		model.setSkeleton(skeleton);
 
 		string directory = path.substr(0, path.find_last_of('/'));
 		processSkinnedNode(model, *rootBone, directory, node, scene);

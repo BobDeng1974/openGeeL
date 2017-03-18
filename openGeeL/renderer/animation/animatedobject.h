@@ -12,6 +12,7 @@ namespace geeL {
 	class AnimatedObject {
 
 	public:
+		AnimatedObject();
 		~AnimatedObject();
 
 		//Add animation. Memory will be managed by this model
@@ -22,11 +23,11 @@ namespace geeL {
 
 		//Get animation at index. Index will get clamped if not present.
 		const Animation& getAnimation(unsigned int index) const;
+
 		const Skeleton& getSkeleton() const;
+		void setSkeleton(Skeleton* const skeleton);
 
 	protected:
-		AnimatedObject() {}
-
 		Skeleton* skeleton;
 		std::vector<Animation*> animations;
 	};

@@ -39,31 +39,26 @@ namespace geeL{
 
 
 	void MeshRenderer::draw(bool deferred) const {
-
 		cullFaces();
 
 		//Draw model
 		if (!instanced && model != nullptr) {
-			if (deferred) {
-				transformMeshes(*model, deferredMaterials);
-				model->draw(deferredMaterials);
-			}
-			else {
-				transformMeshes(*model, forwardMaterials);
-				model->draw(forwardMaterials);
-			}
+			const std::map<unsigned int, Material*>* materials = 
+				deferred ? &deferredMaterials : & forwardMaterials;
+
+			transformMeshes(*model, *materials);
+			model->draw(*materials);
 		}
 
 		uncullFaces();
 	}
 
 	void MeshRenderer::draw(const Shader& shader) const {
-
 		cullFaces();
 
 		//Draw model
 		if (!instanced && model != nullptr) {
-			transformMeshes(*model, &shader);
+			transformMeshes(&shader);
 			model->draw();
 		}
 
@@ -105,7 +100,7 @@ namespace geeL{
 		int counter = 0;
 
 		if (shader.deferred) {
-			std::vector<MaterialContainer*> mats = model->getMaterials();
+			std::vector<MaterialContainer*>& mats = model->getMaterials();
 			for (auto it = mats.begin(); it != mats.end(); it++) {
 				MaterialContainer& container = **it;
 				deferredMaterials[counter] = new Material(shader, container);
@@ -113,7 +108,7 @@ namespace geeL{
 			}
 		}
 		else {
-			std::vector<MaterialContainer*> mats = model->getMaterials();
+			std::vector<MaterialContainer*>& mats = model->getMaterials();
 			for (auto it = mats.begin(); it != mats.end(); it++) {
 				MaterialContainer& container = **it;
 				forwardMaterials[counter] = new Material(shader, container);
@@ -122,30 +117,18 @@ namespace geeL{
 		}
 	}
 
-	void MeshRenderer::transformMeshes(Model& model, const Shader* shader) const {
-
-		//Load transform into vertex shaders
-		transformMeshes(model, deferredMaterials, shader);
-		transformMeshes(model, forwardMaterials, shader);
+	void MeshRenderer::transformMeshes(const Shader* shader) const {
+		shader->use();
+		shader->setMat4("model", transform.getMatrix());
 	}
 
-	void MeshRenderer::transformMeshes(Model& model,
-		const map<unsigned int, Material*>& materials, const Shader* shader) const {
+	void MeshRenderer::transformMeshes(Model& model, const map<unsigned int, Material*>& materials) const {
+		for (auto it = materials.begin(); it != materials.end(); it++) {
+			Material* mat = it->second;
+			const Shader& shader = mat->shader;
 
-		for (map<unsigned int, Material*>::const_iterator it = materials.begin(); 
-			it != materials.end(); it++) {
-
-			unsigned int i = it->first;
-			const Shader* sha;
-			if (shader == nullptr) {
-				Material* mat = it->second;
-				sha = &mat->shader;
-			}
-			else
-				sha = shader;
-
-			sha->use();
-			sha->setMat4("model", transform.getMatrix());
+			shader.use();
+			shader.setMat4("model", transform.getMatrix());
 		}
 	}
 

@@ -25,14 +25,12 @@ namespace geeL {
 		const Skeleton& getSkeleton() const;
 
 	protected:
-		Animator(AnimatedObject& object, Transform& modelTransform);
-		~Animator();
+		Animator(AnimatedObject& object, Skeleton& skeleton);
 		
 		virtual void resetSkeleton();
 
 		AnimatedObject& object;
-		Skeleton* skeleton;
-		Transform& modelTransform;
+		Skeleton& skeleton;
 	};
 
 
@@ -40,7 +38,7 @@ namespace geeL {
 	class SimpleAnimator : public Animator {
 
 	public:
-		SimpleAnimator(AnimatedObject& object, Transform& modelTransform);
+		SimpleAnimator(AnimatedObject& object, Skeleton& skeleton);
 
 		virtual void update();
 		void playAnimation(unsigned int index);

@@ -16,6 +16,7 @@ namespace geeL {
 		Transform& transform;
 
 		SceneObject(Transform& transform, std::string name = "Scene Object");
+		~SceneObject();
 
 		//Update object and all its components
 		virtual void update();
@@ -23,8 +24,12 @@ namespace geeL {
 		//Update objects and all its components after transformation changes
 		virtual void lateUpdate();
 
-		//Add and init new component to scene object that will the be updated automatically
-		void addComponent(std::shared_ptr<Component> component);
+		//Add and init new empty component of given type to scene object that will be updated automatically
+		template<class T>
+		T& addComponent();
+
+		//Add copy of given component to scene object that will be updated automatically
+		Component& addComponent(const Component& component);
 
 		bool isActive() const;
 		void setActive(bool active);
@@ -32,10 +37,10 @@ namespace geeL {
 		std::string getName() const;
 		void setName(std::string name);
 
-	private:
+	protected:
 		bool active;
 		std::string name;
-		std::list<std::shared_ptr<Component>> components;
+		std::list<Component*> components;
 
 	};
 }

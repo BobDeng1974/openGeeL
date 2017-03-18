@@ -77,6 +77,7 @@ namespace geeL {
 	private:
 		SceneShader* forwardShader;
 		SceneShader* deferredShader;
+		SceneShader* deferredAnimatedShader;
 		std::list<MaterialContainer*> container;
 		std::list<SceneShader*> shaders;
 		std::map<std::string, SimpleTexture> textures;

@@ -85,8 +85,8 @@ namespace geeL {
 	class SkinnedModel : public Model, public AnimatedObject {
 
 	public:
-		SkinnedModel() : Model() {}
-		SkinnedModel(std::string path) : Model(path) {}
+		SkinnedModel() : Model(), AnimatedObject() {}
+		SkinnedModel(std::string path) : Model(path), AnimatedObject() {}
 		~SkinnedModel();
 
 		virtual void draw() const;
