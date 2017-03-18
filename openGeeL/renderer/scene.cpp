@@ -14,7 +14,6 @@
 #include "lighting\lightmanager.h"
 #include "transformation\transform.h"
 #include "scene.h"
-#include <iostream>
 
 using namespace std;
 
@@ -25,56 +24,51 @@ namespace geeL {
 
 	
 	RenderScene::~RenderScene() {
-		for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), [&](MeshRenderer* object) {
-			delete object;
-		});
-
-		for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), [&](MeshRenderer* object) {
+		iterRenderObjects(RenderMode::All, [&](MeshRenderer* object) {
 			delete object;
 		});
 	}
 
 
 	void RenderScene::update() {
-		worldTransform.update();
+
 		camera.update();
+		iterRenderObjects(RenderMode::All, [&](MeshRenderer* object) {
+			object->update();
+		});
+
+		worldTransform.update();
+
+		camera.lateUpdate();
+		iterRenderObjects(RenderMode::All, [&](MeshRenderer* object) {
+			object->lateUpdate();
+		});
 
 		originViewSpace = TranslateToViewSpace(glm::vec3(0.f, 0.f, 0.f));
 
+		//TODO: Move this to a seperate thread to allow simulation at fixed frame rate
 		if (physics != nullptr)
 			physics->update();
 	}
 
 	void RenderScene::drawDeferred() const {
-		drawObjects(deferredRenderObjects, true);
+		iterRenderObjects(RenderMode::Deferred, [&](MeshRenderer* object) {
+			if (object->isActive())
+				object->draw(true);
+		});
 	}
 
 	void RenderScene::drawForward() const {
-		drawObjects(forwardRenderObjects, false);
-	}
-
-	void RenderScene::drawObjects(const std::list<MeshRenderer*>& objects, bool deferred) const {
-		for_each(objects.begin(), objects.end(), [&](MeshRenderer* object) {
-			if(object->isActive())
-				object->draw(deferred);
+		iterRenderObjects(RenderMode::Forward, [&](MeshRenderer* object) {
+			if (object->isActive())
+				object->draw(false);
 		});
 	}
-
-	void RenderScene::draw() const {
-		drawObjects(deferredRenderObjects, true);
-		drawObjects(forwardRenderObjects, false);
-		drawSkybox();
-	}
-
+	
 	void RenderScene::drawObjects(const Shader& shader) const {
 		shader.use();
 
-		for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), [&](MeshRenderer* object) {
-			if (object->isActive())
-				object->draw(shader);
-		});
-
-		for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), [&](MeshRenderer* object) {
+		iterRenderObjects(RenderMode::All, [&](MeshRenderer* object) {
 			if (object->isActive())
 				object->draw(shader);
 		});
@@ -114,9 +108,14 @@ namespace geeL {
 		MeshRenderer* renderer = meshFactory.CreateMeshRendererManual(model, transform, faceCulling, true, name);
 		renderer->customizeMaterials(materials);
 
-		if (renderer->containsDeferredMaterials())
+		bool containsDeferred = renderer->containsDeferredMaterials();
+		bool containsForward = renderer->containsForwardMaterials();
+
+		if (containsDeferred && containsForward)
+			mixedRenderObjects.push_back(renderer);
+		if (containsDeferred)
 			deferredRenderObjects.push_back(renderer);
-		if (renderer->containsForwardMaterials())
+		if (containsForward)
 			forwardRenderObjects.push_back(renderer);
 
 		return *renderer;
@@ -141,9 +140,14 @@ namespace geeL {
 		MeshRenderer* renderer = meshFactory.CreateSkinnedMeshRendererManual(model, transform, faceCulling, true, name);
 		renderer->customizeMaterials(materials);
 
-		if (renderer->containsDeferredMaterials())
+		bool containsDeferred = renderer->containsDeferredMaterials();
+		bool containsForward  = renderer->containsForwardMaterials();
+
+		if (containsDeferred && containsForward)
+			mixedRenderObjects.push_back(renderer);
+		if (containsDeferred)
 			deferredRenderObjects.push_back(renderer);
-		if (renderer->containsForwardMaterials())
+		if (containsForward)
 			forwardRenderObjects.push_back(renderer);
 
 		return *renderer;
@@ -191,6 +195,27 @@ namespace geeL {
 
 	std::list<MeshRenderer*>::iterator RenderScene::renderObjectsEnd() {
 		return deferredRenderObjects.end();
+	}
+
+
+	void RenderScene::iterRenderObjects(RenderMode mode, std::function<void(MeshRenderer* object)> function) {
+		if(mode == RenderMode::All || mode == RenderMode::Deferred)
+			for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
+
+		if(mode == RenderMode::All || mode == RenderMode::Forward)
+			for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
+		
+		for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
+	}
+
+	void RenderScene::iterRenderObjects(RenderMode mode, std::function<void(MeshRenderer* object)> function) const {
+		if (mode == RenderMode::All || mode == RenderMode::Deferred)
+			for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
+
+		if (mode == RenderMode::All || mode == RenderMode::Forward)
+			for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
+
+		for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
 	}
 
 }

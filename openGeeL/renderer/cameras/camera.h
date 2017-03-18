@@ -29,7 +29,7 @@ namespace geeL {
 		Camera(Transform& transform, float speed, float sensitivity, std::string name = "Camera");
 
 		//Update view and projection matrices
-		void update();
+		virtual void lateUpdate();
 
 		virtual void handleInput(const InputManager& input);
 

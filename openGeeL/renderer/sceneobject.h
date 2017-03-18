@@ -20,6 +20,9 @@ namespace geeL {
 		//Update object and all its components
 		virtual void update();
 
+		//Update objects and all its components after transformation changes
+		virtual void lateUpdate();
+
 		//Add and init new component to scene object that will the be updated automatically
 		void addComponent(std::shared_ptr<Component> component);
 

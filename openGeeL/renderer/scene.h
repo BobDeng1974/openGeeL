@@ -2,6 +2,7 @@
 #define RENDERSCENE_H
 
 #include <vec3.hpp>
+#include <functional>
 #include <list>
 #include <vector>
 
@@ -19,7 +20,7 @@ namespace geeL {
 	class Transform;
 
 	struct ScreenInfo;
-	enum CullingMode;
+	enum class CullingMode;
 
 	class RenderScene {
 
@@ -55,11 +56,8 @@ namespace geeL {
 		//Draw only those objects that are suited for deferred rendering
 		void drawDeferred() const;
 
-		//Draw all those objects that are suited not for deferred rendering (with forward rendering)
+		//Draw all those objects that are not suited for deferred rendering (with forward rendering)
 		void drawForward() const;
-
-		//Draw all objects with forward rendering
-		void draw() const;
 
 		//Draw skybox indepentently
 		void drawSkybox() const;
@@ -93,10 +91,20 @@ namespace geeL {
 		Skybox* skybox;
 		Physics* physics;
 		MeshFactory& meshFactory;
+
 		std::list<MeshRenderer*> deferredRenderObjects;
 		std::list<MeshRenderer*> forwardRenderObjects;
-	
-		void drawObjects(const std::list<MeshRenderer*>& objects, bool deferred = true) const;
+		std::list<MeshRenderer*> mixedRenderObjects;
+
+		enum class RenderMode {
+			All,
+			Deferred,
+			Forward
+		};
+
+		void iterRenderObjects(RenderMode mode, std::function<void(MeshRenderer* object)> function);
+		void iterRenderObjects(RenderMode mode, std::function<void(MeshRenderer* object)> function) const;
+
 	};
 }
 

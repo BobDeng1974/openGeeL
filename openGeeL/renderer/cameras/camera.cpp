@@ -24,7 +24,9 @@ namespace geeL {
 		: SceneObject(transform, name), speed(speed), sensitivity(sensitivity) {}
 
 
-	void Camera::update() {
+	void Camera::lateUpdate() {
+		SceneObject::lateUpdate();
+
 		viewMatrix = computeViewMatrix();
 		inverseView = inverse(viewMatrix);
 		projectionMatrix = computeProjectionMatrix();

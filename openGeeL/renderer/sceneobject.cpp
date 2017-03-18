@@ -16,6 +16,12 @@ namespace geeL {
 		});
 	}
 
+	void SceneObject::lateUpdate() {
+		for_each(components.begin(), components.end(), [&](shared_ptr<Component> comp) {
+			comp->lateUpdate();
+		});
+	}
+
 	void SceneObject::addComponent(shared_ptr<Component> component) {
 		component->init();
 		components.push_back(component);
