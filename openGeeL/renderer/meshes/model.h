@@ -95,6 +95,8 @@ namespace geeL {
 		virtual void draw(const std::vector<Material*>& customMaterials) const;
 		virtual void draw(const std::map<unsigned int, Material*>& customMaterials) const;
 
+		virtual void updateBones(const Skeleton& skeleton);
+
 		//Add static mesh. Memory will be managed by this model
 		SkinnedMesh& addMesh(SkinnedMesh* mesh);
 

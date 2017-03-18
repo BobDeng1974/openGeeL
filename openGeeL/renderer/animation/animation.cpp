@@ -25,13 +25,13 @@ namespace geeL {
 		if (bones.find(bone) != bones.end()) {
 			const AnimationBoneData& data = *bones.at(bone);
 
-			auto positions = data.positions;
+			const std::vector<KeyFrame>& positions = data.positions;
 			vec3& position = getVector(positions, time);
 
-			auto rotations = data.rotations;
+			const std::vector<KeyFrame>& rotations = data.rotations;
 			vec3& rotation = getVector(rotations, time);
 
-			auto scalings = data.scalings;
+			const std::vector<KeyFrame>& scalings = data.scalings;
 			vec3& scaling = getVector(scalings, time);
 
 			return Transform(position, rotation, scaling);

@@ -3,10 +3,9 @@
 
 namespace geeL {
 
-	Skeleton::Skeleton(Transform* root) : rootBone(root) {
+	Skeleton::Skeleton(Transform* const root) : rootBone(root) {
 		addBone(root);
 	}
-
 
 	Skeleton::~Skeleton() {
 		delete rootBone;
@@ -18,6 +17,14 @@ namespace geeL {
 	}
 
 	Transform* const Skeleton::getBone(std::string name) {
+		auto it = bones.find(name);
+		if (it != bones.end())
+			return it->second;
+
+		return nullptr;
+	}
+
+	const Transform* const Skeleton::getBone(std::string name) const {
 		auto it = bones.find(name);
 		if (it != bones.end())
 			return it->second;

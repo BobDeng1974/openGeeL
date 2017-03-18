@@ -7,7 +7,7 @@
 
 namespace geeL {
 
-	Animator::Animator(const AnimatedObject& object, Transform& modelTransform)
+	Animator::Animator(AnimatedObject& object, Transform& modelTransform)
 		: object(object), skeleton(new Skeleton(object.getSkeleton())), modelTransform(modelTransform) {
 	
 		//Add transform of skeleton to the transform of the actual model
@@ -20,6 +20,10 @@ namespace geeL {
 		delete skeleton;
 	}
 
+	void Animator::lateUpdate() {
+		object.updateBones(*skeleton);
+	}
+
 	void Animator::resetSkeleton() {
 		modelTransform.RemoveChild(*skeleton->getRootBone());
 
@@ -28,8 +32,12 @@ namespace geeL {
 		modelTransform.AddChild(*skeleton->getRootBone());
 	}
 
+	const Skeleton& Animator::getSkeleton() const {
+		return *skeleton;
+	}
 
-	SimpleAnimator::SimpleAnimator(const AnimatedObject& object, Transform& modelTransform)
+
+	SimpleAnimator::SimpleAnimator(AnimatedObject& object, Transform& modelTransform)
 		: Animator(object, modelTransform), currentAnimation(nullptr), currentTime(0.) {}
 
 

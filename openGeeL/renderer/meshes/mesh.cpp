@@ -4,6 +4,8 @@
 #include "mesh.h"
 #include "../materials/defaultmaterial.h"
 #include "../materials/material.h"
+#include "../animation/skeleton.h"
+#include "../transformation/transform.h"
 #include <iostream>
 
 using namespace std;
@@ -100,7 +102,6 @@ namespace geeL {
 
 
 
-
 	SkinnedMesh::SkinnedMesh(vector<SkinnedVertex>& vertices, vector<unsigned int>& indices, 
 		std::map<std::string, MeshBoneData>& bones, MaterialContainer& material)
 			: Mesh(material), vertices(vertices), indices(indices), bones(bones) {
@@ -150,6 +151,20 @@ namespace geeL {
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
+	}
+
+	void SkinnedMesh::updateMeshBoneData(const Skeleton& skeleton) {
+
+		for (auto it = bones.begin(); it != bones.end(); it++) {
+			const std::string& name = (*it).first;
+			MeshBoneData& data = (*it).second;
+			const Transform* bone = skeleton.getBone(name);
+
+			if(bone != nullptr)
+				data.transform = bone->getMatrix() * data.offsetMatrix;
+			else
+				throw "Bone not present. Something went wrong during importing process";
+		}
 	}
 
 	unsigned int SkinnedMesh::getIndicesCount() const {

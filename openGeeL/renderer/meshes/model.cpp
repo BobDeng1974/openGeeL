@@ -1,6 +1,6 @@
-#include <iostream>
 #include "../shader/shader.h"
 #include "../materials/material.h"
+#include "../animation/skeleton.h"
 #include "mesh.h"
 #include "model.h"
 
@@ -53,7 +53,6 @@ namespace geeL {
 	}
 
 
-
 	StaticMesh& StaticModel::addMesh(StaticMesh* mesh) {
 		meshes.push_back(mesh);
 
@@ -102,12 +101,12 @@ namespace geeL {
 	}
 
 
+
 	SkinnedModel::~SkinnedModel() {
 		for (auto it = meshes.begin(); it != meshes.end(); it++)
 			delete *it;
-
-		
 	}
+
 
 	void SkinnedModel::draw() const {
 		for (auto it = meshes.begin(); it != meshes.end(); it++) {
@@ -147,6 +146,15 @@ namespace geeL {
 			mesh.draw(mat);
 		}
 	}
+
+
+	void SkinnedModel::updateBones(const Skeleton& skeleton) {
+		for (auto it = meshes.begin(); it != meshes.end(); it++) {
+			SkinnedMesh& mesh = **it;
+			mesh.updateMeshBoneData(skeleton);
+		}
+	}
+
 
 	SkinnedMesh& SkinnedModel::addMesh(SkinnedMesh* mesh) {
 		meshes.push_back(mesh);

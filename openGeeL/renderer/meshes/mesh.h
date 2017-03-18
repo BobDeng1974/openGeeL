@@ -14,6 +14,7 @@ namespace geeL {
 
 	class Material;
 	class MaterialContainer;
+	class Skeleton;
 
 
 	//Single vertex of a mesh
@@ -128,6 +129,8 @@ namespace geeL {
 			std::map<std::string, MeshBoneData>& bones, MaterialContainer& material);
 
 		virtual void draw() const;
+
+		void updateMeshBoneData(const Skeleton& skeleton);
 
 		virtual unsigned int getIndicesCount() const;
 		virtual unsigned int getVerticesCount() const;

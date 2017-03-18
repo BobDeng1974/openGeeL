@@ -40,12 +40,7 @@ namespace geeL{
 
 	void MeshRenderer::draw(bool deferred) const {
 
-		switch (faceCulling) {
-			case cullNone:
-				glDisable(GL_CULL_FACE);
-			case cullBack:
-				glCullFace(GL_BACK);
-		}
+		cullFaces();
 
 		//Draw model
 		if (!instanced && model != nullptr) {
@@ -59,22 +54,12 @@ namespace geeL{
 			}
 		}
 
-		switch (faceCulling) {
-			case cullNone:
-				glEnable(GL_CULL_FACE);
-			case cullBack:
-				glCullFace(GL_FRONT);
-		}
+		uncullFaces();
 	}
 
 	void MeshRenderer::draw(const Shader& shader) const {
 
-		switch (faceCulling) {
-		case cullNone:
-			glDisable(GL_CULL_FACE);
-		case cullBack:
-			glCullFace(GL_BACK);
-		}
+		cullFaces();
 
 		//Draw model
 		if (!instanced && model != nullptr) {
@@ -82,12 +67,7 @@ namespace geeL{
 			model->draw();
 		}
 
-		switch (faceCulling) {
-		case cullNone:
-			glEnable(GL_CULL_FACE);
-		case cullBack:
-			glCullFace(GL_FRONT);
-		}
+		uncullFaces();
 	}
 	
 
@@ -166,6 +146,24 @@ namespace geeL{
 
 			sha->use();
 			sha->setMat4("model", transform.getMatrix());
+		}
+	}
+
+	void MeshRenderer::cullFaces() const {
+		switch (faceCulling) {
+			case CullingMode::cullNone:
+				glDisable(GL_CULL_FACE);
+			case CullingMode::cullBack:
+				glCullFace(GL_BACK);
+		}
+	}
+
+	void MeshRenderer::uncullFaces() const {
+		switch (faceCulling) {
+			case CullingMode::cullNone:
+				glEnable(GL_CULL_FACE);
+			case CullingMode::cullBack:
+				glCullFace(GL_FRONT);
 		}
 	}
 

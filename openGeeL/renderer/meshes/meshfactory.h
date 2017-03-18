@@ -15,7 +15,7 @@ struct aiScene;
 
 namespace geeL {
 
-	enum CullingMode;
+	enum class CullingMode;
 	enum class DefaultShading;
 	enum class ColorType;
 

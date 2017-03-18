@@ -12,11 +12,12 @@ namespace geeL {
 	class Skeleton {
 
 	public:
-		Skeleton(Transform* root);
+		Skeleton(Transform* const root);
 		~Skeleton();
 
 		Transform* const getRootBone();
 		Transform* const getBone(std::string name);
+		const Transform* const getBone(std::string name) const;
 
 		void setBone(std::string name, const Transform& transform);
 

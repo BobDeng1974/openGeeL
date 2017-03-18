@@ -7,7 +7,6 @@
 
 namespace geeL {
 
-	class Animator;
 	class Material;
 	class DefaultMaterialContainer;
 	class Model;
@@ -17,7 +16,7 @@ namespace geeL {
 	class Shader;
 	class Transform;
 
-	enum CullingMode {
+	enum class CullingMode {
 		cullNone,
 		cullFront,
 		cullBack
@@ -33,11 +32,11 @@ namespace geeL {
 
 		//Constructor for mesh renderer with no assigned model (since it will be drawn instanced)
 		MeshRenderer(Transform& transform, SceneShader& shader,
-			CullingMode faceCulling = cullFront, std::string name = "MeshRenderer");
+			CullingMode faceCulling = CullingMode::cullFront, std::string name = "MeshRenderer");
 
 		//Constructor for mesh renderer with an unique assigned model
 		MeshRenderer(Transform& transform, SceneShader& shader, Model& model,
-			CullingMode faceCulling = cullFront, std::string name = "MeshRenderer");
+			CullingMode faceCulling = CullingMode::cullFront, std::string name = "MeshRenderer");
 
 		~MeshRenderer();
 
@@ -81,6 +80,10 @@ namespace geeL {
 		void transformMeshes(Model& model, const std::map<unsigned int, Material*>& materials,
 			const Shader* shader = nullptr) const;
 
+
+		void cullFaces() const;
+		void uncullFaces() const;
+
 	};
 
 
@@ -89,14 +92,13 @@ namespace geeL {
 
 	public:
 		SkinnedMeshRenderer(Transform& transform, SceneShader& shader,
-			CullingMode faceCulling = cullFront, std::string name = "SkinnedMeshRenderer");
+			CullingMode faceCulling = CullingMode::cullFront, std::string name = "SkinnedMeshRenderer");
 
 		SkinnedMeshRenderer(Transform& transform, SceneShader& shader, SkinnedModel& model,
-			CullingMode faceCulling = cullFront, std::string name = "SkinnedMeshRenderer");
+			CullingMode faceCulling = CullingMode::cullFront, std::string name = "SkinnedMeshRenderer");
 
 
 	private:
-		Animator* animator;
 		SkinnedModel* skinnedModel;
 
 	};
