@@ -131,16 +131,16 @@ namespace geeL {
 		aiNode* node = scene->mRootNode;
 		Transform* rootBone = new Transform(MatrixExtension::convertMatrix(node->mTransformation));
 		rootBone->setName(string(node->mName.C_Str()));
-		Skeleton* skeleton = new Skeleton(rootBone);
-		model.setSkeleton(skeleton);
 
 		string directory = path.substr(0, path.find_last_of('/'));
 		processSkinnedNode(model, *rootBone, directory, node, scene);
+
+		Skeleton* skeleton = new Skeleton(rootBone);
+		model.setSkeleton(skeleton);
 	}
 
 	void MeshFactory::processSkinnedNode(SkinnedModel& model, Transform& bone, 
 		string directory, aiNode* node, const aiScene* scene) {
-
 
 		//Add mesh if current node contains one
 		for (unsigned int i = 0; i < node->mNumMeshes; i++) {
@@ -176,7 +176,6 @@ namespace geeL {
 
 			processSkinnedNode(model, *trans, directory, child, scene);
 		}
-			
 	}
 
 
@@ -257,31 +256,22 @@ namespace geeL {
 
 	void MeshFactory::processBones(vector<SkinnedVertex>& vertices, std::map<std::string, MeshBoneData>& bones, aiMesh* mesh) {
 
-		unsigned int boneCount = 0;
 		for (unsigned int i = 0; i < mesh->mNumBones; i++) {
 			aiBone* bone = mesh->mBones[i];
 			string name = bone->mName.data;
-			unsigned int index = 0;
 
-			//Search for bone in bone map and add if not present
-			if (bones.find(name) == bones.end()) {
-				index = boneCount;
+			aiMatrix4x4& mat = bone->mOffsetMatrix;
+			//mat.Transpose();
 
-				auto mat = bone->mOffsetMatrix;
-				//mat.Transpose();
-
-				bones[name].offsetMatrix = *reinterpret_cast<mat4*>(&mat);
-				bones[name].id = index;
-				boneCount++;
-			}
+			bones[name].offsetMatrix = *reinterpret_cast<mat4*>(&mat);
 
 			//Iterate over all vertices that are affected by this bone
 			for (unsigned int j = 0; j < bone->mNumWeights; j++) {
 				aiVertexWeight weight = bone->mWeights[j];
 
 				//Populate vertices with bone weights
-				VertexBoneData& boneData = vertices[weight.mVertexId].bones;
-				boneData.addBone(weight.mVertexId, weight.mWeight);
+				VertexBoneData& boneData = vertices[j].bones;
+				boneData.addBone(j, weight.mWeight);
 			}
 		}
 	}

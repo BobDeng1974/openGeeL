@@ -12,8 +12,13 @@ namespace geeL {
 	class Skeleton {
 
 	public:
+		//Create new skeleton with given root bone. It is assumed
+		//that bone structure is already complete and no new bones
+		//will be added
 		Skeleton(Transform* const root);
 		~Skeleton();
+
+		unsigned int getBoneID(std::string name) const;
 
 		Transform* const getRootBone();
 		Transform* const getBone(std::string name);

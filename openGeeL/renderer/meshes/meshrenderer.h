@@ -29,12 +29,7 @@ namespace geeL {
 	class MeshRenderer : public SceneObject {
 
 	public:
-		Model* model;
 		const CullingMode faceCulling;
-
-		//Constructor for mesh renderer with no assigned model (since it will be drawn instanced)
-		MeshRenderer(Transform& transform, SceneShader& shader,
-			CullingMode faceCulling = CullingMode::cullFront, std::string name = "MeshRenderer");
 
 		//Constructor for mesh renderer with an unique assigned model
 		MeshRenderer(Transform& transform, SceneShader& shader, Model& model,
@@ -45,8 +40,6 @@ namespace geeL {
 
 		virtual void draw(bool deferred = true) const;
 		virtual void draw(const Shader& shader) const;
-
-		
 
 		//Change materials of mesh renderer in numerical order. For clarification:
 		//Let materials hold i materials and default materials hold j materials
@@ -63,6 +56,8 @@ namespace geeL {
 		//Check if the meshes contain default materials (meaning: with default shading)
 		bool containsDeferredMaterials() const;
 
+		const Model& getModel() const;
+
 		std::map<unsigned int, Material*>::iterator deferredMaterialsBegin();
 		std::map<unsigned int, Material*>::iterator deferredMaterialsEnd();
 
@@ -71,7 +66,6 @@ namespace geeL {
 
 
 	protected:
-		bool instanced;
 		std::map<unsigned int, Material*> deferredMaterials;
 		std::map<unsigned int, Material*> forwardMaterials;
 
@@ -85,6 +79,9 @@ namespace geeL {
 		void cullFaces() const;
 		void uncullFaces() const;
 
+	private:
+		Model* model;
+
 	};
 
 
@@ -92,13 +89,13 @@ namespace geeL {
 	class SkinnedMeshRenderer : public MeshRenderer {
 
 	public:
-		SkinnedMeshRenderer(Transform& transform, SceneShader& shader,
-			CullingMode faceCulling = CullingMode::cullFront, std::string name = "SkinnedMeshRenderer");
-
 		SkinnedMeshRenderer(Transform& transform, SceneShader& shader, SkinnedModel& model,
 			CullingMode faceCulling = CullingMode::cullFront, std::string name = "SkinnedMeshRenderer");
 
 		~SkinnedMeshRenderer();
+
+		virtual void draw(bool deferred = true) const;
+		virtual void draw(const Shader& shader) const;
 		
 		Skeleton& getSkeleton();
 		SkinnedModel& getSkinnedModel();
@@ -112,12 +109,7 @@ namespace geeL {
 		Animator* animator;
 		SkinnedModel* skinnedModel;
 
-		//Load skeleton into shaders of materials
-		virtual void transformMeshes(Model& model, const std::map<unsigned int, Material*>& materials) const;
-		virtual void transformMeshes(const Shader* shader) const;
-
 	};
-
 }
 
 #endif

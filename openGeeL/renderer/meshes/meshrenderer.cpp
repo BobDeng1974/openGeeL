@@ -13,14 +13,8 @@ using namespace std;
 
 namespace geeL{
 
-	MeshRenderer::MeshRenderer(Transform& transform, SceneShader& shader, CullingMode faceCulling, std::string name)
-		: SceneObject(transform, name), model(nullptr), faceCulling(faceCulling), instanced(true) {
-	
-		initMaterials(shader);
-	}
-
 	MeshRenderer::MeshRenderer(Transform& transform, SceneShader& shader, Model& model, CullingMode faceCulling, std::string name)
-		: SceneObject(transform, name), model(&model), faceCulling(faceCulling), instanced(false) {
+		: SceneObject(transform, name), model(&model), faceCulling(faceCulling) {
 	
 		initMaterials(shader);
 	}
@@ -42,13 +36,11 @@ namespace geeL{
 		cullFaces();
 
 		//Draw model
-		if (!instanced && model != nullptr) {
-			const std::map<unsigned int, Material*>* materials = 
-				deferred ? &deferredMaterials : & forwardMaterials;
+		const std::map<unsigned int, Material*>* materials = 
+			deferred ? &deferredMaterials : & forwardMaterials;
 
-			transformMeshes(*model, *materials);
-			model->draw(*materials);
-		}
+		transformMeshes(*model, *materials);
+		model->draw(*materials);
 
 		uncullFaces();
 	}
@@ -57,10 +49,8 @@ namespace geeL{
 		cullFaces();
 
 		//Draw model
-		if (!instanced && model != nullptr) {
-			transformMeshes(&shader);
-			model->draw();
-		}
+		transformMeshes(&shader);
+		model->draw();
 
 		uncullFaces();
 	}
@@ -172,5 +162,9 @@ namespace geeL{
 
 	map<unsigned int, Material*>::iterator MeshRenderer::forwardMaterialsEnd() {
 		return forwardMaterials.end();
+	}
+
+	const Model& MeshRenderer::getModel() const {
+		return *model;
 	}
 }

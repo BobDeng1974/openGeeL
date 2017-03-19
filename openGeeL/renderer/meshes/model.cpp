@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "../shader/shader.h"
 #include "../materials/material.h"
 #include "../animation/skeleton.h"
@@ -9,48 +10,42 @@ using namespace std;
 namespace geeL {
 
 
+	std::vector<MaterialContainer*> Model::getMaterials() const {
+		std::vector<MaterialContainer*> materials;
+		materials.reserve(meshCount());
+
+		iterateMeshes([&](const Mesh* mesh) {
+			materials.push_back(&mesh->getMaterialContainer());
+		});
+
+		return materials;
+	}
+
+	void Model::draw() const {
+		iterateMeshes([&](const Mesh* mesh) {
+			mesh->draw();
+		});
+	}
+
+	void Model::draw(const map<unsigned int, Material*>& customMaterials) const {
+		for (auto it = customMaterials.begin(); it != customMaterials.end(); it++) {
+			unsigned int i = it->first;
+
+			Material& mat = *it->second;
+			mat.bindTextures();
+			mat.bind();
+
+			const Mesh& mesh = getMesh(i);
+			mesh.draw();
+		}
+	}
+
+
 	StaticModel::~StaticModel() {
 		for (auto it = meshes.begin(); it != meshes.end(); it++)
 			delete *it;
 	}
 
-	void StaticModel::draw() const {
-		for (auto it = meshes.begin(); it != meshes.end(); it++) {
-			const StaticMesh& mesh = **it;
-			mesh.draw();
-		}
-	}
-
-	void StaticModel::draw(const vector<Material*>& customMaterials) const {
-		size_t size = customMaterials.size();
-
-		size_t i = 0;
-		for (auto it = meshes.begin(); it != meshes.end(); it++) {
-			const Mesh& mesh = **it;
-
-			if (i < size) {
-				Material& mat = *customMaterials[i];
-				mesh.draw(mat);
-			}
-			else
-				mesh.draw();
-
-			i++;
-		}
-	}
-
-	void StaticModel::draw(const map<unsigned int, Material*>& customMaterials) const {
-
-		for (auto it = customMaterials.begin(); 
-			it != customMaterials.end(); it++) {
-			
-			unsigned int i = it->first;
-			Material& mat = *it->second;
-
-			const Mesh& mesh = *meshes[i];
-			mesh.draw(mat);
-		}
-	}
 
 
 	StaticMesh& StaticModel::addMesh(StaticMesh* mesh) {
@@ -59,45 +54,13 @@ namespace geeL {
 		return *meshes.back();
 	}
 
-	vector<StaticMesh*>::iterator StaticModel::meshesBegin() {
-		return meshes.begin();
-	}
 
-	vector<StaticMesh*>::iterator StaticModel::meshesEnd() {
-		return meshes.end();
-	}
-
-	vector<StaticMesh*>::const_iterator StaticModel::meshesBeginConst() const {
-		return meshes.begin();
-	}
-
-	vector<StaticMesh*>::const_iterator StaticModel::meshesEndConst() const {
-		return meshes.end();
-	}
-
-	const Mesh& StaticModel::getMesh(unsigned int index) {
-		if (index < meshes.size()) {
-			return *meshes[index];
-		}
-
-		throw std::out_of_range("Index out of range");
+	void StaticModel::iterateMeshes(std::function<void(const Mesh* mesh)> function) const {
+		for_each(meshes.begin(), meshes.end(), function);
 	}
 
 	unsigned int StaticModel::meshCount() const {
 		return meshes.size();
-	}
-
-	std::vector<MaterialContainer*> StaticModel::getMaterials() const {
-		std::vector<MaterialContainer*> materials;
-		materials.reserve(meshCount());
-
-		for (auto it = meshes.begin(); it != meshes.end(); it++) {
-			const Mesh& mesh = **it;
-
-			materials.push_back(&mesh.getMaterialContainer());
-		}
-
-		return materials;
 	}
 
 
@@ -108,50 +71,26 @@ namespace geeL {
 	}
 
 
-	void SkinnedModel::draw() const {
-		for (auto it = meshes.begin(); it != meshes.end(); it++) {
-			const Mesh& mesh = **it;
-			mesh.draw();
-		}
-	}
-
-	void SkinnedModel::draw(const vector<Material*>& customMaterials) const {
-		size_t size = customMaterials.size();
-
-		size_t i = 0;
-		for (auto it = meshes.begin(); it != meshes.end(); it++) {
-			const Mesh& mesh = **it;
-
-			if (i < size) {
-				Material& mat = *customMaterials[i];
-				mesh.draw(mat);
-			}
-			else
-				mesh.draw();
-
-			i++;
-		}
-	}
-
-
-	void SkinnedModel::draw(const map<unsigned int, Material*>& customMaterials) const {
-
-		for (auto it = customMaterials.begin();
-			it != customMaterials.end(); it++) {
-
-			unsigned int i = it->first;
-			Material& mat = *it->second;
-
-			const Mesh& mesh = *meshes[i];
-			mesh.draw(mat);
-		}
-	}
-
-
 	void SkinnedModel::updateBones(const Skeleton& skeleton) {
 		for (auto it = meshes.begin(); it != meshes.end(); it++) {
 			SkinnedMesh& mesh = **it;
 			mesh.updateMeshBoneData(skeleton);
+		}
+	}
+
+	void SkinnedModel::setSkeleton(Skeleton* const skeleton) {
+		AnimatedObject::setSkeleton(skeleton);
+
+		//Align bone IDs to those of the skeleton
+		for (auto it = meshes.begin(); it != meshes.end(); it++) {
+			SkinnedMesh& mesh = **it;
+
+			for (auto et = mesh.bonesBegin(); et != mesh.bonesEnd(); et++) {
+				string name = et->first;
+				MeshBoneData& data = et->second;
+
+				data.id = this->skeleton->getBoneID(name);
+			}
 		}
 	}
 
@@ -161,28 +100,12 @@ namespace geeL {
 		return *meshes.back();
 	}
 
-	const Mesh& SkinnedModel::getMesh(unsigned int index) {
-		if (index < meshes.size()) {
-			return *meshes[index];
-		}
-
-		throw std::out_of_range("Index out of range");
+	void SkinnedModel::iterateMeshes(std::function<void(const Mesh* mesh)> function) const {
+		for_each(meshes.begin(), meshes.end(), function);
 	}
 
 	unsigned int SkinnedModel::meshCount() const {
 		return meshes.size();
 	}
 
-	std::vector<MaterialContainer*> SkinnedModel::getMaterials() const {
-		std::vector<MaterialContainer*> materials;
-		materials.reserve(meshCount());
-
-		for (auto it = meshes.begin(); it != meshes.end(); it++) {
-			const Mesh& mesh = **it;
-
-			materials.push_back(&mesh.getMaterialContainer());
-		}
-
-		return materials;
-	}
 }

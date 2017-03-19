@@ -123,7 +123,7 @@ namespace geeL {
 
 	void Transform::setMatrix(const mat4& matrix) {
 
-		//Extract position from matrix and remove it
+		//Extract position from matrix
 		position.x = matrix[3][0];
 		position.y = matrix[3][1];
 		position.z = matrix[3][2];

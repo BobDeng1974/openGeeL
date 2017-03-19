@@ -32,8 +32,8 @@ namespace geeL {
 		virtual void addBox(const glm::vec3 magnitude, Transform& transform, RigidbodyProperties properties);
 		virtual void addCylinder(const glm::vec3 magnitude, Transform& transform, RigidbodyProperties properties);
 		virtual void addCapsule(float radius, float height, Transform& transform, RigidbodyProperties properties);
-		virtual void addMesh(const StaticModel& model, Transform& transform, RigidbodyProperties properties);
-		virtual void addStaticMesh(const StaticModel& model, Transform& transform, RigidbodyProperties properties);
+		virtual void addMesh(const Model& model, Transform& transform, RigidbodyProperties properties);
+		virtual void addStaticMesh(const Model& model, Transform& transform, RigidbodyProperties properties);
 
 	private:
 		std::list<Rigidbody*> rigidbodies;

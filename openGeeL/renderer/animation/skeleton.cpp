@@ -15,6 +15,14 @@ namespace geeL {
 	}
 
 
+	unsigned int Skeleton::getBoneID(std::string name) const {
+		auto it = bones.find(name);
+		if (it != bones.end())
+			return it->second->getID();
+
+		return 0;
+	}
+
 	Transform* const Skeleton::getRootBone() {
 		return rootBone;
 	}

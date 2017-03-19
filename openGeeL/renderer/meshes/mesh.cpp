@@ -13,15 +13,6 @@ using namespace glm;
 
 namespace geeL {
 
-
-	void Mesh::draw(Material& customMaterial) const {
-		customMaterial.bindTextures();
-		customMaterial.bind();
-
-		draw();
-	}
-
-
 	MaterialContainer& Mesh::getMaterialContainer() const {
 		return *material;
 	}
@@ -195,4 +186,29 @@ namespace geeL {
 
 		return vec3();
 	}
+
+	unsigned int SkinnedMesh::getBoneID(std::string name) const {
+		auto it = bones.find(name);
+		if (it != bones.end())
+			return it->second.id;
+
+		return 0;
+	}
+
+	void SkinnedMesh::setBoneID(std::string name, unsigned int id) {
+		auto it = bones.find(name);
+		if (it != bones.end()) {
+			MeshBoneData& data = it->second;
+			data.id = id;
+		}
+	}
+
+	std::map<std::string, MeshBoneData>::iterator  SkinnedMesh::bonesBegin() {
+		return bones.begin();
+	}
+
+	std::map<std::string, MeshBoneData>::iterator  SkinnedMesh::bonesEnd() {
+		return bones.end();
+	}
+
 }

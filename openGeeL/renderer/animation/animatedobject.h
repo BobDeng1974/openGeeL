@@ -25,7 +25,10 @@ namespace geeL {
 		const Animation& getAnimation(unsigned int index) const;
 
 		const Skeleton& getSkeleton() const;
-		void setSkeleton(Skeleton* const skeleton);
+
+		//Set skeleton for this animated object. It is assumed that the 
+		//skeleton is completely processed and ready to use
+		virtual void setSkeleton(Skeleton* const skeleton);
 
 	protected:
 		Skeleton* skeleton;

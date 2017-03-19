@@ -9,10 +9,6 @@
 
 namespace geeL {
 
-	SkinnedMeshRenderer::SkinnedMeshRenderer(Transform& transform, SceneShader& shader,
-		CullingMode faceCulling, std::string name)
-			: MeshRenderer(transform, shader, faceCulling, name), skinnedModel(nullptr) , skeleton(nullptr) {}
-
 	SkinnedMeshRenderer::SkinnedMeshRenderer(Transform& transform, SceneShader& shader, SkinnedModel& model,
 		CullingMode faceCulling, std::string name)
 			: MeshRenderer(transform, shader, model, faceCulling, name), 
@@ -30,22 +26,29 @@ namespace geeL {
 	}
 
 
-	void SkinnedMeshRenderer::transformMeshes(const Shader* shader) const {
-		//TODO: bind actual skeleton instead of root transform
-		shader->use();
-		shader->setMat4("model", transform.getMatrix());
+	void SkinnedMeshRenderer::draw(bool deferred) const {
+		cullFaces();
+
+		//Draw model
+		const std::map<unsigned int, Material*>* materials =
+			deferred ? &deferredMaterials : &forwardMaterials;
+
+		//TODO: load skeleton matrices into shader
+		transformMeshes(*skinnedModel, *materials);
+		skinnedModel->draw(*materials);
+
+		uncullFaces();
 	}
 
-	void SkinnedMeshRenderer::transformMeshes(Model& model, const std::map<unsigned int, Material*>& materials) const {
+	void SkinnedMeshRenderer::draw(const Shader& shader) const {
+		cullFaces();
 
-		//TODO: bind actual skeleton instead of root transform
-		for (auto it = materials.begin(); it != materials.end(); it++) {
-			Material* mat = it->second;
-			const Shader& shader = mat->shader;
+		//Draw model
+		//TODO: load skeleton matrices into shader
+		transformMeshes(&shader);
+		skinnedModel->draw();
 
-			shader.use();
-			shader.setMat4("model", transform.getMatrix());
-		}
+		uncullFaces();
 	}
 
 	Skeleton& SkinnedMeshRenderer::getSkeleton() {

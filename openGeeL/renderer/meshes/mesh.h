@@ -16,7 +16,6 @@ namespace geeL {
 	class MaterialContainer;
 	class Skeleton;
 
-
 	//Single vertex of a mesh
 	struct Vertex {
 		glm::vec3 position;
@@ -75,16 +74,12 @@ namespace geeL {
 
 		virtual void draw() const = 0;
 
-		//Draw mesh with given materials
-		virtual void draw(Material& customMaterial) const;
-
 		virtual unsigned int getIndicesCount() const = 0;
 		virtual unsigned int getVerticesCount() const = 0;
 
-		virtual const glm::vec3& getVertexPosition(unsigned int i) const = 0;
-
 		//Returns vertex index at index i or 0 if i is not present
 		virtual unsigned int getIndex(unsigned int i) const = 0;
+		virtual const glm::vec3& getVertexPosition(unsigned int i) const = 0;
 
 		MaterialContainer& getMaterialContainer() const;
 
@@ -92,7 +87,6 @@ namespace geeL {
 		MaterialContainer* material;
 
 	};
-
 
 
 	//Mesh container class for static geometry
@@ -140,6 +134,12 @@ namespace geeL {
 		virtual unsigned int getIndex(unsigned int i) const;
 		virtual const glm::vec3& getVertexPosition(unsigned int i) const;
 
+		unsigned int getBoneID(std::string name) const;
+		void setBoneID(std::string name, unsigned int id);
+
+		std::map<std::string, MeshBoneData>::iterator bonesBegin();
+		std::map<std::string, MeshBoneData>::iterator bonesEnd();
+
 	private:
 		unsigned int vao, vbo, ebo;
 		std::vector<SkinnedVertex> vertices;
@@ -148,8 +148,6 @@ namespace geeL {
 
 		void init();
 	};
-
-
 }
 
 #endif

@@ -82,12 +82,12 @@ namespace geeL {
 		addRigidbody(coll, transform, properties);
 	}
 
-	void WorldPhysics::addMesh(const StaticModel& model, Transform& transform, RigidbodyProperties properties) {
+	void WorldPhysics::addMesh(const Model& model, Transform& transform, RigidbodyProperties properties) {
 		MeshCollider* coll = new MeshCollider(model);
 		addRigidbody(coll, transform, properties);
 	}
 
-	void WorldPhysics::addStaticMesh(const StaticModel& model, Transform& transform, RigidbodyProperties properties) {
+	void WorldPhysics::addStaticMesh(const Model& model, Transform& transform, RigidbodyProperties properties) {
 		StaticMeshCollider* coll = new StaticMeshCollider(model);
 		addRigidbody(coll, transform, properties);
 	}

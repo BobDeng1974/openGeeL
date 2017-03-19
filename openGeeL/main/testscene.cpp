@@ -161,7 +161,8 @@ namespace {
 			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 5.f, 4.f), vec3(0.f), vec3(1.f, 1.f, 1.f));
 			MeshRenderer& sphere1 = scene.AddMeshRenderer("resources/primitives/sphere.obj", meshTransform4, CullingMode::cullFront, true, "Sphere");
 			//if (physics != nullptr) physics->addSphere(1.f, meshTransform4, RigidbodyProperties(10.f, false));
-			//if (physics != nullptr) physics->addMesh(*sphere1.model, meshTransform4, RigidbodyProperties(10.f, false));
+			//if (physics != nullptr) physics->addMesh(sphere1.getModel(), meshTransform4, RigidbodyProperties(10.f, false));
+
 
 			for (auto it = sphere1.deferredMaterialsBegin(); it != sphere1.deferredMaterialsEnd(); it++) {
 				MaterialContainer& container = it->second->container;
