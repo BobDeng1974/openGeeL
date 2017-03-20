@@ -187,9 +187,8 @@ namespace {
 			Transform& meshTransform7 = transformFactory.CreateTransform(vec3(2.f, -2.f, 4.0f), vec3(-90.f, 0.f, 0.f), vec3(scale, scale, scale));
 			SkinnedMeshRenderer& dude = scene.AddSkinnedMeshRenderer("resources/guard/boblampclean.md5mesh", meshTransform7, CullingMode::cullFront, true, "Dude");
 
-			SimpleAnimator* dudeAnim = new SimpleAnimator(dude.getSkinnedModel(), dude.getSkeleton());
-			//dude.addComponent<Animator>();
-
+			//SimpleAnimator* dudeAnim = new SimpleAnimator(dude.getSkinnedModel(), dude.getSkeleton());
+			//dude.addAnimatorComponent(*dudeAnim);
 		}
 
 		virtual void draw(const Camera& camera) {

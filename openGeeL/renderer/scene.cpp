@@ -24,7 +24,7 @@ namespace geeL {
 
 	
 	RenderScene::~RenderScene() {
-		iterRenderObjects(RenderMode::All, [&](MeshRenderer* object) {
+		iterRenderObjects([&](MeshRenderer* object) {
 			delete object;
 		});
 	}
@@ -33,14 +33,14 @@ namespace geeL {
 	void RenderScene::update() {
 
 		camera.update();
-		iterRenderObjects(RenderMode::All, [&](MeshRenderer* object) {
+		iterRenderObjects([&](MeshRenderer* object) {
 			object->update();
 		});
 
 		worldTransform.update();
 
 		camera.lateUpdate();
-		iterRenderObjects(RenderMode::All, [&](MeshRenderer* object) {
+		iterRenderObjects([&](MeshRenderer* object) {
 			object->lateUpdate();
 		});
 
@@ -52,14 +52,14 @@ namespace geeL {
 	}
 
 	void RenderScene::drawDeferred() const {
-		iterRenderObjects(RenderMode::Deferred, [&](MeshRenderer* object) {
+		iterRenderObjects(RenderObjectsMode::Deferred, [&](const MeshRenderer* object) {
 			if (object->isActive())
 				object->draw(true);
 		});
 	}
 
 	void RenderScene::drawForward() const {
-		iterRenderObjects(RenderMode::Forward, [&](MeshRenderer* object) {
+		iterRenderObjects(RenderObjectsMode::Forward, [&](const MeshRenderer* object) {
 			if (object->isActive())
 				object->draw(false);
 		});
@@ -68,7 +68,7 @@ namespace geeL {
 	void RenderScene::drawObjects(const Shader& shader) const {
 		shader.use();
 
-		iterRenderObjects(RenderMode::All, [&](MeshRenderer* object) {
+		iterRenderObjects([&](const MeshRenderer* object) {
 			if (object->isActive())
 				object->draw(shader);
 		});
@@ -191,32 +191,35 @@ namespace geeL {
 		this->physics = physics;
 	}
 
-	std::list<MeshRenderer*>::iterator RenderScene::renderObjectsBegin() {
-		return deferredRenderObjects.begin();
-	}
-
-	std::list<MeshRenderer*>::iterator RenderScene::renderObjectsEnd() {
-		return deferredRenderObjects.end();
-	}
-
-
-	void RenderScene::iterRenderObjects(RenderMode mode, std::function<void(MeshRenderer* object)> function) {
-		if(mode == RenderMode::All || mode == RenderMode::Deferred)
+	void RenderScene::iterRenderObjects(RenderObjectsMode mode, std::function<void(MeshRenderer*)> function) {
+		if(mode == RenderObjectsMode::Deferred)
 			for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
 
-		if(mode == RenderMode::All || mode == RenderMode::Forward)
+		if(mode == RenderObjectsMode::Forward)
 			for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
 		
 		for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
 	}
 
-	void RenderScene::iterRenderObjects(RenderMode mode, std::function<void(MeshRenderer* object)> function) const {
-		if (mode == RenderMode::All || mode == RenderMode::Deferred)
+	void RenderScene::iterRenderObjects(RenderObjectsMode mode, std::function<void(const MeshRenderer*)> function) const {
+		if (mode == RenderObjectsMode::Deferred)
 			for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
 
-		if (mode == RenderMode::All || mode == RenderMode::Forward)
+		if (mode == RenderObjectsMode::Forward)
 			for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
 
+		for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
+	}
+
+	void RenderScene::iterRenderObjects(std::function<void(MeshRenderer*)> function) {
+		for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
+		for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
+		for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
+	}
+
+	void RenderScene::iterRenderObjects(std::function<void(const MeshRenderer*)> function) const {
+		for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
+		for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
 		for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
 	}
 

@@ -70,10 +70,10 @@ namespace geeL {
 	}
 
 	void PointLight::renderShadowmap(const RenderScene& scene, const Shader& shader) {
-		shader.use();
-
 		//Write light transforms of cubemap faces into shader
 		computeLightTransform();
+
+		shader.use();
 		for (int i = 0; i < 6; i++) {
 			string name = "lightTransforms[" + to_string(i) + "]";
 			shader.setMat4(name, lightTransforms[i]);

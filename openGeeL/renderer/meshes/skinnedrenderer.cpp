@@ -26,16 +26,39 @@ namespace geeL {
 	}
 
 
+	void SkinnedMeshRenderer::lateUpdate() {
+		skinnedModel->updateBones(*skeleton);
+	}
+
 	void SkinnedMeshRenderer::draw(bool deferred) const {
 		cullFaces();
 
-		//Draw model
 		const std::map<unsigned int, Material*>* materials =
 			deferred ? &deferredMaterials : &forwardMaterials;
 
-		//TODO: load skeleton matrices into shader
-		transformMeshes(*skinnedModel, *materials);
-		skinnedModel->draw(*materials);
+		for (auto it = materials->begin(); it != materials->end(); it++) {
+			Material& material = *it->second;
+			Shader& shader = material.shader;
+			shader.use();
+
+			//Load materials into shader
+			material.bindTextures();
+			material.bind();
+
+			unsigned int index = it->first;
+			const SkinnedMesh& mesh = skinnedModel->getSkinnedMesh(index);
+
+			//Bind bone transforms for indivdual meshes
+			for (auto et = mesh.bonesBeginConst(); et != mesh.bonesEndBegin(); et++) {
+				const MeshBoneData& data = et->second;
+				const glm::mat4& transform = data.transform;
+
+				shader.setMat4("bones[" + std::to_string(data.id) + "]", transform);
+			}
+
+			//Draw individual mesh
+			mesh.draw();
+		}
 
 		uncullFaces();
 	}
@@ -43,8 +66,9 @@ namespace geeL {
 	void SkinnedMeshRenderer::draw(const Shader& shader) const {
 		cullFaces();
 
+		//TODO: Load relevant bone transforms into materials
+
 		//Draw model
-		//TODO: load skeleton matrices into shader
 		transformMeshes(&shader);
 		skinnedModel->draw();
 
@@ -59,16 +83,18 @@ namespace geeL {
 		return *skinnedModel;
 	}
 
-	template<class T>
-	T& SkinnedMeshRenderer::addAnimatorComponent(const T& animator) {
-		T* t = new T(animator);
+	void SkinnedMeshRenderer::loadSkeleton(const Shader& shader) const {
+		skinnedModel->iterateMeshes([&](const SkinnedMesh* mesh) {
+			for (auto et = mesh->bonesBeginConst(); et != mesh->bonesEndBegin(); et++) {
+				const MeshBoneData& data = et->second;
+				const glm::mat4& transform = data.transform;
 
-		if (dynamic_cast<Animator*>(t) != nullptr) {
-			this->animator = t;
-			this->animator->init();
-			this->components.push_back(animator);
-		}
-		else
-			std::cout << "Given component is not an animator\n";
+				shader.setMat4("bones[" + std::to_string(data.id) + "]", transform);
+			}
+		});
+	}
+
+	RenderMode SkinnedMeshRenderer::getRenderMode() const {
+		return RenderMode::Skinned;
 	}
 }

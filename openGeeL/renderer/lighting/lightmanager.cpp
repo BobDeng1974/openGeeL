@@ -116,6 +116,7 @@ namespace geeL {
 			if (staticDLs[j]->isActive()) {
 				staticDLs[j]->forwardBind(shader, dlName + "[" + std::to_string(j) + "].",
 					"direLightMatrix[" + to_string(j) + "]");
+				dlCount++;
 			}
 		}
 

@@ -19,10 +19,9 @@ namespace geeL {
 		float x, float y, float width, float height) 
 			: GUIElement(window, x, y, width, height), scene(scene) {
 	
-		for (auto it = scene.renderObjectsBegin(); it != scene.renderObjectsEnd(); it++) {
-			MeshRenderer* renderer = *it;
+		scene.iterRenderObjects([&](MeshRenderer* renderer) {
 			add(*renderer);
-		}
+		});
 
 		LightManager& manager = scene.lightManager;
 		for (auto it = manager.directionalLightsBegin(); it != manager.directionalLightsEnd(); it++) {

@@ -46,8 +46,6 @@ namespace geeL {
 			delete *it;
 	}
 
-
-
 	StaticMesh& StaticModel::addMesh(StaticMesh* mesh) {
 		meshes.push_back(mesh);
 
@@ -55,13 +53,10 @@ namespace geeL {
 	}
 
 
-	void StaticModel::iterateMeshes(std::function<void(const Mesh* mesh)> function) const {
+	void StaticModel::iterateMeshes(std::function<void(const Mesh*)> function) const {
 		for_each(meshes.begin(), meshes.end(), function);
 	}
 
-	unsigned int StaticModel::meshCount() const {
-		return meshes.size();
-	}
 
 
 
@@ -94,18 +89,17 @@ namespace geeL {
 		}
 	}
 
-
 	SkinnedMesh& SkinnedModel::addMesh(SkinnedMesh* mesh) {
 		meshes.push_back(mesh);
 		return *meshes.back();
 	}
 
-	void SkinnedModel::iterateMeshes(std::function<void(const Mesh* mesh)> function) const {
+	void SkinnedModel::iterateMeshes(std::function<void(const Mesh*)> function) const {
 		for_each(meshes.begin(), meshes.end(), function);
 	}
 
-	unsigned int SkinnedModel::meshCount() const {
-		return meshes.size();
+	void SkinnedModel::iterateMeshes(std::function<void(const SkinnedMesh*)> function) const {
+		for_each(meshes.begin(), meshes.end(), function);
 	}
 
 }

@@ -43,6 +43,20 @@ namespace geeL {
 		std::list<Component*> components;
 
 	};
+
+
+	template<class T>
+	inline T& SceneObject::addComponent() {
+		T* comp = new T();
+
+		if (dynamic_cast<Component*>(comp) != nullptr) {
+			comp->init();
+			components.push_back(comp);
+		}
+		else
+			std::cout << "Given type has to be a component type\n";
+	}
+
 }
 
 #endif

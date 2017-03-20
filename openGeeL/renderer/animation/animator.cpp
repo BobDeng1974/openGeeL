@@ -11,10 +11,6 @@ namespace geeL {
 		: object(object), skeleton(skeleton) {}
 
 
-	void Animator::lateUpdate() {
-		object.updateBones(skeleton);
-	}
-
 	void Animator::resetSkeleton() {
 		//TODO: implement this
 	}

@@ -82,9 +82,8 @@ namespace geeL {
 
 		void setPhysics(Physics* physics);
 
-		std::list<MeshRenderer*>::iterator renderObjectsBegin();
-		std::list<MeshRenderer*>::iterator renderObjectsEnd();
-
+		void iterRenderObjects(std::function<void(MeshRenderer*)> function);
+		void iterRenderObjects(std::function<void(const MeshRenderer*)> function) const;
 
 	private:
 		Transform& worldTransform;
@@ -97,14 +96,13 @@ namespace geeL {
 		std::list<MeshRenderer*> forwardRenderObjects;
 		std::list<MeshRenderer*> mixedRenderObjects;
 
-		enum class RenderMode {
-			All,
+		enum class RenderObjectsMode {
 			Deferred,
 			Forward
 		};
 
-		void iterRenderObjects(RenderMode mode, std::function<void(MeshRenderer* object)> function);
-		void iterRenderObjects(RenderMode mode, std::function<void(MeshRenderer* object)> function) const;
+		void iterRenderObjects(RenderObjectsMode mode, std::function<void(MeshRenderer*)> function);
+		void iterRenderObjects(RenderObjectsMode mode, std::function<void(const MeshRenderer*)> function) const;
 
 	};
 }

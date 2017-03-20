@@ -167,4 +167,8 @@ namespace geeL{
 	const Model& MeshRenderer::getModel() const {
 		return *model;
 	}
+
+	RenderMode MeshRenderer::getRenderMode() const {
+		return RenderMode::Static;
+	}
 }

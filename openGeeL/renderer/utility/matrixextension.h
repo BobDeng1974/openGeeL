@@ -20,7 +20,7 @@ namespace geeL {
 		}
 
 
-		inline static glm::mat4 convertMatrix(aiMatrix4x4& from) {
+		inline static glm::mat4 convertMatrix(const aiMatrix4x4& from) {
 			glm::mat4 matrix;
 
 			matrix[0][0] = from.a1;
@@ -42,6 +42,16 @@ namespace geeL {
 			matrix[1][3] = from.d2;
 			matrix[2][3] = from.d3;
 			matrix[3][3] = from.d4;
+
+			return matrix;
+		}
+
+		inline static aiMatrix4x4 convertMatrix(const glm::mat4& from) {
+			aiMatrix4x4 matrix(
+				from[0][0], from[0][1], from[0][2], from[0][3],
+				from[1][0], from[1][1], from[1][2], from[1][3],
+				from[2][0], from[2][1], from[2][2], from[2][3],
+				from[3][0], from[3][1], from[3][2], from[3][3]);
 
 			return matrix;
 		}

@@ -9,14 +9,12 @@
 #include <iostream>
 
 using namespace std;
-using namespace glm;
 
 namespace geeL {
 
 	MaterialContainer& Mesh::getMaterialContainer() const {
 		return *material;
 	}
-
 
 
 	StaticMesh::StaticMesh(vector<Vertex>& vertices, vector<unsigned int>& indices, MaterialContainer& material)
@@ -129,11 +127,10 @@ namespace geeL {
 		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(SkinnedVertex), (GLvoid*)offsetof(SkinnedVertex, bitangent));
 
 		glEnableVertexAttribArray(5);
-		glVertexAttribIPointer(5, BONECOUNT, GL_INT, sizeof(SkinnedVertex), (GLvoid*)offsetof(SkinnedVertex, bones));
+		glVertexAttribIPointer(5, BONECOUNT, GL_INT, sizeof(SkinnedVertex), (GLvoid*)offsetof(SkinnedVertex, IDs));
 
 		glEnableVertexAttribArray(6);
-		glVertexAttribPointer(6, BONECOUNT, GL_FLOAT, GL_FALSE, sizeof(SkinnedVertex),
-			(GLvoid*)(offsetof(SkinnedVertex, bones) + offsetof(VertexBoneData, weights)));
+		glVertexAttribPointer(6, BONECOUNT, GL_FLOAT, GL_FALSE, sizeof(SkinnedVertex), (GLvoid*)offsetof(SkinnedVertex, weights));
 
 		glBindVertexArray(0);
 	}
@@ -184,7 +181,7 @@ namespace geeL {
 		if (i < vertices.size())
 			return vertices[i].position;
 
-		return vec3();
+		return glm::vec3();
 	}
 
 	unsigned int SkinnedMesh::getBoneID(std::string name) const {
@@ -208,6 +205,14 @@ namespace geeL {
 	}
 
 	std::map<std::string, MeshBoneData>::iterator  SkinnedMesh::bonesEnd() {
+		return bones.end();
+	}
+
+	std::map<std::string, MeshBoneData>::const_iterator  SkinnedMesh::bonesBeginConst() const {
+		return bones.begin();
+	}
+
+	std::map<std::string, MeshBoneData>::const_iterator  SkinnedMesh::bonesEndBegin() const {
 		return bones.end();
 	}
 

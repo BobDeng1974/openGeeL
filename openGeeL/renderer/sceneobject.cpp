@@ -29,18 +29,6 @@ namespace geeL {
 		});
 	}
 
-	template<class T>
-	T& SceneObject::addComponent() {
-		T* comp = new T();
-
-		if (dynamic_cast<Component*>(comp) != nullptr) {
-			comp->init();
-			components.push_back(comp);
-		}
-		else
-			std::cout << "Given type has to be a component type\n";
-
-	}
 
 	Component&  SceneObject::addComponent(const Component& component) {
 		Component* comp = new Component(component);

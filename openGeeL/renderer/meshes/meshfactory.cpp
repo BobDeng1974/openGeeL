@@ -234,7 +234,7 @@ namespace geeL {
 				vertex.texCoords = vec;
 			}
 			else
-				vertex.texCoords = glm::vec2(0.0f, 0.0f);
+				vertex.texCoords = glm::vec2(0.f, 0.f);
 
 			vertices.push_back(vertex);
 		}
@@ -245,7 +245,7 @@ namespace geeL {
 
 		//Walk through each of the meshes faces
 		for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
-			aiFace face = mesh->mFaces[i];
+			aiFace& face = mesh->mFaces[i];
 
 			//Retrieve indices of the face and store them in indices vector
 			for (unsigned int j = 0; j < face.mNumIndices; j++)
@@ -261,17 +261,14 @@ namespace geeL {
 			string name = bone->mName.data;
 
 			aiMatrix4x4& mat = bone->mOffsetMatrix;
-			//mat.Transpose();
-
-			bones[name].offsetMatrix = *reinterpret_cast<mat4*>(&mat);
+			bones[name].offsetMatrix = MatrixExtension::convertMatrix(mat);
 
 			//Iterate over all vertices that are affected by this bone
 			for (unsigned int j = 0; j < bone->mNumWeights; j++) {
 				aiVertexWeight weight = bone->mWeights[j];
 
 				//Populate vertices with bone weights
-				VertexBoneData& boneData = vertices[j].bones;
-				boneData.addBone(j, weight.mWeight);
+				vertices[j].addBone(j, weight.mWeight);
 			}
 		}
 	}
@@ -279,7 +276,6 @@ namespace geeL {
 
 	void MeshFactory::processTextures(vector<TextureMap*>& textures, std::string directory, aiMesh* mesh, const aiScene* scene) {
 		if (mesh->mMaterialIndex >= 0) {
-
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
 			loadMaterialTextures(textures, material, aiTextureType_DIFFUSE, MapType::Diffuse, directory, ColorType::GammaSpace);
@@ -319,27 +315,27 @@ namespace geeL {
 				AnimationBoneData* data = new AnimationBoneData();
 
 				//Add position key frames to data
-				for (unsigned int i = 0; i < node->mNumPositionKeys; i++) {
-					aiVectorKey key = node->mPositionKeys[i];
+				for (unsigned int k = 0; k < node->mNumPositionKeys; k++) {
+					aiVectorKey& key = node->mPositionKeys[k];
 					aiVector3D& p = key.mValue;
 
 					data->positions.push_back(KeyFrame(glm::vec3(p.x, p.y, p.z), key.mTime));
 				}
 
 				//Add rotation key frames to data
-				for (unsigned int i = 0; i < node->mNumRotationKeys; i++) {
-					aiQuatKey key = node->mRotationKeys[i];
+				for (unsigned int k = 0; k < node->mNumRotationKeys; k++) {
+					aiQuatKey& key = node->mRotationKeys[k];
 					aiQuaternion& r = key.mValue;
 					
-					data->positions.push_back(KeyFrame(VectorExtension::quatToEuler(r.x, r.y, r.z, r.w), key.mTime));
+					data->rotations.push_back(KeyFrame(VectorExtension::quatToEuler(r.x, r.y, r.z, r.w), key.mTime));
 				}
 
 				//Add scaling key frames to data
-				for (unsigned int i = 0; i < node->mNumScalingKeys; i++) {
-					aiVectorKey key = node->mScalingKeys[i];
+				for (unsigned int k = 0; k < node->mNumScalingKeys; k++) {
+					aiVectorKey& key = node->mScalingKeys[k];
 					aiVector3D& s = key.mValue;
 
-					data->positions.push_back(KeyFrame(glm::vec3(s.x, s.y, s.z), key.mTime));
+					data->scalings.push_back(KeyFrame(glm::vec3(s.x, s.y, s.z), key.mTime));
 				}
 
 				animation->addBoneData(name, data);

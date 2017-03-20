@@ -19,7 +19,6 @@ namespace geeL {
 		: SceneObject(transform, name), diffuse(diffuse), shadowBias(shadowBias), dynamicBias(shadowBias) {}
 
 
-
 	void Light::deferredBind(const RenderScene& scene, const Shader& shader, string name) const {
 		forwardBind(shader, name, "");
 	}
@@ -59,20 +58,25 @@ namespace geeL {
 	}
 
 	void Light::renderShadowmap(const RenderScene& scene, const Shader& shader) {
+		//Write light transform into shader
+		computeLightTransform();
+
 		shader.use();
+		shader.setMat4("lightTransform", lightTransform);
 
 		if(resolution == ShadowmapResolution::Adaptive)
 			adaptShadowmap(scene);
-
-		//Write light transform into shader
-		computeLightTransform();
-		shader.setMat4("lightTransform", lightTransform);
 
 		glViewport(0, 0, shadowmapWidth, shadowmapHeight);
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowmapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
-		scene.drawObjects(shader);
+		//scene.drawObjects(shader);
+		scene.iterRenderObjects([&](const MeshRenderer* object) {
+			if (object->isActive())
+				object->draw(shader);
+		});
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 

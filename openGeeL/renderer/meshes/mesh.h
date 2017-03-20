@@ -16,6 +16,7 @@ namespace geeL {
 	class MaterialContainer;
 	class Skeleton;
 
+
 	//Single vertex of a mesh
 	struct Vertex {
 		glm::vec3 position;
@@ -25,20 +26,17 @@ namespace geeL {
 		glm::vec3 bitangent;
 	};
 
-	//Single bone in meshes skeleton
-	struct MeshBoneData {
-		unsigned int id;
-		glm::mat4 offsetMatrix;
-		glm::mat4 transform;
 
-	};
+	//Vertex with associated bone data
+	struct SkinnedVertex {
+		glm::vec3 position;
+		glm::vec3 normal;
+		glm::vec2 texCoords;
+		glm::vec3 tangent;
+		glm::vec3 bitangent;
 
-
-	//Associated bone information for a single vertex
-	struct VertexBoneData {
 		unsigned int IDs[BONECOUNT];
 		float weights[BONECOUNT];
-
 
 		void addBone(unsigned int id, float weight) {
 			//Find unused spot in arrays
@@ -53,15 +51,12 @@ namespace geeL {
 	};
 
 
-	//Vertex with associated bone data
-	struct SkinnedVertex {
-		glm::vec3 position;
-		glm::vec3 normal;
-		glm::vec2 texCoords;
-		glm::vec3 tangent;
-		glm::vec3 bitangent;
+	//Single bone in meshes skeleton
+	struct MeshBoneData {
+		unsigned int id;
+		glm::mat4 offsetMatrix;
+		glm::mat4 transform;
 
-		VertexBoneData bones;
 	};
 
 
@@ -139,6 +134,9 @@ namespace geeL {
 
 		std::map<std::string, MeshBoneData>::iterator bonesBegin();
 		std::map<std::string, MeshBoneData>::iterator bonesEnd();
+
+		std::map<std::string, MeshBoneData>::const_iterator bonesBeginConst() const;
+		std::map<std::string, MeshBoneData>::const_iterator bonesEndBegin() const;
 
 	private:
 		unsigned int vao, vbo, ebo;

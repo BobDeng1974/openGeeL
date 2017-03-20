@@ -24,13 +24,17 @@ namespace geeL {
 		cullBack
 	};
 
+	enum class RenderMode {
+		Static,
+		Skinned,
+		Instanced
+	};
+
 
 	//Represents a drawn model in a render scene. Independent from actual model
 	class MeshRenderer : public SceneObject {
 
 	public:
-		const CullingMode faceCulling;
-
 		//Constructor for mesh renderer with an unique assigned model
 		MeshRenderer(Transform& transform, SceneShader& shader, Model& model,
 			CullingMode faceCulling = CullingMode::cullFront, std::string name = "MeshRenderer");
@@ -64,8 +68,10 @@ namespace geeL {
 		std::map<unsigned int, Material*>::iterator forwardMaterialsBegin();
 		std::map<unsigned int, Material*>::iterator forwardMaterialsEnd();
 
+		virtual RenderMode getRenderMode() const;
 
 	protected:
+		const CullingMode faceCulling;
 		std::map<unsigned int, Material*> deferredMaterials;
 		std::map<unsigned int, Material*> forwardMaterials;
 
@@ -94,6 +100,9 @@ namespace geeL {
 
 		~SkinnedMeshRenderer();
 
+		//Updates model with current transformational data of skeleton
+		virtual void lateUpdate();
+
 		virtual void draw(bool deferred = true) const;
 		virtual void draw(const Shader& shader) const;
 		
@@ -104,12 +113,30 @@ namespace geeL {
 		template<class T>
 		T& addAnimatorComponent(const T& animator);
 
+		virtual RenderMode getRenderMode() const;
+
 	private:
 		Skeleton* skeleton;
 		Animator* animator;
 		SkinnedModel* skinnedModel;
 
+		void loadSkeleton(const Shader& shader) const;
 	};
+
+
+	template<class T>
+	inline T& SkinnedMeshRenderer::addAnimatorComponent(const T & animator) {
+		T* t = new T(animator);
+
+		if (dynamic_cast<Animator*>(t) != nullptr) {
+			this->animator = t;
+			this->animator->init();
+			this->components.push_back(this->animator);
+		}
+		else
+			std::cout << "Given component is not an animator\n";
+	}
+	
 }
 
 #endif

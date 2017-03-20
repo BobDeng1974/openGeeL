@@ -11,22 +11,17 @@ namespace geeL {
 	class Transform;
 
 	//Abstract base class for all animating objects
-	class Animator : Component {
+	class Animator : public Component {
 
 	public:
+		Animator(AnimatedObject& object, Skeleton& skeleton);
+
 		//Tick function of animator. Should be called every frame
 		virtual void update() = 0;
-
-		//Second tick function that should be called after transformations
-		//for current frame are computed since it forwards final transformations
-		//into animated object
-		virtual void lateUpdate();
 
 		const Skeleton& getSkeleton() const;
 
 	protected:
-		Animator(AnimatedObject& object, Skeleton& skeleton);
-		
 		virtual void resetSkeleton();
 
 		AnimatedObject& object;
