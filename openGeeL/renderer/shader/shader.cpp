@@ -195,8 +195,13 @@ namespace geeL {
 	}
 
 
+	unsigned int counter = 0;
+	static unsigned int activeShader = 0;
 	void Shader::use() const {
-		glUseProgram(program);
+		if (program != activeShader) {
+			glUseProgram(program);
+			activeShader = program;
+		}
 	}
 
 	void Shader::addMap(unsigned int mapID, std::string name, unsigned int type) {
@@ -205,7 +210,7 @@ namespace geeL {
 
 	void Shader::bindMaps() {
 		int counter = mapOffset;
-		for (list<TextureBinding>::const_iterator it = maps.begin(); it != maps.end(); it++) {
+		for (auto it = maps.begin(); it != maps.end(); it++) {
 			glUniform1i(glGetUniformLocation(program, it->name.c_str()), counter);
 			counter++;
 		}
@@ -216,7 +221,7 @@ namespace geeL {
 	void Shader::loadMaps() const {
 		int layer = GL_TEXTURE0;
 		int counter = mapOffset;
-		for (list<TextureBinding>::const_iterator it = maps.begin(); it != maps.end(); it++) {
+		for (auto it = maps.begin(); it != maps.end(); it++) {
 			glActiveTexture(layer + counter);
 
 			glBindTexture(it->type, it->id);
@@ -227,7 +232,7 @@ namespace geeL {
 	void Shader::loadMaps(std::list<unsigned int>& maps, unsigned int type) const {
 		int layer = GL_TEXTURE0;
 		int counter = mapOffset;
-		for (list<unsigned int>::const_iterator it = maps.begin(); it != maps.end(); it++) {
+		for (auto it = maps.begin(); it != maps.end(); it++) {
 			glActiveTexture(layer + counter);
 
 			glBindTexture(type, *it);

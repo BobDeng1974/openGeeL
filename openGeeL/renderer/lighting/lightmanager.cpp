@@ -46,7 +46,6 @@ namespace geeL {
 
 	
 	PointLight& LightManager::addPointLight(Transform& transform, vec3 diffuse, float shadowBias) {
-
 		PointLight* light = new PointLight(transform, diffuse, shadowBias);
 		staticPLs.push_back(light);
 		light->initShadowmap();
@@ -77,7 +76,6 @@ namespace geeL {
 				plCount++;
 			}
 		}
-			
 
 		for (size_t j = 0; j < staticDLs.size(); j++) {
 			if (staticDLs[j]->isActive()) {
@@ -153,8 +151,6 @@ namespace geeL {
 			name = slName + "[" + to_string(j) + "].cookie";
 			staticSLs[j]->addLightCookie(shader, name);
 		}
-
-		shader.bindMaps();
 	}
 
 	void LightManager::forwardScreenInfo(const ScreenInfo& info, const Camera& camera) {
@@ -165,19 +161,23 @@ namespace geeL {
 	}
 
 	void LightManager::drawShadowmaps(const RenderScene& scene) const {
+
 		for (size_t j = 0; j < staticPLs.size(); j++) {
 			if (staticPLs[j]->isActive())
-				staticPLs[j]->renderShadowmap(scene, *plShader);
+				staticPLs[j]->renderShadowmap(scene.camera, 
+					[&](const Shader& shader) { scene.drawStaticObjects(shader); }, *plShader);
 		}
 
 		for (size_t j = 0; j < staticDLs.size(); j++) {
 			if (staticDLs[j]->isActive())
-				staticDLs[j]->renderShadowmap(scene, *dlShader);
+				staticDLs[j]->renderShadowmap(scene.camera, 
+					[&](const Shader& shader) { scene.drawStaticObjects(shader); }, *dlShader);
 		}
 
 		for (size_t j = 0; j < staticSLs.size(); j++) {
 			if (staticSLs[j]->isActive())
-				staticSLs[j]->renderShadowmap(scene, *dlShader);
+				staticSLs[j]->renderShadowmap(scene.camera, 
+					[&](const Shader& shader) { scene.drawStaticObjects(shader); }, *dlShader);
 		}	
 	}
 

@@ -15,7 +15,7 @@ using glm::mat4;
 namespace geeL {
 
 	class TextureMap;
-	class Shader;
+	class SceneShader;
 
 	//A generic material class that allow a wide array of parameters
 	class GenericMaterialContainer : public MaterialContainer {
@@ -31,8 +31,8 @@ namespace geeL {
 		void addParameter(std::string name, vec3 parameter);
 		void addParameter(std::string name, mat4 parameter);
 
-		void bindTextures(Shader& shader) const;
-		void bind(Shader& shader) const;
+		void bindTextures(SceneShader& shader) const;
+		void bind(SceneShader& shader) const;
 
 		virtual float getFloatValue(std::string name) const;
 		virtual int   getIntValue(std::string name) const;

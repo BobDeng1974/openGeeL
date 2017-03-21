@@ -54,17 +54,23 @@ namespace geeL {
 		//Update scene information. Should be called once at beginning of frame
 		void update();
 		
-		//Draw only those objects that are suited for deferred rendering
+		//Draw all those objects with a deferred rendering shader
 		void drawDeferred() const;
 
-		//Draw all those objects that are not suited for deferred rendering (with forward rendering)
+		//Draw all those objects with a forward rendering shader
 		void drawForward() const;
 
 		//Draw skybox indepentently
 		void drawSkybox() const;
 
-		//Draw only the objects in the scene and all with given shader
+		//Draw all objects in the scene with the given shader
 		void drawObjects(const Shader& shader) const;
+
+		//Draw all static objects in the scene with the given shader
+		void drawStaticObjects(const Shader& shader) const;
+
+		//Draw all skinned objects in the scene with the given shader
+		void drawSkinnedObjects(const Shader& shader) const;
 
 		void forwardScreenInfo(const ScreenInfo& info);
 
@@ -93,12 +99,23 @@ namespace geeL {
 		MeshFactory& meshFactory;
 
 		std::list<MeshRenderer*> deferredRenderObjects;
+		std::list<MeshRenderer*> deferredSkinnedObjects;
+
 		std::list<MeshRenderer*> forwardRenderObjects;
+		std::list<MeshRenderer*> forwardSkinnedObjects;
+
 		std::list<MeshRenderer*> mixedRenderObjects;
+		std::list<MeshRenderer*> mixedSkinnedObjects;
 
 		enum class RenderObjectsMode {
 			Deferred,
-			Forward
+			DeferredStatic,
+			DeferredSkinned,
+			Forward,
+			ForwardStatic,
+			ForwardSkinned,
+			Static,
+			Skinned
 		};
 
 		void iterRenderObjects(RenderObjectsMode mode, std::function<void(MeshRenderer*)> function);

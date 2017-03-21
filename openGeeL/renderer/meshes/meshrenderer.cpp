@@ -39,7 +39,7 @@ namespace geeL{
 		const std::map<unsigned int, Material*>* materials = 
 			deferred ? &deferredMaterials : & forwardMaterials;
 
-		transformMeshes(*model, *materials);
+		transformMeshes(*model, *materials, deferred);
 		model->draw(*materials);
 
 		uncullFaces();
@@ -112,13 +112,24 @@ namespace geeL{
 		shader->setMat4("model", transform.getMatrix());
 	}
 
-	void MeshRenderer::transformMeshes(Model& model, const map<unsigned int, Material*>& materials) const {
-		for (auto it = materials.begin(); it != materials.end(); it++) {
-			Material* mat = it->second;
-			const Shader& shader = mat->shader;
+	void MeshRenderer::transformMeshes(Model& model, const map<unsigned int, Material*>& materials, bool deferred) const {
+		//In deferred rendering mode all material shaders are equal. 
+		//Therefore, binding one means binding all
+		if (deferred) {
+			Material* mat = materials.begin()->second;
+			const SceneShader& shader = mat->shader;
 
 			shader.use();
 			shader.setMat4("model", transform.getMatrix());
+		}
+		else {
+			for (auto it = materials.begin(); it != materials.end(); it++) {
+				Material* mat = it->second;
+				const SceneShader& shader = mat->shader;
+
+				shader.use();
+				shader.setMat4("model", transform.getMatrix());
+			}
 		}
 	}
 

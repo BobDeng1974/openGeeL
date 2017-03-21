@@ -57,7 +57,9 @@ namespace geeL {
 		shader.addMap(shadowmapID, name, GL_TEXTURE_2D);
 	}
 
-	void Light::renderShadowmap(const RenderScene& scene, const Shader& shader) {
+	void Light::renderShadowmap(const Camera& camera, 
+		std::function<void(const Shader&)> renderCall, const Shader& shader) {
+
 		//Write light transform into shader
 		computeLightTransform();
 
@@ -65,17 +67,13 @@ namespace geeL {
 		shader.setMat4("lightTransform", lightTransform);
 
 		if(resolution == ShadowmapResolution::Adaptive)
-			adaptShadowmap(scene);
+			adaptShadowmap(camera);
 
 		glViewport(0, 0, shadowmapWidth, shadowmapHeight);
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowmapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
-		//scene.drawObjects(shader);
-		scene.iterRenderObjects([&](const MeshRenderer* object) {
-			if (object->isActive())
-				object->draw(shader);
-		});
+		renderCall(shader);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
@@ -90,10 +88,10 @@ namespace geeL {
 	}
 
 
-	void Light::adaptShadowmap(const RenderScene& scene) {
-		vec3 center = scene.camera.center;
+	void Light::adaptShadowmap(const Camera& camera) {
+		vec3 center = camera.center;
 		//float depth = scene.camera.depth;
-		const ScreenInfo& info = *scene.camera.info;
+		const ScreenInfo& info = *camera.info;
 		float depth = fminf(info.CTdepth, fminf(info.BLdepth,
 			fminf(info.BRdepth, fminf(info.TLdepth, info.TRdepth))));
 

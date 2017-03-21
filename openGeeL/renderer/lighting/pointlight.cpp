@@ -69,7 +69,9 @@ namespace geeL {
 		shader.addMap(shadowmapID, name, GL_TEXTURE_CUBE_MAP);
 	}
 
-	void PointLight::renderShadowmap(const RenderScene& scene, const Shader& shader) {
+	void PointLight::renderShadowmap(const Camera& camera, 
+		std::function<void(const Shader&)> renderCall, const Shader& shader) {
+		
 		//Write light transforms of cubemap faces into shader
 		computeLightTransform();
 
@@ -83,13 +85,13 @@ namespace geeL {
 		shader.setVector3("lightPosition", transform.getPosition());
 
 		if (resolution == ShadowmapResolution::Adaptive)
-			adaptShadowmap(scene);
+			adaptShadowmap(camera);
 
 		glViewport(0, 0, shadowmapWidth, shadowmapHeight);
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowmapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
-		scene.drawObjects(shader);
+		renderCall(shader);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 

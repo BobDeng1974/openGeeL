@@ -74,6 +74,24 @@ namespace geeL {
 		});
 	}
 
+	void RenderScene::drawStaticObjects(const Shader& shader) const {
+		shader.use();
+
+		iterRenderObjects(RenderObjectsMode::Static, [&](const MeshRenderer* object) {
+			if (object->isActive())
+				object->draw(shader);
+		});
+	}
+
+	void RenderScene::drawSkinnedObjects(const Shader& shader) const {
+		shader.use();
+
+		iterRenderObjects(RenderObjectsMode::Skinned, [&](const MeshRenderer* object) {
+			if (object->isActive())
+				object->draw(shader);
+		});
+	}
+
 	void RenderScene::setSkybox(Skybox& skybox) {
 		this->skybox = &skybox;
 	}
@@ -128,9 +146,9 @@ namespace geeL {
 		SkinnedMeshRenderer* renderer = meshFactory.CreateSkinnedMeshRendererManual(model, transform, faceCulling, deferred, name);
 
 		if (deferred)
-			deferredRenderObjects.push_back(renderer);
+			deferredSkinnedObjects.push_back(renderer);
 		else
-			forwardRenderObjects.push_back(renderer);
+			forwardSkinnedObjects.push_back(renderer);
 
 		return *renderer;
 	}
@@ -146,11 +164,11 @@ namespace geeL {
 		bool containsForward  = renderer->containsForwardMaterials();
 
 		if (containsDeferred && containsForward)
-			mixedRenderObjects.push_back(renderer);
+			mixedSkinnedObjects.push_back(renderer);
 		if (containsDeferred)
-			deferredRenderObjects.push_back(renderer);
+			deferredSkinnedObjects.push_back(renderer);
 		if (containsForward)
-			forwardRenderObjects.push_back(renderer);
+			forwardSkinnedObjects.push_back(renderer);
 
 		return *renderer;
 	}
@@ -191,36 +209,116 @@ namespace geeL {
 		this->physics = physics;
 	}
 
-	void RenderScene::iterRenderObjects(RenderObjectsMode mode, std::function<void(MeshRenderer*)> function) {
-		if(mode == RenderObjectsMode::Deferred)
-			for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
 
-		if(mode == RenderObjectsMode::Forward)
-			for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
-		
-		for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
+
+	void RenderScene::iterRenderObjects(RenderObjectsMode mode, std::function<void(MeshRenderer*)> function) {
+		switch (mode) {
+			case RenderObjectsMode::Deferred:
+				for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
+				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
+
+				for_each(deferredSkinnedObjects.begin(), deferredSkinnedObjects.end(), function);
+				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
+				break;
+			case RenderObjectsMode::DeferredStatic:
+				for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
+				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
+				break;
+			case RenderObjectsMode::DeferredSkinned:
+				for_each(deferredSkinnedObjects.begin(), deferredSkinnedObjects.end(), function);
+				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
+				break;
+			case RenderObjectsMode::Static:
+				for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
+				for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
+				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
+				break;
+			case RenderObjectsMode::Skinned:
+				for_each(deferredSkinnedObjects.begin(), deferredSkinnedObjects.end(), function);
+				for_each(forwardSkinnedObjects.begin(), forwardSkinnedObjects.end(), function);
+				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
+				break;
+			case RenderObjectsMode::Forward:
+				for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
+				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
+
+				for_each(forwardSkinnedObjects.begin(), forwardSkinnedObjects.end(), function);
+				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
+				break;
+			case RenderObjectsMode::ForwardStatic:
+				for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
+				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
+				break;
+			case RenderObjectsMode::ForwardSkinned:
+				for_each(forwardSkinnedObjects.begin(), forwardSkinnedObjects.end(), function);
+				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
+				break;
+		}
 	}
 
 	void RenderScene::iterRenderObjects(RenderObjectsMode mode, std::function<void(const MeshRenderer*)> function) const {
-		if (mode == RenderObjectsMode::Deferred)
-			for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
+		switch (mode) {
+			case RenderObjectsMode::Deferred:
+				for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
+				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
 
-		if (mode == RenderObjectsMode::Forward)
-			for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
+				for_each(deferredSkinnedObjects.begin(), deferredSkinnedObjects.end(), function);
+				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
+				break;
+			case RenderObjectsMode::DeferredStatic:
+				for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
+				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
+				break;
+			case RenderObjectsMode::DeferredSkinned:
+				for_each(deferredSkinnedObjects.begin(), deferredSkinnedObjects.end(), function);
+				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
+				break;
+			case RenderObjectsMode::Static:
+				for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
+				for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
+				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
+				break;
+			case RenderObjectsMode::Skinned:
+				for_each(deferredSkinnedObjects.begin(), deferredSkinnedObjects.end(), function);
+				for_each(forwardSkinnedObjects.begin(), forwardSkinnedObjects.end(), function);
+				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
+				break;
+			case RenderObjectsMode::Forward:
+				for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
+				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
 
-		for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
+				for_each(forwardSkinnedObjects.begin(), forwardSkinnedObjects.end(), function);
+				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
+				break;
+			case RenderObjectsMode::ForwardStatic:
+				for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
+				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
+				break;
+			case RenderObjectsMode::ForwardSkinned:
+				for_each(forwardSkinnedObjects.begin(), forwardSkinnedObjects.end(), function);
+				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
+				break;
+		}
 	}
 
 	void RenderScene::iterRenderObjects(std::function<void(MeshRenderer*)> function) {
 		for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
 		for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
 		for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
+
+		for_each(deferredSkinnedObjects.begin(), deferredSkinnedObjects.end(), function);
+		for_each(forwardSkinnedObjects.begin(), forwardSkinnedObjects.end(), function);
+		for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
 	}
 
 	void RenderScene::iterRenderObjects(std::function<void(const MeshRenderer*)> function) const {
 		for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
 		for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
 		for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
+
+		for_each(deferredSkinnedObjects.begin(), deferredSkinnedObjects.end(), function);
+		for_each(forwardSkinnedObjects.begin(), forwardSkinnedObjects.end(), function);
+		for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
 	}
 
 }

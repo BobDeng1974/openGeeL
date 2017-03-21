@@ -6,7 +6,7 @@
 
 namespace geeL {
 
-	class Shader;
+	class SceneShader;
 
 	enum MaterialType {
 		Opaque = 0,
@@ -24,8 +24,8 @@ namespace geeL {
 		MaterialContainer(std::string name = "material", MaterialType type = Opaque)
 			: type(type), name(name) {}
 
-		virtual void bindTextures(Shader& shader) const = 0;
-		virtual void bind(Shader& shader) const = 0;
+		virtual void bindTextures(SceneShader& shader) const = 0;
+		virtual void bind(SceneShader& shader) const = 0;
 
 		virtual float getFloatValue(std::string name) const = 0;
 		virtual int getIntValue(std::string name) const = 0;
@@ -41,10 +41,10 @@ namespace geeL {
 	class Material {
 		
 	public:
-		Shader& shader;
+		SceneShader& shader;
 		MaterialContainer& container;
 
-		Material(Shader& shader, MaterialContainer& container, bool deferred = true);
+		Material(SceneShader& shader, MaterialContainer& container, bool deferred = true);
 
 		void bindTextures() const;
 		void bind() const;

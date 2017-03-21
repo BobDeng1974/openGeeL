@@ -15,7 +15,10 @@ namespace geeL {
 		virtual void deferredBind(const RenderScene& scene, const Shader& shader, std::string name) const;
 		virtual void forwardBind(const Shader& shader, std::string name, std::string transformName) const;
 		virtual void initShadowmap();
-		virtual void renderShadowmap(const RenderScene& scene, const Shader& shader);
+
+		virtual void renderShadowmap(const Camera& camera, 
+			std::function<void(const Shader&)> renderCall, const Shader& shader);
+
 		virtual void addShadowmap(Shader& shader, std::string name);
 		virtual void computeLightTransform();
 

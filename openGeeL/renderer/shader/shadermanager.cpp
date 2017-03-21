@@ -39,6 +39,8 @@ namespace geeL {
 
 			scene.camera.uniformBind(camID);
 		}
+
+		shader.bindMaps();
 	}
 
 	void ShaderManager::staticDeferredBind(const RenderScene& scene, SceneShader& shader) const {
@@ -56,6 +58,8 @@ namespace geeL {
 
 			scene.camera.uniformBind(camID);
 		}
+
+		shader.bindMaps();
 	}
 
 	void ShaderManager::dynamicBind(const RenderScene& scene) const {

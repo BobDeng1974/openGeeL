@@ -3,6 +3,7 @@
 
 #include <vec3.hpp>
 #include <mat4x4.hpp>
+#include <functional>
 #include <string>
 #include "../sceneobject.h"
 
@@ -10,6 +11,7 @@ using glm::vec3;
 
 namespace geeL {
 
+	class Camera;
 	class Transform;
 	class RenderScene;
 	class Shader;
@@ -36,7 +38,12 @@ namespace geeL {
 
 		virtual void initShadowmap();
 		virtual void addShadowmap(Shader& shader, std::string name);
-		virtual void renderShadowmap(const RenderScene& scene, const Shader& shader);
+
+		//Render function for shadow maps. Takes current scene camera, render function
+		//that  draws desired objects of scene and the actual shadow map shader
+		virtual void renderShadowmap(const Camera& camera, 
+			std::function<void(const Shader&)> renderCall, const Shader& shader);
+
 		virtual void computeLightTransform() = 0;
 
 		//Computes experienced intensity at given point. Ranges between 0 and 1
@@ -64,7 +71,7 @@ namespace geeL {
 		void setDimensions(int resolution);
 
 		//Dynamically change shadow map resolution
-		virtual void adaptShadowmap(const RenderScene& scene);
+		virtual void adaptShadowmap(const Camera& camera);
 
 		//Dynamically change resolution of shadow map 
 		//depending on distance to render camera. Returns true if 

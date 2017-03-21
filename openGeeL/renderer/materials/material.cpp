@@ -2,7 +2,7 @@
 
 namespace geeL {
 
-	Material::Material(Shader& shader, MaterialContainer& container, bool deferred)
+	Material::Material(SceneShader& shader, MaterialContainer& container, bool deferred)
 		: shader(shader), container(container), deferred(deferred) {}
 
 

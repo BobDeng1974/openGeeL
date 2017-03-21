@@ -25,7 +25,8 @@ namespace geeL {
 	void DirectionalLight::deferredBind(const RenderScene& scene, const Shader& shader, string name) const {
 		Light::deferredBind(scene, shader, name);
 
-		shader.setVector3(name + "direction", scene.GetOriginInViewSpace() - scene.TranslateToViewSpace(transform.getForwardDirection()));
+		shader.setVector3(name + "direction", scene.GetOriginInViewSpace() - 
+			scene.TranslateToViewSpace(transform.getForwardDirection()));
 		shader.setMat4(name + "lightTransform", lightTransform);
 	}
 
@@ -36,15 +37,17 @@ namespace geeL {
 		shader.setMat4(transformName, lightTransform);
 	}
 
-	void DirectionalLight::renderShadowmap(const RenderScene& scene, const Shader& shader) {
+	void DirectionalLight::renderShadowmap(const Camera& camera, 
+		std::function<void(const Shader&)> renderCall, const Shader& shader) {
+		
 		shader.use();
-
 		shader.setMat4("lightTransform", lightTransform);
+
 		glViewport(0, 0, shadowmapWidth, shadowmapHeight);
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowmapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
-		scene.drawObjects(shader);
+		renderCall(shader);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 

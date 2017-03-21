@@ -79,7 +79,7 @@ namespace geeL {
 		void initMaterials(SceneShader& shader);
 
 		//Transform given model with transformation data of this mesh renderer
-		virtual void transformMeshes(Model& model, const std::map<unsigned int, Material*>& materials) const;
+		virtual void transformMeshes(Model& model, const std::map<unsigned int, Material*>& materials, bool deferred) const;
 		virtual void transformMeshes(const Shader* shader) const;
 
 		void cullFaces() const;

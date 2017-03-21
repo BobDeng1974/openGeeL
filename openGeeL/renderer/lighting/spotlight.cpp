@@ -76,7 +76,6 @@ namespace geeL {
 
 		bool changed = false;
 		if (distance < 1.f) {
-
 			int resolution = 1024; //^= ShadowmapResolution::VeryHigh
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);
@@ -85,7 +84,6 @@ namespace geeL {
 			}
 		}
 		else if (distance < 6.f) {
-
 			int resolution = 768;
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);
@@ -94,7 +92,6 @@ namespace geeL {
 			}
 		}
 		else if (distance < 10.f) {
-
 			int resolution = 512; //^= ShadowmapResolution::High
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);
@@ -103,7 +100,6 @@ namespace geeL {
 			}
 		}
 		else if (distance < 15.f) {
-
 			int resolution = 256; //^= ShadowmapResolution::Medium
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);
@@ -112,7 +108,6 @@ namespace geeL {
 			}
 		}
 		else {
-
 			int resolution = 128; //^= ShadowmapResolution::Small
 			if (shadowmapWidth != resolution) {
 				setDimensions(resolution);

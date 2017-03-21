@@ -10,7 +10,7 @@
 namespace geeL {
 
 	class TextureMap;
-	class Shader;
+	class SceneShader;
 
 	//Material class with default shading
 	class DefaultMaterialContainer : public MaterialContainer {
@@ -32,8 +32,8 @@ namespace geeL {
 		void setMetallic(float value);
 		void setColor(glm::vec3 value);
 
-		virtual void bindTextures(Shader& shader) const;
-		virtual void bind(Shader& shader) const;
+		virtual void bindTextures(SceneShader& shader) const;
+		virtual void bind(SceneShader& shader) const;
 
 		virtual float getFloatValue(std::string name) const;
 		virtual int getIntValue(std::string name) const;
