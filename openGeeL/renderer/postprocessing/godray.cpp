@@ -15,17 +15,22 @@ namespace geeL {
 			scene(scene), lightPosition(lightPosition), samples(samples) {}
 
 
+	void GodRay::init(ScreenQuad& screen, const FrameBufferInformation& info) {
+		PostProcessingEffect::init(screen, info);
+
+		shader.setInteger("samples", samples);
+		shader.setInteger("raysOnly", onlyEffect);
+	}
+
 	void GodRay::bindValues() {
 		PostProcessingEffect::bindValues();
 
-		shader.setInteger("samples", samples);
 		glm::vec3 screenPos = scene.TranslateToScreenSpace(lightPosition);
 		shader.setVector3("lightPosition", screenPos);
 
 		glm::vec3 viewPos = scene.TranslateToViewSpace(lightPosition);
 		viewPos = -glm::normalize(viewPos);
 		shader.setVector3("lightPositionView", viewPos);
-		shader.setInteger("raysOnly", onlyEffect);
 	}
 
 	glm::vec3 GodRay::getLightPosition() const {
@@ -41,8 +46,12 @@ namespace geeL {
 	}
 
 	void GodRay::setSampleCount(unsigned int samples) {
-		if (samples < 200)
+		if (samples < 200 && samples != this->samples) {
 			this->samples = samples;
+
+			shader.use();
+			shader.setInteger("samples", samples);
+		}
 	}
 
 }

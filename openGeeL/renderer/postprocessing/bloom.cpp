@@ -11,15 +11,19 @@ namespace geeL {
 		: PostProcessingEffect("renderer/postprocessing/bloomfilter.frag"), scatter(scatter) {}
 
 
-	void BloomFilter::bindValues() {
-		PostProcessingEffect::bindValues();
+	void BloomFilter::init(ScreenQuad& screen, const FrameBufferInformation& info) {
+		PostProcessingEffect::init(screen, info);
 
 		shader.setFloat("scatter", scatter);
 	}
 
 	void BloomFilter::setScatter(float scatter) {
-		if (scatter > 0.f)
+		if (scatter > 0.f && scatter != this->scatter) {
 			this->scatter = scatter;
+
+			shader.use();
+			shader.setFloat("scatter", scatter);
+		}
 	}
 
 	float BloomFilter::getScatter() const {
@@ -34,7 +38,7 @@ namespace geeL {
 		filter.setScatter(scatter);
 	}
 
-	float  Bloom::getScatter() const {
+	float Bloom::getScatter() const {
 		return filter.getScatter();
 	}
 

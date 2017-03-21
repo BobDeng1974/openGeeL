@@ -19,11 +19,10 @@ namespace geeL {
 
 		BloomFilter(float scatter = 0.6f);
 
+		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
+
 		void setScatter(float scatter);
 		float getScatter() const;
-
-	protected:
-		virtual void bindValues();
 
 	};
 

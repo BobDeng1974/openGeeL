@@ -184,8 +184,8 @@ namespace {
 			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", meshTransform6, CullingMode::cullFront, true, "Cyborg");
 
 			float scale = 0.05f;
-			Transform& meshTransform7 = transformFactory.CreateTransform(vec3(2.f, -2.f, 4.0f), vec3(-90.f, 0.f, 0.f), vec3(scale, scale, scale));
-			SkinnedMeshRenderer& dude = scene.AddSkinnedMeshRenderer("resources/guard/boblampclean.md5mesh", meshTransform7, CullingMode::cullFront, true, "Dude");
+			//Transform& meshTransform7 = transformFactory.CreateTransform(vec3(2.f, -2.f, 4.0f), vec3(-90.f, 0.f, 0.f), vec3(scale, scale, scale));
+			//SkinnedMeshRenderer& dude = scene.AddSkinnedMeshRenderer("resources/guard/boblampclean.md5mesh", meshTransform7, CullingMode::cullFront, true, "Dude");
 
 			//SimpleAnimator* dudeAnim = new SimpleAnimator(dude.getSkinnedModel(), dude.getSkeleton());
 			//dude.addAnimatorComponent(*dudeAnim);
@@ -268,7 +268,7 @@ void draw() {
 	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.3f, 0.3f);
 	
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 4.f, 100.f, 0.3f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 14.f, 100.f, 0.3f);
 
 	FXAA fxaa = FXAA();
 
@@ -297,8 +297,8 @@ void draw() {
 	//renderer.addEffect(raySmooth);
 	//postLister.add(raySmooth, godRaySnippet);
 
-	//renderer.addEffect(ssrrSmooth, ssrr);
-	
+	renderer.addEffect(ssrrSmooth, ssrr);
+
 	//renderer.addEffect(dof, dof);
 	//postLister.add(dof);
 

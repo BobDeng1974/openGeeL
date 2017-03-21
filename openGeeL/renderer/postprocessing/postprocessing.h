@@ -56,7 +56,7 @@ namespace geeL {
 		ScreenQuad* screen;
 		bool onlyEffect;
 
-		virtual void bindValues();
+		virtual void bindValues() {}
 		virtual void bindToScreen();
 	};
 }

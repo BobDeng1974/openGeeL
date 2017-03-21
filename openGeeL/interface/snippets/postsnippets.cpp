@@ -58,12 +58,23 @@ namespace geeL {
 
 
 	void ColorCorrectionSnippet::draw(GUIContext* context) {
-		color.r = GUISnippets::drawBarFloat(context, color.r, 0.f, 1.f, 0.001f, "Red");
-		color.g = GUISnippets::drawBarFloat(context, color.g, 0.f, 1.f, 0.001f, "Green");
-		color.b = GUISnippets::drawBarFloat(context, color.b, 0.f, 1.f, 0.001f, "Blue");
-		color.h = GUISnippets::drawBarFloat(context, color.h, 0.f, 1.f, 0.001f, "Hue");
-		color.s = GUISnippets::drawBarFloat(context, color.s, 0.f, 1.f, 0.001f, "Saturation");
-		color.v = GUISnippets::drawBarFloat(context, color.v, 0.f, 1.f, 0.001f, "Brightness");
+		float r = GUISnippets::drawBarFloat(context, color.getRed(), 0.f, 1.f, 0.001f, "Red");
+		color.setRed(r);
+
+		float g = GUISnippets::drawBarFloat(context, color.getGreen(), 0.f, 1.f, 0.001f, "Green");
+		color.setGreen(g);
+
+		float b = GUISnippets::drawBarFloat(context, color.getBlue(), 0.f, 1.f, 0.001f, "Blue");
+		color.setBlue(b);
+
+		float h = GUISnippets::drawBarFloat(context, color.getHue(), 0.f, 1.f, 0.001f, "Hue");
+		color.setHue(h);
+
+		float s = GUISnippets::drawBarFloat(context, color.getSaturation(), 0.f, 1.f, 0.001f, "Saturation");
+		color.setSaturation(s);
+
+		float v = GUISnippets::drawBarFloat(context, color.getBrightness(), 0.f, 1.f, 0.001f, "Brightness");
+		color.setBrightness(v);
 	}
 
 	std::string ColorCorrectionSnippet::toString() const {

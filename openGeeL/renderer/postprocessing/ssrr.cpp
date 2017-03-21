@@ -10,14 +10,19 @@ namespace geeL {
 	SSRR::SSRR() : PostProcessingEffect("renderer/postprocessing/ssrr.frag"){}
 
 
-	void SSRR::bindValues() {
+	void SSRR::init(ScreenQuad& screen, const FrameBufferInformation& info) {
+		PostProcessingEffect::init(screen, info);
+
 		shader.setInteger("image", shader.mapOffset);
 		shader.setInteger("gSpecular", shader.mapOffset + 1);
 		shader.setInteger("gPositionDepth", shader.mapOffset + 2);
 		shader.setInteger("gNormalMet", shader.mapOffset + 3);
 
-		shader.setMat4("projection", *projectionMatrix);
 		shader.setInteger("effectOnly", onlyEffect);
+	}
+
+	void SSRR::bindValues() {
+		shader.setMat4("projection", *projectionMatrix);
 	}
 
 	void SSRR::addWorldInformation(map<WorldMaps, unsigned int> maps, map<WorldMatrices,
@@ -27,6 +32,5 @@ namespace geeL {
 		addBuffer({ maps[WorldMaps::DiffuseRoughness], maps[WorldMaps::PositionDepth], maps[WorldMaps::NormalMetallic] });
 		projectionMatrix = matrices[WorldMatrices::Projection];
 	}
-
 
 }

@@ -24,8 +24,11 @@ namespace geeL {
 
 	void BlurredPostEffect::init(ScreenQuad& screen, const FrameBufferInformation& info) {
 		PostProcessingEffect::init(screen, info);
-
 		screenInfo = &info;
+
+		shader.setInteger("image", shader.mapOffset);
+		shader.setInteger("image2", shader.mapOffset + 1);
+		shader.setInteger("effectOnly", onlyEffect);
 
 		effectBuffer.init(info.width * effectResolution, info.height * effectResolution, 
 			1, ColorType::RGB16, FilterMode::Linear);
@@ -40,10 +43,6 @@ namespace geeL {
 
 
 	void BlurredPostEffect::bindValues() {
-		shader.setInteger("image", shader.mapOffset);
-		shader.setInteger("image2", shader.mapOffset + 1);
-		shader.setInteger("effectOnly", onlyEffect);
-
 		effectBuffer.fill(effect);
 
 		blur.setBuffer(effectBuffer.getColorID());
@@ -51,6 +50,16 @@ namespace geeL {
 
 		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
 		FrameBuffer::bind(parentFBO);
+	}
+
+	void BlurredPostEffect::draw() {
+		shader.use();
+		bindValues();
+
+		//Switch shader again since shader of encapsuled 
+		//effect was set active during 'bindValues'
+		shader.use();
+		bindToScreen();
 	}
 
 	void BlurredPostEffect::resizeEffectResolution(float effectResolution) {

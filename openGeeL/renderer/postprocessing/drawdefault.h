@@ -19,8 +19,6 @@ namespace geeL {
 	protected:
 		float exposure;
 
-		virtual void bindValues();
-
 	};
 }
 

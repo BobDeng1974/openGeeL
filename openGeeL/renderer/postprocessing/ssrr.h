@@ -12,6 +12,8 @@ namespace geeL {
 	public:
 		SSRR();
 
+		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
+
 		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
 			std::map<WorldMatrices, const glm::mat4*> matrices,
 			std::map<WorldVectors, const glm::vec3*> vectors);

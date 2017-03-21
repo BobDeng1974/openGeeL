@@ -14,7 +14,9 @@ namespace geeL {
 			float effectResolution = 1.f, float blurResolution = 1.f);
 
 		virtual void setBuffer(const FrameBuffer& buffer);
+
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
+		virtual void draw();
 
 		void resizeEffectResolution(float effectResolution);
 

@@ -17,6 +17,8 @@ namespace geeL {
 	public:
 		GodRay(const RenderScene& scene, glm::vec3 lightPosition, unsigned int samples = 20.f);
 
+		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
+
 		glm::vec3 getLightPosition() const;
 		void setLightPosition(glm::vec3 position);
 

@@ -58,6 +58,9 @@ namespace geeL {
 		this->screen = &screen;
 
 		setParentFBO(info.fbo);
+
+		shader.use();
+		shader.setInteger("image", shader.mapOffset);
 	}
 
 	void PostProcessingEffect::draw() {
@@ -68,14 +71,10 @@ namespace geeL {
 	}
 
 	void PostProcessingEffect::bindToScreen() {
-		shader.use();
 		shader.loadMaps(buffers);
 		screen->draw();
 	}
 
-	void PostProcessingEffect::bindValues() {
-		shader.setInteger("image", shader.mapOffset);
-	}
 
 	string PostProcessingEffect::toString() const {
 		return "Post effect with shader: " + shader.name;

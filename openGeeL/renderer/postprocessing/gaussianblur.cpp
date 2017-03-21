@@ -29,6 +29,12 @@ namespace geeL {
 
 		frameBuffers[0].init(info.width, info.height);
 		frameBuffers[1].init(info.width, info.height);
+
+		//Set kernel
+		for (int i = 0; i < 5; i++) {
+			string name = "kernel[" + std::to_string(i) + "]";
+			shader.setFloat(name, kernel[i]);
+		}
 	}
 
 	void GaussianBlur::bindValues() {
@@ -36,12 +42,6 @@ namespace geeL {
 
 		bool horizontal = true;
 		bool first = true;
-
-		//Set kernel
-		for (int i = 0; i < 5; i++) {
-			string name = "kernel[" + std::to_string(i) + "]";
-			shader.setFloat(name, kernel[i]);
-		}
 		
 		for (unsigned int i = 0; i < amount; i++) {
 			frameBuffers[horizontal].bind();
@@ -80,8 +80,13 @@ namespace geeL {
 	}
 
 	void GaussianBlur::setKernel(float newKernel[5]) {
-		for (int i = 0; i < 5; i++)
+		shader.use();
+		for (int i = 0; i < 5; i++) {
 			kernel[i] = newKernel[i];
+
+			string name = "kernel[" + std::to_string(i) + "]";
+			shader.setFloat(name, kernel[i]);
+		}
 	}
 
 
@@ -93,24 +98,24 @@ namespace geeL {
 		: GaussianBlur(strength, shaderPath), sigma(sigma) {}
 
 
-	void BilateralFilter::bindValues() {
+	void BilateralFilter::init(ScreenQuad& screen, const FrameBufferInformation& info) {
+		GaussianBlur::init(screen, info);
+
 		shader.setFloat("sigma", sigma);
-
-		GaussianBlur::bindValues();
 	}
-
 
 
 	BilateralDepthFilter::BilateralDepthFilter(unsigned int strength, float sigma)
 		: BilateralFilter("renderer/postprocessing/bilateraldepth.frag", strength, sigma) {}
 
 
-	void BilateralDepthFilter::bindValues() {
-		BilateralFilter::bindValues();
+	void BilateralDepthFilter::init(ScreenQuad& screen, const FrameBufferInformation& info) {
+		BilateralFilter::init(screen, info);
 
 		shader.setInteger("image", shader.mapOffset);
 		shader.setInteger("gPositionDepth", shader.mapOffset + 1);
 	}
+
 
 	void BilateralDepthFilter::addWorldInformation(map<WorldMaps, unsigned int> maps,
 		map<WorldMatrices, const glm::mat4*> matrices,
@@ -134,6 +139,8 @@ namespace geeL {
 	void SobelBlur::init(ScreenQuad & screen, const FrameBufferInformation& info) {
 		GaussianBlur::init(screen, info);
 
+		shader.setInteger("sobel", shader.mapOffset + 1);
+
 		sobelBuffer.init(info.width, info.height);
 		sobel.init(screen, sobelBuffer.info);
 
@@ -144,7 +151,6 @@ namespace geeL {
 		sobelBuffer.fill(sobel);
 
 		shader.use();
-		shader.setInteger("sobel", shader.mapOffset + 1);
 		GaussianBlur::bindValues();
 	}
 

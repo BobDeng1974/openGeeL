@@ -18,6 +18,9 @@ namespace geeL {
 
 		void bindDoFData(float focalLength, float aperture, float farDistance);
 
+		void setFocalLength(float value);
+		void setAperture(float value);
+
 	protected:
 		virtual void bindValues();
 
@@ -37,6 +40,7 @@ namespace geeL {
 			const float& focalLength, float aperture = 10.f, float farDistance = 100.f, float blurResolution = 1.f);
 
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
+		virtual void draw();
 
 		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
 			std::map<WorldMatrices, const glm::mat4*> matrices,

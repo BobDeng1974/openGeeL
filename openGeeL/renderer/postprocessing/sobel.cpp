@@ -6,9 +6,10 @@ namespace geeL {
 		: PostProcessingEffect("renderer/postprocessing/sobel.frag"), scale(scale) {}
 
 
-	void SobelFilter::bindValues() {
-		PostProcessingEffect::bindValues();
+	void SobelFilter::init(ScreenQuad& screen, const FrameBufferInformation& info) {
+		PostProcessingEffect::init(screen, info);
 
 		shader.setFloat("scale", scale);
 	}
+
 }

@@ -19,26 +19,27 @@ namespace geeL {
 		SimpleTexture noise = SimpleTexture("resources/textures/noise.png", ColorType::Single);
 		buffers.push_back(noise.getID());
 
-		shader.use();
 		shader.setVector3("noiseScale",
 			vec3(float(info.width) / 255.f, float(info.height) / 255.f, 0.f));
-	}
 
-
-	void DefaultPostProcess::bindValues() {
 		shader.setInteger("image", shader.mapOffset);
 		shader.setInteger("noiseMap", shader.mapOffset + 1);
-		
 		shader.setFloat("exposure", exposure);
 	}
+
 
 	float DefaultPostProcess::getExposure() const {
 		return exposure;
 	}
 
 	void DefaultPostProcess::setExposure(float exposure) {
-		if (exposure > 0.f)
+		if (exposure > 0.f && exposure != this->exposure) {
 			this->exposure = exposure;
+
+			shader.use();
+			shader.setFloat("exposure", exposure);
+		}
+			
 	}
 
 }

@@ -47,8 +47,19 @@ namespace geeL {
 
 	void SSAO::init(ScreenQuad& screen, const FrameBufferInformation& info) {
 		PostProcessingEffect::init(screen, info);
-
 		screenInfo = &info;
+
+		shader.setInteger("gPositionDepth", shader.mapOffset);
+		shader.setInteger("gNormalMet", shader.mapOffset + 1);
+		shader.setInteger("noiseTexture", shader.mapOffset + 2);
+
+		shader.setFloat("screenWidth", screenInfo->width);
+		shader.setFloat("screenHeight", screenInfo->height);
+		shader.setFloat("radius", radius);
+
+		for (unsigned int i = 0; i < sampleCount; i++)
+			shader.setVector3("samples[" + to_string(i) + "]", kernel[i]);
+		
 		tempBuffer.init(info.width, info.height, 1, ColorType::Single, 
 			FilterMode::Nearest, WrapMode::Repeat, false);
 
@@ -73,17 +84,6 @@ namespace geeL {
 	}
 
 	void SSAO::bindValues() {
-		shader.setInteger("gPositionDepth", shader.mapOffset);
-		shader.setInteger("gNormalMet", shader.mapOffset + 1);
-		shader.setInteger("noiseTexture", shader.mapOffset + 2);
-
-		shader.setFloat("screenWidth", screenInfo->width);
-		shader.setFloat("screenHeight", screenInfo->height);
-		shader.setFloat("radius", radius);
-
-		for (unsigned int i = 0; i < sampleCount; i++)
-			shader.setVector3("samples[" + to_string(i) + "]", kernel[i]);
-
 		shader.setMat4("projection", *projectionMatrix);
 
 		tempBuffer.fill(*this, false);
@@ -105,8 +105,12 @@ namespace geeL {
 	}
 
 	void SSAO::setRadius(float radius) {
-		if (radius > 0.f)
+		if (radius > 0.f && radius != this->radius) {
 			this->radius = radius;
+
+			shader.use();
+			shader.setFloat("radius", radius);
+		}
 	}
 }
 

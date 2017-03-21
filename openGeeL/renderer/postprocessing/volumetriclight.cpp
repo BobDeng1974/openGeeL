@@ -24,20 +24,21 @@ namespace geeL {
 		unsigned int cookieID = light.getLightCookieID();
 		if(cookieID != 0)
 			buffers.push_back(cookieID);
-	}
 
-	void VolumetricLight::bindValues() {
 		shader.setInteger("image", shader.mapOffset);
 		shader.setInteger("gPositionDepth", shader.mapOffset + 1);
 		shader.setInteger("shadowMap", shader.mapOffset + 2);
 		shader.setInteger("lightCookie", shader.mapOffset + 3);
 
 		shader.setInteger("effectOnly", onlyEffect);
-		shader.setMat4("inverseView", *inverseView);
-		shader.setMat4("projection", *projectionMatrix);
 		shader.setFloat("minCutoff", minDistance);
 		shader.setFloat("density", density);
 		shader.setInteger("samples", samples);
+	}
+
+	void VolumetricLight::bindValues() {
+		shader.setMat4("inverseView", *inverseView);
+		shader.setMat4("projection", *projectionMatrix);
 
 		light.deferredBind(scene, shader, "light.");
 	}
@@ -56,8 +57,12 @@ namespace geeL {
 	}
 
 	void VolumetricLight::setSampleCount(unsigned int samples) {
-		if (samples < 500)
+		if (samples < 500 && samples != this->samples) {
 			this->samples = samples;
+
+			shader.use();
+			shader.setInteger("samples", samples);
+		}
 	}
 
 	float VolumetricLight::getDensity() const {
@@ -65,8 +70,12 @@ namespace geeL {
 	}
 
 	void VolumetricLight::setDensity(float density) {
-		if (density > 0.f)
+		if (density > 0.f && density != this->density) {
 			this->density = density;
+
+			shader.use();
+			shader.setFloat("density", density);
+		}
 	}
 
 
@@ -75,8 +84,12 @@ namespace geeL {
 	}
 
 	void VolumetricLight::setMinDistance(float distance) {
-		if (distance > 0.f)
+		if (distance > 0.f && distance != minDistance) {
 			minDistance = distance;
+
+			shader.use();
+			shader.setFloat("minCutoff", minDistance);
+		}
 	}
 
 }

@@ -11,10 +11,10 @@ namespace geeL {
 	public:
 		SimpleBlur(unsigned int strength = 1);
 
+		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
+
 	protected:
 		SimpleBlur(unsigned int strength, std::string shaderPath);
-
-		virtual void bindValues();
 
 	private:
 		unsigned int amount;

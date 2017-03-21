@@ -24,6 +24,15 @@ namespace geeL {
 		shader.setFloat("farDistance", farDistance);
 	}
 
+	void  DepthOfFieldBlur::setFocalLength(float value) {
+		shader.use();
+		shader.setFloat("focalDistance", value);
+	}
+
+	void DepthOfFieldBlur::setAperture(float value) {
+		shader.use();
+		shader.setFloat("aperture", value);
+	}
 
 
 	DepthOfFieldBlurred::DepthOfFieldBlurred(DepthOfFieldBlur& blur,
@@ -36,6 +45,16 @@ namespace geeL {
 	void DepthOfFieldBlurred::init(ScreenQuad& screen, const FrameBufferInformation& info) {
 		PostProcessingEffect::init(screen, info);
 
+		shader.setInteger("image", shader.mapOffset);
+		shader.setInteger("gPositionDepth", shader.mapOffset + 1);
+		shader.setInteger("blurredImage", shader.mapOffset + 2);
+		shader.setFloat("farDistance", farDistance);
+		shader.setFloat("aperture", aperture);
+
+		//Clamp focal length with reasonable values
+		float dist = (focalLength < 0.f || focalLength > 30.f) ? 30.f : focalLength;
+		blur.bindDoFData(dist, aperture, farDistance);
+
 		screenInfo = &info;
 		blurBuffer.init(info.width * blurResolution, info.height * blurResolution, 
 			1, ColorType::RGB16, FilterMode::Linear);
@@ -45,22 +64,26 @@ namespace geeL {
 	}
 
 	void DepthOfFieldBlurred::bindValues() {
-		shader.setInteger("image", shader.mapOffset);
-		shader.setInteger("gPositionDepth", shader.mapOffset + 1);
-		shader.setInteger("blurredImage", shader.mapOffset + 2);
-
 		//Clamp focal length with reasonable values
 		float dist = (focalLength < 0.f || focalLength > 30.f) ? 30.f : focalLength;
 
 		shader.setFloat("focalDistance", dist);
-		shader.setFloat("aperture", aperture);
-		shader.setFloat("farDistance", farDistance);
-
-		blur.bindDoFData(dist, aperture, farDistance);
+		blur.setFocalLength(dist);
+		
 		blurBuffer.fill(blur);
 
 		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
 		FrameBuffer::bind(parentFBO);
+	}
+
+	void DepthOfFieldBlurred::draw() {
+		shader.use();
+		bindValues();
+
+		//Switch shader again since shader of encapsuled 
+		//dof blur was set active during 'bindValues'
+		shader.use();
+		bindToScreen();
 	}
 
 	void DepthOfFieldBlurred::addWorldInformation(map<WorldMaps, unsigned int> maps,
@@ -89,7 +112,12 @@ namespace geeL {
 	}
 
 	void DepthOfFieldBlurred::setAperture(float aperture) {
-		if (aperture > 0.f)
+		if (aperture > 0.f && aperture != this->aperture) {
 			this->aperture = aperture;
+
+			shader.use();
+			shader.setFloat("aperture", aperture);
+			blur.setAperture(aperture);
+		}
 	}
 }

@@ -41,10 +41,10 @@ namespace geeL {
 	public:
 		BilateralFilter(unsigned int strength = 1, float sigma = 0.5f);
 
+		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
+
 	protected:
 		BilateralFilter(std::string shaderPath, unsigned int strength = 1, float sigma = 0.5f);
-
-		virtual void bindValues();
 
 	private:
 		float sigma;
@@ -58,12 +58,11 @@ namespace geeL {
 	public:
 		BilateralDepthFilter(unsigned int strength = 1, float sigma = 0.5f);
 
+		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
+
 		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
 			std::map<WorldMatrices, const glm::mat4*> matrices,
 			std::map<WorldVectors, const glm::vec3*> vectors);
-
-	protected:
-		virtual void bindValues();
 
 	};
 

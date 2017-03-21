@@ -9,12 +9,12 @@ namespace geeL {
 	class ToneMapping : public PostProcessingEffect {
 
 	public:
-		float exposure;
-
 		ToneMapping(float exposure);
 
+		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
+
 	protected:
-		virtual void bindValues();
+		float exposure;
 
 	};
 }
