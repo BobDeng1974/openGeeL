@@ -24,12 +24,6 @@ namespace geeL {
 		: lightManager(lightManager), camera(camera), meshFactory(meshFactory), physics(nullptr), worldTransform(world) {}
 
 	
-	RenderScene::~RenderScene() {
-		iterRenderObjects([&](MeshRenderer* object) {
-			delete object;
-		});
-	}
-
 
 	void RenderScene::update() {
 
@@ -108,70 +102,12 @@ namespace geeL {
 	}
 
 
-	MeshRenderer& RenderScene::AddMeshRenderer(string modelPath, Transform& transform, 
-		CullingMode faceCulling, bool deferred, const string& name) {
-		
-		StaticModel& model = meshFactory.CreateStaticModel(modelPath);
-		if(deferred)
-			deferredRenderObjects.push_back(meshFactory.CreateMeshRendererManual(model, transform, faceCulling, deferred, name));
-		else
-			forwardRenderObjects.push_back(meshFactory.CreateMeshRendererManual(model, transform, faceCulling, deferred, name));
-
-		return *deferredRenderObjects.back();
+	void RenderScene::AddMeshRenderer(MeshRenderer& renderer) {
+		deferredRenderObjects.push_back(&renderer);
 	}
 
-	MeshRenderer& RenderScene::AddMeshRenderer(std::string modelPath, Transform& transform,
-		std::vector<Material*> materials, CullingMode faceCulling, const string& name) {
-
-		StaticModel& model = meshFactory.CreateStaticModel(modelPath);
-		MeshRenderer* renderer = meshFactory.CreateMeshRendererManual(model, transform, faceCulling, true, name);
-		renderer->customizeMaterials(materials);
-
-		bool containsDeferred = renderer->containsDeferredMaterials();
-		bool containsForward = renderer->containsForwardMaterials();
-
-		if (containsDeferred && containsForward)
-			mixedRenderObjects.push_back(renderer);
-		if (containsDeferred)
-			deferredRenderObjects.push_back(renderer);
-		if (containsForward)
-			forwardRenderObjects.push_back(renderer);
-
-		return *renderer;
-	}
-
-	SkinnedMeshRenderer& RenderScene::AddSkinnedMeshRenderer(string modelPath, Transform& transform,
-		CullingMode faceCulling, bool deferred, const string& name) {
-
-		SkinnedModel& model = meshFactory.CreateSkinnedModel(modelPath);
-		SkinnedMeshRenderer* renderer = meshFactory.CreateSkinnedMeshRendererManual(model, transform, faceCulling, deferred, name);
-
-		if (deferred)
-			deferredSkinnedObjects.push_back(renderer);
-		else
-			forwardSkinnedObjects.push_back(renderer);
-
-		return *renderer;
-	}
-
-	SkinnedMeshRenderer& RenderScene::AddSkinnedMeshRenderer(std::string modelPath, Transform& transform,
-		std::vector<Material*> materials, CullingMode faceCulling, const string& name) {
-
-		SkinnedModel& model = meshFactory.CreateSkinnedModel(modelPath);
-		SkinnedMeshRenderer* renderer = meshFactory.CreateSkinnedMeshRendererManual(model, transform, faceCulling, true, name);
-		renderer->customizeMaterials(materials);
-
-		bool containsDeferred = renderer->containsDeferredMaterials();
-		bool containsForward  = renderer->containsForwardMaterials();
-
-		if (containsDeferred && containsForward)
-			mixedSkinnedObjects.push_back(renderer);
-		if (containsDeferred)
-			deferredSkinnedObjects.push_back(renderer);
-		if (containsForward)
-			forwardSkinnedObjects.push_back(renderer);
-
-		return *renderer;
+	void RenderScene::AddSkinnedMeshRenderer(SkinnedMeshRenderer& renderer) {
+		deferredSkinnedObjects.push_back(&renderer);
 	}
 
 

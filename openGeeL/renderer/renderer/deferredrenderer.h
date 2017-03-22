@@ -14,6 +14,7 @@ namespace geeL {
 
 	class Camera;
 	class DefaultPostProcess;
+	class MaterialFactory;
 	class Shader;
 	class SceneShader;
 	class SSAO;
@@ -24,10 +25,7 @@ namespace geeL {
 
 	public:
 		DeferredRenderer(RenderWindow& window, InputManager& inputManager, 
-			RenderContext& context, DefaultPostProcess& def);
-
-		DeferredRenderer(RenderWindow& window, InputManager& inputManager, 
-			RenderContext& context, DefaultPostProcess& def, SSAO* ssao, float ssaoResolution = 1.f);
+			RenderContext& context, DefaultPostProcess& def, const MaterialFactory& factory);
 
 		~DeferredRenderer();
 
@@ -35,6 +33,8 @@ namespace geeL {
 		virtual void render();
 		virtual void draw();
 		virtual void handleInput();
+
+		void addSSAO(SSAO& ssao, float ssaoResolution = 1.f);
 
 		//Add new post processing effect to renderer. 
 		void addEffect(PostProcessingEffect& effect);
@@ -50,6 +50,7 @@ namespace geeL {
 		int toggle;
 		bool geometryPass = true;
 		Shader* deferredShader;
+		const MaterialFactory& factory;
 		std::vector<PostProcessingEffect*> effects;
 		std::list<WorldInformationRequester*> requester;
 		ScreenQuad screen;
@@ -60,7 +61,7 @@ namespace geeL {
 
 		unsigned int defaultBuffer;
 		float ssaoResolution;
-		SSAO* ssao = nullptr;
+		SSAO* ssao;
 		ScreenQuad* ssaoScreen = nullptr;
 		FrameBuffer* ssaoBuffer = nullptr;
 		PostProcessingEffect* isolatedEffect = nullptr;

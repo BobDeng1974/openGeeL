@@ -21,6 +21,7 @@
 #include "../transformation/transform.h"
 #include "../scene.h"
 #include "../../interface/guirenderer.h"
+#include "../materials/materialfactory.h"
 #include "deferredrenderer.h"
 
 #define fps 10
@@ -30,20 +31,13 @@ using namespace std;
 namespace geeL {
 
 	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, 
-		RenderContext& context, DefaultPostProcess& def)
-			: DeferredRenderer(window, inputManager, context, def, nullptr) {}
-
-	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, 
-		RenderContext& context, DefaultPostProcess& def, SSAO* ssao, float ssaoResolution)
-			: Renderer(window, inputManager, context), ssao(ssao), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()),
-				gBuffer(GBuffer()), screen(ScreenQuad()), ssaoResolution(ssaoResolution),
+		RenderContext& context, DefaultPostProcess& def, const MaterialFactory& factory)
+			: Renderer(window, inputManager, context), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()),
+				gBuffer(GBuffer()), screen(ScreenQuad()), ssao(nullptr),
 				deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
-					"renderer/shaders/cooktorrancedeferred.frag")), toggle(0) {
+					"renderer/shaders/cooktorrancedeferred.frag")), toggle(0), factory(factory) {
 
 		effects.push_back(&def);
-
-		if(ssao != nullptr)
-			addRequester(*ssao);
 	}
 
 	DeferredRenderer::~DeferredRenderer() {
@@ -252,6 +246,13 @@ namespace geeL {
 
 	void DeferredRenderer::handleInput() {
 		scene->camera.handleInput(*inputManager);
+	}
+
+	void DeferredRenderer::addSSAO(SSAO& ssao, float ssaoResolution) {
+		this->ssao = &ssao;
+		this->ssaoResolution = ssaoResolution;
+
+		addRequester(*this->ssao);
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {

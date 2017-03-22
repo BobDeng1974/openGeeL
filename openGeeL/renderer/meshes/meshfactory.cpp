@@ -22,36 +22,45 @@ namespace geeL {
 
 	MeshFactory::MeshFactory(MaterialFactory& factory) : factory(factory) {}
 
+	MeshFactory::~MeshFactory() {
+		for (auto it = meshRenderer.begin(); it != meshRenderer.end(); it++)
+			delete *it;
+	}
 
-	MeshRenderer& MeshFactory::CreateMeshRenderer(StaticModel& model, Transform& transform, 
-		DefaultShading shading, CullingMode faceCulling, string name) {
+
+	MeshRenderer& MeshFactory::CreateMeshRenderer(StaticModel& model, 
+		Transform& transform, CullingMode faceCulling, const string& name) {
 		
-		meshRenderer.push_back(MeshRenderer(transform, factory.getDefaultShader(shading), model, faceCulling, name));
-		return meshRenderer.back();
+		return CreateMeshRenderer(model, factory.getDefaultShader(DefaultShading::DeferredStatic), 
+			transform, faceCulling, name);
 	}
 
-	MeshRenderer* MeshFactory::CreateMeshRendererManual(StaticModel& model, Transform& transform,
-		CullingMode faceCulling, bool deferred, string name) {
+	MeshRenderer& MeshFactory::CreateMeshRenderer(StaticModel& model, SceneShader& shader, Transform& transform,
+		CullingMode faceCulling, const string& name) {
 
-		DefaultShading shading = deferred ?  DefaultShading::DeferredStatic : DefaultShading::ForwardStatic;
-		return new MeshRenderer(transform, factory.getDefaultShader(shading), model, faceCulling, name);
+		MeshRenderer* renderer = new MeshRenderer(transform, shader, model, faceCulling, name);
+
+		meshRenderer.push_back(renderer);
+		return *renderer;
 	}
 
-	MeshRenderer& MeshFactory::CreateSkinnedMeshRenderer(SkinnedModel& model, Transform& transform, DefaultShading shading,
-		CullingMode faceCulling, std::string name) {
 
-		meshRenderer.push_back(SkinnedMeshRenderer(transform, factory.getDefaultShader(shading), model, faceCulling, name));
-		return meshRenderer.back();
+	SkinnedMeshRenderer& MeshFactory::CreateSkinnedMeshRenderer(SkinnedModel& model, Transform& transform,
+		CullingMode faceCulling, const string& name) {
+
+		return CreateSkinnedMeshRenderer(model, factory.getDefaultShader(DefaultShading::DeferredSkinned), 
+			transform, faceCulling, name);
 	}
 
-	//Create skinned mesh renderer on heap. Caller has to manage its memory manually
-	SkinnedMeshRenderer* MeshFactory::CreateSkinnedMeshRendererManual(SkinnedModel& model, Transform& transform,
-		CullingMode faceCulling, bool deferred, std::string name) {
+	SkinnedMeshRenderer& MeshFactory::CreateSkinnedMeshRenderer(SkinnedModel& model, SceneShader& shader, 
+		Transform& transform, CullingMode faceCulling, const string& name) {
 
-		DefaultShading shading = deferred ? DefaultShading::DeferredSkinned : DefaultShading::ForwardSkinned;
-		return new SkinnedMeshRenderer(transform, factory.getDefaultShader(shading), model, faceCulling, name);
+		SkinnedMeshRenderer* renderer = new SkinnedMeshRenderer(transform, shader, 
+			model, faceCulling, name);
+
+		meshRenderer.push_back(renderer);
+		return *renderer;
 	}
-
 
 	StaticModel& MeshFactory::CreateStaticModel(string filePath) {
 		if (staticModels.find(filePath) == staticModels.end()) {
@@ -355,11 +364,11 @@ namespace geeL {
 		return staticModels.end();
 	}
 
-	list<MeshRenderer>::iterator MeshFactory::rendererBegin() {
+	list<MeshRenderer*>::iterator MeshFactory::rendererBegin() {
 		return meshRenderer.begin();
 	}
 
-	list<MeshRenderer>::iterator MeshFactory::rendererEnd() {
+	list<MeshRenderer*>::iterator MeshFactory::rendererEnd() {
 		return meshRenderer.end();
 	}
 

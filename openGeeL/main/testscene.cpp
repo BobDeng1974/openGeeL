@@ -137,11 +137,18 @@ namespace {
 
 			float height = -2.f;
 			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.2f, 0.2f, 0.2f));
-			nanoRenderer = &scene.AddMeshRenderer("resources/nanosuit/nanosuit.obj", meshTransform1, CullingMode::cullFront, true, "Nanosuit");
+			
+			nanoRenderer = &meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/nanosuit/nanosuit.obj"), 
+				meshTransform1, CullingMode::cullFront, "MeshRenderer");
+			scene.AddMeshRenderer(*nanoRenderer);
+
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(100.2f, 0.2f, 100.2f));
-			MeshRenderer& plane = scene.AddMeshRenderer("resources/primitives/plane.obj", meshTransform2, CullingMode::cullFront, true, "Floor");
-			if(physics != nullptr) physics->addPlane(vec3(0.f, 1.f, 0.f), meshTransform2, RigidbodyProperties(0.f, false));
+			MeshRenderer& plane = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/plane.obj"),
+				meshTransform2, CullingMode::cullFront, "Floor");
+
+			scene.AddMeshRenderer(plane);
+			if (physics != nullptr) physics->addPlane(vec3(0.f, 1.f, 0.f), meshTransform2, RigidbodyProperties(0.f, false));
 
 			for (auto it = plane.deferredMaterialsBegin(); it != plane.deferredMaterialsEnd(); it++) {
 				MaterialContainer& container = it->second->container;
@@ -150,8 +157,11 @@ namespace {
 				container.setVectorValue("Color", vec3(0.4f, 0.4f, 0.4f));
 			}
 
+
 			Transform& meshTransform3 = transformFactory.CreateTransform(vec3(-9.f, -3.f, 11.0f), vec3(0.5f, 0.5f, 0.5f), vec3(0.3f, 0.3f, 0.3f));
-			MeshRenderer& box1 = scene.AddMeshRenderer("resources/empire/EmpireState_lp.obj", meshTransform3, CullingMode::cullFront, true, "Empire State");
+			MeshRenderer& box1 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/empire/EmpireState_lp.obj"),
+				meshTransform3, CullingMode::cullFront, "Empire State");
+			scene.AddMeshRenderer(box1);
 
 			for (auto it = box1.deferredMaterialsBegin(); it != box1.deferredMaterialsEnd(); it++) {
 				MaterialContainer& container = it->second->container;
@@ -160,10 +170,11 @@ namespace {
 			}
 
 			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 5.f, 4.f), vec3(0.f), vec3(1.f, 1.f, 1.f));
-			MeshRenderer& sphere1 = scene.AddMeshRenderer("resources/primitives/sphere.obj", meshTransform4, CullingMode::cullFront, true, "Sphere");
+			MeshRenderer& sphere1 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/sphere.obj"),
+				meshTransform4, CullingMode::cullFront, "Sphere");
+			scene.AddMeshRenderer(sphere1);
 			//if (physics != nullptr) physics->addSphere(1.f, meshTransform4, RigidbodyProperties(10.f, false));
 			//if (physics != nullptr) physics->addMesh(sphere1.getModel(), meshTransform4, RigidbodyProperties(10.f, false));
-
 
 			for (auto it = sphere1.deferredMaterialsBegin(); it != sphere1.deferredMaterialsEnd(); it++) {
 				MaterialContainer& container = it->second->container;
@@ -172,7 +183,9 @@ namespace {
 			}
 
 			Transform& meshTransform5 = transformFactory.CreateTransform(vec3(0.0f, 0.5f, -2.0f), vec3(0.5f, 0.5f, 0.5f), vec3(5.2f, 2.2f, 1.2f));
-			MeshRenderer& box = scene.AddMeshRenderer("resources/primitives/cube.obj", meshTransform5, CullingMode::cullFront, true, "Box");
+			MeshRenderer& box = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/cube.obj"),
+				meshTransform5, CullingMode::cullFront, "Box");
+			scene.AddMeshRenderer(box);
 
 			for (auto it = box.deferredMaterialsBegin(); it != box.deferredMaterialsEnd(); it++) {
 				MaterialContainer& container = it->second->container;
@@ -182,14 +195,20 @@ namespace {
 			}
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-			scene.AddMeshRenderer("resources/cyborg/Cyborg.obj", meshTransform6, CullingMode::cullFront, true, "Cyborg");
+			MeshRenderer& cyborg = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/cyborg/Cyborg.obj"),
+				meshTransform6, CullingMode::cullFront, "Cyborg");
+			scene.AddMeshRenderer(cyborg);
 
+			/*
 			float scale = 0.05f;
 			Transform& meshTransform7 = transformFactory.CreateTransform(vec3(2.f, -2.f, 4.0f), vec3(-90.f, 0.f, 0.f), vec3(scale, scale, scale));
-			SkinnedMeshRenderer& dude = scene.AddSkinnedMeshRenderer("resources/guard/boblampclean.md5mesh", meshTransform7, CullingMode::cullFront, true, "Dude");
+			SkinnedMeshRenderer& dude = meshFactory.CreateSkinnedMeshRenderer(meshFactory.CreateSkinnedModel("resources/guard/boblampclean.md5mesh"),
+				meshTransform7, CullingMode::cullFront, "Dude");
+			scene.AddMeshRenderer(dude);
 
 			SimpleAnimator& anim = dude.addComponent(SimpleAnimator(dude.getSkinnedModel(), dude.getSkeleton()));
 			anim.playAnimation(0);
+			*/
 		}
 
 		virtual void draw(const Camera& camera) {
@@ -216,15 +235,17 @@ void draw() {
 	geeL::Transform& cameraTransform = Transform(vec3(0.0f, 2.0f, 9.0f), vec3(-90.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
 
+	MaterialFactory materialFactory = MaterialFactory();
+	MeshFactory meshFactory = MeshFactory(materialFactory);
+
 	BilateralFilter blur = BilateralFilter(1, 0.5f);
 	DefaultPostProcess def = DefaultPostProcess();
 	SSAO ssao = SSAO(blur, 10.f);
 	RenderContext context = RenderContext();
-	DeferredRenderer& renderer = DeferredRenderer(window, manager, context, def, &ssao, 0.5f);
+	DeferredRenderer& renderer = DeferredRenderer(window, manager, context, def, materialFactory);
+	renderer.addSSAO(ssao, 0.5f);
 	renderer.init();
-
-	MaterialFactory materialFactory = MaterialFactory();
-	MeshFactory meshFactory = MeshFactory(materialFactory);
+	
 
 	LightManager lightManager = LightManager(vec3(0.15f));
 	ShaderManager shaderManager = ShaderManager(materialFactory);

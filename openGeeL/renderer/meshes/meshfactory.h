@@ -26,6 +26,7 @@ namespace geeL {
 	class MaterialFactory;
 	class MeshRenderer;
 	class Model;
+	class SceneShader;
 	class SkinnedMesh;
 	class SkinnedMeshRenderer;
 	class SkinnedModel;
@@ -39,21 +40,21 @@ namespace geeL {
 
 	public:
 		MeshFactory(MaterialFactory& factory);
+		~MeshFactory();
 
 		//Create new mesh renderer with default shading
-		MeshRenderer& CreateMeshRenderer(StaticModel& model, Transform& transform, DefaultShading shading,
-			CullingMode faceCulling, std::string name = "MeshRenderer");
+		MeshRenderer& CreateMeshRenderer(StaticModel& model, Transform& transform,
+			CullingMode faceCulling, const std::string& name = "MeshRenderer");
 
-		//Create mesh renderer on heap. Caller has to manage its memory manually
-		MeshRenderer* CreateMeshRendererManual(StaticModel& model, Transform& transform,
-			CullingMode faceCulling, bool deferred = true, std::string name = "MeshRenderer");
+		MeshRenderer& CreateMeshRenderer(StaticModel& model, SceneShader& shader, Transform& transform,
+			CullingMode faceCulling, const std::string& name = "MeshRenderer");
 
-		MeshRenderer& CreateSkinnedMeshRenderer(SkinnedModel& model, Transform& transform, DefaultShading shading,
-			CullingMode faceCulling, std::string name = "SkinnedMeshRenderer");
+		//Create new skinned mesh renderer with default shading
+		SkinnedMeshRenderer& CreateSkinnedMeshRenderer(SkinnedModel& model, Transform& transform,
+			CullingMode faceCulling, const std::string& name = "SkinnedMeshRenderer");
 
-		//Create skinned mesh renderer on heap. Caller has to manage its memory manually
-		SkinnedMeshRenderer* CreateSkinnedMeshRendererManual(SkinnedModel& model, Transform& transform,
-			CullingMode faceCulling, bool deferred = true, std::string name = "SkinnedMeshRenderer");
+		SkinnedMeshRenderer& CreateSkinnedMeshRenderer(SkinnedModel& model, SceneShader& shader, Transform& transform,
+			CullingMode faceCulling, const std::string& name = "SkinnedMeshRenderer");
 
 		//Creates, initializes and returns a new static model from given file path or 
 		//returns an existing model if it already uses this file
@@ -66,14 +67,14 @@ namespace geeL {
 		std::map<std::string, StaticModel>::iterator modelsBegin();
 		std::map<std::string, StaticModel>::iterator modelsEnd();
 
-		std::list<MeshRenderer>::iterator rendererBegin();
-		std::list<MeshRenderer>::iterator rendererEnd();
+		std::list<MeshRenderer*>::iterator rendererBegin();
+		std::list<MeshRenderer*>::iterator rendererEnd();
 
 	private:
 		MaterialFactory& factory;
 		std::map<std::string, StaticModel> staticModels;
 		std::map<std::string, SkinnedModel> skinnedModels;
-		std::list<MeshRenderer> meshRenderer;
+		std::list<MeshRenderer*> meshRenderer;
 
 		void fillStaticModel(StaticModel& model, std::string path);
 		void processStaticNode(StaticModel& model, std::string directory, aiNode* node, const aiScene* scene);
