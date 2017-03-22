@@ -6,6 +6,7 @@
 #include "meshes\mesh.h"
 #include "meshes\model.h"
 #include "meshes\meshrenderer.h"
+#include "meshes\skinnedrenderer.h"
 #include "meshes\meshfactory.h"
 #include "cameras\camera.h"
 #include "cubemapping\skybox.h"
@@ -108,7 +109,7 @@ namespace geeL {
 
 
 	MeshRenderer& RenderScene::AddMeshRenderer(string modelPath, Transform& transform, 
-		CullingMode faceCulling, bool deferred, string name) {
+		CullingMode faceCulling, bool deferred, const string& name) {
 		
 		StaticModel& model = meshFactory.CreateStaticModel(modelPath);
 		if(deferred)
@@ -120,7 +121,7 @@ namespace geeL {
 	}
 
 	MeshRenderer& RenderScene::AddMeshRenderer(std::string modelPath, Transform& transform,
-		std::vector<Material*> materials, CullingMode faceCulling, string name) {
+		std::vector<Material*> materials, CullingMode faceCulling, const string& name) {
 
 		StaticModel& model = meshFactory.CreateStaticModel(modelPath);
 		MeshRenderer* renderer = meshFactory.CreateMeshRendererManual(model, transform, faceCulling, true, name);
@@ -140,7 +141,7 @@ namespace geeL {
 	}
 
 	SkinnedMeshRenderer& RenderScene::AddSkinnedMeshRenderer(string modelPath, Transform& transform,
-		CullingMode faceCulling, bool deferred, string name) {
+		CullingMode faceCulling, bool deferred, const string& name) {
 
 		SkinnedModel& model = meshFactory.CreateSkinnedModel(modelPath);
 		SkinnedMeshRenderer* renderer = meshFactory.CreateSkinnedMeshRendererManual(model, transform, faceCulling, deferred, name);
@@ -154,7 +155,7 @@ namespace geeL {
 	}
 
 	SkinnedMeshRenderer& RenderScene::AddSkinnedMeshRenderer(std::string modelPath, Transform& transform,
-		std::vector<Material*> materials, CullingMode faceCulling, string name) {
+		std::vector<Material*> materials, CullingMode faceCulling, const string& name) {
 
 		SkinnedModel& model = meshFactory.CreateSkinnedModel(modelPath);
 		SkinnedMeshRenderer* renderer = meshFactory.CreateSkinnedMeshRendererManual(model, transform, faceCulling, true, name);

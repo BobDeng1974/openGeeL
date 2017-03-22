@@ -3,7 +3,7 @@
 #include <glfw3.h>
 #include <gtc/type_ptr.hpp>
 #include <glm.hpp>
-#include "../shader/shader.h"
+#include "../shader/sceneshader.h"
 #include "camera.h"
 #include "../inputmanager.h"
 #include "../transformation/transform.h"
@@ -17,10 +17,10 @@ using namespace glm;
 
 namespace geeL {
 
-	Camera::Camera(Transform& transform, std::string name)
+	Camera::Camera(Transform& transform, const std::string& name)
 		: SceneObject(transform, name), speed(0), sensitivity(0) {}
 
-	Camera::Camera(Transform& transform, float speed, float sensitivity, std::string name)
+	Camera::Camera(Transform& transform, float speed, float sensitivity, const std::string& name)
 		: SceneObject(transform, name), speed(speed), sensitivity(sensitivity) {}
 
 

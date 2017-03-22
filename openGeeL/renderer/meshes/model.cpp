@@ -14,16 +14,16 @@ namespace geeL {
 		std::vector<MaterialContainer*> materials;
 		materials.reserve(meshCount());
 
-		iterateMeshes([&](const Mesh* mesh) {
-			materials.push_back(&mesh->getMaterialContainer());
+		iterateMeshes([&](const Mesh& mesh) {
+			materials.push_back(&mesh.getMaterialContainer());
 		});
 
 		return materials;
 	}
 
 	void Model::draw() const {
-		iterateMeshes([&](const Mesh* mesh) {
-			mesh->draw();
+		iterateMeshes([&](const Mesh& mesh) {
+			mesh.draw();
 		});
 	}
 
@@ -42,18 +42,16 @@ namespace geeL {
 
 
 	StaticModel::~StaticModel() {
-		for (auto it = meshes.begin(); it != meshes.end(); it++)
-			delete *it;
 	}
 
-	StaticMesh& StaticModel::addMesh(StaticMesh* mesh) {
-		meshes.push_back(mesh);
+	StaticMesh& StaticModel::addMesh(StaticMesh&& mesh) {
+		meshes.push_back(std::move(mesh));
 
-		return *meshes.back();
+		return meshes.back();
 	}
 
 
-	void StaticModel::iterateMeshes(std::function<void(const Mesh*)> function) const {
+	void StaticModel::iterateMeshes(std::function<void(const Mesh&)> function) const {
 		for_each(meshes.begin(), meshes.end(), function);
 	}
 
@@ -61,14 +59,12 @@ namespace geeL {
 
 
 	SkinnedModel::~SkinnedModel() {
-		for (auto it = meshes.begin(); it != meshes.end(); it++)
-			delete *it;
 	}
 
 
 	void SkinnedModel::updateBones(const Skeleton& skeleton) {
 		for (auto it = meshes.begin(); it != meshes.end(); it++) {
-			SkinnedMesh& mesh = **it;
+			SkinnedMesh& mesh = *it;
 			mesh.updateMeshBoneData(skeleton);
 		}
 	}
@@ -78,7 +74,7 @@ namespace geeL {
 
 		//Align bone IDs to those of the skeleton
 		for (auto it = meshes.begin(); it != meshes.end(); it++) {
-			SkinnedMesh& mesh = **it;
+			SkinnedMesh& mesh = *it;
 
 			for (auto et = mesh.bonesBegin(); et != mesh.bonesEnd(); et++) {
 				string name = et->first;
@@ -89,16 +85,16 @@ namespace geeL {
 		}
 	}
 
-	SkinnedMesh& SkinnedModel::addMesh(SkinnedMesh* mesh) {
-		meshes.push_back(mesh);
-		return *meshes.back();
+	SkinnedMesh& SkinnedModel::addMesh(SkinnedMesh&& mesh) {
+		meshes.push_back(std::move(mesh));
+		return meshes.back();
 	}
 
-	void SkinnedModel::iterateMeshes(std::function<void(const Mesh*)> function) const {
+	void SkinnedModel::iterateMeshes(std::function<void(const Mesh&)> function) const {
 		for_each(meshes.begin(), meshes.end(), function);
 	}
 
-	void SkinnedModel::iterateMeshes(std::function<void(const SkinnedMesh*)> function) const {
+	void SkinnedModel::iterateMeshes(std::function<void(const SkinnedMesh&)> function) const {
 		for_each(meshes.begin(), meshes.end(), function);
 	}
 

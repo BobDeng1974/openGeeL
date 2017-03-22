@@ -49,7 +49,7 @@ namespace geeL {
 	private:
 		int toggle;
 		bool geometryPass = true;
-		SceneShader* deferredShader;
+		Shader* deferredShader;
 		std::vector<PostProcessingEffect*> effects;
 		std::list<WorldInformationRequester*> requester;
 		ScreenQuad screen;

@@ -13,6 +13,7 @@
 #include "mesh.h"
 #include "model.h"
 #include "meshrenderer.h"
+#include "skinnedrenderer.h"
 #include "meshfactory.h"
 
 using namespace std;
@@ -106,7 +107,7 @@ namespace geeL {
 			mat.setRoughness(0.4f);
 			mat.setMetallic(0.2f);
 
-			model.addMesh(new StaticMesh(vertices, indices, mat));
+			model.addMesh(StaticMesh(vertices, indices, mat));
 		}
 
 		//Traverse node tree
@@ -163,7 +164,7 @@ namespace geeL {
 			mat.setRoughness(0.4f);
 			mat.setMetallic(0.2f);
 
-			model.addMesh(new SkinnedMesh(vertices, indices, bones, mat));
+			model.addMesh(SkinnedMesh(vertices, indices, bones, mat));
 		}
 
 		//Traverse node tree

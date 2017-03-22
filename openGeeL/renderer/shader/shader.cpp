@@ -14,6 +14,81 @@ namespace geeL {
 	Shader::Shader(const char* vertexPath, const char* fragmentPath)
 		: name(fragmentPath), mapBindingPos(0) {
 
+		init(vertexPath, fragmentPath);
+	}
+
+
+	Shader::Shader(const char* vertexPath, const char* geometryPath, const char* fragmentPath)
+		: name(fragmentPath), mapBindingPos(0) {
+
+		init(vertexPath, geometryPath, fragmentPath);
+	}
+
+
+	unsigned int counter = 0;
+	static unsigned int activeShader = 0;
+	void Shader::use() const {
+		if (program != activeShader) {
+			glUseProgram(program);
+			activeShader = program;
+		}
+	}
+
+	void Shader::addMap(unsigned int mapID, std::string name, unsigned int type) {
+		maps.push_back(TextureBinding(mapID, type, name));
+	}
+
+	void Shader::bindMaps() {
+		int counter = mapOffset;
+		for (auto it = maps.begin(); it != maps.end(); it++) {
+			glUniform1i(glGetUniformLocation(program, it->name.c_str()), counter);
+			counter++;
+		}
+
+		mapBindingPos = maps.size() + mapOffset;
+	}
+	
+	void Shader::loadMaps() const {
+		int layer = GL_TEXTURE0;
+		int counter = mapOffset;
+		for (auto it = maps.begin(); it != maps.end(); it++) {
+			glActiveTexture(layer + counter);
+
+			glBindTexture(it->type, it->id);
+			counter++;
+		}
+	}
+
+	void Shader::loadMaps(std::list<unsigned int>& maps, unsigned int type) const {
+		int layer = GL_TEXTURE0;
+		int counter = mapOffset;
+		for (auto it = maps.begin(); it != maps.end(); it++) {
+			glActiveTexture(layer + counter);
+
+			glBindTexture(type, *it);
+			counter++;
+		}
+	}
+
+	void Shader::setInteger(string name, int value) const {
+		glUniform1i(glGetUniformLocation(program, name.c_str()), value);
+	}
+
+	void Shader::setFloat(string name, float value) const {
+		glUniform1f(glGetUniformLocation(program, name.c_str()), value);
+	}
+
+	void Shader::setVector3(string name, const glm::vec3& value) const {
+		glUniform3f(glGetUniformLocation(program, name.c_str()),
+			value.x, value.y, value.z);
+	}
+
+	void Shader::setMat4(string name, const glm::mat4& value) const {
+		glUniformMatrix4fv(glGetUniformLocation(program, name.c_str()), 1, GL_FALSE,
+			glm::value_ptr(value));
+	}
+
+	void Shader::init(const char* vertexPath, const char* fragmentPath) {
 		//Read code from file path
 		string vertexCode;
 		string fragmentCode;
@@ -90,10 +165,7 @@ namespace geeL {
 		glDeleteShader(fragmentShader);
 	}
 
-
-	Shader::Shader(const char* vertexPath, const char* geometryPath, const char* fragmentPath)
-		: name(fragmentPath), mapBindingPos(0) {
-
+	void Shader::init(const char* vertexPath, const char* geometryPath, const char* fragmentPath) {
 		//Read code from file path
 		string vertexCode;
 		string fragmentCode;
@@ -192,70 +264,6 @@ namespace geeL {
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
 		glDeleteShader(geometryShader);
-	}
-
-
-	unsigned int counter = 0;
-	static unsigned int activeShader = 0;
-	void Shader::use() const {
-		if (program != activeShader) {
-			glUseProgram(program);
-			activeShader = program;
-		}
-	}
-
-	void Shader::addMap(unsigned int mapID, std::string name, unsigned int type) {
-		maps.push_back(TextureBinding(mapID, type, name));
-	}
-
-	void Shader::bindMaps() {
-		int counter = mapOffset;
-		for (auto it = maps.begin(); it != maps.end(); it++) {
-			glUniform1i(glGetUniformLocation(program, it->name.c_str()), counter);
-			counter++;
-		}
-
-		mapBindingPos = maps.size() + mapOffset;
-	}
-	
-	void Shader::loadMaps() const {
-		int layer = GL_TEXTURE0;
-		int counter = mapOffset;
-		for (auto it = maps.begin(); it != maps.end(); it++) {
-			glActiveTexture(layer + counter);
-
-			glBindTexture(it->type, it->id);
-			counter++;
-		}
-	}
-
-	void Shader::loadMaps(std::list<unsigned int>& maps, unsigned int type) const {
-		int layer = GL_TEXTURE0;
-		int counter = mapOffset;
-		for (auto it = maps.begin(); it != maps.end(); it++) {
-			glActiveTexture(layer + counter);
-
-			glBindTexture(type, *it);
-			counter++;
-		}
-	}
-
-	void Shader::setInteger(string name, int value) const {
-		glUniform1i(glGetUniformLocation(program, name.c_str()), value);
-	}
-
-	void Shader::setFloat(string name, float value) const {
-		glUniform1f(glGetUniformLocation(program, name.c_str()), value);
-	}
-
-	void Shader::setVector3(string name, const glm::vec3& value) const {
-		glUniform3f(glGetUniformLocation(program, name.c_str()),
-			value.x, value.y, value.z);
-	}
-
-	void Shader::setMat4(string name, const glm::mat4& value) const {
-		glUniformMatrix4fv(glGetUniformLocation(program, name.c_str()), 1, GL_FALSE,
-			glm::value_ptr(value));
 	}
 
 }

@@ -15,15 +15,15 @@ using namespace glm;
 
 namespace geeL {
 
-	Light::Light(Transform& transform, vec3 diffuse, float shadowBias, std::string name)
+	Light::Light(Transform& transform, vec3 diffuse, float shadowBias, const std::string& name)
 		: SceneObject(transform, name), diffuse(diffuse), shadowBias(shadowBias), dynamicBias(shadowBias) {}
 
 
-	void Light::deferredBind(const RenderScene& scene, const Shader& shader, string name) const {
+	void Light::deferredBind(const RenderScene& scene, const Shader& shader, const std::string& name) const {
 		forwardBind(shader, name, "");
 	}
 
-	void Light::forwardBind(const Shader& shader,  string name, string transformName) const {
+	void Light::forwardBind(const Shader& shader,  string name, const std::string& transformName) const {
 		shader.setVector3(name + "diffuse", diffuse);
 		shader.setFloat(name + "bias", dynamicBias);
 	}
@@ -53,7 +53,7 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void Light::addShadowmap(Shader& shader, string name) {
+	void Light::addShadowmap(Shader& shader, const std::string& name) {
 		shader.addMap(shadowmapID, name, GL_TEXTURE_2D);
 	}
 

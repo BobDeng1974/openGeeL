@@ -56,33 +56,17 @@ namespace geeL {
 		void setVector3(std::string name, const glm::vec3& value) const;
 		void setMat4(std::string name, const glm::mat4& value) const;
 
+	protected:
+		void init(const char* vertexPath, const char* fragmentPath);
+		void init(const char* vertexPath, const char* geometryPath, const char* fragmentPath);
+
 	private:
 		std::list<TextureBinding> maps;
 
 	};
 
 
-	//Special shader container that is intented for the use in scene drawing.
-	//It therefore holds additional scene information.
-	class SceneShader : public Shader {
-
-	public:
-		const bool deferred;
-		const bool useLight;
-		const bool useCamera;
-		const bool useSkybox;
-		std::string cameraName, skyboxName;
-
-
-		SceneShader();
-
-		SceneShader(const char* vertexPath, const char* fragmentPath, bool deferred = false, bool useLight = true, bool useCamera = true,
-			bool useSkybox = true, std::string cameraName = "camera", std::string skyboxName = "skybox");
-
-		SceneShader(const char* vertexPath, const char* geometryPath, const char* fragmentPath, bool deferred = false, bool useLight = true,
-			bool useCamera = true, bool useSkybox = true, std::string cameraName = "camera", std::string skyboxName = "skybox");
-
-	};
+	
 }
 
 #endif

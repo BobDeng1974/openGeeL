@@ -7,7 +7,7 @@
 #include <map>
 #include <cmath>
 #include <gtc/matrix_transform.hpp>
-#include "../shader/shader.h"
+#include "../shader/sceneshader.h"
 #include "../postprocessing/drawdefault.h"
 #include "../texturing/simpletexture.h"
 #include "../window.h"
@@ -37,7 +37,7 @@ namespace geeL {
 		RenderContext& context, DefaultPostProcess& def, SSAO* ssao, float ssaoResolution)
 			: Renderer(window, inputManager, context), ssao(ssao), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()),
 				gBuffer(GBuffer()), screen(ScreenQuad()), ssaoResolution(ssaoResolution),
-				deferredShader(new SceneShader("renderer/shaders/deferredlighting.vert",
+				deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
 					"renderer/shaders/cooktorrancedeferred.frag")), toggle(0) {
 
 		effects.push_back(&def);

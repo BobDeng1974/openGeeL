@@ -7,7 +7,6 @@
 
 namespace geeL {
 
-	class Animator;
 	class DefaultMaterialContainer;
 	class Material;
 	class Model;
@@ -37,7 +36,7 @@ namespace geeL {
 	public:
 		//Constructor for mesh renderer with an unique assigned model
 		MeshRenderer(Transform& transform, SceneShader& shader, Model& model,
-			CullingMode faceCulling = CullingMode::cullFront, std::string name = "MeshRenderer");
+			CullingMode faceCulling = CullingMode::cullFront, const std::string& name = "MeshRenderer");
 
 		~MeshRenderer();
 
@@ -89,54 +88,6 @@ namespace geeL {
 		Model* model;
 
 	};
-
-
-	//Special mesh renderer that is intended for use with animated/skinned models
-	class SkinnedMeshRenderer : public MeshRenderer {
-
-	public:
-		SkinnedMeshRenderer(Transform& transform, SceneShader& shader, SkinnedModel& model,
-			CullingMode faceCulling = CullingMode::cullFront, std::string name = "SkinnedMeshRenderer");
-
-		~SkinnedMeshRenderer();
-
-		//Updates model with current transformational data of skeleton
-		virtual void lateUpdate();
-
-		virtual void draw(bool deferred = true) const;
-		virtual void draw(const Shader& shader) const;
-		
-		Skeleton& getSkeleton();
-		SkinnedModel& getSkinnedModel();
-
-		//Add copy of given animator to scene object that will be updated automatically
-		template<class T>
-		T& addAnimatorComponent(const T& animator);
-
-		virtual RenderMode getRenderMode() const;
-
-	private:
-		Skeleton* skeleton;
-		Animator* animator;
-		SkinnedModel* skinnedModel;
-
-		void loadSkeleton(const Shader& shader) const;
-	};
-
-
-	template<class T>
-	inline T& SkinnedMeshRenderer::addAnimatorComponent(const T & animator) {
-		T* t = new T(animator);
-
-		if (dynamic_cast<Animator*>(t) != nullptr) {
-			this->animator = t;
-			this->animator->init();
-			this->components.push_back(this->animator);
-		}
-		else
-			std::cout << "Given component is not an animator\n";
-	}
-	
 }
 
 #endif

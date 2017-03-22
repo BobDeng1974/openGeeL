@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <list>
-#include "shader.h"
+#include "sceneshader.h"
 #include "../cameras/camera.h"
 #include "../lighting/lightmanager.h"
 #include "../materials/materialfactory.h"
@@ -27,12 +27,12 @@ namespace geeL {
 	void ShaderManager::staticForwardBind(const RenderScene& scene, SceneShader& shader) const {
 		shader.use();
 
-		if (shader.useLight) {
+		if (shader.getUseLight()) {
 			scene.lightManager.forwardBind(shader);
 			shader.mapOffset = 1;
 			scene.lightManager.bindShadowmaps(shader);
 		}
-		if (shader.useCamera) {
+		if (shader.getUseCamera()) {
 			glUniformBlockBinding(shader.program,
 				glGetUniformBlockIndex(shader.program, "cameraMatrices"),
 				getUniformBindingPoint(camID));
@@ -43,21 +43,18 @@ namespace geeL {
 		shader.bindMaps();
 	}
 
-	void ShaderManager::staticDeferredBind(const RenderScene& scene, SceneShader& shader) const {
+	void ShaderManager::staticDeferredBind(const RenderScene& scene, Shader& shader) const {
 		shader.use();
 
-		if (shader.useLight) {
-			scene.lightManager.deferredBind(scene, shader);
-			shader.mapOffset = 1;
-			scene.lightManager.bindShadowmaps(shader);
-		}
-		if (shader.useCamera) {
-			glUniformBlockBinding(shader.program,
-				glGetUniformBlockIndex(shader.program, "cameraMatrices"),
-				getUniformBindingPoint(camID));
+		scene.lightManager.deferredBind(scene, shader);
+		shader.mapOffset = 1;
+		scene.lightManager.bindShadowmaps(shader);
 
-			scene.camera.uniformBind(camID);
-		}
+		glUniformBlockBinding(shader.program,
+			glGetUniformBlockIndex(shader.program, "cameraMatrices"),
+			getUniformBindingPoint(camID));
+
+		scene.camera.uniformBind(camID);
 
 		shader.bindMaps();
 	}
@@ -69,7 +66,7 @@ namespace geeL {
 			const SceneShader& shader = **it;
 
 			shader.use();
-			if (shader.useLight) scene.lightManager.forwardBind(shader);
+			if (shader.getUseLight()) scene.lightManager.forwardBind(shader);
 		}
 	}
 

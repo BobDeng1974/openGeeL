@@ -6,6 +6,7 @@
 #include <string>
 #include "../texturing/simpletexture.h"
 #include "../texturing/envmap.h"
+#include "../shader/defshading.h"
 
 namespace geeL {
 
@@ -14,15 +15,6 @@ namespace geeL {
 	class DefaultMaterialContainer;
 	class GenericMaterialContainer;
 	class SceneShader;
-
-
-	enum class DefaultShading {
-		DeferredStatic,
-		DeferredSkinned,
-		ForwardStatic,
-		ForwardSkinned
-	};
-
 
 	class MaterialFactory {
 
@@ -52,7 +44,7 @@ namespace geeL {
 
 		//Creates and returns a new shader program with given file paths
 		//for vertex and fragment shaders
-		SceneShader& CreateShader(std::string vertexPath, std::string fragmentPath);
+		SceneShader& CreateShader(DefaultShading shading, std::string fragmentPath);
 
 		std::list<MaterialContainer*>::iterator materialsBegin();
 		std::list<MaterialContainer*>::iterator materialsEnd();

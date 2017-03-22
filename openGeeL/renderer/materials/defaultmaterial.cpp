@@ -3,7 +3,7 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 #include <iostream>
-#include "../shader/shader.h"
+#include "../shader/sceneshader.h"
 #include "../texturing/simpletexture.h"
 #include "defaultmaterial.h"
 

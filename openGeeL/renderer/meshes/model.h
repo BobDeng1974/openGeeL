@@ -36,7 +36,7 @@ namespace geeL {
 		//Draw models with given custom materials
 		virtual void draw(const std::map<unsigned int, Material*>& customMaterials) const;
 
-		virtual void iterateMeshes(std::function<void(const Mesh*)> function) const = 0;
+		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const = 0;
 		virtual unsigned int meshCount() const = 0;
 		virtual const Mesh& getMesh(unsigned int index) const = 0;
 
@@ -55,16 +55,15 @@ namespace geeL {
 		StaticModel(std::string path) : Model(path) {}
 		~StaticModel();
 
-		//Add static mesh. Memory will be managed by this model
-		StaticMesh& addMesh(StaticMesh* mesh);
+		StaticMesh& addMesh(StaticMesh&& mesh);
 
-		virtual void iterateMeshes(std::function<void(const Mesh*)> function) const;
+		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const;
 		
 		virtual unsigned int meshCount() const;
 		virtual const Mesh& getMesh(unsigned int index) const;
 
 	private:
-		std::vector<StaticMesh*> meshes;
+		std::vector<StaticMesh> meshes;
 		
 	};
 
@@ -80,25 +79,24 @@ namespace geeL {
 		virtual void updateBones(const Skeleton& skeleton);
 		virtual void setSkeleton(Skeleton* const skeleton);
 
-		//Add skinned mesh. Memory will be managed by this model
-		SkinnedMesh& addMesh(SkinnedMesh* mesh);
+		SkinnedMesh& addMesh(SkinnedMesh&& mesh);
 
-		virtual void iterateMeshes(std::function<void(const Mesh*)> function) const;
-		void iterateMeshes(std::function<void(const SkinnedMesh*)> function) const;
+		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const;
+		void iterateMeshes(std::function<void(const SkinnedMesh&)> function) const;
 
 		virtual unsigned int meshCount() const;
 		virtual const Mesh& getMesh(unsigned int index) const;
 		virtual const SkinnedMesh& getSkinnedMesh(unsigned int intex) const;
 
 	private:
-		std::vector<SkinnedMesh*> meshes;
+		std::vector<SkinnedMesh> meshes;
 
 	};
 
 
 
 	inline const Mesh& StaticModel::getMesh(unsigned int index) const {
-		return *meshes[index];
+		return meshes[index];
 	}
 
 	inline unsigned int StaticModel::meshCount() const {
@@ -106,11 +104,11 @@ namespace geeL {
 	}
 
 	inline const Mesh& SkinnedModel::getMesh(unsigned int index) const {
-		return *meshes[index];
+		return meshes[index];
 	}
 
 	inline const SkinnedMesh& SkinnedModel::getSkinnedMesh(unsigned int index) const {
-		return *meshes[index];
+		return meshes[index];
 	}
 
 	inline unsigned int SkinnedModel::meshCount() const {

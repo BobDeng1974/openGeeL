@@ -4,7 +4,7 @@
 #include "../materials/defaultmaterial.h"
 #include "../materials/material.h"
 #include "../transformation/transform.h"
-#include "../shader/shader.h"
+#include "../shader/sceneshader.h"
 #include "mesh.h"
 #include "model.h"
 #include "meshrenderer.h"
@@ -13,7 +13,7 @@ using namespace std;
 
 namespace geeL{
 
-	MeshRenderer::MeshRenderer(Transform& transform, SceneShader& shader, Model& model, CullingMode faceCulling, std::string name)
+	MeshRenderer::MeshRenderer(Transform& transform, SceneShader& shader, Model& model, CullingMode faceCulling, const std::string& name)
 		: SceneObject(transform, name), model(&model), faceCulling(faceCulling) {
 	
 		initMaterials(shader);
@@ -89,8 +89,8 @@ namespace geeL{
 		//Load the default materials of the models meshes as materials of this mesh renderer
 		int counter = 0;
 
-		if (shader.deferred) {
-			std::vector<MaterialContainer*>& mats = model->getMaterials();
+		if (shader.getDeferred()) {
+			std::vector<MaterialContainer*>&& mats = model->getMaterials();
 			for (auto it = mats.begin(); it != mats.end(); it++) {
 				MaterialContainer& container = **it;
 				deferredMaterials[counter] = new Material(shader, container);
@@ -98,7 +98,7 @@ namespace geeL{
 			}
 		}
 		else {
-			std::vector<MaterialContainer*>& mats = model->getMaterials();
+			std::vector<MaterialContainer*>&& mats = model->getMaterials();
 			for (auto it = mats.begin(); it != mats.end(); it++) {
 				MaterialContainer& container = **it;
 				forwardMaterials[counter] = new Material(shader, container);

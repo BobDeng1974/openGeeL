@@ -23,10 +23,10 @@ namespace geeL {
 		glm::vec3 center;
 
 		//Defines a static camera 
-		Camera(Transform& transform, std::string name = "Camera");
+		Camera(Transform& transform, const std::string& name = "Camera");
 
 		//Defines a movable camera
-		Camera(Transform& transform, float speed, float sensitivity, std::string name = "Camera");
+		Camera(Transform& transform, float speed, float sensitivity, const std::string& name = "Camera");
 
 		//Update view and projection matrices
 		virtual void lateUpdate();

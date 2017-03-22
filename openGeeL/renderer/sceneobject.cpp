@@ -7,8 +7,8 @@ using namespace std;
 
 namespace geeL {
 
-	SceneObject::SceneObject(Transform& transform, std::string name) 
-		: transform(transform), name(name), active(true) {}
+	SceneObject::SceneObject(Transform& transform, const std::string& name)
+		: transform(transform), name(std::move(name)), active(true) {}
 
 	SceneObject::~SceneObject() {
 		for_each(components.begin(), components.end(), [&](Component* comp) {
@@ -29,14 +29,6 @@ namespace geeL {
 		});
 	}
 
-
-	Component&  SceneObject::addComponent(const Component& component) {
-		Component* comp = new Component(component);
-		comp->init();
-
-		components.push_back(comp);
-	}
-
 	bool SceneObject::isActive() const {
 		return active;
 	}
@@ -49,8 +41,8 @@ namespace geeL {
 		return name;
 	}
 
-	void SceneObject::setName(std::string name) {
-		this->name = name;
+	void SceneObject::setName(const std::string& name) {
+		this->name = std::move(name);
 	}
 
 }

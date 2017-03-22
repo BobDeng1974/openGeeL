@@ -1,16 +1,15 @@
 #include <iostream>
-#include "../shader/shader.h"
+#include "../shader/sceneshader.h"
 #include "../materials/material.h"
 #include "../transformation/transform.h"
-#include "../animation/animator.h"
 #include "../animation/skeleton.h"
 #include "model.h"
-#include "meshrenderer.h"
+#include "skinnedrenderer.h"
 
 namespace geeL {
 
 	SkinnedMeshRenderer::SkinnedMeshRenderer(Transform& transform, SceneShader& shader, SkinnedModel& model,
-		CullingMode faceCulling, std::string name)
+		CullingMode faceCulling, const std::string& name)
 			: MeshRenderer(transform, shader, model, faceCulling, name), 
 				skinnedModel(&model), skeleton(new Skeleton(model.getSkeleton())) {
 	
@@ -84,8 +83,8 @@ namespace geeL {
 	}
 
 	void SkinnedMeshRenderer::loadSkeleton(const Shader& shader) const {
-		skinnedModel->iterateMeshes([&](const SkinnedMesh* mesh) {
-			for (auto et = mesh->bonesBeginConst(); et != mesh->bonesEndBegin(); et++) {
+		skinnedModel->iterateMeshes([&](const SkinnedMesh& mesh) {
+			for (auto et = mesh.bonesBeginConst(); et != mesh.bonesEndBegin(); et++) {
 				const MeshBoneData& data = et->second;
 				const glm::mat4& transform = data.transform;
 

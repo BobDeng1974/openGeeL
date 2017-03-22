@@ -15,7 +15,7 @@ using namespace glm;
 namespace geeL {
 
 	SpotLight::SpotLight(Transform& transform, vec3 diffuse, 
-		float angle, float outerAngle, float shadowBias, float farPlane, std::string name)
+		float angle, float outerAngle, float shadowBias, float farPlane, const string& name)
 			: Light(transform, diffuse, shadowBias, name), 
 				angle(angle), outerAngle(outerAngle), farPlane(farPlane), lightCookie(nullptr) {
 	
@@ -23,7 +23,7 @@ namespace geeL {
 	}
 
 
-	void SpotLight::deferredBind(const RenderScene& scene, const Shader& shader, string name) const {
+	void SpotLight::deferredBind(const RenderScene& scene, const Shader& shader, const string& name) const {
 		Light::deferredBind(scene, shader, name);
 
 		shader.setVector3(name + "position", scene.TranslateToViewSpace(transform.getPosition()));
@@ -35,7 +35,7 @@ namespace geeL {
 		shader.setFloat(name + "useCookie", (lightCookie != nullptr));
 	}
 
-	void SpotLight::forwardBind(const Shader& shader, string name, string transformName) const {
+	void SpotLight::forwardBind(const Shader& shader, const string& name, const string& transformName) const {
 		Light::forwardBind(shader, name, transformName);
 
 		shader.setVector3(name + "position", transform.getPosition());
@@ -58,15 +58,15 @@ namespace geeL {
 		return 0;
 	}
 
-	void SpotLight::addLightCookie(Shader& shader, string name) {
+	void SpotLight::addLightCookie(Shader& shader, const string& name) {
 		if(lightCookie != nullptr)
 			shader.addMap(lightCookie->getID(), name, GL_TEXTURE_2D);
 	}
 
 	void SpotLight::computeLightTransform() {
 		float fov = glm::degrees(angle);
-		mat4 projection = glm::perspective(fov, 1.f, 1.0f, farPlane);
-		mat4 view = lookAt(transform.getPosition(), transform.getPosition() + 
+		mat4&& projection = glm::perspective(fov, 1.f, 1.0f, farPlane);
+		mat4&& view = lookAt(transform.getPosition(), transform.getPosition() + 
 			transform.getForwardDirection(), transform.getUpDirection());
 
 		lightTransform = projection * view;

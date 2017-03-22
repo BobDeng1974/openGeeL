@@ -15,14 +15,14 @@ using namespace glm;
 
 namespace geeL {
 
-	DirectionalLight::DirectionalLight(Transform& transform, vec3 diffuse, float shadowBias, std::string name)
+	DirectionalLight::DirectionalLight(Transform& transform, vec3 diffuse, float shadowBias, const string& name)
 		: Light(transform, diffuse, shadowBias, name) {
 	
 		setResolution(ShadowmapResolution::High);
 	}
 
 
-	void DirectionalLight::deferredBind(const RenderScene& scene, const Shader& shader, string name) const {
+	void DirectionalLight::deferredBind(const RenderScene& scene, const Shader& shader, const string& name) const {
 		Light::deferredBind(scene, shader, name);
 
 		shader.setVector3(name + "direction", scene.GetOriginInViewSpace() - 
@@ -30,7 +30,7 @@ namespace geeL {
 		shader.setMat4(name + "lightTransform", lightTransform);
 	}
 
-	void DirectionalLight::forwardBind(const Shader& shader, string name, string transformName) const {
+	void DirectionalLight::forwardBind(const Shader& shader, const string& name, const string& transformName) const {
 		Light::forwardBind(shader, name, transformName);
 
 		shader.setVector3(name + "direction", transform.getForwardDirection());
@@ -65,10 +65,10 @@ namespace geeL {
 		far = fmaxf(8.f, fminf(50.f, far));
 
 		float a = (shadowmapWidth / 500.f) * far;
-		mat4 projection = ortho(-a, a, -a, a, 1.0f, 4.f * far);
-		mat4 view = lookAt(transform.getForwardDirection() * far + offset, offset, vec3(0.f, 1.f, 0.f));
+		mat4&& projection = ortho(-a, a, -a, a, 1.0f, 4.f * far);
+		mat4&& view = lookAt(transform.getForwardDirection() * far + offset, offset, vec3(0.f, 1.f, 0.f));
 
-		lightTransform = projection * view;
+		lightTransform =  projection * view;
 	}
 
 	float DirectionalLight::getIntensity(glm::vec3 point) const {

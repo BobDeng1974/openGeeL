@@ -14,24 +14,24 @@ using namespace glm;
 
 namespace geeL {
 
-	PointLight::PointLight(Transform& transform, vec3 diffuse, float shadowBias, float farPlane, std::string name)
+	PointLight::PointLight(Transform& transform, vec3 diffuse, float shadowBias, float farPlane, const string& name)
 		: Light(transform, diffuse, shadowBias, name), farPlane(farPlane) {
 	
 		lightTransforms.reserve(6);
-		initLightTransform();
+		computeLightTransform();
 
 		setResolution(ShadowmapResolution::Adaptive);
 	}
 
 
-	void PointLight::deferredBind(const RenderScene& scene, const Shader& shader, string name) const {
+	void PointLight::deferredBind(const RenderScene& scene, const Shader& shader, const string& name) const {
 		Light::deferredBind(scene, shader, name);
 
 		shader.setVector3(name + "position", scene.TranslateToViewSpace(transform.getPosition()));
 		shader.setFloat(name + "farPlane", farPlane);
 	}
 
-	void PointLight::forwardBind(const Shader& shader, string name, string transformName) const {
+	void PointLight::forwardBind(const Shader& shader, const string& name, const string& transformName) const {
 		Light::forwardBind(shader, name, transformName);
 
 		shader.setVector3(name + "position", transform.getPosition());
@@ -65,7 +65,7 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void PointLight::addShadowmap(Shader& shader, std::string name) {
+	void PointLight::addShadowmap(Shader& shader, const string& name) {
 		shader.addMap(shadowmapID, name, GL_TEXTURE_CUBE_MAP);
 	}
 
@@ -159,47 +159,25 @@ namespace geeL {
 	}
 
 	
-	void PointLight::initLightTransform() {
-		mat4 projection = glm::perspective(90.f, 1.f, 1.0f, farPlane);
-
-		mat4 view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(1.f, 0.f, 0.f), vec3(0.f, -1.f, 0.f));
-		lightTransforms.push_back(projection * view);
-
-		view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(-1.f, 0.f, 0.f), vec3(0.f, -1.f, 0.f));
-		lightTransforms.push_back(projection * view);
-
-		view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(0.f, 1.f, 0.f), vec3(0.f, 0.f, 1.f));
-		lightTransforms.push_back(projection * view);
-
-		view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(0.f, -1.f, 0.f), vec3(0.f, 0.f, -1.f));
-		lightTransforms.push_back(projection * view);
-
-		view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(0.f, 0.f, 1.f), vec3(0.f, -1.f, 0.f));
-		lightTransforms.push_back(projection * view);
-
-		view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(0.f, 0.f, -1.f), vec3(0.f, -1.f, 0.f));
-		lightTransforms.push_back(projection * view);
-	}
-
 	void PointLight::computeLightTransform() {
-		mat4 projection = glm::perspective(90.f, 1.f, 1.0f, farPlane);
+		mat4&& projection = glm::perspective(90.f, 1.f, 1.0f, farPlane);
 
-		mat4 view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(1.f, 0.f, 0.f), vec3(0.f, -1.f, 0.f));
-		lightTransforms[0] = projection * view;
+		mat4&& view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(1.f, 0.f, 0.f), vec3(0.f, -1.f, 0.f));
+		lightTransforms[0] = std::move(projection * view);
 
 		view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(-1.f, 0.f, 0.f), vec3(0.f, -1.f, 0.f));
-		lightTransforms[1] = projection * view;
+		lightTransforms[1] = std::move(projection * view);
 
 		view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(0.f, 1.f, 0.f), vec3(0.f, 0.f, 1.f));
-		lightTransforms[2] = projection * view;
+		lightTransforms[2] = std::move(projection * view);
 
 		view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(0.f, -1.f, 0.f), vec3(0.f, 0.f, -1.f));
-		lightTransforms[3] = projection * view;
+		lightTransforms[3] = std::move(projection * view);
 
 		view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(0.f, 0.f, 1.f), vec3(0.f, -1.f, 0.f));
-		lightTransforms[4] = projection * view;
+		lightTransforms[4] = std::move(projection * view);
 
 		view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(0.f, 0.f, -1.f), vec3(0.f, -1.f, 0.f));
-		lightTransforms[5] = projection * view;
+		lightTransforms[5] = std::move(projection * view);
 	}
 }

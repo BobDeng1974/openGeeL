@@ -4,6 +4,7 @@
 #include <string>
 #include <list>
 #include <memory>
+#include "scripting\component.h"
 
 namespace geeL {
 
@@ -15,7 +16,7 @@ namespace geeL {
 	public:
 		Transform& transform;
 
-		SceneObject(Transform& transform, std::string name = "Scene Object");
+		SceneObject(Transform& transform, const std::string& name = "Scene Object");
 		~SceneObject();
 
 		//Update object and all its components
@@ -28,14 +29,15 @@ namespace geeL {
 		template<class T>
 		T& addComponent();
 
-		//Add copy of given component to scene object that will be updated automatically
-		Component& addComponent(const Component& component);
+		//Add given component to scene object that will be updated automatically
+		template<class T>
+		T& addComponent(T&& component);
 
 		bool isActive() const;
 		void setActive(bool active);
 
 		std::string getName() const;
-		void setName(std::string name);
+		void setName(const std::string& name);
 
 	protected:
 		bool active;
@@ -46,15 +48,25 @@ namespace geeL {
 
 
 	template<class T>
-	inline T& SceneObject::addComponent() {
-		T* comp = new T();
+	inline T& SceneObject::addComponent(T&& component) {
+		static_assert(std::is_base_of<Component, T>::value, "Given class is not a component");
 
-		if (dynamic_cast<Component*>(comp) != nullptr) {
-			comp->init();
-			components.push_back(comp);
-		}
-		else
-			std::cout << "Given type has to be a component type\n";
+		T* comp = new T(std::move(component));
+		comp->init();
+		components.push_back(comp);
+
+		return *comp;
+	}
+
+	template<class T>
+	inline T& SceneObject::addComponent() {
+		static_assert(std::is_base_of<Component, T>::value, "Given class is not a component");
+
+		T* comp = new T();
+		comp->init();
+		components.push_back(comp);
+
+		return *comp;
 	}
 
 }

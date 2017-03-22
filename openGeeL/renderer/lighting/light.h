@@ -31,13 +31,13 @@ namespace geeL {
 	public:
 		vec3 diffuse;
 
-		Light(Transform& transform, vec3 diffuse, float shadowBias, std::string name = "Light");
+		Light(Transform& transform, vec3 diffuse, float shadowBias, const std::string& name = "Light");
 
-		virtual void deferredBind(const RenderScene& scene, const Shader& shader, std::string name) const;
-		virtual void forwardBind(const Shader& shader, std::string name, std::string transformName) const;
+		virtual void deferredBind(const RenderScene& scene, const Shader& shader, const std::string& name) const;
+		virtual void forwardBind(const Shader& shader, std::string name, const std::string& transformName) const;
 
 		virtual void initShadowmap();
-		virtual void addShadowmap(Shader& shader, std::string name);
+		virtual void addShadowmap(Shader& shader, const std::string& name);
 
 		//Render function for shadow maps. Takes current scene camera, render function
 		//that  draws desired objects of scene and the actual shadow map shader

@@ -4,6 +4,7 @@
 #include "skeleton.h"
 #include "animatedobject.h"
 #include "animator.h"
+#include <iostream>
 
 namespace geeL {
 

@@ -1,4 +1,4 @@
-#include "../shader/shader.h"
+#include "../shader/sceneshader.h"
 #include "genericmaterial.h"
 #include "defaultmaterial.h"
 #include "material.h"
@@ -9,9 +9,9 @@ using namespace std;
 namespace geeL {
 
 	MaterialFactory::MaterialFactory() : 
-		forwardShader(new SceneShader("renderer/shaders/lighting.vert", "renderer/shaders/lighting.frag")),
-		deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", "renderer/shaders/gbuffer.frag", true, false)),
-		deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", "renderer/shaders/gbuffer.frag", true, false)) {
+		forwardShader(new SceneShader(FragmentShader("renderer/shaders/lighting.frag", false), false)),
+		deferredShader(new SceneShader(FragmentShader("renderer/shaders/gbuffer.frag", true, false), false)),
+		deferredAnimatedShader(new SceneShader(FragmentShader("renderer/shaders/gbuffer.frag", true, false), true)) {
 	
 		shaders.push_back(forwardShader);
 	}
@@ -67,8 +67,12 @@ namespace geeL {
 		return *mat;
 	}
 
-	SceneShader& MaterialFactory::CreateShader(string vertexPath, string fragmentPath) {
-		shaders.push_back(new SceneShader(vertexPath.c_str(), fragmentPath.c_str()));
+	SceneShader& MaterialFactory::CreateShader(DefaultShading shading, string fragmentPath) {
+		bool animated = (shading == DefaultShading::DeferredSkinned) || (shading == DefaultShading::ForwardSkinned);
+		FragmentShader frag = FragmentShader(fragmentPath, ((shading == DefaultShading::DeferredSkinned) 
+			|| (shading == DefaultShading::DeferredStatic)));
+
+		shaders.push_back(new SceneShader(frag, animated));
 		return *shaders.back();
 	}
 	
