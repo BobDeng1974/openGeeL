@@ -1,14 +1,18 @@
 #ifndef MESHRENDERER_H
 #define MESHRENDERER_H
 
+#include <functional>
 #include <vector>
 #include <map>
 #include "../sceneobject.h"
+#include "../materials/material.h"
 
 namespace geeL {
 
 	class DefaultMaterialContainer;
 	class Material;
+	class MaterialContainer;
+	class Mesh;
 	class Model;
 	class SceneShader;
 	class Shader;
@@ -38,51 +42,50 @@ namespace geeL {
 		MeshRenderer(Transform& transform, SceneShader& shader, Model& model,
 			CullingMode faceCulling = CullingMode::cullFront, const std::string& name = "MeshRenderer");
 
-		~MeshRenderer();
+		//Draw all meshes of with their respective shader and material.
+		//Meshes with same shaders will be rendered in groups to avoid
+		//unnecessary program switching in GPU
+		virtual void draw() const;
 
+		//Only draw those meshes whose materials
+		//are linked to given shader
+		virtual void draw(const SceneShader& shader) const;
 
-		virtual void draw(bool deferred = true) const;
-		virtual void draw(const Shader& shader) const;
+		//Draw all meshes exclusively with the given shader. No material properties will be used
+		virtual void drawExclusive(const Shader& shader) const;
 
-		//Change materials of mesh renderer in numerical order. For clarification:
-		//Let materials hold i materials and default materials hold j materials
-		//If i < j, then the first i materials will be changed
-		//If i > j, then j materials will be change and the remaining (i - j) materials ignored
-		void customizeMaterials(std::vector<Material*> materials);
+		//Customize material of given mesh (If it is actually part of this mesh renderer)
+		void changeMaterial(Material&& material, const Mesh& mesh);
 
-		//Customize material at index i if present in mesh renderer
-		void customizeMaterials(Material* material, unsigned int index);
-
-		//Check if the meshes contain materials with non-default materials (meaning: with no default shading)
-		bool containsForwardMaterials() const;
-
-		//Check if the meshes contain default materials (meaning: with default shading)
-		bool containsDeferredMaterials() const;
+		
+		void iterateMaterials(std::function<void(MaterialContainer&)> function);
 
 		const Model& getModel() const;
-
-		std::map<unsigned int, Material*>::iterator deferredMaterialsBegin();
-		std::map<unsigned int, Material*>::iterator deferredMaterialsEnd();
-
-		std::map<unsigned int, Material*>::iterator forwardMaterialsBegin();
-		std::map<unsigned int, Material*>::iterator forwardMaterialsEnd();
-
 		virtual RenderMode getRenderMode() const;
 
 	protected:
 		const CullingMode faceCulling;
-		std::map<unsigned int, Material*> deferredMaterials;
-		std::map<unsigned int, Material*> forwardMaterials;
 
 		//Init materials with data from the meshes material containers
 		void initMaterials(SceneShader& shader);
 
-		//Transform given model with transformation data of this mesh renderer
-		virtual void transformMeshes(Model& model, const std::map<unsigned int, Material*>& materials, bool deferred) const;
-		virtual void transformMeshes(const Shader* shader) const;
-
 		void cullFaces() const;
 		void uncullFaces() const;
+
+
+		struct MaterialMapping {
+			const Mesh* mesh;
+			Material material;
+
+			MaterialMapping(const Mesh& mesh, Material material) 
+				: mesh(&mesh), material(std::move(material)) {}
+			
+			bool operator== (const MaterialMapping &rhs) {
+				return mesh == rhs.mesh;
+			}
+		};
+
+		std::map<const SceneShader*, std::list<MaterialMapping>> materials;
 
 	private:
 		Model* model;

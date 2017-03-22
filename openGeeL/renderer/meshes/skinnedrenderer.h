@@ -18,6 +18,7 @@ namespace geeL {
 		virtual void lateUpdate();
 
 		virtual void draw(bool deferred = true) const;
+		virtual void draw(const SceneShader& shader) const;
 		virtual void draw(const Shader& shader) const;
 
 		Skeleton& getSkeleton();

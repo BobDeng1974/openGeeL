@@ -8,6 +8,7 @@
 #include "meshes\meshrenderer.h"
 #include "meshes\skinnedrenderer.h"
 #include "meshes\meshfactory.h"
+#include "materials\materialfactory.h"
 #include "cameras\camera.h"
 #include "cubemapping\skybox.h"
 #include "utility\gbuffer.h"
@@ -20,8 +21,9 @@ using namespace std;
 
 namespace geeL {
 
-	RenderScene::RenderScene(LightManager& lightManager, Camera& camera, MeshFactory& meshFactory, Transform& world)
-		: lightManager(lightManager), camera(camera), meshFactory(meshFactory), physics(nullptr), worldTransform(world) {}
+	RenderScene::RenderScene(Transform& world, LightManager& lightManager, Camera& camera, MeshFactory& meshFactory, MaterialFactory& materialFactory)
+		: lightManager(lightManager), camera(camera), meshFactory(meshFactory),
+			physics(nullptr), worldTransform(world), materialFactory(materialFactory) {}
 
 	
 
@@ -49,14 +51,14 @@ namespace geeL {
 	void RenderScene::drawDeferred() const {
 		iterRenderObjects(RenderObjectsMode::Deferred, [&](const MeshRenderer* object) {
 			if (object->isActive())
-				object->draw(true);
+				object->draw();
 		});
 	}
 
 	void RenderScene::drawForward() const {
 		iterRenderObjects(RenderObjectsMode::Forward, [&](const MeshRenderer* object) {
 			if (object->isActive())
-				object->draw(false);
+				object->draw();
 		});
 	}
 	
@@ -65,7 +67,7 @@ namespace geeL {
 
 		iterRenderObjects([&](const MeshRenderer* object) {
 			if (object->isActive())
-				object->draw(shader);
+				object->drawExclusive(shader);
 		});
 	}
 
@@ -74,7 +76,7 @@ namespace geeL {
 
 		iterRenderObjects(RenderObjectsMode::Static, [&](const MeshRenderer* object) {
 			if (object->isActive())
-				object->draw(shader);
+				object->drawExclusive(shader);
 		});
 	}
 
@@ -83,7 +85,7 @@ namespace geeL {
 
 		iterRenderObjects(RenderObjectsMode::Skinned, [&](const MeshRenderer* object) {
 			if (object->isActive())
-				object->draw(shader);
+				object->drawExclusive(shader);
 		});
 	}
 

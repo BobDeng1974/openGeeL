@@ -16,6 +16,7 @@ namespace geeL {
 	class SkinnedMeshRenderer;
 	class StaticModel;
 	class Material;
+	class MaterialFactory;
 	class MeshFactory;
 	class Physics;
 	class Transform;
@@ -29,7 +30,7 @@ namespace geeL {
 		Camera& camera;
 		LightManager& lightManager;
 
-		RenderScene(LightManager& lightManager, Camera& camera, MeshFactory& meshFactory, Transform& world);
+		RenderScene(Transform& world, LightManager& lightManager, Camera& camera, MeshFactory& meshFactory, MaterialFactory& materialFactory);
 
 		void setSkybox(Skybox& skybox);
 		void bindSkybox(Shader& shader) const;
@@ -86,6 +87,7 @@ namespace geeL {
 		Skybox* skybox;
 		Physics* physics;
 		MeshFactory& meshFactory;
+		MaterialFactory& materialFactory;
 
 		std::list<MeshRenderer*> deferredRenderObjects;
 		std::list<MeshRenderer*> deferredSkinnedObjects;

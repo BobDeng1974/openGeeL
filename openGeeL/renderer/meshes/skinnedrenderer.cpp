@@ -32,12 +32,10 @@ namespace geeL {
 	void SkinnedMeshRenderer::draw(bool deferred) const {
 		cullFaces();
 
-		const std::map<unsigned int, Material*>* materials =
-			deferred ? &deferredMaterials : &forwardMaterials;
-
+		/*
 		for (auto it = materials->begin(); it != materials->end(); it++) {
 			Material& material = *it->second;
-			Shader& shader = material.shader;
+			const Shader& shader = material.getShader();
 			shader.use();
 
 			//Load materials into shader
@@ -47,7 +45,7 @@ namespace geeL {
 			unsigned int index = it->first;
 			const SkinnedMesh& mesh = skinnedModel->getSkinnedMesh(index);
 
-			//Bind bone transforms for indivdual meshes
+			//Bind bone transforms to indivdual meshes
 			for (auto et = mesh.bonesBeginConst(); et != mesh.bonesEndBegin(); et++) {
 				const MeshBoneData& data = et->second;
 				const glm::mat4& transform = data.transform;
@@ -58,6 +56,14 @@ namespace geeL {
 			//Draw individual mesh
 			mesh.draw();
 		}
+		*/
+		uncullFaces();
+	}
+
+	void SkinnedMeshRenderer::draw(const SceneShader& shader) const {
+		cullFaces();
+
+		//TODO: implement this
 
 		uncullFaces();
 	}
@@ -66,9 +72,9 @@ namespace geeL {
 		cullFaces();
 
 		//TODO: Load relevant bone transforms into materials
+		shader.use();
+		shader.setMat4("model", transform.getMatrix());
 
-		//Draw model
-		transformMeshes(&shader);
 		skinnedModel->draw();
 
 		uncullFaces();

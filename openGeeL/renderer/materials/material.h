@@ -41,9 +41,7 @@ namespace geeL {
 	class Material {
 		
 	public:
-		SceneShader& shader;
-		MaterialContainer& container;
-
+		Material();
 		Material(SceneShader& shader, MaterialContainer& container, bool deferred = true);
 
 		void bindTextures() const;
@@ -51,7 +49,12 @@ namespace geeL {
 
 		bool rendersDeferred() const;
 
+		const SceneShader& getShader() const;
+		MaterialContainer& getMaterialContainer();
+
 	private:
+		SceneShader* shader;
+		MaterialContainer* container;
 		bool deferred;
 
 	};

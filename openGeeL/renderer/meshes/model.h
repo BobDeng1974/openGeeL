@@ -30,17 +30,12 @@ namespace geeL {
 		Model() {}
 		Model(std::string path) : path(path) {}
 
-		//Draw models without materials
+		//Draw all meshes of models without materials
 		virtual void draw() const;
-
-		//Draw models with given custom materials
-		virtual void draw(const std::map<unsigned int, Material*>& customMaterials) const;
 
 		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const = 0;
 		virtual unsigned int meshCount() const = 0;
 		virtual const Mesh& getMesh(unsigned int index) const = 0;
-
-		virtual std::vector<MaterialContainer*> getMaterials() const;
 
 	protected:
 		std::string path;
@@ -53,7 +48,6 @@ namespace geeL {
 	public:
 		StaticModel() : Model() {}
 		StaticModel(std::string path) : Model(path) {}
-		~StaticModel();
 
 		StaticMesh& addMesh(StaticMesh&& mesh);
 
@@ -74,7 +68,6 @@ namespace geeL {
 	public:
 		SkinnedModel() : Model(), AnimatedObject() {}
 		SkinnedModel(std::string path) : Model(path), AnimatedObject() {}
-		~SkinnedModel();
 
 		virtual void updateBones(const Skeleton& skeleton);
 		virtual void setSkeleton(Skeleton* const skeleton);

@@ -9,40 +9,12 @@ using namespace std;
 
 namespace geeL {
 
-
-	std::vector<MaterialContainer*> Model::getMaterials() const {
-		std::vector<MaterialContainer*> materials;
-		materials.reserve(meshCount());
-
-		iterateMeshes([&](const Mesh& mesh) {
-			materials.push_back(&mesh.getMaterialContainer());
-		});
-
-		return materials;
-	}
-
 	void Model::draw() const {
 		iterateMeshes([&](const Mesh& mesh) {
 			mesh.draw();
 		});
 	}
 
-	void Model::draw(const map<unsigned int, Material*>& customMaterials) const {
-		for (auto it = customMaterials.begin(); it != customMaterials.end(); it++) {
-			unsigned int i = it->first;
-
-			Material& mat = *it->second;
-			mat.bindTextures();
-			mat.bind();
-
-			const Mesh& mesh = getMesh(i);
-			mesh.draw();
-		}
-	}
-
-
-	StaticModel::~StaticModel() {
-	}
 
 	StaticMesh& StaticModel::addMesh(StaticMesh&& mesh) {
 		meshes.push_back(std::move(mesh));
@@ -56,10 +28,6 @@ namespace geeL {
 	}
 
 
-
-
-	SkinnedModel::~SkinnedModel() {
-	}
 
 
 	void SkinnedModel::updateBones(const Skeleton& skeleton) {

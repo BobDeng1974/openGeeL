@@ -19,119 +19,110 @@ namespace geeL{
 		initMaterials(shader);
 	}
 
-	MeshRenderer::~MeshRenderer() {
-		for (auto it = deferredMaterials.begin(); it != deferredMaterials.end(); it++) {
-			Material* mat = (*it).second;
-			delete mat;
-		}
 
-		for (auto it = forwardMaterials.begin(); it != forwardMaterials.end(); it++) {
-			Material* mat = (*it).second;
-			delete mat;
-		}
-	}
-
-
-	void MeshRenderer::draw(bool deferred) const {
+	void MeshRenderer::draw() const {
 		cullFaces();
 
-		//Draw model
-		const std::map<unsigned int, Material*>* materials = 
-			deferred ? &deferredMaterials : & forwardMaterials;
+		for (auto it = materials.begin(); it != materials.end(); it++) {
+			//Activate and forward information to shader
+			const Shader& shader = *it->first;
+			shader.use();
+			shader.setMat4("model", transform.getMatrix());
 
-		transformMeshes(*model, *materials, deferred);
-		model->draw(*materials);
+			const std::list<MaterialMapping>& elements = it->second;
+			for (auto et = elements.begin(); et != elements.end(); et++) {
+				const MaterialMapping& container = *et;
+
+				//Draw individual material
+				const Material& mat = container.material;
+				mat.bindTextures();
+				mat.bind();
+
+				//Draw mesh
+				const Mesh& mesh = *container.mesh;
+				mesh.draw();
+			}
+		}
 
 		uncullFaces();
 	}
 
-	void MeshRenderer::draw(const Shader& shader) const {
+	void MeshRenderer::draw(const SceneShader& shader) const {
 		cullFaces();
 
-		//Draw model
-		transformMeshes(&shader);
+		auto it = materials.find(&shader);
+		if (it != materials.end()) {
+			const Shader& shader = *it->first;
+			shader.use();
+			shader.setMat4("model", transform.getMatrix());
+
+			const std::list<MaterialMapping>& elements = it->second;
+			for (auto et = elements.begin(); et != elements.end(); et++) {
+				const MaterialMapping& container = *et;
+
+				//Draw individual material
+				const Material& mat = container.material;
+				mat.bindTextures();
+				mat.bind();
+
+				//Draw mesh
+				const Mesh& mesh = *container.mesh;
+				mesh.draw();
+			}
+		}
+
+		uncullFaces();
+	}
+
+	void MeshRenderer::drawExclusive(const Shader& shader) const {
+		cullFaces();
+
+		shader.use();
+		shader.setMat4("model", transform.getMatrix());
+
 		model->draw();
 
 		uncullFaces();
 	}
 	
 
-	void MeshRenderer::customizeMaterials(vector<Material*> materials) {
-		int size = (materials.size() > model->meshCount()) 
-			? model->meshCount()
-			: materials.size();
+	void MeshRenderer::changeMaterial(Material&& material, const Mesh& mesh) {
 
-		for (size_t i = 0; i < size; i++) {
-			Material* mat = materials[i];
-			
-			customizeMaterials(mat, i);
-		}
-	}
+		//Remove old element from materials since new material probably uses a different shader
+		std::list<MaterialMapping>* elements;
+		MaterialMapping* toRemove = nullptr;
+		for (auto it = materials.begin(); it != materials.end(); it++) {
+			elements = &it->second;
+			for (auto et = elements->begin(); et != elements->end(); et++) {
+				MaterialMapping& container = *et;
 
-	void MeshRenderer::customizeMaterials(Material* material, unsigned int index) {
-		if (index >= model->meshCount())
-			return;
+				if (container.mesh == &mesh) {
+					toRemove = &container;
+					break;
+				}
+			}
 
-		if (material->rendersDeferred()) {
-			deferredMaterials[index] = material;
-			if (forwardMaterials.find(index) != forwardMaterials.end())
-				forwardMaterials.erase(forwardMaterials.find(index));
-		}
-		else {
-			forwardMaterials[index] = material;
-			if (deferredMaterials.find(index) != deferredMaterials.end())
-				deferredMaterials.erase(deferredMaterials.find(index));
+			if (toRemove != nullptr) {
+				elements->remove(*toRemove);
+
+				//Add moved 'copy' of new material
+				const SceneShader& shader = material.getShader();
+				materials[&shader].push_back(MaterialMapping(mesh, material));
+
+				return;
+			}
 		}
 	}
 
 	void MeshRenderer::initMaterials(SceneShader& shader) {
+		model->iterateMeshes([&](const Mesh& mesh) {
+			MaterialContainer& container = mesh.getMaterialContainer();
+			Material material = Material(shader, container);
 
-		//Load the default materials of the models meshes as materials of this mesh renderer
-		int counter = 0;
-
-		if (shader.getDeferred()) {
-			std::vector<MaterialContainer*>&& mats = model->getMaterials();
-			for (auto it = mats.begin(); it != mats.end(); it++) {
-				MaterialContainer& container = **it;
-				deferredMaterials[counter] = new Material(shader, container);
-				counter++;
-			}
-		}
-		else {
-			std::vector<MaterialContainer*>&& mats = model->getMaterials();
-			for (auto it = mats.begin(); it != mats.end(); it++) {
-				MaterialContainer& container = **it;
-				forwardMaterials[counter] = new Material(shader, container);
-				counter++;
-			}
-		}
+			materials[&shader].push_back(MaterialMapping(mesh, material));
+		});
 	}
 
-	void MeshRenderer::transformMeshes(const Shader* shader) const {
-		shader->use();
-		shader->setMat4("model", transform.getMatrix());
-	}
-
-	void MeshRenderer::transformMeshes(Model& model, const map<unsigned int, Material*>& materials, bool deferred) const {
-		//In deferred rendering mode all material shaders are equal. 
-		//Therefore, binding one means binding all
-		if (deferred) {
-			Material* mat = materials.begin()->second;
-			const SceneShader& shader = mat->shader;
-
-			shader.use();
-			shader.setMat4("model", transform.getMatrix());
-		}
-		else {
-			for (auto it = materials.begin(); it != materials.end(); it++) {
-				Material* mat = it->second;
-				const SceneShader& shader = mat->shader;
-
-				shader.use();
-				shader.setMat4("model", transform.getMatrix());
-			}
-		}
-	}
 
 	void MeshRenderer::cullFaces() const {
 		switch (faceCulling) {
@@ -151,29 +142,17 @@ namespace geeL{
 		}
 	}
 
-	bool MeshRenderer::containsForwardMaterials() const {
-		return forwardMaterials.size() > 0;
+	void MeshRenderer::iterateMaterials(std::function<void(MaterialContainer&)> function) {
+		for (auto it = materials.begin(); it != materials.end(); it++) {
+			std::list<MaterialMapping>& elements = it->second;
+
+			for (auto et = elements.begin(); et != elements.end(); et++) {
+				Material& mat = (*et).material;
+				function(mat.getMaterialContainer());
+			}
+		}
 	}
 
-	bool MeshRenderer::containsDeferredMaterials() const {
-		return deferredMaterials.size() > 0;
-	}
-
-	map<unsigned int, Material*>::iterator MeshRenderer::deferredMaterialsBegin() {
-		return deferredMaterials.begin();
-	}
-
-	map<unsigned int, Material*>::iterator MeshRenderer::deferredMaterialsEnd() {
-		return deferredMaterials.end();
-	}
-
-	map<unsigned int, Material*>::iterator MeshRenderer::forwardMaterialsBegin() {
-		return forwardMaterials.begin();
-	}
-
-	map<unsigned int, Material*>::iterator MeshRenderer::forwardMaterialsEnd() {
-		return forwardMaterials.end();
-	}
 
 	const Model& MeshRenderer::getModel() const {
 		return *model;
