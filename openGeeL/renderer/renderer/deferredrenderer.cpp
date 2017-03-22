@@ -62,7 +62,7 @@ namespace geeL {
 
 		if (ssao != nullptr) {
 			ssaoBuffer = new FrameBuffer();
-			ssaoBuffer->init(window->width * ssaoResolution, window->height * ssaoResolution, 
+			ssaoBuffer->init(unsigned int(window->width * ssaoResolution), unsigned int(window->height * ssaoResolution),
 				1, ColorType::Single, FilterMode::Nearest, WrapMode::Repeat, false);
 		}
 
@@ -79,8 +79,8 @@ namespace geeL {
 
 		//frameBuffer1.init(window->width, window->height, 2, { RGBA16, Single });
 		//frameBuffer2.init(window->width, window->height, 2, { RGBA16, Single });
-		frameBuffer1.init(window->width, window->height, 1, ColorType::RGBA16);
-		frameBuffer2.init(window->width, window->height, 1, ColorType::RGBA16);
+		frameBuffer1.init(unsigned int(window->width), unsigned int(window->height), 1, ColorType::RGBA16);
+		frameBuffer2.init(unsigned int(window->width), unsigned int(window->height), 1, ColorType::RGBA16);
 		screen.init();
 		screen.init();
 	}
@@ -118,7 +118,6 @@ namespace geeL {
 	void DeferredRenderer::render() {
 
 		renderInit();
-
 		//Render loop
 		while (!window->shouldClose()) {
 			int currFPS = (int)ceil(Time::deltaTime * 1000.f);
@@ -333,7 +332,7 @@ namespace geeL {
 
 	void DeferredRenderer::toggleBuffer(bool next) {
 		int bufferSize = 4;
-		int max = bufferSize + effects.size();
+		int max = int(bufferSize + effects.size());
 		int i = next ? 1 : -1;
 		toggle = abs((toggle + i) % max);
 

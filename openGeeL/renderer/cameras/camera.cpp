@@ -76,8 +76,8 @@ namespace geeL {
 	void Camera::computeMouseInput(const InputManager& input) {
 
 		if (input.getMouseKey(1)) {
-			float yOffset = input.getMouseYOffset() * sensitivity * 0.01;
-			float xOffset = -input.getMouseXOffset() * sensitivity * 0.01f;
+			float yOffset = float(input.getMouseYOffset()) * sensitivity * 0.01f;
+			float xOffset = -float(input.getMouseXOffset()) * sensitivity * 0.01f;
 
 			transform.rotate(transform.getRightDirection(), yOffset);
 			transform.rotate(transform.getUpDirection(), xOffset);

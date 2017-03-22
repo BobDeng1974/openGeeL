@@ -9,18 +9,18 @@ using namespace glm;
 namespace geeL {
 
 	PerspectiveCamera::PerspectiveCamera(Transform& transform, 
-		float fov, float width, float height, float nearClip, float farClip, std::string name)
-		: Camera(transform, name), FOV(fov), currentFOV(fov), width(width), height(height), nearClip(nearClip), farClip(farClip) {}
+		float fov, unsigned int width, unsigned int height, float nearClip, float farClip, std::string name)
+		: Camera(transform, name), FOV(fov), currentFOV(fov), aspectRatio(float(width) / float(height)), nearClip(nearClip), farClip(farClip) {}
 
 	PerspectiveCamera::PerspectiveCamera(Transform& transform, float speed, float sensitivity,
-		float fov, float width, float height, float nearClip, float farClip, std::string name)
-			: Camera(transform, speed, sensitivity, name), FOV(fov), currentFOV(fov), width(width), 
-				height(height), nearClip(nearClip), farClip(farClip) {
+		float fov, unsigned int width, unsigned int height, float nearClip, float farClip, std::string name)
+			: Camera(transform, speed, sensitivity, name), FOV(fov), currentFOV(fov), aspectRatio(float(width) / float(height)), 
+				nearClip(nearClip), farClip(farClip) {
 	}
 
 
 	mat4 PerspectiveCamera::computeProjectionMatrix() const {
-		return perspective(currentFOV, width / height, nearClip, farClip);
+		return perspective(currentFOV, aspectRatio, nearClip, farClip);
 	}
 
 	const float PerspectiveCamera::getNearPlane() const {

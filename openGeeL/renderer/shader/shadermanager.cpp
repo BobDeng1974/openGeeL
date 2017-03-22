@@ -14,7 +14,7 @@ namespace geeL {
 	ShaderManager::ShaderManager(MaterialFactory& factory) 
 		: factory(factory), bindingPointCounter(0) {
 	
-		camID = generateUniformBuffer(2.f * sizeof(glm::mat4) + sizeof(glm::vec3));
+		camID = generateUniformBuffer(2 * int(sizeof(glm::mat4) + sizeof(glm::vec3)));
 	}
 
 	void ShaderManager::staticBind(const RenderScene& scene) const {

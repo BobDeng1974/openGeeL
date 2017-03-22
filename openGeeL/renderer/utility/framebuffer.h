@@ -27,10 +27,10 @@ namespace geeL {
 
 		FrameBuffer();
 
-		void init(int width, int height, int colorBufferAmount = 1, ColorType colorType = ColorType::RGBA16,
+		void init(unsigned int width, unsigned int height, int colorBufferAmount = 1, ColorType colorType = ColorType::RGBA16,
 			FilterMode filterMode = FilterMode::Nearest, WrapMode wrapMode = WrapMode::ClampBorder, bool useDepth = true);
 
-		void init(int width, int height, int colorBufferAmount, std::vector<ColorType> bufferTypes,
+		void init(unsigned int width, unsigned int height, int colorBufferAmount, std::vector<ColorType> bufferTypes,
 			FilterMode filterMode = FilterMode::Nearest, WrapMode wrapMode = WrapMode::ClampBorder, bool useDepth = true);
 	
 		void fill(Drawer& drawer, bool setFBO = true) const;

@@ -30,9 +30,9 @@ namespace geeL {
 		shader.setInteger("image2", shader.mapOffset + 1);
 		shader.setInteger("effectOnly", onlyEffect);
 
-		effectBuffer.init(info.width * effectResolution, info.height * effectResolution, 
+		effectBuffer.init(unsigned int(info.width * effectResolution), unsigned int(info.height * effectResolution),
 			1, ColorType::RGB16, FilterMode::Linear);
-		blurBuffer.init(info.width * blurResolution, info.height * blurResolution, 
+		blurBuffer.init(unsigned int(info.width * blurResolution), unsigned int(info.height * blurResolution),
 			1, ColorType::RGB16, FilterMode::Linear);
 
 		effect.init(screen, effectBuffer.info);
@@ -66,8 +66,8 @@ namespace geeL {
 		if (effectResolution > 0.f && effectResolution < 1.f) {
 			this->effectResolution = effectResolution;
 
-			effectBuffer.resize(screenInfo->width * effectResolution, 
-				screenInfo->height * effectResolution);
+			effectBuffer.resize(unsigned int(screenInfo->width * effectResolution), 
+				unsigned int(screenInfo->height * effectResolution));
 		}
 	}
 

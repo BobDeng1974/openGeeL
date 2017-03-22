@@ -110,7 +110,7 @@ namespace geeL {
 		textureStack.draw(shader);
 
 		shader.setInteger("material.mapFlags", textureStack.mapFlags);
-		shader.setFloat("material.type", type);
+		shader.setFloat("material.type", (float)type);
 		shader.setFloat("material.roughness", roughness);
 		shader.setFloat("material.metallic", metallic);
 		shader.setVector3("material.color", color);

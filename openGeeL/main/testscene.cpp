@@ -281,7 +281,7 @@ void draw() {
 	renderer.addGUIRenderer(&gui);
 	
 	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
-	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50), 15.f);
+	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50), 15);
 	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
 
 	GaussianBlur& blur4 = GaussianBlur();

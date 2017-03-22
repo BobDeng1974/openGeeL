@@ -120,6 +120,8 @@ namespace geeL {
 				//TODO: implement animated forward shader
 				return *forwardShader;
 		}
+
+		return *deferredShader;
 	}
 
 	SceneShader& MaterialFactory::getForwardShader() const {

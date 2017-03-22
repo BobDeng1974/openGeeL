@@ -12,11 +12,11 @@ namespace geeL {
 	class PerspectiveCamera : public Camera {
 
 	public:		
-		PerspectiveCamera(Transform& transform, float fov, float width, float height, 
+		PerspectiveCamera(Transform& transform, float fov, unsigned int width, unsigned int height,
 			float nearClip, float farClip, std::string name = "PerspectiveCamera");
 
-		PerspectiveCamera(Transform& transform, float speed, float sensitivity, float fov, float width, 
-			float height, float nearClip, float farClip, std::string name = "PerspectiveCamera");
+		PerspectiveCamera(Transform& transform, float speed, float sensitivity, float fov, unsigned int width,
+			unsigned int height, float nearClip, float farClip, std::string name = "PerspectiveCamera");
 
 		const float getNearPlane() const;
 		const float getFarPlane() const;
@@ -32,7 +32,7 @@ namespace geeL {
 
 	private:
 		std::list<std::function<void(float, float)>> callbacks;
-		float FOV, currentFOV, width, height, 
+		float FOV, currentFOV, aspectRatio, 
 			nearClip, farClip;
 
 		virtual glm::mat4 computeProjectionMatrix() const;

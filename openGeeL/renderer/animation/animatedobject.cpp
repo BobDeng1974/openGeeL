@@ -19,8 +19,8 @@ namespace geeL {
 		animations.push_back(animation);
 	}
 
-	const Animation& AnimatedObject::getAnimation(unsigned int index) const {
-		unsigned int i = (index > animations.size() - 1) ? animations.size() - 1 : index;
+	const Animation& AnimatedObject::getAnimation(size_t index) const {
+		size_t i = (index > animations.size() - 1) ? animations.size() - 1 : index;
 
 		return *animations[i];
 	}

@@ -56,7 +56,7 @@ namespace geeL {
 		blur.bindDoFData(dist, aperture, farDistance);
 
 		screenInfo = &info;
-		blurBuffer.init(info.width * blurResolution, info.height * blurResolution, 
+		blurBuffer.init(int(info.width * blurResolution), int(info.height * blurResolution), 
 			1, ColorType::RGB16, FilterMode::Linear);
 
 		blur.init(screen, blurBuffer.info);
@@ -98,8 +98,8 @@ namespace geeL {
 		if (blurResolution > 0.f && blurResolution < 1.f) {
 			this->blurResolution = blurResolution;
 
-			blurBuffer.resize(screenInfo->width * blurResolution,
-				screenInfo->height * blurResolution);
+			blurBuffer.resize(int(screenInfo->width * blurResolution),
+				int(screenInfo->height * blurResolution));
 		}
 	}
 

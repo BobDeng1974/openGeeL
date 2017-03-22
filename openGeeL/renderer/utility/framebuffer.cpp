@@ -14,7 +14,7 @@ namespace geeL {
 	FrameBuffer::FrameBuffer() {}
 
 
-	void FrameBuffer::init(int width, int height, int colorBufferAmount,
+	void FrameBuffer::init(unsigned int width, unsigned int height, int colorBufferAmount,
 		ColorType colorType, FilterMode filterMode, WrapMode wrapMode, bool useDepth) {
 		
 		int amount = min(3, colorBufferAmount);
@@ -22,7 +22,7 @@ namespace geeL {
 		init(width, height, amount, bufferTypes, filterMode, wrapMode, useDepth);
 	}
 
-	void FrameBuffer::init(int width, int height, int colorBufferAmount, vector<ColorType> bufferTypes,
+	void FrameBuffer::init(unsigned int width, unsigned int height, int colorBufferAmount, vector<ColorType> bufferTypes,
 		FilterMode filterMode, WrapMode wrapMode, bool useDepth) {
 
 		if (colorBufferAmount != bufferTypes.size())

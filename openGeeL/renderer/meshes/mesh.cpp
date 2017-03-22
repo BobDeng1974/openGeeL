@@ -56,37 +56,37 @@ namespace geeL {
 
 	void StaticMesh::draw() const {
 		glBindVertexArray(vao);
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, int(indices.size()), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
 
-	unsigned int StaticMesh::getIndicesCount() const {
+	size_t StaticMesh::getIndicesCount() const {
 		return indices.size();
 	}
 
-	unsigned int StaticMesh::getVerticesCount() const {
+	size_t StaticMesh::getVerticesCount() const {
 		return vertices.size();
 	}
 
-	const Vertex& StaticMesh::getVertex(unsigned int i) const {
-		if (i < vertices.size())
-			return vertices[i];
+	const Vertex& StaticMesh::getVertex(size_t i) const {
+		if (i >= vertices.size())
+			i = vertices.size() - 1;
 
-		return Vertex();
+		return vertices[i];
 	}
 
-	unsigned int StaticMesh::getIndex(unsigned int i) const {
-		if (i < indices.size())
-			return indices[i];
-
-		return 0;
+	unsigned int StaticMesh::getIndex(size_t i) const {
+		if (i >= vertices.size())
+			i = vertices.size() - 1;
+			
+		return indices[i];
 	}
 
-	const glm::vec3& StaticMesh::getVertexPosition(unsigned int i) const {
-		if (i < vertices.size())
-			return vertices[i].position;
+	const glm::vec3& StaticMesh::getVertexPosition(size_t i) const {
+		if (i >= vertices.size())
+			i = vertices.size() - 1;
 
-		return glm::vec3();
+		return vertices[i].position;
 	}
 
 
@@ -137,7 +137,7 @@ namespace geeL {
 
 	void SkinnedMesh::draw() const {
 		glBindVertexArray(vao);
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, int(indices.size()), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
 
@@ -155,33 +155,33 @@ namespace geeL {
 		}
 	}
 
-	unsigned int SkinnedMesh::getIndicesCount() const {
-		return indices.size();
+	size_t SkinnedMesh::getIndicesCount() const {
+		return unsigned int(indices.size());
 	}
 
-	unsigned int SkinnedMesh::getVerticesCount() const {
-		return vertices.size();
+	size_t SkinnedMesh::getVerticesCount() const {
+		return unsigned int(vertices.size());
 	}
 
-	const SkinnedVertex& SkinnedMesh::getVertex(unsigned int i) const {
-		if (i < vertices.size())
-			return vertices[i];
+	const SkinnedVertex& SkinnedMesh::getVertex(size_t i) const {
+		if (i >= vertices.size())
+			i = vertices.size() - 1;
 
-		return SkinnedVertex();
+		return vertices[i];
 	}
 
-	unsigned int SkinnedMesh::getIndex(unsigned int i) const {
-		if (i < indices.size())
-			return indices[i];
+	unsigned int SkinnedMesh::getIndex(size_t i) const {
+		if (i >= vertices.size())
+			i = vertices.size() - 1;
 
-		return 0;
+		return indices[i];
 	}
 
-	const glm::vec3& SkinnedMesh::getVertexPosition(unsigned int i) const {
-		if (i < vertices.size())
-			return vertices[i].position;
+	const glm::vec3& SkinnedMesh::getVertexPosition(size_t i) const {
+		if (i >= vertices.size())
+			i = vertices.size() - 1;
 
-		return glm::vec3();
+		return vertices[i].position;
 	}
 
 	unsigned int SkinnedMesh::getBoneID(std::string name) const {

@@ -140,35 +140,35 @@ namespace geeL {
 		return state == GLFW_PRESS;
 	}
 
-	float InputManager::getMouseX() const {
+	double InputManager::getMouseX() const {
 		return mouseX;
 	}
 
-	float InputManager::getMouseY() const {
+	double InputManager::getMouseY() const {
 		return mouseY;
 	}
 
-	float InputManager::getMouseXNorm() const {
+	double InputManager::getMouseXNorm() const {
 		return mouseX / (double)window->width;
 	}
 
-	float InputManager::getMouseYNorm() const {
+	double InputManager::getMouseYNorm() const {
 		return mouseY / (double)window->height;
 	}
 
-	float InputManager::getMouseXOffset() const {
+	double InputManager::getMouseXOffset() const {
 		return (mouseX - lastX);
 	}
 
-	float InputManager::getMouseYOffset() const {
+	double InputManager::getMouseYOffset() const {
 		return (lastY - mouseY);
 	}
 
-	float InputManager::getMouseScroll() const {
+	double InputManager::getMouseScroll() const {
 		return scroll;
 	}
 
-	float InputManager::getMouseScrollOffset() const {
+	double InputManager::getMouseScrollOffset() const {
 		return scroll - lastScroll;
 	}
 

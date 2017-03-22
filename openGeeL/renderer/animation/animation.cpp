@@ -64,11 +64,11 @@ namespace geeL {
 	vec3 Animation::getVector(const std::vector<KeyFrame>& list, double time) const {
 
 		//Linear search in sorted key frame list
-		unsigned int start = 0;
-		unsigned int end = list.size();
+		size_t start = 0;
+		size_t end = list.size();
 
 		while ((end - start) > 1) {
-			unsigned int step = (start + end) / 2;
+			size_t step = (start + end) / 2;
 			const KeyFrame& frame = list[step];
 			
 			if (frame.time > time)
@@ -83,7 +83,7 @@ namespace geeL {
 		double factor = (time - list[start].time) 
 			/ (list[end].time - list[start].time);
 
-		return VectorExtension::lerp(startVec, endVec, factor);
+		return VectorExtension::lerp(startVec, endVec, float(factor));
 	}
 
 	double Animation::getDuration() const {

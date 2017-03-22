@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cmath>
 
+#include "../utility/rendertime.h"
 #include "splitrenderer.h"
 #include "../window.h"
 #include "../scripting/scenecontrolobject.h"
@@ -40,16 +41,9 @@ namespace geeL {
 	}
 
 	void SplitRenderer::render() {
-		GLfloat deltaTime = 0.f;
-		GLfloat lastFrame = 0.f;
-		GLfloat currentFrame = 0.f;
-		
 		while (!window->shouldClose()) {
-
-			int currFPS = ceil(deltaTime * 1000);
+			int currFPS = (int)ceil(Time::deltaTime * 1000.f);
 			std::this_thread::sleep_for(std::chrono::milliseconds(fps - currFPS));
-
-			lastFrame = glfwGetTime();
 
 			glClearColor(0.02f, 0.02f, 0.02f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -60,8 +54,7 @@ namespace geeL {
 			inputManager->update();
 			handleInput();
 
-			currentFrame = glfwGetTime();
-			deltaTime = currentFrame - lastFrame;
+			Time::update();
 		}
 
 		for (size_t i = 0; i < objects.size(); i++)

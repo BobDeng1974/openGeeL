@@ -93,7 +93,7 @@ namespace geeL {
 	}
 
 	inline unsigned int StaticModel::meshCount() const {
-		return meshes.size();
+		return unsigned int(meshes.size());
 	}
 
 	inline const Mesh& SkinnedModel::getMesh(unsigned int index) const {
@@ -105,7 +105,7 @@ namespace geeL {
 	}
 
 	inline unsigned int SkinnedModel::meshCount() const {
-		return meshes.size();
+		return unsigned int(meshes.size());
 	}
 
 }

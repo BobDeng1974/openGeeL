@@ -8,7 +8,7 @@ namespace geeL{
 
 	void Time::update() {
 
-		float currentFrame = glfwGetTime();
+		float currentFrame = (float)glfwGetTime();
 		Time::deltaTime = currentFrame - Time::lastFrame;
 		Time::lastFrame = currentFrame;
 	}
@@ -25,11 +25,11 @@ namespace geeL{
 
 
 	void RenderTime::reset() {
-		lastTime = glfwGetTime();
+		lastTime = (float)glfwGetTime();
 	}
 
 	void RenderTime::update(RenderPass pass) {
-		float currTime = glfwGetTime();
+		float currTime = (float)glfwGetTime();
 		float delta = currTime - lastTime;
 		lastTime = currTime;
 

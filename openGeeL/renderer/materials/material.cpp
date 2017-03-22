@@ -4,8 +4,8 @@ namespace geeL {
 
 	Material::Material() {}
 
-	Material::Material(SceneShader& shader, MaterialContainer& container, bool deferred)
-		: shader(&shader), container(&container), deferred(deferred) {}
+	Material::Material(SceneShader& shader, MaterialContainer& container)
+		: shader(&shader), container(&container) {}
 
 
 	void Material::bindTextures() const {
@@ -14,10 +14,6 @@ namespace geeL {
 
 	void Material::bind() const {
 		container->bind(*shader);
-	}
-
-	bool Material::rendersDeferred() const {
-		return deferred;
 	}
 
 	const SceneShader& Material::getShader() const {

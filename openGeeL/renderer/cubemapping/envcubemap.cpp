@@ -1,4 +1,4 @@
-
+#define GLEW_STATIC
 #include <list>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>

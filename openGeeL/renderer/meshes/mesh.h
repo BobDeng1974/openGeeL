@@ -69,12 +69,12 @@ namespace geeL {
 
 		virtual void draw() const = 0;
 
-		virtual unsigned int getIndicesCount() const = 0;
-		virtual unsigned int getVerticesCount() const = 0;
+		virtual size_t getIndicesCount() const = 0;
+		virtual size_t getVerticesCount() const = 0;
 
-		//Returns vertex index at index i or 0 if i is not present
-		virtual unsigned int getIndex(unsigned int i) const = 0;
-		virtual const glm::vec3& getVertexPosition(unsigned int i) const = 0;
+		//Returns vertex index at index i or clamps index to high
+		virtual unsigned int getIndex(size_t i) const = 0;
+		virtual const glm::vec3& getVertexPosition(size_t i) const = 0;
 
 		MaterialContainer& getMaterialContainer() const;
 
@@ -93,13 +93,13 @@ namespace geeL {
 
 		virtual void draw() const;
 
-		virtual unsigned int getIndicesCount() const;
-		virtual unsigned int getVerticesCount() const;
+		virtual size_t getIndicesCount() const;
+		virtual size_t getVerticesCount() const;
 
 		//Returns vertex at index i or emptry Vertex if i is not present
-		virtual const Vertex& getVertex(unsigned int i) const;
-		virtual unsigned int getIndex(unsigned int i) const;
-		virtual const glm::vec3& getVertexPosition(unsigned int i) const;
+		virtual const Vertex& getVertex(size_t i) const;
+		virtual unsigned int getIndex(size_t i) const;
+		virtual const glm::vec3& getVertexPosition(size_t i) const;
 
 	private:
 		unsigned int vao, vbo, ebo;
@@ -121,13 +121,13 @@ namespace geeL {
 
 		void updateMeshBoneData(const Skeleton& skeleton);
 
-		virtual unsigned int getIndicesCount() const;
-		virtual unsigned int getVerticesCount() const;
+		virtual size_t getIndicesCount() const;
+		virtual size_t getVerticesCount() const;
 
 		//Returns vertex at index i or emptry Vertex if i is not present
-		virtual const SkinnedVertex& getVertex(unsigned int i) const;
-		virtual unsigned int getIndex(unsigned int i) const;
-		virtual const glm::vec3& getVertexPosition(unsigned int i) const;
+		virtual const SkinnedVertex& getVertex(size_t i) const;
+		virtual unsigned int getIndex(size_t i) const;
+		virtual const glm::vec3& getVertexPosition(size_t i) const;
 
 		unsigned int getBoneID(std::string name) const;
 		void setBoneID(std::string name, unsigned int id);

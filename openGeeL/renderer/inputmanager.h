@@ -68,14 +68,14 @@ namespace geeL {
 		bool getButtonHold(std::string button) const;
 
 		bool getMouseKey(int key) const;
-		float getMouseX() const;
-		float getMouseY() const;
-		float getMouseXNorm() const;
-		float getMouseYNorm() const;
-		float getMouseXOffset() const;
-		float getMouseYOffset() const;
-		float getMouseScroll() const;
-		float getMouseScrollOffset() const;
+		double getMouseX() const;
+		double getMouseY() const;
+		double getMouseXNorm() const;
+		double getMouseYNorm() const;
+		double getMouseXOffset() const;
+		double getMouseYOffset() const;
+		double getMouseScroll() const;
+		double getMouseScrollOffset() const;
 
 	private:
 		const RenderWindow* window;

@@ -53,8 +53,8 @@ namespace geeL {
 		shader.setInteger("gNormalMet", shader.mapOffset + 1);
 		shader.setInteger("noiseTexture", shader.mapOffset + 2);
 
-		shader.setFloat("screenWidth", screenInfo->width);
-		shader.setFloat("screenHeight", screenInfo->height);
+		shader.setFloat("screenWidth", float(screenInfo->width));
+		shader.setFloat("screenHeight", float(screenInfo->height));
 		shader.setFloat("radius", radius);
 
 		for (unsigned int i = 0; i < sampleCount; i++)

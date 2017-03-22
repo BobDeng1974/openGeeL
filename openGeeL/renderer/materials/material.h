@@ -42,12 +42,10 @@ namespace geeL {
 		
 	public:
 		Material();
-		Material(SceneShader& shader, MaterialContainer& container, bool deferred = true);
+		Material(SceneShader& shader, MaterialContainer& container);
 
 		void bindTextures() const;
 		void bind() const;
-
-		bool rendersDeferred() const;
 
 		const SceneShader& getShader() const;
 		MaterialContainer& getMaterialContainer();
@@ -55,7 +53,6 @@ namespace geeL {
 	private:
 		SceneShader* shader;
 		MaterialContainer* container;
-		bool deferred;
 
 	};
 }

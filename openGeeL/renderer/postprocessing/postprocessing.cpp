@@ -44,7 +44,7 @@ namespace geeL {
 	}
 
 	void PostProcessingEffect::addBuffer(std::list<unsigned int> buffers) {
-		unsigned int counter = this->buffers.size();
+		size_t counter = this->buffers.size();
 		for (auto it = buffers.begin(); it != buffers.end(); it++) {
 			this->buffers.push_back(*it);
 

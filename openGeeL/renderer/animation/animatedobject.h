@@ -22,7 +22,7 @@ namespace geeL {
 		virtual void updateBones(const Skeleton& skeleton) = 0;
 
 		//Get animation at index. Index will get clamped if not present.
-		const Animation& getAnimation(unsigned int index) const;
+		const Animation& getAnimation(size_t index) const;
 
 		const Skeleton& getSkeleton() const;
 
