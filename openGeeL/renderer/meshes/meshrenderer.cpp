@@ -142,14 +142,21 @@ namespace geeL{
 		}
 	}
 
-	void MeshRenderer::iterateMaterials(std::function<void(MaterialContainer&)> function) {
+	void MeshRenderer::iterateMaterials(std::function<void(MaterialContainer&)> function) const {
 		for (auto it = materials.begin(); it != materials.end(); it++) {
-			std::list<MaterialMapping>& elements = it->second;
+			const std::list<MaterialMapping>& elements = it->second;
 
 			for (auto et = elements.begin(); et != elements.end(); et++) {
-				Material& mat = (*et).material;
+				const Material& mat = (*et).material;
 				function(mat.getMaterialContainer());
 			}
+		}
+	}
+
+	void MeshRenderer::iterateShaders(std::function<void(const SceneShader&)> function) const {
+		for (auto it = materials.begin(); it != materials.end(); it++) {
+			const SceneShader& shader = *it->first;
+			function(shader);
 		}
 	}
 

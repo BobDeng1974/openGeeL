@@ -106,7 +106,7 @@ namespace geeL {
 	void GUISnippets::drawColor(GUIContext* context, glm::vec3& color) {
 
 		
-		nk_color c = nk_rgb_f(color.r, color.g, color.b);
+		nk_color c = nk_rgb(color.r, color.g, color.b);
 		if (nk_combo_begin_color(context, c, nk_vec2(nk_widget_width(context), 400))) {
 			nk_layout_row_dynamic(context, 120, 1);
 			c = nk_color_picker(context, c, NK_RGB);

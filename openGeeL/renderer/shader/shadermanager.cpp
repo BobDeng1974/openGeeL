@@ -37,7 +37,7 @@ namespace geeL {
 				glGetUniformBlockIndex(shader.program, "cameraMatrices"),
 				getUniformBindingPoint(camID));
 
-			scene.camera.uniformBind(camID);
+			scene.getCamera().uniformBind(camID);
 		}
 
 		shader.bindMaps();
@@ -54,7 +54,7 @@ namespace geeL {
 			glGetUniformBlockIndex(shader.program, "cameraMatrices"),
 			getUniformBindingPoint(camID));
 
-		scene.camera.uniformBind(camID);
+		scene.getCamera().uniformBind(camID);
 
 		shader.bindMaps();
 	}
@@ -71,7 +71,7 @@ namespace geeL {
 	}
 
 	void ShaderManager::bindCamera(const RenderScene& scene) const {
-		scene.camera.uniformBind(camID);
+		scene.getCamera().uniformBind(camID);
 	}
 
 	int ShaderManager::generateUniformBuffer(int size) {

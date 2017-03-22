@@ -212,7 +212,7 @@ namespace geeL {
 	void DeferredRenderer::draw() {
 		if (geometryPass) {
 			for (size_t i = 0; i < objects.size(); i++)
-				objects[i]->draw(scene->camera);
+				objects[i]->draw(scene->getCamera());
 
 			scene->update();
 			shaderManager->bindCamera(*scene);
@@ -224,7 +224,7 @@ namespace geeL {
 			deferredShader->use();
 			deferredShader->loadMaps();
 			scene->lightManager.deferredBind(*scene, *deferredShader);
-			deferredShader->setMat4("inverseView", glm::inverse(scene->camera.getViewMatrix()));
+			deferredShader->setMat4("inverseView", glm::inverse(scene->getCamera().getViewMatrix()));
 			deferredShader->setVector3("origin", scene->GetOriginInViewSpace());
 			deferredShader->setVector3("ambient", scene->lightManager.ambient);
 			screen.draw();
@@ -244,7 +244,7 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::handleInput() {
-		scene->camera.handleInput(*inputManager);
+		scene->getCamera().handleInput(*inputManager);
 	}
 
 	void DeferredRenderer::addSSAO(SSAO& ssao, float ssaoResolution) {
@@ -289,13 +289,13 @@ namespace geeL {
 
 		//ISSUE: If scene camera changes, everything is fucked
 		map<WorldMatrices, const mat4*> worldMatrices;
-		worldMatrices[WorldMatrices::View]        = &scene->camera.getViewMatrix();
-		worldMatrices[WorldMatrices::Projection]  = &scene->camera.getProjectionMatrix();
-		worldMatrices[WorldMatrices::InverseView] = &scene->camera.getInverseViewMatrix();
+		worldMatrices[WorldMatrices::View]        = &scene->getCamera().getViewMatrix();
+		worldMatrices[WorldMatrices::Projection]  = &scene->getCamera().getProjectionMatrix();
+		worldMatrices[WorldMatrices::InverseView] = &scene->getCamera().getInverseViewMatrix();
 
 		map<WorldVectors, const vec3*> worldVectors;
-		worldVectors[WorldVectors::CameraPosition]  = &scene->camera.getPosition();
-		worldVectors[WorldVectors::CameraDirection] = &scene->camera.getDirection();
+		worldVectors[WorldVectors::CameraPosition]  = &scene->getCamera().getPosition();
+		worldVectors[WorldVectors::CameraDirection] = &scene->getCamera().getDirection();
 		worldVectors[WorldVectors::OriginView]      = &scene->GetOriginInViewSpace();
 
 		for (auto it = requester.begin(); it != requester.end(); it++) {

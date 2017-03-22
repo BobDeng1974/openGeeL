@@ -58,7 +58,8 @@ namespace geeL {
 		void changeMaterial(Material&& material, const Mesh& mesh);
 
 		
-		void iterateMaterials(std::function<void(MaterialContainer&)> function);
+		void iterateMaterials(std::function<void(MaterialContainer&)> function) const;
+		void iterateShaders(std::function<void(const SceneShader&)> function) const;
 
 		const Model& getModel() const;
 		virtual RenderMode getRenderMode() const;

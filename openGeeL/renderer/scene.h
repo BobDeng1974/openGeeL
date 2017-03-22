@@ -3,7 +3,7 @@
 
 #include <vec3.hpp>
 #include <functional>
-#include <list>
+#include <map>
 #include <vector>
 
 namespace geeL {
@@ -12,6 +12,7 @@ namespace geeL {
 	class LightManager;
 	class Skybox;
 	class Shader;
+	class SceneShader;
 	class MeshRenderer;
 	class SkinnedMeshRenderer;
 	class StaticModel;
@@ -27,10 +28,11 @@ namespace geeL {
 	class RenderScene {
 
 	public:
-		Camera& camera;
 		LightManager& lightManager;
 
-		RenderScene(Transform& world, LightManager& lightManager, Camera& camera, MeshFactory& meshFactory, MaterialFactory& materialFactory);
+		RenderScene(Transform& world, LightManager& lightManager, Camera& camera, 
+			MeshFactory& meshFactory, MaterialFactory& materialFactory);
+
 
 		void setSkybox(Skybox& skybox);
 		void bindSkybox(Shader& shader) const;
@@ -44,6 +46,9 @@ namespace geeL {
 		//Update scene information. Should be called once at beginning of frame
 		void update();
 		
+		//Draw all objects that are linked to given shader
+		void draw(const SceneShader& shader);
+
 		//Draw all those objects with a deferred rendering shader
 		void drawDeferred() const;
 
@@ -78,10 +83,20 @@ namespace geeL {
 
 		void setPhysics(Physics* physics);
 
-		void iterRenderObjects(std::function<void(MeshRenderer*)> function);
-		void iterRenderObjects(std::function<void(const MeshRenderer*)> function) const;
+		const Camera& getCamera() const;
+		Camera& getCamera();
+
+
+		void iterAllObjects(std::function<void(MeshRenderer&)> function);
+
+		void iterRenderObjects(std::function<void(const MeshRenderer&)> function) const;
+		bool iterRenderObjects(const SceneShader& shader, std::function<void(const MeshRenderer&)> function) const;
+
+		void iterSkinnedObjects(std::function<void(const MeshRenderer&)> function) const;
+		bool iterSkinnedObjects(const SceneShader& shader, std::function<void(const SkinnedMeshRenderer&)> function) const;
 
 	private:
+		Camera* camera;
 		Transform& worldTransform;
 		glm::vec3 originViewSpace;
 		Skybox* skybox;
@@ -89,28 +104,11 @@ namespace geeL {
 		MeshFactory& meshFactory;
 		MaterialFactory& materialFactory;
 
-		std::list<MeshRenderer*> deferredRenderObjects;
-		std::list<MeshRenderer*> deferredSkinnedObjects;
-
-		std::list<MeshRenderer*> forwardRenderObjects;
-		std::list<MeshRenderer*> forwardSkinnedObjects;
-
-		std::list<MeshRenderer*> mixedRenderObjects;
-		std::list<MeshRenderer*> mixedSkinnedObjects;
-
-		enum class RenderObjectsMode {
-			Deferred,
-			DeferredStatic,
-			DeferredSkinned,
-			Forward,
-			ForwardStatic,
-			ForwardSkinned,
-			Static,
-			Skinned
-		};
-
-		void iterRenderObjects(RenderObjectsMode mode, std::function<void(MeshRenderer*)> function);
-		void iterRenderObjects(RenderObjectsMode mode, std::function<void(const MeshRenderer*)> function) const;
+		//Objects are indexed by their used shaders (and their transforms id) to allow grouped drawing and 
+		//therefore no unnecessary shader programm switching. Objects with multiple materials are linked to
+		//all their shaders respectively
+		std::map<const SceneShader*, std::map<unsigned int, MeshRenderer*>> renderObjects;
+		std::map<const SceneShader*, std::map<unsigned int, SkinnedMeshRenderer*>> skinnedObjects;
 
 	};
 }

@@ -164,19 +164,19 @@ namespace geeL {
 
 		for (size_t j = 0; j < staticPLs.size(); j++) {
 			if (staticPLs[j]->isActive())
-				staticPLs[j]->renderShadowmap(scene.camera, 
+				staticPLs[j]->renderShadowmap(scene.getCamera(), 
 					[&](const Shader& shader) { scene.drawStaticObjects(shader); }, *plShader);
 		}
 
 		for (size_t j = 0; j < staticDLs.size(); j++) {
 			if (staticDLs[j]->isActive())
-				staticDLs[j]->renderShadowmap(scene.camera, 
+				staticDLs[j]->renderShadowmap(scene.getCamera(),
 					[&](const Shader& shader) { scene.drawStaticObjects(shader); }, *dlShader);
 		}
 
 		for (size_t j = 0; j < staticSLs.size(); j++) {
 			if (staticSLs[j]->isActive())
-				staticSLs[j]->renderShadowmap(scene.camera, 
+				staticSLs[j]->renderShadowmap(scene.getCamera(),
 					[&](const Shader& shader) { scene.drawStaticObjects(shader); }, *dlShader);
 		}	
 	}

@@ -2,6 +2,7 @@
 #include <vec4.hpp>
 #include <mat4x4.hpp>
 #include "shader\shader.h"
+#include "shader\sceneshader.h"
 #include "materials\material.h"
 #include "meshes\mesh.h"
 #include "meshes\model.h"
@@ -16,29 +17,30 @@
 #include "lighting\lightmanager.h"
 #include "transformation\transform.h"
 #include "scene.h"
+#include <iostream>
 
 using namespace std;
 
 namespace geeL {
 
 	RenderScene::RenderScene(Transform& world, LightManager& lightManager, Camera& camera, MeshFactory& meshFactory, MaterialFactory& materialFactory)
-		: lightManager(lightManager), camera(camera), meshFactory(meshFactory),
+		: lightManager(lightManager), camera(&camera), meshFactory(meshFactory),
 			physics(nullptr), worldTransform(world), materialFactory(materialFactory) {}
 
 	
 
 	void RenderScene::update() {
 
-		camera.update();
-		iterRenderObjects([&](MeshRenderer* object) {
-			object->update();
+		camera->update();
+		iterAllObjects([&](MeshRenderer& object) {
+			object.update();
 		});
 
 		worldTransform.update();
 
-		camera.lateUpdate();
-		iterRenderObjects([&](MeshRenderer* object) {
-			object->lateUpdate();
+		camera->lateUpdate();
+		iterAllObjects([&](MeshRenderer& object) {
+			object.lateUpdate();
 		});
 
 		originViewSpace = TranslateToViewSpace(glm::vec3(0.f, 0.f, 0.f));
@@ -48,44 +50,86 @@ namespace geeL {
 			physics->update();
 	}
 
+	void RenderScene::draw(const SceneShader& shader) {
+		//Try to find static object with shader first and draw if successfull
+		bool found = iterRenderObjects(shader, [&](const MeshRenderer& object) {
+			if (object.isActive())
+				object.draw();
+			});
+
+		//Otherwise try to draw skinned objects
+		if (!found) {
+			iterSkinnedObjects(shader, [&](const SkinnedMeshRenderer& object) {
+				if (object.isActive())
+					object.draw();
+			});
+		}
+	}
+
 	void RenderScene::drawDeferred() const {
-		iterRenderObjects(RenderObjectsMode::Deferred, [&](const MeshRenderer* object) {
-			if (object->isActive())
-				object->draw();
+		iterRenderObjects(materialFactory.getDeferredShader(), [&](const MeshRenderer& object) {
+			if (object.isActive())
+				object.draw();
+		});
+
+		iterSkinnedObjects(materialFactory.getDeferredShader(), [&](const SkinnedMeshRenderer& object) {
+			if (object.isActive())
+				object.draw();
 		});
 	}
 
 	void RenderScene::drawForward() const {
-		iterRenderObjects(RenderObjectsMode::Forward, [&](const MeshRenderer* object) {
-			if (object->isActive())
-				object->draw();
-		});
+
+		//Draw all registered objects with shaders other than deferred shader
+		const SceneShader& defShader = materialFactory.getDeferredShader();
+		for (auto it = renderObjects.begin(); it != renderObjects.end(); it++) {
+			const SceneShader* shader = it->first;
+			if (shader == &defShader)
+				continue;
+
+			auto& elements = it->second;
+			for (auto et = elements.begin(); et != elements.end(); et++) {
+				const MeshRenderer& object = *et->second;
+				if (object.isActive())
+					object.draw();
+			}
+		}
+
+		const SceneShader& defSkinnedShader = materialFactory.getDefaultShader(DefaultShading::DeferredSkinned);
+		for (auto it = skinnedObjects.begin(); it != skinnedObjects.end(); it++) {
+			const SceneShader* shader = it->first;
+			if (shader == &defSkinnedShader)
+				continue;
+
+			auto& elements = it->second;
+			for (auto et = elements.begin(); et != elements.end(); et++) {
+				const SkinnedMeshRenderer& object = *et->second;
+				if (object.isActive())
+					object.draw();
+			}
+		}
 	}
 	
 	void RenderScene::drawObjects(const Shader& shader) const {
-		shader.use();
-
-		iterRenderObjects([&](const MeshRenderer* object) {
-			if (object->isActive())
-				object->drawExclusive(shader);
-		});
+		drawStaticObjects(shader);
+		drawSkinnedObjects(shader);
 	}
 
 	void RenderScene::drawStaticObjects(const Shader& shader) const {
 		shader.use();
 
-		iterRenderObjects(RenderObjectsMode::Static, [&](const MeshRenderer* object) {
-			if (object->isActive())
-				object->drawExclusive(shader);
+		iterRenderObjects([&](const MeshRenderer& object) {
+			if (object.isActive())
+				object.drawExclusive(shader);
 		});
 	}
 
 	void RenderScene::drawSkinnedObjects(const Shader& shader) const {
 		shader.use();
 
-		iterRenderObjects(RenderObjectsMode::Skinned, [&](const MeshRenderer* object) {
-			if (object->isActive())
-				object->drawExclusive(shader);
+		iterSkinnedObjects([&](const MeshRenderer& object) {
+			if (object.isActive())
+				object.drawExclusive(shader);
 		});
 	}
 
@@ -95,7 +139,7 @@ namespace geeL {
 
 	void RenderScene::drawSkybox() const {
 		if (skybox != nullptr)
-			skybox->draw(camera);
+			skybox->draw(*camera);
 	}
 
 	void RenderScene::bindSkybox(Shader& shader) const {
@@ -103,33 +147,46 @@ namespace geeL {
 			skybox->bind(shader);
 	}
 
+	const Camera& RenderScene::getCamera() const {
+		return *camera;
+	}
+
+	Camera& RenderScene::getCamera() {
+		return *camera;
+	}
+
 
 	void RenderScene::AddMeshRenderer(MeshRenderer& renderer) {
-		deferredRenderObjects.push_back(&renderer);
+		renderer.iterateShaders([this, &renderer](const SceneShader& shader) {
+			renderObjects[&shader][renderer.transform.getID()] = &renderer;
+		});
+
 	}
 
 	void RenderScene::AddSkinnedMeshRenderer(SkinnedMeshRenderer& renderer) {
-		deferredSkinnedObjects.push_back(&renderer);
+		renderer.iterateShaders([this, &renderer](const SceneShader& shader) {
+			skinnedObjects[&shader][renderer.transform.getID()] = &renderer;
+		});
 	}
 
 
 	void RenderScene::forwardScreenInfo(const ScreenInfo& info) {
-		camera.updateDepth(info);
-		lightManager.forwardScreenInfo(info, camera);
+		camera->updateDepth(info);
+		lightManager.forwardScreenInfo(info, *camera);
 	}
 
 	glm::vec3 RenderScene::TranslateToScreenSpace(const glm::vec3& vector) const {
-		glm::vec4 vec = camera.getProjectionMatrix() * camera.getViewMatrix() * glm::vec4(vector, 1.f);
+		glm::vec4 vec = camera->getProjectionMatrix() * camera->getViewMatrix() * glm::vec4(vector, 1.f);
 		return glm::vec3(vec.x / vec.w, vec.y / vec.w, vec.z / vec.w) * 0.5f + 0.5f;
 	}
 
 	glm::vec3 RenderScene::TranslateToViewSpace(const glm::vec3& vector) const {
-		glm::vec4 vec = camera.getViewMatrix() * glm::vec4(vector, 1.f);
+		glm::vec4 vec = camera->getViewMatrix() * glm::vec4(vector, 1.f);
 		return glm::vec3(vec.x, vec.y, vec.z);
 	}
 
 	glm::vec3 RenderScene::TranslateToWorldSpace(const glm::vec3& vector) const {
-		glm::vec4 vec = camera.getInverseViewMatrix() * glm::vec4(vector, 1.f);
+		glm::vec4 vec = camera->getInverseViewMatrix() * glm::vec4(vector, 1.f);
 		return glm::vec3(vec.x, vec.y, vec.z);
 	}
 
@@ -149,115 +206,73 @@ namespace geeL {
 	}
 
 
+	void RenderScene::iterAllObjects(function<void(MeshRenderer&)> function) {
+		for (auto it = renderObjects.begin(); it != renderObjects.end(); it++) {
+			auto& elements = it->second;
+			for (auto et = elements.begin(); et != elements.end(); et++) {
+				MeshRenderer& object = *et->second;
+				function(object);
+			}
+		}
 
-	void RenderScene::iterRenderObjects(RenderObjectsMode mode, std::function<void(MeshRenderer*)> function) {
-		switch (mode) {
-			case RenderObjectsMode::Deferred:
-				for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
-				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
-
-				for_each(deferredSkinnedObjects.begin(), deferredSkinnedObjects.end(), function);
-				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
-				break;
-			case RenderObjectsMode::DeferredStatic:
-				for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
-				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
-				break;
-			case RenderObjectsMode::DeferredSkinned:
-				for_each(deferredSkinnedObjects.begin(), deferredSkinnedObjects.end(), function);
-				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
-				break;
-			case RenderObjectsMode::Static:
-				for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
-				for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
-				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
-				break;
-			case RenderObjectsMode::Skinned:
-				for_each(deferredSkinnedObjects.begin(), deferredSkinnedObjects.end(), function);
-				for_each(forwardSkinnedObjects.begin(), forwardSkinnedObjects.end(), function);
-				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
-				break;
-			case RenderObjectsMode::Forward:
-				for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
-				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
-
-				for_each(forwardSkinnedObjects.begin(), forwardSkinnedObjects.end(), function);
-				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
-				break;
-			case RenderObjectsMode::ForwardStatic:
-				for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
-				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
-				break;
-			case RenderObjectsMode::ForwardSkinned:
-				for_each(forwardSkinnedObjects.begin(), forwardSkinnedObjects.end(), function);
-				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
-				break;
+		for (auto it = skinnedObjects.begin(); it != skinnedObjects.end(); it++) {
+			auto& elements = it->second;
+			for (auto et = elements.begin(); et != elements.end(); et++) {
+				SkinnedMeshRenderer& object = *et->second;
+				function(object);
+			}
 		}
 	}
 
-	void RenderScene::iterRenderObjects(RenderObjectsMode mode, std::function<void(const MeshRenderer*)> function) const {
-		switch (mode) {
-			case RenderObjectsMode::Deferred:
-				for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
-				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
-
-				for_each(deferredSkinnedObjects.begin(), deferredSkinnedObjects.end(), function);
-				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
-				break;
-			case RenderObjectsMode::DeferredStatic:
-				for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
-				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
-				break;
-			case RenderObjectsMode::DeferredSkinned:
-				for_each(deferredSkinnedObjects.begin(), deferredSkinnedObjects.end(), function);
-				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
-				break;
-			case RenderObjectsMode::Static:
-				for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
-				for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
-				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
-				break;
-			case RenderObjectsMode::Skinned:
-				for_each(deferredSkinnedObjects.begin(), deferredSkinnedObjects.end(), function);
-				for_each(forwardSkinnedObjects.begin(), forwardSkinnedObjects.end(), function);
-				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
-				break;
-			case RenderObjectsMode::Forward:
-				for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
-				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
-
-				for_each(forwardSkinnedObjects.begin(), forwardSkinnedObjects.end(), function);
-				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
-				break;
-			case RenderObjectsMode::ForwardStatic:
-				for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
-				for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
-				break;
-			case RenderObjectsMode::ForwardSkinned:
-				for_each(forwardSkinnedObjects.begin(), forwardSkinnedObjects.end(), function);
-				for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
-				break;
+	void RenderScene::iterRenderObjects(function<void(const MeshRenderer&)> function) const {
+		for (auto it = renderObjects.begin(); it != renderObjects.end(); it++) {
+			auto& elements = it->second;
+			for (auto et = elements.begin(); et != elements.end(); et++) {
+				const MeshRenderer& object = *et->second;
+				function(object);
+			}
 		}
 	}
 
-	void RenderScene::iterRenderObjects(std::function<void(MeshRenderer*)> function) {
-		for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
-		for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
-		for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
+	bool RenderScene::iterRenderObjects(const SceneShader& shader, function<void(const MeshRenderer&)> function) const {
+		auto it = renderObjects.find(&shader);
+		if (it != renderObjects.end()) {
+			auto& elements = it->second;
+			for (auto et = elements.begin(); et != elements.end(); et++) {
+				const MeshRenderer& object = *et->second;
+				function(object);
+			}
 
-		for_each(deferredSkinnedObjects.begin(), deferredSkinnedObjects.end(), function);
-		for_each(forwardSkinnedObjects.begin(), forwardSkinnedObjects.end(), function);
-		for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
+			return true;
+		}
+
+		return false;
 	}
 
-	void RenderScene::iterRenderObjects(std::function<void(const MeshRenderer*)> function) const {
-		for_each(deferredRenderObjects.begin(), deferredRenderObjects.end(), function);
-		for_each(forwardRenderObjects.begin(), forwardRenderObjects.end(), function);
-		for_each(mixedRenderObjects.begin(), mixedRenderObjects.end(), function);
-
-		for_each(deferredSkinnedObjects.begin(), deferredSkinnedObjects.end(), function);
-		for_each(forwardSkinnedObjects.begin(), forwardSkinnedObjects.end(), function);
-		for_each(mixedSkinnedObjects.begin(), mixedSkinnedObjects.end(), function);
+	void RenderScene::iterSkinnedObjects(function<void(const MeshRenderer&)> function) const {
+		for (auto it = skinnedObjects.begin(); it != skinnedObjects.end(); it++) {
+			auto& elements = it->second;
+			for (auto et = elements.begin(); et != elements.end(); et++) {
+				const SkinnedMeshRenderer& object = *et->second;
+				function(object);
+			}
+		}
 	}
+
+	bool RenderScene::iterSkinnedObjects(const SceneShader& shader, function<void(const SkinnedMeshRenderer&)> function) const {
+		auto it = skinnedObjects.find(&shader);
+		if (it != skinnedObjects.end()) {
+			auto& elements = it->second;
+			for (auto et = elements.begin(); et != elements.end(); et++) {
+				const SkinnedMeshRenderer& object = *et->second;
+				function(object);
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
 
 }
