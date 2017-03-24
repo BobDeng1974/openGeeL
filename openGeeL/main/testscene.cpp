@@ -239,7 +239,7 @@ void draw() {
 
 	BilateralFilter blur = BilateralFilter(1, 0.5f);
 	DefaultPostProcess def = DefaultPostProcess();
-	SSAO ssao = SSAO(blur, 10.f);
+	SSAO ssao = SSAO(blur, 4.f);
 	RenderContext context = RenderContext();
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, context, def, materialFactory);
 	renderer.addSSAO(ssao, 0.5f);
@@ -307,9 +307,9 @@ void draw() {
 	postLister.add(def);
 	postLister.add(ssao);
 
-	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
-	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
-	postLister.add(volSmooth, lightSnippet);
+	//VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
+	//renderer.addEffect(volSmooth, { &vol, &sobelBlur });
+	//postLister.add(volSmooth, lightSnippet);
 
 	//renderer.addEffect(bloom);
 	//postLister.add(bloom);
@@ -318,7 +318,7 @@ void draw() {
 	//renderer.addEffect(raySmooth);
 	//postLister.add(raySmooth, godRaySnippet);
 
-	renderer.addEffect(ssrrSmooth, ssrr);
+	//renderer.addEffect(ssrrSmooth, ssrr);
 
 	//renderer.addEffect(dof, dof);
 	//postLister.add(dof);

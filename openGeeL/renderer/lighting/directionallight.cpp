@@ -60,7 +60,8 @@ namespace geeL {
 		lightTransform = projection * view;
 	}
 
-	void DirectionalLight::computeLightTransformExt(const ScreenInfo& info, vec3 offset) {
+
+	void DirectionalLight::forwardScreenInfo(const ScreenInfo& info, vec3 offset) {
 		float far = fmaxf(info.CTdepth, fmaxf(info.BLdepth, fmaxf(info.BRdepth, fmaxf(info.TLdepth, info.TRdepth))));
 		far = fmaxf(8.f, fminf(50.f, far));
 

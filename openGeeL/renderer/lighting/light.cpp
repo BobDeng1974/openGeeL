@@ -146,4 +146,5 @@ namespace geeL {
 	const mat4& Light::getLightTransform() const {
 		return lightTransform;
 	}
+
 }

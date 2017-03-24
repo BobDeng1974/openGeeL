@@ -20,7 +20,7 @@ namespace geeL {
 			std::function<void(const Shader&)> renderCall, const Shader& shader);
 
 		virtual void computeLightTransform();
-		virtual void computeLightTransformExt(const ScreenInfo& info, glm::vec3 offset);
+		virtual void forwardScreenInfo(const ScreenInfo& info, glm::vec3 offset);
 		virtual float getIntensity(glm::vec3 point) const;
 
 	protected:

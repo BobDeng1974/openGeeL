@@ -156,7 +156,7 @@ namespace geeL {
 	void LightManager::forwardScreenInfo(const ScreenInfo& info, const Camera& camera) {
 
 		for (size_t j = 0; j < staticDLs.size(); j++) {
-			staticDLs[j]->computeLightTransformExt(info, camera.center);
+			staticDLs[j]->forwardScreenInfo(info, camera.center);
 		}
 	}
 

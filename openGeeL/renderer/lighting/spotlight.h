@@ -26,6 +26,8 @@ namespace geeL {
 		//Add light cookie of this spotlight to given shader.
 		void addLightCookie(Shader& shader, const std::string& name);
 
+		float getAngle() const;
+
 	protected:
 		virtual bool adaptShadowmapResolution(float distance);
 
@@ -35,6 +37,12 @@ namespace geeL {
 		float angle, outerAngle;
 
 	};
+
+
+	inline float SpotLight::getAngle() const {
+		return angle;
+	}
+
 }
 
 #endif
