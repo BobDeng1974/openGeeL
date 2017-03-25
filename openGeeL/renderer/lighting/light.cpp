@@ -13,9 +13,13 @@ using namespace glm;
 
 namespace geeL {
 
-	Light::Light(Transform& transform, vec3 diffuse, float shadowBias, const std::string& name)
+	Light::Light(Transform& transform, vec3 diffuse, const std::string& name)
 		: SceneObject(transform, name), diffuse(diffuse), shadowMap(nullptr) {}
 
+	Light::~Light() {
+		if (shadowMap != nullptr)
+			delete shadowMap;
+	}
 
 	const ShadowMap* const Light::getShadowMap() const {
 		return shadowMap;
@@ -61,8 +65,4 @@ namespace geeL {
 		
 		return 1.f / (distance * distance);
 	}
-
-
-
-
 }

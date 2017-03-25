@@ -15,10 +15,8 @@ using namespace glm;
 
 namespace geeL {
 
-	DirectionalLight::DirectionalLight(Transform& transform, vec3 diffuse, float shadowBias, const string& name)
-		: Light(transform, diffuse, shadowBias, name) {
-	
-	}
+	DirectionalLight::DirectionalLight(Transform& transform, vec3 diffuse, const string& name)
+		: Light(transform, diffuse, name) {}
 
 
 	void DirectionalLight::deferredBind(const RenderScene& scene, const Shader& shader, const string& name) const {

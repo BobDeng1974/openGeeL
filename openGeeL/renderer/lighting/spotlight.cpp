@@ -14,12 +14,8 @@ using namespace glm;
 
 namespace geeL {
 
-	SpotLight::SpotLight(Transform& transform, vec3 diffuse, 
-		float angle, float outerAngle, float shadowBias, float farPlane, const string& name)
-			: Light(transform, diffuse, shadowBias, name), 
-				angle(angle), outerAngle(outerAngle), lightCookie(nullptr) {
-	
-	}
+	SpotLight::SpotLight(Transform& transform, vec3 diffuse, float angle, float outerAngle, const string& name)
+			: Light(transform, diffuse, name), angle(angle), outerAngle(outerAngle), lightCookie(nullptr) {}
 
 
 	void SpotLight::deferredBind(const RenderScene& scene, const Shader& shader, const string& name) const {

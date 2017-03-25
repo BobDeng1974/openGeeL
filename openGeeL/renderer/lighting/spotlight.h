@@ -11,9 +11,8 @@ namespace geeL {
 	class SpotLight : public Light {
 
 	public:
-		SpotLight(Transform& transform, vec3 diffuse, 
-			float angle = 30.f, float outerAngle = 5.f, float shadowBias = 0.003f, 
-			float farPlane = 100.f, const std::string& name = "SpotLight");
+		SpotLight(Transform& transform, vec3 diffuse, float angle = 30.f, 
+			float outerAngle = 5.f, const std::string& name = "SpotLight");
 
 		virtual void deferredBind(const RenderScene& scene, const Shader& shader, const std::string& name) const;
 		virtual void forwardBind(const Shader& shader, const std::string& name, const std::string& transformName) const;

@@ -24,7 +24,8 @@ namespace geeL {
 	public:
 		vec3 diffuse;
 
-		Light(Transform& transform, vec3 diffuse, float shadowBias, const std::string& name = "Light");
+		Light(Transform& transform, vec3 diffuse, const std::string& name = "Light");
+		~Light();
 
 		virtual void deferredBind(const RenderScene& scene, const Shader& shader, const std::string& name) const;
 		virtual void forwardBind(const Shader& shader, std::string name, const std::string& transformName) const;

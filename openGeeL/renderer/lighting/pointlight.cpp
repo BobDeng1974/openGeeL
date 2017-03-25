@@ -14,10 +14,8 @@ using namespace glm;
 
 namespace geeL {
 
-	PointLight::PointLight(Transform& transform, vec3 diffuse, float shadowBias, float farPlane, const string& name)
-		: Light(transform, diffuse, shadowBias, name) {
-	
-	}
+	PointLight::PointLight(Transform& transform, vec3 diffuse, const string& name)
+		: Light(transform, diffuse, name) {}
 
 
 	void PointLight::deferredBind(const RenderScene& scene, const Shader& shader, const string& name) const {
