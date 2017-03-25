@@ -17,7 +17,6 @@ namespace geeL {
 
 		virtual void deferredBind(const RenderScene& scene, const Shader& shader, const std::string& name) const;
 		virtual void forwardBind(const Shader& shader, const std::string& name, const std::string& transformName) const;
-		virtual void computeLightTransform();
 
 		//Set light cookie for this spotlight
 		void setLightCookie(SimpleTexture& cookie);
@@ -28,12 +27,8 @@ namespace geeL {
 
 		float getAngle() const;
 
-	protected:
-		virtual bool adaptShadowmapResolution(float distance);
-
 	private:
 		SimpleTexture* lightCookie;
-		float farPlane;
 		float angle, outerAngle;
 
 	};

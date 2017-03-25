@@ -1,9 +1,9 @@
 #include "../transformation/transform.h"
 #include "../lighting/spotlight.h"
 #include "volumetriclight.h"
-
 #include "../scene.h"
 #include "../cameras/camera.h"
+#include "../shadowmapping/shadowmap.h"
 #include <iostream>
 
 using namespace glm;
@@ -19,7 +19,12 @@ namespace geeL {
 	void VolumetricLight::init(ScreenQuad& screen, const FrameBufferInformation& info) {
 		PostProcessingEffect::init(screen, info);
 
-		buffers.push_back(light.getShadowMapID());
+		const ShadowMap* map = light.getShadowMap();
+
+		if (map != nullptr)
+			buffers.push_back(map->getID());
+		else
+			std::cout << "Volumetric light not functional since light has no shadow map attached\n";
 
 		unsigned int cookieID = light.getLightCookieID();
 		if(cookieID != 0)

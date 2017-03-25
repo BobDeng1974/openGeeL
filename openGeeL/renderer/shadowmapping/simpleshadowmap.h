@@ -3,7 +3,6 @@
 
 #include "shadowmap.h"
 
-
 namespace geeL {
 
 	struct ScreenInfo;
@@ -12,13 +11,19 @@ namespace geeL {
 	class PointLight;
 	class DirectionalLight;
 
+	enum class ShadowmapResolution {
+		Adaptive = 0,
+		Small = 128,
+		Medium = 256,
+		High = 512,
+		VeryHigh = 1024
+	};
+
 
 	class SimpleShadowMap : public ShadowMap {
 
 	public:
-		SimpleShadowMap(const Light& light, float farPlane);
-
-		virtual void init();
+		SimpleShadowMap(const Light& light, float shadowBias, float farPlane);
 
 		virtual void bindData(const Shader& shader, const std::string& name) = 0;
 		virtual void bindMap(Shader& shader, const std::string& name);
@@ -26,13 +31,20 @@ namespace geeL {
 		virtual void draw(const Camera& camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader) = 0;
 
+		virtual unsigned int getID() const;
+
 		void setResolution(ShadowmapResolution resolution);
+
+		float getShadowBias() const;
+		void setShadowBias(float bias);
 
 
 	protected:
 		float shadowBias, dynamicBias, farPlane;
 		unsigned int id, fbo, width, height;
 		ShadowmapResolution resolution;
+
+		virtual void init();
 
 		//Dynamically change shadow map resolution
 		virtual void adaptShadowmap(const Camera& camera);
@@ -50,11 +62,16 @@ namespace geeL {
 
 	};
 
+	inline unsigned int SimpleShadowMap::getID() const {
+		return id;
+	}
+
+
 
 	class SimpleSpotLightMap : public SimpleShadowMap {
 
 	public:
-		SimpleSpotLightMap(const SpotLight& light, float farPlane);
+		SimpleSpotLightMap(const SpotLight& light, float shadowBias, float farPlane);
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 
@@ -70,29 +87,38 @@ namespace geeL {
 	};
 
 
+
 	class SimplePointLightMap : public SimpleShadowMap {
 
 	public:
-		SimplePointLightMap(const PointLight& light, float farPlane);
+		SimplePointLightMap(const PointLight& light, float shadowBias, float farPlane);
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 
 		virtual void draw(const Camera& camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader);
 
+		virtual void bindMap(Shader& shader, const std::string& name);
+
+	protected:
+		virtual void init();
+
 	private:
 		const PointLight& pointLight;
 		std::vector<glm::mat4> lightTransforms;
 
+		
 		void computeLightTransform();
 		virtual bool adaptShadowmapResolution(float distance);
+		virtual void bindShadowmapResolution() const;
 	};
+
 
 
 	class SimpleDirectionalLightMap : public SimpleShadowMap {
 
 	public:
-		SimpleDirectionalLightMap(const DirectionalLight& light, float farPlane);
+		SimpleDirectionalLightMap(const DirectionalLight& light, float shadowBias, float farPlane);
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 

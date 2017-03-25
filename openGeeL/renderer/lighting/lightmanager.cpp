@@ -9,6 +9,8 @@
 #include "../utility/gbuffer.h"
 #include "../transformation/transform.h"
 #include "../shader/shader.h"
+#include "../shadowmapping/shadowmap.h"
+#include "../shadowmapping/simpleshadowmap.h"
 #include "../scene.h"
 
 using namespace std;
@@ -39,7 +41,7 @@ namespace geeL {
 	DirectionalLight& LightManager::addDirectionalLight(Transform& transform, vec3 diffuse, float shadowBias) {
 		DirectionalLight* light = new DirectionalLight(transform, diffuse, shadowBias);
 		staticDLs.push_back(light);
-		light->initShadowmap();
+		//light->initShadowmap();
 
 		return *light;
 	}
@@ -48,7 +50,11 @@ namespace geeL {
 	PointLight& LightManager::addPointLight(Transform& transform, vec3 diffuse, float shadowBias) {
 		PointLight* light = new PointLight(transform, diffuse, shadowBias);
 		staticPLs.push_back(light);
-		light->initShadowmap();
+		//light->initShadowmap();
+
+		SimplePointLightMap* map = new SimplePointLightMap(*light, shadowBias, 100.f);
+		//map->init();
+		light->setShadowMap(*map);
 		
 		return *light;
 	}
@@ -58,7 +64,12 @@ namespace geeL {
 
 		SpotLight* light = new SpotLight(transform, diffuse, angle, outerAngle, shadowBias);
 		staticSLs.push_back(light);
-		light->initShadowmap();
+		//light->initShadowmap();
+
+		SimpleSpotLightMap* map = new SimpleSpotLightMap(*light, shadowBias, 100.f);
+		//map->init();
+
+		light->setShadowMap(*map);
 
 		return *light;
 	}

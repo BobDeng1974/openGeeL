@@ -14,21 +14,9 @@ namespace geeL {
 
 		virtual void deferredBind(const RenderScene& scene, const Shader& shader, const std::string& name) const;
 		virtual void forwardBind(const Shader& shader, const std::string& name, const std::string& transformName) const;
-		virtual void initShadowmap();
 
-		virtual void renderShadowmap(const Camera& camera, 
-			std::function<void(const Shader&)> renderCall, const Shader& shader);
 
-		virtual void addShadowmap(Shader& shader, const std::string& name);
-		virtual void computeLightTransform();
 
-	protected:
-		virtual void bindShadowmapResolution() const;
-		virtual bool adaptShadowmapResolution(float distance);
-
-	private:
-		float farPlane;
-		std::vector<glm::mat4> lightTransforms;
 	
 	};
 }

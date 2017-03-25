@@ -82,8 +82,8 @@ namespace geeL {
 			SceneObjectSnippet::draw(context);
 			GUISnippets::drawColor(context, light.diffuse);
 
-			float bias = GUISnippets::drawBarFloat(context, light.getShadowBias(), 0.f, 0.02f, 0.0001f, "Shadow Bias");
-			light.setShadowBias(bias);
+			//float bias = GUISnippets::drawBarFloat(context, light.getShadowBias(), 0.f, 0.02f, 0.0001f, "Shadow Bias");
+			//light.setShadowBias(bias);
 			
 			nk_tree_pop(context);
 		}

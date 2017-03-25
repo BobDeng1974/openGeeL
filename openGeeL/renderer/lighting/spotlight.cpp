@@ -17,9 +17,8 @@ namespace geeL {
 	SpotLight::SpotLight(Transform& transform, vec3 diffuse, 
 		float angle, float outerAngle, float shadowBias, float farPlane, const string& name)
 			: Light(transform, diffuse, shadowBias, name), 
-				angle(angle), outerAngle(outerAngle), farPlane(farPlane), lightCookie(nullptr) {
+				angle(angle), outerAngle(outerAngle), lightCookie(nullptr) {
 	
-		setResolution(ShadowmapResolution::Adaptive);
 	}
 
 
@@ -31,7 +30,6 @@ namespace geeL {
 			scene.TranslateToViewSpace(transform.getForwardDirection()) - scene.GetOriginInViewSpace());
 		shader.setFloat(name + "angle", angle);
 		shader.setFloat(name + "outerAngle", outerAngle);
-		shader.setMat4(name + "lightTransform", lightTransform);
 		shader.setFloat(name + "useCookie", (lightCookie != nullptr));
 	}
 
@@ -44,7 +42,6 @@ namespace geeL {
 		shader.setFloat(name + "outerAngle", outerAngle);
 		shader.setFloat(name + "useCookie", (lightCookie != nullptr));
 
-		shader.setMat4(transformName, lightTransform);
 	}
 
 	void SpotLight::setLightCookie(SimpleTexture& cookie) {
@@ -63,59 +60,5 @@ namespace geeL {
 			shader.addMap(lightCookie->getID(), name, GL_TEXTURE_2D);
 	}
 
-	void SpotLight::computeLightTransform() {
-		float fov = glm::degrees(angle);
-		mat4&& projection = glm::perspective(fov, 1.f, 1.0f, farPlane);
-		mat4&& view = lookAt(transform.getPosition(), transform.getPosition() + 
-			transform.getForwardDirection(), transform.getUpDirection());
 
-		lightTransform = projection * view;
-	}
-
-	bool SpotLight::adaptShadowmapResolution(float distance) {
-
-		bool changed = false;
-		if (distance < 1.f) {
-			int resolution = 1024; //^= ShadowmapResolution::VeryHigh
-			if (shadowmapWidth != resolution) {
-				setDimensions(resolution);
-				dynamicBias = shadowBias * 0.5f;
-				changed = true;
-			}
-		}
-		else if (distance < 6.f) {
-			int resolution = 768;
-			if (shadowmapWidth != resolution) {
-				setDimensions(resolution);
-				dynamicBias = shadowBias * 0.5f;
-				changed = true;
-			}
-		}
-		else if (distance < 10.f) {
-			int resolution = 512; //^= ShadowmapResolution::High
-			if (shadowmapWidth != resolution) {
-				setDimensions(resolution);
-				dynamicBias = shadowBias * 0.5f;
-				changed = true;
-			}
-		}
-		else if (distance < 15.f) {
-			int resolution = 256; //^= ShadowmapResolution::Medium
-			if (shadowmapWidth != resolution) {
-				setDimensions(resolution);
-				dynamicBias = shadowBias;
-				changed = true;
-			}
-		}
-		else {
-			int resolution = 128; //^= ShadowmapResolution::Small
-			if (shadowmapWidth != resolution) {
-				setDimensions(resolution);
-				dynamicBias = shadowBias * 1.5f;
-				changed = true;
-			}
-		}
-
-		return changed;
-	}
 }

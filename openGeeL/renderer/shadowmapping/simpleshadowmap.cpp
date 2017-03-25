@@ -15,7 +15,9 @@ using namespace glm;
 
 namespace geeL {
 
-	SimpleShadowMap::SimpleShadowMap(const Light& light, float farPlane) : ShadowMap(light), farPlane(farPlane) {
+	SimpleShadowMap::SimpleShadowMap(const Light& light, float shadowBias, float farPlane) 
+		: ShadowMap(light), shadowBias(shadowBias), dynamicBias(shadowBias), farPlane(farPlane) {
+		
 		setResolution(ShadowmapResolution::Adaptive);
 	}
 
@@ -100,10 +102,21 @@ namespace geeL {
 		return false;
 	}
 
+	float SimpleShadowMap::getShadowBias() const {
+		return dynamicBias;
+	}
+
+	void SimpleShadowMap::setShadowBias(float bias) {
+		if (bias > 0.f)
+			dynamicBias = bias;
+	}
 
 
-	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight& light, float farPlane) 
-		: SimpleShadowMap(light, farPlane), spotLight(light) {}
+	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight& light, float shadowBias, float farPlane)
+		: SimpleShadowMap(light, shadowBias, farPlane), spotLight(light) {
+	
+		init();
+	}
 
 
 	void SimpleSpotLightMap::bindData(const Shader& shader, const std::string& name) {
@@ -159,17 +172,50 @@ namespace geeL {
 	}
 
 
-	SimplePointLightMap::SimplePointLightMap(const PointLight& light, float farPlane) 
-		: SimpleShadowMap(light, farPlane), pointLight(light) {
+	SimplePointLightMap::SimplePointLightMap(const PointLight& light, float shadowBias, float farPlane)
+		: SimpleShadowMap(light, shadowBias, farPlane), pointLight(light) {
 	
 		lightTransforms.reserve(6);
 		computeLightTransform();
+
+		init();
 	}
 
 
 	void SimplePointLightMap::bindData(const Shader& shader, const std::string& name) {
 		shader.setFloat(name + "bias", dynamicBias);
 		shader.setFloat(name + "farPlane", farPlane);
+	}
+
+	void SimplePointLightMap::bindMap(Shader& shader, const std::string& name) {
+		shader.addMap(id, name, GL_TEXTURE_CUBE_MAP);
+	}
+
+	void SimplePointLightMap::init() {
+
+		//Generate depth cube map texture
+		glGenTextures(1, &id);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+
+		//Write faces of the cubemap
+		for (int i = 0; i < 6; i++)
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
+				width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+		//Bind depth map to frame buffer (the shadow map)
+		glGenFramebuffers(1, &fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, id, 0);
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	void SimplePointLightMap::draw(const Camera& camera,
@@ -236,12 +282,24 @@ namespace geeL {
 		return false;
 	}
 
+	void SimplePointLightMap::bindShadowmapResolution() const {
+		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+
+		//Write faces of the cubemap
+		for (int i = 0; i < 6; i++)
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
+				width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
 
 
-	SimpleDirectionalLightMap::SimpleDirectionalLightMap(const DirectionalLight& light, float farPlane) 
-		: SimpleShadowMap(light, farPlane), directionalLight(light) {
+
+	SimpleDirectionalLightMap::SimpleDirectionalLightMap(const DirectionalLight& light, float shadowBias, float farPlane)
+		: SimpleShadowMap(light, shadowBias, farPlane), directionalLight(light) {
 	
 		setResolution(ShadowmapResolution::High);
+		init();
 	}
 
 

@@ -10,8 +10,6 @@ namespace geeL {
 	public:
 		ShadowMap(const Light& light) : light(light) {}
 
-		virtual void init() = 0;
-
 		virtual void bindData(const Shader& shader, const std::string& name) = 0;
 		virtual void bindMap(Shader& shader, const std::string& name) = 0;
 
@@ -20,9 +18,10 @@ namespace geeL {
 		virtual void draw(const Camera& camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader) = 0;
 
+		virtual unsigned int getID() const = 0;
+
 	protected:
 		const Light& light;
-
 
 	};
 }
