@@ -57,9 +57,7 @@ namespace geeL {
 		//Bind resolution to shadow map texture(s)
 		virtual void bindShadowmapResolution() const;
 
-
 		bool setResolution(int resolution, float biasFactor);
-
 	};
 
 	inline unsigned int SimpleShadowMap::getID() const {
@@ -129,7 +127,7 @@ namespace geeL {
 		const DirectionalLight& directionalLight;
 		glm::mat4 lightTransform;
 
-		void computeLightTransform(const ScreenInfo& info, glm::vec3 offset);
+		void computeLightTransform();
 		virtual bool adaptShadowmapResolution(float distance);
 
 	};

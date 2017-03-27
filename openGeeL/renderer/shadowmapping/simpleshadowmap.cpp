@@ -42,6 +42,8 @@ namespace geeL {
 		glGenFramebuffers(1, &fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id, 0);
+
+		//Disable writes to color buffer
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -311,6 +313,9 @@ namespace geeL {
 	void SimpleDirectionalLightMap::draw(const Camera& camera,
 		std::function<void(const Shader&)> renderCall, const Shader& shader) {
 
+		//Write light transform into shader
+		computeLightTransform();
+
 		shader.use();
 		shader.setMat4("lightTransform", lightTransform);
 
@@ -323,17 +328,14 @@ namespace geeL {
 	}
 
 
-	void SimpleDirectionalLightMap::computeLightTransform(const ScreenInfo& info, glm::vec3 offset) {
-		float far = fmaxf(info.CTdepth, fmaxf(info.BLdepth, fmaxf(info.BRdepth, fmaxf(info.TLdepth, info.TRdepth))));
-		far = fmaxf(8.f, fminf(50.f, far));
-
-		float a = (width / 500.f) * far;
-		mat4&& projection = ortho(-a, a, -a, a, 1.0f, 4.f * far);
-		mat4&& view = lookAt(light.transform.getForwardDirection() * far + offset, offset, vec3(0.f, 1.f, 0.f));
+	void SimpleDirectionalLightMap::computeLightTransform() {
+		float far = 50.f;
+		float a = width / 50.f;
+		mat4 projection = ortho(-a, a, -a, a, 1.0f, 2 * far);
+		mat4 view = lookAt(light.transform.getForwardDirection() * far, vec3(0.f), vec3(0.f, 1.f, 0.f));
 
 		lightTransform = projection * view;
 	}
-
 
 	bool SimpleDirectionalLightMap::adaptShadowmapResolution(float distance) {
 		return false;
