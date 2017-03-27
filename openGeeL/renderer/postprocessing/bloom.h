@@ -24,6 +24,9 @@ namespace geeL {
 		void setScatter(float scatter);
 		float getScatter() const;
 
+	private:
+		ShaderLocation scatterLocation;
+
 	};
 
 

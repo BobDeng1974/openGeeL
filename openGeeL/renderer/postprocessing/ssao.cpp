@@ -65,6 +65,8 @@ namespace geeL {
 
 		blur.init(screen, info);
 		blur.setBuffer(tempBuffer.getColorID());
+
+		projectionLocation = shader.getLocation("projection");
 	}
 
 	void SSAO::draw() {
@@ -84,7 +86,7 @@ namespace geeL {
 	}
 
 	void SSAO::bindValues() {
-		shader.setMat4("projection", *projectionMatrix);
+		shader.setMat4(projectionLocation, *projectionMatrix);
 
 		tempBuffer.fill(*this, false);
 	}

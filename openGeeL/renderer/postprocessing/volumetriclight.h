@@ -43,6 +43,9 @@ namespace geeL {
 		const glm::mat4* inverseView;
 		const glm::mat4x4* projectionMatrix;
 
+		ShaderLocation projectionLocation;
+		ShaderLocation invViewLocation;
+
 	};
 }
 

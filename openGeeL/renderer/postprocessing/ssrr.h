@@ -23,6 +23,7 @@ namespace geeL {
 
 	private:
 		const glm::mat4x4* projectionMatrix;
+		ShaderLocation projectionLocation;
 
 	};
 }

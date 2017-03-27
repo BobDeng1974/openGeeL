@@ -45,14 +45,14 @@ void main() {
 			step(0.f, TexCoords.y - off.y);
 
 		//Sample right / top pixel
-		float depth = texture(gPositionDepth, TexCoords + off).w;
+		float depth = -texture(gPositionDepth, TexCoords + off).z;
 		float sharp = getSharpness(depth);
 
 		result += inBorders * 
 			(texture(image, TexCoords + off).rgb * sharp + baseColor * (1 - sharp)) * kernel[i];
             
 		//Sample left / bottom pixel
-		depth = texture(gPositionDepth, TexCoords - off).w;
+		depth = -texture(gPositionDepth, TexCoords - off).z;
 		sharp = getSharpness(depth);
 
 		result += inBorders * 

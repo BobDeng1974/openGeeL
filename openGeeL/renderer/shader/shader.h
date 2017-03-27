@@ -8,6 +8,7 @@
 
 #define GL_TEXTURE_2D 0x0DE1
 
+typedef int ShaderLocation;
 
 namespace geeL {
 
@@ -51,10 +52,17 @@ namespace geeL {
 		//and loading maps from other sources will also override this call
 		void loadMaps(std::list<unsigned int>& maps, unsigned int type = GL_TEXTURE_2D) const;
 
-		void setInteger(std::string name, int value) const;
-		void setFloat(std::string name, float value) const;
-		void setVector3(std::string name, const glm::vec3& value) const;
-		void setMat4(std::string name, const glm::mat4& value) const;
+		ShaderLocation getLocation(std::string name) const;
+
+		ShaderLocation setInteger(std::string name, int value) const;
+		ShaderLocation setFloat(std::string name, float value) const;
+		ShaderLocation setVector3(std::string name, const glm::vec3& value) const;
+		ShaderLocation setMat4(std::string name, const glm::mat4& value) const;
+
+		void setInteger(ShaderLocation location, int value) const;
+		void setFloat(ShaderLocation location, float value) const;
+		void setVector3(ShaderLocation location, const glm::vec3& value) const;
+		void setMat4(ShaderLocation location, const glm::mat4& value) const;
 
 	protected:
 		void init(const char* vertexPath, const char* fragmentPath);
@@ -64,8 +72,6 @@ namespace geeL {
 		std::list<TextureBinding> maps;
 
 	};
-
-
 	
 }
 

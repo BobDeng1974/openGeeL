@@ -42,6 +42,8 @@ namespace geeL {
 		FrameBuffer tempBuffer;
 		const FrameBufferInformation* screenInfo;
 		const glm::mat4x4* projectionMatrix;
+
+		ShaderLocation projectionLocation;
 	};
 }
 

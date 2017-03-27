@@ -20,17 +20,20 @@ namespace geeL {
 
 		shader.setInteger("samples", samples);
 		shader.setInteger("raysOnly", onlyEffect);
+
+		lightLocation = shader.getLocation("lightPosition");
+		lightViewLocation = shader.getLocation("lightPositionView");
 	}
 
 	void GodRay::bindValues() {
 		PostProcessingEffect::bindValues();
 
 		glm::vec3 screenPos = scene.TranslateToScreenSpace(lightPosition);
-		shader.setVector3("lightPosition", screenPos);
+		shader.setVector3(lightLocation, screenPos);
 
 		glm::vec3 viewPos = scene.TranslateToViewSpace(lightPosition);
 		viewPos = -glm::normalize(viewPos);
-		shader.setVector3("lightPositionView", viewPos);
+		shader.setVector3(lightViewLocation, viewPos);
 	}
 
 	glm::vec3 GodRay::getLightPosition() const {

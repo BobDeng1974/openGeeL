@@ -24,7 +24,7 @@ namespace geeL {
 
 		shader.setInteger("image", shader.mapOffset);
 		shader.setInteger("noiseMap", shader.mapOffset + 1);
-		shader.setFloat("exposure", exposure);
+		exposureLocation = shader.setFloat("exposure", exposure);
 	}
 
 
@@ -37,7 +37,7 @@ namespace geeL {
 			this->exposure = exposure;
 
 			shader.use();
-			shader.setFloat("exposure", exposure);
+			shader.setFloat(exposureLocation, exposure);
 		}
 			
 	}

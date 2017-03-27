@@ -51,6 +51,8 @@ namespace geeL {
 		shader.setFloat("farDistance", farDistance);
 		shader.setFloat("aperture", aperture);
 
+		focalLocation = shader.getLocation("focalDistance");
+
 		//Clamp focal length with reasonable values
 		float dist = (focalLength < 0.f || focalLength > 30.f) ? 30.f : focalLength;
 		blur.bindDoFData(dist, aperture, farDistance);
@@ -67,7 +69,7 @@ namespace geeL {
 		//Clamp focal length with reasonable values
 		float dist = (focalLength < 0.f || focalLength > 30.f) ? 30.f : focalLength;
 
-		shader.setFloat("focalDistance", dist);
+		shader.setFloat(focalLocation, dist);
 		blur.setFocalLength(dist);
 		
 		blurBuffer.fill(blur);

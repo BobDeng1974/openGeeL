@@ -33,6 +33,9 @@ namespace geeL {
 		unsigned int samples;
 		glm::vec3 lightPosition;
 		const RenderScene& scene;
+
+		ShaderLocation lightLocation;
+		ShaderLocation lightViewLocation;
 	};
 }
 

@@ -18,6 +18,7 @@ namespace geeL {
 
 	protected:
 		float exposure;
+		ShaderLocation exposureLocation;
 
 	};
 }

@@ -39,11 +39,14 @@ namespace geeL {
 		shader.setFloat("minCutoff", minDistance);
 		shader.setFloat("density", density);
 		shader.setInteger("samples", samples);
+
+		projectionLocation = shader.getLocation("projection");
+		invViewLocation = shader.getLocation("inverseView");
 	}
 
 	void VolumetricLight::bindValues() {
-		shader.setMat4("inverseView", *inverseView);
-		shader.setMat4("projection", *projectionMatrix);
+		shader.setMat4(invViewLocation, *inverseView);
+		shader.setMat4(projectionLocation, *projectionMatrix);
 
 		light.deferredBind(scene, shader, "light.");
 	}

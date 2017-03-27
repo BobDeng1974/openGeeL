@@ -17,11 +17,10 @@ using namespace glm;
 
 namespace geeL {
 
-	Camera::Camera(Transform& transform, const std::string& name)
-		: SceneObject(transform, name), speed(0), sensitivity(0) {}
-
-	Camera::Camera(Transform& transform, float speed, float sensitivity, const std::string& name)
-		: SceneObject(transform, name), speed(speed), sensitivity(sensitivity) {}
+	Camera::Camera(Transform& transform, float speed, float sensitivity, 
+		float nearClip, float farClip, const std::string& name)
+			: SceneObject(transform, name), speed(speed), sensitivity(sensitivity), 
+				nearClip(nearClip), farClip(farClip) {}
 
 
 	void Camera::lateUpdate() {
@@ -141,6 +140,48 @@ namespace geeL {
 	void Camera::setSensitivity(float sensitivity) {
 		if (sensitivity > 0.f)
 			this->sensitivity = sensitivity;
+	}
+
+	const float Camera::getNearPlane() const {
+		return nearClip;
+	}
+
+	const float Camera::getFarPlane() const {
+		return farClip;
+	}
+
+	void Camera::setNearPlane(float near) {
+		if (near > 0.f) {
+			nearClip = near;
+			onViewingPlaneChange();
+		}
+	}
+
+	void Camera::setFarPlane(float far) {
+		if (far > nearClip) {
+			farClip = far;
+			onViewingPlaneChange();
+		}
+	}
+
+	void Camera::addViewingPlaneChangeListener(
+		std::function<void(float, float)> listener) {
+
+		callbacks.push_back(listener);
+	}
+
+	void Camera::removeViewingPlaneChangeListener(
+		std::function<void(float, float)> listener) {
+
+		//TODO: implement this
+	}
+
+	void  Camera::onViewingPlaneChange() {
+		for (auto it = callbacks.begin(); it != callbacks.end(); it++) {
+			auto func = *it;
+
+			func(nearClip, farClip);
+		}
 	}
 
 }

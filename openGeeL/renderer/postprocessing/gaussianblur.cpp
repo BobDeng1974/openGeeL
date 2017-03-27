@@ -35,6 +35,8 @@ namespace geeL {
 			string name = "kernel[" + std::to_string(i) + "]";
 			shader.setFloat(name, kernel[i]);
 		}
+
+		horLocation = shader.getLocation("horizontal");
 	}
 
 	void GaussianBlur::bindValues() {
@@ -45,7 +47,7 @@ namespace geeL {
 		
 		for (unsigned int i = 0; i < amount; i++) {
 			frameBuffers[horizontal].bind();
-			shader.setInteger("horizontal", horizontal);
+			shader.setInteger(horLocation, horizontal);
 
 			//Pick committed color buffer the first time and then the previous blurred buffer
 			if (first) {
@@ -65,7 +67,7 @@ namespace geeL {
 		}
 		
 		//Set values for final blur call
-		shader.setInteger("horizontal", horizontal);
+		shader.setInteger(horLocation, horizontal);
 		currBuffer = frameBuffers[!horizontal].getColorID();
 
 		FrameBuffer::bind(parentFBO);

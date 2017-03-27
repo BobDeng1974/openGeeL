@@ -61,6 +61,8 @@ namespace geeL {
 		float farDistance;
 		float blurResolution;
 
+		ShaderLocation focalLocation;
+
 		DepthOfFieldBlur& blur;
 		FrameBuffer blurBuffer;
 		const FrameBufferInformation* screenInfo;

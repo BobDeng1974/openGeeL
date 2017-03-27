@@ -15,7 +15,7 @@ uniform float farDistance;
 void main() {
 	vec3 focused = texture(image, TexCoords).rgb; 
 	vec3 blurred = texture(blurredImage, TexCoords).rgb; 
-	float depth  = texture(gPositionDepth, TexCoords).w;
+	float depth  = -texture(gPositionDepth, TexCoords).z;
 
 	float diff = abs(focalDistance - depth);
 	diff = (diff / farDistance) * aperture;

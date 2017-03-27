@@ -19,10 +19,12 @@ namespace geeL {
 		shader.setInteger("gNormalMet", shader.mapOffset + 3);
 
 		shader.setInteger("effectOnly", onlyEffect);
+
+		projectionLocation = shader.getLocation("projection");
 	}
 
 	void SSRR::bindValues() {
-		shader.setMat4("projection", *projectionMatrix);
+		shader.setMat4(projectionLocation, *projectionMatrix);
 	}
 
 	void SSRR::addWorldInformation(map<WorldMaps, unsigned int> maps, map<WorldMatrices,

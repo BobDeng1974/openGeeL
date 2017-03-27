@@ -14,7 +14,7 @@ namespace geeL {
 	void BloomFilter::init(ScreenQuad& screen, const FrameBufferInformation& info) {
 		PostProcessingEffect::init(screen, info);
 
-		shader.setFloat("scatter", scatter);
+		scatterLocation = shader.setFloat("scatter", scatter);
 	}
 
 	void BloomFilter::setScatter(float scatter) {
@@ -22,7 +22,7 @@ namespace geeL {
 			this->scatter = scatter;
 
 			shader.use();
-			shader.setFloat("scatter", scatter);
+			shader.setFloat(scatterLocation, scatter);
 		}
 	}
 

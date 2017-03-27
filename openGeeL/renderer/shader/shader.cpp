@@ -70,23 +70,56 @@ namespace geeL {
 		}
 	}
 
-	void Shader::setInteger(string name, int value) const {
+	ShaderLocation Shader::getLocation(std::string name) const {
+		return glGetUniformLocation(program, name.c_str());
+	}
+
+	ShaderLocation Shader::setInteger(string name, int value) const {
+		ShaderLocation location = glGetUniformLocation(program, name.c_str());
 		glUniform1i(glGetUniformLocation(program, name.c_str()), value);
+
+		return location;
 	}
 
-	void Shader::setFloat(string name, float value) const {
+	ShaderLocation Shader::setFloat(string name, float value) const {
+		ShaderLocation location = glGetUniformLocation(program, name.c_str());
 		glUniform1f(glGetUniformLocation(program, name.c_str()), value);
+
+		return location;
 	}
 
-	void Shader::setVector3(string name, const glm::vec3& value) const {
+	ShaderLocation Shader::setVector3(string name, const glm::vec3& value) const {
+		ShaderLocation location = glGetUniformLocation(program, name.c_str());
 		glUniform3f(glGetUniformLocation(program, name.c_str()),
 			value.x, value.y, value.z);
+
+		return location;
 	}
 
-	void Shader::setMat4(string name, const glm::mat4& value) const {
+	ShaderLocation Shader::setMat4(string name, const glm::mat4& value) const {
+		ShaderLocation location = glGetUniformLocation(program, name.c_str());
 		glUniformMatrix4fv(glGetUniformLocation(program, name.c_str()), 1, GL_FALSE,
 			glm::value_ptr(value));
+
+		return location;
 	}
+
+	void Shader::setInteger(ShaderLocation location, int value) const {
+		glUniform1i(location, value);
+	}
+
+	void Shader::setFloat(ShaderLocation location, float value) const {
+		glUniform1f(location, value);
+	}
+
+	void Shader::setVector3(ShaderLocation location, const glm::vec3& value) const {
+		glUniform3f(location, value.x, value.y, value.z);
+	}
+
+	void Shader::setMat4(ShaderLocation location, const glm::mat4& value) const {
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+	}
+
 
 	void Shader::init(const char* vertexPath, const char* fragmentPath) {
 		//Read code from file path
