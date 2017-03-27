@@ -36,8 +36,4 @@ namespace geeL {
 		return 1.f;
 	}
 
-	void DirectionalLight::forwardScreenInfo(const ScreenInfo& info, glm::vec3 offset) {
-
-	}
-
 }

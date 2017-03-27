@@ -21,6 +21,7 @@ in vec3 normal;
 in vec3 fragPosition;
 in vec2 textureCoordinates;
 in mat3 TBN;
+in float clipDepth;
 
 uniform Material material;
 
@@ -44,7 +45,7 @@ void main() {
 		discard;
 	else {
 		gPositionDepth.xyz = fragPosition;
-		gPositionDepth.a = LinearizeDepth(gl_FragCoord.z); 
+		gPositionDepth.a = clipDepth; 
     
 		vec3 norm = normalize(normal);
 	

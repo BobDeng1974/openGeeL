@@ -21,6 +21,7 @@ namespace geeL {
 			delete shadowMap;
 	}
 
+
 	const ShadowMap* const Light::getShadowMap() const {
 		return shadowMap;
 	}

@@ -49,7 +49,7 @@ namespace geeL {
 
 		//Only draw those meshes whose materials
 		//are linked to given shader
-		virtual void draw(const SceneShader& shader) const;
+		virtual void draw(SceneShader& shader) const;
 
 		//Draw all meshes exclusively with the given shader. No material properties will be used
 		virtual void drawExclusive(const Shader& shader) const;
@@ -60,6 +60,7 @@ namespace geeL {
 		
 		void iterateMaterials(std::function<void(MaterialContainer&)> function) const;
 		void iterateShaders(std::function<void(const SceneShader&)> function) const;
+		void iterateShaders(std::function<void(SceneShader&)> function);
 
 		const Model& getModel() const;
 		virtual RenderMode getRenderMode() const;
@@ -86,7 +87,7 @@ namespace geeL {
 			}
 		};
 
-		std::map<const SceneShader*, std::list<MaterialMapping>> materials;
+		std::map<SceneShader*, std::list<MaterialMapping>> materials;
 
 	private:
 		Model* model;

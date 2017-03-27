@@ -37,7 +37,7 @@ namespace geeL {
 		~LightManager();
 
 		//Add and create directional light
-		DirectionalLight& addDirectionalLight(Transform& transform, glm::vec3 diffuse, 
+		DirectionalLight& addDirectionalLight(const Camera& camera, Transform& transform, glm::vec3 diffuse,
 			float shadowBias = 0.00002f);
 	
 		//Add and create point light
@@ -54,8 +54,6 @@ namespace geeL {
 
 		void bindShadowmaps(Shader& shader) const;
 		void drawShadowmaps(const RenderScene& scene) const;
-
-		void forwardScreenInfo(const ScreenInfo& info, const Camera& camera);
 
 		std::vector<DirectionalLight*>::iterator directionalLightsBegin();
 		std::vector<DirectionalLight*>::iterator directionalLightsEnd();

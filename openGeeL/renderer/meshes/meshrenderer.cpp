@@ -25,9 +25,10 @@ namespace geeL{
 
 		for (auto it = materials.begin(); it != materials.end(); it++) {
 			//Activate and forward information to shader
-			const Shader& shader = *it->first;
+			SceneShader& shader = *it->first;
 			shader.use();
-			shader.setMat4("model", transform.getMatrix());
+			shader.setModelMatrix(transform.getMatrix());
+			shader.bindMatrices();
 
 			const std::list<MaterialMapping>& elements = it->second;
 			for (auto et = elements.begin(); et != elements.end(); et++) {
@@ -47,14 +48,15 @@ namespace geeL{
 		uncullFaces();
 	}
 
-	void MeshRenderer::draw(const SceneShader& shader) const {
+	void MeshRenderer::draw(SceneShader& shader) const {
 		cullFaces();
 
 		auto it = materials.find(&shader);
 		if (it != materials.end()) {
-			const Shader& shader = *it->first;
+			SceneShader& shader = *it->first;
 			shader.use();
-			shader.setMat4("model", transform.getMatrix());
+			shader.setModelMatrix(transform.getMatrix());
+			shader.bindMatrices();
 
 			const std::list<MaterialMapping>& elements = it->second;
 			for (auto et = elements.begin(); et != elements.end(); et++) {
@@ -106,7 +108,7 @@ namespace geeL{
 				elements->remove(*toRemove);
 
 				//Add moved 'copy' of new material
-				const SceneShader& shader = material.getShader();
+				SceneShader& shader = material.getShader();
 				materials[&shader].push_back(MaterialMapping(mesh, material));
 
 				return;
@@ -159,6 +161,14 @@ namespace geeL{
 			function(shader);
 		}
 	}
+
+	void MeshRenderer::iterateShaders(std::function<void(SceneShader&)> function) {
+		for (auto it = materials.begin(); it != materials.end(); it++) {
+			SceneShader& shader = *it->first;
+			function(shader);
+		}
+	}
+
 
 
 	const Model& MeshRenderer::getModel() const {

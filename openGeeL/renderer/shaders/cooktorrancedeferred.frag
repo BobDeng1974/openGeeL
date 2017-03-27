@@ -27,10 +27,12 @@ struct SpotLight {
 	float useCookie;
 };
 
+const int DIRECTIONAL_SHADOWMAP_COUNT = 3;
 
 struct DirectionalLight {
-	sampler2D shadowMap;
-	mat4 lightTransform;
+	sampler2D shadowMaps[DIRECTIONAL_SHADOWMAP_COUNT];
+	float cascadeEndClip[DIRECTIONAL_SHADOWMAP_COUNT];
+	mat4 lightTransforms[DIRECTIONAL_SHADOWMAP_COUNT];
 
 	vec3 direction;
     vec3 diffuse;
@@ -114,7 +116,8 @@ void main() {
 		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
 		//irradiance += calculateVolumetricLightColor(fragPosition, pointLights[i].position, pointLights[i].diffuse, 0.001f);
 	}
-        
+       
+	vec3 ayy = vec3(0.f); 
 	for(int i = 0; i < dlCount; i++) {
         irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
 		irradiance += calculateVolumetricLightColor(fragPosition, directionalLights[i].direction * -100.f, directionalLights[i].diffuse, 150.f);
@@ -126,7 +129,10 @@ void main() {
 	vec3 ambienceDiffuse = calculateIndirectDiffuse(normal, kd, albedo, occlusion); 
 	vec3 ambienceSpecular = calculateIndirectSpecular(normal, viewDirection, albedo, roughness, metallic);
 
-	color = vec4(irradiance + ambienceDiffuse + ambienceSpecular, 1.f);
+	
+
+
+	color = vec4(irradiance + ambienceDiffuse + ambienceSpecular + ayy, 1.f);
 }
 
 //Lighting.....................................................................................................................................
@@ -449,7 +455,17 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 
 }
 
 float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
-	vec4 posLightSpace = directionalLights[i].lightTransform * inverseView * vec4(fragPosition, 1.0f);
+
+	int smIndex = 0;
+	float clipDepth = texture(gPositionDepth, textureCoordinates).w;
+	for(int k = 0; k < DIRECTIONAL_SHADOWMAP_COUNT; k++) {
+		if(clipDepth < directionalLights[i].cascadeEndClip[k]) {
+			smIndex = k;
+			break;
+		}
+	}
+
+	vec4 posLightSpace = directionalLights[i].lightTransforms[smIndex] * inverseView * vec4(fragPosition, 1.f);
 	vec3 coords = posLightSpace.xyz / posLightSpace.w;
 	coords = coords * 0.5f + 0.5f;
 
@@ -457,18 +473,17 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
     if(coords.z > 1.f)
         return 0.f;
 	else {
-		float mapDepth = texture(directionalLights[i].shadowMap, coords.xy).r;
 		float minBias = directionalLights[i].bias;
-		float bias = max(minBias * 100.f * (1.f - dot(norm, directionalLights[i].direction)), minBias);  
+		float bias = max(minBias * 100.f * (1.f - dot(norm, directionalLights[i].direction)), minBias);
 		float curDepth = coords.z - bias;
 
 		float shadow = 0.f;
-		vec2 texelSize = 0.8f / textureSize(directionalLights[i].shadowMap, 0);
+		vec2 texelSize = 0.8f / textureSize(directionalLights[i].shadowMaps[smIndex], 0);
 		int samples = 8;
 		for(int j = 0; j < samples; j++) {
 			int index = int(20.0f * random(floor(fragPosition.xyz * 1000.0f), j)) % 20;
 
-			float depth = texture(directionalLights[i].shadowMap, coords.xy + sampleDirections2D[index] * texelSize).r;
+			float depth = texture(directionalLights[i].shadowMaps[smIndex], coords.xy + sampleDirections2D[index] * texelSize).r;
 			shadow += step(depth, curDepth - bias);      
 		}    
 	

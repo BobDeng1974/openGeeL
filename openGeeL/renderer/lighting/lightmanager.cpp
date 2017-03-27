@@ -11,6 +11,7 @@
 #include "../shader/shader.h"
 #include "../shadowmapping/shadowmap.h"
 #include "../shadowmapping/simpleshadowmap.h"
+#include "../shadowmapping/cascadedmap.h"
 #include "../scene.h"
 
 using namespace std;
@@ -38,11 +39,12 @@ namespace geeL {
 			delete staticSLs[j];
 	}
 
-	DirectionalLight& LightManager::addDirectionalLight(Transform& transform, vec3 diffuse, float shadowBias) {
+	DirectionalLight& LightManager::addDirectionalLight(const Camera& camera, Transform& transform, vec3 diffuse, float shadowBias) {
 		DirectionalLight* light = new DirectionalLight(transform, diffuse);
 		staticDLs.push_back(light);
 
-
+		CascadedDirectionalShadowMap* map = new CascadedDirectionalShadowMap(*light, camera, shadowBias, 512, 512);
+		light->setShadowMap(*map);
 
 		return *light;
 	}
@@ -157,13 +159,6 @@ namespace geeL {
 
 			name = slName + "[" + to_string(j) + "].cookie";
 			staticSLs[j]->addLightCookie(shader, name);
-		}
-	}
-
-	void LightManager::forwardScreenInfo(const ScreenInfo& info, const Camera& camera) {
-
-		for (size_t j = 0; j < staticDLs.size(); j++) {
-			staticDLs[j]->forwardScreenInfo(info, camera.center);
 		}
 	}
 

@@ -20,6 +20,10 @@ namespace geeL {
 		return *shader;
 	}
 
+	SceneShader& Material::getShader() {
+		return *shader;
+	}
+
 	MaterialContainer& Material::getMaterialContainer() const {
 		return *container;
 	}

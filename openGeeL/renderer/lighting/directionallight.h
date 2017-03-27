@@ -15,7 +15,6 @@ namespace geeL {
 		virtual void deferredBind(const RenderScene& scene, const Shader& shader, const std::string& name) const;
 		virtual void forwardBind(const Shader& shader, const std::string& name, const std::string& transformName) const;
 
-		virtual void forwardScreenInfo(const ScreenInfo& info, glm::vec3 offset);
 		virtual float getIntensity(glm::vec3 point) const;
 
 	};

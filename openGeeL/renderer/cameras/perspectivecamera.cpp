@@ -3,47 +3,23 @@
 #include "perspectivecamera.h"
 #include "../inputmanager.h"
 #include "../transformation/transform.h"
+#include <iostream>
 
 using namespace glm;
 
 namespace geeL {
 
-	PerspectiveCamera::PerspectiveCamera(Transform& transform, 
-		float fov, unsigned int width, unsigned int height, float nearClip, float farClip, std::string name)
-		: Camera(transform, name), FOV(fov), currentFOV(fov), aspectRatio(float(width) / float(height)), nearClip(nearClip), farClip(farClip) {}
-
 	PerspectiveCamera::PerspectiveCamera(Transform& transform, float speed, float sensitivity,
 		float fov, unsigned int width, unsigned int height, float nearClip, float farClip, std::string name)
-			: Camera(transform, speed, sensitivity, name), FOV(fov), currentFOV(fov), aspectRatio(float(width) / float(height)), 
-				nearClip(nearClip), farClip(farClip) {
-	}
+			: Camera(transform, speed, sensitivity, nearClip, farClip, name), FOV(fov), currentFOV(fov), width(float(width)), 
+				height(float(height)), aspectRatio(float(width) / float(height)) {}
 
 
 	mat4 PerspectiveCamera::computeProjectionMatrix() const {
 		return perspective(currentFOV, aspectRatio, nearClip, farClip);
 	}
 
-	const float PerspectiveCamera::getNearPlane() const {
-		return nearClip;
-	}
-
-	const float PerspectiveCamera::getFarPlane() const {
-		return farClip;
-	}
-
-	void PerspectiveCamera::setNearPlane(float near) {
-		if (near > 0.f) {
-			nearClip = near;
-			onViewingPlaneChange();
-		}
-	}
-
-	void PerspectiveCamera::setFarPlane(float far) {
-		if (far > nearClip) {
-			farClip = far;
-			onViewingPlaneChange();
-		}
-	}
+	
 
 	float PerspectiveCamera::getFieldOfView() const {
 		return currentFOV;
@@ -54,23 +30,28 @@ namespace geeL {
 			currentFOV = fov;
 	}
 
-	void PerspectiveCamera::addViewingPlaneChangeListener(
-		std::function<void(float, float)> listener) {
+	std::vector<vec3> PerspectiveCamera::getViewBorders(float near, float far) const {
+		float invAspect = height / width;
+		float tanHor = tanf(glm::radians(currentFOV / 2.f));
+		float tanVer = tanf(glm::radians((currentFOV * invAspect) / 2.f));
 
-		callbacks.push_back(listener);
+		float xNear = near * tanHor;
+		float xFar = far * tanHor;
+		float yNear = near * tanVer;
+		float yFar = far * tanVer;
+
+		std::vector<vec3> corners = { 
+			vec3(xNear, yNear, near), 
+			vec3(-xNear, yNear, near), 
+			vec3(xNear, -yNear, near), 
+			vec3(-xNear, -yNear, near), 
+			vec3(xFar, yFar, far), 
+			vec3(-xFar, yFar, far), 
+			vec3(xFar, -yFar, far), 
+			vec3(-xFar, -yFar, far) };
+
+		return corners;
 	}
 
-	void PerspectiveCamera::removeViewingPlaneChangeListener(
-		std::function<void(float, float)> listener) {
-
-		//TODO: implement this
-	}
-
-	void  PerspectiveCamera::onViewingPlaneChange() {
-		for (auto it = callbacks.begin(); it != callbacks.end(); it++) {
-			auto func = *it;
-
-			func(nearClip, farClip);
-		}
-	}
+	
 }

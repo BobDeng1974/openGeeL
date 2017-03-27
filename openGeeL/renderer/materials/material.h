@@ -48,6 +48,7 @@ namespace geeL {
 		void bind() const;
 
 		const SceneShader& getShader() const;
+		SceneShader& getShader();
 		MaterialContainer& getMaterialContainer() const;
 
 	private:
