@@ -14,17 +14,16 @@ namespace geeL {
 	class SceneShader;
 
 	//Class that forwards scene information into all registered shaders
-	class ShaderManager {
+	class ShaderInformationLinker {
 
 	public:
-		ShaderManager(MaterialFactory& factory);
+		ShaderInformationLinker(MaterialFactory& factory);
 
-		void staticBind(const RenderScene& scene) const;
-		void dynamicBind(const RenderScene& scene) const;
+		//Statically bind scene information into shader. Should be called once when a new shader is created at runtime
+		void staticBind(const RenderScene& scene, SceneShader& shader) const;
 
-		//Static bind a single shader. Should be called when a new shader is created at runtime
-		void staticForwardBind(const RenderScene& scene, SceneShader& shader) const;
-		void staticDeferredBind(const RenderScene& scene, Shader& shader) const;
+		//Dynamically bind scene information into shader during runtime
+		void dynamicBind(const RenderScene& scene, SceneShader& shader) const;
 
 		//Bind only the uniform camera information
 		void bindCamera(const RenderScene& scene) const;

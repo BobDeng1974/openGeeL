@@ -12,7 +12,7 @@ namespace geeL {
 	class InputManager;
 	class LightManager;
 	class MeshDrawer;
-	class ShaderManager;
+	class ShaderInformationLinker;
 	class GUIRenderer;
 
 
@@ -53,7 +53,6 @@ namespace geeL {
 		virtual void initObjects();
 	
 		virtual void setScene(RenderScene& scene);
-		void setShaderManager(const ShaderManager& manager);
 
 
 	protected:
@@ -63,7 +62,6 @@ namespace geeL {
 		GUIRenderer*  gui;
 
 		RenderScene* scene;
-		const ShaderManager* shaderManager;
 	
 		std::vector<SceneControlObject*> objects;
 

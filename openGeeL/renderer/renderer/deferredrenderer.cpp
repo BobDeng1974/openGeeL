@@ -71,6 +71,9 @@ namespace geeL {
 		deferredShader->addMap(gBuffer.positionDepth, "gPositionDepth");
 		deferredShader->addMap(gBuffer.normalMet, "gNormalMet");
 		deferredShader->addMap(gBuffer.diffuseSpec, "gDiffuseSpec");
+
+		invViewLocation = deferredShader->getLocation("inverseView");
+		originLocation = deferredShader->getLocation("origin");
 		
 		if (ssao != nullptr) {
 			deferredShader->addMap(ssaoBuffer->getColorID(), "ssao");
@@ -111,8 +114,9 @@ namespace geeL {
 			ssao->init(*ssaoScreen, ssaoBuffer->info);
 		}
 
-		shaderManager->staticDeferredBind(*scene, *deferredShader);
-		shaderManager->staticBind(*scene);
+		
+		scene->lightManager.bindShadowmaps(*deferredShader);
+		deferredShader->bindMaps();
 	}
 
 	void DeferredRenderer::render() {
@@ -215,18 +219,16 @@ namespace geeL {
 				objects[i]->draw(scene->getCamera());
 
 			scene->update();
-			shaderManager->bindCamera(*scene);
 			scene->drawDeferred();
 		}
 		else {
-			//glClear(GL_COLOR_BUFFER_BIT);
 			//Lighting pass
 			deferredShader->use();
 			deferredShader->loadMaps();
 			scene->lightManager.deferredBind(*scene, *deferredShader);
-			deferredShader->setMat4("inverseView", glm::inverse(scene->getCamera().getViewMatrix()));
-			deferredShader->setVector3("origin", scene->GetOriginInViewSpace());
-			deferredShader->setVector3("ambient", scene->lightManager.ambient);
+			deferredShader->setMat4(invViewLocation, scene->getCamera().getInverseViewMatrix());
+			deferredShader->setVector3(originLocation, scene->GetOriginInViewSpace());
+			//deferredShader->setVector3("ambient", scene->lightManager.ambient);
 			screen.draw();
 
 			glClear(GL_DEPTH_BUFFER_BIT);
@@ -235,7 +237,6 @@ namespace geeL {
 			frameBuffer1.copyDepth(gBuffer.fbo);
 
 			//Forward pass
-			shaderManager->dynamicBind(*scene);
 			scene->drawForward();
 			scene->drawSkybox();
 		}

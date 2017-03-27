@@ -39,9 +39,25 @@ namespace geeL {
 		bool SceneShader::getUseCamera() const;
 		bool SceneShader::getUseSkybox() const;
 
+		void setViewMatrix(const glm::mat4& view);
+		void setModelMatrix(const glm::mat4& model);
+
+		void bindViewMatrix() const;
+		void bindModel() const;
+
+		//Bind model and view matrices into shader (if they were set beforehand)
+		void bindMatrices() const;
+
 	private:
 		FragmentShader shader;
 		std::string vertexPath;
+
+		const glm::mat4* view;
+		const glm::mat4* model;
+
+		ShaderLocation viewLocation;
+		ShaderLocation modelLocation;
+		ShaderLocation modelViewLocation;
 
 		std::string chooseVertexShader(const FragmentShader& fragmentPath, bool animated);
 

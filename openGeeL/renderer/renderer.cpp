@@ -30,7 +30,4 @@ namespace geeL{
 		this->scene = &scene;
 	}
 
-	void Renderer::setShaderManager(const ShaderManager& manager) {
-		shaderManager = &manager;
-	}
 }

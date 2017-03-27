@@ -49,7 +49,7 @@ namespace geeL {
 	private:
 		int toggle;
 		bool geometryPass = true;
-		Shader* deferredShader;
+		
 		const MaterialFactory& factory;
 		std::vector<PostProcessingEffect*> effects;
 		std::list<WorldInformationRequester*> requester;
@@ -65,6 +65,10 @@ namespace geeL {
 		ScreenQuad* ssaoScreen = nullptr;
 		FrameBuffer* ssaoBuffer = nullptr;
 		PostProcessingEffect* isolatedEffect = nullptr;
+
+		Shader* deferredShader;
+		ShaderLocation invViewLocation;
+		ShaderLocation originLocation;
 
 		//Initialize start of rendering process
 		void renderInit();

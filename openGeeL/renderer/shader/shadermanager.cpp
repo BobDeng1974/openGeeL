@@ -11,20 +11,13 @@
 
 namespace geeL {
 
-	ShaderManager::ShaderManager(MaterialFactory& factory) 
+	ShaderInformationLinker::ShaderInformationLinker(MaterialFactory& factory) 
 		: factory(factory), bindingPointCounter(0) {
 	
 		camID = generateUniformBuffer(2 * int(sizeof(glm::mat4) + sizeof(glm::vec3)));
 	}
 
-	void ShaderManager::staticBind(const RenderScene& scene) const {
-		for (auto it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
-			SceneShader& shader = **it;
-			staticForwardBind(scene, shader);
-		}
-	}
-
-	void ShaderManager::staticForwardBind(const RenderScene& scene, SceneShader& shader) const {
+	void ShaderInformationLinker::staticBind(const RenderScene& scene, SceneShader& shader) const {
 		shader.use();
 
 		if (shader.getUseLight()) {
@@ -43,38 +36,19 @@ namespace geeL {
 		shader.bindMaps();
 	}
 
-	void ShaderManager::staticDeferredBind(const RenderScene& scene, Shader& shader) const {
-		shader.use();
-
-		scene.lightManager.deferredBind(scene, shader);
-		shader.mapOffset = 1;
-		scene.lightManager.bindShadowmaps(shader);
-
-		glUniformBlockBinding(shader.program,
-			glGetUniformBlockIndex(shader.program, "cameraMatrices"),
-			getUniformBindingPoint(camID));
-
-		scene.getCamera().uniformBind(camID);
-
-		shader.bindMaps();
-	}
-
-	void ShaderManager::dynamicBind(const RenderScene& scene) const {
+	void ShaderInformationLinker::dynamicBind(const RenderScene& scene, SceneShader& shader) const {
 		bindCamera(scene);
 
-		for (auto it = factory.shadersBegin(); it != factory.shadersEnd(); it++) {
-			const SceneShader& shader = **it;
-
-			shader.use();
-			if (shader.getUseLight()) scene.lightManager.forwardBind(shader);
-		}
+		shader.use();
+		if (shader.getUseLight()) scene.lightManager.forwardBind(shader);
+		if (shader.getUseCamera()) shader.setViewMatrix(scene.getCamera().getViewMatrix());
 	}
 
-	void ShaderManager::bindCamera(const RenderScene& scene) const {
+	void ShaderInformationLinker::bindCamera(const RenderScene& scene) const {
 		scene.getCamera().uniformBind(camID);
 	}
 
-	int ShaderManager::generateUniformBuffer(int size) {
+	int ShaderInformationLinker::generateUniformBuffer(int size) {
 		GLuint ubo;
 		glGenBuffers(1, &ubo);
 
@@ -90,7 +64,7 @@ namespace geeL {
 	}
 
 	
-	int ShaderManager::getUniformBindingPoint(int id) const {
+	int ShaderInformationLinker::getUniformBindingPoint(int id) const {
 		if (UBObjects.find(id) == UBObjects.end())
 			throw std::invalid_argument("No uniform buffer object with ID: " + id);
 

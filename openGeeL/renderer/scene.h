@@ -12,6 +12,7 @@ namespace geeL {
 	class LightManager;
 	class Skybox;
 	class Shader;
+	class ShaderInformationLinker;
 	class SceneShader;
 	class MeshRenderer;
 	class SkinnedMeshRenderer;
@@ -30,7 +31,7 @@ namespace geeL {
 	public:
 		LightManager& lightManager;
 
-		RenderScene(Transform& world, LightManager& lightManager, Camera& camera, 
+		RenderScene(Transform& world, LightManager& lightManager, ShaderInformationLinker& shaderManager, Camera& camera, 
 			MeshFactory& meshFactory, MaterialFactory& materialFactory);
 
 
@@ -47,7 +48,7 @@ namespace geeL {
 		void update();
 		
 		//Draw all objects that are linked to given shader
-		void draw(const SceneShader& shader);
+		void draw(SceneShader& shader);
 
 		//Draw all those objects with a deferred rendering shader
 		void drawDeferred() const;
@@ -79,7 +80,6 @@ namespace geeL {
 		glm::vec3 TranslateToWorldSpace(const glm::vec3& vector) const;
 
 		const glm::vec3& GetOriginInViewSpace() const;
-		unsigned int getSkyboxID() const;
 
 		void setPhysics(Physics* physics);
 
@@ -90,10 +90,10 @@ namespace geeL {
 		void iterAllObjects(std::function<void(MeshRenderer&)> function);
 
 		void iterRenderObjects(std::function<void(const MeshRenderer&)> function) const;
-		bool iterRenderObjects(const SceneShader& shader, std::function<void(const MeshRenderer&)> function) const;
+		bool iterRenderObjects(SceneShader& shader, std::function<void(const MeshRenderer&)> function) const;
 
 		void iterSkinnedObjects(std::function<void(const MeshRenderer&)> function) const;
-		bool iterSkinnedObjects(const SceneShader& shader, std::function<void(const SkinnedMeshRenderer&)> function) const;
+		bool iterSkinnedObjects(SceneShader& shader, std::function<void(const SkinnedMeshRenderer&)> function) const;
 
 	private:
 		Camera* camera;
@@ -102,13 +102,14 @@ namespace geeL {
 		Skybox* skybox;
 		Physics* physics;
 		MeshFactory& meshFactory;
+		ShaderInformationLinker& shaderLinker;
 		MaterialFactory& materialFactory;
 
 		//Objects are indexed by their used shaders (and their transforms id) to allow grouped drawing and 
 		//therefore no unnecessary shader programm switching. Objects with multiple materials are linked to
 		//all their shaders respectively
-		std::map<const SceneShader*, std::map<unsigned int, MeshRenderer*>> renderObjects;
-		std::map<const SceneShader*, std::map<unsigned int, SkinnedMeshRenderer*>> skinnedObjects;
+		std::map<SceneShader*, std::map<unsigned int, MeshRenderer*>> renderObjects;
+		std::map<SceneShader*, std::map<unsigned int, SkinnedMeshRenderer*>> skinnedObjects;
 
 	};
 }

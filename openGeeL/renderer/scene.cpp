@@ -15,6 +15,7 @@
 #include "utility\gbuffer.h"
 #include "physics\physics.h"
 #include "lighting\lightmanager.h"
+#include "shader\shadermanager.h"
 #include "transformation\transform.h"
 #include "scene.h"
 #include <iostream>
@@ -23,9 +24,10 @@ using namespace std;
 
 namespace geeL {
 
-	RenderScene::RenderScene(Transform& world, LightManager& lightManager, Camera& camera, MeshFactory& meshFactory, MaterialFactory& materialFactory)
-		: lightManager(lightManager), camera(&camera), meshFactory(meshFactory),
-			physics(nullptr), worldTransform(world), materialFactory(materialFactory) {}
+	RenderScene::RenderScene(Transform& world, LightManager& lightManager, ShaderInformationLinker& shaderManager, 
+		Camera& camera, MeshFactory& meshFactory, MaterialFactory& materialFactory)
+			: lightManager(lightManager), shaderLinker(shaderManager), camera(&camera), meshFactory(meshFactory),
+				physics(nullptr), worldTransform(world), materialFactory(materialFactory) {}
 
 	
 
@@ -44,13 +46,14 @@ namespace geeL {
 		});
 
 		originViewSpace = TranslateToViewSpace(glm::vec3(0.f, 0.f, 0.f));
+		shaderLinker.bindCamera(*this);
 
 		//TODO: Move this to a seperate thread to allow simulation at fixed frame rate
 		if (physics != nullptr)
 			physics->update();
 	}
 
-	void RenderScene::draw(const SceneShader& shader) {
+	void RenderScene::draw(SceneShader& shader) {
 		//Try to find static object with shader first and draw if successfull
 		bool found = iterRenderObjects(shader, [&](const MeshRenderer& object) {
 			if (object.isActive())
@@ -67,9 +70,11 @@ namespace geeL {
 	}
 
 	void RenderScene::drawDeferred() const {
+
+		shaderLinker.dynamicBind(*this, materialFactory.getDeferredShader());
 		iterRenderObjects(materialFactory.getDeferredShader(), [&](const MeshRenderer& object) {
 			if (object.isActive())
-				object.draw();
+				object.draw(materialFactory.getDeferredShader());
 		});
 
 		iterSkinnedObjects(materialFactory.getDeferredShader(), [&](const SkinnedMeshRenderer& object) {
@@ -83,9 +88,11 @@ namespace geeL {
 		//Draw all registered objects with shaders other than deferred shader
 		const SceneShader& defShader = materialFactory.getDeferredShader();
 		for (auto it = renderObjects.begin(); it != renderObjects.end(); it++) {
-			const SceneShader* shader = it->first;
+			SceneShader* shader = it->first;
 			if (shader == &defShader)
 				continue;
+
+			shaderLinker.dynamicBind(*this, *shader);
 
 			auto& elements = it->second;
 			for (auto et = elements.begin(); et != elements.end(); et++) {
@@ -157,14 +164,24 @@ namespace geeL {
 
 
 	void RenderScene::AddMeshRenderer(MeshRenderer& renderer) {
-		renderer.iterateShaders([this, &renderer](const SceneShader& shader) {
+		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
+			//Init shader if it hadn't been added to the scene before
+			auto it = renderObjects.find(&shader);
+			if (it == renderObjects.end())
+				shaderLinker.staticBind(*this, shader);
+
 			renderObjects[&shader][renderer.transform.getID()] = &renderer;
 		});
 
 	}
 
 	void RenderScene::AddSkinnedMeshRenderer(SkinnedMeshRenderer& renderer) {
-		renderer.iterateShaders([this, &renderer](const SceneShader& shader) {
+		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
+			//Init shader if it hadn't been added to the scene before
+			auto it = skinnedObjects.find(&shader);
+			if (it == skinnedObjects.end())
+				shaderLinker.staticBind(*this, shader);
+
 			skinnedObjects[&shader][renderer.transform.getID()] = &renderer;
 		});
 	}
@@ -172,7 +189,6 @@ namespace geeL {
 
 	void RenderScene::forwardScreenInfo(const ScreenInfo& info) {
 		camera->updateDepth(info);
-		lightManager.forwardScreenInfo(info, *camera);
 	}
 
 	glm::vec3 RenderScene::TranslateToScreenSpace(const glm::vec3& vector) const {
@@ -194,12 +210,6 @@ namespace geeL {
 		return originViewSpace;
 	}
 
-	unsigned int RenderScene::getSkyboxID() const {
-		if (skybox != nullptr)
-			return skybox->getID();
-
-		return 0;
-	}
 
 	void RenderScene::setPhysics(Physics* physics) {
 		this->physics = physics;
@@ -234,7 +244,7 @@ namespace geeL {
 		}
 	}
 
-	bool RenderScene::iterRenderObjects(const SceneShader& shader, function<void(const MeshRenderer&)> function) const {
+	bool RenderScene::iterRenderObjects(SceneShader& shader, function<void(const MeshRenderer&)> function) const {
 		auto it = renderObjects.find(&shader);
 		if (it != renderObjects.end()) {
 			auto& elements = it->second;
@@ -259,7 +269,7 @@ namespace geeL {
 		}
 	}
 
-	bool RenderScene::iterSkinnedObjects(const SceneShader& shader, function<void(const SkinnedMeshRenderer&)> function) const {
+	bool RenderScene::iterSkinnedObjects(SceneShader& shader, function<void(const SkinnedMeshRenderer&)> function) const {
 		auto it = skinnedObjects.find(&shader);
 		if (it != skinnedObjects.end()) {
 			auto& elements = it->second;
