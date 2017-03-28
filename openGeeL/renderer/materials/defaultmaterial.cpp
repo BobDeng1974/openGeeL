@@ -12,10 +12,7 @@ using namespace std;
 namespace geeL {
 
 	DefaultMaterialContainer::DefaultMaterialContainer(MaterialType type) 
-		: MaterialContainer("material", type) {
-		
-		textureStack = LayeredTexture();
-	}
+		: MaterialContainer("material", type) {}
 
 
 	void DefaultMaterialContainer::addTexture(std::string name, TextureMap& texture) {
@@ -106,7 +103,6 @@ namespace geeL {
 
 	void DefaultMaterialContainer::bind(SceneShader& shader) const {
 		shader.use();
-		shader.loadMaps();
 		textureStack.draw(shader);
 
 		shader.setInteger("material.mapFlags", textureStack.mapFlags);

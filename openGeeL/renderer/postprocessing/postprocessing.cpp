@@ -15,7 +15,6 @@ namespace geeL {
 	PostProcessingEffect::PostProcessingEffect(string vertexPath, string fragmentPath)
 		: shader(Shader(vertexPath.c_str(), fragmentPath.c_str())), onlyEffect(false) {
 	
-		shader.mapOffset = 1;
 		buffers.push_back(0);
 	}
 

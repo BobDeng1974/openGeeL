@@ -67,7 +67,6 @@ namespace geeL {
 		}
 
 		deferredShader->use();
-		deferredShader->mapOffset = 1;
 		deferredShader->addMap(gBuffer.positionDepth, "gPositionDepth");
 		deferredShader->addMap(gBuffer.normalMet, "gNormalMet");
 		deferredShader->addMap(gBuffer.diffuseSpec, "gDiffuseSpec");

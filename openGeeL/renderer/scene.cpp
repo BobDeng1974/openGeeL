@@ -54,6 +54,8 @@ namespace geeL {
 	}
 
 	void RenderScene::draw(SceneShader& shader) {
+		shaderLinker.dynamicBind(*this, shader);
+
 		//Try to find static object with shader first and draw if successfull
 		bool found = iterRenderObjects(shader, [&](const MeshRenderer& object) {
 			if (object.isActive())
@@ -71,13 +73,17 @@ namespace geeL {
 
 	void RenderScene::drawDeferred() const {
 
-		shaderLinker.dynamicBind(*this, materialFactory.getDeferredShader());
-		iterRenderObjects(materialFactory.getDeferredShader(), [&](const MeshRenderer& object) {
+		SceneShader* shader = &materialFactory.getDeferredShader();
+		shaderLinker.dynamicBind(*this, *shader);
+
+		iterRenderObjects(*shader, [&](const MeshRenderer& object) {
 			if (object.isActive())
 				object.draw(materialFactory.getDeferredShader());
 		});
 
-		iterSkinnedObjects(materialFactory.getDeferredShader(), [&](const SkinnedMeshRenderer& object) {
+		shader = &materialFactory.getDefaultShader(DefaultShading::DeferredSkinned);
+		//shaderLinker.dynamicBind(*this, *shader);
+		iterSkinnedObjects(*shader, [&](const SkinnedMeshRenderer& object) {
 			if (object.isActive())
 				object.draw();
 		});

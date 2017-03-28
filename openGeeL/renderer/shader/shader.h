@@ -32,7 +32,7 @@ namespace geeL {
 	public:
 		int program;
 		int mapBindingPos;
-		int mapOffset = 0;
+		const int mapOffset = 0;
 		std::string name;
 
 		Shader() : mapBindingPos(0) {}
@@ -67,6 +67,8 @@ namespace geeL {
 		void setFloat(ShaderLocation location, float value) const;
 		void setVector3(ShaderLocation location, const glm::vec3& value) const;
 		void setMat4(ShaderLocation location, const glm::mat4& value) const;
+
+
 
 	protected:
 		void init(const char* vertexPath, const char* fragmentPath);

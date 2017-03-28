@@ -11,9 +11,9 @@ using namespace std;
 
 namespace geeL {
 
-	GenericMaterialContainer::GenericMaterialContainer(string name, MaterialType type) : MaterialContainer(name, type) {
-		textureStack = LayeredTexture();
-	}
+	GenericMaterialContainer::GenericMaterialContainer(string name, MaterialType type) 
+		: MaterialContainer(name, type) {}
+
 
 	void GenericMaterialContainer::addTexture(string name, TextureMap& texture) {
 		textureStack.addTexture(this->name + "." + name, texture);
@@ -52,7 +52,6 @@ namespace geeL {
 
 	void GenericMaterialContainer::bind(SceneShader& shader) const {
 		shader.use();
-		shader.loadMaps();
 		textureStack.draw(shader);
 
 		shader.setInteger("material.mapFlags", textureStack.mapFlags);
