@@ -27,6 +27,10 @@ namespace geeL {
 		return shadowMap;
 	}
 
+	ShadowMap* const Light::getShadowMap() {
+		return shadowMap;
+	}
+
 	void Light::setShadowMap(ShadowMap& map) {
 		shadowMap = &map;
 

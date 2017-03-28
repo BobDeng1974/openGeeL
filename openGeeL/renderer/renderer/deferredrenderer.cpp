@@ -89,8 +89,9 @@ namespace geeL {
 
 	void DeferredRenderer::renderInit() {
 
-		scene->lightManager.bindShadowmaps(*deferredShader);
+		deferredShader->use();
 		scene->bindSkybox(*deferredShader);
+		scene->lightManager.bindShadowmaps(*deferredShader);
 
 		//Init all effects
 		bool chooseBuffer = true;

@@ -38,6 +38,7 @@ namespace geeL {
 			const std::string& name) const;
 
 		const ShadowMap* const getShadowMap() const;
+		ShadowMap* const getShadowMap();
 		void setShadowMap(ShadowMap& map);
 
 		//Add shadow map to given shader

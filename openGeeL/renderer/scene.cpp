@@ -171,7 +171,7 @@ namespace geeL {
 
 	void RenderScene::AddMeshRenderer(MeshRenderer& renderer) {
 		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
-			//Init shader if it hadn't been added to the scene before
+			//Init shader if it hasn't been added to the scene before
 			auto it = renderObjects.find(&shader);
 			if (it == renderObjects.end())
 				shaderLinker.staticBind(*this, shader);
@@ -183,7 +183,7 @@ namespace geeL {
 
 	void RenderScene::AddSkinnedMeshRenderer(SkinnedMeshRenderer& renderer) {
 		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
-			//Init shader if it hadn't been added to the scene before
+			//Init shader if it hasn't been added to the scene before
 			auto it = skinnedObjects.find(&shader);
 			if (it == skinnedObjects.end())
 				shaderLinker.staticBind(*this, shader);

@@ -23,21 +23,20 @@ namespace geeL {
 			add(renderer);
 		});
 
+		
 		LightManager& manager = scene.lightManager;
-		for (auto it = manager.directionalLightsBegin(); it != manager.directionalLightsEnd(); it++) {
-			Light& light = **it;
-			add(light);
-		}
 
-		for (auto it = manager.spotLightsBegin(); it != manager.spotLightsEnd(); it++) {
-			Light& light = **it;
+		manager.iterDirectionalLights([this](DirectionalLight& light) {
 			add(light);
-		}
+		});
 
-		for (auto it = manager.pointLightsBegin(); it != manager.pointLightsEnd(); it++) {
-			Light& light = **it;
+		manager.iterPointLights([this](PointLight& light) {
 			add(light);
-		}
+		});
+
+		manager.iterSpotLights([this](SpotLight& light) {
+			add(light);
+		});
 	}
 
 	ObjectLister::~ObjectLister() {

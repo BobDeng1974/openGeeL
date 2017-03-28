@@ -19,8 +19,7 @@ namespace geeL {
 
 	void ShaderInformationLinker::staticBind(const RenderScene& scene, SceneShader& shader) const {
 		shader.use();
-		shader.loadMaps();
-
+		
 		if (shader.getUseLight()) {
 			scene.lightManager.bind(scene, shader);
 			scene.lightManager.bindShadowmaps(shader);
@@ -38,6 +37,7 @@ namespace geeL {
 		bindCamera(scene);
 
 		shader.use();
+		shader.loadMaps();
 		if (shader.getUseLight()) scene.lightManager.bind(scene, shader);
 		if (shader.getUseCamera()) shader.setViewMatrix(scene.getCamera().getViewMatrix());
 	}

@@ -68,8 +68,6 @@ namespace geeL {
 		void setVector3(ShaderLocation location, const glm::vec3& value) const;
 		void setMat4(ShaderLocation location, const glm::mat4& value) const;
 
-
-
 	protected:
 		void init(const char* vertexPath, const char* fragmentPath);
 		void init(const char* vertexPath, const char* geometryPath, const char* fragmentPath);
