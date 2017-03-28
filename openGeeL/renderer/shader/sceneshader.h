@@ -20,6 +20,12 @@ namespace geeL {
 			: path(path), deferred(deferred), useLight(useLight), useCamera(useCamera), useSkybox(useSkybox) {}
 	};
 
+	enum class ShaderTransformSpace {
+		World,
+		View
+	};
+
+
 	//Special shader container that is intented for the use in scene drawing.
 	//It therefore holds additional scene information.
 	class SceneShader : public Shader {
@@ -29,7 +35,7 @@ namespace geeL {
 
 		SceneShader();
 
-		SceneShader(const FragmentShader& fragmentPath, bool animated = false,
+		SceneShader(const FragmentShader& fragmentPath, ShaderTransformSpace space, bool animated = false,
 			std::string cameraName = "camera", std::string skyboxName = "skybox");
 
 		void changeShader(const FragmentShader& shader);
@@ -48,8 +54,11 @@ namespace geeL {
 		//Bind model and view matrices into shader (if they were set beforehand)
 		void bindMatrices() const;
 
+		ShaderTransformSpace getSpace() const;
+
 	private:
 		FragmentShader shader;
+		ShaderTransformSpace space;
 		std::string vertexPath;
 
 		const glm::mat4* view;
@@ -78,6 +87,10 @@ namespace geeL {
 
 	inline bool SceneShader::getUseSkybox() const {
 		return shader.useSkybox;
+	}
+
+	inline ShaderTransformSpace SceneShader::getSpace() const {
+		return space;
 	}
 }
 

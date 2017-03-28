@@ -2,6 +2,7 @@
 #include "../lighting/spotlight.h"
 #include "volumetriclight.h"
 #include "../scene.h"
+#include "../shader/sceneshader.h"
 #include "../cameras/camera.h"
 #include "../shadowmapping/shadowmap.h"
 #include <iostream>
@@ -48,7 +49,7 @@ namespace geeL {
 		shader.setMat4(invViewLocation, *inverseView);
 		shader.setMat4(projectionLocation, *projectionMatrix);
 
-		light.deferredBind(scene, shader, "light.");
+		light.bind(scene, shader, "light.", ShaderTransformSpace::View);
 	}
 
 

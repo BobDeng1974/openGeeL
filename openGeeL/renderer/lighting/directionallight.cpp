@@ -3,6 +3,7 @@
 #include <string>
 #include <gtc/matrix_transform.hpp>
 #include "../shader/shader.h"
+#include "../shader/sceneshader.h"
 #include "../transformation/transform.h"
 #include "../cameras/camera.h"
 #include "../scene.h"
@@ -19,17 +20,20 @@ namespace geeL {
 		: Light(transform, diffuse, name) {}
 
 
-	void DirectionalLight::deferredBind(const RenderScene& scene, const Shader& shader, const string& name) const {
-		Light::deferredBind(scene, shader, name);
+	void DirectionalLight::bind(const RenderScene& scene, const Shader& shader, 
+		const string& name, ShaderTransformSpace space) const {
+		Light::bind(scene, shader, name, space);
 
-		shader.setVector3(name + "direction", scene.GetOriginInViewSpace() - 
-			scene.TranslateToViewSpace(transform.getForwardDirection()));
-	}
-
-	void DirectionalLight::forwardBind(const Shader& shader, const string& name, const string& transformName) const {
-		Light::forwardBind(shader, name, transformName);
-
-		shader.setVector3(name + "direction", transform.getForwardDirection());
+		switch (space) {
+			case ShaderTransformSpace::View:
+				shader.setVector3(name + "direction", scene.GetOriginInViewSpace() -
+					scene.TranslateToViewSpace(transform.getForwardDirection()));
+				break;
+			case ShaderTransformSpace::World:
+				shader.setVector3(name + "direction", transform.getForwardDirection());
+				break;
+		}
+		
 	}
 
 	float DirectionalLight::getIntensity(glm::vec3 point) const {

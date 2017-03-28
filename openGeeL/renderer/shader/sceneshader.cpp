@@ -5,12 +5,12 @@ using namespace std;
 
 namespace geeL {
 
-	SceneShader::SceneShader() : Shader(), shader(""), cameraName("camera"), 
+	SceneShader::SceneShader() : Shader(), shader(""), space(ShaderTransformSpace::View), cameraName("camera"), 
 		skyboxName("skybox"), view(nullptr), model(nullptr) {}
 
-	SceneShader::SceneShader(const FragmentShader& fragmentPath, bool animated, string cameraName, string skyboxName)
+	SceneShader::SceneShader(const FragmentShader& fragmentPath, ShaderTransformSpace space, bool animated, string cameraName, string skyboxName)
 			: Shader(chooseVertexShader(fragmentPath, animated).c_str(), fragmentPath.path.c_str()), 
-				shader(fragmentPath), cameraName(cameraName), skyboxName(skyboxName), view(nullptr), model(nullptr) {
+				shader(fragmentPath), space(space), cameraName(cameraName), skyboxName(skyboxName), view(nullptr), model(nullptr) {
 	
 		viewLocation = getLocation("viewMatrix");
 		modelLocation = getLocation("model");

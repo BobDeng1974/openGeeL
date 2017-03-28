@@ -225,7 +225,7 @@ namespace geeL {
 			//Lighting pass
 			deferredShader->use();
 			deferredShader->loadMaps();
-			scene->lightManager.deferredBind(*scene, *deferredShader);
+			scene->lightManager.bind(*scene, *deferredShader, ShaderTransformSpace::View);
 			deferredShader->setMat4(invViewLocation, scene->getCamera().getInverseViewMatrix());
 			deferredShader->setVector3(originLocation, scene->GetOriginInViewSpace());
 			//deferredShader->setVector3("ambient", scene->lightManager.ambient);

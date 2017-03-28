@@ -9,9 +9,9 @@ using namespace std;
 namespace geeL {
 
 	MaterialFactory::MaterialFactory() : 
-		forwardShader(new SceneShader(FragmentShader("renderer/shaders/lighting.frag", false), false)),
-		deferredShader(new SceneShader(FragmentShader("renderer/shaders/gbuffer.frag", true, false), false)),
-		deferredAnimatedShader(new SceneShader(FragmentShader("renderer/shaders/gbuffer.frag", true, false), true)) {
+		forwardShader(new SceneShader(FragmentShader("renderer/shaders/lighting.frag", false), ShaderTransformSpace::World, false)),
+		deferredShader(new SceneShader(FragmentShader("renderer/shaders/gbuffer.frag", true, false), ShaderTransformSpace::View, false)),
+		deferredAnimatedShader(new SceneShader(FragmentShader("renderer/shaders/gbuffer.frag", true, false), ShaderTransformSpace::View, true)) {
 	
 		shaders.push_back(forwardShader);
 	}
@@ -72,7 +72,10 @@ namespace geeL {
 		FragmentShader frag = FragmentShader(fragmentPath, ((shading == DefaultShading::DeferredSkinned) 
 			|| (shading == DefaultShading::DeferredStatic)));
 
-		shaders.push_back(new SceneShader(frag, animated));
+		ShaderTransformSpace space = (shading == DefaultShading::DeferredSkinned) || (shading == DefaultShading::DeferredStatic) ?
+			ShaderTransformSpace::View : ShaderTransformSpace::World;
+
+		shaders.push_back(new SceneShader(frag, space, animated));
 		return *shaders.back();
 	}
 	

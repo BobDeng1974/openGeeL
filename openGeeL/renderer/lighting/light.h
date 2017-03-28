@@ -16,7 +16,11 @@ namespace geeL {
 	class Transform;
 	class RenderScene;
 	class Shader;
+	class SceneShader;
 	const RenderScene;
+
+	enum class ShaderTransformSpace;
+	
 
 
 	class Light : public SceneObject {
@@ -27,8 +31,11 @@ namespace geeL {
 		Light(Transform& transform, vec3 diffuse, const std::string& name = "Light");
 		~Light();
 
-		virtual void deferredBind(const RenderScene& scene, const Shader& shader, const std::string& name) const;
-		virtual void forwardBind(const Shader& shader, std::string name, const std::string& transformName) const;
+		virtual void bind(const RenderScene& scene, const Shader& shader, 
+			const std::string& name, ShaderTransformSpace space) const;
+
+		virtual void bind(const RenderScene& scene, const SceneShader& shader,
+			const std::string& name) const;
 
 		const ShadowMap* const getShadowMap() const;
 		void setShadowMap(ShadowMap& map);

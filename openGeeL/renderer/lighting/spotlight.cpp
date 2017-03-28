@@ -3,6 +3,7 @@
 #include <string>
 #include <gtc/matrix_transform.hpp>
 #include "../shader/shader.h"
+#include "../shader/sceneshader.h"
 #include "../texturing/simpletexture.h"
 #include "../transformation/transform.h"
 #include "../scene.h"
@@ -18,26 +19,24 @@ namespace geeL {
 			: Light(transform, diffuse, name), angle(angle), outerAngle(outerAngle), lightCookie(nullptr) {}
 
 
-	void SpotLight::deferredBind(const RenderScene& scene, const Shader& shader, const string& name) const {
-		Light::deferredBind(scene, shader, name);
+	void SpotLight::bind(const RenderScene& scene, const Shader& shader, const string& name, ShaderTransformSpace space) const {
+		Light::bind(scene, shader, name, space);
 
-		shader.setVector3(name + "position", scene.TranslateToViewSpace(transform.getPosition()));
-		shader.setVector3(name + "direction",
-			scene.TranslateToViewSpace(transform.getForwardDirection()) - scene.GetOriginInViewSpace());
+		switch (space) {
+			case ShaderTransformSpace::View:
+				shader.setVector3(name + "position", scene.TranslateToViewSpace(transform.getPosition()));
+				shader.setVector3(name + "direction",
+					scene.TranslateToViewSpace(transform.getForwardDirection()) - scene.GetOriginInViewSpace());
+				break;
+			case ShaderTransformSpace::World:
+				shader.setVector3(name + "position", transform.getPosition());
+				shader.setVector3(name + "direction", transform.getForwardDirection());
+				break;
+		}
+
 		shader.setFloat(name + "angle", angle);
 		shader.setFloat(name + "outerAngle", outerAngle);
 		shader.setFloat(name + "useCookie", (lightCookie != nullptr));
-	}
-
-	void SpotLight::forwardBind(const Shader& shader, const string& name, const string& transformName) const {
-		Light::forwardBind(shader, name, transformName);
-
-		shader.setVector3(name + "position", transform.getPosition());
-		shader.setVector3(name + "direction", transform.getForwardDirection());
-		shader.setFloat(name + "angle", angle);
-		shader.setFloat(name + "outerAngle", outerAngle);
-		shader.setFloat(name + "useCookie", (lightCookie != nullptr));
-
 	}
 
 	void SpotLight::setLightCookie(SimpleTexture& cookie) {

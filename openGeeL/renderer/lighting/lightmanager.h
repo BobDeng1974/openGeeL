@@ -16,9 +16,12 @@ namespace geeL {
 	class DirectionalLight;
 	class SpotLight;
 	class Shader;
+	class SceneShader;
 	class RenderScene;
 	class Transform;
+
 	struct ScreenInfo;
+	enum class ShaderTransformSpace;
 
 	class LightManager {
 
@@ -49,8 +52,8 @@ namespace geeL {
 			float angle, float outerAngle, float shadowBias = 0.001f);
 
 
-		void deferredBind(const RenderScene& scene, const Shader& shader) const;
-		void forwardBind(const Shader& shader) const;
+		void bind(const RenderScene& scene, const Shader& shader, ShaderTransformSpace space) const;
+		void bind(const RenderScene& scene, const SceneShader& shader) const;
 
 		void bindShadowmaps(Shader& shader) const;
 		void drawShadowmaps(const RenderScene& scene) const;

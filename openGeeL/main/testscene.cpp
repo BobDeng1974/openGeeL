@@ -94,7 +94,7 @@ namespace {
 	public:
 		LightManager& lightManager;
 		MaterialFactory& materialFactory;
-		ShaderManager& shaderManager;
+		ShaderInformationLinker& shaderManager;
 		TransformFactory transformFactory;
 		MeshFactory& meshFactory;
 		Physics* physics;
@@ -103,7 +103,7 @@ namespace {
 
 
 		TestScene(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
-			ShaderManager& shaderManager, RenderScene& scene, TransformFactory& transformFactory, Physics* physics)
+			ShaderInformationLinker& shaderManager, RenderScene& scene, TransformFactory& transformFactory, Physics* physics)
 				: SceneControlObject(scene),
 					materialFactory(materialFactory),
 					meshFactory(meshFactory), 
@@ -133,7 +133,7 @@ namespace {
 
 			lightIntensity = 0.5f;
 			//geeL::Transform& lightTransform3 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(75, 20, 10), vec3(1.f, 1.f, 1.f));
-			//&lightManager.addDirectionalLight(lightTransform3, glm::vec3(l, l, l));
+			//&lightManager.addDirectionalLight(scene.getCamera(), lightTransform3, glm::vec3(lightIntensity, lightIntensity, lightIntensity));
 
 			float height = -2.f;
 			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.2f, 0.2f, 0.2f));
@@ -247,9 +247,9 @@ void draw() {
 	
 
 	LightManager lightManager = LightManager(vec3(0.15f));
-	ShaderManager shaderManager = ShaderManager(materialFactory);
+	ShaderInformationLinker shaderManager = ShaderInformationLinker(materialFactory);
 	
-	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, camera, meshFactory, materialFactory);
+	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, meshFactory, materialFactory);
 	WorldPhysics physics = WorldPhysics();
 	scene.setPhysics(&physics);
 
@@ -261,7 +261,6 @@ void draw() {
 	scene.setSkybox(skybox);
 	
 	renderer.setScene(scene);
-	renderer.setShaderManager(shaderManager);
 
 	TestScene testScene = TestScene(materialFactory, meshFactory, 
 		lightManager, shaderManager, scene, transFactory, &physics);
@@ -307,9 +306,9 @@ void draw() {
 	postLister.add(def);
 	postLister.add(ssao);
 
-	//VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
-	//renderer.addEffect(volSmooth, { &vol, &sobelBlur });
-	//postLister.add(volSmooth, lightSnippet);
+	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
+	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
+	postLister.add(volSmooth, lightSnippet);
 
 	//renderer.addEffect(bloom);
 	//postLister.add(bloom);
@@ -318,7 +317,7 @@ void draw() {
 	//renderer.addEffect(raySmooth);
 	//postLister.add(raySmooth, godRaySnippet);
 
-	//renderer.addEffect(ssrrSmooth, ssrr);
+	renderer.addEffect(ssrrSmooth, ssrr);
 
 	//renderer.addEffect(dof, dof);
 	//postLister.add(dof);
