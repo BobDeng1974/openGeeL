@@ -25,7 +25,6 @@ namespace geeL {
 	}
 
 
-	unsigned int counter = 0;
 	static unsigned int activeShader = 0;
 	void Shader::use() const {
 		if (program != activeShader) {
@@ -34,27 +33,18 @@ namespace geeL {
 		}
 	}
 
-	void Shader::addMap(unsigned int mapID, std::string name, unsigned int type) {
-		glUniform1i(glGetUniformLocation(program, name.c_str()), mapOffset + maps.size());
+	void Shader::addMap(TextureID id, std::string name, unsigned int type) {
+		unsigned int offset = maps.size();
+		glUniform1i(glGetUniformLocation(program, name.c_str()), mapOffset + offset);
 
-		maps.push_back(TextureBinding(mapID, type, name));
+		maps[id] = TextureBinding(id, type, offset, name);
 		mapBindingPos++;
 	}
 
-	void Shader::removeMap(unsigned int mapID) {
-
-		//Check if texture with given ID is in shader
-		TextureBinding* binding = nullptr;
-		for (auto it = maps.begin(); it != maps.end(); it++) {
-			if ((*it).id == mapID) {
-				binding = &(*it);
-				break;
-			}
-		}
-
-		//Remove texture
-		if (binding != nullptr) {
-			maps.remove(*binding);
+	void Shader::removeMap(TextureID id) {
+		auto it = maps.find(id);
+		if (it != maps.end()) {
+			maps.erase(it);
 
 			//Rebind all maps again since positions might have changed
 			bindMaps();
@@ -62,9 +52,11 @@ namespace geeL {
 	}
 
 	void Shader::bindMaps() {
-		int counter = mapOffset;
+		int counter = 0;
 		for (auto it = maps.begin(); it != maps.end(); it++) {
-			glUniform1i(glGetUniformLocation(program, it->name.c_str()), counter);
+			TextureBinding& binding = (*it).second;
+			binding.offset = counter;
+			glUniform1i(glGetUniformLocation(program, binding.name.c_str()), mapOffset + binding.offset);
 			counter++;
 		}
 
@@ -73,12 +65,10 @@ namespace geeL {
 	
 	void Shader::loadMaps() const {
 		int layer = GL_TEXTURE0;
-		int counter = mapOffset;
 		for (auto it = maps.begin(); it != maps.end(); it++) {
-			glActiveTexture(layer + counter);
-
-			glBindTexture(it->type, it->id);
-			counter++;
+			const TextureBinding& binding = (*it).second;
+			glActiveTexture(layer + mapOffset + binding.offset);
+			glBindTexture(binding.type, binding.id);
 		}
 	}
 

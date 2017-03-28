@@ -1,6 +1,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include <map>
 #include <list>
 #include <string>
 #include <vec3.hpp>
@@ -9,16 +10,20 @@
 #define GL_TEXTURE_2D 0x0DE1
 
 typedef int ShaderLocation;
+typedef unsigned int TextureID;
 
 namespace geeL {
 
 	struct TextureBinding {
-		unsigned int id;
+		TextureID id;
 		unsigned int type;
+		unsigned int offset;
 		std::string name;
 
-		TextureBinding(unsigned int id, unsigned int type, std::string name) :
-			id(id), type(type), name(name) {}
+		TextureBinding() {}
+
+		TextureBinding(TextureID id, unsigned int type, unsigned offset, std::string name) :
+			id(id), type(type), offset(offset), name(name) {}
 
 		bool operator== (const TextureBinding &rhs) {
 			return id == rhs.id;
@@ -42,11 +47,11 @@ namespace geeL {
 
 		void use() const;
 
-		//Add a new map to the shader, e.g a shadow map
-		void addMap(unsigned int mapID, std::string name, unsigned int type = GL_TEXTURE_2D);
+		//Add a new map to the shader
+		void addMap(TextureID id, std::string name, unsigned int type = GL_TEXTURE_2D);
 
 		//Remove map with given ID from shader (if it exists)
-		void removeMap(unsigned int mapID);
+		void removeMap(TextureID id);
 
 		//Load maps into their binding points in the shader
 		void loadMaps() const;
@@ -73,13 +78,12 @@ namespace geeL {
 		void init(const char* vertexPath, const char* geometryPath, const char* fragmentPath);
 
 	private:
-		std::list<TextureBinding> maps;
+		std::map<TextureID, TextureBinding> maps;
 
 		//Bind all added maps to the shader
 		void bindMaps();
 
 	};
-	
 }
 
 #endif
