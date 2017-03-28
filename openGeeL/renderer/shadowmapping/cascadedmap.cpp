@@ -82,6 +82,11 @@ namespace geeL {
 			shader.addMap(shadowMaps[i].id, name + "s[" + std::to_string(i) + "]");
 	}
 
+	void CascadedDirectionalShadowMap::removeMap(Shader& shader) {
+		for (unsigned int i = 0; i < MAPCOUNT; i++)
+			shader.removeMap(shadowMaps[i].id);
+	}
+
 
 	void CascadedDirectionalShadowMap::draw(const Camera& camera,
 		std::function<void(const Shader&)> renderCall, const Shader& shader) {

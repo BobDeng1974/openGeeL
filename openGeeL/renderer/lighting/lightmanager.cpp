@@ -1,7 +1,5 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include "lightmanager.h"
-#include "light.h"
 #include "pointlight.h"
 #include "directionallight.h"
 #include "spotlight.h"
@@ -14,6 +12,9 @@
 #include "../shadowmapping/simpleshadowmap.h"
 #include "../shadowmapping/cascadedmap.h"
 #include "../scene.h"
+#include "light.h"
+#include "lightbinding.h"
+#include "lightmanager.h"
 
 using namespace std;
 using namespace glm;
@@ -50,7 +51,7 @@ namespace geeL {
 		CascadedDirectionalShadowMap* map = new CascadedDirectionalShadowMap(*light, camera, shadowBias, 512, 512);
 		light->setShadowMap(*map);
 
-		onAdd(light);
+		onAdd(light, dirLights.back());
 		return *light;
 	}
 
@@ -65,7 +66,7 @@ namespace geeL {
 		SimplePointLightMap* map = new SimplePointLightMap(*light, shadowBias, 100.f);
 		light->setShadowMap(*map);
 		
-		onAdd(light);
+		onAdd(light, pointLights.back());
 		return *light;
 	}
 
@@ -81,7 +82,7 @@ namespace geeL {
 		SimpleSpotLightMap* map = new SimpleSpotLightMap(*light, shadowBias, 100.f);
 		light->setShadowMap(*map);
 		
-		onAdd(light);
+		onAdd(light, spotLights.back());
 		return *light;
 	}
 
@@ -94,7 +95,7 @@ namespace geeL {
 			dirLights.remove(*binding);
 			reindexLights<std::list<DLightBinding>>(dirLights);
 
-			onRemove(&light);
+			onRemove(&light, *binding);
 			delete &light;
 		}
 	}
@@ -108,7 +109,7 @@ namespace geeL {
 			pointLights.remove(*binding);
 			reindexLights<std::list<PLightBinding>>(pointLights);
 
-			onRemove(&light);
+			onRemove(&light, *binding);
 			delete &light;
 		}
 	}
@@ -122,7 +123,7 @@ namespace geeL {
 			spotLights.remove(*binding);
 			reindexLights<std::list<SLightBinding>>(spotLights);
 
-			onRemove(&light);
+			onRemove(&light, *binding);
 			delete &light;
 		}
 	}
@@ -172,9 +173,9 @@ namespace geeL {
 	}
 
 
-	void LightManager::bindShadowmap(Shader& shader, PointLight& light) {
+	void LightManager::bindShadowmap(Shader& shader, PointLight& light) const {
 		//Find corresponding light binding
-		PLightBinding* binding = getBinding<PLightBinding, PointLight,
+		const PLightBinding* binding = getBinding<PLightBinding, PointLight,
 			std::list<PLightBinding>>(light, pointLights);
 
 		//Bind shadowmap
@@ -182,9 +183,9 @@ namespace geeL {
 			light.addShadowmap(shader, binding->getName() + "shadowMap");
 	}
 
-	void LightManager::bindShadowmap(Shader& shader, SpotLight& light) {
+	void LightManager::bindShadowmap(Shader& shader, SpotLight& light) const {
 		//Find corresponding light binding
-		SLightBinding* binding = getBinding<SLightBinding, SpotLight, 
+		const SLightBinding* binding = getBinding<SLightBinding, SpotLight, 
 			std::list<SLightBinding>>(light, spotLights);
 
 		//Bind shadowmap
@@ -192,9 +193,9 @@ namespace geeL {
 			light.addShadowmap(shader, binding->getName() + "shadowMap");
 	}
 
-	void LightManager::bindShadowmap(Shader& shader, DirectionalLight& light) {
+	void LightManager::bindShadowmap(Shader& shader, DirectionalLight& light) const {
 		//Find corresponding light binding
-		DLightBinding* binding = getBinding<DLightBinding, DirectionalLight,
+		const DLightBinding* binding = getBinding<DLightBinding, DirectionalLight,
 			std::list<DLightBinding>>(light, dirLights);
 
 		//Bind shadowmap
@@ -284,24 +285,52 @@ namespace geeL {
 		removeListener.push_back(listener);
 	}
 
-	void LightManager::onAdd(Light* light) {
+	void LightManager::addShaderListener(Shader& shader) {
+		shaderListener.insert(&shader);
+	}
+
+	void LightManager::onAdd(Light* light, LightBinding& binding) {
 		for (auto it = addListener.begin(); it != addListener.end(); it++) {
 			auto function = *it;
 			function(light, light->getShadowMap());
 		}
+
+		for (auto it = shaderListener.begin(); it != shaderListener.end(); it++) {
+			Shader& shader = **it;
+			light->addShadowmap(shader, binding.getName() + "shadowMap");
+		}
 	}
 
-	void LightManager::onRemove(Light* light) {
+	void LightManager::onRemove(Light* light, LightBinding& binding) {
 		for (auto it = removeListener.begin(); it != removeListener.end(); it++) {
 			auto function = *it;
 			function(light, light->getShadowMap());
 		}
 
+		for (auto it = shaderListener.begin(); it != shaderListener.end(); it++) {
+			Shader& shader = **it;
+			light->removeShadowmap(shader);
+		}
 	}
 
 
 	template<class B, class L, class A>
-	B* LightManager::getBinding(L& light, A& list) {
+	const B* LightManager::getBinding(const L& light, const A& list) const {
+		const B* binding = nullptr;
+		for (auto it = list.begin(); it != list.end(); it++) {
+			const B& b = *it;
+
+			if (&light == b.light) {
+				binding = &b;
+				break;
+			}
+		}
+
+		return binding;
+	}
+
+	template<class B, class L, class A>
+	B* LightManager::getBinding(const L& light, A& list) {
 		B* binding = nullptr;
 		for (auto it = list.begin(); it != list.end(); it++) {
 			B& b = *it;
@@ -316,7 +345,7 @@ namespace geeL {
 	}
 
 	template<class A>
-	void LightManager::reindexLights(A& list) {
+	void LightManager::reindexLights(A& list) const {
 		size_t counter = 0;
 		for (auto it = list.begin(); it != list.end(); it++) {
 			LightBinding& b = *it;
@@ -325,6 +354,5 @@ namespace geeL {
 			counter++;
 		}
 	}
-
 
 }

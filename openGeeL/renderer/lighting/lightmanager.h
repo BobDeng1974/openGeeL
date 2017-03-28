@@ -3,10 +3,9 @@
 
 #include <functional>
 #include <list>
+#include <set>
 #include <string>
-#include <vector>
 #include <vec3.hpp>
-#include "lightbinding.h"
 
 #define MAX_POINTLIGHTS 5
 #define MAX_DIRECTIONALLIGHTS 5
@@ -25,10 +24,16 @@ namespace geeL {
 	class RenderScene;
 	class Transform;
 
+	class LightBinding;
+	class DLightBinding;
+	class PLightBinding;
+	class SLightBinding;
+
 	struct ScreenInfo;
 	enum class ShaderTransformSpace;
 
 
+	//Managing class for all light sources in a scene
 	class LightManager {
 
 	public:
@@ -64,9 +69,9 @@ namespace geeL {
 		void bind(const RenderScene& scene, const Shader& shader, ShaderTransformSpace space) const;
 		void bind(const RenderScene& scene, const SceneShader& shader) const;
 
-		void bindShadowmap(Shader& shader, DirectionalLight& light);
-		void bindShadowmap(Shader& shader, PointLight& light);
-		void bindShadowmap(Shader& shader, SpotLight& light);
+		void bindShadowmap(Shader& shader, DirectionalLight& light) const;
+		void bindShadowmap(Shader& shader, PointLight& light) const;
+		void bindShadowmap(Shader& shader, SpotLight& light) const;
 
 		void bindShadowmaps(Shader& shader) const;
 		void drawShadowmaps(const RenderScene& scene) const;
@@ -77,6 +82,9 @@ namespace geeL {
 
 		void addLightAddListener(std::function<void(Light const *, ShadowMap const *)> listener);
 		void addLightRemoveListener(std::function<void(Light const *, ShadowMap const *)> listener);
+
+		//Add shader that shall be updated when lights are added/removed
+		void addShaderListener(Shader& shader);
 
 	private:
 		//Shader for spotlights and directional lights
@@ -89,15 +97,19 @@ namespace geeL {
 
 		std::list<std::function<void(Light const *, ShadowMap const *)>> addListener;
 		std::list<std::function<void(Light const *, ShadowMap const *)>> removeListener;
+		std::set<Shader*> shaderListener;
 
-		void onRemove(Light* light);
-		void onAdd(Light* light);
+		void onRemove(Light* light, LightBinding& binding);
+		void onAdd(Light* light, LightBinding& binding);
 
 		template<class B, class L, class A>
-		B* getBinding(L& light, A& list);
+		const B* getBinding(const L& light, const A& list) const;
+
+		template<class B, class L, class A>
+		B* getBinding(const L& light, A& list);
 
 		template<class A>
-		void reindexLights(A& list);
+		void reindexLights(A& list) const;
 	};
 }
 

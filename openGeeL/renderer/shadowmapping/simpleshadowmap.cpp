@@ -59,6 +59,10 @@ namespace geeL {
 		shader.addMap(id, name, GL_TEXTURE_2D);
 	}
 
+	void SimpleShadowMap::removeMap(Shader& shader) {
+		shader.removeMap(id);
+	}
+
 
 	void SimpleShadowMap::adaptShadowmap(const Camera& camera) {
 		vec3 center = camera.center;

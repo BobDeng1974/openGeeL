@@ -12,6 +12,7 @@ namespace geeL {
 
 		virtual void bindData(const Shader& shader, const std::string& name) = 0;
 		virtual void bindMap(Shader& shader, const std::string& name) = 0;
+		virtual void removeMap(Shader& shader) = 0;
 
 		//Render function for shadow maps. Takes current scene camera, render function
 		//that  draws desired objects of scene and the actual shadow map shader

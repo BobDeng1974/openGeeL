@@ -53,6 +53,11 @@ namespace geeL {
 			shadowMap->bindMap(shader, name);
 	}
 
+	void Light::removeShadowmap(Shader& shader) {
+		if (shadowMap != nullptr)
+			shadowMap->removeMap(shader);
+	}
+
 	void Light::renderShadowmap(const Camera& camera, 
 		std::function<void(const Shader&)> renderCall, const Shader& shader) {
 

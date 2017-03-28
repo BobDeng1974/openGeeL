@@ -173,8 +173,10 @@ namespace geeL {
 		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
 			//Init shader if it hasn't been added to the scene before
 			auto it = renderObjects.find(&shader);
-			if (it == renderObjects.end())
+			if (it == renderObjects.end()) {
 				shaderLinker.staticBind(*this, shader);
+				lightManager.addShaderListener(shader);
+			}
 
 			renderObjects[&shader][renderer.transform.getID()] = &renderer;
 		});
@@ -185,8 +187,10 @@ namespace geeL {
 		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
 			//Init shader if it hasn't been added to the scene before
 			auto it = skinnedObjects.find(&shader);
-			if (it == skinnedObjects.end())
+			if (it == skinnedObjects.end()) {
 				shaderLinker.staticBind(*this, shader);
+				lightManager.addShaderListener(shader);
+			}
 
 			skinnedObjects[&shader][renderer.transform.getID()] = &renderer;
 		});

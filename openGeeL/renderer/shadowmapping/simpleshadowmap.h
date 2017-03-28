@@ -27,6 +27,7 @@ namespace geeL {
 
 		virtual void bindData(const Shader& shader, const std::string& name) = 0;
 		virtual void bindMap(Shader& shader, const std::string& name);
+		virtual void removeMap(Shader& shader);
 
 		virtual void draw(const Camera& camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader) = 0;

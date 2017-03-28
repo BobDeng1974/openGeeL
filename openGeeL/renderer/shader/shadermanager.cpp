@@ -5,9 +5,8 @@
 #include "../cameras/camera.h"
 #include "../lighting/lightmanager.h"
 #include "../materials/materialfactory.h"
-#include "shadermanager.h"
 #include "../scene.h"
-
+#include "shadermanager.h"
 
 namespace geeL {
 
