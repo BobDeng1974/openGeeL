@@ -35,7 +35,30 @@ namespace geeL {
 	}
 
 	void Shader::addMap(unsigned int mapID, std::string name, unsigned int type) {
+		glUniform1i(glGetUniformLocation(program, name.c_str()), mapOffset + maps.size());
+
 		maps.push_back(TextureBinding(mapID, type, name));
+		mapBindingPos++;
+	}
+
+	void Shader::removeMap(unsigned int mapID) {
+
+		//Check if texture with given ID is in shader
+		TextureBinding* binding = nullptr;
+		for (auto it = maps.begin(); it != maps.end(); it++) {
+			if ((*it).id == mapID) {
+				binding = &(*it);
+				break;
+			}
+		}
+
+		//Remove texture
+		if (binding != nullptr) {
+			maps.remove(*binding);
+
+			//Rebind all maps again since positions might have changed
+			bindMaps();
+		}
 	}
 
 	void Shader::bindMaps() {

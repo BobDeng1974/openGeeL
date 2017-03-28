@@ -19,6 +19,10 @@ namespace geeL {
 
 		TextureBinding(unsigned int id, unsigned int type, std::string name) :
 			id(id), type(type), name(name) {}
+
+		bool operator== (const TextureBinding &rhs) {
+			return id == rhs.id;
+		}
 	};
 
 
@@ -41,8 +45,8 @@ namespace geeL {
 		//Add a new map to the shader, e.g a shadow map
 		void addMap(unsigned int mapID, std::string name, unsigned int type = GL_TEXTURE_2D);
 
-		//Bind all added maps to the shader
-		void bindMaps();
+		//Remove map with given ID from shader (if it exists)
+		void removeMap(unsigned int mapID);
 
 		//Load maps into their binding points in the shader
 		void loadMaps() const;
@@ -70,6 +74,9 @@ namespace geeL {
 
 	private:
 		std::list<TextureBinding> maps;
+
+		//Bind all added maps to the shader
+		void bindMaps();
 
 	};
 	

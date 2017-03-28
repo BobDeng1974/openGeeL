@@ -90,8 +90,8 @@ namespace geeL {
 
 	void DeferredRenderer::renderInit() {
 
+		scene->lightManager.bindShadowmaps(*deferredShader);
 		scene->bindSkybox(*deferredShader);
-		deferredShader->bindMaps();
 
 		//Init all effects
 		bool chooseBuffer = true;
@@ -113,10 +113,6 @@ namespace geeL {
 			ssaoScreen->init();
 			ssao->init(*ssaoScreen, ssaoBuffer->info);
 		}
-
-		
-		scene->lightManager.bindShadowmaps(*deferredShader);
-		deferredShader->bindMaps();
 	}
 
 	void DeferredRenderer::render() {

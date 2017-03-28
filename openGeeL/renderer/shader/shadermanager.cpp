@@ -32,8 +32,6 @@ namespace geeL {
 
 			scene.getCamera().uniformBind(camID);
 		}
-
-		shader.bindMaps();
 	}
 
 	void ShaderInformationLinker::dynamicBind(const RenderScene& scene, SceneShader& shader) const {
