@@ -19,13 +19,13 @@ namespace geeL {
 		: Light(transform, diffuse, name) {}
 
 
-	void PointLight::bind(const RenderScene& scene, const Shader& shader, 
+	void PointLight::bind(const Camera& camera, const Shader& shader,
 		const string& name, ShaderTransformSpace space) const {
-		Light::bind(scene, shader, name, space);
+		Light::bind(camera, shader, name, space);
 
 		switch (space) {
 			case ShaderTransformSpace::View:
-				shader.setVector3(name + "position", scene.TranslateToViewSpace(transform.getPosition()));
+				shader.setVector3(name + "position", camera.TranslateToViewSpace(transform.getPosition()));
 				break;
 			case ShaderTransformSpace::World:
 				shader.setVector3(name + "position", transform.getPosition());

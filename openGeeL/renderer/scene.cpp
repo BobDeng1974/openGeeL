@@ -32,7 +32,6 @@ namespace geeL {
 	
 
 	void RenderScene::update() {
-
 		camera->update();
 		iterAllObjects([&](MeshRenderer& object) {
 			object.update();
@@ -45,7 +44,6 @@ namespace geeL {
 			object.lateUpdate();
 		});
 
-		originViewSpace = TranslateToViewSpace(glm::vec3(0.f, 0.f, 0.f));
 		shaderLinker.bindCamera(*this);
 
 		//TODO: Move this to a seperate thread to allow simulation at fixed frame rate
@@ -196,30 +194,39 @@ namespace geeL {
 		});
 	}
 
+	void RenderScene::RemoveMeshRenderer(MeshRenderer& renderer) {
+		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
+			auto shaders = renderObjects.find(&shader);
+			if (shaders != renderObjects.end()) {
+				auto& objects = (*shaders).second;
+
+				auto obj = objects.find(renderer.transform.getID());
+				if (obj != objects.end())
+					objects.erase(obj);
+			}
+
+			//TODO: maybe also remove shader when this renderer was the last attached object
+		});
+
+	}
+
+	void RenderScene::RemoveSkinnedMeshRenderer(SkinnedMeshRenderer& renderer) {
+		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
+			auto shaders = skinnedObjects.find(&shader);
+			if (shaders != skinnedObjects.end()) {
+				auto& objects = (*shaders).second;
+
+				auto obj = objects.find(renderer.transform.getID());
+				if (obj != objects.end())
+					objects.erase(obj);
+			}
+		});
+	}
+
 
 	void RenderScene::forwardScreenInfo(const ScreenInfo& info) {
 		camera->updateDepth(info);
 	}
-
-	glm::vec3 RenderScene::TranslateToScreenSpace(const glm::vec3& vector) const {
-		glm::vec4 vec = camera->getProjectionMatrix() * camera->getViewMatrix() * glm::vec4(vector, 1.f);
-		return glm::vec3(vec.x / vec.w, vec.y / vec.w, vec.z / vec.w) * 0.5f + 0.5f;
-	}
-
-	glm::vec3 RenderScene::TranslateToViewSpace(const glm::vec3& vector) const {
-		glm::vec4 vec = camera->getViewMatrix() * glm::vec4(vector, 1.f);
-		return glm::vec3(vec.x, vec.y, vec.z);
-	}
-
-	glm::vec3 RenderScene::TranslateToWorldSpace(const glm::vec3& vector) const {
-		glm::vec4 vec = camera->getInverseViewMatrix() * glm::vec4(vector, 1.f);
-		return glm::vec3(vec.x, vec.y, vec.z);
-	}
-
-	const glm::vec3& RenderScene::GetOriginInViewSpace() const {
-		return originViewSpace;
-	}
-
 
 	void RenderScene::setPhysics(Physics* physics) {
 		this->physics = physics;

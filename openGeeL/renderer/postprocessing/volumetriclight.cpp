@@ -49,7 +49,7 @@ namespace geeL {
 		shader.setMat4(invViewLocation, *inverseView);
 		shader.setMat4(projectionLocation, *projectionMatrix);
 
-		light.bind(scene, shader, "light.", ShaderTransformSpace::View);
+		light.bind(scene.getCamera(), shader, "light.", ShaderTransformSpace::View);
 	}
 
 

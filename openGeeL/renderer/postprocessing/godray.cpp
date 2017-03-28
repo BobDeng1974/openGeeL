@@ -3,6 +3,7 @@
 #include <gtc/matrix_transform.hpp>
 #include "../transformation/transform.h"
 #include "../lighting/directionallight.h"
+#include "../cameras/camera.h"
 #include "../primitives/screenquad.h"
 #include "../scene.h"
 #include "gaussianblur.h"
@@ -28,10 +29,10 @@ namespace geeL {
 	void GodRay::bindValues() {
 		PostProcessingEffect::bindValues();
 
-		glm::vec3 screenPos = scene.TranslateToScreenSpace(lightPosition);
+		glm::vec3 screenPos = scene.getCamera().TranslateToScreenSpace(lightPosition);
 		shader.setVector3(lightLocation, screenPos);
 
-		glm::vec3 viewPos = scene.TranslateToViewSpace(lightPosition);
+		glm::vec3 viewPos = scene.getCamera().TranslateToViewSpace(lightPosition);
 		viewPos = -glm::normalize(viewPos);
 		shader.setVector3(lightViewLocation, viewPos);
 	}

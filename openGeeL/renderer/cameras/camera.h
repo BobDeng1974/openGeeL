@@ -65,9 +65,21 @@ namespace geeL {
 		//Returns view borders for given frustum 
 		virtual std::vector<glm::vec3> getViewBorders(float near, float far) const = 0;
 
+		//Translate vector from world to screen space of this camera
+		glm::vec3 TranslateToScreenSpace(const glm::vec3& vector) const;
+
+		//Translate vector from world to view space of this camera
+		glm::vec3 TranslateToViewSpace(const glm::vec3& vector) const;
+
+		//Transflate vector from view space of this camera to world space 
+		glm::vec3 TranslateToWorldSpace(const glm::vec3& vector) const;
+
+		const glm::vec3& GetOriginInViewSpace() const;
+
 	protected:
 		float speed, sensitivity;
 		float nearClip, farClip;
+		glm::vec3 originViewSpace;
 		glm::mat4 viewMatrix;
 		glm::mat4 inverseView;
 		glm::mat4 projectionMatrix;

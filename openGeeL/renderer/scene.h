@@ -35,15 +35,6 @@ namespace geeL {
 			MeshFactory& meshFactory, MaterialFactory& materialFactory);
 
 
-		void setSkybox(Skybox& skybox);
-		void bindSkybox(Shader& shader) const;
-
-		//Create and add new mesh renderer to scene
-		void AddMeshRenderer(MeshRenderer& renderer);
-
-		//Create and add new mesh renderer to scene
-		void AddSkinnedMeshRenderer(SkinnedMeshRenderer& renderer);
-
 		//Update scene information. Should be called once at beginning of frame
 		void update();
 		
@@ -55,10 +46,7 @@ namespace geeL {
 
 		//Draw all those objects with a forward rendering shader
 		void drawForward() const;
-
-		//Draw skybox indepentently
-		void drawSkybox() const;
-
+	
 		//Draw all objects in the scene with the given shader
 		void drawObjects(const Shader& shader) const;
 
@@ -68,24 +56,24 @@ namespace geeL {
 		//Draw all skinned objects in the scene with the given shader
 		void drawSkinnedObjects(const Shader& shader) const;
 
+		void setSkybox(Skybox& skybox);
+		void bindSkybox(Shader& shader) const;
+
+		//Draw skybox indepentently
+		void drawSkybox() const;
+
 		void forwardScreenInfo(const ScreenInfo& info);
-
-		//Translate vector from world to screen space
-		glm::vec3 TranslateToScreenSpace(const glm::vec3& vector) const;
-
-		//Translate vector from world to view space
-		glm::vec3 TranslateToViewSpace(const glm::vec3& vector) const;
-
-		//Transflate vector from view to world space
-		glm::vec3 TranslateToWorldSpace(const glm::vec3& vector) const;
-
-		const glm::vec3& GetOriginInViewSpace() const;
 
 		void setPhysics(Physics* physics);
 
 		const Camera& getCamera() const;
 		Camera& getCamera();
 
+		void AddMeshRenderer(MeshRenderer& renderer);
+		void AddSkinnedMeshRenderer(SkinnedMeshRenderer& renderer);
+
+		void RemoveMeshRenderer(MeshRenderer& renderer);
+		void RemoveSkinnedMeshRenderer(SkinnedMeshRenderer& renderer);
 
 		void iterAllObjects(std::function<void(MeshRenderer&)> function);
 
@@ -98,7 +86,6 @@ namespace geeL {
 	private:
 		Camera* camera;
 		Transform& worldTransform;
-		glm::vec3 originViewSpace;
 		Skybox* skybox;
 		Physics* physics;
 		MeshFactory& meshFactory;

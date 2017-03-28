@@ -219,11 +219,12 @@ namespace geeL {
 		}
 		else {
 			//Lighting pass
+			const Camera& currentCam = scene->getCamera();
 			deferredShader->use();
 			deferredShader->loadMaps();
-			scene->lightManager.bind(*scene, *deferredShader, ShaderTransformSpace::View);
-			deferredShader->setMat4(invViewLocation, scene->getCamera().getInverseViewMatrix());
-			deferredShader->setVector3(originLocation, scene->GetOriginInViewSpace());
+			scene->lightManager.bind(currentCam, *deferredShader, ShaderTransformSpace::View);
+			deferredShader->setMat4(invViewLocation, currentCam.getInverseViewMatrix());
+			deferredShader->setVector3(originLocation, currentCam.GetOriginInViewSpace());
 			//deferredShader->setVector3("ambient", scene->lightManager.ambient);
 			screen.draw();
 
@@ -293,7 +294,7 @@ namespace geeL {
 		map<WorldVectors, const vec3*> worldVectors;
 		worldVectors[WorldVectors::CameraPosition]  = &scene->getCamera().getPosition();
 		worldVectors[WorldVectors::CameraDirection] = &scene->getCamera().getDirection();
-		worldVectors[WorldVectors::OriginView]      = &scene->GetOriginInViewSpace();
+		worldVectors[WorldVectors::OriginView]      = &scene->getCamera().GetOriginInViewSpace();
 
 		for (auto it = requester.begin(); it != requester.end(); it++) {
 			WorldInformationRequester* req = *it;

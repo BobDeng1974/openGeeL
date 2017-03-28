@@ -20,7 +20,7 @@ namespace geeL {
 		shader.use();
 		
 		if (shader.getUseLight()) {
-			scene.lightManager.bind(scene, shader);
+			scene.lightManager.bind(scene.getCamera(), shader);
 			scene.lightManager.bindShadowmaps(shader);
 		}
 		if (shader.getUseCamera()) {
@@ -37,7 +37,7 @@ namespace geeL {
 
 		shader.use();
 		shader.loadMaps();
-		if (shader.getUseLight()) scene.lightManager.bind(scene, shader);
+		if (shader.getUseLight()) scene.lightManager.bind(scene.getCamera(), shader);
 		if (shader.getUseCamera()) shader.setViewMatrix(scene.getCamera().getViewMatrix());
 	}
 

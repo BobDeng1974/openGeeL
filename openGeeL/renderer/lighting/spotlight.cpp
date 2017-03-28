@@ -6,6 +6,7 @@
 #include "../shader/sceneshader.h"
 #include "../texturing/simpletexture.h"
 #include "../transformation/transform.h"
+#include "../cameras/camera.h"
 #include "../scene.h"
 #include "spotlight.h"
 
@@ -19,14 +20,14 @@ namespace geeL {
 			: Light(transform, diffuse, name), angle(angle), outerAngle(outerAngle), lightCookie(nullptr) {}
 
 
-	void SpotLight::bind(const RenderScene& scene, const Shader& shader, const string& name, ShaderTransformSpace space) const {
-		Light::bind(scene, shader, name, space);
+	void SpotLight::bind(const Camera& camera, const Shader& shader, const string& name, ShaderTransformSpace space) const {
+		Light::bind(camera, shader, name, space);
 
 		switch (space) {
 			case ShaderTransformSpace::View:
-				shader.setVector3(name + "position", scene.TranslateToViewSpace(transform.getPosition()));
+				shader.setVector3(name + "position", camera.TranslateToViewSpace(transform.getPosition()));
 				shader.setVector3(name + "direction",
-					scene.TranslateToViewSpace(transform.getForwardDirection()) - scene.GetOriginInViewSpace());
+					camera.TranslateToViewSpace(transform.getForwardDirection()) - camera.GetOriginInViewSpace());
 				break;
 			case ShaderTransformSpace::World:
 				shader.setVector3(name + "position", transform.getPosition());

@@ -129,7 +129,7 @@ namespace geeL {
 	}
 
 
-	void LightManager::bind(const RenderScene& scene, const Shader& shader, ShaderTransformSpace space) const {
+	void LightManager::bind(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const {
 		shader.use();
 
 		int plCount = 0;
@@ -140,7 +140,7 @@ namespace geeL {
 			const PLightBinding& binding = *it;
 			Light& light = *binding.light;
 			if (light.isActive()) {
-				light.bind(scene, shader, binding.getName(plCount), space);
+				light.bind(camera, shader, binding.getName(plCount), space);
 				plCount++;
 			}
 		}
@@ -149,7 +149,7 @@ namespace geeL {
 			const DLightBinding& binding = *it;
 			Light& light = *binding.light;
 			if (light.isActive()) {
-				light.bind(scene, shader, binding.getName(dlCount), space);
+				light.bind(camera, shader, binding.getName(dlCount), space);
 				dlCount++;
 			}
 		}
@@ -158,7 +158,7 @@ namespace geeL {
 			const SLightBinding& binding = *it;
 			Light& light = *binding.light;
 			if (light.isActive()) {
-				light.bind(scene, shader, binding.getName(slCount), space);
+				light.bind(camera, shader, binding.getName(slCount), space);
 				slCount++;
 			}
 		}
@@ -168,8 +168,8 @@ namespace geeL {
 		shader.setInteger(slCountName, slCount);
 	}
 
-	void LightManager::bind(const RenderScene& scene, const SceneShader& shader) const {
-		bind(scene, shader, shader.getSpace());
+	void LightManager::bind(const Camera& camera, const SceneShader& shader) const {
+		bind(camera, shader, shader.getSpace());
 	}
 
 

@@ -31,10 +31,10 @@ namespace geeL {
 		Light(Transform& transform, vec3 diffuse, const std::string& name = "Light");
 		~Light();
 
-		virtual void bind(const RenderScene& scene, const Shader& shader, 
+		virtual void bind(const Camera& camera, const Shader& shader, 
 			const std::string& name, ShaderTransformSpace space) const;
 
-		virtual void bind(const RenderScene& scene, const SceneShader& shader,
+		virtual void bind(const Camera& camera, const SceneShader& shader,
 			const std::string& name) const;
 
 		const ShadowMap* const getShadowMap() const;

@@ -11,7 +11,7 @@ namespace geeL {
 	public:
 		PointLight(Transform& transform, vec3 diffuse, const std::string& name = "Pointlight");
 
-		virtual void bind(const RenderScene& scene, const Shader& shader, 
+		virtual void bind(const Camera& camera, const Shader& shader,
 			const std::string& name, ShaderTransformSpace space) const;
 
 	};

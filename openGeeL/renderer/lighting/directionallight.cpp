@@ -20,14 +20,14 @@ namespace geeL {
 		: Light(transform, diffuse, name) {}
 
 
-	void DirectionalLight::bind(const RenderScene& scene, const Shader& shader, 
+	void DirectionalLight::bind(const Camera& camera, const Shader& shader,
 		const string& name, ShaderTransformSpace space) const {
-		Light::bind(scene, shader, name, space);
+		Light::bind(camera, shader, name, space);
 
 		switch (space) {
 			case ShaderTransformSpace::View:
-				shader.setVector3(name + "direction", scene.GetOriginInViewSpace() -
-					scene.TranslateToViewSpace(transform.getForwardDirection()));
+				shader.setVector3(name + "direction", camera.GetOriginInViewSpace() -
+					camera.TranslateToViewSpace(transform.getForwardDirection()));
 				break;
 			case ShaderTransformSpace::World:
 				shader.setVector3(name + "direction", transform.getForwardDirection());

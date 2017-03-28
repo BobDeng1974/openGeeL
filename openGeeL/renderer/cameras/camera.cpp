@@ -29,6 +29,8 @@ namespace geeL {
 		viewMatrix = computeViewMatrix();
 		inverseView = inverse(viewMatrix);
 		projectionMatrix = computeProjectionMatrix();
+
+		originViewSpace = TranslateToViewSpace(glm::vec3(0.f, 0.f, 0.f));
 	}
 
 	const mat4& Camera::getViewMatrix() const {
@@ -182,6 +184,25 @@ namespace geeL {
 
 			func(nearClip, farClip);
 		}
+	}
+
+	glm::vec3 Camera::TranslateToScreenSpace(const glm::vec3& vector) const {
+		glm::vec4 vec = getProjectionMatrix() * getViewMatrix() * glm::vec4(vector, 1.f);
+		return glm::vec3(vec.x / vec.w, vec.y / vec.w, vec.z / vec.w) * 0.5f + 0.5f;
+	}
+
+	glm::vec3 Camera::TranslateToViewSpace(const glm::vec3& vector) const {
+		glm::vec4 vec = getViewMatrix() * glm::vec4(vector, 1.f);
+		return glm::vec3(vec.x, vec.y, vec.z);
+	}
+
+	glm::vec3 Camera::TranslateToWorldSpace(const glm::vec3& vector) const {
+		glm::vec4 vec = getInverseViewMatrix() * glm::vec4(vector, 1.f);
+		return glm::vec3(vec.x, vec.y, vec.z);
+	}
+
+	const glm::vec3& Camera::GetOriginInViewSpace() const {
+		return originViewSpace;
 	}
 
 }
