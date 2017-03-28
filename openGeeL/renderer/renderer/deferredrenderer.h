@@ -21,7 +21,7 @@ namespace geeL {
 	class PostProcessingEffect;
 	class WorldPostProcessingEffect;
 
-	class DeferredRenderer : public Renderer, public WorldInformationProvider {
+	class DeferredRenderer : public Renderer, public WorldMapProvider {
 
 	public:
 		DeferredRenderer(RenderWindow& window, InputManager& inputManager, 
@@ -38,10 +38,10 @@ namespace geeL {
 
 		//Add new post processing effect to renderer. 
 		void addEffect(PostProcessingEffect& effect);
-		void addEffect(PostProcessingEffect& effect, WorldInformationRequester& requester);
-		void addEffect(PostProcessingEffect& effect, std::list<WorldInformationRequester*> requester);
+		void addEffect(PostProcessingEffect& effect, WorldMapRequester& requester);
+		void addEffect(PostProcessingEffect& effect, std::list<WorldMapRequester*> requester);
 
-		virtual void addRequester(WorldInformationRequester& requester);
+		virtual void addRequester(WorldMapRequester& requester);
 		virtual void linkInformation() const;
 
 		const RenderTime& getRenderTime() const;
@@ -52,7 +52,7 @@ namespace geeL {
 		
 		const MaterialFactory& factory;
 		std::vector<PostProcessingEffect*> effects;
-		std::list<WorldInformationRequester*> requester;
+		std::list<WorldMapRequester*> requester;
 		ScreenQuad screen;
 		GBuffer gBuffer;
 		FrameBuffer frameBuffer1;

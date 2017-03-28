@@ -11,9 +11,9 @@
 
 namespace geeL {
 
-	GodRay::GodRay(const RenderScene& scene, glm::vec3 lightPosition, unsigned int samples) 
+	GodRay::GodRay(glm::vec3 lightPosition, unsigned int samples) 
 		: PostProcessingEffect("renderer/postprocessing/godray.frag"), 
-			scene(scene), lightPosition(lightPosition), samples(samples) {}
+			lightPosition(lightPosition), samples(samples) {}
 
 
 	void GodRay::init(ScreenQuad& screen, const FrameBufferInformation& info) {
@@ -29,10 +29,10 @@ namespace geeL {
 	void GodRay::bindValues() {
 		PostProcessingEffect::bindValues();
 
-		glm::vec3 screenPos = scene.getCamera().TranslateToScreenSpace(lightPosition);
+		glm::vec3 screenPos = camera->TranslateToScreenSpace(lightPosition);
 		shader.setVector3(lightLocation, screenPos);
 
-		glm::vec3 viewPos = scene.getCamera().TranslateToViewSpace(lightPosition);
+		glm::vec3 viewPos = camera->TranslateToViewSpace(lightPosition);
 		viewPos = -glm::normalize(viewPos);
 		shader.setVector3(lightViewLocation, viewPos);
 	}

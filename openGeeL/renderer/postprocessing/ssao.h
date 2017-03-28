@@ -13,7 +13,7 @@ namespace geeL {
 	class BilateralFilter;
 
 	//Screen Space Ambient Occlusion Post Effect
-	class SSAO : public PostProcessingEffect, public WorldInformationRequester {
+	class SSAO : public PostProcessingEffect, public WorldMapRequester, public CameraRequester {
 
 	public:
 		SSAO(PostProcessingEffect& blur, float radius = 5.f);
@@ -21,9 +21,7 @@ namespace geeL {
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 		virtual void draw();
 
-		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
-			std::map<WorldMatrices, const glm::mat4*> matrices,
-			std::map<WorldVectors, const glm::vec3*> vectors);
+		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps);
 
 		float getRadius() const;
 		void setRadius(float radius);
@@ -35,15 +33,16 @@ namespace geeL {
 		bool ssaoPass = false;
 		float radius;
 		unsigned int sampleCount = 32;
+
 		SimpleTexture noiseTexture;
 		std::vector<glm::vec3> kernel;
 		std::vector<glm::vec3> noise;
 		PostProcessingEffect& blur;
-		FrameBuffer tempBuffer;
-		const FrameBufferInformation* screenInfo;
-		const glm::mat4x4* projectionMatrix;
 
 		ShaderLocation projectionLocation;
+		FrameBuffer tempBuffer;
+		const FrameBufferInformation* screenInfo;
+		
 	};
 }
 

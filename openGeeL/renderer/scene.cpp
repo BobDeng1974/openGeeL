@@ -17,6 +17,7 @@
 #include "lighting\lightmanager.h"
 #include "shader\shadermanager.h"
 #include "transformation\transform.h"
+#include "utility\worldinformation.h"
 #include "scene.h"
 #include <iostream>
 
@@ -156,6 +157,20 @@ namespace geeL {
 	void RenderScene::bindSkybox(Shader& shader) const {
 		if (skybox != nullptr)
 			skybox->bind(shader);
+	}
+
+	void RenderScene::addCameraRequester(CameraRequester& requester) {
+		cameraRequester.push_back(&requester);
+		requester.updateCamera(*camera);
+	}
+
+	void RenderScene::setCamera(Camera& camera) {
+		this->camera = &camera;
+
+		for (auto it = cameraRequester.begin(); it != cameraRequester.end(); it++) {
+			CameraRequester& requester = **it;
+			requester.updateCamera(*this->camera);
+		}
 	}
 
 	const Camera& RenderScene::getCamera() const {

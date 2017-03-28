@@ -12,9 +12,9 @@ using namespace std;
 
 namespace geeL {
 
-	VolumetricLight::VolumetricLight(const RenderScene& scene, const SpotLight& light, float density, float minDistance, unsigned int samples)
+	VolumetricLight::VolumetricLight(const SpotLight& light, float density, float minDistance, unsigned int samples)
 		: PostProcessingEffect("renderer/postprocessing/volumetriclight.frag"), 
-			scene(scene), light(light), density(density), minDistance(minDistance), samples(samples) {}
+			light(light), density(density), minDistance(minDistance), samples(samples) {}
 
 
 	void VolumetricLight::init(ScreenQuad& screen, const FrameBufferInformation& info) {
@@ -46,19 +46,15 @@ namespace geeL {
 	}
 
 	void VolumetricLight::bindValues() {
-		shader.setMat4(invViewLocation, *inverseView);
-		shader.setMat4(projectionLocation, *projectionMatrix);
+		shader.setMat4(invViewLocation, camera->getInverseViewMatrix());
+		shader.setMat4(projectionLocation, camera->getProjectionMatrix());
 
-		light.bind(scene.getCamera(), shader, "light.", ShaderTransformSpace::View);
+		light.bind(*camera, shader, "light.", ShaderTransformSpace::View);
 	}
 
 
-	void VolumetricLight::addWorldInformation(map<WorldMaps, unsigned int> maps, map<WorldMatrices, const mat4*> matrices,
-		map<WorldVectors, const vec3*> vectors) {
-
+	void VolumetricLight::addWorldInformation(map<WorldMaps, unsigned int> maps) {
 		addBuffer( { maps[WorldMaps::PositionDepth] });
-		inverseView = matrices[WorldMatrices::InverseView];
-		projectionMatrix = matrices[WorldMatrices::Projection];
 	}
 
 	unsigned int VolumetricLight::getSampleCount() const {

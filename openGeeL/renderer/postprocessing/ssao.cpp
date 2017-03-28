@@ -86,20 +86,15 @@ namespace geeL {
 	}
 
 	void SSAO::bindValues() {
-		shader.setMat4(projectionLocation, *projectionMatrix);
+		shader.setMat4(projectionLocation, camera->getProjectionMatrix());
 
 		tempBuffer.fill(*this, false);
 	}
 
-	void SSAO::addWorldInformation(map<WorldMaps, unsigned int> maps,
-		map<WorldMatrices, const glm::mat4*> matrices,
-		map<WorldVectors, const glm::vec3*> vectors) {
-
+	void SSAO::addWorldInformation(map<WorldMaps, unsigned int> maps) {
 		//Set instead of add buffers to override the default image buffer since it isn't need for SSAO
 		setBuffer( {maps[WorldMaps::PositionDepth], maps[WorldMaps::NormalMetallic]} );
 		buffers.push_back(noiseTexture.getID());
-
-		projectionMatrix = matrices[WorldMatrices::Projection];
 	}
 
 	float SSAO::getRadius() const {

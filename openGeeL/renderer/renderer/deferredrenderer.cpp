@@ -257,24 +257,24 @@ namespace geeL {
 		linkImageBuffer(effect);
 	}
 
-	void DeferredRenderer::addEffect(PostProcessingEffect& effect, WorldInformationRequester& requester) {
+	void DeferredRenderer::addEffect(PostProcessingEffect& effect, WorldMapRequester& requester) {
 		effects.push_back(&effect);
 		linkImageBuffer(effect);
 
 		addRequester(requester);
 	}
 
-	void DeferredRenderer::addEffect(PostProcessingEffect& effect, list<WorldInformationRequester*> requester) {
+	void DeferredRenderer::addEffect(PostProcessingEffect& effect, list<WorldMapRequester*> requester) {
 		effects.push_back(&effect);
 		linkImageBuffer(effect);
 
 		for (auto it = requester.begin(); it != requester.end(); it++) {
-			WorldInformationRequester* req = *it;
+			WorldMapRequester* req = *it;
 			addRequester(*req);
 		}
 	}
 
-	void DeferredRenderer::addRequester(WorldInformationRequester& requester) {
+	void DeferredRenderer::addRequester(WorldMapRequester& requester) {
 		this->requester.push_back(&requester);
 	}
 
@@ -285,20 +285,9 @@ namespace geeL {
 		worldMaps[WorldMaps::PositionDepth]    = gBuffer.positionDepth;
 		worldMaps[WorldMaps::NormalMetallic]   = gBuffer.normalMet;
 
-		//ISSUE: If scene camera changes, everything is fucked
-		map<WorldMatrices, const mat4*> worldMatrices;
-		worldMatrices[WorldMatrices::View]        = &scene->getCamera().getViewMatrix();
-		worldMatrices[WorldMatrices::Projection]  = &scene->getCamera().getProjectionMatrix();
-		worldMatrices[WorldMatrices::InverseView] = &scene->getCamera().getInverseViewMatrix();
-
-		map<WorldVectors, const vec3*> worldVectors;
-		worldVectors[WorldVectors::CameraPosition]  = &scene->getCamera().getPosition();
-		worldVectors[WorldVectors::CameraDirection] = &scene->getCamera().getDirection();
-		worldVectors[WorldVectors::OriginView]      = &scene->getCamera().GetOriginInViewSpace();
-
 		for (auto it = requester.begin(); it != requester.end(); it++) {
-			WorldInformationRequester* req = *it;
-			req->addWorldInformation(worldMaps, worldMatrices, worldVectors);
+			WorldMapRequester* req = *it;
+			req->addWorldInformation(worldMaps);
 		}
 	}
 

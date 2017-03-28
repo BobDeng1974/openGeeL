@@ -3,6 +3,7 @@
 
 #include <vec3.hpp>
 #include "../utility/framebuffer.h"
+#include "../utility/worldinformation.h"
 #include "postprocessing.h"
 
 namespace geeL {
@@ -12,10 +13,10 @@ namespace geeL {
 	class RenderScene;
 
 	//God ray post effect that draws outgoing light shafts into the scene
-	class GodRay : public PostProcessingEffect {
+	class GodRay : public PostProcessingEffect, public CameraRequester {
 
 	public:
-		GodRay(const RenderScene& scene, glm::vec3 lightPosition, unsigned int samples = 20.f);
+		GodRay(glm::vec3 lightPosition, unsigned int samples = 20.f);
 
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
@@ -32,7 +33,6 @@ namespace geeL {
 	private:
 		unsigned int samples;
 		glm::vec3 lightPosition;
-		const RenderScene& scene;
 
 		ShaderLocation lightLocation;
 		ShaderLocation lightViewLocation;

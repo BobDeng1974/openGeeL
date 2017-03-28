@@ -54,22 +54,20 @@ namespace geeL {
 
 
 	//Two pass gaussian blur that blurs depending on depth differences and scaled with given factor
-	class BilateralDepthFilter : public BilateralFilter, public WorldInformationRequester {
+	class BilateralDepthFilter : public BilateralFilter, public WorldMapRequester {
 
 	public:
 		BilateralDepthFilter(unsigned int strength = 1, float sigma = 0.5f);
 
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
-		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
-			std::map<WorldMatrices, const glm::mat4*> matrices,
-			std::map<WorldVectors, const glm::vec3*> vectors);
+		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps);
 
 	};
 
 
 	//Two pass gaussian blur that blurs depending sobel edge detection
-	class SobelBlur : public GaussianBlur, public WorldInformationRequester {
+	class SobelBlur : public GaussianBlur, public WorldMapRequester {
 
 	public:
 		SobelBlur(SobelFilter& sobel, unsigned int strength = 1);
@@ -77,9 +75,7 @@ namespace geeL {
 		virtual void setBuffer(unsigned int buffer);
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
-		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
-			std::map<WorldMatrices, const glm::mat4*> matrices,
-			std::map<WorldVectors, const glm::vec3*> vectors);
+		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps);
 
 	protected:
 		virtual void bindValues();

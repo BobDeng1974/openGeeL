@@ -4,6 +4,7 @@
 #include <vec3.hpp>
 #include <mat4x4.hpp>
 #include <map>
+#include "../cameras/camera.h"
 
 namespace geeL {
 
@@ -14,38 +15,34 @@ namespace geeL {
 		NormalMetallic = 4,
 	};
 
-	enum class WorldMatrices {
-		None = 0,
-		View = 1,
-		Projection = 2,
-		InverseView = 3
-	};
 
-	enum class WorldVectors {
-		None = 0,
-		CameraPosition = 1,
-		CameraDirection = 2,
-		OriginView = 4
-	};
-
-
-	//Object that can request and is dependend on world information 
-	class WorldInformationRequester {
+	//Object that can request world maps
+	class WorldMapRequester {
 
 	public:
-		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
-			std::map<WorldMatrices, const glm::mat4*> matrices,
-			std::map<WorldVectors, const glm::vec3*> vectors) = 0;
+		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps) = 0;
 
 	};
-
 
 	//Object that can provide world information to linked requesters
-	class WorldInformationProvider {
+	class WorldMapProvider {
 
 	public:
-		virtual void addRequester(WorldInformationRequester& requester) = 0;
+		virtual void addRequester(WorldMapRequester& requester) = 0;
 		virtual void linkInformation() const = 0;
+
+	};
+
+	//Object that can request current scene camera
+	class CameraRequester {
+
+	public:
+		virtual void updateCamera(Camera& camera) {
+			this->camera = &camera;
+		}
+
+	protected:
+		Camera* camera = nullptr;
 
 	};
 
@@ -55,25 +52,10 @@ namespace geeL {
 		return static_cast<WorldMaps>(static_cast<int>(a) | static_cast<int>(b));
 	}
 
-	inline WorldMatrices operator|(WorldMatrices a, WorldMatrices b) {
-		return static_cast<WorldMatrices>(static_cast<int>(a) | static_cast<int>(b));
-	}
-
-	inline WorldVectors operator|(WorldVectors a, WorldVectors b) {
-		return static_cast<WorldVectors>(static_cast<int>(a) | static_cast<int>(b));
-	}
-
 	inline WorldMaps operator&(WorldMaps a, WorldMaps b) {
 		return static_cast<WorldMaps>(static_cast<int>(a) & static_cast<int>(b));
 	}
 
-	inline WorldMatrices operator&(WorldMatrices a, WorldMatrices b) {
-		return static_cast<WorldMatrices>(static_cast<int>(a) & static_cast<int>(b));
-	}
-
-	inline WorldVectors operator&(WorldVectors a, WorldVectors b) {
-		return static_cast<WorldVectors>(static_cast<int>(a) & static_cast<int>(b));
-	}
 }
 
 #endif

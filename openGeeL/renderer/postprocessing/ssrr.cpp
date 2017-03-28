@@ -24,15 +24,12 @@ namespace geeL {
 	}
 
 	void SSRR::bindValues() {
-		shader.setMat4(projectionLocation, *projectionMatrix);
+		shader.setMat4(projectionLocation, camera->getProjectionMatrix());
 	}
 
-	void SSRR::addWorldInformation(map<WorldMaps, unsigned int> maps, map<WorldMatrices,
-		const glm::mat4*> matrices,
-		map<WorldVectors, const glm::vec3*> vectors) {
-
-		addBuffer({ maps[WorldMaps::DiffuseRoughness], maps[WorldMaps::PositionDepth], maps[WorldMaps::NormalMetallic] });
-		projectionMatrix = matrices[WorldMatrices::Projection];
+	void SSRR::addWorldInformation(map<WorldMaps, unsigned int> maps) {
+		addBuffer({ maps[WorldMaps::DiffuseRoughness], 
+			maps[WorldMaps::PositionDepth], maps[WorldMaps::NormalMetallic] });
 	}
 
 }

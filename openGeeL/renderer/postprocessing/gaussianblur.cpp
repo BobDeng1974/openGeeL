@@ -119,10 +119,7 @@ namespace geeL {
 	}
 
 
-	void BilateralDepthFilter::addWorldInformation(map<WorldMaps, unsigned int> maps,
-		map<WorldMatrices, const glm::mat4*> matrices,
-		map<WorldVectors, const glm::vec3*> vectors) {
-
+	void BilateralDepthFilter::addWorldInformation(map<WorldMaps, unsigned int> maps) {
 		addBuffer( { maps[WorldMaps::PositionDepth] });
 	}
 
@@ -164,10 +161,7 @@ namespace geeL {
 		screen->draw();
 	}
 
-	void  SobelBlur::addWorldInformation(map<WorldMaps, unsigned int> maps,
-		map<WorldMatrices, const glm::mat4*> matrices,
-		map<WorldVectors, const glm::vec3*> vectors) {
-
+	void  SobelBlur::addWorldInformation(map<WorldMaps, unsigned int> maps) {
 		sobel.setBuffer({ maps[WorldMaps::PositionDepth] });
 	}
 }

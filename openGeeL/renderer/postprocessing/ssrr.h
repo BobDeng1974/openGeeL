@@ -7,22 +7,19 @@
 namespace geeL {
 
 	//Screen Space Raycasted Reflections post effect
-	class SSRR : public PostProcessingEffect, public WorldInformationRequester {
+	class SSRR : public PostProcessingEffect, public WorldMapRequester, public CameraRequester {
 
 	public:
 		SSRR();
 
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
-		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
-			std::map<WorldMatrices, const glm::mat4*> matrices,
-			std::map<WorldVectors, const glm::vec3*> vectors);
+		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps);
 
 	protected:
 		virtual void bindValues();
 
 	private:
-		const glm::mat4x4* projectionMatrix;
 		ShaderLocation projectionLocation;
 
 	};

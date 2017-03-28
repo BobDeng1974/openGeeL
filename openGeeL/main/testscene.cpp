@@ -261,6 +261,7 @@ void draw() {
 	scene.setSkybox(skybox);
 	
 	renderer.setScene(scene);
+	scene.addCameraRequester(ssao);
 
 	TestScene testScene = TestScene(materialFactory, meshFactory, 
 		lightManager, shaderManager, scene, transFactory, &physics);
@@ -280,7 +281,7 @@ void draw() {
 	renderer.addGUIRenderer(&gui);
 	
 	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
-	GodRay& ray = GodRay(scene, glm::vec3(-40, 30, -50), 15);
+	GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 15);
 	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
 
 	GaussianBlur& blur4 = GaussianBlur();
@@ -298,7 +299,7 @@ void draw() {
 
 	SobelFilter sobel = SobelFilter(15);
 	SobelBlur sobelBlur = SobelBlur(sobel);
-	VolumetricLight vol = VolumetricLight(scene, *spotLight, 0.3f, 1.f, 160);
+	VolumetricLight vol = VolumetricLight(*spotLight, 0.3f, 1.f, 160);
 	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.4f);
 
 	ColorCorrection colorCorrect = ColorCorrection();
@@ -308,6 +309,7 @@ void draw() {
 
 	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
 	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
+	scene.addCameraRequester(vol);
 	postLister.add(volSmooth, lightSnippet);
 
 	//renderer.addEffect(bloom);
@@ -315,9 +317,11 @@ void draw() {
 
 	//GodRaySnippet godRaySnippet = GodRaySnippet(ray);
 	//renderer.addEffect(raySmooth);
+	//scene.addCameraRequester(ray);
 	//postLister.add(raySmooth, godRaySnippet);
 
 	renderer.addEffect(ssrrSmooth, ssrr);
+	scene.addCameraRequester(ssrr);
 
 	//renderer.addEffect(dof, dof);
 	//postLister.add(dof);

@@ -9,17 +9,15 @@ namespace geeL {
 	class RenderScene;
 	class SpotLight;
 
-	class VolumetricLight : public PostProcessingEffect, public WorldInformationRequester {
+	class VolumetricLight : public PostProcessingEffect, public WorldMapRequester, public CameraRequester {
 
 	public:
-		VolumetricLight(const RenderScene& scene, const SpotLight& light, 
+		VolumetricLight(const SpotLight& light, 
 			float density = 1.f, float minDistance = 1.f, unsigned int samples = 30);
 
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
-		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps,
-			std::map<WorldMatrices, const glm::mat4*> matrices,
-			std::map<WorldVectors, const glm::vec3*> vectors) override;
+		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps) override;
 
 		unsigned int getSampleCount() const;
 		void setSampleCount(unsigned int samples);
@@ -30,7 +28,6 @@ namespace geeL {
 		float getMinDistance() const;
 		void setMinDistance(float distance);
 
-
 	protected:
 		virtual void bindValues();
 
@@ -38,10 +35,7 @@ namespace geeL {
 		unsigned int samples;
 		float density;
 		float minDistance;
-		const RenderScene& scene;
 		const SpotLight& light;
-		const glm::mat4* inverseView;
-		const glm::mat4x4* projectionMatrix;
 
 		ShaderLocation projectionLocation;
 		ShaderLocation invViewLocation;

@@ -4,11 +4,13 @@
 #include <vec3.hpp>
 #include <functional>
 #include <map>
+#include <list>
 #include <vector>
 
 namespace geeL {
 
 	class Camera;
+	class CameraRequester;
 	class LightManager;
 	class Skybox;
 	class Shader;
@@ -66,6 +68,8 @@ namespace geeL {
 
 		void setPhysics(Physics* physics);
 
+		void addCameraRequester(CameraRequester& requester);
+		void setCamera(Camera& camera);
 		const Camera& getCamera() const;
 		Camera& getCamera();
 
@@ -91,6 +95,8 @@ namespace geeL {
 		MeshFactory& meshFactory;
 		ShaderInformationLinker& shaderLinker;
 		MaterialFactory& materialFactory;
+
+		std::list<CameraRequester*> cameraRequester;
 
 		//Objects are indexed by their used shaders (and their transforms id) to allow grouped drawing and 
 		//therefore no unnecessary shader programm switching. Objects with multiple materials are linked to

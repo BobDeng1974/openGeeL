@@ -88,10 +88,7 @@ namespace geeL {
 		bindToScreen();
 	}
 
-	void DepthOfFieldBlurred::addWorldInformation(map<WorldMaps, unsigned int> maps,
-		map<WorldMatrices, const glm::mat4*> matrices,
-		map<WorldVectors, const glm::vec3*> vectors) {
-
+	void DepthOfFieldBlurred::addWorldInformation(map<WorldMaps, unsigned int> maps) {
 		addBuffer( {maps[WorldMaps::PositionDepth]} );
 		blur.setBuffer({ buffers.front(), *next(buffers.begin()) });
 	}
