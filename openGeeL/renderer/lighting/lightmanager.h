@@ -52,7 +52,7 @@ namespace geeL {
 
 		//Add and create directional light
 		DirectionalLight& addDirectionalLight(const Camera& camera, Transform& transform, glm::vec3 diffuse,
-			float shadowBias = 0.00001f);
+			float shadowBias = 0.00002f);
 	
 		//Add and create point light
 		PointLight& addPointLight(Transform& transform, glm::vec3 diffuse,

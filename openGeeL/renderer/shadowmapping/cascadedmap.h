@@ -10,7 +10,6 @@
 namespace geeL {
 
 	struct CascadedMap {
-		unsigned int id;
 		float cascadeEnd;
 		float cascadeEndClip;
 
@@ -60,6 +59,8 @@ namespace geeL {
 		virtual unsigned int getID() const;
 
 	private:
+		unsigned int ID;
+
 		CascadedMap shadowMaps[MAPCOUNT];
 
 		void computeLightTransforms(const Camera& camera);

@@ -19,34 +19,29 @@ namespace geeL {
 		float shadowBias, unsigned int width, unsigned int height)
 			: CascadedShadowMap(light, shadowBias, width, height) {
 		
-		unsigned int IDs[MAPCOUNT];
-		glGenTextures(MAPCOUNT, IDs);
-		for (unsigned int i = 0; i < MAPCOUNT; i++) {
-			glBindTexture(GL_TEXTURE_2D, IDs[i]);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 
-				0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		glGenTextures(1, &ID);
+		glBindTexture(GL_TEXTURE_2D, ID);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 
+			0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-			GLfloat borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-			glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-		}
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		GLfloat borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+		
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 		
 		glGenFramebuffers(1, &fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, IDs[0], 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ID, 0);
 
 		//Disable writing to color buffer
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-		for (unsigned int i = 0; i < MAPCOUNT; i++)
-			shadowMaps[i].id = IDs[i];
 
 		setCascades(camera);
 	}
@@ -78,13 +73,11 @@ namespace geeL {
 	}
 
 	void CascadedDirectionalShadowMap::bindMap(Shader& shader, const std::string& name) {
-		for (unsigned int i = 0; i < MAPCOUNT; i++)
-			shader.addMap(shadowMaps[i].id, name + "s[" + std::to_string(i) + "]");
+		shader.addMap(ID, name);
 	}
 
 	void CascadedDirectionalShadowMap::removeMap(Shader& shader) {
-		for (unsigned int i = 0; i < MAPCOUNT; i++)
-			shader.removeMap(shadowMaps[i].id);
+		shader.removeMap(ID);
 	}
 
 
@@ -93,24 +86,30 @@ namespace geeL {
 
 		computeLightTransforms(camera);
 
-		glViewport(0, 0, width, height);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ID, 0);
+		glClear(GL_DEPTH_BUFFER_BIT);
 
 		shader.use();
+		unsigned int hWidth = width / 2;
+		unsigned int hHeight = height / 2;
 		for (unsigned int i = 0; i < MAPCOUNT; i++) {
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMaps[i].id, 0);
-			glClear(GL_DEPTH_BUFFER_BIT);
+			int x = i % 2;
+			int y = i / 2;
 
+			glViewport(x * hWidth, y * hHeight, hWidth, hHeight);
 			shader.setMat4("lightTransform", shadowMaps[i].lightTransform);
 			renderCall(shader);
 		}
-
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 
 	void CascadedDirectionalShadowMap::computeLightTransforms(const Camera& camera) {
+
+		glm::mat4 lightView = glm::lookAt(camera.transform.getPosition(), camera.transform.getPosition()-light.transform.getForwardDirection(),
+			vec3(0.f, 1.f, 0.f));
 
 		float near = camera.getNearPlane();
 		for (unsigned int i = 0; i < MAPCOUNT; i++) {
@@ -123,9 +122,6 @@ namespace geeL {
 			float maxY = std::numeric_limits<float>::min();
 			float minZ = std::numeric_limits<float>::max();
 			float maxZ = std::numeric_limits<float>::min();
-
-			glm::mat4 lightView = glm::lookAt(light.transform.getForwardDirection() * (far * 0.5f),
-				vec3(0.f), vec3(0.f, 1.f, 0.f));
 
 			std::vector<glm::vec3>&& borders = camera.getViewBorders(near, far);
 			for (auto it = borders.begin(); it != borders.end(); it++) {
@@ -141,7 +137,7 @@ namespace geeL {
 				maxZ = std::max(maxZ, border.z);
 			}
 
-			glm::mat4&& lightProj = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
+			glm::mat4&& lightProj = glm::ortho(-maxX, -minX, -maxY, -minY, minZ, maxZ);
 			shadowMaps[i].lightTransform = lightProj * lightView;
 
 			near = far;
@@ -149,7 +145,7 @@ namespace geeL {
 	}
 
 	unsigned int CascadedDirectionalShadowMap::getID() const {
-		return shadowMaps[0].id;
+		return ID;
 	}
 
 }

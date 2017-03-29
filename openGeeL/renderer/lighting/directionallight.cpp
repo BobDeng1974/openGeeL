@@ -33,7 +33,6 @@ namespace geeL {
 				shader.setVector3(name + "direction", transform.getForwardDirection());
 				break;
 		}
-		
 	}
 
 	float DirectionalLight::getIntensity(glm::vec3 point) const {

@@ -333,10 +333,9 @@ namespace geeL {
 
 
 	void SimpleDirectionalLightMap::computeLightTransform() {
-		float far = 50.f;
-		float a = width / 50.f;
-		mat4 projection = ortho(-a, a, -a, a, 1.0f, 2 * far);
-		mat4 view = lookAt(light.transform.getForwardDirection() * far, vec3(0.f), vec3(0.f, 1.f, 0.f));
+		float a = width / 10.f;
+		mat4 projection = ortho(-a, a, -a, a, -farPlane, farPlane);
+		mat4 view = lookAt(vec3(0.f), -light.transform.getForwardDirection(), vec3(0.f, 1.f, 0.f));
 
 		lightTransform = projection * view;
 	}

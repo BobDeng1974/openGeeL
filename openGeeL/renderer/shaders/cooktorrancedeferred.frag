@@ -30,7 +30,7 @@ struct SpotLight {
 const int DIRECTIONAL_SHADOWMAP_COUNT = 3;
 
 struct DirectionalLight {
-	sampler2D shadowMaps[DIRECTIONAL_SHADOWMAP_COUNT];
+	sampler2D shadowMap;
 	float cascadeEndClip[DIRECTIONAL_SHADOWMAP_COUNT];
 	mat4 lightTransforms[DIRECTIONAL_SHADOWMAP_COUNT];
 
@@ -457,9 +457,13 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 
 float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 
 	int smIndex = 0;
+	float xOffset = 0;
+	float yOffset = 0;
 	float clipDepth = texture(gPositionDepth, textureCoordinates).w;
 	for(int k = 0; k < DIRECTIONAL_SHADOWMAP_COUNT; k++) {
 		if(clipDepth < directionalLights[i].cascadeEndClip[k]) {
+			xOffset = mod(float(k), 2.f);
+			yOffset = floor(float(k) / 2.f);
 			smIndex = k;
 			break;
 		}
@@ -468,6 +472,12 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	vec4 posLightSpace = directionalLights[i].lightTransforms[smIndex] * inverseView * vec4(fragPosition, 1.f);
 	vec3 coords = posLightSpace.xyz / posLightSpace.w;
 	coords = coords * 0.5f + 0.5f;
+
+	//Translate texture coordinates according to current sub shadow map
+	coords.x *= 0.5f;
+	coords.y *= 0.5f;
+	coords.x += xOffset * 0.5f;
+	coords.y += yOffset * 0.5f;
 
 	//Don't draw shadow when outside of farPlane region.
     if(coords.z > 1.f)
@@ -478,12 +488,12 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 		float curDepth = coords.z - bias;
 
 		float shadow = 0.f;
-		vec2 texelSize = 0.8f / textureSize(directionalLights[i].shadowMaps[smIndex], 0);
+		vec2 texelSize = 0.8f / textureSize(directionalLights[i].shadowMap, 0);
 		int samples = 8;
 		for(int j = 0; j < samples; j++) {
 			int index = int(20.0f * random(floor(fragPosition.xyz * 1000.0f), j)) % 20;
 
-			float depth = texture(directionalLights[i].shadowMaps[smIndex], coords.xy + sampleDirections2D[index] * texelSize).r;
+			float depth = texture(directionalLights[i].shadowMap, coords.xy + sampleDirections2D[index] * texelSize).r;
 			shadow += step(depth, curDepth - bias);      
 		}    
 	
