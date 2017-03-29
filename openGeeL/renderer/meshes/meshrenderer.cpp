@@ -77,14 +77,10 @@ namespace geeL{
 	}
 
 	void MeshRenderer::drawExclusive(const Shader& shader) const {
-		cullFaces();
-
 		shader.use();
 		shader.setMat4("model", transform.getMatrix());
 
 		model->draw();
-
-		uncullFaces();
 	}
 	
 
@@ -130,8 +126,10 @@ namespace geeL{
 		switch (faceCulling) {
 			case CullingMode::cullNone:
 				glDisable(GL_CULL_FACE);
+				break;
 			case CullingMode::cullBack:
 				glCullFace(GL_BACK);
+				break;
 		}
 	}
 
@@ -139,8 +137,10 @@ namespace geeL{
 		switch (faceCulling) {
 			case CullingMode::cullNone:
 				glEnable(GL_CULL_FACE);
+				break;
 			case CullingMode::cullBack:
 				glCullFace(GL_FRONT);
+				break;
 		}
 	}
 

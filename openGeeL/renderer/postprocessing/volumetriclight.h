@@ -17,7 +17,7 @@ namespace geeL {
 
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
-		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps) override;
+		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps);
 
 		unsigned int getSampleCount() const;
 		void setSampleCount(unsigned int samples);

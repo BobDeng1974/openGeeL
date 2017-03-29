@@ -69,15 +69,11 @@ namespace geeL {
 	}
 
 	void SkinnedMeshRenderer::draw(const Shader& shader) const {
-		cullFaces();
-
 		//TODO: Load relevant bone transforms into materials
 		shader.use();
 		shader.setMat4("model", transform.getMatrix());
 
 		skinnedModel->draw();
-
-		uncullFaces();
 	}
 
 	Skeleton& SkinnedMeshRenderer::getSkeleton() {

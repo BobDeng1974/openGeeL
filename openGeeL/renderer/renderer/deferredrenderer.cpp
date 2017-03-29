@@ -135,7 +135,9 @@ namespace geeL {
 
 			//Hacky: Read camera depth from geometry pass and write it into the scene
 			scene->forwardScreenInfo(gBuffer.screenInfo);
+			glCullFace(GL_BACK);
 			scene->lightManager.drawShadowmaps(*scene);
+			glCullFace(GL_FRONT);
 			renderTime.update(RenderPass::Shadow);
 
 			//SSAO pass

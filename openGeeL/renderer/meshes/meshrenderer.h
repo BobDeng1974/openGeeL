@@ -2,7 +2,7 @@
 #define MESHRENDERER_H
 
 #include <functional>
-#include <vector>
+#include <list>
 #include <map>
 #include "../sceneobject.h"
 #include "../materials/material.h"
@@ -51,7 +51,8 @@ namespace geeL {
 		//are linked to given shader
 		virtual void draw(SceneShader& shader) const;
 
-		//Draw all meshes exclusively with the given shader. No material properties will be used
+		//Draw all meshes exclusively with the given shader. No material properties will be used and face
+		//culling options of objects won't be forced
 		virtual void drawExclusive(const Shader& shader) const;
 
 		//Customize material of given mesh (If it is actually part of this mesh renderer)

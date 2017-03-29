@@ -48,6 +48,7 @@ namespace geeL {
 		DLightBinding d = DLightBinding(light, index, dlName);
 		dirLights.push_back(std::move(d));
 
+		//SimpleDirectionalLightMap* map = new SimpleDirectionalLightMap(*light, shadowBias, 100.f);
 		CascadedDirectionalShadowMap* map = new CascadedDirectionalShadowMap(*light, camera, shadowBias, 512, 512);
 		light->setShadowMap(*map);
 

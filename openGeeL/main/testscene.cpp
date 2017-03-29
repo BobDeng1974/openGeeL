@@ -105,12 +105,8 @@ namespace {
 		TestScene(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
 			ShaderInformationLinker& shaderManager, RenderScene& scene, TransformFactory& transformFactory, Physics* physics)
 				: SceneControlObject(scene),
-					materialFactory(materialFactory),
-					meshFactory(meshFactory), 
-					lightManager(lightManager),
-					shaderManager(shaderManager),
-					transformFactory(transformFactory),
-					physics(physics) {}
+					materialFactory(materialFactory), meshFactory(meshFactory), lightManager(lightManager),
+					shaderManager(shaderManager), transformFactory(transformFactory), physics(physics) {}
 
 
 		virtual void init() {
@@ -168,7 +164,7 @@ namespace {
 			});
 
 
-			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 5.f, 4.f), vec3(0.f), vec3(1.f, 1.f, 1.f));
+			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 2.f, 4.f), vec3(0.f), vec3(1.f, 1.f, 1.f));
 			MeshRenderer& sphere1 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/sphere.obj"),
 				meshTransform4, CullingMode::cullFront, "Sphere");
 			scene.AddMeshRenderer(sphere1);

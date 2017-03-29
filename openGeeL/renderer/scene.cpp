@@ -19,7 +19,6 @@
 #include "transformation\transform.h"
 #include "utility\worldinformation.h"
 #include "scene.h"
-#include <iostream>
 
 using namespace std;
 
@@ -74,7 +73,6 @@ namespace geeL {
 
 		SceneShader* shader = &materialFactory.getDeferredShader();
 		shaderLinker.dynamicBind(*this, *shader);
-
 		iterRenderObjects(*shader, [&](const MeshRenderer& object) {
 			if (object.isActive())
 				object.draw(materialFactory.getDeferredShader());
@@ -196,7 +194,7 @@ namespace geeL {
 
 	}
 
-	void RenderScene::AddSkinnedMeshRenderer(SkinnedMeshRenderer& renderer) {
+	void RenderScene::AddMeshRenderer(SkinnedMeshRenderer& renderer) {
 		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
 			//Init shader if it hasn't been added to the scene before
 			auto it = skinnedObjects.find(&shader);
@@ -225,7 +223,7 @@ namespace geeL {
 
 	}
 
-	void RenderScene::RemoveSkinnedMeshRenderer(SkinnedMeshRenderer& renderer) {
+	void RenderScene::RemoveMeshRenderer(SkinnedMeshRenderer& renderer) {
 		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
 			auto shaders = skinnedObjects.find(&shader);
 			if (shaders != skinnedObjects.end()) {

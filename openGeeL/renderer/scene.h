@@ -5,7 +5,6 @@
 #include <functional>
 #include <map>
 #include <list>
-#include <vector>
 
 namespace geeL {
 
@@ -70,14 +69,15 @@ namespace geeL {
 
 		void addCameraRequester(CameraRequester& requester);
 		void setCamera(Camera& camera);
+
 		const Camera& getCamera() const;
 		Camera& getCamera();
 
 		void AddMeshRenderer(MeshRenderer& renderer);
-		void AddSkinnedMeshRenderer(SkinnedMeshRenderer& renderer);
+		void AddMeshRenderer(SkinnedMeshRenderer& renderer);
 
 		void RemoveMeshRenderer(MeshRenderer& renderer);
-		void RemoveSkinnedMeshRenderer(SkinnedMeshRenderer& renderer);
+		void RemoveMeshRenderer(SkinnedMeshRenderer& renderer);
 
 		void iterAllObjects(std::function<void(MeshRenderer&)> function);
 

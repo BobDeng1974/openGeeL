@@ -52,15 +52,15 @@ namespace geeL {
 
 		//Add and create directional light
 		DirectionalLight& addDirectionalLight(const Camera& camera, Transform& transform, glm::vec3 diffuse,
-			float shadowBias = 0.00002f);
+			float shadowBias = 0.00001f);
 	
 		//Add and create point light
 		PointLight& addPointLight(Transform& transform, glm::vec3 diffuse,
-			float shadowBias = 0.001f);
+			float shadowBias = 0.0001f);
 	
 		//Add and create spotlight
 		SpotLight& addSpotlight(Transform& transform, glm::vec3 diffuse,
-			float angle, float outerAngle, float shadowBias = 0.001f);
+			float angle, float outerAngle, float shadowBias = 0.0001f);
 
 		void removeLight(DirectionalLight& light);
 		void removeLight(PointLight& light);
