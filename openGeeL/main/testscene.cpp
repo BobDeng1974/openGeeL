@@ -62,6 +62,7 @@
 #include "../renderer/texturing/envmap.h"
 #include "../renderer/cubemapping/envcubemap.h"
 #include "../renderer/cubemapping/irrmap.h"
+#include "../renderer/cubemapping/prefilterEnvmap.h"
 #include "../renderer/cubemapping/skybox.h"
 #include "../renderer/scene.h"
 #include "../renderer/utility/rendertime.h"
@@ -147,7 +148,7 @@ namespace {
 			if (physics != nullptr) physics->addPlane(vec3(0.f, 1.f, 0.f), meshTransform2, RigidbodyProperties(0.f, false));
 
 			plane.iterateMaterials([&](MaterialContainer& container) {
-				container.setFloatValue("Roughness", 0.9f);
+				container.setFloatValue("Roughness", 0.1f);
 				container.setFloatValue("Metallic", 0.f);
 				container.setVectorValue("Color", vec3(0.4f, 0.4f, 0.4f));
 			});
@@ -252,8 +253,9 @@ void draw() {
 	EnvironmentMap& envMap = materialFactory.CreateEnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
 	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(envMap, 1024);
 	IrradianceMap irrMap = IrradianceMap(envCubeMap);
+	PrefilteredEnvironmentMap filMap = PrefilteredEnvironmentMap(envCubeMap);
 
-	Skybox skybox = Skybox(irrMap);
+	Skybox skybox = Skybox(filMap);
 	scene.setSkybox(skybox);
 	
 	renderer.setScene(scene);

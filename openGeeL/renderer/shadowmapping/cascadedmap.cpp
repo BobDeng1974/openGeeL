@@ -31,7 +31,6 @@ namespace geeL {
 		GLfloat borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 		
-
 		glBindTexture(GL_TEXTURE_2D, 0);
 		
 		glGenFramebuffers(1, &fbo);

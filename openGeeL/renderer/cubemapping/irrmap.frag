@@ -9,9 +9,9 @@ in vec3 localPos;
 uniform samplerCube environmentMap;
 
 void main() {		
+	vec3 irradiance = vec3(0.f);
+
     vec3 normal = normalize(localPos);
-    vec3 irradiance = vec3(0.f);
-    
 	vec3 right = cross(vec3(0.f, 1.f, 0.f), normal);
 	vec3 up = cross(normal, right);
 

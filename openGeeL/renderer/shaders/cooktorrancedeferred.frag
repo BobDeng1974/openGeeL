@@ -308,6 +308,7 @@ vec2 hammersleySeq(int i, int count) {
 	return vec2(float(i) / float(count), j);
 }
 
+
 vec3 generateSampledVector(float roughness, vec2 samp) {
 	float e1 = samp.x;
 	float e2 = samp.y;
@@ -329,8 +330,8 @@ vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, float roughn
 
 	float NoV = doto(normalWorld, viewWorld);
 
-	vec3 irradiance = vec3(0.f);
-	int sampleCount = 20;
+	vec3 radiance = vec3(0.f);
+	int sampleCount = 1;
 	for(int i = 0; i < sampleCount; i++) {
 		vec3 sampleVector = generateSampledVector(roughness, hammersleySeq(i, sampleCount));
 		sampleVector = sampleVector.x * right + sampleVector.y * up + sampleVector.z * reflection; //To world coordinates
@@ -348,16 +349,16 @@ vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, float roughn
 
 		float denom =  1.f / (4.f * NoV * doto(halfway, normalWorld) + 0.001f); 
 
-		irradiance += texture(skybox, sampleVector).rgb * geo * fresnel * sinT * denom;
+		radiance += texture(skybox, sampleVector).rgb * geo * fresnel * sinT * denom;
 	}
 	
 	float samp = 1.f / float(sampleCount);
-	irradiance *= samp;
+	radiance *= samp;
 
 	//Factor in pseudo NDF if only one sample is taken
 	float single = step(sampleCount, 2);
-	return irradiance * (1.f - single) + 
-		irradiance * single * (1.f - roughness);
+	return radiance * (1.f - single) + 
+		radiance * single * (1.f - roughness);
 }
 
 
