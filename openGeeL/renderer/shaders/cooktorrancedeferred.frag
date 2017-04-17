@@ -43,7 +43,9 @@ struct DirectionalLight {
 struct Skybox {
 	samplerCube albedo;
 	samplerCube irradiance;
+	samplerCube environment;
 
+	sampler2D integration;
 };
 
 in vec2 textureCoordinates;

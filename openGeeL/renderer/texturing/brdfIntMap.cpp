@@ -56,4 +56,8 @@ namespace geeL {
 	void BRDFIntegrationMap::remove() {
 		glDeleteTextures(1, &id);
 	}
+
+	void BRDFIntegrationMap::add(Shader& shader, std::string name) const {
+		shader.addMap(id, name);
+	}
 }

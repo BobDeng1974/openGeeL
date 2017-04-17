@@ -16,6 +16,8 @@ namespace geeL {
 		PrefilteredEnvironmentMap(const CubeMap& environmentMap, unsigned int resolution = 512);
 		~PrefilteredEnvironmentMap();
 
+		virtual void add(Shader& shader, std::string name) const;
+
 	private:
 		Shader* conversionShader;
 		unsigned int resolution;
