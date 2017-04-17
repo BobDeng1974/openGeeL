@@ -35,6 +35,8 @@ class Shader;
 
 	public:
 		virtual unsigned int getID() const = 0;
+
+		//Remove texture from GPU memory
 		virtual void remove() = 0;
 
 		static void initColorType(ColorType type, int width, int height, unsigned char* image);

@@ -40,6 +40,12 @@ struct DirectionalLight {
 	float bias;
 };
 
+struct Skybox {
+	samplerCube albedo;
+	samplerCube irradiance;
+
+};
+
 in vec2 textureCoordinates;
 in mat3 TBN;
 
@@ -56,8 +62,7 @@ uniform sampler2D gDiffuseSpec;
 uniform sampler2D ssao;
 uniform int useSSAO;
 
-uniform samplerCube skybox;
-uniform samplerCube irradianceMap;
+uniform Skybox skybox;
 
 uniform mat4 inverseView;
 uniform vec3 origin;
@@ -277,7 +282,7 @@ vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal,
 vec3 calculateIndirectDiffuse(vec3 normal, vec3 kd, vec3 albedo, float occlusion) {
 
 	vec4 normalWorld = inverseView * vec4(origin + normal, 1.f);
-	vec3 irradiance = texture(irradianceMap, normalWorld.xyz).rgb;
+	vec3 irradiance = texture(skybox.irradiance, normalWorld.xyz).rgb;
 	float l = length(irradiance);
 	irradiance *= kd;
 
@@ -345,7 +350,7 @@ vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, float roughn
 
 		float denom =  1.f / (4.f * NoV * doto(halfway, normalWorld) + 0.001f); 
 
-		radiance += texture(skybox, sampleVector).rgb * geo * fresnel * sinT * denom;
+		radiance += texture(skybox.albedo, sampleVector).rgb * geo * fresnel * sinT * denom;
 	}
 	
 	float samp = 1.f / float(sampleCount);
