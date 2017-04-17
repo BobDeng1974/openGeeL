@@ -48,6 +48,9 @@ namespace geeL {
 		return id;
 	}
 
+	void SimpleTexture::remove() {
+		glDeleteTextures(1, &id);
+	}
 
 
 	TextureMap::TextureMap(const char* fileName, MapType type, ColorType colorType, WrapMode wrapMode, FilterMode filterMode)

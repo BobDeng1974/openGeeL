@@ -14,6 +14,7 @@ namespace geeL {
 		EnvironmentMap(std::string fileName);
 		
 		virtual unsigned int getID() const;
+		virtual void remove();
 
 	private:
 		unsigned int id;

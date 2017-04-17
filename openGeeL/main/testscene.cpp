@@ -255,7 +255,7 @@ void draw() {
 	IrradianceMap irrMap = IrradianceMap(envCubeMap);
 	PrefilteredEnvironmentMap filMap = PrefilteredEnvironmentMap(envCubeMap);
 
-	Skybox skybox = Skybox(filMap);
+	Skybox skybox = Skybox(irrMap);
 	scene.setSkybox(skybox);
 	
 	renderer.setScene(scene);

@@ -1,6 +1,8 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include <iostream>
+
 namespace geeL {
 
 class Shader;
@@ -33,10 +35,12 @@ class Shader;
 
 	public:
 		virtual unsigned int getID() const = 0;
+		virtual void remove() = 0;
 
 		static void initColorType(ColorType type, int width, int height, unsigned char* image);
 		static void initFilterMode(FilterMode mode);
 		static void initWrapMode(WrapMode mode);
+		
 	};
 
 }

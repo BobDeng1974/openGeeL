@@ -37,4 +37,8 @@ namespace geeL {
 		return id;
 	}
 
+	void EnvironmentMap::remove() {
+		glDeleteTextures(1, &id);
+	}
+
 }

@@ -36,6 +36,7 @@ namespace geeL {
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest);
 
 		virtual unsigned int getID() const;
+		virtual void remove();
 
 	protected:
 		unsigned int id;

@@ -13,6 +13,10 @@ namespace geeL {
 
 	FrameBuffer::FrameBuffer() {}
 
+	FrameBuffer::~FrameBuffer() {
+		remove();
+	}
+
 
 	void FrameBuffer::init(unsigned int width, unsigned int height, int colorBufferAmount,
 		ColorType colorType, FilterMode filterMode, WrapMode wrapMode, bool useDepth) {
@@ -85,6 +89,14 @@ namespace geeL {
 
 	void FrameBuffer::unbind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void FrameBuffer::remove(unsigned int fbo) {
+		glDeleteFramebuffers(1, &fbo);
+	}
+
+	void FrameBuffer::remove() {
+		glDeleteFramebuffers(1, &info.fbo);
 	}
 
 	void FrameBuffer::resetSize(int width, int height) {

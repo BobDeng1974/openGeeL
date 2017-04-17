@@ -117,7 +117,6 @@ void main() {
 		//irradiance += calculateVolumetricLightColor(fragPosition, pointLights[i].position, pointLights[i].diffuse, 0.001f);
 	}
        
-	vec3 ayy = vec3(0.f); 
 	for(int i = 0; i < dlCount; i++) {
         irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
 		irradiance += calculateVolumetricLightColor(fragPosition, directionalLights[i].direction * -100.f, directionalLights[i].diffuse, 150.f);
@@ -129,10 +128,7 @@ void main() {
 	vec3 ambienceDiffuse = calculateIndirectDiffuse(normal, kd, albedo, occlusion); 
 	vec3 ambienceSpecular = calculateIndirectSpecular(normal, viewDirection, albedo, roughness, metallic);
 
-	
-
-
-	color = vec4(irradiance + ambienceDiffuse + ambienceSpecular + ayy, 1.f);
+	color = vec4(irradiance + ambienceDiffuse + ambienceSpecular, 1.f);
 }
 
 //Lighting.....................................................................................................................................

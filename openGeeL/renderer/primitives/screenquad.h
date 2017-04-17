@@ -13,6 +13,9 @@ namespace geeL {
 		virtual void draw() const;
 
 	};
+
+
+	static ScreenQuad SCREENQUAD = ScreenQuad();
 }
 
 #endif

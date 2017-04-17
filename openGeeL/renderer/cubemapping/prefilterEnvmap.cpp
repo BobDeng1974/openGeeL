@@ -72,10 +72,9 @@ namespace geeL {
 		for (unsigned int mip = 0; mip < mipLevels; mip++) {
 
 			float roughness = (float)mip / (float)(mipLevels - 1);
-			conversionShader->setFloat("roughness", 0.2f);
+			conversionShader->setFloat("roughness", roughness);
 
 			unsigned int mipResolution = resolution * std::pow(0.5, mip);
-
 			glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipResolution, mipResolution);
 			glViewport(0, 0, mipResolution, mipResolution);
@@ -91,7 +90,9 @@ namespace geeL {
 		}
  
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
 		FrameBuffer::unbind();
+		FrameBuffer::remove(fbo);
 	}
 
 }

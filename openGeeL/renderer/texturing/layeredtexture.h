@@ -22,6 +22,7 @@ namespace geeL {
 		virtual void draw(const Shader& shader, int texLayer = 0) const;
 
 		virtual unsigned int getID() const;
+		virtual void remove();
 
 	private:
 		std::list<std::pair<std::string, TextureMap*>> textures;

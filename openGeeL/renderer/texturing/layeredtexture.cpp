@@ -60,4 +60,11 @@ namespace geeL {
 		return 0;
 	}
 
+	void LayeredTexture::remove() {
+		for_each(textures.begin(), textures.end(), [&](pair<std::string, TextureMap*> tex) {
+			TextureMap* texture = tex.second;
+
+			texture->remove();
+		});
+	}
 }

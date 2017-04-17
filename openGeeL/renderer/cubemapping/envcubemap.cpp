@@ -79,7 +79,9 @@ namespace geeL {
 		}
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
 		FrameBuffer::unbind();
+		FrameBuffer::remove(fbo);
 	}
 
 }

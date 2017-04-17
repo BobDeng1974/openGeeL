@@ -26,6 +26,7 @@ namespace geeL {
 		FrameBufferInformation info;
 
 		FrameBuffer();
+		~FrameBuffer();
 
 		void init(unsigned int width, unsigned int height, int colorBufferAmount = 1, ColorType colorType = ColorType::RGBA16,
 			FilterMode filterMode = FilterMode::Nearest, WrapMode wrapMode = WrapMode::ClampBorder, bool useDepth = true);
@@ -41,6 +42,10 @@ namespace geeL {
 
 		static void bind(unsigned int fbo);
 		static void unbind();
+
+		static void remove(unsigned int fbo);
+		void remove();
+
 		static void resetSize(int width, int height);
 		void resize(int width, int height);
 
