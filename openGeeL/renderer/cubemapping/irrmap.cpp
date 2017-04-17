@@ -45,6 +45,16 @@ namespace geeL {
 		delete conversionShader;
 	}
 
+	void IrradianceMap::bind(const Shader& shader, std::string name) const {
+		glActiveTexture(GL_TEXTURE1);
+		glUniform1i(glGetUniformLocation(shader.program, name.c_str()), 1);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, environmentMap.getID());
+	}
+
+	void IrradianceMap::add(Shader& shader, std::string name) const {
+		shader.addMap(environmentMap.getID(), name + "albedo", GL_TEXTURE_CUBE_MAP);
+		shader.addMap(id, name + "irradiance", GL_TEXTURE_CUBE_MAP);
+	}
 
 	void IrradianceMap::convertEnvironmentMap() {
 

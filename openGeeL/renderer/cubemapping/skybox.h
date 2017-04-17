@@ -22,8 +22,6 @@ namespace geeL {
 		Skybox(const CubeMap& cubeMap);
 		Skybox(const IrradianceMap& irradianceMap);
 
-		void addIrradianceMap(const CubeMap& irradianceMap);
-
 		void draw(const Camera& camera) const;
 		void bind(Shader& shader) const;
 
@@ -31,7 +29,6 @@ namespace geeL {
 
 	private:
 		const CubeMap& cubeMap;
-		const CubeMap* irradianceMap;
 		Shader shader;
 
 	};
