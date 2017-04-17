@@ -108,7 +108,8 @@ namespace geeL {
 
 	void CascadedDirectionalShadowMap::computeLightTransforms(const Camera& camera) {
 
-		glm::mat4 lightView = glm::lookAt(camera.transform.getPosition(), camera.transform.getPosition()-light.transform.getForwardDirection(),
+		glm::mat4 lightView = glm::lookAt(camera.transform.getPosition(), 
+			camera.transform.getPosition() - light.transform.getForwardDirection(),
 			vec3(0.f, 1.f, 0.f));
 
 		float near = camera.getNearPlane();

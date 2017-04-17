@@ -292,20 +292,32 @@ vec3 calculateIndirectDiffuse(vec3 normal, vec3 kd, vec3 albedo, float occlusion
 	return irradiance * albedo * occlusion;
 }
 
-float random2(vec2 co){
-    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+
+//Hammersley sequence according to
+//http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html
+vec2 hammersleySeq(int i, int count) {
+
+	uint bits = i;
+	bits = (bits << 16u) | (bits >> 16u);
+    bits = ((bits & 0x55555555u) << 1u) | ((bits & 0xAAAAAAAAu) >> 1u);
+    bits = ((bits & 0x33333333u) << 2u) | ((bits & 0xCCCCCCCCu) >> 2u);
+    bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & 0xF0F0F0F0u) >> 4u);
+    bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & 0xFF00FF00u) >> 8u);
+    float j = float(bits) * 2.3283064365386963e-10;
+
+	return vec2(float(i) / float(count), j);
 }
 
-vec3 generateSampledVector(float roughness, float i, float count) {
-	float e1 = i / count;
-	float e2 = random2(vec2(i, count));
+vec3 generateSampledVector(float roughness, vec2 samp) {
+	float e1 = samp.x;
+	float e2 = samp.y;
 
 	float theta = atan((roughness * sqrt(e1)) / sqrt(1.f - e2));
+	//float theta = atan((roughness * roughness * sqrt(e1)) / sqrt(1.f - e2));
 	float phi   = 2.f * PI * e2;
 
 	return vec3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
 }
-
 
 vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, float roughness, float metallic) {
 
@@ -318,9 +330,9 @@ vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, float roughn
 	float NoV = doto(normalWorld, viewWorld);
 
 	vec3 irradiance = vec3(0.f);
-	int sampleCount = 1;
+	int sampleCount = 20;
 	for(int i = 0; i < sampleCount; i++) {
-		vec3 sampleVector = generateSampledVector(roughness, i, sampleCount);
+		vec3 sampleVector = generateSampledVector(roughness, hammersleySeq(i, sampleCount));
 		sampleVector = sampleVector.x * right + sampleVector.y * up + sampleVector.z * reflection; //To world coordinates
 		sampleVector = normalize(sampleVector);
 
