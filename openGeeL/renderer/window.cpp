@@ -60,6 +60,8 @@ namespace geeL {
 	    if (glewInit() != GLEW_OK) {
 			std::cout << "Failed to initialize GLEW" << std::endl;
 	    }
+
+		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	}
 
 	RenderWindow::~RenderWindow() {

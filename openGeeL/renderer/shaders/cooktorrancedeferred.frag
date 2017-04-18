@@ -134,8 +134,8 @@ void main() {
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
 
 	vec3 ambienceDiffuse = calculateIndirectDiffuse(normal, kd, albedo, occlusion); 
-	//vec3 ambienceSpecular = calculateIndirectSpecular(normal, viewDirection, albedo, roughness, metallic);
-	vec3 ambienceSpecular = calculateIndirectSpecularSplitSum(normal, viewDirection, albedo, roughness, metallic);
+	vec3 ambienceSpecular = calculateIndirectSpecular(normal, viewDirection, albedo, roughness, metallic);
+	//vec3 ambienceSpecular = calculateIndirectSpecularSplitSum(normal, viewDirection, albedo, roughness, metallic);
 
 	color = vec4(irradiance + ambienceDiffuse + ambienceSpecular, 1.f);
 }
@@ -333,6 +333,7 @@ vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, float roughn
 	vec3 right = cross(reflection, normalWorld);
 	vec3 up = cross(reflection, right);
 
+	float mipmapHeuristic = 150 * roughness * roughness;
 	float NoV = doto(normalWorld, viewWorld);
 
 	vec3 radiance = vec3(0.f);
@@ -354,7 +355,7 @@ vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, float roughn
 
 		float denom =  1.f / (4.f * NoV * doto(halfway, normalWorld) + 0.001f); 
 
-		radiance += texture(skybox.albedo, sampleVector).rgb * geo * fresnel * sinT * denom;
+		radiance += textureLod(skybox.albedo, sampleVector, mipmapHeuristic).rgb * geo * fresnel * sinT * denom;
 	}
 	
 	float samp = 1.f / float(sampleCount);

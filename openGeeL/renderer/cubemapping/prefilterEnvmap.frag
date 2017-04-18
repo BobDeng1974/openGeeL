@@ -64,7 +64,6 @@ void main() {
 		vec3 L = normalize(2.f * dot(normal, H) * H - normal);
 
 		float NdotL = max(dot(normal, L), 0.f);
-		
 		prefilterColor += textureLod(environmentMap, L, mipmapLevel).rgb * NdotL;
 		weight += NdotL;
 	}
