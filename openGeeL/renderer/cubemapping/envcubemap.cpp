@@ -23,13 +23,12 @@ namespace geeL {
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, 0, GL_RGB16F, 
 				resolution, resolution, 0, GL_RGB, GL_FLOAT, nullptr);
 
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-		//TODO: maybe use framebuffer object here
 		unsigned int captureRBO;
 		glGenFramebuffers(1, &fbo);
 		glGenRenderbuffers(1, &captureRBO);
@@ -40,6 +39,11 @@ namespace geeL {
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
 
 		convertEnvironmentMap();
+
+		//Mip map rendered environment map
+		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
 	EnvironmentCubeMap::~EnvironmentCubeMap() {

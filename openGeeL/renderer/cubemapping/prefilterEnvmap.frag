@@ -54,8 +54,9 @@ vec3 importanceSampleGGX(vec2 samp, vec3 N) {
 void main() {		
 	vec3 prefilterColor = vec3(0.f);
     vec3 normal = normalize(localPos);
+	float mipmapLevel = 100.f * roughness * roughness; //TODO: find better heuristic
 
-	int sampleCount = 2048;
+	int sampleCount = 1024;
 	float weight = 0.f;
 	for(int i = 0; i < sampleCount; i++) {
 		//Generate halfway direction vector and compute reflected direction
@@ -63,7 +64,8 @@ void main() {
 		vec3 L = normalize(2.f * dot(normal, H) * H - normal);
 
 		float NdotL = max(dot(normal, L), 0.f);
-		prefilterColor += texture(environmentMap, L).rgb * NdotL;
+		
+		prefilterColor += textureLod(environmentMap, L, mipmapLevel).rgb * NdotL;
 		weight += NdotL;
 	}
 
