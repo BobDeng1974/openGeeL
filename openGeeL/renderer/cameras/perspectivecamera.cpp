@@ -11,7 +11,7 @@ namespace geeL {
 
 	PerspectiveCamera::PerspectiveCamera(Transform& transform, float speed, float sensitivity,
 		float fov, unsigned int width, unsigned int height, float nearClip, float farClip, std::string name)
-			: Camera(transform, speed, sensitivity, nearClip, farClip, name), FOV(fov), currentFOV(fov), width(float(width)), 
+			: SceneCamera(transform, speed, sensitivity, nearClip, farClip, name), FOV(fov), currentFOV(fov), width(float(width)), 
 				height(float(height)), aspectRatio(float(width) / float(height)) {}
 
 

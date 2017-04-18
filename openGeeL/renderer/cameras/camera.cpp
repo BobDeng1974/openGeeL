@@ -17,21 +17,8 @@ using namespace glm;
 
 namespace geeL {
 
-	Camera::Camera(Transform& transform, float speed, float sensitivity, 
-		float nearClip, float farClip, const std::string& name)
-			: SceneObject(transform, name), speed(speed), sensitivity(sensitivity), 
-				nearClip(nearClip), farClip(farClip) {}
+	Camera::Camera(Transform& transform, const string& name) : SceneObject(transform, name) {}
 
-
-	void Camera::lateUpdate() {
-		SceneObject::lateUpdate();
-
-		viewMatrix = computeViewMatrix();
-		inverseView = inverse(viewMatrix);
-		projectionMatrix = computeProjectionMatrix();
-
-		originViewSpace = TranslateToViewSpace(glm::vec3(0.f, 0.f, 0.f));
-	}
 
 	const mat4& Camera::getViewMatrix() const {
 		return viewMatrix;
@@ -45,16 +32,70 @@ namespace geeL {
 		return projectionMatrix;
 	}
 
-	mat4 Camera::computeViewMatrix() const {
-		return transform.lookAt();
+	void Camera::bind(const SceneShader& shader) const {
+		shader.use();
+
+		shader.setVector3(shader.cameraName + ".position", transform.getPosition());
+		shader.setMat4("view", viewMatrix);
+		shader.setMat4("projection", projectionMatrix);
 	}
 
-	void Camera::handleInput(const InputManager& input) {
+	void Camera::bindPosition(const Shader& shader, std::string name) const {
+		shader.use();
+		shader.setVector3(name, transform.getPosition());
+	}
+
+	void Camera::uniformBind(int uniformID) const {
+
+		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projectionMatrix));
+
+		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(viewMatrix));
+
+		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
+		glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &transform.getPosition());
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	}
+
+
+	SimpleCamera::SimpleCamera(Transform& transform, const std::string& name) : Camera(transform, name) {}
+
+	void SimpleCamera::setViewMatrix(const glm::mat4& view) {
+		viewMatrix = view;
+		inverseView = inverse(viewMatrix);
+	}
+
+	void SimpleCamera::setProjectionMatrix(const glm::mat4& projection) {
+		projectionMatrix = projection;
+	}
+
+
+
+	SceneCamera::SceneCamera(Transform& transform, float speed, float sensitivity, 
+		float nearClip, float farClip, const std::string& name)
+			: Camera(transform, name), speed(speed), sensitivity(sensitivity), 
+				nearClip(nearClip), farClip(farClip) {}
+
+
+	void SceneCamera::lateUpdate() {
+		SceneObject::lateUpdate();
+
+		viewMatrix = computeViewMatrix();
+		inverseView = inverse(viewMatrix);
+		projectionMatrix = computeProjectionMatrix();
+
+		originViewSpace = TranslateToViewSpace(glm::vec3(0.f, 0.f, 0.f));
+	}
+
+	
+
+	void SceneCamera::handleInput(const InputManager& input) {
 		computeKeyboardInput(input);
 		computeMouseInput(input);
 	}
 
-	void Camera::computeKeyboardInput(const InputManager& input) {
+	void SceneCamera::computeKeyboardInput(const InputManager& input) {
 
 		GLfloat cameraSpeed = speed * Time::deltaTime;
 
@@ -74,7 +115,7 @@ namespace geeL {
 	}
 
 
-	void Camera::computeMouseInput(const InputManager& input) {
+	void SceneCamera::computeMouseInput(const InputManager& input) {
 
 		if (input.getMouseKey(1)) {
 			float yOffset = float(input.getMouseYOffset()) * sensitivity * 0.01f;
@@ -85,100 +126,78 @@ namespace geeL {
 		}
 	}
 
-	void Camera::bind(const SceneShader& shader) const {
-		shader.use();
-
-		shader.setVector3(shader.cameraName + ".position", transform.getPosition());
-		shader.setMat4("view", viewMatrix);
-		shader.setMat4("projection", projectionMatrix);
+	mat4 SceneCamera::computeViewMatrix() const {
+		return transform.lookAt();
 	}
 
-	void Camera::bindPosition(const Shader& shader, std::string name) const {
-		shader.use();
-		shader.setVector3(name, transform.getPosition());
-	}
-
-	void Camera::updateDepth(const ScreenInfo& info) {
+	void SceneCamera::updateDepth(const ScreenInfo& info) {
 		this->info = &info;
 		depth = info.CTdepth;
 
 		center = transform.getPosition() + transform.getForwardDirection() * depth;
 	}
 
-	void Camera::uniformBind(int uniformID) const {
-
-		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projectionMatrix));
-
-		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
-		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(viewMatrix));
-
-		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
-		glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &transform.getPosition());
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	}
-
-	const glm::vec3& Camera::getPosition() const {
+	const glm::vec3& SceneCamera::getPosition() const {
 		return transform.getPosition();
 	}
 
-	const glm::vec3& Camera::getDirection() const {
+	const glm::vec3& SceneCamera::getDirection() const {
 		return transform.getForwardDirection();
 	}
 
-	float Camera::getSpeed() const {
+	float SceneCamera::getSpeed() const {
 		return speed;
 	}
 
-	float Camera::getSensitivity() const {
+	float SceneCamera::getSensitivity() const {
 		return sensitivity;
 	}
 
-	void Camera::setSpeed(float speed) {
+	void SceneCamera::setSpeed(float speed) {
 		if (speed > 0.f)
 			this->speed = speed;
 	}
 
-	void Camera::setSensitivity(float sensitivity) {
+	void SceneCamera::setSensitivity(float sensitivity) {
 		if (sensitivity > 0.f)
 			this->sensitivity = sensitivity;
 	}
 
-	const float Camera::getNearPlane() const {
+	const float SceneCamera::getNearPlane() const {
 		return nearClip;
 	}
 
-	const float Camera::getFarPlane() const {
+	const float SceneCamera::getFarPlane() const {
 		return farClip;
 	}
 
-	void Camera::setNearPlane(float near) {
+	void SceneCamera::setNearPlane(float near) {
 		if (near > 0.f) {
 			nearClip = near;
 			onViewingPlaneChange();
 		}
 	}
 
-	void Camera::setFarPlane(float far) {
+	void SceneCamera::setFarPlane(float far) {
 		if (far > nearClip) {
 			farClip = far;
 			onViewingPlaneChange();
 		}
 	}
 
-	void Camera::addViewingPlaneChangeListener(
+	void SceneCamera::addViewingPlaneChangeListener(
 		std::function<void(float, float)> listener) {
 
 		callbacks.push_back(listener);
 	}
 
-	void Camera::removeViewingPlaneChangeListener(
+	void SceneCamera::removeViewingPlaneChangeListener(
 		std::function<void(float, float)> listener) {
 
 		//TODO: implement this
 	}
 
-	void  Camera::onViewingPlaneChange() {
+	void  SceneCamera::onViewingPlaneChange() {
 		for (auto it = callbacks.begin(); it != callbacks.end(); it++) {
 			auto func = *it;
 
@@ -186,22 +205,22 @@ namespace geeL {
 		}
 	}
 
-	glm::vec3 Camera::TranslateToScreenSpace(const glm::vec3& vector) const {
+	glm::vec3 SceneCamera::TranslateToScreenSpace(const glm::vec3& vector) const {
 		glm::vec4 vec = getProjectionMatrix() * getViewMatrix() * glm::vec4(vector, 1.f);
 		return glm::vec3(vec.x / vec.w, vec.y / vec.w, vec.z / vec.w) * 0.5f + 0.5f;
 	}
 
-	glm::vec3 Camera::TranslateToViewSpace(const glm::vec3& vector) const {
+	glm::vec3 SceneCamera::TranslateToViewSpace(const glm::vec3& vector) const {
 		glm::vec4 vec = getViewMatrix() * glm::vec4(vector, 1.f);
 		return glm::vec3(vec.x, vec.y, vec.z);
 	}
 
-	glm::vec3 Camera::TranslateToWorldSpace(const glm::vec3& vector) const {
+	glm::vec3 SceneCamera::TranslateToWorldSpace(const glm::vec3& vector) const {
 		glm::vec4 vec = getInverseViewMatrix() * glm::vec4(vector, 1.f);
 		return glm::vec3(vec.x, vec.y, vec.z);
 	}
 
-	const glm::vec3& Camera::GetOriginInViewSpace() const {
+	const glm::vec3& SceneCamera::GetOriginInViewSpace() const {
 		return originViewSpace;
 	}
 

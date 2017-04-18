@@ -17,7 +17,44 @@ namespace geeL {
 	class Shader;
 	class SceneShader;
 
+
+	//Base class for all camera objects that contains only transformational information
 	class Camera : public SceneObject {
+
+	public:
+		const glm::mat4& getViewMatrix() const;
+		const glm::mat4& getInverseViewMatrix() const;
+		const glm::mat4& getProjectionMatrix() const;
+
+		void bind(const SceneShader& shader) const;
+		void bindPosition(const Shader& shader, std::string name = "cameraPosition") const;
+		void uniformBind(int uniformID) const;
+
+	protected:
+		Camera(Transform& transform, const std::string& name = "Camera");
+
+		glm::vec3 originViewSpace;
+		glm::mat4 viewMatrix;
+		glm::mat4 inverseView;
+		glm::mat4 projectionMatrix;
+
+	};
+
+
+	//Simple camera whose view and projection matrices must be computed and set manually
+	class SimpleCamera : public Camera {
+
+	public:
+		SimpleCamera(Transform& transform, const std::string&name = "Camera");
+
+		void setViewMatrix(const glm::mat4& view);
+		void setProjectionMatrix(const glm::mat4& projection);
+
+	};
+
+
+	//Movable camera that offers additional scene information
+	class SceneCamera : public Camera {
 
 	public:
 		float depth;
@@ -25,7 +62,7 @@ namespace geeL {
 		glm::vec3 center;
 
 		//Defines a movable camera
-		Camera(Transform& transform, float speed, float sensitivity, float nearClip, 
+		SceneCamera(Transform& transform, float speed, float sensitivity, float nearClip, 
 			float farClip, const std::string& name = "Camera");
 
 		//Update view and projection matrices
@@ -33,16 +70,8 @@ namespace geeL {
 
 		virtual void handleInput(const InputManager& input);
 
-		void bind(const SceneShader& shader) const;
-		void bindPosition(const Shader& shader, std::string name = "cameraPosition") const;
-		void uniformBind(int uniformID) const;
-
 		//Update position and depth of center pixel of camera view
 		void updateDepth(const ScreenInfo& info);
-
-		const glm::mat4& getViewMatrix() const;
-		const glm::mat4& getInverseViewMatrix() const;
-		const glm::mat4& getProjectionMatrix() const;
 
 		const glm::vec3& getPosition() const;
 		const glm::vec3& getDirection() const;
@@ -80,9 +109,6 @@ namespace geeL {
 		float speed, sensitivity;
 		float nearClip, farClip;
 		glm::vec3 originViewSpace;
-		glm::mat4 viewMatrix;
-		glm::mat4 inverseView;
-		glm::mat4 projectionMatrix;
 		std::list<std::function<void(float, float)>> callbacks;
 
 		virtual void computeKeyboardInput(const InputManager& input);

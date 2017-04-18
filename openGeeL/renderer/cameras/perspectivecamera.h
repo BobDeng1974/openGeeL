@@ -9,7 +9,7 @@ namespace geeL {
 
 	class Transform;
 
-	class PerspectiveCamera : public Camera {
+	class PerspectiveCamera : public SceneCamera {
 
 	public:		
 		PerspectiveCamera(Transform& transform, float speed, float sensitivity, float fov, unsigned int width,
