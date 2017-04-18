@@ -376,13 +376,13 @@ vec3 calculateIndirectSpecularSplitSum(vec3 normal, vec3 view, vec3 albedo, floa
 
 	vec3 prefilteredColor = textureLod(skybox.prefilterEnv, reflection,  roughness * ROUGHNESS_LOD).rgb; 
 	vec2 brdfInt = texture(skybox.integration, vec2(NdotV, roughness)).rg;
-	brdfInt = clamp(brdfInt, 0.f, 1.f);
+	brdfInt = brdfInt;
 
 	vec3 F0 = vec3(0.04f);
     F0 = mix(F0, albedo, metallic);
 
 	//Main splitsum integral
-	return prefilteredColor * (F0 * brdfInt.x + brdfInt.y);;
+	return prefilteredColor * (F0 * brdfInt.x + brdfInt.y);
 }
 
 

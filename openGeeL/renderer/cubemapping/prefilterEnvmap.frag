@@ -55,7 +55,7 @@ void main() {
 	vec3 prefilterColor = vec3(0.f);
     vec3 normal = normalize(localPos);
 
-	int sampleCount = 1024;
+	int sampleCount = 2048;
 	float weight = 0.f;
 	for(int i = 0; i < sampleCount; i++) {
 		//Generate halfway direction vector and compute reflected direction
