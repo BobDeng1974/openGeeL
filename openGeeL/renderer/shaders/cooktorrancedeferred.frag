@@ -43,7 +43,7 @@ struct DirectionalLight {
 struct Skybox {
 	samplerCube albedo;
 	samplerCube irradiance;
-	samplerCube environment;
+	samplerCube prefilterEnv;
 
 	sampler2D integration;
 };
@@ -96,6 +96,7 @@ vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightC
 
 vec3 calculateIndirectDiffuse(vec3 normal, vec3 kd, vec3 albedo, float occlusion);
 vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, float roughness, float metallic);
+vec3 calculateIndirectSpecularSplitSum(vec3 normal, vec3 view, vec3 albedo, float roughness, float metallic);
 
 
 //Return dot(a,b) >= 0
@@ -133,7 +134,8 @@ void main() {
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
 
 	vec3 ambienceDiffuse = calculateIndirectDiffuse(normal, kd, albedo, occlusion); 
-	vec3 ambienceSpecular = calculateIndirectSpecular(normal, viewDirection, albedo, roughness, metallic);
+	//vec3 ambienceSpecular = calculateIndirectSpecular(normal, viewDirection, albedo, roughness, metallic);
+	vec3 ambienceSpecular = calculateIndirectSpecularSplitSum(normal, viewDirection, albedo, roughness, metallic);
 
 	color = vec4(irradiance + ambienceDiffuse + ambienceSpecular, 1.f);
 }
@@ -362,6 +364,25 @@ vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, float roughn
 	float single = step(sampleCount, 2);
 	return radiance * (1.f - single) + 
 		radiance * single * (1.f - roughness);
+}
+
+const float ROUGHNESS_LOD = 4; //Amount of roughness levels in pre-filtered environment map 
+
+vec3 calculateIndirectSpecularSplitSum(vec3 normal, vec3 view, vec3 albedo, float roughness, float metallic) {
+	vec3 normalWorld = normalize((inverseView * vec4(origin + normal, 1.f)).xyz);
+	vec3 viewWorld = normalize((inverseView * vec4(origin + view, 1.f)).xyz);
+	vec3 reflection = normalize(reflect(-viewWorld, normalWorld));
+	float NdotV = doto(normalWorld, viewWorld);
+
+	vec3 prefilteredColor = textureLod(skybox.prefilterEnv, reflection,  roughness * ROUGHNESS_LOD).rgb; 
+	vec2 brdfInt = texture(skybox.integration, vec2(NdotV, roughness)).rg;
+	brdfInt = clamp(brdfInt, 0.f, 1.f);
+
+	vec3 F0 = vec3(0.04f);
+    F0 = mix(F0, albedo, metallic);
+
+	//Main splitsum integral
+	return prefilteredColor * (F0 * brdfInt.x + brdfInt.y);;
 }
 
 
