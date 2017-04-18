@@ -48,7 +48,7 @@ namespace geeL {
 
 
 	void PrefilteredEnvironmentMap::add(Shader& shader, std::string name) const {
-		shader.addMap(id, name + "environment", GL_TEXTURE_CUBE_MAP);
+		shader.addMap(id, name + "prefilterEnv", GL_TEXTURE_CUBE_MAP);
 	}
 
 

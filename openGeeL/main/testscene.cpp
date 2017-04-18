@@ -63,7 +63,9 @@
 #include "../renderer/cubemapping/envcubemap.h"
 #include "../renderer/cubemapping/irrmap.h"
 #include "../renderer/cubemapping/prefilterEnvmap.h"
+#include "../renderer/cubemapping/iblmap.h"
 #include "../renderer/cubemapping/skybox.h"
+#include "../renderer/texturing/brdfIntMap.h"
 #include "../renderer/scene.h"
 #include "../renderer/utility/rendertime.h"
 
@@ -133,13 +135,7 @@ namespace {
 			//&lightManager.addDirectionalLight(scene.getCamera(), lightTransform3, glm::vec3(lightIntensity, lightIntensity, lightIntensity));
 
 			float height = -2.f;
-			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.2f, 0.2f, 0.2f));
 			
-			nanoRenderer = &meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/nanosuit/nanosuit.obj"), 
-				meshTransform1, CullingMode::cullFront, "MeshRenderer");
-			scene.AddMeshRenderer(*nanoRenderer);
-
-
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(100.2f, 0.2f, 100.2f));
 			MeshRenderer& plane = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/plane.obj"),
 				meshTransform2, CullingMode::cullFront, "Floor");
@@ -148,7 +144,7 @@ namespace {
 			if (physics != nullptr) physics->addPlane(vec3(0.f, 1.f, 0.f), meshTransform2, RigidbodyProperties(0.f, false));
 
 			plane.iterateMaterials([&](MaterialContainer& container) {
-				container.setFloatValue("Roughness", 0.1f);
+				container.setFloatValue("Roughness", 0.25f);
 				container.setFloatValue("Metallic", 0.f);
 				container.setVectorValue("Color", vec3(0.4f, 0.4f, 0.4f));
 			});
@@ -173,7 +169,7 @@ namespace {
 			//if (physics != nullptr) physics->addMesh(sphere1.getModel(), meshTransform4, RigidbodyProperties(10.f, false));
 
 			sphere1.iterateMaterials([&](MaterialContainer& container) {
-				container.setFloatValue("Roughness", 0.f);
+				container.setFloatValue("Roughness", 0.05f);
 				container.setFloatValue("Metallic", 0.5f);
 			});
 
@@ -184,7 +180,7 @@ namespace {
 			scene.AddMeshRenderer(box);
 
 			box.iterateMaterials([&](MaterialContainer& container) {
-				container.setFloatValue("Roughness", 0.f);
+				container.setFloatValue("Roughness", 0.3f);
 				container.setFloatValue("Metallic", 0.1f);
 				container.setVectorValue("Color", vec3(0.1f, 0.1f, 0.1f));
 			});
@@ -194,6 +190,11 @@ namespace {
 			MeshRenderer& cyborg = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/cyborg/Cyborg.obj"),
 				meshTransform6, CullingMode::cullFront, "Cyborg");
 			scene.AddMeshRenderer(cyborg);
+
+			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.2f, 0.2f, 0.2f));
+			nanoRenderer = &meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/nanosuit/nanosuit.obj"),
+				meshTransform1, CullingMode::cullFront, "Nano");
+			scene.AddMeshRenderer(*nanoRenderer);
 
 			/*
 			float scale = 0.05f;
@@ -254,8 +255,10 @@ void draw() {
 	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(envMap, 1024);
 	IrradianceMap irrMap = IrradianceMap(envCubeMap);
 	PrefilteredEnvironmentMap filMap = PrefilteredEnvironmentMap(envCubeMap);
+	BRDFIntegrationMap brdfInt = BRDFIntegrationMap();
+	IBLMap iblMap = IBLMap(brdfInt, irrMap, filMap);
 
-	Skybox skybox = Skybox(irrMap);
+	Skybox skybox = Skybox(iblMap);
 	scene.setSkybox(skybox);
 	
 	renderer.setScene(scene);

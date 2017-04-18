@@ -1,6 +1,5 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include <iostream>
 #include "../primitives/screenquad.h"
 #include "../shader/shader.h"
 #include "stb_image.h"
