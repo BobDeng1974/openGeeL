@@ -8,7 +8,7 @@
 
 namespace geeL {
 
-	class Camera;
+	class SceneCamera;
 	class CameraRequester;
 	class LightManager;
 	class Skybox;
@@ -32,7 +32,7 @@ namespace geeL {
 	public:
 		LightManager& lightManager;
 
-		RenderScene(Transform& world, LightManager& lightManager, ShaderInformationLinker& shaderManager, Camera& camera, 
+		RenderScene(Transform& world, LightManager& lightManager, ShaderInformationLinker& shaderManager, SceneCamera& camera, 
 			MeshFactory& meshFactory, MaterialFactory& materialFactory);
 
 
@@ -68,10 +68,10 @@ namespace geeL {
 		void setPhysics(Physics* physics);
 
 		void addCameraRequester(CameraRequester& requester);
-		void setCamera(Camera& camera);
+		void setCamera(SceneCamera& camera);
 
-		const Camera& getCamera() const;
-		Camera& getCamera();
+		const SceneCamera& getCamera() const;
+		SceneCamera& getCamera();
 
 		void AddMeshRenderer(MeshRenderer& renderer);
 		void AddMeshRenderer(SkinnedMeshRenderer& renderer);
@@ -88,7 +88,7 @@ namespace geeL {
 		bool iterSkinnedObjects(SceneShader& shader, std::function<void(const SkinnedMeshRenderer&)> function) const;
 
 	private:
-		Camera* camera;
+		SceneCamera* camera;
 		Transform& worldTransform;
 		Skybox* skybox;
 		Physics* physics;

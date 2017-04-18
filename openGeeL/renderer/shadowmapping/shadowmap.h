@@ -16,7 +16,7 @@ namespace geeL {
 
 		//Render function for shadow maps. Takes current scene camera, render function
 		//that  draws desired objects of scene and the actual shadow map shader
-		virtual void draw(const Camera& camera,
+		virtual void draw(const SceneCamera& camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader) = 0;
 
 		virtual unsigned int getID() const = 0;

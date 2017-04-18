@@ -27,7 +27,7 @@ namespace geeL {
 		virtual void bindMap(Shader& shader, const std::string& name) = 0;
 		virtual void removeMap(Shader& shader) = 0;
 
-		virtual void draw(const Camera& camera,
+		virtual void draw(const SceneCamera& camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader) = 0;
 
 		//Returns ID of first (nearest) shadow map
@@ -43,18 +43,18 @@ namespace geeL {
 	class CascadedDirectionalShadowMap : public CascadedShadowMap {
 
 	public:
-		CascadedDirectionalShadowMap(const Light& light, const Camera& camera, 
+		CascadedDirectionalShadowMap(const Light& light, const SceneCamera& camera, 
 			float shadowBias, unsigned int width, unsigned int height);
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 		virtual void bindMap(Shader& shader, const std::string& name);
 		virtual void removeMap(Shader& shader);
 
-		virtual void draw(const Camera& camera,
+		virtual void draw(const SceneCamera& camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader);
 
 		//Set split planes (between cameras near and far clip plane)
-		void setCascades(const Camera& camera);
+		void setCascades(const SceneCamera& camera);
 
 		virtual unsigned int getID() const;
 
@@ -63,7 +63,7 @@ namespace geeL {
 
 		CascadedMap shadowMaps[MAPCOUNT];
 
-		void computeLightTransforms(const Camera& camera);
+		void computeLightTransforms(const SceneCamera& camera);
 	};
 
 }

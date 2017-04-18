@@ -15,7 +15,7 @@
 
 namespace geeL {
 
-	CascadedDirectionalShadowMap::CascadedDirectionalShadowMap(const Light& light, const Camera& camera, 
+	CascadedDirectionalShadowMap::CascadedDirectionalShadowMap(const Light& light, const SceneCamera& camera, 
 		float shadowBias, unsigned int width, unsigned int height)
 			: CascadedShadowMap(light, shadowBias, width, height) {
 		
@@ -46,7 +46,7 @@ namespace geeL {
 	}
 
 
-	void CascadedDirectionalShadowMap::setCascades(const Camera& camera) {
+	void CascadedDirectionalShadowMap::setCascades(const SceneCamera& camera) {
 		float step = 1.f / (float)MAPCOUNT;
 		float near = camera.getNearPlane();
 		float far = camera.getFarPlane();
@@ -80,7 +80,7 @@ namespace geeL {
 	}
 
 
-	void CascadedDirectionalShadowMap::draw(const Camera& camera,
+	void CascadedDirectionalShadowMap::draw(const SceneCamera& camera,
 		std::function<void(const Shader&)> renderCall, const Shader& shader) {
 
 		computeLightTransforms(camera);
@@ -105,7 +105,7 @@ namespace geeL {
 	}
 
 
-	void CascadedDirectionalShadowMap::computeLightTransforms(const Camera& camera) {
+	void CascadedDirectionalShadowMap::computeLightTransforms(const SceneCamera& camera) {
 
 		glm::mat4 lightView = glm::lookAt(camera.transform.getPosition(), 
 			camera.transform.getPosition() - light.transform.getForwardDirection(),

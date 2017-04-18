@@ -64,7 +64,7 @@ namespace geeL {
 	}
 
 
-	void SimpleShadowMap::adaptShadowmap(const Camera& camera) {
+	void SimpleShadowMap::adaptShadowmap(const SceneCamera& camera) {
 		vec3 center = camera.center;
 		//float depth = scene.camera.depth;
 		const ScreenInfo& info = *camera.info;
@@ -130,7 +130,7 @@ namespace geeL {
 		shader.setMat4(name + "lightTransform", lightTransform);
 	}
 
-	void SimpleSpotLightMap::draw(const Camera& camera,
+	void SimpleSpotLightMap::draw(const SceneCamera& camera,
 		std::function<void(const Shader&)> renderCall, const Shader& shader) {
 
 		//Write light transform into shader
@@ -224,7 +224,7 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void SimplePointLightMap::draw(const Camera& camera,
+	void SimplePointLightMap::draw(const SceneCamera& camera,
 		std::function<void(const Shader&)> renderCall, const Shader& shader) {
 
 		//Write light transforms of cubemap faces into shader
@@ -314,7 +314,7 @@ namespace geeL {
 		shader.setMat4(name + "lightTransform", lightTransform);
 	}
 
-	void SimpleDirectionalLightMap::draw(const Camera& camera,
+	void SimpleDirectionalLightMap::draw(const SceneCamera& camera,
 		std::function<void(const Shader&)> renderCall, const Shader& shader) {
 
 		//Write light transform into shader

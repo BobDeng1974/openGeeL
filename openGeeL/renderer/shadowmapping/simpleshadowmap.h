@@ -29,7 +29,7 @@ namespace geeL {
 		virtual void bindMap(Shader& shader, const std::string& name);
 		virtual void removeMap(Shader& shader);
 
-		virtual void draw(const Camera& camera,
+		virtual void draw(const SceneCamera& camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader) = 0;
 
 		virtual unsigned int getID() const;
@@ -48,7 +48,7 @@ namespace geeL {
 		virtual void init();
 
 		//Dynamically change shadow map resolution
-		virtual void adaptShadowmap(const Camera& camera);
+		virtual void adaptShadowmap(const SceneCamera& camera);
 
 		//Dynamically change resolution of shadow map 
 		//depending on distance to render camera. Returns true if 
@@ -74,7 +74,7 @@ namespace geeL {
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 
-		virtual void draw(const Camera& camera,
+		virtual void draw(const SceneCamera& camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader);
 
 	private:
@@ -94,7 +94,7 @@ namespace geeL {
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 
-		virtual void draw(const Camera& camera,
+		virtual void draw(const SceneCamera& camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader);
 
 		virtual void bindMap(Shader& shader, const std::string& name);
@@ -121,7 +121,7 @@ namespace geeL {
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 
-		virtual void draw(const Camera& camera,
+		virtual void draw(const SceneCamera& camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader);
 
 	private:

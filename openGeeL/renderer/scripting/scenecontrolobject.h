@@ -6,7 +6,7 @@
 
 namespace geeL {
 
-	class Camera;
+	class SceneCamera;
 	class RenderScene;
 
 	//Base class for scripting objects that can control behaviour and objects of a scene
@@ -16,7 +16,7 @@ namespace geeL {
 		SceneControlObject(RenderScene& scene) : scene(scene) {}
 
 		virtual void init() = 0;
-		virtual void draw(const Camera& camera) = 0;
+		virtual void draw(const SceneCamera& camera) = 0;
 		virtual void handleInput(const InputManager& input) {}
 		virtual void quit() = 0;
 

@@ -14,7 +14,7 @@
 namespace geeL {
 
 	class Light;
-	class Camera;
+	class SceneCamera;
 	class PointLight;
 	class DirectionalLight;
 	class SpotLight;
@@ -51,7 +51,7 @@ namespace geeL {
 		~LightManager();
 
 		//Add and create directional light
-		DirectionalLight& addDirectionalLight(const Camera& camera, Transform& transform, glm::vec3 diffuse,
+		DirectionalLight& addDirectionalLight(const SceneCamera& camera, Transform& transform, glm::vec3 diffuse,
 			float shadowBias = 0.00002f);
 	
 		//Add and create point light
@@ -66,8 +66,8 @@ namespace geeL {
 		void removeLight(PointLight& light);
 		void removeLight(SpotLight& light);
 
-		void bind(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const;
-		void bind(const Camera& camera, const SceneShader& shader) const;
+		void bind(const SceneCamera& camera, const Shader& shader, ShaderTransformSpace space) const;
+		void bind(const SceneCamera& camera, const SceneShader& shader) const;
 
 		void bindShadowmap(Shader& shader, DirectionalLight& light) const;
 		void bindShadowmap(Shader& shader, PointLight& light) const;

@@ -12,7 +12,7 @@ using glm::vec3;
 namespace geeL {
 
 	class ShadowMap;
-	class Camera;
+	class SceneCamera;
 	class Transform;
 	class RenderScene;
 	class Shader;
@@ -31,10 +31,10 @@ namespace geeL {
 		Light(Transform& transform, vec3 diffuse, const std::string& name = "Light");
 		~Light();
 
-		virtual void bind(const Camera& camera, const Shader& shader, 
+		virtual void bind(const SceneCamera& camera, const Shader& shader, 
 			const std::string& name, ShaderTransformSpace space) const;
 
-		virtual void bind(const Camera& camera, const SceneShader& shader,
+		virtual void bind(const SceneCamera& camera, const SceneShader& shader,
 			const std::string& name) const;
 
 		const ShadowMap* const getShadowMap() const;
@@ -47,7 +47,7 @@ namespace geeL {
 		//Remove shadow map from given shader
 		virtual void removeShadowmap(Shader& shader);
 
-		virtual void renderShadowmap(const Camera& camera, 
+		virtual void renderShadowmap(const SceneCamera& camera, 
 			std::function<void(const Shader&)> renderCall, const Shader& shader);
 
 		//Computes experienced intensity at given point. Ranges between 0 and 1

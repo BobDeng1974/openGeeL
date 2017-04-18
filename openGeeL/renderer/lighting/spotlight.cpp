@@ -20,7 +20,7 @@ namespace geeL {
 			: Light(transform, diffuse, name), angle(angle), outerAngle(outerAngle), lightCookie(nullptr) {}
 
 
-	void SpotLight::bind(const Camera& camera, const Shader& shader, const string& name, ShaderTransformSpace space) const {
+	void SpotLight::bind(const SceneCamera& camera, const Shader& shader, const string& name, ShaderTransformSpace space) const {
 		Light::bind(camera, shader, name, space);
 
 		switch (space) {

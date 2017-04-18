@@ -10,7 +10,7 @@ using glm::mat4;
 
 namespace geeL {
 
-	class Camera;
+	class SceneCamera;
 	class CubeMap;
 	class IrradianceMap;
 	class Shader;
@@ -22,7 +22,7 @@ namespace geeL {
 		Skybox(const CubeMap& cubeMap);
 		Skybox(const IrradianceMap& irradianceMap);
 
-		void draw(const Camera& camera) const;
+		void draw(const SceneCamera& camera) const;
 		void bind(Shader& shader) const;
 
 		unsigned int getID() const;

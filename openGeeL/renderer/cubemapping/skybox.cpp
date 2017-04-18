@@ -19,7 +19,7 @@ namespace geeL {
 			shader(Shader("renderer/cubemapping/skybox.vert", "renderer/cubemapping/skybox.frag")) {}
 
 
-	void Skybox::draw(const Camera& camera) const {
+	void Skybox::draw(const SceneCamera& camera) const {
 		glDepthFunc(GL_LEQUAL);
 		shader.use();
 

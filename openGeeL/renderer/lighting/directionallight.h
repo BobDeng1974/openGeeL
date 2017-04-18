@@ -12,7 +12,7 @@ namespace geeL {
 	public:
 		DirectionalLight(Transform& transform, vec3 diffuse, const std::string& name = "DirectionalLight");
 
-		virtual void bind(const Camera& camera, const Shader& shader,
+		virtual void bind(const SceneCamera& camera, const Shader& shader,
 			const std::string& name, ShaderTransformSpace space) const;
 
 		virtual float getIntensity(glm::vec3 point) const;

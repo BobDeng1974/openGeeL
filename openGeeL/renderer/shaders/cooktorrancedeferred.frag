@@ -134,8 +134,8 @@ void main() {
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
 
 	vec3 ambienceDiffuse = calculateIndirectDiffuse(normal, kd, albedo, occlusion); 
-	vec3 ambienceSpecular = calculateIndirectSpecular(normal, viewDirection, albedo, roughness, metallic);
-	//vec3 ambienceSpecular = calculateIndirectSpecularSplitSum(normal, viewDirection, albedo, roughness, metallic);
+	//vec3 ambienceSpecular = calculateIndirectSpecular(normal, viewDirection, albedo, roughness, metallic);
+	vec3 ambienceSpecular = calculateIndirectSpecularSplitSum(normal, viewDirection, albedo, roughness, metallic);
 
 	color = vec4(irradiance + ambienceDiffuse + ambienceSpecular, 1.f);
 }

@@ -12,7 +12,7 @@ namespace geeL {
 
 	enum class MapType;
 
-	class Camera;
+	class SceneCamera;
 	class LightManager;
 	class Material;
 	class MaterialFactory;

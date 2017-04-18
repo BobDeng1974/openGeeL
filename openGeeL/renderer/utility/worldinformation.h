@@ -37,12 +37,12 @@ namespace geeL {
 	class CameraRequester {
 
 	public:
-		virtual void updateCamera(Camera& camera) {
+		virtual void updateCamera(SceneCamera& camera) {
 			this->camera = &camera;
 		}
 
 	protected:
-		Camera* camera = nullptr;
+		SceneCamera* camera = nullptr;
 
 	};
 

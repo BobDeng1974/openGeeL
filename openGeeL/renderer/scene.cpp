@@ -25,7 +25,7 @@ using namespace std;
 namespace geeL {
 
 	RenderScene::RenderScene(Transform& world, LightManager& lightManager, ShaderInformationLinker& shaderManager, 
-		Camera& camera, MeshFactory& meshFactory, MaterialFactory& materialFactory)
+		SceneCamera& camera, MeshFactory& meshFactory, MaterialFactory& materialFactory)
 			: lightManager(lightManager), shaderLinker(shaderManager), camera(&camera), meshFactory(meshFactory),
 				physics(nullptr), worldTransform(world), materialFactory(materialFactory) {}
 
@@ -58,7 +58,7 @@ namespace geeL {
 		bool found = iterRenderObjects(shader, [&](const MeshRenderer& object) {
 			if (object.isActive())
 				object.draw();
-			});
+		});
 
 		//Otherwise try to draw skinned objects
 		if (!found) {
@@ -162,7 +162,7 @@ namespace geeL {
 		requester.updateCamera(*camera);
 	}
 
-	void RenderScene::setCamera(Camera& camera) {
+	void RenderScene::setCamera(SceneCamera& camera) {
 		this->camera = &camera;
 
 		for (auto it = cameraRequester.begin(); it != cameraRequester.end(); it++) {
@@ -171,11 +171,11 @@ namespace geeL {
 		}
 	}
 
-	const Camera& RenderScene::getCamera() const {
+	const SceneCamera& RenderScene::getCamera() const {
 		return *camera;
 	}
 
-	Camera& RenderScene::getCamera() {
+	SceneCamera& RenderScene::getCamera() {
 		return *camera;
 	}
 

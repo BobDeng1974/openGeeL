@@ -221,7 +221,7 @@ namespace geeL {
 		}
 		else {
 			//Lighting pass
-			const Camera& currentCam = scene->getCamera();
+			const SceneCamera& currentCam = scene->getCamera();
 			deferredShader->use();
 			deferredShader->loadMaps();
 			scene->lightManager.bind(currentCam, *deferredShader, ShaderTransformSpace::View);

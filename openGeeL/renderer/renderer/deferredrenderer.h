@@ -12,7 +12,7 @@
 
 namespace geeL {
 
-	class Camera;
+	class SceneCamera;
 	class DefaultPostProcess;
 	class MaterialFactory;
 	class Shader;

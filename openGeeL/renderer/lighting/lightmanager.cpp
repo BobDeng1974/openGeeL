@@ -41,7 +41,7 @@ namespace geeL {
 			delete (*it).light;
 	}
 
-	DirectionalLight& LightManager::addDirectionalLight(const Camera& camera, Transform& transform, vec3 diffuse, float shadowBias) {
+	DirectionalLight& LightManager::addDirectionalLight(const SceneCamera& camera, Transform& transform, vec3 diffuse, float shadowBias) {
 		DirectionalLight* light = new DirectionalLight(transform, diffuse);
 		
 		size_t index = dirLights.size();
@@ -130,7 +130,7 @@ namespace geeL {
 	}
 
 
-	void LightManager::bind(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const {
+	void LightManager::bind(const SceneCamera& camera, const Shader& shader, ShaderTransformSpace space) const {
 		shader.use();
 
 		int plCount = 0;
@@ -169,7 +169,7 @@ namespace geeL {
 		shader.setInteger(slCountName, slCount);
 	}
 
-	void LightManager::bind(const Camera& camera, const SceneShader& shader) const {
+	void LightManager::bind(const SceneCamera& camera, const SceneShader& shader) const {
 		bind(camera, shader, shader.getSpace());
 	}
 

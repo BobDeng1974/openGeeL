@@ -5,7 +5,7 @@ struct GLFWwindow;
 
 namespace geeL {
 
-	class Camera;
+	class SceneCamera;
 	class Debugger;
 
 
