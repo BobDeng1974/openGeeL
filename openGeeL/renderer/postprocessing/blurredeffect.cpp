@@ -1,5 +1,5 @@
 #include "../primitives/screenquad.h"
-#include "../utility/framebuffer.h"
+#include "../framebuffer/framebuffer.h"
 #include "gaussianblur.h"
 #include "blurredeffect.h"
 
@@ -16,7 +16,7 @@ namespace geeL {
 	}
 
 
-	void BlurredPostEffect::setBuffer(const FrameBuffer& buffer) {
+	void BlurredPostEffect::setBuffer(const ColorBuffer& buffer) {
 		PostProcessingEffect::setBuffer(buffer);
 
 		effect.setBuffer(buffer);
@@ -48,8 +48,8 @@ namespace geeL {
 		blur.setBuffer(effectBuffer.getColorID());
 		blurBuffer.fill(blur);
 
-		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
-		FrameBuffer::bind(parentFBO);
+		ColorBuffer::resetSize(screenInfo->width, screenInfo->height);
+		ColorBuffer::bind(parentFBO);
 	}
 
 	void BlurredPostEffect::draw() {

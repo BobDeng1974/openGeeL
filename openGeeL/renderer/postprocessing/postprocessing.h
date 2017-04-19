@@ -11,7 +11,7 @@ typedef unsigned int GLuint;
 namespace geeL {
 
 	struct FrameBufferInformation;
-	class FrameBuffer;
+	class ColorBuffer;
 	class Shader;
 	class ScreenQuad;
 
@@ -25,7 +25,7 @@ namespace geeL {
 		unsigned int getBuffer() const;
 
 		//Set main image buffer that will be used as base for post processing
-		virtual void setBuffer(const FrameBuffer& buffer);
+		virtual void setBuffer(const ColorBuffer& buffer);
 
 		//Set (first) buffer that will be used as base for post processing
 		virtual void setBuffer(unsigned int buffer);

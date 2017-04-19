@@ -2,7 +2,7 @@
 #include <glew.h>
 #include "gaussianblur.h"
 #include "../primitives/screenquad.h"
-#include "../utility/framebuffer.h"
+#include "../framebuffer/framebuffer.h"
 #include "bloom.h"
 
 namespace geeL {

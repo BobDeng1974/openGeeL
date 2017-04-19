@@ -4,7 +4,7 @@
 #include "directionallight.h"
 #include "spotlight.h"
 #include "../cameras/camera.h"
-#include "../utility/gbuffer.h"
+#include "../framebuffer/gbuffer.h"
 #include "../transformation/transform.h"
 #include "../shader/shader.h"
 #include "../shader/sceneshader.h"

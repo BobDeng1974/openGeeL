@@ -208,7 +208,7 @@ namespace {
 			*/
 		}
 
-		virtual void draw(const Camera& camera) {
+		virtual void draw(const SceneCamera& camera) {
 			nanoRenderer->transform.rotate(vec3(0.f, 1.f, 0.f), 1.5f * Time::deltaTime);
 		}
 

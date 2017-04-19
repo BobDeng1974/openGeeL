@@ -8,7 +8,7 @@ namespace geeL {
 
 	class GUISnippet;
 	class SceneObject;
-	class Camera;
+	class SceneCamera;
 	class PerspectiveCamera;
 	class MeshRenderer;
 	class Light;
@@ -24,7 +24,7 @@ namespace geeL {
 		virtual void draw(GUIContext* context);
 
 		void add(SceneObject& obj);
-		void add(Camera& cam);
+		void add(SceneCamera& cam);
 		void add(PerspectiveCamera& cam);
 		void add(MeshRenderer& mesh);
 		void add(Light& light);

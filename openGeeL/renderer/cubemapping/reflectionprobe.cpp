@@ -2,7 +2,7 @@
 #include <glew.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
-#include "../utility/framebuffer.h"
+#include "../framebuffer/framebuffer.h"
 #include "../transformation/transform.h"
 #include "../cameras/camera.h"
 #include "reflectionprobe.h"
@@ -38,7 +38,7 @@ namespace geeL {
 	}
 
 	ReflectionProbe::~ReflectionProbe() {
-		FrameBuffer::remove(fbo);
+		ColorBuffer::remove(fbo);
 	}
 
 
@@ -58,7 +58,7 @@ namespace geeL {
 		glViewport(0, 0, resolution, resolution);
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-		FrameBuffer::bind(fbo);
+		ColorBuffer::bind(fbo);
 		for (unsigned int side = 0; side < 6; side++) {
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, id, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -74,7 +74,7 @@ namespace geeL {
 		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-		FrameBuffer::unbind();
+		ColorBuffer::unbind();
 	}
 
 }

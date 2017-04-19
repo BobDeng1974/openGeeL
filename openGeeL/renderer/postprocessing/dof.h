@@ -1,7 +1,7 @@
 #ifndef  DOF_H
 #define  DOF_H
 
-#include "../utility/framebuffer.h"
+#include "../framebuffer/framebuffer.h"
 #include "postprocessing.h"
 #include "../utility/worldinformation.h"
 #include "gaussianblur.h"
@@ -62,7 +62,7 @@ namespace geeL {
 		ShaderLocation focalLocation;
 
 		DepthOfFieldBlur& blur;
-		FrameBuffer blurBuffer;
+		ColorBuffer blurBuffer;
 		const FrameBufferInformation* screenInfo;
 
 	};

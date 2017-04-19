@@ -32,7 +32,7 @@ namespace geeL {
 
 	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, 
 		RenderContext& context, DefaultPostProcess& def, const MaterialFactory& factory)
-			: Renderer(window, inputManager, context), frameBuffer1(FrameBuffer()), frameBuffer2(FrameBuffer()),
+			: Renderer(window, inputManager, context), frameBuffer1(ColorBuffer()), frameBuffer2(ColorBuffer()),
 				gBuffer(GBuffer()), screen(ScreenQuad()), ssao(nullptr),
 				deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
 					"renderer/shaders/cooktorrancedeferred.frag")), toggle(0), factory(factory) {
@@ -61,7 +61,7 @@ namespace geeL {
 		gBuffer.init(window->width, window->height);
 
 		if (ssao != nullptr) {
-			ssaoBuffer = new FrameBuffer();
+			ssaoBuffer = new ColorBuffer();
 			ssaoBuffer->init(unsigned int(window->width * ssaoResolution), unsigned int(window->height * ssaoResolution),
 				1, ColorType::Single, FilterMode::Nearest, WrapMode::Repeat, false);
 		}
@@ -143,7 +143,7 @@ namespace geeL {
 			//SSAO pass
 			if (ssao != nullptr) {
 				ssaoBuffer->fill(*ssao);
-				FrameBuffer::resetSize(window->width, window->height);
+				ColorBuffer::resetSize(window->width, window->height);
 				renderTime.update(RenderPass::SSAO);
 			}
 
@@ -233,7 +233,7 @@ namespace geeL {
 			glClear(GL_DEPTH_BUFFER_BIT);
 			//Copy depth buffer from gBuffer to draw forward 
 			//rendered objects 'into' the scene instead of 'on top'
-			frameBuffer1.copyDepth(gBuffer.fbo);
+			frameBuffer1.copyDepth(gBuffer);
 
 			//Forward pass
 			scene->drawForward();

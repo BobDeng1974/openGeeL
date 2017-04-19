@@ -1,5 +1,5 @@
 #include "../cameras/camera.h"
-#include "../utility/framebuffer.h"
+#include "../framebuffer/framebuffer.h"
 #include "ssrr.h"
 #include <iostream>
 

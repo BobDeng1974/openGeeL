@@ -4,8 +4,8 @@
 #include <list>
 #include <vector>
 #include "../primitives/screenquad.h"
-#include "../utility/framebuffer.h"
-#include "../utility/gbuffer.h"
+#include "../framebuffer/framebuffer.h"
+#include "../framebuffer/gbuffer.h"
 #include "../utility/worldinformation.h"
 #include "../utility/rendertime.h"
 #include "../renderer.h"
@@ -55,15 +55,15 @@ namespace geeL {
 		std::list<WorldMapRequester*> requester;
 		ScreenQuad screen;
 		GBuffer gBuffer;
-		FrameBuffer frameBuffer1;
-		FrameBuffer frameBuffer2;
+		ColorBuffer frameBuffer1;
+		ColorBuffer frameBuffer2;
 		RenderTime renderTime;
 
 		unsigned int defaultBuffer;
 		float ssaoResolution;
 		SSAO* ssao;
 		ScreenQuad* ssaoScreen = nullptr;
-		FrameBuffer* ssaoBuffer = nullptr;
+		ColorBuffer* ssaoBuffer = nullptr;
 		PostProcessingEffect* isolatedEffect = nullptr;
 
 		Shader* deferredShader;

@@ -70,7 +70,7 @@ namespace geeL {
 		shader.setInteger(horLocation, horizontal);
 		currBuffer = frameBuffers[!horizontal].getColorID();
 
-		FrameBuffer::bind(parentFBO);
+		ColorBuffer::bind(parentFBO);
 	}
 
 	void GaussianBlur::bindToScreen() {

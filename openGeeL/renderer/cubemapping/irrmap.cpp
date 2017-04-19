@@ -3,7 +3,7 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include "../shader/shader.h"
-#include "../utility/framebuffer.h"
+#include "../framebuffer/framebuffer.h"
 #include "../primitives/screencube.h"
 #include "irrmap.h"
 
@@ -76,7 +76,7 @@ namespace geeL {
 		
 		glViewport(0, 0, resolution, resolution);
 
-		FrameBuffer::bind(fbo);
+		ColorBuffer::bind(fbo);
 		for (unsigned int side = 0; side < 6; side++) {
 			conversionShader->setMat4("view", views[side]);
 
@@ -88,7 +88,7 @@ namespace geeL {
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-		FrameBuffer::unbind();
-		FrameBuffer::remove(fbo);
+		ColorBuffer::unbind();
+		ColorBuffer::remove(fbo);
 	}
 }

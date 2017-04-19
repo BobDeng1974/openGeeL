@@ -1,13 +1,13 @@
 #ifndef BLOOM_H
 #define BLOOM_H
 
-#include "../utility/framebuffer.h"
+#include "../framebuffer/framebuffer.h"
 #include "blurredeffect.h"
 #include "postprocessing.h"
 
 namespace geeL {
 
-	class FrameBuffer;
+	class ColorBuffer;
 	class GaussianBlur;
 	class ScreenQuad;
 

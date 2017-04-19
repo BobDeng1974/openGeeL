@@ -97,7 +97,7 @@ namespace geeL {
 		objectSnippets.push_back(snippet);
 	}
 
-	void ObjectLister::add(Camera& cam) {
+	void ObjectLister::add(SceneCamera& cam) {
 		CameraSnippet* snippet = new CameraSnippet(cam);
 		cameraSnippets.push_back(snippet);
 	}

@@ -2,7 +2,7 @@
 #define GODRAY_H
 
 #include <vec3.hpp>
-#include "../utility/framebuffer.h"
+#include "../framebuffer/framebuffer.h"
 #include "../utility/worldinformation.h"
 #include "postprocessing.h"
 

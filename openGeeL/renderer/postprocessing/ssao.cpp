@@ -80,7 +80,7 @@ namespace geeL {
 			shader.use();
 			bindValues();
 
-			FrameBuffer::bind(parentFBO);
+			ColorBuffer::bind(parentFBO);
 			blur.draw();
 		}
 	}

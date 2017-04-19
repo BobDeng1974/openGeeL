@@ -2,7 +2,7 @@
 #include <glew.h>
 #include "../shader/shader.h"
 #include "../primitives/screenquad.h"
-#include "../utility/framebuffer.h"
+#include "../framebuffer/framebuffer.h"
 #include "postprocessing.h"
 
 using namespace std;
@@ -22,7 +22,7 @@ namespace geeL {
 		return buffers.front();
 	}
 
-	void PostProcessingEffect::setBuffer(const FrameBuffer& buffer) {
+	void PostProcessingEffect::setBuffer(const ColorBuffer& buffer) {
 		setBuffer(buffer.getColorID());
 	}
 

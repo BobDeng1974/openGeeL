@@ -1,7 +1,7 @@
 #ifndef BLURREDEFFECT_H
 #define BLURREDEFFECT_H
 
-#include "../utility/framebuffer.h"
+#include "../framebuffer/framebuffer.h"
 #include "postprocessing.h"
 
 namespace geeL {
@@ -13,7 +13,7 @@ namespace geeL {
 		BlurredPostEffect(PostProcessingEffect& effect, PostProcessingEffect& blur, 
 			float effectResolution = 1.f, float blurResolution = 1.f);
 
-		virtual void setBuffer(const FrameBuffer& buffer);
+		virtual void setBuffer(const ColorBuffer& buffer);
 
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 		virtual void draw();
@@ -31,8 +31,8 @@ namespace geeL {
 		float effectResolution, blurResolution;
 		PostProcessingEffect& effect;
 		PostProcessingEffect& blur;
-		FrameBuffer effectBuffer;
-		FrameBuffer blurBuffer;
+		ColorBuffer effectBuffer;
+		ColorBuffer blurBuffer;
 		const FrameBufferInformation* screenInfo;
 
 	};

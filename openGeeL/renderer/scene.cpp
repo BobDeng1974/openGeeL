@@ -12,7 +12,7 @@
 #include "materials\materialfactory.h"
 #include "cameras\camera.h"
 #include "cubemapping\skybox.h"
-#include "utility\gbuffer.h"
+#include "framebuffer\gbuffer.h"
 #include "physics\physics.h"
 #include "lighting\lightmanager.h"
 #include "shader\shadermanager.h"

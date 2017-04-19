@@ -5,7 +5,7 @@
 
 namespace geeL {
 	
-	class Camera;
+	class SceneCamera;
 	class Light;
 	class MeshRenderer;
 	class PerspectiveCamera;
@@ -57,13 +57,13 @@ namespace geeL {
 	class CameraSnippet : public SceneObjectSnippet {
 
 	public:
-		CameraSnippet(Camera& cam);
+		CameraSnippet(SceneCamera& cam);
 
 		virtual void draw(GUIContext* context);
 		virtual std::string toString() const;
 
 	private:
-		Camera& cam;
+		SceneCamera& cam;
 
 	};
 

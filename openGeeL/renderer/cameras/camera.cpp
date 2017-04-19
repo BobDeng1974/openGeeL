@@ -7,7 +7,7 @@
 #include "camera.h"
 #include "../inputmanager.h"
 #include "../transformation/transform.h"
-#include "../utility/gbuffer.h"
+#include "../framebuffer/gbuffer.h"
 #include "../utility/rendertime.h"
 
 #define pi 3.141592f

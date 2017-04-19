@@ -3,7 +3,7 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include "../shader/shader.h"
-#include "../utility/framebuffer.h"
+#include "../framebuffer/framebuffer.h"
 #include "../primitives/screencube.h"
 #include "prefilterEnvmap.h"
 
@@ -71,7 +71,7 @@ namespace geeL {
 		std::list<unsigned int> maps = { environmentMap.getID() };
 		conversionShader->loadMaps(maps, GL_TEXTURE_CUBE_MAP);
 
-		FrameBuffer::bind(fbo);
+		ColorBuffer::bind(fbo);
 		unsigned int mipLevels = 5;
 		//Generate mipmaps according to roughness strength
 		for (unsigned int mip = 0; mip < mipLevels; mip++) {
@@ -79,7 +79,7 @@ namespace geeL {
 			float roughness = (float)mip / (float)(mipLevels - 1);
 			conversionShader->setFloat("roughness", roughness);
 
-			unsigned int mipResolution = resolution * std::pow(0.5, mip);
+			unsigned int mipResolution = resolution * std::pow(0.5f, mip);
 			glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipResolution, mipResolution);
 			glViewport(0, 0, mipResolution, mipResolution);
@@ -96,8 +96,8 @@ namespace geeL {
  
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-		FrameBuffer::unbind();
-		FrameBuffer::remove(fbo);
+		ColorBuffer::unbind();
+		ColorBuffer::remove(fbo);
 	}
 
 }

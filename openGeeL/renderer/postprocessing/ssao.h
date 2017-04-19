@@ -4,9 +4,9 @@
 #include <vector>
 #include <vec3.hpp>
 #include "../texturing/simpletexture.h"
-#include "../utility/framebuffer.h"
-#include "postprocessing.h"
+#include "../framebuffer/framebuffer.h"
 #include "../utility/worldinformation.h"
+#include "postprocessing.h"
 
 namespace geeL {
 
@@ -40,7 +40,7 @@ namespace geeL {
 		PostProcessingEffect& blur;
 
 		ShaderLocation projectionLocation;
-		FrameBuffer tempBuffer;
+		ColorBuffer tempBuffer;
 		const FrameBufferInformation* screenInfo;
 		
 	};

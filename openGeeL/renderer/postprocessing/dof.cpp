@@ -74,8 +74,8 @@ namespace geeL {
 		
 		blurBuffer.fill(blur);
 
-		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
-		FrameBuffer::bind(parentFBO);
+		ColorBuffer::resetSize(screenInfo->width, screenInfo->height);
+		ColorBuffer::bind(parentFBO);
 	}
 
 	void DepthOfFieldBlurred::draw() {

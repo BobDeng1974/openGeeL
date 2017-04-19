@@ -3,7 +3,7 @@
 #include <gtc/type_ptr.hpp>
 #include <gtc/matrix_transform.hpp>
 #include "../cameras/camera.h"
-#include "../utility/gbuffer.h"
+#include "../framebuffer/gbuffer.h"
 #include "../shader/shader.h"
 #include "../transformation/transform.h"
 #include "../lighting/spotlight.h"

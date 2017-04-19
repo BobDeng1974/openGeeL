@@ -94,7 +94,7 @@ namespace geeL {
 	}
 
 
-	CameraSnippet::CameraSnippet(Camera& cam) : SceneObjectSnippet(cam), cam(cam) {}
+	CameraSnippet::CameraSnippet(SceneCamera& cam) : SceneObjectSnippet(cam), cam(cam) {}
 
 	void CameraSnippet::draw(GUIContext* context) {
 
