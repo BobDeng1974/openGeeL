@@ -7,7 +7,7 @@
 #include "../transformation/transform.h"
 #include "../cameras/camera.h"
 #include "../scene.h"
-#include "../utility/gbuffer.h"
+#include "../framebuffer/gbuffer.h"
 #include "directionallight.h"
 #include <iostream>
 
@@ -20,7 +20,7 @@ namespace geeL {
 		: Light(transform, diffuse, name) {}
 
 
-	void DirectionalLight::bind(const SceneCamera& camera, const Shader& shader,
+	void DirectionalLight::bind(const Camera& camera, const Shader& shader,
 		const string& name, ShaderTransformSpace space) const {
 		Light::bind(camera, shader, name, space);
 

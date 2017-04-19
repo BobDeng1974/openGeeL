@@ -4,7 +4,7 @@
 #include <gtc/matrix_transform.hpp>
 #include "../shader/shader.h"
 #include "../shader/sceneshader.h"
-#include "../texturing/simpletexture.h"
+#include "../texturing/imagetexture.h"
 #include "../transformation/transform.h"
 #include "../cameras/camera.h"
 #include "../scene.h"
@@ -20,7 +20,7 @@ namespace geeL {
 			: Light(transform, diffuse, name), angle(angle), outerAngle(outerAngle), lightCookie(nullptr) {}
 
 
-	void SpotLight::bind(const SceneCamera& camera, const Shader& shader, const string& name, ShaderTransformSpace space) const {
+	void SpotLight::bind(const Camera& camera, const Shader& shader, const string& name, ShaderTransformSpace space) const {
 		Light::bind(camera, shader, name, space);
 
 		switch (space) {
@@ -40,7 +40,7 @@ namespace geeL {
 		shader.setFloat(name + "useCookie", (lightCookie != nullptr));
 	}
 
-	void SpotLight::setLightCookie(SimpleTexture& cookie) {
+	void SpotLight::setLightCookie(ImageTexture& cookie) {
 		lightCookie = &cookie;
 	}
 

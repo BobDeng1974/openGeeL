@@ -13,6 +13,7 @@
 
 namespace geeL {
 
+	class Camera;
 	class Light;
 	class SceneCamera;
 	class PointLight;
@@ -66,8 +67,8 @@ namespace geeL {
 		void removeLight(PointLight& light);
 		void removeLight(SpotLight& light);
 
-		void bind(const SceneCamera& camera, const Shader& shader, ShaderTransformSpace space) const;
-		void bind(const SceneCamera& camera, const SceneShader& shader) const;
+		void bind(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const;
+		void bind(const Camera& camera, const SceneShader& shader) const;
 
 		void bindShadowmap(Shader& shader, DirectionalLight& light) const;
 		void bindShadowmap(Shader& shader, PointLight& light) const;

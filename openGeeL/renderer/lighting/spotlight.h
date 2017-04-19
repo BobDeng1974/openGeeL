@@ -5,7 +5,7 @@
 
 namespace geeL {
 
-	class SimpleTexture;
+	class ImageTexture;
 	class Transform;
 
 	class SpotLight : public Light {
@@ -14,11 +14,11 @@ namespace geeL {
 		SpotLight(Transform& transform, vec3 diffuse, float angle = 30.f, 
 			float outerAngle = 5.f, const std::string& name = "SpotLight");
 
-		virtual void bind(const SceneCamera& camera, const Shader& shader,
+		virtual void bind(const Camera& camera, const Shader& shader,
 			const std::string& name, ShaderTransformSpace space) const;
 
 		//Set light cookie for this spotlight
-		void setLightCookie(SimpleTexture& cookie);
+		void setLightCookie(ImageTexture& cookie);
 		unsigned int getLightCookieID() const;
 
 		//Add light cookie of this spotlight to given shader.
@@ -27,7 +27,7 @@ namespace geeL {
 		float getAngle() const;
 
 	private:
-		SimpleTexture* lightCookie;
+		ImageTexture* lightCookie;
 		float angle, outerAngle;
 
 	};

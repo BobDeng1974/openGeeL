@@ -7,7 +7,6 @@
 #include "camera.h"
 #include "../inputmanager.h"
 #include "../transformation/transform.h"
-#include "../framebuffer/gbuffer.h"
 #include "../utility/rendertime.h"
 
 #define pi 3.141592f
@@ -56,6 +55,25 @@ namespace geeL {
 		glBindBuffer(GL_UNIFORM_BUFFER, uniformID);
 		glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &transform.getPosition());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	}
+
+	glm::vec3 Camera::TranslateToScreenSpace(const glm::vec3& vector) const {
+		glm::vec4 vec = getProjectionMatrix() * getViewMatrix() * glm::vec4(vector, 1.f);
+		return glm::vec3(vec.x / vec.w, vec.y / vec.w, vec.z / vec.w) * 0.5f + 0.5f;
+	}
+
+	glm::vec3 Camera::TranslateToViewSpace(const glm::vec3& vector) const {
+		glm::vec4 vec = getViewMatrix() * glm::vec4(vector, 1.f);
+		return glm::vec3(vec.x, vec.y, vec.z);
+	}
+
+	glm::vec3 Camera::TranslateToWorldSpace(const glm::vec3& vector) const {
+		glm::vec4 vec = getInverseViewMatrix() * glm::vec4(vector, 1.f);
+		return glm::vec3(vec.x, vec.y, vec.z);
+	}
+
+	const glm::vec3& Camera::GetOriginInViewSpace() const {
+		return originViewSpace;
 	}
 
 
@@ -131,7 +149,7 @@ namespace geeL {
 	}
 
 	void SceneCamera::updateDepth(const ScreenInfo& info) {
-		this->info = &info;
+		this->info = info;
 		depth = info.CTdepth;
 
 		center = transform.getPosition() + transform.getForwardDirection() * depth;
@@ -205,23 +223,6 @@ namespace geeL {
 		}
 	}
 
-	glm::vec3 SceneCamera::TranslateToScreenSpace(const glm::vec3& vector) const {
-		glm::vec4 vec = getProjectionMatrix() * getViewMatrix() * glm::vec4(vector, 1.f);
-		return glm::vec3(vec.x / vec.w, vec.y / vec.w, vec.z / vec.w) * 0.5f + 0.5f;
-	}
-
-	glm::vec3 SceneCamera::TranslateToViewSpace(const glm::vec3& vector) const {
-		glm::vec4 vec = getViewMatrix() * glm::vec4(vector, 1.f);
-		return glm::vec3(vec.x, vec.y, vec.z);
-	}
-
-	glm::vec3 SceneCamera::TranslateToWorldSpace(const glm::vec3& vector) const {
-		glm::vec4 vec = getInverseViewMatrix() * glm::vec4(vector, 1.f);
-		return glm::vec3(vec.x, vec.y, vec.z);
-	}
-
-	const glm::vec3& SceneCamera::GetOriginInViewSpace() const {
-		return originViewSpace;
-	}
+	
 
 }

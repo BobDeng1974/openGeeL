@@ -11,6 +11,7 @@ using glm::vec3;
 
 namespace geeL {
 
+	class Camera;
 	class ShadowMap;
 	class SceneCamera;
 	class Transform;
@@ -22,7 +23,6 @@ namespace geeL {
 	enum class ShaderTransformSpace;
 	
 
-
 	class Light : public SceneObject {
 
 	public:
@@ -31,10 +31,10 @@ namespace geeL {
 		Light(Transform& transform, vec3 diffuse, const std::string& name = "Light");
 		~Light();
 
-		virtual void bind(const SceneCamera& camera, const Shader& shader, 
+		virtual void bind(const Camera& camera, const Shader& shader, 
 			const std::string& name, ShaderTransformSpace space) const;
 
-		virtual void bind(const SceneCamera& camera, const SceneShader& shader,
+		virtual void bind(const Camera& camera, const SceneShader& shader,
 			const std::string& name) const;
 
 		const ShadowMap* const getShadowMap() const;

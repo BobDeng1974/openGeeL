@@ -36,14 +36,14 @@ namespace geeL {
 
 	}
 
-	void Light::bind(const SceneCamera& camera, const Shader& shader, const std::string& name, ShaderTransformSpace space) const {
+	void Light::bind(const Camera& camera, const Shader& shader, const std::string& name, ShaderTransformSpace space) const {
 		shader.setVector3(name + "diffuse", diffuse);
 
 		if (shadowMap != nullptr)
 			shadowMap->bindData(shader, name);
 	}
 
-	void Light::bind(const SceneCamera& camera, const SceneShader& shader, const std::string& name) const {
+	void Light::bind(const Camera& camera, const SceneShader& shader, const std::string& name) const {
 		bind(camera, shader, name, shader.getSpace());
 	}
 

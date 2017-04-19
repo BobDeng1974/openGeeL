@@ -6,12 +6,12 @@
 #include <vector>
 #include <vec3.hpp>
 #include <mat4x4.hpp>
+#include "../utility/screeninfo.h"
 #include "../sceneobject.h"
 
 
 namespace geeL {
 
-	struct ScreenInfo;
 	class InputManager;
 	class Transform;
 	class Shader;
@@ -22,6 +22,10 @@ namespace geeL {
 	class Camera : public SceneObject {
 
 	public:
+		float depth;
+		ScreenInfo info;
+		glm::vec3 center;
+
 		const glm::mat4& getViewMatrix() const;
 		const glm::mat4& getInverseViewMatrix() const;
 		const glm::mat4& getProjectionMatrix() const;
@@ -29,6 +33,17 @@ namespace geeL {
 		void bind(const SceneShader& shader) const;
 		void bindPosition(const Shader& shader, std::string name = "cameraPosition") const;
 		void uniformBind(int uniformID) const;
+
+		//Translate vector from world to screen space of this camera
+		glm::vec3 TranslateToScreenSpace(const glm::vec3& vector) const;
+
+		//Translate vector from world to view space of this camera
+		glm::vec3 TranslateToViewSpace(const glm::vec3& vector) const;
+
+		//Transflate vector from view space of this camera to world space 
+		glm::vec3 TranslateToWorldSpace(const glm::vec3& vector) const;
+
+		const glm::vec3& GetOriginInViewSpace() const;
 
 	protected:
 		Camera(Transform& transform, const std::string& name = "Camera");
@@ -57,10 +72,6 @@ namespace geeL {
 	class SceneCamera : public Camera {
 
 	public:
-		float depth;
-		const ScreenInfo* info;
-		glm::vec3 center;
-
 		//Defines a movable camera
 		SceneCamera(Transform& transform, float speed, float sensitivity, float nearClip, 
 			float farClip, const std::string& name = "Camera");
@@ -94,21 +105,11 @@ namespace geeL {
 		//Returns view borders for given frustum 
 		virtual std::vector<glm::vec3> getViewBorders(float near, float far) const = 0;
 
-		//Translate vector from world to screen space of this camera
-		glm::vec3 TranslateToScreenSpace(const glm::vec3& vector) const;
-
-		//Translate vector from world to view space of this camera
-		glm::vec3 TranslateToViewSpace(const glm::vec3& vector) const;
-
-		//Transflate vector from view space of this camera to world space 
-		glm::vec3 TranslateToWorldSpace(const glm::vec3& vector) const;
-
-		const glm::vec3& GetOriginInViewSpace() const;
+		
 
 	protected:
 		float speed, sensitivity;
 		float nearClip, farClip;
-		glm::vec3 originViewSpace;
 		std::list<std::function<void(float, float)>> callbacks;
 
 		virtual void computeKeyboardInput(const InputManager& input);
