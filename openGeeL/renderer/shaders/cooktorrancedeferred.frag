@@ -10,6 +10,8 @@ struct PointLight {
 
 	float bias;
 	float farPlane;
+
+	bool useShadowmap;
 };
 
 struct SpotLight {
@@ -24,7 +26,9 @@ struct SpotLight {
     float angle;
     float outerAngle;
 	float bias;
-	float useCookie;
+
+	bool useShadowmap;
+	bool useCookie;
 };
 
 const int DIRECTIONAL_SHADOWMAP_COUNT = 3;
@@ -38,6 +42,7 @@ struct DirectionalLight {
     vec3 diffuse;
 
 	float bias;
+	bool useShadowmap;
 };
 
 struct Skybox {
@@ -248,7 +253,7 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal,
 
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
 		viewDirection, light.position, light.diffuse, albedo, roughness, metallic);
-	float shadow = 1.0f - calculatePointLightShadows(index, normal, fragPosition);
+	float shadow = light.useShadowmap ? 1.0f - calculatePointLightShadows(index, normal, fragPosition) : 0.f;
 	
     return shadow * reflectance;
 }
@@ -267,8 +272,8 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal,
 		viewDirection, light.position, light.diffuse, albedo, roughness, metallic);
 
 	vec3 coords = vec3(0.f);
-	float shadow = 1.0f - calculateSpotLightShadows(index, normal, fragPosition, coords);
-	float cookie = texture(light.cookie, coords.xy).r * light.useCookie;
+	float shadow = light.useShadowmap ? 1.0f - calculateSpotLightShadows(index, normal, fragPosition, coords) : 0.f;
+	float cookie = texture(light.cookie, coords.xy).r * float(light.useCookie);
 
     return shadow * reflectance * intensity * cookie;
 }
@@ -278,7 +283,7 @@ vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal,
 	
 	vec3 reflectance = calculateReflectanceDirectional(fragPosition, normal, 
 		viewDirection, light.direction, light.diffuse, albedo, roughness, metallic);
-	float shadow = 1.f - calculateDirectionalLightShadows(index, normal, fragPosition);
+	float shadow = light.useShadowmap ? 1.f - calculateDirectionalLightShadows(index, normal, fragPosition) : 0.f;
 	
     return shadow * reflectance;
 }

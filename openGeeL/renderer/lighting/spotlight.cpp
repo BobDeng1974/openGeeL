@@ -37,7 +37,7 @@ namespace geeL {
 
 		shader.setFloat(name + "angle", angle);
 		shader.setFloat(name + "outerAngle", outerAngle);
-		shader.setFloat(name + "useCookie", (lightCookie != nullptr));
+		shader.setInteger(name + "useCookie", (lightCookie != nullptr));
 	}
 
 	void SpotLight::setLightCookie(ImageTexture& cookie) {
