@@ -14,7 +14,7 @@ namespace geeL {
 	class ReflectionProbe : public CubeMap, public SceneObject {
 
 	public:
-		ReflectionProbe(std::function<void(const Camera&)> renderCall, Transform& transform, float depth, 
+		ReflectionProbe(std::function<void(const Camera&, FrameBufferInformation)> renderCall, Transform& transform, float depth,
 			unsigned int resolution, std::string name = "ReflectionProbe");
 
 		~ReflectionProbe();
@@ -25,7 +25,7 @@ namespace geeL {
 		float depth;
 		unsigned int resolution, fbo;
 
-		std::function<void(const Camera&)> renderCall;
+		std::function<void(const Camera&, FrameBufferInformation)> renderCall;
 
 	};
 

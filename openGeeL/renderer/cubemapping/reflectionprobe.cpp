@@ -11,7 +11,7 @@ using namespace glm;
 
 namespace geeL {
 
-	ReflectionProbe::ReflectionProbe(std::function<void(const Camera&)> renderCall, Transform& transform, 
+	ReflectionProbe::ReflectionProbe(std::function<void(const Camera&, FrameBufferInformation)> renderCall, Transform& transform,
 		float depth, unsigned int resolution, std::string name)
 			: SceneObject(transform, name), depth(depth), resolution(resolution), renderCall(renderCall) {
 
@@ -58,6 +58,11 @@ namespace geeL {
 
 		glViewport(0, 0, resolution, resolution);
 
+		FrameBufferInformation info;
+		info.fbo = fbo;
+		info.width = resolution;
+		info.height = resolution;
+
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 		FrameBuffer::bind(fbo);
 		for (unsigned int side = 0; side < 6; side++) {
@@ -68,7 +73,7 @@ namespace geeL {
 			cam.setProjectionMatrix(projection);
 			cam.setViewMatrix(views[side]);
 
-			renderCall(cam);
+			renderCall(cam, info);
 		}
 
 		//Mip map rendered environment map

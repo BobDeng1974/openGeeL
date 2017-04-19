@@ -65,6 +65,7 @@
 #include "../renderer/cubemapping/prefilterEnvmap.h"
 #include "../renderer/cubemapping/iblmap.h"
 #include "../renderer/cubemapping/skybox.h"
+#include "../renderer/cubemapping/reflectionprobe.h"
 #include "../renderer/texturing/brdfIntMap.h"
 #include "../renderer/scene.h"
 #include "../renderer/utility/rendertime.h"
@@ -262,7 +263,7 @@ void draw() {
 	scene.setSkybox(skybox);
 	
 	renderer.setScene(scene);
-	scene.addCameraRequester(ssao);
+	scene.addRequester(ssao);
 
 	TestScene testScene = TestScene(materialFactory, meshFactory, 
 		lightManager, shaderManager, scene, transFactory, &physics);
@@ -310,7 +311,7 @@ void draw() {
 
 	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
 	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
-	scene.addCameraRequester(vol);
+	scene.addRequester(vol);
 	postLister.add(volSmooth, lightSnippet);
 
 	//renderer.addEffect(bloom);
@@ -322,7 +323,7 @@ void draw() {
 	//postLister.add(raySmooth, godRaySnippet);
 
 	renderer.addEffect(ssrrSmooth, ssrr);
-	scene.addCameraRequester(ssrr);
+	scene.addRequester(ssrr);
 
 	//renderer.addEffect(dof, dof);
 	//postLister.add(dof);
@@ -333,5 +334,6 @@ void draw() {
 	//renderer.addEffect(fxaa);
 
 	renderer.linkInformation();
+	renderer.renderInit();
 	renderer.render();
 }

@@ -86,8 +86,8 @@ namespace geeL {
 	void DeferredRenderer::renderInit() {
 
 		deferredShader->use();
-		scene->bindSkybox(*deferredShader);
 		scene->lightManager.bindShadowmaps(*deferredShader);
+		scene->addRequester(*this);
 
 		//Init all effects
 		bool chooseBuffer = true;
@@ -113,7 +113,6 @@ namespace geeL {
 
 	void DeferredRenderer::render() {
 
-		renderInit();
 		//Render loop
 		while (!window->shouldClose()) {
 			int currFPS = (int)ceil(Time::deltaTime * 1000.f);
@@ -122,9 +121,8 @@ namespace geeL {
 			inputManager->update();
 			handleInput();
 			renderTime.reset();
-
 			glEnable(GL_DEPTH_TEST);
-			
+
 			//Geometry pass
 			gBuffer.fill(geometryPassFunc);
 			renderTime.update(RenderPass::Geometry);
@@ -320,6 +318,12 @@ namespace geeL {
 
 	void DeferredRenderer::addRequester(WorldMapRequester& requester) {
 		this->requester.push_back(&requester);
+	}
+
+	void DeferredRenderer::updateInformation(SceneCamera& camera, Skybox& skybox) {
+		std::cout << "ayy\n";
+		deferredShader->use();
+		scene->bindSkybox(*deferredShader);
 	}
 
 	void DeferredRenderer::linkInformation() const {

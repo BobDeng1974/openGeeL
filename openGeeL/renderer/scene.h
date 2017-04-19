@@ -9,7 +9,7 @@
 namespace geeL {
 
 	class SceneCamera;
-	class CameraRequester;
+	class SceneRequester;
 	class LightManager;
 	class Skybox;
 	class Shader;
@@ -73,7 +73,7 @@ namespace geeL {
 
 		void setPhysics(Physics* physics);
 
-		void addCameraRequester(CameraRequester& requester);
+		void addRequester(SceneRequester& requester);
 		void setCamera(SceneCamera& camera);
 
 		const SceneCamera& getCamera() const;
@@ -102,7 +102,7 @@ namespace geeL {
 		RenderPipeline& pipeline;
 		MaterialFactory& materialFactory;
 
-		std::list<CameraRequester*> cameraRequester;
+		std::list<SceneRequester*> sceneRequester;
 
 		//Objects are indexed by their used shaders (and their transforms id) to allow grouped drawing and 
 		//therefore no unnecessary shader programm switching. Objects with multiple materials are linked to

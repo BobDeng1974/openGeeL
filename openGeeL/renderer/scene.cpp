@@ -165,6 +165,11 @@ namespace geeL {
 
 	void RenderScene::setSkybox(Skybox& skybox) {
 		this->skybox = &skybox;
+
+		for (auto it = sceneRequester.begin(); it != sceneRequester.end(); it++) {
+			SceneRequester& requester = **it;
+			requester.updateInformation(*this->camera, *this->skybox);
+		}
 	}
 
 	void RenderScene::drawSkybox() const {
@@ -177,17 +182,17 @@ namespace geeL {
 			skybox->bind(shader);
 	}
 
-	void RenderScene::addCameraRequester(CameraRequester& requester) {
-		cameraRequester.push_back(&requester);
-		requester.updateCamera(*camera);
+	void RenderScene::addRequester(SceneRequester& requester) {
+		sceneRequester.push_back(&requester);
+		requester.updateInformation(*camera, *skybox);
 	}
 
 	void RenderScene::setCamera(SceneCamera& camera) {
 		this->camera = &camera;
 
-		for (auto it = cameraRequester.begin(); it != cameraRequester.end(); it++) {
-			CameraRequester& requester = **it;
-			requester.updateCamera(*this->camera);
+		for (auto it = sceneRequester.begin(); it != sceneRequester.end(); it++) {
+			SceneRequester& requester = **it;
+			requester.updateInformation(*this->camera, * skybox);
 		}
 	}
 

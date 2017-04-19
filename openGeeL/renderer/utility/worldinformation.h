@@ -5,6 +5,7 @@
 #include <mat4x4.hpp>
 #include <map>
 #include "../cameras/camera.h"
+#include "../cubemapping/skybox.h"
 #include "../texturing/texture.h"
 
 namespace geeL {
@@ -35,17 +36,24 @@ namespace geeL {
 
 	};
 
-	//Object that can request current scene camera
-	class CameraRequester {
+	//Object that can request current scene information
+	class SceneRequester {
 
 	public:
-		virtual void updateCamera(SceneCamera& camera) {
+		virtual void updateInformation(SceneCamera& camera, Skybox& skybox) = 0;
+
+	};
+
+	//Special scene requester that stores current scene camera
+	class CameraRequester : public SceneRequester {
+
+	public:
+		virtual void updateInformation(SceneCamera& camera, Skybox& skybox) {
 			this->camera = &camera;
 		}
 
 	protected:
 		SceneCamera* camera = nullptr;
-
 	};
 
 

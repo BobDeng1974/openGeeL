@@ -35,11 +35,20 @@ namespace geeL {
 	}
 
 	void Shader::addMap(TextureID id, const std::string& name, unsigned int type) {
-		unsigned int offset = maps.size();
-		glUniform1i(glGetUniformLocation(program, name.c_str()), mapOffset + offset);
+		auto it = maps.find(name);
+		//Update texture ID if a binding with same name already exists
+		if (it != maps.end()) {
+			TextureBinding& binding = it->second;
+			binding.id = id;
+		}
+		//Add new texture binding otherwise
+		else {
+			unsigned int offset = maps.size();
+			glUniform1i(glGetUniformLocation(program, name.c_str()), mapOffset + offset);
 
-		maps[id] = TextureBinding(id, type, offset, name);
-		mapBindingPos++;
+			maps[name] = TextureBinding(id, type, offset, name);
+			mapBindingPos++;
+		}
 	}
 
 	void Shader::addMap(const Texture& texture, const std::string& name, unsigned int type) {
@@ -47,7 +56,26 @@ namespace geeL {
 	}
 
 	void Shader::removeMap(TextureID id) {
-		auto it = maps.find(id);
+		auto element = maps.end();
+		for (auto it = maps.begin(); it != maps.end(); it++) {
+			TextureBinding& tex = (*it).second;
+
+			if (tex.id == id) {
+				element = it;
+				break;
+			}
+		}
+
+		if (element != maps.end()) {
+			maps.erase(element);
+
+			//Rebind all maps again since positions might have changed
+			bindMaps();
+		}
+	}
+
+	void Shader::removeMap(const std::string& name) {
+		auto it = maps.find(name);
 		if (it != maps.end()) {
 			maps.erase(it);
 

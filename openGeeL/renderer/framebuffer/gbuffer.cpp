@@ -65,7 +65,6 @@ namespace geeL {
 		float mini = 0.f;
 		int maxDistance = 100;
 
-
 		glReadPixels(xOffset, yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
 		screenInfo.TRdepth = (-data[2] < mini) ? maxDistance : -data[2];
 

@@ -27,7 +27,7 @@ namespace geeL {
 		shader.setMat4(projectionLocation, camera->getProjectionMatrix());
 	}
 
-	void SSRR::addWorldInformation(map<WorldMaps, const Texture const*> maps) {
+	void SSRR::addWorldInformation(map<WorldMaps, const Texture*> maps) {
 		addBuffer( { maps[WorldMaps::DiffuseRoughness]->getID(), 
 			maps[WorldMaps::PositionDepth]->getID(), maps[WorldMaps::NormalMetallic]->getID() });
 	}

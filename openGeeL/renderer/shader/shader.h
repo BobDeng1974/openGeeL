@@ -56,6 +56,9 @@ namespace geeL {
 		//Remove map with given ID from shader (if it exists)
 		void removeMap(TextureID id);
 
+		//Remove map with given name from shader (if it exists)
+		void removeMap(const std::string& name);
+
 		//Load maps into their binding points in the shader
 		void loadMaps() const;
 
@@ -81,7 +84,7 @@ namespace geeL {
 		void init(const char* vertexPath, const char* geometryPath, const char* fragmentPath);
 
 	private:
-		std::map<TextureID, TextureBinding> maps;
+		std::map<std::string, TextureBinding> maps;
 
 		//Bind all added maps to the shader
 		void bindMaps();
