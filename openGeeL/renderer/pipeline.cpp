@@ -1,16 +1,16 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <list>
-#include "sceneshader.h"
-#include "../cameras/camera.h"
-#include "../lighting/lightmanager.h"
-#include "../materials/materialfactory.h"
-#include "../scene.h"
-#include "shadermanager.h"
+#include "shader/sceneshader.h"
+#include "cameras/camera.h"
+#include "lighting/lightmanager.h"
+#include "materials/materialfactory.h"
+#include "scene.h"
+#include "pipeline.h"
 
 namespace geeL {
 
-	RenderPipeline::RenderPipeline(MaterialFactory& factory) 
+	RenderPipeline::RenderPipeline(MaterialFactory& factory)
 		: factory(factory), bindingPointCounter(0) {
 	
 		camID = generateUniformBuffer(2 * int(sizeof(glm::mat4) + sizeof(glm::vec3)));

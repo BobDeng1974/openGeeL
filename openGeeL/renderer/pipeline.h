@@ -8,25 +8,27 @@ using namespace std;
 
 namespace geeL {
 
-	class RenderScene;
+	class Camera;
+	class LightManager;
 	class MaterialFactory;
+	class RenderScene;
 	class Shader;
 	class SceneShader;
 
-	//Class that forwards scene information into all registered shaders
-	class ShaderInformationLinker {
+	//Class that can forward scene information into rendering pipeline
+	class RenderPipeline {
 
 	public:
-		ShaderInformationLinker(MaterialFactory& factory);
+		RenderPipeline(MaterialFactory& factory);
 
-		//Statically bind scene information into shader. Should be called once when a new shader is created at runtime
-		void staticBind(const RenderScene& scene, SceneShader& shader) const;
+		//Statically bind scene information into shader. Should be called once when shader is created at runtime
+		void staticBind(const Camera& camera, const LightManager& lightManager, SceneShader& shader) const;
 
 		//Dynamically bind scene information into shader during runtime
-		void dynamicBind(const RenderScene& scene, SceneShader& shader) const;
+		void dynamicBind(const Camera& camera, const LightManager& lightManager, SceneShader& shader) const;
 
-		//Bind only the uniform camera information
-		void bindCamera(const RenderScene& scene) const;
+		//Bind uniform camera information
+		void bindCamera(const Camera& camera) const;
 
 		//Generate a new uniform buffer object and return its ID
 		int generateUniformBuffer(int size);

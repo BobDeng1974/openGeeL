@@ -14,6 +14,8 @@ typedef unsigned int TextureID;
 
 namespace geeL {
 
+	class Texture;
+
 	struct TextureBinding {
 		TextureID id;
 		unsigned int type;
@@ -48,7 +50,8 @@ namespace geeL {
 		void use() const;
 
 		//Add a new map to the shader
-		void addMap(TextureID id, std::string name, unsigned int type = GL_TEXTURE_2D);
+		void addMap(TextureID id, const std::string& name, unsigned int type = GL_TEXTURE_2D);
+		void addMap(const Texture& texture, const std::string& name, unsigned int type = GL_TEXTURE_2D);
 
 		//Remove map with given ID from shader (if it exists)
 		void removeMap(TextureID id);

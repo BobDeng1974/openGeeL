@@ -12,10 +12,10 @@
 #include "materials\materialfactory.h"
 #include "cameras\camera.h"
 #include "cubemapping\skybox.h"
-#include "framebuffer\gbuffer.h"
+#include "utility\screeninfo.h"
 #include "physics\physics.h"
 #include "lighting\lightmanager.h"
-#include "shader\shadermanager.h"
+#include "pipeline.h"
 #include "transformation\transform.h"
 #include "utility\worldinformation.h"
 #include "scene.h"
@@ -24,9 +24,9 @@ using namespace std;
 
 namespace geeL {
 
-	RenderScene::RenderScene(Transform& world, LightManager& lightManager, ShaderInformationLinker& shaderManager, 
+	RenderScene::RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& shaderManager, 
 		SceneCamera& camera, MeshFactory& meshFactory, MaterialFactory& materialFactory)
-			: lightManager(lightManager), shaderLinker(shaderManager), camera(&camera), meshFactory(meshFactory),
+			: lightManager(lightManager), pipeline(shaderManager), camera(&camera), meshFactory(meshFactory),
 				physics(nullptr), worldTransform(world), materialFactory(materialFactory) {}
 
 	
@@ -44,7 +44,7 @@ namespace geeL {
 			object.lateUpdate();
 		});
 
-		shaderLinker.bindCamera(*this);
+		pipeline.bindCamera(*camera);
 
 		//TODO: Move this to a seperate thread to allow simulation at fixed frame rate
 		if (physics != nullptr)
@@ -52,7 +52,7 @@ namespace geeL {
 	}
 
 	void RenderScene::draw(SceneShader& shader) {
-		shaderLinker.dynamicBind(*this, shader);
+		pipeline.dynamicBind(*camera, lightManager, shader);
 
 		//Try to find static object with shader first and draw if successfull
 		bool found = iterRenderObjects(shader, [&](const MeshRenderer& object) {
@@ -70,16 +70,19 @@ namespace geeL {
 	}
 
 	void RenderScene::drawDeferred() const {
+		drawDeferred(*camera);
+	}
 
+	void RenderScene::drawDeferred(const Camera& camera) const {
 		SceneShader* shader = &materialFactory.getDeferredShader();
-		shaderLinker.dynamicBind(*this, *shader);
+		pipeline.dynamicBind(camera, lightManager, *shader);
 		iterRenderObjects(*shader, [&](const MeshRenderer& object) {
 			if (object.isActive())
 				object.draw(materialFactory.getDeferredShader());
 		});
 
 		shader = &materialFactory.getDefaultShader(DefaultShading::DeferredSkinned);
-		//shaderLinker.dynamicBind(*this, *shader);
+		pipeline.dynamicBind(camera, lightManager, *shader);
 		iterSkinnedObjects(*shader, [&](const SkinnedMeshRenderer& object) {
 			if (object.isActive())
 				object.draw();
@@ -87,6 +90,10 @@ namespace geeL {
 	}
 
 	void RenderScene::drawForward() const {
+		drawForward(*camera);
+	}
+
+	void RenderScene::drawForward(const Camera& camera) const {
 
 		//Draw all registered objects with shaders other than deferred shader
 		const SceneShader& defShader = materialFactory.getDeferredShader();
@@ -95,7 +102,7 @@ namespace geeL {
 			if (shader == &defShader)
 				continue;
 
-			shaderLinker.dynamicBind(*this, *shader);
+			pipeline.dynamicBind(camera, lightManager, *shader);
 
 			auto& elements = it->second;
 			for (auto et = elements.begin(); et != elements.end(); et++) {
@@ -107,9 +114,11 @@ namespace geeL {
 
 		const SceneShader& defSkinnedShader = materialFactory.getDefaultShader(DefaultShading::DeferredSkinned);
 		for (auto it = skinnedObjects.begin(); it != skinnedObjects.end(); it++) {
-			const SceneShader* shader = it->first;
+			SceneShader* shader = it->first;
 			if (shader == &defSkinnedShader)
 				continue;
+
+			pipeline.dynamicBind(camera, lightManager, *shader);
 
 			auto& elements = it->second;
 			for (auto et = elements.begin(); et != elements.end(); et++) {
@@ -185,7 +194,7 @@ namespace geeL {
 			//Init shader if it hasn't been added to the scene before
 			auto it = renderObjects.find(&shader);
 			if (it == renderObjects.end()) {
-				shaderLinker.staticBind(*this, shader);
+				pipeline.staticBind(*camera, lightManager, shader);
 				lightManager.addShaderListener(shader);
 			}
 
@@ -199,7 +208,7 @@ namespace geeL {
 			//Init shader if it hasn't been added to the scene before
 			auto it = skinnedObjects.find(&shader);
 			if (it == skinnedObjects.end()) {
-				shaderLinker.staticBind(*this, shader);
+				pipeline.staticBind(*camera, lightManager, shader);
 				lightManager.addShaderListener(shader);
 			}
 

@@ -13,7 +13,7 @@ namespace geeL {
 	class LightManager;
 	class Skybox;
 	class Shader;
-	class ShaderInformationLinker;
+	class RenderPipeline;
 	class SceneShader;
 	class MeshRenderer;
 	class SkinnedMeshRenderer;
@@ -32,7 +32,7 @@ namespace geeL {
 	public:
 		LightManager& lightManager;
 
-		RenderScene(Transform& world, LightManager& lightManager, ShaderInformationLinker& shaderManager, SceneCamera& camera, 
+		RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& shaderManager, SceneCamera& camera, 
 			MeshFactory& meshFactory, MaterialFactory& materialFactory);
 
 
@@ -45,16 +45,22 @@ namespace geeL {
 		//Draw all those objects with a deferred rendering shader
 		void drawDeferred() const;
 
+		//Draw all deferred shaded objects from given camera's perspective
+		void drawDeferred(const Camera& camera) const;
+
 		//Draw all those objects with a forward rendering shader
 		void drawForward() const;
+
+		//Draw all forward shaded objects from given camera's perspective
+		void drawForward(const Camera& camera) const;
 	
-		//Draw all objects in the scene with the given shader
+		//Draw all objects in the scene with given shader
 		void drawObjects(const Shader& shader) const;
 
-		//Draw all static objects in the scene with the given shader
+		//Draw all static objects in the scene with given shader
 		void drawStaticObjects(const Shader& shader) const;
 
-		//Draw all skinned objects in the scene with the given shader
+		//Draw all skinned objects in the scene with given shader
 		void drawSkinnedObjects(const Shader& shader) const;
 
 		void setSkybox(Skybox& skybox);
@@ -93,7 +99,7 @@ namespace geeL {
 		Skybox* skybox;
 		Physics* physics;
 		MeshFactory& meshFactory;
-		ShaderInformationLinker& shaderLinker;
+		RenderPipeline& pipeline;
 		MaterialFactory& materialFactory;
 
 		std::list<CameraRequester*> cameraRequester;

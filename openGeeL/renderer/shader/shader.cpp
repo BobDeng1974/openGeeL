@@ -5,6 +5,7 @@
 #include <iostream>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
+#include "../texturing/texture.h"
 #include "shader.h"
 
 using namespace std;
@@ -33,12 +34,16 @@ namespace geeL {
 		}
 	}
 
-	void Shader::addMap(TextureID id, std::string name, unsigned int type) {
+	void Shader::addMap(TextureID id, const std::string& name, unsigned int type) {
 		unsigned int offset = maps.size();
 		glUniform1i(glGetUniformLocation(program, name.c_str()), mapOffset + offset);
 
 		maps[id] = TextureBinding(id, type, offset, name);
 		mapBindingPos++;
+	}
+
+	void Shader::addMap(const Texture& texture, const std::string& name, unsigned int type) {
+		addMap(texture.getID(), name, type);
 	}
 
 	void Shader::removeMap(TextureID id) {
