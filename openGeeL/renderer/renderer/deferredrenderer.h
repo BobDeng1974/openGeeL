@@ -12,6 +12,7 @@
 
 namespace geeL {
 
+	class Camera;
 	class SceneCamera;
 	class DefaultPostProcess;
 	class MaterialFactory;
@@ -32,6 +33,8 @@ namespace geeL {
 		virtual void init();
 		virtual void render();
 		virtual void draw();
+		virtual void draw(const Camera& camera, FrameBufferInformation info);
+
 		virtual void handleInput();
 
 		void addSSAO(SSAO& ssao, float ssaoResolution = 1.f);
@@ -76,7 +79,7 @@ namespace geeL {
 		void renderInit();
 
 		void geometryPass();
-		void lightingPass();
+		void lightingPass(const Camera& camera);
 		void forwardPass();
 
 		void linkImageBuffer(PostProcessingEffect& effect) const;

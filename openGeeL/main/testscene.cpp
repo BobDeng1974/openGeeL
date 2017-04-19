@@ -14,7 +14,7 @@
 #include "../renderer/inputmanager.h"
 #include "../renderer/window.h"
 #include "../renderer/texturing/texture.h"
-#include "../renderer/texturing/simpletexture.h"
+#include "../renderer/texturing/imagetexture.h"
 #include "../renderer/texturing/layeredtexture.h"
 
 #include "../renderer/cameras/camera.h"
@@ -33,7 +33,7 @@
 #include "../renderer/materials/defaultmaterial.h"
 #include "../renderer/materials/genericmaterial.h"
 #include "../renderer/materials/materialfactory.h"
-#include "../renderer/shader/shadermanager.h"
+#include "../renderer/pipeline.h"
 #include "../renderer/meshes/mesh.h"
 #include "../renderer/meshes/model.h"
 #include "../renderer/meshes/meshrenderer.h"
@@ -97,7 +97,7 @@ namespace {
 	public:
 		LightManager& lightManager;
 		MaterialFactory& materialFactory;
-		ShaderInformationLinker& shaderManager;
+		RenderPipeline& shaderManager;
 		TransformFactory transformFactory;
 		MeshFactory& meshFactory;
 		Physics* physics;
@@ -106,7 +106,7 @@ namespace {
 
 
 		TestScene(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
-			ShaderInformationLinker& shaderManager, RenderScene& scene, TransformFactory& transformFactory, Physics* physics)
+			RenderPipeline& shaderManager, RenderScene& scene, TransformFactory& transformFactory, Physics* physics)
 				: SceneControlObject(scene),
 					materialFactory(materialFactory), meshFactory(meshFactory), lightManager(lightManager),
 					shaderManager(shaderManager), transformFactory(transformFactory), physics(physics) {}
@@ -123,7 +123,7 @@ namespace {
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
 
-			SimpleTexture& texture = materialFactory.CreateTexture("resources/textures/cookie.png", 
+			ImageTexture& texture = materialFactory.CreateTexture("resources/textures/cookie.png", 
 				ColorType::GammaSpace, WrapMode::Repeat, FilterMode::Linear);
 
 			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-9, 5, 0), vec3(-264.0f, 0, -5), vec3(1.f, 1.f, 1.f));
@@ -144,7 +144,7 @@ namespace {
 			if (physics != nullptr) physics->addPlane(vec3(0.f, 1.f, 0.f), meshTransform2, RigidbodyProperties(0.f, false));
 
 			plane.iterateMaterials([&](MaterialContainer& container) {
-				container.setFloatValue("Roughness", 0.25f);
+				container.setFloatValue("Roughness", 0.35f);
 				container.setFloatValue("Metallic", 0.f);
 				container.setVectorValue("Color", vec3(0.4f, 0.4f, 0.4f));
 			});
@@ -245,7 +245,7 @@ void draw() {
 	
 
 	LightManager lightManager = LightManager(vec3(0.15f));
-	ShaderInformationLinker shaderManager = ShaderInformationLinker(materialFactory);
+	RenderPipeline shaderManager = RenderPipeline(materialFactory);
 	
 	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, meshFactory, materialFactory);
 	WorldPhysics physics = WorldPhysics();

@@ -11,8 +11,9 @@ using namespace glm;
 
 namespace geeL {
 
-	ReflectionProbe::ReflectionProbe(Transform& transform, float depth, unsigned int resolution, std::string name) 
-		: SceneObject(transform, name), depth(depth), resolution(resolution) {
+	ReflectionProbe::ReflectionProbe(std::function<void(const Camera&)> renderCall, Transform& transform, 
+		float depth, unsigned int resolution, std::string name)
+			: SceneObject(transform, name), depth(depth), resolution(resolution), renderCall(renderCall) {
 
 		//Init cubemap without textures
 		glGenTextures(1, &id);
@@ -38,11 +39,11 @@ namespace geeL {
 	}
 
 	ReflectionProbe::~ReflectionProbe() {
-		ColorBuffer::remove(fbo);
+		FrameBuffer::remove(fbo);
 	}
 
 
-	void ReflectionProbe::update(std::function<void(const Camera&)> renderCall) {
+	void ReflectionProbe::update() {
 
 		glm::mat4 projection = perspective(90.0f, 1.0f, 0.1f, depth);
 		glm::mat4 views[] = {
@@ -58,7 +59,7 @@ namespace geeL {
 		glViewport(0, 0, resolution, resolution);
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-		ColorBuffer::bind(fbo);
+		FrameBuffer::bind(fbo);
 		for (unsigned int side = 0; side < 6; side++) {
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, id, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -74,7 +75,7 @@ namespace geeL {
 		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-		ColorBuffer::unbind();
+		FrameBuffer::unbind();
 	}
 
 }

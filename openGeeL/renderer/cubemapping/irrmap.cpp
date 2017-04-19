@@ -28,7 +28,6 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-		//TODO: maybe use framebuffer object here
 		unsigned int captureRBO;
 		glGenFramebuffers(1, &fbo);
 		glGenRenderbuffers(1, &captureRBO);

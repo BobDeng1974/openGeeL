@@ -3,7 +3,7 @@
 #include <gtc/type_ptr.hpp>
 #include <gtc/matrix_transform.hpp>
 #include "../cameras/camera.h"
-#include "../framebuffer/gbuffer.h"
+#include "../utility/screeninfo.h"
 #include "../shader/shader.h"
 #include "../transformation/transform.h"
 #include "../lighting/spotlight.h"
@@ -67,7 +67,7 @@ namespace geeL {
 	void SimpleShadowMap::adaptShadowmap(const SceneCamera& camera) {
 		vec3 center = camera.center;
 		//float depth = scene.camera.depth;
-		const ScreenInfo& info = *camera.info;
+		const ScreenInfo& info = camera.info;
 		float depth = fminf(info.CTdepth, fminf(info.BLdepth,
 			fminf(info.BRdepth, fminf(info.TLdepth, info.TRdepth))));
 

@@ -12,7 +12,7 @@ namespace geeL {
 	class InputManager;
 	class LightManager;
 	class MeshDrawer;
-	class ShaderInformationLinker;
+	class RenderPipeline;
 	class GUIRenderer;
 
 

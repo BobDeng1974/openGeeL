@@ -5,11 +5,9 @@
 #include <chrono>
 #include <iostream>
 #include <map>
-#include <cmath>
-#include <gtc/matrix_transform.hpp>
 #include "../shader/sceneshader.h"
 #include "../postprocessing/drawdefault.h"
-#include "../texturing/simpletexture.h"
+#include "../texturing/imagetexture.h"
 #include "../window.h"
 #include "../scripting/scenecontrolobject.h"
 #include "../inputmanager.h"
@@ -17,11 +15,8 @@
 #include "../postprocessing/postprocessing.h"
 #include "../cameras/camera.h"
 #include "../lighting/lightmanager.h"
-#include "../shader/shadermanager.h"
-#include "../transformation/transform.h"
 #include "../scene.h"
 #include "../../interface/guirenderer.h"
-#include "../materials/materialfactory.h"
 #include "deferredrenderer.h"
 
 #define fps 10
@@ -40,7 +35,7 @@ namespace geeL {
 		effects.push_back(&def);
 
 		geometryPassFunc = [this]() { this->geometryPass(); };
-		lightingPassFunc = [this]() { this->lightingPass(); this->forwardPass(); };
+		lightingPassFunc = [this]() { this->lightingPass(scene->getCamera()); this->forwardPass(); };
 	}
 
 	DeferredRenderer::~DeferredRenderer() {
@@ -66,26 +61,24 @@ namespace geeL {
 		if (ssao != nullptr) {
 			ssaoBuffer = new ColorBuffer();
 			ssaoBuffer->init(unsigned int(window->width * ssaoResolution), unsigned int(window->height * ssaoResolution),
-				1, ColorType::Single, FilterMode::Nearest, WrapMode::Repeat, false);
+				ColorType::Single, FilterMode::Nearest, WrapMode::Repeat, false);
 		}
 
 		deferredShader->use();
-		deferredShader->addMap(gBuffer.positionDepth, "gPositionDepth");
-		deferredShader->addMap(gBuffer.normalMet, "gNormalMet");
-		deferredShader->addMap(gBuffer.diffuseSpec, "gDiffuseSpec");
+		deferredShader->addMap(gBuffer.getPositionDepth(), "gPositionDepth");
+		deferredShader->addMap(gBuffer.getNormalMetallic(), "gNormalMet");
+		deferredShader->addMap(gBuffer.getDiffuseSpecular(), "gDiffuseSpec");
 
 		invViewLocation = deferredShader->getLocation("inverseView");
 		originLocation = deferredShader->getLocation("origin");
 		
 		if (ssao != nullptr) {
-			deferredShader->addMap(ssaoBuffer->getColorID(), "ssao");
+			deferredShader->addMap(ssaoBuffer->getTexture().getID(), "ssao");
 			deferredShader->setInteger("useSSAO", 1);
 		}
 
-		//frameBuffer1.init(window->width, window->height, 2, { RGBA16, Single });
-		//frameBuffer2.init(window->width, window->height, 2, { RGBA16, Single });
-		frameBuffer1.init(unsigned int(window->width), unsigned int(window->height), 1, ColorType::RGBA16);
-		frameBuffer2.init(unsigned int(window->width), unsigned int(window->height), 1, ColorType::RGBA16);
+		frameBuffer1.init(unsigned int(window->width), unsigned int(window->height), ColorType::RGBA16);
+		frameBuffer2.init(unsigned int(window->width), unsigned int(window->height), ColorType::RGBA16);
 		screen.init();
 		screen.init();
 	}
@@ -105,8 +98,8 @@ namespace geeL {
 
 		//Set color buffer of default effect depending on the amount of added effects
 		defaultBuffer = (effects.size() % 2 == 0)
-			? frameBuffer2.getColorID()
-			: frameBuffer1.getColorID();
+			? frameBuffer2.getTexture().getID()
+			: frameBuffer1.getTexture().getID();
 
 		effects.front()->setBuffer(defaultBuffer);
 
@@ -138,6 +131,7 @@ namespace geeL {
 
 			//Hacky: Read camera depth from geometry pass and write it into the scene
 			scene->forwardScreenInfo(gBuffer.screenInfo);
+
 			glCullFace(GL_BACK);
 			scene->lightManager.drawShadowmaps(*scene);
 			glCullFace(GL_FRONT);
@@ -168,7 +162,7 @@ namespace geeL {
 
 				//Draw isolated effect
 				isolatedEffect->effectOnly(true);
-				isolatedEffect->setBuffer(frameBuffer1.getColorID());
+				isolatedEffect->setBuffer(frameBuffer1.getTexture().getID());
 				frameBuffer2.fill(*isolatedEffect);
 
 				def->draw();
@@ -220,6 +214,10 @@ namespace geeL {
 		//Geometry pass
 		gBuffer.fill(geometryPassFunc);
 
+		glCullFace(GL_BACK);
+		scene->lightManager.drawShadowmaps(*scene);
+		glCullFace(GL_FRONT);
+
 		//SSAO pass
 		if (ssao != nullptr) {
 			ssaoBuffer->fill(*ssao);
@@ -227,11 +225,32 @@ namespace geeL {
 		}
 
 		//TODO: parent FBO needs to be reset here
-		lightingPass();
+		lightingPass(scene->getCamera());
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		glDisable(GL_DEPTH_TEST);
+	}
 
+	void DeferredRenderer::draw(const Camera& camera, FrameBufferInformation info) {
+		glEnable(GL_DEPTH_TEST);
+
+		//Geometry pass
+		gBuffer.fill([this, camera] () { scene->drawDeferred(camera); });
+
+		//TODO: Enable shadow mapping
+
+		//SSAO pass
+		if (ssao != nullptr)
+			ssaoBuffer->fill(*ssao);
+
+		FrameBuffer::resetSize(info.width, info.height);
+		FrameBuffer::bind(info.fbo);
+
+		//Lighting pass
+		lightingPass(camera);
+
+		glClear(GL_COLOR_BUFFER_BIT);
+		glDisable(GL_DEPTH_TEST);
 	}
 
 	void DeferredRenderer::geometryPass() {
@@ -242,13 +261,12 @@ namespace geeL {
 		scene->drawDeferred();
 	}
 
-	void DeferredRenderer::lightingPass() {
-		const SceneCamera& currentCam = scene->getCamera();
+	void DeferredRenderer::lightingPass(const Camera& camera) {
 		deferredShader->use();
 		deferredShader->loadMaps();
-		scene->lightManager.bind(currentCam, *deferredShader, ShaderTransformSpace::View);
-		deferredShader->setMat4(invViewLocation, currentCam.getInverseViewMatrix());
-		deferredShader->setVector3(originLocation, currentCam.GetOriginInViewSpace());
+		scene->lightManager.bind(camera, *deferredShader, ShaderTransformSpace::View);
+		deferredShader->setMat4(invViewLocation, camera.getInverseViewMatrix());
+		deferredShader->setVector3(originLocation, camera.GetOriginInViewSpace());
 		//deferredShader->setVector3("ambient", scene->lightManager.ambient);
 		screen.draw();
 
@@ -304,10 +322,10 @@ namespace geeL {
 
 	void DeferredRenderer::linkInformation() const {
 
-		map<WorldMaps, unsigned int> worldMaps;
-		worldMaps[WorldMaps::DiffuseRoughness] = gBuffer.diffuseSpec;
-		worldMaps[WorldMaps::PositionDepth]    = gBuffer.positionDepth;
-		worldMaps[WorldMaps::NormalMetallic]   = gBuffer.normalMet;
+		map<WorldMaps, const Texture*> worldMaps;
+		worldMaps[WorldMaps::DiffuseRoughness] = &gBuffer.getDiffuseSpecular();
+		worldMaps[WorldMaps::PositionDepth]    = &gBuffer.getPositionDepth();
+		worldMaps[WorldMaps::NormalMetallic]   = &gBuffer.getNormalMetallic();
 
 		for (auto it = requester.begin(); it != requester.end(); it++) {
 			WorldMapRequester* req = *it;
@@ -354,20 +372,20 @@ namespace geeL {
 					currBuffer = defaultBuffer;
 					break;
 				case 1:
-					currBuffer = gBuffer.diffuseSpec;
+					currBuffer = gBuffer.getDiffuseSpecular().getID();
 					break;
 				case 2:
-					currBuffer = gBuffer.normalMet;
+					currBuffer = gBuffer.getNormalMetallic().getID();
 					break;
 				case 3:
-					currBuffer = ssaoBuffer->getColorID();
+					currBuffer = ssaoBuffer->getTexture().getID();
 					break;
 			}
 
 			isolatedEffect = nullptr;
 		}
 		else {
-			currBuffer = frameBuffer2.getColorID();
+			currBuffer = frameBuffer2.getTexture().getID();
 
 			int index = toggle - bufferSize;
 			isolatedEffect = effects[index];

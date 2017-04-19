@@ -28,11 +28,11 @@ namespace geeL {
 	}
 
 
-	SimpleTexture& MaterialFactory::CreateTexture(std::string filePath, ColorType colorType,
+	ImageTexture& MaterialFactory::CreateTexture(std::string filePath, ColorType colorType,
 		WrapMode wrapMode, FilterMode filterMode) {
 
 		if (textures.find(filePath) == textures.end())
-			textures[filePath] = SimpleTexture(filePath.c_str(), colorType, wrapMode, filterMode);
+			textures[filePath] = ImageTexture(filePath.c_str(), colorType, wrapMode, filterMode);
 
 		return textures[filePath];
 	}

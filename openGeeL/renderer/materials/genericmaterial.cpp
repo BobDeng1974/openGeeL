@@ -5,7 +5,7 @@
 #include <iostream>
 #include "genericmaterial.h"
 #include "../shader/sceneshader.h"
-#include "../texturing/simpletexture.h"
+#include "../texturing/imagetexture.h"
 
 using namespace std;
 

@@ -4,7 +4,7 @@
 #include <gtc/type_ptr.hpp>
 #include <iostream>
 #include "../shader/sceneshader.h"
-#include "../texturing/simpletexture.h"
+#include "../texturing/imagetexture.h"
 #include "defaultmaterial.h"
 
 using namespace std;

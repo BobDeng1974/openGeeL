@@ -4,7 +4,7 @@
 #include <list>
 #include <map>
 #include <string>
-#include "../texturing/simpletexture.h"
+#include "../texturing/imagetexture.h"
 #include "../texturing/envmap.h"
 #include "../shader/defshading.h"
 
@@ -24,7 +24,7 @@ namespace geeL {
 
 		//Creates and returns a new texture from given file path or 
 		//returns an existing texture if it already uses this file
-		SimpleTexture& CreateTexture(std::string filePath, ColorType colorType = ColorType::RGBA,
+		ImageTexture& CreateTexture(std::string filePath, ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest);
 
 		//Creates and returns a new texture map from given file path or 
@@ -72,7 +72,7 @@ namespace geeL {
 		SceneShader* deferredAnimatedShader;
 		std::list<MaterialContainer*> container;
 		std::list<SceneShader*> shaders;
-		std::map<std::string, SimpleTexture> textures;
+		std::map<std::string, ImageTexture> textures;
 		std::map<std::string, TextureMap> textureMaps;
 		std::map<std::string, EnvironmentMap> envMaps;
 
