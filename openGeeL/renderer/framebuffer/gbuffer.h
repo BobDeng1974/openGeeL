@@ -29,8 +29,7 @@ namespace geeL {
 
 		void init(int width, int height);
 
-		void fill(Drawer& drawer, bool setFBO = false);
-		virtual void fill(Drawer& drawer, bool setFBO = false) const;
+		virtual void fill(std::function<void()> drawCall);
 
 		//Returns depth of current drawn image
 		float getDepth() const;

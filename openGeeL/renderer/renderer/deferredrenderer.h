@@ -48,7 +48,6 @@ namespace geeL {
 
 	private:
 		int toggle;
-		bool geometryPass = true;
 		
 		const MaterialFactory& factory;
 		std::vector<PostProcessingEffect*> effects;
@@ -70,8 +69,15 @@ namespace geeL {
 		ShaderLocation invViewLocation;
 		ShaderLocation originLocation;
 
+		std::function<void()> geometryPassFunc;
+		std::function<void()> lightingPassFunc;
+
 		//Initialize start of rendering process
 		void renderInit();
+
+		void geometryPass();
+		void lightingPass();
+		void forwardPass();
 
 		void linkImageBuffer(PostProcessingEffect& effect) const;
 		void handleInput(GLFWwindow* window, int key, int scancode, int action, int mode);

@@ -38,15 +38,14 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void GBuffer::fill(Drawer& drawer, bool setFBO) {
+	void GBuffer::fill(std::function<void()> drawCall) {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 		glViewport(0, 0, info.width, info.height);
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		drawer.draw();
+		drawCall();
 
-		//glReadBuffer(GL_COLOR_ATTACHMENT0);
 		float data[4];
 		glReadPixels(info.width / 2, info.height / 2, 1, 1, GL_RGBA, GL_FLOAT, data);
 		screenInfo.CTdepth = -data[2];
@@ -56,7 +55,7 @@ namespace geeL {
 		float mini = 0.f;
 		int maxDistance = 100;
 
-		
+
 		glReadPixels(xOffset, yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
 		screenInfo.TRdepth = (-data[2] < mini) ? maxDistance : -data[2];
 
@@ -68,17 +67,7 @@ namespace geeL {
 
 		glReadPixels(info.width - xOffset, info.height - yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
 		screenInfo.BLdepth = (-data[2] < mini) ? maxDistance : -data[2];
-		
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
 
-	void GBuffer::fill(Drawer& drawer, bool setFBO) const {
-		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
-		glViewport(0, 0, info.width, info.height);
-		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		drawer.draw();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 

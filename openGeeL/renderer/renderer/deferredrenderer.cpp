@@ -38,6 +38,9 @@ namespace geeL {
 					"renderer/shaders/cooktorrancedeferred.frag")), toggle(0), factory(factory) {
 
 		effects.push_back(&def);
+
+		geometryPassFunc = [this]() { this->geometryPass(); };
+		lightingPassFunc = [this]() { this->lightingPass(); this->forwardPass(); };
 	}
 
 	DeferredRenderer::~DeferredRenderer() {
@@ -130,7 +133,7 @@ namespace geeL {
 			glEnable(GL_DEPTH_TEST);
 			
 			//Geometry pass
-			gBuffer.fill(*this);
+			gBuffer.fill(geometryPassFunc);
 			renderTime.update(RenderPass::Geometry);
 
 			//Hacky: Read camera depth from geometry pass and write it into the scene
@@ -148,7 +151,7 @@ namespace geeL {
 			}
 
 			//Lighting & forward pass
-			frameBuffer1.fill(*this);
+			frameBuffer1.fill(lightingPassFunc);
 			renderTime.update(RenderPass::Lighting);
 
 			glClear(GL_COLOR_BUFFER_BIT);
@@ -212,35 +215,54 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::draw() {
-		if (geometryPass) {
-			for (size_t i = 0; i < objects.size(); i++)
-				objects[i]->draw(scene->getCamera());
+		glEnable(GL_DEPTH_TEST);
 
-			scene->update();
-			scene->drawDeferred();
-		}
-		else {
-			//Lighting pass
-			const SceneCamera& currentCam = scene->getCamera();
-			deferredShader->use();
-			deferredShader->loadMaps();
-			scene->lightManager.bind(currentCam, *deferredShader, ShaderTransformSpace::View);
-			deferredShader->setMat4(invViewLocation, currentCam.getInverseViewMatrix());
-			deferredShader->setVector3(originLocation, currentCam.GetOriginInViewSpace());
-			//deferredShader->setVector3("ambient", scene->lightManager.ambient);
-			screen.draw();
+		//Geometry pass
+		gBuffer.fill(geometryPassFunc);
 
-			glClear(GL_DEPTH_BUFFER_BIT);
-			//Copy depth buffer from gBuffer to draw forward 
-			//rendered objects 'into' the scene instead of 'on top'
-			frameBuffer1.copyDepth(gBuffer);
-
-			//Forward pass
-			scene->drawForward();
-			scene->drawSkybox();
+		//SSAO pass
+		if (ssao != nullptr) {
+			ssaoBuffer->fill(*ssao);
+			ColorBuffer::resetSize(window->width, window->height);
 		}
 
-		geometryPass = !geometryPass;
+		//TODO: parent FBO needs to be reset here
+		lightingPass();
+
+		glClear(GL_COLOR_BUFFER_BIT);
+		glDisable(GL_DEPTH_TEST);
+
+	}
+
+	void DeferredRenderer::geometryPass() {
+		for (size_t i = 0; i < objects.size(); i++)
+			objects[i]->draw(scene->getCamera());
+
+		scene->update();
+		scene->drawDeferred();
+	}
+
+	void DeferredRenderer::lightingPass() {
+		const SceneCamera& currentCam = scene->getCamera();
+		deferredShader->use();
+		deferredShader->loadMaps();
+		scene->lightManager.bind(currentCam, *deferredShader, ShaderTransformSpace::View);
+		deferredShader->setMat4(invViewLocation, currentCam.getInverseViewMatrix());
+		deferredShader->setVector3(originLocation, currentCam.GetOriginInViewSpace());
+		//deferredShader->setVector3("ambient", scene->lightManager.ambient);
+		screen.draw();
+
+		glClear(GL_DEPTH_BUFFER_BIT);
+	}
+
+	void DeferredRenderer::forwardPass() {
+		//Copy depth buffer from gBuffer to draw forward 
+		//rendered objects 'into' the scene instead of 'on top'
+		frameBuffer1.copyDepth(gBuffer);
+
+		//Forward pass
+		scene->drawForward();
+		scene->drawSkybox();
 	}
 
 	void DeferredRenderer::handleInput() {

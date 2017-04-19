@@ -1,6 +1,7 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
+#include <functional>
 #include <glew.h>
 #include <vector>
 #include "../texturing/texture.h"
@@ -26,7 +27,7 @@ namespace geeL {
 	public:
 		FrameBufferInformation info;
 
-		virtual void fill(Drawer& drawer, bool setFBO) const = 0;
+		virtual void fill(std::function<void()> drawCall) = 0;
 
 		void bind() const;
 		static void bind(unsigned int fbo);
@@ -58,8 +59,8 @@ namespace geeL {
 		void init(unsigned int width, unsigned int height, int colorBufferAmount, std::vector<ColorType> bufferTypes,
 			FilterMode filterMode = FilterMode::Nearest, WrapMode wrapMode = WrapMode::ClampBorder, bool useDepth = true);
 	
-		virtual void fill(Drawer& drawer, bool setFBO = true) const;
-		
+		virtual void fill(std::function<void()> drawCall);
+		void fill(Drawer& drawer, bool setFBO = true) const;
 
 		unsigned int getColorID(unsigned int position = 0) const;
 		static void resetSize(int width, int height);
