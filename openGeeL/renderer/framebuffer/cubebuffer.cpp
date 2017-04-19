@@ -35,4 +35,20 @@ namespace geeL {
 		FrameBuffer::unbind();
 	}
 
+	void CubeBuffer::fill(std::function<void(unsigned int)> drawCall) {
+		glViewport(0, 0, info.width, info.height);
+
+		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+		FrameBuffer::bind(info.fbo);
+		for (unsigned int side = 0; side < 6; side++) {
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, textureID, 0);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			drawCall(side);
+		}
+
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		FrameBuffer::unbind();
+	}
+
 }

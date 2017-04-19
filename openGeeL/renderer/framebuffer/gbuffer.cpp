@@ -10,6 +10,12 @@ namespace geeL {
 
 	GBuffer::GBuffer() {}
 
+	GBuffer::~GBuffer() {
+		positionDepth.remove();
+		normalMet.remove();
+		diffuseSpec.remove();
+	}
+
 
 	void GBuffer::init(int width, int height) {
 		info.width = width;
@@ -19,14 +25,18 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 
 		//Create attachements for all color buffers
-		positionDepth = generateTexture(0, GL_RGBA16F);
-		normalMet     = generateTexture(1, GL_RGBA16F);
-		diffuseSpec   = generateTexture(2, GL_RGBA);
-		GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+		positionDepth = RenderTexture(width, height, ColorType::RGBA16);
+		normalMet = RenderTexture(width, height, ColorType::RGBA16);
+		diffuseSpec = RenderTexture(width, height, ColorType::RGBA);
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, positionDepth.getID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, normalMet.getID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, diffuseSpec.getID(), 0);
+		unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
 		glDrawBuffers(3, attachments);
 
 		// Create a renderbuffer object for depth and stencil attachment
-		GLuint rbo;
+		unsigned int rbo;
 		glGenRenderbuffers(1, &rbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
@@ -71,22 +81,20 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	unsigned int GBuffer::generateTexture(unsigned int position, unsigned int type) {
-		GLuint textureID;
-		glGenTextures(1, &textureID);
-		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, type, info.width, info.height, 0, 
-			(type == GL_RGB16F) ? GL_RGB : GL_RGBA, (type == GL_RGB16F || type == GL_RGBA16F) ? GL_FLOAT : GL_UNSIGNED_BYTE, NULL);
-		
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, GL_TEXTURE_2D, textureID, 0);
-
-		return textureID;
-	}
-
 	float GBuffer::getDepth() const {
 		return depthPos;
+	}
+
+	const RenderTexture& GBuffer::getDiffuseSpecular() const {
+		return diffuseSpec;
+	}
+
+	const RenderTexture& GBuffer::getPositionDepth() const {
+		return positionDepth;
+	}
+
+	const RenderTexture& GBuffer::getNormalMetallic() const {
+		return normalMet;
 	}
 
 }

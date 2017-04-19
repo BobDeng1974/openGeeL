@@ -5,6 +5,7 @@
 #include <glew.h>
 #include <vector>
 #include "../texturing/texture.h"
+#include "../texturing/rendertexture.h"
 
 namespace geeL {
 
@@ -36,6 +37,7 @@ namespace geeL {
 		void copyDepth(unsigned int targetFBO) const;
 		void copyDepth(const FrameBuffer& buffer) const;
 		
+		static void resetSize(int width, int height);
 		static void remove(unsigned int fbo);
 		void remove();
 
@@ -53,24 +55,21 @@ namespace geeL {
 		ColorBuffer();
 		~ColorBuffer();
 
-		void init(unsigned int width, unsigned int height, int colorBufferAmount = 1, ColorType colorType = ColorType::RGBA16,
+		void init(unsigned int width, unsigned int height, std::vector<RenderTexture*>&& colorBuffers, bool useDepth = true);
+
+		void init(unsigned int width, unsigned int height, ColorType colorType = ColorType::RGBA16,
 			FilterMode filterMode = FilterMode::Nearest, WrapMode wrapMode = WrapMode::ClampBorder, bool useDepth = true);
 
-		void init(unsigned int width, unsigned int height, int colorBufferAmount, std::vector<ColorType> bufferTypes,
-			FilterMode filterMode = FilterMode::Nearest, WrapMode wrapMode = WrapMode::ClampBorder, bool useDepth = true);
-	
 		virtual void fill(std::function<void()> drawCall);
 		void fill(Drawer& drawer, bool setFBO = true) const;
 
-		unsigned int getColorID(unsigned int position = 0) const;
-		static void resetSize(int width, int height);
+		const RenderTexture& getTexture(unsigned int position = 0) const;
+		
 		void resize(int width, int height);
 
 	private:
 		unsigned int rbo;
-		std::vector<unsigned int> colorBuffers;
-
-		unsigned int generateTexture(ColorType colorType, FilterMode filterMode, WrapMode wrapMode);
+		std::vector<RenderTexture*> buffers;
 	};
 }
 

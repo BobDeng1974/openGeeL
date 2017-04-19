@@ -37,6 +37,10 @@ namespace geeL {
 			info.width, info.height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	}
 
+	void FrameBuffer::resetSize(int width, int height) {
+		glViewport(0, 0, width, height);
+	}
+
 	void FrameBuffer::remove(unsigned int fbo) {
 		glDeleteFramebuffers(1, &fbo);
 	}
@@ -63,22 +67,17 @@ namespace geeL {
 
 	ColorBuffer::~ColorBuffer() {
 		remove();
+
+		for (auto it = buffers.begin(); it != buffers.end(); it++) {
+			RenderTexture* texture = *it;
+			texture->remove();
+
+			delete texture;
+		}
 	}
 
-
-	void ColorBuffer::init(unsigned int width, unsigned int height, int colorBufferAmount,
-		ColorType colorType, FilterMode filterMode, WrapMode wrapMode, bool useDepth) {
-		
-		int amount = min(3, colorBufferAmount);
-		vector<ColorType> bufferTypes = vector<ColorType>(amount, colorType);
-		init(width, height, amount, bufferTypes, filterMode, wrapMode, useDepth);
-	}
-
-	void ColorBuffer::init(unsigned int width, unsigned int height, int colorBufferAmount, vector<ColorType> bufferTypes,
-		FilterMode filterMode, WrapMode wrapMode, bool useDepth) {
-
-		if (colorBufferAmount != bufferTypes.size())
-			throw "Given amount of buffer types doesn't match amount of given color buffers";
+	void ColorBuffer::init(unsigned int width, unsigned int height, std::vector<RenderTexture*>&& colorBuffers, bool useDepth) {
+		buffers = std::move(colorBuffers);
 
 		info.width = width;
 		info.height = height;
@@ -86,30 +85,30 @@ namespace geeL {
 		glGenFramebuffers(1, &info.fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 
+		int amount = min(3, (int)colorBuffers.size());
+		if (colorBuffers.size() > 3)
+			std::cout << "Only first 3 textures are used in color buffer\n";
+
 		// Create color attachment textures
-		int amount = min(3, colorBufferAmount);
-		for (int i = 0; i < amount; i++) {
-			unsigned int color = generateTexture(bufferTypes[i], filterMode, wrapMode);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, color, 0);
-			colorBuffers.push_back(color);
-		}
+		for (int i = 0; i < amount; i++)
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, buffers[i]->getID(), 0);
 
 		switch (amount) {
 			case 1: {
 				GLuint attachments[1] = { GL_COLOR_ATTACHMENT0 };
 				glDrawBuffers(amount, attachments);
-			}
-					break;
+				}
+				break;
 			case 2: {
 				GLuint attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
 				glDrawBuffers(amount, attachments);
-			}
-					break;
+				}
+				break;
 			case 3: {
 				GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
 				glDrawBuffers(amount, attachments);
-			}
-			break;
+				}
+				break;
 		}
 
 		if (useDepth) {
@@ -127,12 +126,35 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	
+	void ColorBuffer::init(unsigned int width, unsigned int height,
+		ColorType colorType, FilterMode filterMode, WrapMode wrapMode, bool useDepth) {
+		
+		info.width = width;
+		info.height = height;
 
-	
+		glGenFramebuffers(1, &info.fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 
-	void ColorBuffer::resetSize(int width, int height) {
-		glViewport(0, 0, width, height);
+		// Create color attachment textures
+		RenderTexture* texture = new RenderTexture(width, height, colorType, wrapMode, filterMode);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getID(), 0);
+		unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
+		glDrawBuffers(1, attachments);
+		buffers.push_back(texture);
+
+		if (useDepth) {
+			// Create a renderbuffer object for depth and stencil attachment
+			glGenRenderbuffers(1, &rbo);
+			glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+		}
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	void ColorBuffer::resize(int width, int height) {
@@ -141,7 +163,7 @@ namespace geeL {
 			info.height = height;
 
 			//TODO: make this more orderly
-			glBindTexture(GL_TEXTURE_2D, colorBuffers[0]);
+			glBindTexture(GL_TEXTURE_2D, buffers[0]->getID());
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, info.width, info.height, 0, GL_RGBA, GL_FLOAT, 0);
 			glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -175,28 +197,11 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	
-
-	unsigned int ColorBuffer::generateTexture(ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
-
-		//Generate texture ID and load texture data 
-		unsigned int textureID;
-		glGenTextures(1, &textureID);
-		glBindTexture(GL_TEXTURE_2D, textureID);
-
-		Texture::initColorType(colorType, info.width, info.height, 0);
-		Texture::initWrapMode(wrapMode);
-		Texture::initFilterMode(filterMode);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		return textureID;
-	}
-
-	unsigned int ColorBuffer::getColorID(unsigned int position) const {
-		if (position >= colorBuffers.size())
+	const RenderTexture& ColorBuffer::getTexture(unsigned int position) const {
+		if (position >= buffers.size())
 			throw "Committed postion out of bounds";
 
-		return colorBuffers[position];
+		return *buffers[position];
 	}
 
 	
