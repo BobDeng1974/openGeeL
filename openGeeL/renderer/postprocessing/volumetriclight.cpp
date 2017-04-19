@@ -53,8 +53,8 @@ namespace geeL {
 	}
 
 
-	void VolumetricLight::addWorldInformation(map<WorldMaps, unsigned int> maps) {
-		addBuffer( { maps[WorldMaps::PositionDepth] });
+	void VolumetricLight::addWorldInformation(map<WorldMaps, const Texture*> maps) {
+		addBuffer( { maps[WorldMaps::PositionDepth]->getID() } );
 	}
 
 	unsigned int VolumetricLight::getSampleCount() const {

@@ -57,7 +57,7 @@ namespace geeL {
 			}
 			else {
 				//Then use the previously blurred image
-				currBuffer = frameBuffers[!horizontal].getColorID();
+				currBuffer = frameBuffers[!horizontal].getTexture().getID();
 			}
 
 			//Render Call
@@ -68,7 +68,7 @@ namespace geeL {
 		
 		//Set values for final blur call
 		shader.setInteger(horLocation, horizontal);
-		currBuffer = frameBuffers[!horizontal].getColorID();
+		currBuffer = frameBuffers[!horizontal].getTexture().getID();
 
 		ColorBuffer::bind(parentFBO);
 	}
@@ -119,8 +119,8 @@ namespace geeL {
 	}
 
 
-	void BilateralDepthFilter::addWorldInformation(map<WorldMaps, unsigned int> maps) {
-		addBuffer( { maps[WorldMaps::PositionDepth] });
+	void BilateralDepthFilter::addWorldInformation(map<WorldMaps, const Texture*> maps) {
+		addBuffer( { maps[WorldMaps::PositionDepth]->getID() });
 	}
 
 
@@ -143,7 +143,7 @@ namespace geeL {
 		sobelBuffer.init(info.width, info.height);
 		sobel.init(screen, sobelBuffer.info);
 
-		buffers.push_back(sobelBuffer.getColorID());
+		buffers.push_back(sobelBuffer.getTexture().getID());
 	}
 
 	void SobelBlur::bindValues() {
@@ -156,12 +156,12 @@ namespace geeL {
 	void SobelBlur::bindToScreen() {
 		shader.use();
 
-		std::list<unsigned int> buffs = { currBuffer, sobelBuffer.getColorID() };
+		std::list<unsigned int> buffs = { currBuffer, sobelBuffer.getTexture().getID() };
 		shader.loadMaps(buffs);
 		screen->draw();
 	}
 
-	void  SobelBlur::addWorldInformation(map<WorldMaps, unsigned int> maps) {
-		sobel.setBuffer({ maps[WorldMaps::PositionDepth] });
+	void  SobelBlur::addWorldInformation(map<WorldMaps, const Texture*> maps) {
+		sobel.setBuffer({ maps[WorldMaps::PositionDepth]->getID() });
 	}
 }

@@ -59,10 +59,10 @@ namespace geeL {
 
 		screenInfo = &info;
 		blurBuffer.init(int(info.width * blurResolution), int(info.height * blurResolution), 
-			1, ColorType::RGB16, FilterMode::Linear);
+			ColorType::RGB16, FilterMode::Linear);
 
 		blur.init(screen, blurBuffer.info);
-		buffers.push_back(blurBuffer.getColorID());
+		buffers.push_back(blurBuffer.getTexture().getID());
 	}
 
 	void DepthOfFieldBlurred::bindValues() {
@@ -88,8 +88,8 @@ namespace geeL {
 		bindToScreen();
 	}
 
-	void DepthOfFieldBlurred::addWorldInformation(map<WorldMaps, unsigned int> maps) {
-		addBuffer( {maps[WorldMaps::PositionDepth]} );
+	void DepthOfFieldBlurred::addWorldInformation(map<WorldMaps, const Texture*> maps) {
+		addBuffer( { maps[WorldMaps::PositionDepth]->getID() } );
 		blur.setBuffer({ buffers.front(), *next(buffers.begin()) });
 	}
 

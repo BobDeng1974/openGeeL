@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <vec3.hpp>
-#include "../texturing/simpletexture.h"
+#include "../texturing/imagetexture.h"
 #include "../framebuffer/framebuffer.h"
 #include "../utility/worldinformation.h"
 #include "postprocessing.h"
@@ -21,7 +21,7 @@ namespace geeL {
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 		virtual void draw();
 
-		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps);
+		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 		float getRadius() const;
 		void setRadius(float radius);
@@ -34,7 +34,7 @@ namespace geeL {
 		float radius;
 		unsigned int sampleCount = 32;
 
-		SimpleTexture noiseTexture;
+		ImageTexture noiseTexture;
 		std::vector<glm::vec3> kernel;
 		std::vector<glm::vec3> noise;
 		PostProcessingEffect& blur;

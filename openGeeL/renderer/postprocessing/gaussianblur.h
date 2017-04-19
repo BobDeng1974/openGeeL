@@ -61,7 +61,7 @@ namespace geeL {
 
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
-		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps);
+		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 	};
 
@@ -75,7 +75,7 @@ namespace geeL {
 		virtual void setBuffer(unsigned int buffer);
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
-		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps);
+		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 	protected:
 		virtual void bindValues();

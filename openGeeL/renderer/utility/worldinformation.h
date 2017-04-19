@@ -5,8 +5,10 @@
 #include <mat4x4.hpp>
 #include <map>
 #include "../cameras/camera.h"
+#include "../texturing/texture.h"
 
 namespace geeL {
+
 
 	enum class WorldMaps {
 		None = 0,
@@ -20,7 +22,7 @@ namespace geeL {
 	class WorldMapRequester {
 
 	public:
-		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps) = 0;
+		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps) = 0;
 
 	};
 

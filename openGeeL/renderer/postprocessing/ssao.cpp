@@ -42,7 +42,7 @@ namespace geeL {
 			noise.push_back(sample);
 		}
 
-		noiseTexture = SimpleTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::Nearest);
+		noiseTexture = ImageTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::Nearest);
 	}
 
 	void SSAO::init(ScreenQuad& screen, const FrameBufferInformation& info) {
@@ -60,11 +60,11 @@ namespace geeL {
 		for (unsigned int i = 0; i < sampleCount; i++)
 			shader.setVector3("samples[" + to_string(i) + "]", kernel[i]);
 		
-		tempBuffer.init(info.width, info.height, 1, ColorType::Single, 
+		tempBuffer.init(info.width, info.height, ColorType::Single, 
 			FilterMode::Nearest, WrapMode::Repeat, false);
 
 		blur.init(screen, info);
-		blur.setBuffer(tempBuffer.getColorID());
+		blur.setBuffer(tempBuffer.getTexture().getID());
 
 		projectionLocation = shader.getLocation("projection");
 	}
@@ -91,9 +91,9 @@ namespace geeL {
 		tempBuffer.fill(*this, false);
 	}
 
-	void SSAO::addWorldInformation(map<WorldMaps, unsigned int> maps) {
+	void SSAO::addWorldInformation(map<WorldMaps, const Texture*> maps) {
 		//Set instead of add buffers to override the default image buffer since it isn't need for SSAO
-		setBuffer( {maps[WorldMaps::PositionDepth], maps[WorldMaps::NormalMetallic]} );
+		setBuffer( { maps[WorldMaps::PositionDepth]->getID(), maps[WorldMaps::NormalMetallic]->getID() } );
 		buffers.push_back(noiseTexture.getID());
 	}
 

@@ -42,7 +42,7 @@ namespace geeL {
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 		virtual void draw();
 
-		virtual void addWorldInformation(std::map<WorldMaps, unsigned int> maps);
+		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 		void resizeBlurResolution(float blurResolution);
 		float getBlurResolution() const;

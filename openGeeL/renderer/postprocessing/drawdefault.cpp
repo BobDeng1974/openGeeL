@@ -2,7 +2,7 @@
 #include "../shader/shader.h"
 #include "../primitives/screenquad.h"
 #include "../framebuffer/framebuffer.h"
-#include "../texturing/simpletexture.h"
+#include "../texturing/imagetexture.h"
 #include "drawdefault.h"
 
 using namespace glm;
@@ -16,7 +16,7 @@ namespace geeL {
 	void DefaultPostProcess::init(ScreenQuad& screen, const FrameBufferInformation& info) {
 		PostProcessingEffect::init(screen, info);
 
-		SimpleTexture noise = SimpleTexture("resources/textures/noise.png", ColorType::Single);
+		ImageTexture noise = ImageTexture("resources/textures/noise.png", ColorType::Single);
 		buffers.push_back(noise.getID());
 
 		shader.setVector3("noiseScale",

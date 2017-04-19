@@ -31,21 +31,21 @@ namespace geeL {
 		shader.setInteger("effectOnly", onlyEffect);
 
 		effectBuffer.init(unsigned int(info.width * effectResolution), unsigned int(info.height * effectResolution),
-			1, ColorType::RGB16, FilterMode::Linear);
+			ColorType::RGB16, FilterMode::Linear);
 		blurBuffer.init(unsigned int(info.width * blurResolution), unsigned int(info.height * blurResolution),
-			1, ColorType::RGB16, FilterMode::Linear);
+			ColorType::RGB16, FilterMode::Linear);
 
 		effect.init(screen, effectBuffer.info);
 		blur.init(screen, blurBuffer.info);
 
-		buffers.push_back(blurBuffer.getColorID());
+		buffers.push_back(blurBuffer.getTexture().getID());
 	}
 
 
 	void BlurredPostEffect::bindValues() {
 		effectBuffer.fill(effect);
 
-		blur.setBuffer(effectBuffer.getColorID());
+		blur.setBuffer(effectBuffer.getTexture().getID());
 		blurBuffer.fill(blur);
 
 		ColorBuffer::resetSize(screenInfo->width, screenInfo->height);
