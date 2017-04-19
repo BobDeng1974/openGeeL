@@ -33,8 +33,6 @@ namespace geeL {
 	}
 
 	void RenderPipeline::dynamicBind(const Camera& camera, const LightManager& lightManager, SceneShader& shader) const {
-		//bindCamera(scene.getCamera());
-
 		shader.use();
 		shader.loadMaps();
 		if (shader.getUseLight()) lightManager.bind(camera, shader);

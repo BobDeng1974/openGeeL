@@ -75,7 +75,7 @@ namespace geeL {
 		void bindShadowmap(Shader& shader, SpotLight& light) const;
 
 		void bindShadowmaps(Shader& shader) const;
-		void drawShadowmaps(const RenderScene& scene) const;
+		void drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera) const;
 
 		void iterDirectionalLights(std::function<void(DirectionalLight&)> function);
 		void iterPointLights(std::function<void(PointLight&)> function);

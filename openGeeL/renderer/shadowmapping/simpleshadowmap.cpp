@@ -64,10 +64,18 @@ namespace geeL {
 	}
 
 
-	void SimpleShadowMap::adaptShadowmap(const SceneCamera& camera) {
-		vec3 center = camera.center;
+	void SimpleShadowMap::adaptShadowmap(const SceneCamera* const camera) {
+
+		//Fallback strategy if no camera was forwarded
+		if (camera == nullptr) {
+			//Draw with fixed resolution
+			bindShadowmapResolution(256, 256);
+			return;
+		}
+
+		vec3 center = camera->center;
 		//float depth = scene.camera.depth;
-		const ScreenInfo& info = camera.info;
+		const ScreenInfo& info = camera->info;
 		float depth = fminf(info.CTdepth, fminf(info.BLdepth,
 			fminf(info.BRdepth, fminf(info.TLdepth, info.TRdepth))));
 
@@ -81,10 +89,10 @@ namespace geeL {
 
 		//Only update texture if resolution actually changed
 		if (changed)
-			bindShadowmapResolution();
+			bindShadowmapResolution(width, height);
 	}
 
-	void SimpleShadowMap::bindShadowmapResolution() const {
+	void SimpleShadowMap::bindShadowmapResolution(unsigned int width, unsigned int height) const {
 		glBindTexture(GL_TEXTURE_2D, id);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
 			width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
@@ -130,7 +138,7 @@ namespace geeL {
 		shader.setMat4(name + "lightTransform", lightTransform);
 	}
 
-	void SimpleSpotLightMap::draw(const SceneCamera& camera,
+	void SimpleSpotLightMap::draw(const SceneCamera* const camera,
 		std::function<void(const Shader&)> renderCall, const Shader& shader) {
 
 		//Write light transform into shader
@@ -224,7 +232,7 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void SimplePointLightMap::draw(const SceneCamera& camera,
+	void SimplePointLightMap::draw(const SceneCamera* const camera,
 		std::function<void(const Shader&)> renderCall, const Shader& shader) {
 
 		//Write light transforms of cubemap faces into shader
@@ -288,7 +296,7 @@ namespace geeL {
 		return false;
 	}
 
-	void SimplePointLightMap::bindShadowmapResolution() const {
+	void SimplePointLightMap::bindShadowmapResolution(unsigned int width, unsigned int height) const {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
 		//Write faces of the cubemap
@@ -314,7 +322,7 @@ namespace geeL {
 		shader.setMat4(name + "lightTransform", lightTransform);
 	}
 
-	void SimpleDirectionalLightMap::draw(const SceneCamera& camera,
+	void SimpleDirectionalLightMap::draw(const SceneCamera* const camera,
 		std::function<void(const Shader&)> renderCall, const Shader& shader) {
 
 		//Write light transform into shader

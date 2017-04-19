@@ -74,6 +74,12 @@ namespace geeL {
 	}
 
 	void RenderScene::drawDeferred(const Camera& camera) const {
+
+		//Only bind camera if it is external since the scene 
+		//camera was already bound during update process 
+		if (&camera != this->camera)
+			pipeline.bindCamera(camera);
+
 		SceneShader* shader = &materialFactory.getDeferredShader();
 		pipeline.dynamicBind(camera, lightManager, *shader);
 		iterRenderObjects(*shader, [&](const MeshRenderer& object) {
@@ -94,6 +100,11 @@ namespace geeL {
 	}
 
 	void RenderScene::drawForward(const Camera& camera) const {
+
+		//Only bind camera if it is external since the scene 
+		//camera was already bound during update process 
+		if (&camera != this->camera)
+			pipeline.bindCamera(camera);
 
 		//Draw all registered objects with shaders other than deferred shader
 		const SceneShader& defShader = materialFactory.getDeferredShader();

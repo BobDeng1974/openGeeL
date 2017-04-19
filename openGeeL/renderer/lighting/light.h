@@ -47,7 +47,7 @@ namespace geeL {
 		//Remove shadow map from given shader
 		virtual void removeShadowmap(Shader& shader);
 
-		virtual void renderShadowmap(const SceneCamera& camera, 
+		virtual void renderShadowmap(const SceneCamera* const camera, 
 			std::function<void(const Shader&)> renderCall, const Shader& shader);
 
 		//Computes experienced intensity at given point. Ranges between 0 and 1

@@ -80,10 +80,12 @@ namespace geeL {
 	}
 
 
-	void CascadedDirectionalShadowMap::draw(const SceneCamera& camera,
+	void CascadedDirectionalShadowMap::draw(const SceneCamera* const camera,
 		std::function<void(const Shader&)> renderCall, const Shader& shader) {
 
-		computeLightTransforms(camera);
+		//TODO: Develop backup strategy for when scene camera is not available
+		if(camera != nullptr)
+			computeLightTransforms(*camera);
 
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ID, 0);

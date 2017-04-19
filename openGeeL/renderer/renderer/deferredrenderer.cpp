@@ -133,7 +133,7 @@ namespace geeL {
 			scene->forwardScreenInfo(gBuffer.screenInfo);
 
 			glCullFace(GL_BACK);
-			scene->lightManager.drawShadowmaps(*scene);
+			scene->lightManager.drawShadowmaps(*scene, &scene->getCamera());
 			glCullFace(GL_FRONT);
 			renderTime.update(RenderPass::Shadow);
 
@@ -215,7 +215,7 @@ namespace geeL {
 		gBuffer.fill(geometryPassFunc);
 
 		glCullFace(GL_BACK);
-		scene->lightManager.drawShadowmaps(*scene);
+		scene->lightManager.drawShadowmaps(*scene, &scene->getCamera());
 		glCullFace(GL_FRONT);
 
 		//SSAO pass
@@ -237,7 +237,9 @@ namespace geeL {
 		//Geometry pass
 		gBuffer.fill([this, camera] () { scene->drawDeferred(camera); });
 
-		//TODO: Enable shadow mapping
+		glCullFace(GL_BACK);
+		scene->lightManager.drawShadowmaps(*scene, nullptr);
+		glCullFace(GL_FRONT);
 
 		//SSAO pass
 		if (ssao != nullptr)

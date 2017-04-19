@@ -27,7 +27,7 @@ namespace geeL {
 		virtual void bindMap(Shader& shader, const std::string& name) = 0;
 		virtual void removeMap(Shader& shader) = 0;
 
-		virtual void draw(const SceneCamera& camera,
+		virtual void draw(const SceneCamera* const camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader) = 0;
 
 		//Returns ID of first (nearest) shadow map
@@ -50,7 +50,7 @@ namespace geeL {
 		virtual void bindMap(Shader& shader, const std::string& name);
 		virtual void removeMap(Shader& shader);
 
-		virtual void draw(const SceneCamera& camera,
+		virtual void draw(const SceneCamera* const camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader);
 
 		//Set split planes (between cameras near and far clip plane)

@@ -29,7 +29,7 @@ namespace geeL {
 		virtual void bindMap(Shader& shader, const std::string& name);
 		virtual void removeMap(Shader& shader);
 
-		virtual void draw(const SceneCamera& camera,
+		virtual void draw(const SceneCamera* const camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader) = 0;
 
 		virtual unsigned int getID() const;
@@ -48,7 +48,7 @@ namespace geeL {
 		virtual void init();
 
 		//Dynamically change shadow map resolution
-		virtual void adaptShadowmap(const SceneCamera& camera);
+		virtual void adaptShadowmap(const SceneCamera* const camera);
 
 		//Dynamically change resolution of shadow map 
 		//depending on distance to render camera. Returns true if 
@@ -56,7 +56,7 @@ namespace geeL {
 		virtual bool adaptShadowmapResolution(float distance) = 0;
 
 		//Bind resolution to shadow map texture(s)
-		virtual void bindShadowmapResolution() const;
+		virtual void bindShadowmapResolution(unsigned int width, unsigned int height) const;
 
 		bool setResolution(int resolution, float biasFactor);
 	};
@@ -74,7 +74,7 @@ namespace geeL {
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 
-		virtual void draw(const SceneCamera& camera,
+		virtual void draw(const SceneCamera* const camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader);
 
 	private:
@@ -94,7 +94,7 @@ namespace geeL {
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 
-		virtual void draw(const SceneCamera& camera,
+		virtual void draw(const SceneCamera* const camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader);
 
 		virtual void bindMap(Shader& shader, const std::string& name);
@@ -109,7 +109,7 @@ namespace geeL {
 		
 		void computeLightTransform();
 		virtual bool adaptShadowmapResolution(float distance);
-		virtual void bindShadowmapResolution() const;
+		virtual void bindShadowmapResolution(unsigned int width, unsigned int height) const;
 	};
 
 
@@ -121,7 +121,7 @@ namespace geeL {
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 
-		virtual void draw(const SceneCamera& camera,
+		virtual void draw(const SceneCamera* const camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader);
 
 	private:
