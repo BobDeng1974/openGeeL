@@ -4,7 +4,7 @@
 #include <utility>
 #include <list>
 #include "texture.h"
-#include "simpletexture.h"
+#include "imagetexture.h"
 
 namespace geeL {
 

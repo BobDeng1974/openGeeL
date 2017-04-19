@@ -3,7 +3,7 @@
 #include <glfw3.h>
 #include <algorithm>
 #include "../shader/shader.h"
-#include "simpletexture.h"
+#include "imagetexture.h"
 #include "layeredtexture.h"
 
 using namespace std;

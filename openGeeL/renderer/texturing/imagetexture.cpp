@@ -2,7 +2,7 @@
 #include <glew.h>
 #include <glfw3.h>
 #include "stb_image.h"
-#include "simpletexture.h"
+#include "imagetexture.h"
 #include "../shader/shader.h"
 #include <iostream>
 
@@ -10,11 +10,10 @@ using namespace std;
 
 namespace geeL {
 
-	SimpleTexture::SimpleTexture(const char* fileName, ColorType colorType, WrapMode wrapMode, FilterMode filterMode)
-		:  path(fileName) {
+	ImageTexture::ImageTexture(const char* fileName, ColorType colorType, WrapMode wrapMode, FilterMode filterMode)
+		: path(fileName) {
 		
 		int imgWidth, imgHeight;
-
 		unsigned char* image = stbi_load(fileName, &imgWidth, &imgHeight, 0, STBI_rgb_alpha);
 
 		glGenTextures(1, &id);
@@ -31,7 +30,7 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	SimpleTexture::SimpleTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height,
+	ImageTexture::ImageTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height,
 		WrapMode wrapMode, FilterMode filterMode) {
 
 		glGenTextures(1, &id);
@@ -44,17 +43,17 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	unsigned int SimpleTexture::getID() const {
+	unsigned int ImageTexture::getID() const {
 		return id;
 	}
 
-	void SimpleTexture::remove() {
+	void ImageTexture::remove() {
 		glDeleteTextures(1, &id);
 	}
 
 
 	TextureMap::TextureMap(const char* fileName, MapType type, ColorType colorType, WrapMode wrapMode, FilterMode filterMode)
-		: SimpleTexture(fileName, colorType, wrapMode, filterMode), type(type) {}
+		: ImageTexture(fileName, colorType, wrapMode, filterMode), type(type) {}
 
 
 	void TextureMap::bind(const Shader& shader, std::string name, int texLayer) const {

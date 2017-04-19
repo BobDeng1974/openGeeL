@@ -22,17 +22,17 @@ namespace geeL {
 	};
 
 
-	//Simple 2D Texutre
-	class SimpleTexture : Texture {
+	//Simple 2D Texutre loaded from image file
+	class ImageTexture : Texture {
 
 	public:
 		std::string path;
 
-		SimpleTexture() {}
-		SimpleTexture(const char* fileName, ColorType colorType = ColorType::RGBA,
+		ImageTexture() {}
+		ImageTexture(const char* fileName, ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest);
 
-		SimpleTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height,
+		ImageTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest);
 
 		virtual unsigned int getID() const;
@@ -45,7 +45,7 @@ namespace geeL {
 
 
 	//Texture for mapping purposes (like diffuse, normal mapping) that can be directly bound to a shader
-	class TextureMap : public SimpleTexture {
+	class TextureMap : public ImageTexture {
 
 	public:
 		MapType type;

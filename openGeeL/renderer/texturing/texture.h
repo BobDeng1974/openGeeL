@@ -13,7 +13,8 @@ class Shader;
 		RGB,
 		RGBA,
 		RGB16,
-		RGBA16
+		RGBA16,
+		RGBA32
 	};
 
 	enum class FilterMode {
