@@ -10,6 +10,7 @@ namespace geeL {
 
 	public:
 		RenderTexture() {}
+		RenderTexture(const RenderTexture& texture);
 		RenderTexture(unsigned int width, unsigned int height, ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest);
 

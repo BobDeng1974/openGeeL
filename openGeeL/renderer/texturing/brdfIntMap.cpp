@@ -48,6 +48,8 @@ namespace geeL {
 		delete shader;
 	}
 
+	BRDFIntegrationMap::BRDFIntegrationMap(const BRDFIntegrationMap& map) : id(map.getID()) {}
+
 	unsigned int BRDFIntegrationMap::getID() const {
 		return id;
 	}

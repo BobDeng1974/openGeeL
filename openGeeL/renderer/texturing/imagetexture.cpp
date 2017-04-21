@@ -10,6 +10,9 @@ using namespace std;
 
 namespace geeL {
 
+	ImageTexture::ImageTexture(const ImageTexture& texture) 
+		: path(texture.path), id(texture.getID()) {}
+
 	ImageTexture::ImageTexture(const char* fileName, ColorType colorType, WrapMode wrapMode, FilterMode filterMode)
 		: path(fileName) {
 		
@@ -51,6 +54,8 @@ namespace geeL {
 		glDeleteTextures(1, &id);
 	}
 
+
+	TextureMap::TextureMap(const TextureMap& map) : ImageTexture(map), type(map.type) {}
 
 	TextureMap::TextureMap(const char* fileName, MapType type, ColorType colorType, WrapMode wrapMode, FilterMode filterMode)
 		: ImageTexture(fileName, colorType, wrapMode, filterMode), type(type) {}

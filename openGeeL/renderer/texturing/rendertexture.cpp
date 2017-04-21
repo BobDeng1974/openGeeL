@@ -4,6 +4,9 @@
 
 namespace geeL {
 
+	RenderTexture::RenderTexture(const RenderTexture& texture) 
+		: id(texture.getID()), width(texture.width), height(texture.height) {}
+
 	RenderTexture::RenderTexture(unsigned int width, unsigned int height, ColorType colorType, 
 		WrapMode wrapMode, FilterMode filterMode) : width(width), height(height) {
 

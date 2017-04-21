@@ -14,6 +14,7 @@ namespace geeL {
 		ScreenInfo screenInfo;
 
 		GBuffer();
+		GBuffer(const GBuffer& buffer);
 		~GBuffer();
 
 		void init(int width, int height);

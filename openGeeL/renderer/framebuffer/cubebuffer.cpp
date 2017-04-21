@@ -7,6 +7,8 @@ namespace geeL {
 		glGenRenderbuffers(1, &rbo);
 	}
 
+	CubeBuffer::CubeBuffer(const CubeBuffer& buffer) : FrameBuffer(buffer), rbo(buffer.rbo) {}
+
 	void CubeBuffer::init(unsigned int resolution, unsigned int textureID) {
 		this->textureID = textureID;
 		info.width = resolution;

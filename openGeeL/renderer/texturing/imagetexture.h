@@ -29,6 +29,7 @@ namespace geeL {
 		std::string path;
 
 		ImageTexture() {}
+		ImageTexture(const ImageTexture& texture);
 		ImageTexture(const char* fileName, ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest);
 
@@ -51,6 +52,7 @@ namespace geeL {
 		MapType type;
 		
 		TextureMap() {}
+		TextureMap(const TextureMap& map);
 		TextureMap(const char* fileName, 
 			MapType textureTpe = MapType::Diffuse, ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest);

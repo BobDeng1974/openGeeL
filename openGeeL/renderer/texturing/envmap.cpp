@@ -8,6 +8,8 @@ using namespace std;
 
 namespace geeL {
 
+	EnvironmentMap::EnvironmentMap(const EnvironmentMap& map) : id(map.getID()) {}
+
 	EnvironmentMap::EnvironmentMap(string fileName) {
 
 		stbi_set_flip_vertically_on_load(true);

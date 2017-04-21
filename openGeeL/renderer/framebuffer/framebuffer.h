@@ -28,6 +28,9 @@ namespace geeL {
 	public:
 		FrameBufferInformation info;
 
+		FrameBuffer() {}
+		FrameBuffer(const FrameBuffer& buffer);
+
 		virtual void fill(std::function<void()> drawCall) = 0;
 
 		void bind() const;
@@ -52,7 +55,8 @@ namespace geeL {
 	class ColorBuffer : public FrameBuffer {
 
 	public:
-		ColorBuffer();
+		ColorBuffer() {}
+		ColorBuffer(const ColorBuffer& buffer);
 		~ColorBuffer();
 
 		void init(unsigned int width, unsigned int height, std::vector<RenderTexture*>&& colorBuffers, bool useDepth = true);

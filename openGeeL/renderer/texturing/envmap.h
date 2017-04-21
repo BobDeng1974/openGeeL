@@ -11,6 +11,7 @@ namespace geeL {
 
 	public:
 		EnvironmentMap() {}
+		EnvironmentMap(const EnvironmentMap& map);
 		EnvironmentMap(std::string fileName);
 		
 		virtual unsigned int getID() const;
