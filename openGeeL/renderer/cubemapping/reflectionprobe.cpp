@@ -3,6 +3,7 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include "../framebuffer/framebuffer.h"
+#include "../framebuffer/cubebuffer.h"
 #include "../transformation/transform.h"
 #include "../shader/shader.h"
 #include "../cameras/camera.h"
@@ -12,9 +13,10 @@ using namespace glm;
 
 namespace geeL {
 
-	ReflectionProbe::ReflectionProbe(std::function<void(const Camera&, FrameBufferInformation)> renderCall, Transform& transform,
-		unsigned int resolution, float width, float height, float depth, std::string name)
-			: SceneObject(transform, name), width(width), height(height), depth(depth), resolution(resolution), renderCall(renderCall) {
+	ReflectionProbe::ReflectionProbe(CubeBuffer& frameBuffer, std::function<void(const Camera&, FrameBufferInformation)> renderCall, 
+		Transform& transform, unsigned int resolution, float width, float height, float depth, std::string name)
+			: SceneObject(transform, name), frameBuffer(frameBuffer), width(width), height(height), depth(depth), 
+				resolution(resolution), renderCall(renderCall) {
 
 		//Init cubemap without textures
 		glGenTextures(1, &id);
@@ -29,24 +31,10 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-		unsigned int rbo;
-		glGenFramebuffers(1, &fbo);
-		glGenRenderbuffers(1, &rbo);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolution, resolution);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
-
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	}
 
-	ReflectionProbe::~ReflectionProbe() {
-		FrameBuffer::remove(fbo);
+		frameBuffer.init(resolution, id);
 	}
-
 
 	void ReflectionProbe::update() {
 
@@ -68,27 +56,18 @@ namespace geeL {
 		};
 
 		FrameBufferInformation info;
-		info.fbo = fbo;
+		info.fbo = frameBuffer.getFBO();
 		info.width = resolution;
 		info.height = resolution;
 
-		FrameBuffer::bind(fbo);
-		glViewport(0, 0, resolution, resolution);
-		for (unsigned int side = 0; side < 6; side++) {
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, id, 0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		frameBuffer.fill([&](unsigned int side) {
 			cam.setViewMatrix(views[side]);
 			cam.setProjectionMatrix(projections[side / 2]);
 			renderCall(cam, info);
-		}
-
-		FrameBuffer::unbind();
+		});
 
 		//Mip map rendered environment map
-		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		Texture::mipmapCube(id);
 	}
 
 }

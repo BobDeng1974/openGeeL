@@ -172,16 +172,12 @@ namespace geeL {
 			//Draw all included post effects
 			else {
 				bool chooseBuffer = true;
-				int counter = 0;
 				//Draw all the post processing effects on top of each other. Ping pong style!
 				for (auto effect = next(effects.begin()); effect != effects.end(); effect++) {
-					if (chooseBuffer)
-						frameBuffer2.fill(**effect);
-					else
-						frameBuffer1.fill(**effect);
+					ColorBuffer& currBuffer = chooseBuffer ? frameBuffer2 : frameBuffer1;
+					currBuffer.fill(**effect);
 
 					chooseBuffer = !chooseBuffer;
-					counter++;
 				}
 
 				//Draw the last (default) effect to screen.
@@ -219,14 +215,12 @@ namespace geeL {
 		//SSAO pass
 		if (ssao != nullptr) {
 			ssaoBuffer->fill(*ssao);
-			ColorBuffer::resetSize(window->width, window->height);
+			FrameBuffer::resetSize(window->width, window->height);
 		}
 
 		//TODO: parent FBO needs to be reset here
 		lightingPass(scene->getCamera());
-
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDisable(GL_DEPTH_TEST);
+		scene->drawSkybox();
 	}
 
 	void DeferredRenderer::draw(const Camera& camera, FrameBufferInformation info) {

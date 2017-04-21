@@ -5,17 +5,20 @@
 
 namespace geeL {
 
-
 	class CubeBuffer : public FrameBuffer {
 
 	public:
+		CubeBuffer();
+
 		void init(unsigned int resolution, unsigned int textureID);
 
 		virtual void fill(std::function<void()> drawCall);
-		void fill(std::function<void(unsigned int)> drawCall);
+		void fill(std::function<void(unsigned int)> drawCall, unsigned int mipLevel = 0);
+
+		void resize(unsigned int width, unsigned int height);
 
 	private:
-		unsigned int textureID;
+		unsigned int textureID, rbo;
 
 	};
 

@@ -45,7 +45,7 @@ struct DirectionalLight {
 	bool useShadowmap;
 };
 
-struct Skybox {
+struct ReflectionProbe {
 	samplerCube albedo;
 	samplerCube irradiance;
 	samplerCube prefilterEnv;
@@ -69,7 +69,7 @@ uniform sampler2D gDiffuseSpec;
 uniform sampler2D ssao;
 uniform int useSSAO;
 
-uniform Skybox skybox;
+uniform ReflectionProbe skybox;
 
 uniform mat4 inverseView;
 uniform vec3 origin;

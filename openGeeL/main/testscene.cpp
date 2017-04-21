@@ -69,6 +69,7 @@
 #include "../renderer/texturing/brdfIntMap.h"
 #include "../renderer/scene.h"
 #include "../renderer/utility/rendertime.h"
+#include "../renderer//framebuffer/cubebuffer.h"
 
 #include "../interface/guirenderer.h"
 #include "../interface/elements/objectlister.h"
@@ -254,10 +255,11 @@ void draw() {
 	WorldPhysics physics = WorldPhysics();
 	scene.setPhysics(&physics);
 
+	CubeBuffer cubeBuffer = CubeBuffer();
 	EnvironmentMap& envMap = materialFactory.CreateEnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
-	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(envMap, 1024);
-	IrradianceMap irrMap = IrradianceMap(envCubeMap);
-	PrefilteredEnvironmentMap filMap = PrefilteredEnvironmentMap(envCubeMap);
+	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(envMap, cubeBuffer, 1024);
+	IrradianceMap irrMap = IrradianceMap(envCubeMap, cubeBuffer);
+	PrefilteredEnvironmentMap filMap = PrefilteredEnvironmentMap(envCubeMap, cubeBuffer);
 	BRDFIntegrationMap brdfInt = BRDFIntegrationMap();
 	IBLMap iblMap = IBLMap(brdfInt, irrMap, filMap);
 
@@ -335,15 +337,16 @@ void draw() {
 
 	//renderer.addEffect(fxaa);
 
+	
 	Transform& probeTransform = transFactory.CreateTransform(vec3(0.f, 0.f, 10.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	ReflectionProbe probe = ReflectionProbe(renderCall, probeTransform, 1024);
+	ReflectionProbe probe = ReflectionProbe(cubeBuffer, renderCall, probeTransform, 1024);
 
 	renderer.linkInformation();
 	renderer.renderInit();
 
 	probe.update();
 	Skybox skybox2 = Skybox(probe);
-	scene.setSkybox(skybox2);
+	//scene.setSkybox(skybox2);
 
 	renderer.render();
 }

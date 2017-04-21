@@ -12,6 +12,7 @@
 #include "../shadowmapping/simpleshadowmap.h"
 #include "../shadowmapping/cascadedmap.h"
 #include "../cubemapping/reflectionprobe.h"
+#include "../framebuffer/cubebuffer.h"
 #include "../scene.h"
 #include "light.h"
 #include "lightbinding.h"
@@ -135,7 +136,8 @@ namespace geeL {
 	}
 
 	ReflectionProbe& LightManager::addReflectionProbe(Transform& transform, float depth, unsigned int resolution) {
-		ReflectionProbe* probe = new ReflectionProbe(renderCall, transform, depth, resolution);
+		//TODO: FIX THIS QUICKFIX
+		ReflectionProbe* probe = new ReflectionProbe(CubeBuffer(), renderCall, transform, depth, resolution);
 		reflectionProbes.push_back(probe);
 	}
 

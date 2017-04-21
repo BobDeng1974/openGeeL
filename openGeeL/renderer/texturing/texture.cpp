@@ -74,4 +74,22 @@ namespace geeL {
 		}
 	}
 
+	void Texture::mipmap() const {
+		glBindTexture(GL_TEXTURE_2D, getID());
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	void Texture::mipmap(unsigned int id) {
+		glBindTexture(GL_TEXTURE_2D, id);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	void Texture::mipmapCube(unsigned int id) {
+		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
+
 }

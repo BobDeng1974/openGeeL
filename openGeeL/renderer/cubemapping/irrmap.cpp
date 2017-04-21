@@ -4,6 +4,7 @@
 #include <gtc/matrix_transform.hpp>
 #include "../shader/shader.h"
 #include "../framebuffer/framebuffer.h"
+#include "../framebuffer/cubebuffer.h"
 #include "../primitives/screencube.h"
 #include "irrmap.h"
 
@@ -12,9 +13,10 @@ using namespace glm;
 namespace geeL {
 
 
-	IrradianceMap::IrradianceMap(const CubeMap& environmentMap, unsigned int resolution)
-		: environmentMap(environmentMap), conversionShader(new Shader("renderer/cubemapping/envconvert.vert", 
-			"renderer/cubemapping/irrmap.frag")), resolution(resolution) {
+	IrradianceMap::IrradianceMap(const CubeMap& environmentMap, CubeBuffer& frameBuffer, unsigned int resolution)
+		: environmentMap(environmentMap), frameBuffer(frameBuffer), 
+			conversionShader(new Shader("renderer/cubemapping/envconvert.vert", 
+				"renderer/cubemapping/irrmap.frag")), resolution(resolution) {
 
 		glGenTextures(1, &id);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
@@ -28,15 +30,7 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-		unsigned int captureRBO;
-		glGenFramebuffers(1, &fbo);
-		glGenRenderbuffers(1, &captureRBO);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolution, resolution);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
-
+		frameBuffer.init(resolution, id);
 		convertEnvironmentMap();
 	}
 
@@ -73,20 +67,9 @@ namespace geeL {
 		std::list<unsigned int> maps = { environmentMap.getID() };
 		conversionShader->loadMaps(maps, GL_TEXTURE_CUBE_MAP);
 		
-		glViewport(0, 0, resolution, resolution);
-
-		FrameBuffer::bind(fbo);
-		for (unsigned int side = 0; side < 6; side++) {
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, id, 0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		frameBuffer.fill([&](unsigned int side) {
 			conversionShader->setMat4("view", views[side]);
 			SCREENCUBE.drawComplete();
-		}
-
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-
-		FrameBuffer::unbind();
-		FrameBuffer::remove(fbo);
+		});
 	}
 }

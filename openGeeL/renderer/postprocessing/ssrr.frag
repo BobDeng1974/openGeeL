@@ -51,8 +51,6 @@ void main() {
 		float geo = calculateGeometryFunctionSmith(normal, viewDirection, reflectionDirection, roughness);
 		vec3 fres = calculateFresnelTerm(doto(halfwayDirection, viewDirection), reflectionColor, metallic, roughness);
 
-		
-
 		//Lighting equation
 		vec3  nom   = geo * fres * ndf;
 		float denom = 4.f * doto(viewDirection, normal) * NdotL + 0.001f; 

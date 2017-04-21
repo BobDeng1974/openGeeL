@@ -6,6 +6,7 @@
 #include "../shader/shader.h"
 #include "../texturing/envmap.h"
 #include "../framebuffer/framebuffer.h"
+#include "../framebuffer/cubebuffer.h"
 #include "../primitives/screencube.h"
 #include "envcubemap.h"
 
@@ -13,9 +14,10 @@ using namespace glm;
 
 namespace geeL {
 
-	EnvironmentCubeMap::EnvironmentCubeMap(const EnvironmentMap& map, unsigned int resolution)
-		: map(map), resolution(resolution), conversionShader(new Shader("renderer/cubemapping/envconvert.vert", 
-			"renderer/cubemapping/envconvert.frag")) {
+	EnvironmentCubeMap::EnvironmentCubeMap(const EnvironmentMap& map, CubeBuffer& frameBuffer, unsigned int resolution)
+		: map(map), frameBuffer(frameBuffer), resolution(resolution), 
+			conversionShader(new Shader("renderer/cubemapping/envconvert.vert", 
+				"renderer/cubemapping/envconvert.frag")) {
 
 		//Init cubemap without textures
 		glGenTextures(1, &id);
@@ -30,21 +32,11 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-		unsigned int captureRBO;
-		glGenFramebuffers(1, &fbo);
-		glGenRenderbuffers(1, &captureRBO);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolution, resolution);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
-
+		frameBuffer.init(resolution, id);
 		convertEnvironmentMap();
 
 		//Mip map rendered environment map
-		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		Texture::mipmapCube(id);
 	}
 
 	EnvironmentCubeMap::~EnvironmentCubeMap() {
@@ -71,21 +63,10 @@ namespace geeL {
 		std::list<unsigned int> maps = { map.getID() };
 		conversionShader->loadMaps(maps);
 
-		glViewport(0, 0, resolution, resolution);
-
-		ColorBuffer::bind(fbo);
-		for (unsigned int side = 0; side < 6; side++) {
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, id, 0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		frameBuffer.fill([&](unsigned int side) {
 			conversionShader->setMat4("view", views[side]);
 			SCREENCUBE.drawComplete();
-		}
-
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-
-		ColorBuffer::unbind();
-		ColorBuffer::remove(fbo);
+		});
 	}
 
 }

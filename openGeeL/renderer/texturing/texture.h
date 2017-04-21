@@ -43,6 +43,10 @@ class Shader;
 		static void initColorType(ColorType type, int width, int height, unsigned char* image);
 		static void initFilterMode(FilterMode mode);
 		static void initWrapMode(WrapMode mode);
+
+		void mipmap() const;
+		static void mipmap(unsigned int id);
+		static void mipmapCube(unsigned int id);
 		
 	};
 

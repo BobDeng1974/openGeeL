@@ -5,6 +5,7 @@
 
 namespace geeL {
 
+	class CubeBuffer;
 	class Shader;
 
 	//Cubemap that stores pre-filtered environment map for splitsum approximated IBL
@@ -13,15 +14,15 @@ namespace geeL {
 	public:
 		const CubeMap& environmentMap;
 
-		PrefilteredEnvironmentMap(const CubeMap& environmentMap, unsigned int resolution = 512);
+		PrefilteredEnvironmentMap(const CubeMap& environmentMap, CubeBuffer& frameBuffer, unsigned int resolution = 512);
 		~PrefilteredEnvironmentMap();
 
 		virtual void add(Shader& shader, std::string name) const;
 
 	private:
 		Shader* conversionShader;
+		CubeBuffer& frameBuffer;
 		unsigned int resolution;
-		unsigned int fbo, rbo;
 
 		void convertEnvironmentMap();
 

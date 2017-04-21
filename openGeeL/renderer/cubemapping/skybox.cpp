@@ -14,10 +14,6 @@ namespace geeL {
 	Skybox::Skybox(const CubeMap& cubeMap) : cubeMap(cubeMap),
 		shader(Shader("renderer/cubemapping/skybox.vert", "renderer/cubemapping/skybox.frag")) {}
 
-	Skybox::Skybox(const IrradianceMap& irradianceMap) 
-		: cubeMap(irradianceMap),
-			shader(Shader("renderer/cubemapping/skybox.vert", "renderer/cubemapping/skybox.frag")) {}
-
 
 	void Skybox::draw(const Camera& camera) const {
 		glDepthFunc(GL_LEQUAL);

@@ -6,6 +6,7 @@
 
 namespace geeL {
 
+	class CubeBuffer;
 	class Shader;
 	class EnvironmentMap;
 
@@ -13,13 +14,13 @@ namespace geeL {
 	class EnvironmentCubeMap : public CubeMap {
 
 	public:
-		EnvironmentCubeMap(const EnvironmentMap& map, unsigned int resolution = 512);
+		EnvironmentCubeMap(const EnvironmentMap& map, CubeBuffer& frameBuffer, unsigned int resolution = 512);
 		~EnvironmentCubeMap();
 
 	private:
 		const EnvironmentMap& map;
+		CubeBuffer& frameBuffer;
 		Shader* conversionShader;
-		unsigned int fbo;
 		unsigned int resolution;
 
 		void convertEnvironmentMap();
