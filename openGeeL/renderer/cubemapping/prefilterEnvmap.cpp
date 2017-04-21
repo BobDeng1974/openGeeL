@@ -29,11 +29,11 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 		Texture::mipmapCube(id);
-
-		frameBuffer.init(resolution, id);
-		convertEnvironmentMap();
+		
+		update();
 	}
 
 	PrefilteredEnvironmentMap::~PrefilteredEnvironmentMap() {
@@ -46,7 +46,8 @@ namespace geeL {
 	}
 
 
-	void PrefilteredEnvironmentMap::convertEnvironmentMap() {
+	void PrefilteredEnvironmentMap::update() {
+		frameBuffer.init(resolution, id);
 
 		glm::mat4 projection = perspective(90.0f, 1.0f, 0.1f, 10.0f);
 		glm::mat4 views[] = {

@@ -256,8 +256,8 @@ void draw() {
 	scene.setPhysics(&physics);
 
 	CubeBuffer cubeBuffer = CubeBuffer();
-	EnvironmentMap& envMap = materialFactory.CreateEnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
-	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(envMap, cubeBuffer, 1024);
+	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
+	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 1024);
 	IrradianceMap irrMap = IrradianceMap(envCubeMap, cubeBuffer);
 	PrefilteredEnvironmentMap filMap = PrefilteredEnvironmentMap(envCubeMap, cubeBuffer);
 	BRDFIntegrationMap brdfInt = BRDFIntegrationMap();
@@ -346,7 +346,7 @@ void draw() {
 
 	probe.update();
 	Skybox skybox2 = Skybox(probe);
-	//scene.setSkybox(skybox2);
+	scene.setSkybox(skybox2);
 
 	renderer.render();
 }

@@ -14,7 +14,7 @@ namespace geeL {
 	class IBLMap : public CubeMap {
 
 	public:
-		IBLMap(BRDFIntegrationMap& brdfIntMap, IrradianceMap& irrMap, PrefilteredEnvironmentMap& envMap);
+		IBLMap(BRDFIntegrationMap& brdfIntMap, IrradianceMap& irrMap, PrefilteredEnvironmentMap& preEnvMap);
 
 		virtual void bind(const Shader& shader, std::string name) const;
 		virtual void add(Shader& shader, std::string name) const;
@@ -22,7 +22,26 @@ namespace geeL {
 	private:
 		BRDFIntegrationMap& brdfIntMap;
 		IrradianceMap& irrMap;
-		PrefilteredEnvironmentMap& envMap;
+		PrefilteredEnvironmentMap& preEnvMap;
+
+	};
+
+
+	class DynamicIBLMap : public DynamicCubeMap {
+
+	public:
+		DynamicIBLMap(DynamicCubeMap& environmentMap, BRDFIntegrationMap& brdfIntMap, 
+			IrradianceMap& irrMap, PrefilteredEnvironmentMap& preEnvMap);
+
+		virtual void bind(const Shader& shader, std::string name) const;
+		virtual void add(Shader& shader, std::string name) const;
+		virtual void update();
+
+	private:
+		DynamicCubeMap& baseMap;
+		BRDFIntegrationMap& brdfIntMap;
+		IrradianceMap& irrMap;
+		PrefilteredEnvironmentMap& preEnvMap;
 
 	};
 

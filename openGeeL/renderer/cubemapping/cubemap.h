@@ -20,6 +20,15 @@ namespace geeL {
 		unsigned int id;
 
 	};
+
+
+	//Dynamic cube map that can be redrawn during runtime
+	class DynamicCubeMap : public CubeMap {
+
+	public:
+		virtual void update() = 0;
+
+	};
 }
 
 #endif

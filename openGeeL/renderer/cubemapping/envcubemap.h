@@ -23,7 +23,7 @@ namespace geeL {
 		Shader* conversionShader;
 		unsigned int resolution;
 
-		void convertEnvironmentMap();
+		void update();
 
 	};
 }
