@@ -114,6 +114,10 @@ void main() {
     vec3 normal		  = texture(gNormalMet, textureCoordinates).rgb;
     vec3 albedo		  = texture(gDiffuseSpec, textureCoordinates).rgb;
 
+	//Discard pixel if it is not connected to any position in scene (Will be rendered black anyway)
+	if(length(fragPosition) <= 0.001f)
+		discard;
+
 	float roughness	  = texture(gDiffuseSpec, textureCoordinates).a;
 	float metallic    = texture(gNormalMet, textureCoordinates).a;
 	float occlusion   = (useSSAO == 1) ? texture(ssao, textureCoordinates).r : 1.f;
