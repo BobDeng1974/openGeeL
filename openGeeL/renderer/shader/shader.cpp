@@ -105,12 +105,11 @@ namespace geeL {
 		}
 	}
 
-	void Shader::loadMaps(std::list<unsigned int>& maps, unsigned int type) const {
+	void Shader::loadMaps(std::list<TextureID>& maps, unsigned int type) const {
 		int layer = GL_TEXTURE0;
 		int counter = mapOffset;
 		for (auto it = maps.begin(); it != maps.end(); it++) {
 			glActiveTexture(layer + counter);
-
 			glBindTexture(type, *it);
 			counter++;
 		}

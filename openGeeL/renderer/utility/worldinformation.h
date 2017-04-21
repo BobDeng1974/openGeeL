@@ -52,8 +52,12 @@ namespace geeL {
 			this->camera = &camera;
 		}
 
+		void setCamera(const Camera& camera) {
+			this->camera = &camera;
+		}
+
 	protected:
-		SceneCamera* camera = nullptr;
+		const Camera* camera = nullptr;
 	};
 
 

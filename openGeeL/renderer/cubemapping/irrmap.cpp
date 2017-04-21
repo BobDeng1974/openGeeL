@@ -75,7 +75,7 @@ namespace geeL {
 		
 		glViewport(0, 0, resolution, resolution);
 
-		ColorBuffer::bind(fbo);
+		FrameBuffer::bind(fbo);
 		for (unsigned int side = 0; side < 6; side++) {
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, id, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -86,7 +86,7 @@ namespace geeL {
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-		ColorBuffer::unbind();
-		ColorBuffer::remove(fbo);
+		FrameBuffer::unbind();
+		FrameBuffer::remove(fbo);
 	}
 }

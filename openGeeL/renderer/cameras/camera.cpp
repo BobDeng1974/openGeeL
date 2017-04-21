@@ -82,6 +82,7 @@ namespace geeL {
 	void SimpleCamera::setViewMatrix(const glm::mat4& view) {
 		viewMatrix = view;
 		inverseView = inverse(viewMatrix);
+		originViewSpace = TranslateToViewSpace(glm::vec3(0.f, 0.f, 0.f));
 	}
 
 	void SimpleCamera::setProjectionMatrix(const glm::mat4& projection) {

@@ -66,8 +66,9 @@ namespace geeL {
 		void setSkybox(Skybox& skybox);
 		void bindSkybox(Shader& shader) const;
 
-		//Draw skybox indepentently
+		//Draw skybox
 		void drawSkybox() const;
+		void drawSkybox(const Camera& camera) const;
 
 		void forwardScreenInfo(const ScreenInfo& info);
 

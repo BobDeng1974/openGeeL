@@ -177,6 +177,11 @@ namespace geeL {
 			skybox->draw(*camera);
 	}
 
+	void RenderScene::drawSkybox(const Camera& camera) const {
+		if (skybox != nullptr)
+			skybox->draw(camera);
+	}
+
 	void RenderScene::bindSkybox(Shader& shader) const {
 		if (skybox != nullptr)
 			skybox->bind(shader);
@@ -216,7 +221,6 @@ namespace geeL {
 
 			renderObjects[&shader][renderer.transform.getID()] = &renderer;
 		});
-
 	}
 
 	void RenderScene::AddMeshRenderer(SkinnedMeshRenderer& renderer) {

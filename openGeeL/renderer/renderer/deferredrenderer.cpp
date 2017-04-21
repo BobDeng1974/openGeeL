@@ -240,17 +240,18 @@ namespace geeL {
 		glCullFace(GL_FRONT);
 
 		//SSAO pass
-		if (ssao != nullptr)
+		if (ssao != nullptr) {
+			ssao->setCamera(camera);
 			ssaoBuffer->fill(*ssao);
+			ssao->setCamera(scene->getCamera());
+		}
 
 		FrameBuffer::resetSize(info.width, info.height);
 		FrameBuffer::bind(info.fbo);
 
-		//Lighting pass
+		//Draw lighting pass and skybox directly into given framebuffer
 		lightingPass(camera);
-
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDisable(GL_DEPTH_TEST);
+		scene->drawSkybox(camera);
 	}
 
 	void DeferredRenderer::geometryPass() {
@@ -269,11 +270,10 @@ namespace geeL {
 		deferredShader->setVector3(originLocation, camera.GetOriginInViewSpace());
 		//deferredShader->setVector3("ambient", scene->lightManager.ambient);
 		screen.draw();
-
-		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
 	void DeferredRenderer::forwardPass() {
+		glClear(GL_DEPTH_BUFFER_BIT);
 		//Copy depth buffer from gBuffer to draw forward 
 		//rendered objects 'into' the scene instead of 'on top'
 		frameBuffer1.copyDepth(gBuffer);
@@ -321,7 +321,6 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::updateInformation(SceneCamera& camera, Skybox& skybox) {
-		std::cout << "ayy\n";
 		deferredShader->use();
 		scene->bindSkybox(*deferredShader);
 	}

@@ -69,7 +69,8 @@ namespace geeL {
 		//Fallback strategy if no camera was forwarded
 		if (camera == nullptr) {
 			//Draw with fixed resolution
-			bindShadowmapResolution(256, 256);
+			width = height = 512;
+			bindShadowmapResolution(width, height);
 			return;
 		}
 

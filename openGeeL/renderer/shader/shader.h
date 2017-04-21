@@ -65,7 +65,7 @@ namespace geeL {
 		//Loads committed maps into the shader
 		//IMPORTANT: no binding is taken care of, multiple calls will override previous one
 		//and loading maps from other sources will also override this call
-		void loadMaps(std::list<unsigned int>& maps, unsigned int type = GL_TEXTURE_2D) const;
+		void loadMaps(std::list<TextureID>& maps, unsigned int type = GL_TEXTURE_2D) const;
 
 		ShaderLocation getLocation(std::string name) const;
 

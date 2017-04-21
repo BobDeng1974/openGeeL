@@ -4,6 +4,7 @@
 #include <gtc/matrix_transform.hpp>
 #include "../framebuffer/framebuffer.h"
 #include "../transformation/transform.h"
+#include "../shader/shader.h"
 #include "../cameras/camera.h"
 #include "reflectionprobe.h"
 
@@ -36,6 +37,10 @@ namespace geeL {
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolution, resolution);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 
 	ReflectionProbe::~ReflectionProbe() {
@@ -55,32 +60,30 @@ namespace geeL {
 			lookAt(transform.getPosition(), transform.getPosition() + vec3(0.f, 0.f, -1.f), vec3(0.f, -1.f, 0.f))
 		};
 
-
-		glViewport(0, 0, resolution, resolution);
+		SimpleCamera cam = SimpleCamera(transform);
+		cam.setProjectionMatrix(projection);
 
 		FrameBufferInformation info;
 		info.fbo = fbo;
 		info.width = resolution;
 		info.height = resolution;
 
-		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 		FrameBuffer::bind(fbo);
+		glViewport(0, 0, resolution, resolution);
 		for (unsigned int side = 0; side < 6; side++) {
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, id, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			SimpleCamera cam = SimpleCamera(transform);
-			cam.setProjectionMatrix(projection);
 			cam.setViewMatrix(views[side]);
-
 			renderCall(cam, info);
 		}
 
-		//Mip map rendered environment map
-		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		FrameBuffer::unbind();
+
+		//Mip map rendered environment map
+		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
 }
