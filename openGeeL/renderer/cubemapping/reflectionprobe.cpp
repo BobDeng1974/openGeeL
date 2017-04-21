@@ -13,8 +13,8 @@ using namespace glm;
 namespace geeL {
 
 	ReflectionProbe::ReflectionProbe(std::function<void(const Camera&, FrameBufferInformation)> renderCall, Transform& transform,
-		float depth, unsigned int resolution, std::string name)
-			: SceneObject(transform, name), depth(depth), resolution(resolution), renderCall(renderCall) {
+		unsigned int resolution, float width, float height, float depth, std::string name)
+			: SceneObject(transform, name), width(width), height(height), depth(depth), resolution(resolution), renderCall(renderCall) {
 
 		//Init cubemap without textures
 		glGenTextures(1, &id);
@@ -50,7 +50,14 @@ namespace geeL {
 
 	void ReflectionProbe::update() {
 
-		glm::mat4 projection = perspective(90.0f, 1.0f, 0.1f, depth);
+		SimpleCamera cam = SimpleCamera(transform);
+
+		glm::mat4 projections[] = {
+			perspective(90.0f, 1.0f, 0.1f, width),
+			perspective(90.0f, 1.0f, 0.1f, height),
+			perspective(90.0f, 1.0f, 0.1f, depth)
+		};
+
 		glm::mat4 views[] = {
 			lookAt(transform.getPosition(), transform.getPosition() + vec3(1.f, 0.f, 0.f), vec3(0.f, -1.f, 0.f)),
 			lookAt(transform.getPosition(), transform.getPosition() + vec3(-1.f, 0.f, 0.f), vec3(0.f, -1.f, 0.f)),
@@ -59,9 +66,6 @@ namespace geeL {
 			lookAt(transform.getPosition(), transform.getPosition() + vec3(0.f, 0.f, 1.f), vec3(0.f, -1.f, 0.f)),
 			lookAt(transform.getPosition(), transform.getPosition() + vec3(0.f, 0.f, -1.f), vec3(0.f, -1.f, 0.f))
 		};
-
-		SimpleCamera cam = SimpleCamera(transform);
-		cam.setProjectionMatrix(projection);
 
 		FrameBufferInformation info;
 		info.fbo = fbo;
@@ -75,6 +79,7 @@ namespace geeL {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			cam.setViewMatrix(views[side]);
+			cam.setProjectionMatrix(projections[side / 2]);
 			renderCall(cam, info);
 		}
 

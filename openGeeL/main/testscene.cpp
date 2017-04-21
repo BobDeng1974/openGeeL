@@ -244,8 +244,10 @@ void draw() {
 	renderer.addSSAO(ssao, 0.5f);
 	renderer.init();
 	
+	std::function<void(const Camera&, FrameBufferInformation)> renderCall =
+		[&](const Camera& camera, FrameBufferInformation info) { renderer.draw(camera, info); };
 
-	LightManager lightManager = LightManager(vec3(0.15f));
+	LightManager lightManager = LightManager(renderCall, vec3(0.15f));
 	RenderPipeline shaderManager = RenderPipeline(materialFactory);
 	
 	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, meshFactory, materialFactory);
@@ -309,10 +311,10 @@ void draw() {
 	postLister.add(def);
 	postLister.add(ssao);
 
-	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
-	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
-	scene.addRequester(vol);
-	postLister.add(volSmooth, lightSnippet);
+	//VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
+	//renderer.addEffect(volSmooth, { &vol, &sobelBlur });
+	//scene.addRequester(vol);
+	//postLister.add(volSmooth, lightSnippet);
 
 	//renderer.addEffect(bloom);
 	//postLister.add(bloom);
@@ -333,7 +335,15 @@ void draw() {
 
 	//renderer.addEffect(fxaa);
 
+	Transform& probeTransform = transFactory.CreateTransform(vec3(0.f, 0.f, 10.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	ReflectionProbe probe = ReflectionProbe(renderCall, probeTransform, 1024);
+
 	renderer.linkInformation();
 	renderer.renderInit();
+
+	probe.update();
+	Skybox skybox2 = Skybox(probe);
+	scene.setSkybox(skybox2);
+
 	renderer.render();
 }
