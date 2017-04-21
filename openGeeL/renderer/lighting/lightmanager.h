@@ -11,6 +11,8 @@
 #define MAX_DIRECTIONALLIGHTS 5
 #define MAX_SPOTLIGHTS 5
 
+
+
 namespace geeL {
 
 	class Camera;
@@ -22,6 +24,7 @@ namespace geeL {
 	class Shader;
 	class ShadowMap;
 	class SceneShader;
+	class ReflectionProbe;
 	class RenderScene;
 	class Transform;
 
@@ -31,7 +34,10 @@ namespace geeL {
 	class SLightBinding;
 
 	struct ScreenInfo;
+	struct FrameBufferInformation;
 	enum class ShaderTransformSpace;
+
+	typedef std::function<void(const Camera&, FrameBufferInformation)> ReflectionProbeRender;
 
 
 	//Managing class for all light sources in a scene
@@ -46,7 +52,8 @@ namespace geeL {
 		std::string dlCountName = "dlCount";
 		std::string slCountName = "slCount";
 
-		LightManager(glm::vec3 ambient = glm::vec3(0.25f));
+		LightManager(ReflectionProbeRender reflectionProbeRenderCall,
+			glm::vec3 ambient = glm::vec3(0.25f));
 
 		//Manager is responsible for removing the lights
 		~LightManager();
@@ -66,6 +73,10 @@ namespace geeL {
 		void removeLight(DirectionalLight& light);
 		void removeLight(PointLight& light);
 		void removeLight(SpotLight& light);
+
+		ReflectionProbe& addReflectionProbe(Transform& transform, float depth, unsigned int resolution);
+		void removeReflectionProbe(ReflectionProbe& probe);
+		void drawReflectionProbes() const;
 
 		void bind(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const;
 		void bind(const Camera& camera, const SceneShader& shader) const;
@@ -91,10 +102,12 @@ namespace geeL {
 		//Shader for spotlights and directional lights
 		Shader* dlShader;
 		Shader* plShader;
+		ReflectionProbeRender renderCall;
 
 		std::list<DLightBinding> dirLights;
 		std::list<SLightBinding> spotLights;
 		std::list<PLightBinding> pointLights;
+		std::list<ReflectionProbe*> reflectionProbes;
 
 		std::list<std::function<void(Light const *, ShadowMap const *)>> addListener;
 		std::list<std::function<void(Light const *, ShadowMap const *)>> removeListener;

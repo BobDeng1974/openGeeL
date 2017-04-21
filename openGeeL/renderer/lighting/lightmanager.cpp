@@ -11,6 +11,7 @@
 #include "../shadowmapping/shadowmap.h"
 #include "../shadowmapping/simpleshadowmap.h"
 #include "../shadowmapping/cascadedmap.h"
+#include "../cubemapping/reflectionprobe.h"
 #include "../scene.h"
 #include "light.h"
 #include "lightbinding.h"
@@ -21,9 +22,10 @@ using namespace glm;
 
 namespace geeL {
 
-	LightManager::LightManager(glm::vec3 ambient) : ambient(ambient),
-		dlShader(new Shader("renderer/shaders/shadowmapping.vert", "renderer/shaders/empty.frag")),
-		plShader(new Shader("renderer/shaders/empty.vert", "renderer/shaders/shadowmapping.gs", 
+	LightManager::LightManager(ReflectionProbeRender renderCall, glm::vec3 ambient)
+		: renderCall(renderCall), ambient(ambient),
+			dlShader(new Shader("renderer/shaders/shadowmapping.vert", "renderer/shaders/empty.frag")),
+			plShader(new Shader("renderer/shaders/empty.vert", "renderer/shaders/shadowmapping.gs", 
 			"renderer/shaders/shadowmapping.frag")) {}
 
 
@@ -39,6 +41,9 @@ namespace geeL {
 
 		for (auto it = spotLights.begin(); it != spotLights.end(); it++)
 			delete (*it).light;
+
+		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++)
+			delete *it;
 	}
 
 	DirectionalLight& LightManager::addDirectionalLight(const SceneCamera& camera, Transform& transform, vec3 diffuse, float shadowBias) {
@@ -129,6 +134,21 @@ namespace geeL {
 		}
 	}
 
+	ReflectionProbe& LightManager::addReflectionProbe(Transform& transform, float depth, unsigned int resolution) {
+		ReflectionProbe* probe = new ReflectionProbe(renderCall, transform, depth, resolution);
+		reflectionProbes.push_back(probe);
+	}
+
+	void LightManager::removeReflectionProbe(ReflectionProbe& probe) {
+		//TODO: implement this
+	}
+
+	void LightManager::drawReflectionProbes() const {
+		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
+			ReflectionProbe& probe = **it;
+			probe.update();
+		}
+	}
 
 	void LightManager::bind(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const {
 		shader.use();
