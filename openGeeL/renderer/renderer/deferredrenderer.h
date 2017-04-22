@@ -32,9 +32,7 @@ namespace geeL {
 		~DeferredRenderer();
 
 		virtual void init();
-
-		//Initialize start of rendering process
-		void renderInit();
+		
 		virtual void render();
 		virtual void draw();
 		virtual void draw(const Camera& camera, FrameBufferInformation info);
@@ -53,7 +51,7 @@ namespace geeL {
 
 		const RenderTime& getRenderTime() const;
 
-		virtual void updateInformation(SceneCamera& camera, Skybox& skybox);
+		virtual void updateSkybox(Skybox& skybox);
 
 	private:
 		int toggle;
@@ -81,7 +79,8 @@ namespace geeL {
 		std::function<void()> geometryPassFunc;
 		std::function<void()> lightingPassFunc;
 
-		
+		//Initialize start of rendering process
+		void renderInit();
 
 		void geometryPass();
 		void lightingPass(const Camera& camera);

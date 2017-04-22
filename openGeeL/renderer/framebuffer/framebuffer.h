@@ -11,7 +11,6 @@ namespace geeL {
 
 	class Drawer;
 
-
 	struct FrameBufferInformation {
 
 	public:
@@ -74,6 +73,7 @@ namespace geeL {
 	private:
 		unsigned int rbo;
 		std::vector<RenderTexture*> buffers;
+
 	};
 }
 

@@ -85,8 +85,15 @@ namespace geeL {
 
 	void DeferredRenderer::renderInit() {
 
+		//Init SSAO (if added)
+		if (ssao != nullptr) {
+			ssaoScreen = new ScreenQuad();
+			ssaoScreen->init();
+			ssao->init(*ssaoScreen, ssaoBuffer->info);
+		}
+
 		deferredShader->use();
-		scene->lightManager.bindShadowmaps(*deferredShader);
+		scene->lightManager.bindMaps(*deferredShader);
 		scene->addRequester(*this);
 
 		//Init all effects
@@ -102,16 +109,10 @@ namespace geeL {
 			: frameBuffer1.getTexture().getID();
 
 		effects.front()->setBuffer(defaultBuffer);
-
-		//Init SSAO (if added)
-		if (ssao != nullptr) {
-			ssaoScreen = new ScreenQuad();
-			ssaoScreen->init();
-			ssao->init(*ssaoScreen, ssaoBuffer->info);
-		}
 	}
 
 	void DeferredRenderer::render() {
+		renderInit();
 
 		//Render loop
 		while (!window->shouldClose()) {
@@ -314,9 +315,9 @@ namespace geeL {
 		this->requester.push_back(&requester);
 	}
 
-	void DeferredRenderer::updateInformation(SceneCamera& camera, Skybox& skybox) {
-		deferredShader->use();
-		scene->bindSkybox(*deferredShader);
+	void DeferredRenderer::updateSkybox(Skybox& skybox) {
+		//Redraw reflection probes since skybox is also visible in them
+		scene->lightManager.drawReflectionProbes();
 	}
 
 	void DeferredRenderer::linkInformation() const {

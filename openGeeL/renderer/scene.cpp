@@ -168,7 +168,7 @@ namespace geeL {
 
 		for (auto it = sceneRequester.begin(); it != sceneRequester.end(); it++) {
 			SceneRequester& requester = **it;
-			requester.updateInformation(*this->camera, *this->skybox);
+			requester.updateSkybox(*this->skybox);
 		}
 	}
 
@@ -189,7 +189,8 @@ namespace geeL {
 
 	void RenderScene::addRequester(SceneRequester& requester) {
 		sceneRequester.push_back(&requester);
-		requester.updateInformation(*camera, *skybox);
+		requester.updateSkybox(*skybox);
+		requester.updateCamera(*camera);
 	}
 
 	void RenderScene::setCamera(SceneCamera& camera) {
@@ -197,7 +198,7 @@ namespace geeL {
 
 		for (auto it = sceneRequester.begin(); it != sceneRequester.end(); it++) {
 			SceneRequester& requester = **it;
-			requester.updateInformation(*this->camera, * skybox);
+			requester.updateCamera(*this->camera);
 		}
 	}
 

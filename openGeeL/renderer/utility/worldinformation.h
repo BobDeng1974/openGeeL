@@ -40,7 +40,11 @@ namespace geeL {
 	class SceneRequester {
 
 	public:
-		virtual void updateInformation(SceneCamera& camera, Skybox& skybox) = 0;
+		virtual void updateSkybox(Skybox& skybox) {}
+		virtual void updateCamera(SceneCamera& camera) {}
+
+	protected:
+		SceneRequester() {}
 
 	};
 
@@ -48,7 +52,7 @@ namespace geeL {
 	class CameraRequester : public SceneRequester {
 
 	public:
-		virtual void updateInformation(SceneCamera& camera, Skybox& skybox) {
+		virtual void updateCamera(SceneCamera& camera) {
 			this->camera = &camera;
 		}
 
@@ -59,7 +63,6 @@ namespace geeL {
 	protected:
 		const Camera* camera = nullptr;
 	};
-
 
 
 	inline WorldMaps operator|(WorldMaps a, WorldMaps b) {
