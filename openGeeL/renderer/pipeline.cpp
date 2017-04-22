@@ -21,7 +21,7 @@ namespace geeL {
 		
 		if (shader.getUseLight()) {
 			lightManager.bind(camera, shader);
-			lightManager.bindMaps(shader);
+			lightManager.bindShadowMaps(shader);
 		}
 		if (shader.getUseCamera()) {
 			glUniformBlockBinding(shader.program,

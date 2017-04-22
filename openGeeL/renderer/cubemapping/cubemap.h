@@ -13,6 +13,7 @@ namespace geeL {
 	public:
 		virtual void bind(const Shader& shader, std::string name) const;
 		virtual void add(Shader& shader, std::string name) const;
+		virtual void remove(Shader& shader, unsigned int id) const;
 
 		virtual unsigned int getID() const;
 

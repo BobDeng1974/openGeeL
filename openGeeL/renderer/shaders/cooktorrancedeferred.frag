@@ -50,7 +50,7 @@ struct ReflectionProbe {
 	samplerCube irradiance;
 	samplerCube prefilterEnv;
 
-	sampler2D integration;
+	
 };
 
 in vec2 textureCoordinates;
@@ -70,6 +70,7 @@ uniform sampler2D ssao;
 uniform int useSSAO;
 
 uniform ReflectionProbe skybox;
+uniform sampler2D BRDFIntegrationMap;
 
 uniform mat4 inverseView;
 uniform vec3 origin;
@@ -385,7 +386,7 @@ vec3 calculateIndirectSpecularSplitSum(vec3 normal, vec3 view, vec3 albedo, floa
 	float NdotV = doto(normalWorld, viewWorld);
 
 	vec3 prefilteredColor = textureLod(skybox.prefilterEnv, reflection,  roughness * ROUGHNESS_LOD).rgb; 
-	vec2 brdfInt = texture(skybox.integration, vec2(NdotV, roughness)).rg;
+	vec2 brdfInt = texture(BRDFIntegrationMap, vec2(NdotV, roughness)).rg;
 	brdfInt = brdfInt;
 
 	vec3 F0 = vec3(0.04f);

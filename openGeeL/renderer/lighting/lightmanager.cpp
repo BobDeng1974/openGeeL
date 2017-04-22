@@ -235,7 +235,16 @@ namespace geeL {
 			light.addShadowmap(shader, binding->getName() + "shadowMap");
 	}
 
-	void LightManager::bindMaps(Shader& shader) const {
+	void LightManager::bindReflectionProbes(Shader& shader) const {
+		shader.use();
+
+		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
+			DynamicCubeMap& probe = **it;
+			probe.add(shader, "skybox.");
+		}
+	}
+
+	void LightManager::bindShadowMaps(Shader& shader) const {
 		shader.use();
 
 		for (auto it = pointLights.begin(); it != pointLights.end(); it++) {
@@ -256,11 +265,6 @@ namespace geeL {
 
 			light.addShadowmap(shader, binding.getName() + "shadowMap");
 			light.addLightCookie(shader, binding.getName() + "cookie");
-		}
-
-		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
-			DynamicCubeMap& probe = **it;
-			probe.add(shader, "skybox.");
 		}
 	}
 

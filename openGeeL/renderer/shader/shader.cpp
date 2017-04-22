@@ -70,7 +70,7 @@ namespace geeL {
 			maps.erase(element);
 
 			//Rebind all maps again since positions might have changed
-			bindMaps();
+			bindShadowMaps();
 		}
 	}
 
@@ -80,11 +80,11 @@ namespace geeL {
 			maps.erase(it);
 
 			//Rebind all maps again since positions might have changed
-			bindMaps();
+			bindShadowMaps();
 		}
 	}
 
-	void Shader::bindMaps() {
+	void Shader::bindShadowMaps() {
 		int counter = 0;
 		for (auto it = maps.begin(); it != maps.end(); it++) {
 			TextureBinding& binding = (*it).second;

@@ -41,7 +41,6 @@ namespace geeL {
 	class LightManager {
 
 	public:
-		glm::vec3 ambient;
 		std::string plName = "pointLights";
 		std::string dlName = "directionalLights";
 		std::string slName = "spotLights";
@@ -50,8 +49,6 @@ namespace geeL {
 		std::string slCountName = "slCount";
 
 		LightManager();
-
-		//Manager is responsible for removing the lights
 		~LightManager();
 
 		//Add and create directional light
@@ -78,14 +75,15 @@ namespace geeL {
 
 		void bind(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const;
 		void bind(const Camera& camera, const SceneShader& shader) const;
-		void bindMaps(Shader& shader) const;
+
+		void bindReflectionProbes(Shader& shader) const;
+		void bindShadowMaps(Shader& shader) const;
 
 		void bindShadowmap(Shader& shader, DirectionalLight& light) const;
 		void bindShadowmap(Shader& shader, PointLight& light) const;
 		void bindShadowmap(Shader& shader, SpotLight& light) const;
 
 		void drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera) const;
-
 
 		void iterDirectionalLights(std::function<void(DirectionalLight&)> function);
 		void iterPointLights(std::function<void(PointLight&)> function);
@@ -101,9 +99,9 @@ namespace geeL {
 		void setAmbientColor(const glm::vec3& color);
 
 	private:
-		//Shader for spotlights and directional lights
-		Shader* dlShader;
-		Shader* plShader;
+		glm::vec3 ambient;
+		Shader* dlShader; //Shader for spot and directional light shadow map
+		Shader* plShader; //Shader for point light shadow maps
 
 		std::list<DLightBinding> dirLights;
 		std::list<SLightBinding> spotLights;

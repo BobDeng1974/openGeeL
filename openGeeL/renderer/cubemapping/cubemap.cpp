@@ -18,6 +18,10 @@ namespace geeL {
 		shader.addMap(id, name + "albedo", GL_TEXTURE_CUBE_MAP);
 	}
 
+	void CubeMap::remove(Shader& shader, unsigned int id) const {
+		shader.removeMap(id);
+	}
+
 	unsigned int CubeMap::getID() const {
 		return id;
 	}

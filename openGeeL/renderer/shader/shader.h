@@ -87,7 +87,7 @@ namespace geeL {
 		std::map<std::string, TextureBinding> maps;
 
 		//Bind all added maps to the shader
-		void bindMaps();
+		void bindShadowMaps();
 
 	};
 }

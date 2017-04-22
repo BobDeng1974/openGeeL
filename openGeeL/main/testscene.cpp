@@ -69,7 +69,8 @@
 #include "../renderer/texturing/brdfIntMap.h"
 #include "../renderer/scene.h"
 #include "../renderer/utility/rendertime.h"
-#include "../renderer//framebuffer/cubebuffer.h"
+#include "../renderer/framebuffer/cubebuffer.h"
+#include "../renderer/cubemapping/cubemapfactory.h"
 
 #include "../interface/guirenderer.h"
 #include "../interface/elements/objectlister.h"
@@ -248,7 +249,8 @@ void draw() {
 	std::function<void(const Camera&, FrameBufferInformation)> renderCall =
 		[&](const Camera& camera, FrameBufferInformation info) { renderer.draw(camera, info); };
 
-	LightManager lightManager = LightManager(renderCall, vec3(0.15f));
+	
+	LightManager lightManager = LightManager();
 	RenderPipeline shaderManager = RenderPipeline(materialFactory);
 	
 	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, meshFactory, materialFactory);
@@ -256,14 +258,18 @@ void draw() {
 	scene.setPhysics(&physics);
 
 	CubeBuffer cubeBuffer = CubeBuffer();
+	BRDFIntegrationMap brdfInt = BRDFIntegrationMap();
+	CubeMapFactory cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
+
+	//Transform& probeTransform = transFactory.CreateTransform(vec3(0.f, 0.f, 10.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	//DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024);
+
 	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
 	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 1024);
-	IrradianceMap irrMap = IrradianceMap(envCubeMap, cubeBuffer);
-	PrefilteredEnvironmentMap filMap = PrefilteredEnvironmentMap(envCubeMap, cubeBuffer);
-	BRDFIntegrationMap brdfInt = BRDFIntegrationMap();
-	IBLMap iblMap = IBLMap(brdfInt, irrMap, filMap);
+	IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
-	Skybox skybox = Skybox(iblMap);
+	lightManager.addReflectionProbe(iblMap);
+	Skybox skybox = Skybox(envCubeMap);
 	scene.setSkybox(skybox);
 	
 	renderer.setScene(scene);
@@ -337,16 +343,6 @@ void draw() {
 
 	//renderer.addEffect(fxaa);
 
-	
-	Transform& probeTransform = transFactory.CreateTransform(vec3(0.f, 0.f, 10.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	ReflectionProbe probe = ReflectionProbe(cubeBuffer, renderCall, probeTransform, 1024);
-
 	renderer.linkInformation();
-	renderer.renderInit();
-
-	probe.update();
-	Skybox skybox2 = Skybox(probe);
-	scene.setSkybox(skybox2);
-
 	renderer.render();
 }

@@ -93,7 +93,8 @@ namespace geeL {
 		}
 
 		deferredShader->use();
-		scene->lightManager.bindMaps(*deferredShader);
+		scene->lightManager.bindReflectionProbes(*deferredShader);
+		scene->lightManager.bindShadowMaps(*deferredShader);
 		scene->addRequester(*this);
 
 		//Init all effects
