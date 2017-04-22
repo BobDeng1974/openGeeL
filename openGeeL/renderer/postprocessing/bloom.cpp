@@ -11,8 +11,8 @@ namespace geeL {
 		: PostProcessingEffect("renderer/postprocessing/bloomfilter.frag"), scatter(scatter) {}
 
 
-	void BloomFilter::init(ScreenQuad& screen, const FrameBufferInformation& info) {
-		PostProcessingEffect::init(screen, info);
+	void BloomFilter::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+		PostProcessingEffect::init(screen, buffer);
 
 		scatterLocation = shader.setFloat("scatter", scatter);
 	}

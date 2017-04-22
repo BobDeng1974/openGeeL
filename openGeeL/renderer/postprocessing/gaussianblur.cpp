@@ -29,11 +29,11 @@ namespace geeL {
 		mainBuffer = buffer;
 	}
 
-	void GaussianBlur::init(ScreenQuad& screen, const FrameBufferInformation& info) {
-		PostProcessingEffect::init(screen, info);
+	void GaussianBlur::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+		PostProcessingEffect::init(screen, buffer);
 
-		frameBuffers[0].init(info.width, info.height);
-		frameBuffers[1].init(info.width, info.height);
+		frameBuffers[0].init(buffer.getWidth(), buffer.getHeight());
+		frameBuffers[1].init(buffer.getWidth(), buffer.getHeight());
 
 		//Set kernel
 		for (int i = 0; i < 5; i++) {
@@ -95,8 +95,8 @@ namespace geeL {
 		: GaussianBlur(strength, shaderPath), sigma(sigma) {}
 
 
-	void BilateralFilter::init(ScreenQuad& screen, const FrameBufferInformation& info) {
-		GaussianBlur::init(screen, info);
+	void BilateralFilter::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+		GaussianBlur::init(screen, buffer);
 
 		shader.setFloat("sigma", sigma);
 	}
@@ -121,11 +121,11 @@ namespace geeL {
 		sobel.setBuffer(buffer);
 	}
 
-	void SobelBlur::init(ScreenQuad & screen, const FrameBufferInformation& info) {
-		GaussianBlur::init(screen, info);
+	void SobelBlur::init(ScreenQuad & screen, const FrameBuffer& buffer) {
+		GaussianBlur::init(screen, buffer);
 
-		sobelBuffer.init(info.width, info.height);
-		sobel.init(screen, sobelBuffer.info);
+		sobelBuffer.init(buffer.getWidth(), buffer.getHeight());
+		sobel.init(screen, sobelBuffer);
 
 		addBuffer(sobelBuffer.getTexture(), "sobel");
 	}

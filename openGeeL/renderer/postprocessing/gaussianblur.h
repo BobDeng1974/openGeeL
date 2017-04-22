@@ -19,7 +19,7 @@ namespace geeL {
 		void setKernel(float newKernel[5]);
 		virtual void setBuffer(unsigned int buffer);
 		
-		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
+		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
 	protected:
 		unsigned int currBuffer;
@@ -44,7 +44,7 @@ namespace geeL {
 	public:
 		BilateralFilter(unsigned int strength = 1, float sigma = 0.5f);
 
-		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
+		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
 	protected:
 		BilateralFilter(std::string shaderPath, unsigned int strength = 1, float sigma = 0.5f);
@@ -73,7 +73,7 @@ namespace geeL {
 		SobelBlur(SobelFilter& sobel, unsigned int strength = 1);
 
 		virtual void setBuffer(unsigned int buffer);
-		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
+		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 

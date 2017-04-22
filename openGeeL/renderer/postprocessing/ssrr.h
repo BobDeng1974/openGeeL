@@ -12,7 +12,7 @@ namespace geeL {
 	public:
 		SSRR();
 
-		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
+		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 

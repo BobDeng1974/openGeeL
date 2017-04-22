@@ -42,8 +42,8 @@ namespace geeL {
 				farDistance(farDistance), blurResolution(blurResolution) {}
 
 
-	void DepthOfFieldBlurred::init(ScreenQuad& screen, const FrameBufferInformation& info) {
-		PostProcessingEffect::init(screen, info);
+	void DepthOfFieldBlurred::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+		PostProcessingEffect::init(screen, buffer);
 
 		shader.setFloat("farDistance", farDistance);
 		shader.setFloat("aperture", aperture);
@@ -54,11 +54,11 @@ namespace geeL {
 		float dist = (focalLength < 0.f || focalLength > 30.f) ? 30.f : focalLength;
 		blur.bindDoFData(dist, aperture, farDistance);
 
-		screenInfo = &info;
-		blurBuffer.init(int(info.width * blurResolution), int(info.height * blurResolution), 
+		screenInfo = &buffer.info;
+		blurBuffer.init(int(screenInfo->width * blurResolution), int(screenInfo->height * blurResolution),
 			ColorType::RGB16, FilterMode::Linear);
 
-		blur.init(screen, blurBuffer.info);
+		blur.init(screen, blurBuffer);
 		addBuffer(blurBuffer.getTexture(), "blurredImage");
 	}
 

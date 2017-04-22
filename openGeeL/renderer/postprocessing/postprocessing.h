@@ -11,6 +11,7 @@ typedef unsigned int GLuint;
 namespace geeL {
 
 	struct FrameBufferInformation;
+	class FrameBuffer;
 	class ColorBuffer;
 	class Shader;
 	class ScreenQuad;
@@ -35,7 +36,7 @@ namespace geeL {
 		void addBuffer(const Texture& texture, const std::string& name);
 		void addBuffer(unsigned int id, const std::string& name);
 
-		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
+		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
 		virtual void draw();
 

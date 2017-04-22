@@ -22,19 +22,19 @@ namespace geeL {
 		effect.setBuffer(buffer);
 	}
 
-	void BlurredPostEffect::init(ScreenQuad& screen, const FrameBufferInformation& info) {
-		PostProcessingEffect::init(screen, info);
-		screenInfo = &info;
+	void BlurredPostEffect::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+		PostProcessingEffect::init(screen, buffer);
+		screenInfo = &buffer.info;
 
 		shader.setInteger("effectOnly", onlyEffect);
 
-		effectBuffer.init(unsigned int(info.width * effectResolution), unsigned int(info.height * effectResolution),
+		effectBuffer.init(unsigned int(screenInfo->width * effectResolution), unsigned int(screenInfo->height * effectResolution),
 			ColorType::RGB16, FilterMode::Linear);
-		blurBuffer.init(unsigned int(info.width * blurResolution), unsigned int(info.height * blurResolution),
+		blurBuffer.init(unsigned int(screenInfo->width * blurResolution), unsigned int(screenInfo->height * blurResolution),
 			ColorType::RGB16, FilterMode::Linear);
 
-		effect.init(screen, effectBuffer.info);
-		blur.init(screen, blurBuffer.info);
+		effect.init(screen, effectBuffer);
+		blur.init(screen, blurBuffer);
 
 		addBuffer(blurBuffer.getTexture(), "image2");
 	}

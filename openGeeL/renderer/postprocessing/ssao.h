@@ -20,7 +20,7 @@ namespace geeL {
 
 		//Empty setter since base image isn't needed for SSAO
 		virtual void setBuffer(unsigned int buffer) {}
-		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
+		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 		virtual void draw();
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
@@ -43,7 +43,6 @@ namespace geeL {
 
 		ShaderLocation projectionLocation;
 		ColorBuffer tempBuffer;
-		const FrameBufferInformation* screenInfo;
 		
 	};
 }

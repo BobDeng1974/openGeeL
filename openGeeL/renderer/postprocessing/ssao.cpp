@@ -45,21 +45,20 @@ namespace geeL {
 		noiseTexture = ImageTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::Nearest);
 	}
 
-	void SSAO::init(ScreenQuad& screen, const FrameBufferInformation& info) {
-		PostProcessingEffect::init(screen, info);
-		screenInfo = &info;
+	void SSAO::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+		PostProcessingEffect::init(screen, buffer);
 
-		shader.setFloat("screenWidth", float(screenInfo->width));
-		shader.setFloat("screenHeight", float(screenInfo->height));
+		shader.setFloat("screenWidth", float(buffer.getWidth()));
+		shader.setFloat("screenHeight", float(buffer.getHeight()));
 		shader.setFloat("radius", radius);
 
 		for (unsigned int i = 0; i < sampleCount; i++)
 			shader.setVector3("samples[" + to_string(i) + "]", kernel[i]);
 		
-		tempBuffer.init(info.width, info.height, ColorType::Single, 
+		tempBuffer.init(buffer.getWidth(), buffer.getHeight(), ColorType::Single,
 			FilterMode::Nearest, WrapMode::Repeat, false);
 
-		blur.init(screen, info);
+		blur.init(screen, buffer);
 		blur.setBuffer(tempBuffer.getTexture().getID());
 
 		projectionLocation = shader.getLocation("projection");

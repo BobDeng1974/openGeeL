@@ -15,7 +15,7 @@ namespace geeL {
 		VolumetricLight(const SpotLight& light, 
 			float density = 1.f, float minDistance = 1.f, unsigned int samples = 30);
 
-		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
+		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 

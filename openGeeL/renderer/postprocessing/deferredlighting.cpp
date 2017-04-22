@@ -12,8 +12,8 @@ namespace geeL {
 			"renderer/shaders/cooktorrancedeferred.frag"), scene(scene) {}
 
 
-	void DeferredLighting::init(ScreenQuad& screen, const FrameBufferInformation& info) {
-		PostProcessingEffect::init(screen, info);
+	void DeferredLighting::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+		PostProcessingEffect::init(screen, buffer);
 
 		scene.lightManager.bindReflectionProbes(shader);
 		scene.lightManager.bindShadowMaps(shader);

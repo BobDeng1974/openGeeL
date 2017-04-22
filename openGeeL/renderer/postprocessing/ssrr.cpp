@@ -10,8 +10,8 @@ namespace geeL {
 	SSRR::SSRR() : PostProcessingEffect("renderer/postprocessing/ssrr.frag") {}
 
 
-	void SSRR::init(ScreenQuad& screen, const FrameBufferInformation& info) {
-		PostProcessingEffect::init(screen, info);
+	void SSRR::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+		PostProcessingEffect::init(screen, buffer);
 
 		shader.setInteger("effectOnly", onlyEffect);
 		projectionLocation = shader.getLocation("projection");

@@ -75,15 +75,15 @@ namespace geeL {
 		if (ssao != nullptr) {
 			ssaoScreen = new ScreenQuad();
 			ssaoScreen->init();
-			ssao->init(*ssaoScreen, ssaoBuffer->info);
+			ssao->init(*ssaoScreen, *ssaoBuffer);
 		}
 
-		lighting.init(screen, frameBuffer1.info);
+		lighting.init(screen, frameBuffer1);
 
 		//Init all effects
 		bool chooseBuffer = true;
 		for (auto effect = effects.begin(); effect != effects.end(); effect++) {
-			(*effect)->init(screen, chooseBuffer ? frameBuffer1.info : frameBuffer2.info);
+			(*effect)->init(screen, chooseBuffer ? frameBuffer1 : frameBuffer2);
 			chooseBuffer = !chooseBuffer;
 		}
 

@@ -39,10 +39,10 @@ namespace geeL {
 		shader.addMap(id, name);
 	}
 
-	void PostProcessingEffect::init(ScreenQuad& screen, const FrameBufferInformation& info) {
+	void PostProcessingEffect::init(ScreenQuad& screen, const FrameBuffer& buffer) {
 		this->screen = &screen;
 
-		setParentFBO(info.fbo);
+		setParentFBO(buffer.getFBO());
 		shader.use();
 	}
 
