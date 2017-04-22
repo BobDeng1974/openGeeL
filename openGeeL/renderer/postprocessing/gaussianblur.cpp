@@ -24,6 +24,11 @@ namespace geeL {
 			amount = maxAmount;
 	}
 
+	void GaussianBlur::setBuffer(unsigned int buffer) {
+		PostProcessingEffect::setBuffer(buffer);
+		mainBuffer = buffer;
+	}
+
 	void GaussianBlur::init(ScreenQuad& screen, const FrameBufferInformation& info) {
 		PostProcessingEffect::init(screen, info);
 
@@ -40,8 +45,6 @@ namespace geeL {
 	}
 
 	void GaussianBlur::bindValues() {
-		PostProcessingEffect::bindValues();
-
 		bool horizontal = true;
 		bool first = true;
 		
@@ -53,11 +56,11 @@ namespace geeL {
 			if (first) {
 				first = false;
 				//Use the original the first time
-				currBuffer = buffers.front();
+				addBuffer(mainBuffer, "image");
 			}
 			else {
 				//Then use the previously blurred image
-				currBuffer = frameBuffers[!horizontal].getTexture().getID();
+				addBuffer(frameBuffers[!horizontal].getTexture(), "image");
 			}
 
 			//Render Call
@@ -68,17 +71,9 @@ namespace geeL {
 		
 		//Set values for final blur call
 		shader.setInteger(horLocation, horizontal);
-		currBuffer = frameBuffers[!horizontal].getTexture().getID();
+		addBuffer(frameBuffers[!horizontal].getTexture(), "image");
 
-		ColorBuffer::bind(parentFBO);
-	}
-
-	void GaussianBlur::bindToScreen() {
-		shader.use();
-
-		std::list<unsigned int> buffs = { currBuffer };
-		shader.loadMaps(buffs);
-		screen->draw();
+		FrameBuffer::bind(parentFBO);
 	}
 
 	void GaussianBlur::setKernel(float newKernel[5]) {
@@ -110,17 +105,8 @@ namespace geeL {
 	BilateralDepthFilter::BilateralDepthFilter(unsigned int strength, float sigma)
 		: BilateralFilter("renderer/postprocessing/bilateraldepth.frag", strength, sigma) {}
 
-
-	void BilateralDepthFilter::init(ScreenQuad& screen, const FrameBufferInformation& info) {
-		BilateralFilter::init(screen, info);
-
-		shader.setInteger("image", shader.mapOffset);
-		shader.setInteger("gPositionDepth", shader.mapOffset + 1);
-	}
-
-
 	void BilateralDepthFilter::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		addBuffer( { maps[WorldMaps::PositionDepth]->getID() });
+		addBuffer(*maps[WorldMaps::PositionDepth], "gPositionDepth");
 	}
 
 
@@ -130,7 +116,7 @@ namespace geeL {
 
 
 	void SobelBlur::setBuffer(unsigned int buffer) {
-		PostProcessingEffect::setBuffer(buffer);
+		GaussianBlur::setBuffer(buffer);
 
 		sobel.setBuffer(buffer);
 	}
@@ -138,12 +124,10 @@ namespace geeL {
 	void SobelBlur::init(ScreenQuad & screen, const FrameBufferInformation& info) {
 		GaussianBlur::init(screen, info);
 
-		shader.setInteger("sobel", shader.mapOffset + 1);
-
 		sobelBuffer.init(info.width, info.height);
 		sobel.init(screen, sobelBuffer.info);
 
-		buffers.push_back(sobelBuffer.getTexture().getID());
+		addBuffer(sobelBuffer.getTexture(), "sobel");
 	}
 
 	void SobelBlur::bindValues() {
@@ -153,15 +137,7 @@ namespace geeL {
 		GaussianBlur::bindValues();
 	}
 
-	void SobelBlur::bindToScreen() {
-		shader.use();
-
-		std::list<unsigned int> buffs = { currBuffer, sobelBuffer.getTexture().getID() };
-		shader.loadMaps(buffs);
-		screen->draw();
-	}
-
 	void  SobelBlur::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		sobel.setBuffer({ maps[WorldMaps::PositionDepth]->getID() });
+		sobel.setBuffer(*maps[WorldMaps::PositionDepth]);
 	}
 }

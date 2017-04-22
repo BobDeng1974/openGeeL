@@ -52,6 +52,7 @@ namespace geeL {
 		//Add a new map to the shader
 		void addMap(TextureID id, const std::string& name, unsigned int type = GL_TEXTURE_2D);
 		void addMap(const Texture& texture, const std::string& name, unsigned int type = GL_TEXTURE_2D);
+		TextureID getMap(const std::string& name) const;
 
 		//Remove map with given ID from shader (if it exists)
 		void removeMap(TextureID id);

@@ -23,18 +23,13 @@ namespace geeL {
 		const ShadowMap* map = light.getShadowMap();
 
 		if (map != nullptr)
-			buffers.push_back(map->getID());
+			addBuffer(map->getID(), "shadowMap");
 		else
 			std::cout << "Volumetric light not functional since light has no shadow map attached\n";
 
 		unsigned int cookieID = light.getLightCookieID();
-		if(cookieID != 0)
-			buffers.push_back(cookieID);
-
-		shader.setInteger("image", shader.mapOffset);
-		shader.setInteger("gPositionDepth", shader.mapOffset + 1);
-		shader.setInteger("shadowMap", shader.mapOffset + 2);
-		shader.setInteger("lightCookie", shader.mapOffset + 3);
+		if (cookieID != 0)
+			addBuffer(cookieID, "lightCookie");
 
 		shader.setInteger("effectOnly", onlyEffect);
 		shader.setFloat("minCutoff", minDistance);
@@ -54,7 +49,7 @@ namespace geeL {
 
 
 	void VolumetricLight::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		addBuffer( { maps[WorldMaps::PositionDepth]->getID() } );
+		addBuffer(*maps[WorldMaps::PositionDepth], "gPositionDepth");
 	}
 
 	unsigned int VolumetricLight::getSampleCount() const {

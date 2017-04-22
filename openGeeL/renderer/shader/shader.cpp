@@ -43,6 +43,7 @@ namespace geeL {
 		}
 		//Add new texture binding otherwise
 		else {
+			use();
 			unsigned int offset = maps.size();
 			glUniform1i(glGetUniformLocation(program, name.c_str()), mapOffset + offset);
 
@@ -82,6 +83,14 @@ namespace geeL {
 			//Rebind all maps again since positions might have changed
 			bindShadowMaps();
 		}
+	}
+
+	TextureID Shader::getMap(const std::string& name) const {
+		auto it = maps.find(name);
+		if (it != maps.end())
+			return (*it).second.id;
+
+		return 0;
 	}
 
 	void Shader::bindShadowMaps() {

@@ -18,6 +18,8 @@ namespace geeL {
 	public:
 		SSAO(PostProcessingEffect& blur, float radius = 5.f);
 
+		//Empty setter since base image isn't needed for SSAO
+		virtual void setBuffer(unsigned int buffer) {}
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 		virtual void draw();
 

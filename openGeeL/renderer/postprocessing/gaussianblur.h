@@ -17,6 +17,8 @@ namespace geeL {
 		GaussianBlur(unsigned int strength = 1);
 		
 		void setKernel(float newKernel[5]);
+		virtual void setBuffer(unsigned int buffer);
+		
 		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
 
 	protected:
@@ -25,11 +27,11 @@ namespace geeL {
 		GaussianBlur(unsigned int strength, std::string shaderPath);
 
 		virtual void bindValues();
-		virtual void bindToScreen();
 
 	private:
 		unsigned int amount;
 		unsigned int maxAmount = 10;
+		unsigned int mainBuffer;
 		float kernel[5] = { 0.227027f, 0.1945946f, 0.1216216f, 0.054054f, 0.016216f };
 		ColorBuffer frameBuffers[2];
 		ShaderLocation horLocation;
@@ -59,8 +61,6 @@ namespace geeL {
 	public:
 		BilateralDepthFilter(unsigned int strength = 1, float sigma = 0.5f);
 
-		virtual void init(ScreenQuad& screen, const FrameBufferInformation& info);
-
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 	};
@@ -79,7 +79,6 @@ namespace geeL {
 
 	protected:
 		virtual void bindValues();
-		virtual void bindToScreen();
 
 	private:
 		SobelFilter& sobel;

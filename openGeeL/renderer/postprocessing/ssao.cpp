@@ -49,10 +49,6 @@ namespace geeL {
 		PostProcessingEffect::init(screen, info);
 		screenInfo = &info;
 
-		shader.setInteger("gPositionDepth", shader.mapOffset);
-		shader.setInteger("gNormalMet", shader.mapOffset + 1);
-		shader.setInteger("noiseTexture", shader.mapOffset + 2);
-
 		shader.setFloat("screenWidth", float(screenInfo->width));
 		shader.setFloat("screenHeight", float(screenInfo->height));
 		shader.setFloat("radius", radius);
@@ -92,9 +88,9 @@ namespace geeL {
 	}
 
 	void SSAO::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		//Set instead of add buffers to override the default image buffer since it isn't need for SSAO
-		setBuffer( { maps[WorldMaps::PositionDepth]->getID(), maps[WorldMaps::NormalMetallic]->getID() } );
-		buffers.push_back(noiseTexture.getID());
+		addBuffer(*maps[WorldMaps::PositionDepth], "gPositionDepth");
+		addBuffer(*maps[WorldMaps::NormalMetallic], "gNormalMet");
+		addBuffer(noiseTexture.getID(), "noiseTexture");
 	}
 
 	float SSAO::getRadius() const {

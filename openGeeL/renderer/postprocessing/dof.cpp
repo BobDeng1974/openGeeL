@@ -45,9 +45,6 @@ namespace geeL {
 	void DepthOfFieldBlurred::init(ScreenQuad& screen, const FrameBufferInformation& info) {
 		PostProcessingEffect::init(screen, info);
 
-		shader.setInteger("image", shader.mapOffset);
-		shader.setInteger("gPositionDepth", shader.mapOffset + 1);
-		shader.setInteger("blurredImage", shader.mapOffset + 2);
 		shader.setFloat("farDistance", farDistance);
 		shader.setFloat("aperture", aperture);
 
@@ -62,7 +59,7 @@ namespace geeL {
 			ColorType::RGB16, FilterMode::Linear);
 
 		blur.init(screen, blurBuffer.info);
-		buffers.push_back(blurBuffer.getTexture().getID());
+		addBuffer(blurBuffer.getTexture(), "blurredImage");
 	}
 
 	void DepthOfFieldBlurred::bindValues() {
@@ -74,8 +71,8 @@ namespace geeL {
 		
 		blurBuffer.fill(blur);
 
-		ColorBuffer::resetSize(screenInfo->width, screenInfo->height);
-		ColorBuffer::bind(parentFBO);
+		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
+		FrameBuffer::bind(parentFBO);
 	}
 
 	void DepthOfFieldBlurred::draw() {
@@ -89,8 +86,9 @@ namespace geeL {
 	}
 
 	void DepthOfFieldBlurred::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		addBuffer( { maps[WorldMaps::PositionDepth]->getID() } );
-		blur.setBuffer({ buffers.front(), *next(buffers.begin()) });
+		addBuffer(*maps[WorldMaps::PositionDepth], "gPositionDepth");
+		blur.addBuffer(*maps[WorldMaps::PositionDepth], "gPositionDepth");
+		blur.setBuffer(getBuffer());
 	}
 
 	void DepthOfFieldBlurred::resizeBlurResolution(float blurResolution) {

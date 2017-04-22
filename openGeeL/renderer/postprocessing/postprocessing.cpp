@@ -13,53 +13,37 @@ namespace geeL {
 		: PostProcessingEffect("renderer/shaders/screen.vert", fragmentPath) {}
 
 	PostProcessingEffect::PostProcessingEffect(string vertexPath, string fragmentPath)
-		: shader(Shader(vertexPath.c_str(), fragmentPath.c_str())), onlyEffect(false) {
-	
-		buffers.push_back(0);
-	}
+		: shader(Shader(vertexPath.c_str(), fragmentPath.c_str())), onlyEffect(false) {}
 
 	unsigned int PostProcessingEffect::getBuffer() const {
-		return buffers.front();
+		return shader.getMap("image");
 	}
 
 	void PostProcessingEffect::setBuffer(const ColorBuffer& buffer) {
 		setBuffer(buffer.getTexture().getID());
 	}
 
+	void PostProcessingEffect::setBuffer(const Texture& texture) {
+		setBuffer(texture.getID());
+	}
+
 	void PostProcessingEffect::setBuffer(unsigned int buffer) {
-		buffers.front() = buffer;
+		shader.addMap(buffer, "image");
 	}
 
-	void PostProcessingEffect::setBuffer(std::list<unsigned int> buffers) {
-		this->buffers.clear();
-		unsigned int counter = 0;
-		for (auto it = buffers.begin(); it != buffers.end(); it++) {
-			this->buffers.push_back(*it);
-
-			counter++;
-			if (counter >= maxBuffers)
-				return;
-		}
+	void PostProcessingEffect::addBuffer(const Texture& texture, const std::string& name) {
+		addBuffer(texture.getID(), name);
 	}
 
-	void PostProcessingEffect::addBuffer(std::list<unsigned int> buffers) {
-		size_t counter = this->buffers.size();
-		for (auto it = buffers.begin(); it != buffers.end(); it++) {
-			this->buffers.push_back(*it);
-
-			counter++;
-			if (counter >= maxBuffers)
-				return;
-		}
+	void PostProcessingEffect::addBuffer(unsigned int id, const std::string& name) {
+		shader.addMap(id, name);
 	}
 
 	void PostProcessingEffect::init(ScreenQuad& screen, const FrameBufferInformation& info) {
 		this->screen = &screen;
 
 		setParentFBO(info.fbo);
-
 		shader.use();
-		shader.setInteger("image", shader.mapOffset);
 	}
 
 	void PostProcessingEffect::draw() {
@@ -70,7 +54,7 @@ namespace geeL {
 	}
 
 	void PostProcessingEffect::bindToScreen() {
-		shader.loadMaps(buffers);
+		shader.loadMaps();
 		screen->draw();
 	}
 

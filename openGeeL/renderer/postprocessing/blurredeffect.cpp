@@ -26,8 +26,6 @@ namespace geeL {
 		PostProcessingEffect::init(screen, info);
 		screenInfo = &info;
 
-		shader.setInteger("image", shader.mapOffset);
-		shader.setInteger("image2", shader.mapOffset + 1);
 		shader.setInteger("effectOnly", onlyEffect);
 
 		effectBuffer.init(unsigned int(info.width * effectResolution), unsigned int(info.height * effectResolution),
@@ -38,7 +36,7 @@ namespace geeL {
 		effect.init(screen, effectBuffer.info);
 		blur.init(screen, blurBuffer.info);
 
-		buffers.push_back(blurBuffer.getTexture().getID());
+		addBuffer(blurBuffer.getTexture(), "image2");
 	}
 
 

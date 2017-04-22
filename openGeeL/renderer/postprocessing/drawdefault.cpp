@@ -17,13 +17,11 @@ namespace geeL {
 		PostProcessingEffect::init(screen, info);
 
 		ImageTexture noise = ImageTexture("resources/textures/noise.png", ColorType::Single);
-		buffers.push_back(noise.getID());
+		shader.addMap(noise.getID(), "noiseMap");
 
 		shader.setVector3("noiseScale",
 			vec3(float(info.width) / 255.f, float(info.height) / 255.f, 0.f));
 
-		shader.setInteger("image", shader.mapOffset);
-		shader.setInteger("noiseMap", shader.mapOffset + 1);
 		exposureLocation = shader.setFloat("exposure", exposure);
 	}
 

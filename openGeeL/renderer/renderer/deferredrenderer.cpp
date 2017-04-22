@@ -177,6 +177,7 @@ namespace geeL {
 				//Draw all the post processing effects on top of each other. Ping pong style!
 				for (auto effect = next(effects.begin()); effect != effects.end(); effect++) {
 					ColorBuffer& currBuffer = chooseBuffer ? frameBuffer2 : frameBuffer1;
+
 					currBuffer.fill(**effect);
 
 					chooseBuffer = !chooseBuffer;

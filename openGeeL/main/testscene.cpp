@@ -329,7 +329,7 @@ void draw() {
 
 	//GodRaySnippet godRaySnippet = GodRaySnippet(ray);
 	//renderer.addEffect(raySmooth);
-	//scene.addCameraRequester(ray);
+	//scene.addRequester(ray);
 	//postLister.add(raySmooth, godRaySnippet);
 
 	renderer.addEffect(ssrrSmooth, ssrr);
@@ -338,8 +338,8 @@ void draw() {
 	//renderer.addEffect(dof, dof);
 	//postLister.add(dof);
 
-	//renderer.addEffect(colorCorrect);
-	//postLister.add(colorCorrect);
+	renderer.addEffect(colorCorrect);
+	postLister.add(colorCorrect);
 
 	//renderer.addEffect(fxaa);
 
