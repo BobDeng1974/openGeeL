@@ -10,14 +10,13 @@ namespace geeL {
 
 	class Camera;
 	class CubeBuffer;
+	class FrameBuffer;
 	class Transform;
-
-	struct FrameBufferInformation;
 
 	class ReflectionProbe : public DynamicCubeMap, public SceneObject {
 
 	public:
-		ReflectionProbe(CubeBuffer& frameBuffer, std::function<void(const Camera&, FrameBufferInformation)> renderCall, 
+		ReflectionProbe(CubeBuffer& frameBuffer, std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall,
 			Transform& transform, unsigned int resolution, float width = 50.f, float height = 50.f, float depth = 50.f, 
 			std::string name = "ReflectionProbe");
 
@@ -28,7 +27,7 @@ namespace geeL {
 		float width, height, depth;
 		unsigned int resolution;
 
-		std::function<void(const Camera&, FrameBufferInformation)> renderCall;
+		std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall;
 
 	};
 

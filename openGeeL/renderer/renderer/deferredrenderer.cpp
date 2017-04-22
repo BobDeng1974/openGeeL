@@ -77,8 +77,9 @@ namespace geeL {
 			ssaoScreen->init();
 			ssao->init(*ssaoScreen, *ssaoBuffer);
 		}
-
+		
 		lighting.init(screen, frameBuffer1);
+		scene->init();
 
 		//Init all effects
 		bool chooseBuffer = true;
@@ -160,7 +161,6 @@ namespace geeL {
 				//Draw all the post processing effects on top of each other. Ping pong style!
 				for (auto effect = next(effects.begin()); effect != effects.end(); effect++) {
 					ColorBuffer& currBuffer = chooseBuffer ? frameBuffer2 : frameBuffer1;
-
 					currBuffer.fill(**effect);
 
 					chooseBuffer = !chooseBuffer;
@@ -204,12 +204,12 @@ namespace geeL {
 			FrameBuffer::resetSize(window->width, window->height);
 		}
 
-		//TODO: parent FBO needs to be reset here
+		FrameBuffer::bind(getParentFBO());
 		lightingPass();
 		scene->drawSkybox();
 	}
 
-	void DeferredRenderer::draw(const Camera& camera, FrameBufferInformation info) {
+	void DeferredRenderer::draw(const Camera& camera, const FrameBuffer& buffer) {
 		glEnable(GL_DEPTH_TEST);
 
 		//Geometry pass
@@ -226,8 +226,8 @@ namespace geeL {
 			ssao->setCamera(scene->getCamera());
 		}
 
-		FrameBuffer::resetSize(info.width, info.height);
-		FrameBuffer::bind(info.fbo);
+		FrameBuffer::resetSize(buffer.getWidth(), buffer.getHeight());
+		buffer.bind();
 
 		//Draw lighting pass and skybox directly into given framebuffer
 		lightingPass(camera);

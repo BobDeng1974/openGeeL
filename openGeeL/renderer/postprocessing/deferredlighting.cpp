@@ -34,7 +34,6 @@ namespace geeL {
 		addBuffer(*maps[WorldMaps::DiffuseRoughness], "gDiffuseSpec");
 		addBuffer(*maps[WorldMaps::PositionDepth], "gPositionDepth");
 		addBuffer(*maps[WorldMaps::NormalMetallic], "gNormalMet");
-
 		
 		auto ssao = maps.find(WorldMaps::SSAO);
 		if (ssao != maps.end()) {
@@ -44,10 +43,5 @@ namespace geeL {
 			shader.use();
 			shader.setInteger("useSSAO", 1);
 		}
-	}
-
-	void DeferredLighting::updateSkybox(Skybox& skybox) {
-		//Redraw reflection probes since skybox is also visible in them
-		scene.lightManager.drawReflectionProbes();
 	}
 }

@@ -254,8 +254,8 @@ void draw() {
 	renderer.addSSAO(ssao, 0.5f);
 	renderer.init();
 
-	std::function<void(const Camera&, FrameBufferInformation)> renderCall =
-		[&](const Camera& camera, FrameBufferInformation info) { renderer.draw(camera, info); };
+	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
+		[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
 
 	CubeBuffer cubeBuffer = CubeBuffer();
 	BRDFIntegrationMap brdfInt = BRDFIntegrationMap();

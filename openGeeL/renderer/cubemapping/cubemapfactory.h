@@ -9,6 +9,7 @@ namespace geeL {
 	class Camera;
 	class CubeBuffer;
 	class CubeMap;
+	class FrameBuffer;
 
 	class BRDFIntegrationMap;
 	class DynamicCubeMap;
@@ -19,9 +20,8 @@ namespace geeL {
 	class ReflectionProbe;
 	class Transform;
 
-	struct FrameBufferInformation;
+	typedef std::function<void(const Camera&, const FrameBuffer& buffer)> ReflectionProbeRender;
 
-	typedef std::function<void(const Camera&, FrameBufferInformation)> ReflectionProbeRender;
 
 	class CubeMapFactory {
 

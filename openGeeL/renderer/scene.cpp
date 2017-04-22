@@ -30,6 +30,9 @@ namespace geeL {
 				physics(nullptr), worldTransform(world), materialFactory(materialFactory) {}
 
 	
+	void RenderScene::init() {
+		lightManager.drawReflectionProbes();
+	}
 
 	void RenderScene::update() {
 		camera->update();
@@ -170,6 +173,9 @@ namespace geeL {
 			SceneRequester& requester = **it;
 			requester.updateSkybox(*this->skybox);
 		}
+
+		//Redraw reflection probes since skybox is also visible in them
+		lightManager.drawReflectionProbes();
 	}
 
 	void RenderScene::drawSkybox() const {

@@ -33,7 +33,7 @@ namespace geeL {
 		
 		virtual void render();
 		virtual void draw();
-		virtual void draw(const Camera& camera, FrameBufferInformation info);
+		virtual void draw(const Camera& camera, const FrameBuffer& buffer);
 
 		virtual void handleInput();
 

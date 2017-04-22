@@ -13,7 +13,7 @@ using namespace glm;
 
 namespace geeL {
 
-	ReflectionProbe::ReflectionProbe(CubeBuffer& frameBuffer, std::function<void(const Camera&, FrameBufferInformation)> renderCall, 
+	ReflectionProbe::ReflectionProbe(CubeBuffer& frameBuffer, std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall,
 		Transform& transform, unsigned int resolution, float width, float height, float depth, std::string name)
 			: SceneObject(transform, name), frameBuffer(frameBuffer), width(width), height(height), depth(depth), 
 				resolution(resolution), renderCall(renderCall) {
@@ -53,15 +53,10 @@ namespace geeL {
 			lookAt(transform.getPosition(), transform.getPosition() + vec3(0.f, 0.f, -1.f), vec3(0.f, -1.f, 0.f))
 		};
 
-		FrameBufferInformation info;
-		info.fbo = frameBuffer.getFBO();
-		info.width = resolution;
-		info.height = resolution;
-
 		frameBuffer.fill([&](unsigned int side) {
 			cam.setViewMatrix(views[side]);
 			cam.setProjectionMatrix(projections[side / 2]);
-			renderCall(cam, info);
+			renderCall(cam, frameBuffer);
 		});
 
 		//Mip map rendered environment map

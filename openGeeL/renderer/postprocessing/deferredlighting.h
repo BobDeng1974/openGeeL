@@ -17,7 +17,6 @@ namespace geeL {
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
-		virtual void updateSkybox(Skybox& skybox);
 
 	protected:
 		virtual void bindValues();

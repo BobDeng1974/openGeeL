@@ -35,6 +35,7 @@ namespace geeL {
 		RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& shaderManager, SceneCamera& camera, 
 			MeshFactory& meshFactory, MaterialFactory& materialFactory);
 
+		void init();
 
 		//Update scene information. Should be called once at beginning of frame
 		void update();
