@@ -11,13 +11,15 @@ namespace geeL {
 
 	//Container class that contains irradiance map, pre-filtered environment map
 	//and BRDF integration map for image based lighting
-	class IBLMap : public CubeMap {
+	class IBLMap : public DynamicCubeMap {
 
 	public:
 		IBLMap(BRDFIntegrationMap& brdfIntMap, IrradianceMap& irrMap, PrefilteredEnvironmentMap& preEnvMap);
+		IBLMap(const IBLMap& map);
 
 		virtual void bind(const Shader& shader, std::string name) const;
 		virtual void add(Shader& shader, std::string name) const;
+		virtual void update();
 
 	private:
 		BRDFIntegrationMap& brdfIntMap;
@@ -26,16 +28,20 @@ namespace geeL {
 
 	};
 
-
+	//IBL map for use with a dynamic environment map
 	class DynamicIBLMap : public DynamicCubeMap {
 
 	public:
 		DynamicIBLMap(DynamicCubeMap& environmentMap, BRDFIntegrationMap& brdfIntMap, 
 			IrradianceMap& irrMap, PrefilteredEnvironmentMap& preEnvMap);
+		DynamicIBLMap(const DynamicIBLMap& map);
+
 
 		virtual void bind(const Shader& shader, std::string name) const;
 		virtual void add(Shader& shader, std::string name) const;
 		virtual void update();
+
+		const CubeMap& getEnvironmentMap() const;
 
 	private:
 		DynamicCubeMap& baseMap;

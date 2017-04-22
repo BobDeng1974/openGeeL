@@ -31,7 +31,7 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-		update();
+		conversionShader->mapOffset = 1;
 	}
 
 	IrradianceMap::~IrradianceMap() {
@@ -43,7 +43,7 @@ namespace geeL {
 	}
 
 	void IrradianceMap::add(Shader& shader, std::string name) const {
-		shader.addMap(environmentMap.getID(), name + "albedo", GL_TEXTURE_CUBE_MAP);
+		//shader.addMap(environmentMap.getID(), name + "albedo", GL_TEXTURE_CUBE_MAP);
 		shader.addMap(id, name + "irradiance", GL_TEXTURE_CUBE_MAP);
 	}
 
@@ -60,9 +60,10 @@ namespace geeL {
 			lookAt(vec3(0.0f, 0.0f, 0.0f), vec3(0.0f,  0.0f, -1.0f),  vec3(0.0f, -1.0f,  0.0f))
 		};
 
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
 		conversionShader->use();
 		conversionShader->setMat4("projection", projection);
-
 		conversionShader->setInteger("environmentMap", conversionShader->mapOffset);
 
 		std::list<unsigned int> maps = { environmentMap.getID() };

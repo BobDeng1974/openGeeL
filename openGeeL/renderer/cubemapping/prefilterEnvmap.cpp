@@ -32,8 +32,7 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 		Texture::mipmapCube(id);
-		
-		update();
+		conversionShader->mapOffset = 1;
 	}
 
 	PrefilteredEnvironmentMap::~PrefilteredEnvironmentMap() {

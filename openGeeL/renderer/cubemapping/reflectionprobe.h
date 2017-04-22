@@ -12,6 +12,8 @@ namespace geeL {
 	class CubeBuffer;
 	class Transform;
 
+	struct FrameBufferInformation;
+
 	class ReflectionProbe : public DynamicCubeMap, public SceneObject {
 
 	public:
