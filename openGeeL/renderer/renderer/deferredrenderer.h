@@ -13,20 +13,18 @@
 namespace geeL {
 
 	class Camera;
+	class DeferredLighting;
 	class SceneCamera;
 	class DefaultPostProcess;
 	class MaterialFactory;
-	class Shader;
-	class SceneShader;
-	class Skybox;
 	class SSAO;
 	class PostProcessingEffect;
 	class WorldPostProcessingEffect;
 
-	class DeferredRenderer : public Renderer, public WorldMapProvider, public SceneRequester {
+	class DeferredRenderer : public Renderer, public WorldMapProvider {
 
 	public:
-		DeferredRenderer(RenderWindow& window, InputManager& inputManager, 
+		DeferredRenderer(RenderWindow& window, InputManager& inputManager, DeferredLighting& lighting,
 			RenderContext& context, DefaultPostProcess& def, const MaterialFactory& factory);
 
 		~DeferredRenderer();
@@ -51,8 +49,6 @@ namespace geeL {
 
 		const RenderTime& getRenderTime() const;
 
-		virtual void updateSkybox(Skybox& skybox);
-
 	private:
 		int toggle;
 		
@@ -64,6 +60,7 @@ namespace geeL {
 		ColorBuffer frameBuffer1;
 		ColorBuffer frameBuffer2;
 		RenderTime renderTime;
+		DeferredLighting& lighting;
 
 		unsigned int defaultBuffer;
 		float ssaoResolution;
@@ -72,10 +69,6 @@ namespace geeL {
 		ColorBuffer* ssaoBuffer = nullptr;
 		PostProcessingEffect* isolatedEffect = nullptr;
 
-		Shader* deferredShader;
-		ShaderLocation invViewLocation;
-		ShaderLocation originLocation;
-
 		std::function<void()> geometryPassFunc;
 		std::function<void()> lightingPassFunc;
 
@@ -83,6 +76,7 @@ namespace geeL {
 		void renderInit();
 
 		void geometryPass();
+		void lightingPass();
 		void lightingPass(const Camera& camera);
 		void forwardPass();
 

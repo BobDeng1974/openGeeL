@@ -16,6 +16,7 @@ namespace geeL {
 		DiffuseRoughness = 1,
 		PositionDepth = 2,
 		NormalMetallic = 4,
+		SSAO = 8
 	};
 
 

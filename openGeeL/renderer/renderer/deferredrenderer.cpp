@@ -17,6 +17,7 @@
 #include "../lighting/lightmanager.h"
 #include "../scene.h"
 #include "../../interface/guirenderer.h"
+#include "../postprocessing/deferredlighting.h"
 #include "deferredrenderer.h"
 
 #define fps 10
@@ -25,22 +26,20 @@ using namespace std;
 
 namespace geeL {
 
-	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, 
+	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, DeferredLighting& lighting,
 		RenderContext& context, DefaultPostProcess& def, const MaterialFactory& factory)
 			: Renderer(window, inputManager, context), frameBuffer1(ColorBuffer()), frameBuffer2(ColorBuffer()),
-				gBuffer(GBuffer()), screen(ScreenQuad()), ssao(nullptr),
-				deferredShader(new Shader("renderer/shaders/deferredlighting.vert",
-					"renderer/shaders/cooktorrancedeferred.frag")), toggle(0), factory(factory) {
+				gBuffer(GBuffer()), screen(ScreenQuad()), ssao(nullptr), lighting(lighting),
+				toggle(0), factory(factory) {
 
 		effects.push_back(&def);
+		addRequester(lighting);
 
 		geometryPassFunc = [this]() { this->geometryPass(); };
-		lightingPassFunc = [this]() { this->lightingPass(scene->getCamera()); this->forwardPass(); };
+		lightingPassFunc = [this]() { this->lightingPass(); this->forwardPass(); };
 	}
 
 	DeferredRenderer::~DeferredRenderer() {
-		delete deferredShader;
-
 		if (ssaoBuffer != nullptr)
 			delete ssaoBuffer;
 
@@ -64,19 +63,6 @@ namespace geeL {
 				ColorType::Single, FilterMode::Nearest, WrapMode::Repeat, false);
 		}
 
-		deferredShader->use();
-		deferredShader->addMap(gBuffer.getPositionDepth(), "gPositionDepth");
-		deferredShader->addMap(gBuffer.getNormalMetallic(), "gNormalMet");
-		deferredShader->addMap(gBuffer.getDiffuseSpecular(), "gDiffuseSpec");
-
-		invViewLocation = deferredShader->getLocation("inverseView");
-		originLocation = deferredShader->getLocation("origin");
-		
-		if (ssao != nullptr) {
-			deferredShader->addMap(ssaoBuffer->getTexture().getID(), "ssao");
-			deferredShader->setInteger("useSSAO", 1);
-		}
-
 		frameBuffer1.init(unsigned int(window->width), unsigned int(window->height), ColorType::RGBA16);
 		frameBuffer2.init(unsigned int(window->width), unsigned int(window->height), ColorType::RGBA16);
 		screen.init();
@@ -92,10 +78,7 @@ namespace geeL {
 			ssao->init(*ssaoScreen, ssaoBuffer->info);
 		}
 
-		deferredShader->use();
-		scene->lightManager.bindReflectionProbes(*deferredShader);
-		scene->lightManager.bindShadowMaps(*deferredShader);
-		scene->addRequester(*this);
+		lighting.init(screen, frameBuffer1.info);
 
 		//Init all effects
 		bool chooseBuffer = true;
@@ -222,7 +205,7 @@ namespace geeL {
 		}
 
 		//TODO: parent FBO needs to be reset here
-		lightingPass(scene->getCamera());
+		lightingPass();
 		scene->drawSkybox();
 	}
 
@@ -259,15 +242,16 @@ namespace geeL {
 		scene->drawDeferred();
 	}
 
-	void DeferredRenderer::lightingPass(const Camera& camera) {
-		deferredShader->use();
-		deferredShader->loadMaps();
-		scene->lightManager.bind(camera, *deferredShader, ShaderTransformSpace::View);
-		deferredShader->setMat4(invViewLocation, camera.getInverseViewMatrix());
-		deferredShader->setVector3(originLocation, camera.GetOriginInViewSpace());
-		//deferredShader->setVector3("ambient", scene->lightManager.ambient);
-		screen.draw();
+	void DeferredRenderer::lightingPass() {
+		lighting.draw();
 	}
+
+	void DeferredRenderer::lightingPass(const Camera& camera) {
+		lighting.setCamera(camera);
+		lighting.draw();
+		lighting.setCamera(scene->getCamera());
+	}
+
 
 	void DeferredRenderer::forwardPass() {
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -317,17 +301,15 @@ namespace geeL {
 		this->requester.push_back(&requester);
 	}
 
-	void DeferredRenderer::updateSkybox(Skybox& skybox) {
-		//Redraw reflection probes since skybox is also visible in them
-		scene->lightManager.drawReflectionProbes();
-	}
-
 	void DeferredRenderer::linkInformation() const {
 
 		map<WorldMaps, const Texture*> worldMaps;
 		worldMaps[WorldMaps::DiffuseRoughness] = &gBuffer.getDiffuseSpecular();
 		worldMaps[WorldMaps::PositionDepth]    = &gBuffer.getPositionDepth();
 		worldMaps[WorldMaps::NormalMetallic]   = &gBuffer.getNormalMetallic();
+
+		if(ssao != nullptr)
+			worldMaps[WorldMaps::SSAO] = &ssaoBuffer->getTexture();
 
 		for (auto it = requester.begin(); it != requester.end(); it++) {
 			WorldMapRequester* req = *it;

@@ -7,7 +7,7 @@ using namespace std;
 
 namespace geeL {
 
-	SSRR::SSRR() : PostProcessingEffect("renderer/postprocessing/ssrr.frag"){}
+	SSRR::SSRR() : PostProcessingEffect("renderer/postprocessing/ssrr.frag") {}
 
 
 	void SSRR::init(ScreenQuad& screen, const FrameBufferInformation& info) {

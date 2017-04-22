@@ -40,6 +40,7 @@
 #include "../renderer/meshes/skinnedrenderer.h"
 #include "../renderer/meshes/meshfactory.h"
 
+#include "../renderer/postprocessing/deferredlighting.h"
 #include "../renderer/postprocessing/postprocessing.h"
 #include "../renderer/postprocessing/colorcorrection.h"
 #include "../renderer/postprocessing/gammacorrection.h"
@@ -237,25 +238,24 @@ void draw() {
 
 	MaterialFactory materialFactory = MaterialFactory();
 	MeshFactory meshFactory = MeshFactory(materialFactory);
-
-	BilateralFilter blur = BilateralFilter(1, 0.5f);
-	DefaultPostProcess def = DefaultPostProcess();
-	SSAO ssao = SSAO(blur, 4.f);
-	RenderContext context = RenderContext();
-	DeferredRenderer& renderer = DeferredRenderer(window, manager, context, def, materialFactory);
-	renderer.addSSAO(ssao, 0.5f);
-	renderer.init();
-	
-	std::function<void(const Camera&, FrameBufferInformation)> renderCall =
-		[&](const Camera& camera, FrameBufferInformation info) { renderer.draw(camera, info); };
-
-	
 	LightManager lightManager = LightManager();
 	RenderPipeline shaderManager = RenderPipeline(materialFactory);
 	
 	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, meshFactory, materialFactory);
 	WorldPhysics physics = WorldPhysics();
 	scene.setPhysics(&physics);
+
+	BilateralFilter blur = BilateralFilter(1, 0.5f);
+	DefaultPostProcess def = DefaultPostProcess();
+	SSAO ssao = SSAO(blur, 4.f);
+	RenderContext context = RenderContext();
+	DeferredLighting lighting = DeferredLighting(scene);
+	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, materialFactory);
+	renderer.addSSAO(ssao, 0.5f);
+	renderer.init();
+
+	std::function<void(const Camera&, FrameBufferInformation)> renderCall =
+		[&](const Camera& camera, FrameBufferInformation info) { renderer.draw(camera, info); };
 
 	CubeBuffer cubeBuffer = CubeBuffer();
 	BRDFIntegrationMap brdfInt = BRDFIntegrationMap();
@@ -268,9 +268,9 @@ void draw() {
 	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 1024);
 	IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
-	lightManager.addReflectionProbe(iblMap);
 	Skybox skybox = Skybox(envCubeMap);
 	scene.setSkybox(skybox);
+	lightManager.addReflectionProbe(iblMap);
 	
 	renderer.setScene(scene);
 	scene.addRequester(ssao);
