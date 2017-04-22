@@ -193,8 +193,8 @@ namespace geeL {
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		if(setFBO)
-			drawer.setParentFBO(info.fbo);
+		if (setFBO)
+			drawer.setParent(*this);
 		
 		drawer.draw();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

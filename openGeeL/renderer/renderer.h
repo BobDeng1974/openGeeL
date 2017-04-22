@@ -5,6 +5,7 @@
 
 namespace geeL {
 
+	class FrameBuffer;
 	class RenderContext;
 	class RenderWindow;
 	class RenderScene;
@@ -16,20 +17,19 @@ namespace geeL {
 	class GUIRenderer;
 
 
-	//Basic interface for rendering classes
+	//Basic interface for all rendering classes
 	class Drawer {
 
 	public:
-		unsigned int parentFBO = 0;
-
 		virtual void draw() = 0;
 
-		//FBO this object should be drawn to.
-		//If the object used other fbo's itself it should activate
-		//this one afterwards
-		void setParentFBO(unsigned int fbo) {
-			this->parentFBO = fbo;
-		}
+		void setParent(const FrameBuffer& buffer);
+		const FrameBuffer* const getParentBuffer() const;
+		unsigned int getParentFBO() const;
+
+	protected:
+		const FrameBuffer* parentBuffer = nullptr;
+
 	};
 
 

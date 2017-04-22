@@ -73,7 +73,7 @@ namespace geeL {
 		shader.setInteger(horLocation, horizontal);
 		addBuffer(frameBuffers[!horizontal].getTexture(), "image");
 
-		FrameBuffer::bind(parentFBO);
+		parentBuffer->bind();
 	}
 
 	void GaussianBlur::setKernel(float newKernel[5]) {

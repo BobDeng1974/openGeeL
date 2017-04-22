@@ -46,8 +46,8 @@ namespace geeL {
 		blur.setBuffer(effectBuffer.getTexture().getID());
 		blurBuffer.fill(blur);
 
-		ColorBuffer::resetSize(screenInfo->width, screenInfo->height);
-		ColorBuffer::bind(parentFBO);
+		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
+		parentBuffer->bind();
 	}
 
 	void BlurredPostEffect::draw() {

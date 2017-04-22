@@ -42,7 +42,7 @@ namespace geeL {
 	void PostProcessingEffect::init(ScreenQuad& screen, const FrameBuffer& buffer) {
 		this->screen = &screen;
 
-		setParentFBO(buffer.getFBO());
+		setParent(buffer);
 		shader.use();
 	}
 

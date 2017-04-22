@@ -72,7 +72,7 @@ namespace geeL {
 		blurBuffer.fill(blur);
 
 		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
-		FrameBuffer::bind(parentFBO);
+		parentBuffer->bind();
 	}
 
 	void DepthOfFieldBlurred::draw() {
