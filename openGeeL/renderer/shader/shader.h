@@ -37,9 +37,9 @@ namespace geeL {
 	class Shader {
 
 	public:
-		int program;
-		int mapBindingPos;
-		const int mapOffset = 0;
+		unsigned int program;
+		unsigned int mapBindingPos;
+		unsigned int mapOffset = 0;
 		std::string name;
 
 		Shader() : mapBindingPos(0) {}

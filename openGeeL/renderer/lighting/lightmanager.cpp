@@ -12,6 +12,7 @@
 #include "../shadowmapping/simpleshadowmap.h"
 #include "../shadowmapping/cascadedmap.h"
 #include "../cubemapping/reflectionprobe.h"
+#include "../cubemapping/iblmap.h"
 #include "../framebuffer/cubebuffer.h"
 #include "../scene.h"
 #include "light.h"
@@ -23,8 +24,7 @@ using namespace glm;
 
 namespace geeL {
 
-	LightManager::LightManager(ReflectionProbeRender renderCall, glm::vec3 ambient)
-		: renderCall(renderCall), ambient(ambient),
+	LightManager::LightManager() : ambient(ambient),
 			dlShader(new Shader("renderer/shaders/shadowmapping.vert", "renderer/shaders/empty.frag")),
 			plShader(new Shader("renderer/shaders/empty.vert", "renderer/shaders/shadowmapping.gs", 
 			"renderer/shaders/shadowmapping.frag")) {}
@@ -135,19 +135,28 @@ namespace geeL {
 		}
 	}
 
-	ReflectionProbe& LightManager::addReflectionProbe(Transform& transform, float depth, unsigned int resolution) {
-		//TODO: FIX THIS QUICKFIX
-		ReflectionProbe* probe = new ReflectionProbe(CubeBuffer(), renderCall, transform, depth, resolution);
-		reflectionProbes.push_back(probe);
+	DynamicIBLMap& LightManager::addReflectionProbe(const DynamicIBLMap& probe) {
+		DynamicIBLMap* map = new DynamicIBLMap(probe);
+		reflectionProbes.push_back(map);
+
+		return *map;
 	}
 
-	void LightManager::removeReflectionProbe(ReflectionProbe& probe) {
+	IBLMap& LightManager::addReflectionProbe(const IBLMap& probe) {
+		IBLMap* map = new IBLMap(probe);
+		reflectionProbes.push_back(map);
+
+		return *map;
+	}
+
+	void LightManager::removeReflectionProbe(DynamicCubeMap& probe) {
 		//TODO: implement this
+		reflectionProbes.remove(&probe);
 	}
 
 	void LightManager::drawReflectionProbes() const {
 		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
-			ReflectionProbe& probe = **it;
+			DynamicCubeMap& probe = **it;
 			probe.update();
 		}
 	}
@@ -226,7 +235,7 @@ namespace geeL {
 			light.addShadowmap(shader, binding->getName() + "shadowMap");
 	}
 
-	void LightManager::bindShadowmaps(Shader& shader) const {
+	void LightManager::bindMaps(Shader& shader) const {
 		shader.use();
 
 		for (auto it = pointLights.begin(); it != pointLights.end(); it++) {
@@ -247,6 +256,11 @@ namespace geeL {
 
 			light.addShadowmap(shader, binding.getName() + "shadowMap");
 			light.addLightCookie(shader, binding.getName() + "cookie");
+		}
+
+		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
+			DynamicCubeMap& probe = **it;
+			probe.add(shader, "skybox.");
 		}
 	}
 
@@ -376,6 +390,14 @@ namespace geeL {
 			b.index = counter;
 			counter++;
 		}
+	}
+
+	const glm::vec3& LightManager::getAmbientColor() const {
+		return ambient;
+	}
+
+	void LightManager::setAmbientColor(const glm::vec3& color) {
+		ambient = color;
 	}
 
 }

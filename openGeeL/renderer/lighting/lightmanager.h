@@ -11,20 +11,20 @@
 #define MAX_DIRECTIONALLIGHTS 5
 #define MAX_SPOTLIGHTS 5
 
-
-
 namespace geeL {
 
 	class Camera;
+	class DirectionalLight;
+	class DynamicCubeMap;
+	class DynamicIBLMap;
+	class IBLMap;
 	class Light;
 	class SceneCamera;
 	class PointLight;
-	class DirectionalLight;
 	class SpotLight;
 	class Shader;
 	class ShadowMap;
 	class SceneShader;
-	class ReflectionProbe;
 	class RenderScene;
 	class Transform;
 
@@ -34,10 +34,7 @@ namespace geeL {
 	class SLightBinding;
 
 	struct ScreenInfo;
-	struct FrameBufferInformation;
 	enum class ShaderTransformSpace;
-
-	typedef std::function<void(const Camera&, FrameBufferInformation)> ReflectionProbeRender;
 
 
 	//Managing class for all light sources in a scene
@@ -52,8 +49,7 @@ namespace geeL {
 		std::string dlCountName = "dlCount";
 		std::string slCountName = "slCount";
 
-		LightManager(ReflectionProbeRender reflectionProbeRenderCall,
-			glm::vec3 ambient = glm::vec3(0.25f));
+		LightManager();
 
 		//Manager is responsible for removing the lights
 		~LightManager();
@@ -74,19 +70,22 @@ namespace geeL {
 		void removeLight(PointLight& light);
 		void removeLight(SpotLight& light);
 
-		ReflectionProbe& addReflectionProbe(Transform& transform, float depth, unsigned int resolution);
-		void removeReflectionProbe(ReflectionProbe& probe);
+		DynamicIBLMap& addReflectionProbe(const DynamicIBLMap& probe);
+		IBLMap& addReflectionProbe(const IBLMap& probe);
+
+		void removeReflectionProbe(DynamicCubeMap& probe);
 		void drawReflectionProbes() const;
 
 		void bind(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const;
 		void bind(const Camera& camera, const SceneShader& shader) const;
+		void bindMaps(Shader& shader) const;
 
 		void bindShadowmap(Shader& shader, DirectionalLight& light) const;
 		void bindShadowmap(Shader& shader, PointLight& light) const;
 		void bindShadowmap(Shader& shader, SpotLight& light) const;
 
-		void bindShadowmaps(Shader& shader) const;
 		void drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera) const;
+
 
 		void iterDirectionalLights(std::function<void(DirectionalLight&)> function);
 		void iterPointLights(std::function<void(PointLight&)> function);
@@ -98,16 +97,18 @@ namespace geeL {
 		//Add shader that shall be updated when lights are added/removed
 		void addShaderListener(Shader& shader);
 
+		const glm::vec3& getAmbientColor() const;
+		void setAmbientColor(const glm::vec3& color);
+
 	private:
 		//Shader for spotlights and directional lights
 		Shader* dlShader;
 		Shader* plShader;
-		ReflectionProbeRender renderCall;
 
 		std::list<DLightBinding> dirLights;
 		std::list<SLightBinding> spotLights;
 		std::list<PLightBinding> pointLights;
-		std::list<ReflectionProbe*> reflectionProbes;
+		std::list<DynamicCubeMap*> reflectionProbes;
 
 		std::list<std::function<void(Light const *, ShadowMap const *)>> addListener;
 		std::list<std::function<void(Light const *, ShadowMap const *)>> removeListener;
