@@ -46,6 +46,9 @@ struct DirectionalLight {
 };
 
 struct ReflectionProbe {
+	vec3 minPosition;
+	vec3 maxPosition;
+
 	samplerCube albedo;
 	samplerCube irradiance;
 	samplerCube prefilterEnv;
@@ -146,7 +149,6 @@ void main() {
 	vec3 ambienceSpecular = calculateIndirectSpecularSplitSum(normal, viewDirection, albedo, roughness, metallic);
 
 	color = vec4(irradiance + ambienceDiffuse + ambienceSpecular, 1.f);
-	//color = vec4(albedo, 1.f);
 }
 
 //Lighting.....................................................................................................................................

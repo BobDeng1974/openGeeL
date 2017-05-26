@@ -1,8 +1,10 @@
 #include <iostream>
 #include "testscene.h"
+#include "raymarchscene.h"
 
 int main() {
-	draw();
+	RenderTest::draw();
+	//RaymarchTest::draw();
 
 	return 0;
 }

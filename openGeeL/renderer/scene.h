@@ -8,6 +8,7 @@
 
 namespace geeL {
 
+	class Camera;
 	class SceneCamera;
 	class SceneRequester;
 	class LightManager;
@@ -33,7 +34,7 @@ namespace geeL {
 		LightManager& lightManager;
 
 		RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& shaderManager, SceneCamera& camera, 
-			MeshFactory& meshFactory, MaterialFactory& materialFactory);
+			MaterialFactory& materialFactory);
 
 		void init();
 
@@ -81,11 +82,13 @@ namespace geeL {
 		const SceneCamera& getCamera() const;
 		SceneCamera& getCamera();
 
-		void AddMeshRenderer(MeshRenderer& renderer);
-		void AddMeshRenderer(SkinnedMeshRenderer& renderer);
+		void addShader(SceneShader& shader);
 
-		void RemoveMeshRenderer(MeshRenderer& renderer);
-		void RemoveMeshRenderer(SkinnedMeshRenderer& renderer);
+		void addMeshRenderer(MeshRenderer& renderer);
+		void addMeshRenderer(SkinnedMeshRenderer& renderer);
+
+		void removeMeshRenderer(MeshRenderer& renderer);
+		void removeMeshRenderer(SkinnedMeshRenderer& renderer);
 
 		void iterAllObjects(std::function<void(MeshRenderer&)> function);
 
@@ -100,7 +103,6 @@ namespace geeL {
 		Transform& worldTransform;
 		Skybox* skybox;
 		Physics* physics;
-		MeshFactory& meshFactory;
 		RenderPipeline& pipeline;
 		MaterialFactory& materialFactory;
 

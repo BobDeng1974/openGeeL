@@ -8,8 +8,8 @@
 namespace geeL {
 
 	DeferredLighting::DeferredLighting(RenderScene& scene) 
-		: PostProcessingEffect("renderer/shaders/deferredlighting.vert", 
-			"renderer/shaders/cooktorrancedeferred.frag"), scene(scene) {}
+		: SceneRender(scene, "renderer/shaders/deferredlighting.vert", 
+			"renderer/shaders/cooktorrancedeferred.frag") {}
 
 
 	void DeferredLighting::init(ScreenQuad& screen, const FrameBuffer& buffer) {
@@ -17,13 +17,13 @@ namespace geeL {
 
 		scene.lightManager.bindReflectionProbes(shader);
 		scene.lightManager.bindShadowMaps(shader);
-		scene.addRequester(*this);
 
 		invViewLocation = shader.getLocation("inverseView");
 		originLocation = shader.getLocation("origin");
 	}
 
 	void DeferredLighting::bindValues() {
+		scene.lightManager.bindReflectionProbes(*camera, shader, ShaderTransformSpace::View);
 		scene.lightManager.bind(*camera, shader, ShaderTransformSpace::View);
 		shader.setMat4(invViewLocation, camera->getInverseViewMatrix());
 		shader.setVector3(originLocation, camera->GetOriginInViewSpace());

@@ -15,8 +15,8 @@ namespace geeL {
 		: brdfIntMap(map.brdfIntMap), irrMap(map.irrMap), preEnvMap(map.preEnvMap) {}
 
 
-	void IBLMap::bind(const Shader& shader, std::string name) const {
-		irrMap.bind(shader, name);
+	void IBLMap::draw(const Shader& shader, std::string name) const {
+		irrMap.draw(shader, name);
 	}
 
 	void IBLMap::add(Shader& shader, std::string name) const {
@@ -38,8 +38,8 @@ namespace geeL {
 	DynamicIBLMap::DynamicIBLMap(const DynamicIBLMap& map) 
 		: baseMap(map.baseMap), brdfIntMap(map.brdfIntMap), irrMap(map.irrMap), preEnvMap(map.preEnvMap) {}
 
-	void DynamicIBLMap::bind(const Shader& shader, std::string name) const {
-		baseMap.bind(shader, name);
+	void DynamicIBLMap::draw(const Shader& shader, std::string name) const {
+		baseMap.draw(shader, name);
 	}
 
 	void DynamicIBLMap::add(Shader& shader, std::string name) const {

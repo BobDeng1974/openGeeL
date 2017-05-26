@@ -31,6 +31,10 @@ namespace geeL {
 		shader.addMap(buffer, "image");
 	}
 
+	void PostProcessingEffect::setScreen(ScreenQuad& screen) {
+		this->screen = &screen;
+	}
+
 	void PostProcessingEffect::addBuffer(const Texture& texture, const std::string& name) {
 		addBuffer(texture.getID(), name);
 	}

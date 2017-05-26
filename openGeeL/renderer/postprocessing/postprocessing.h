@@ -29,6 +29,7 @@ namespace geeL {
 		//Set main image buffer that will be used as base for post processing
 		void setBuffer(const ColorBuffer& buffer);
 		void setBuffer(const Texture& texture);
+		void setScreen(ScreenQuad& screen);
 
 		//Set (first) buffer that will be used as base for post processing
 		virtual void setBuffer(unsigned int buffer);

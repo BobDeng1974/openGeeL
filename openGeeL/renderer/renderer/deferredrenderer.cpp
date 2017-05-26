@@ -26,7 +26,7 @@ using namespace std;
 
 namespace geeL {
 
-	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, DeferredLighting& lighting,
+	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, SceneRender& lighting,
 		RenderContext& context, DefaultPostProcess& def, const MaterialFactory& factory)
 			: Renderer(window, inputManager, context), frameBuffer1(ColorBuffer()), frameBuffer2(ColorBuffer()),
 				gBuffer(GBuffer()), screen(ScreenQuad()), ssao(nullptr), lighting(lighting),

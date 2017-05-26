@@ -17,7 +17,7 @@ namespace geeL {
 		IBLMap(BRDFIntegrationMap& brdfIntMap, IrradianceMap& irrMap, PrefilteredEnvironmentMap& preEnvMap);
 		IBLMap(const IBLMap& map);
 
-		virtual void bind(const Shader& shader, std::string name) const;
+		virtual void draw(const Shader& shader, std::string name) const;
 		virtual void add(Shader& shader, std::string name) const;
 		virtual void update();
 
@@ -36,8 +36,7 @@ namespace geeL {
 			IrradianceMap& irrMap, PrefilteredEnvironmentMap& preEnvMap);
 		DynamicIBLMap(const DynamicIBLMap& map);
 
-
-		virtual void bind(const Shader& shader, std::string name) const;
+		virtual void draw(const Shader& shader, std::string name) const;
 		virtual void add(Shader& shader, std::string name) const;
 		virtual void update();
 

@@ -1,4 +1,11 @@
 #pragma once
 
-void draw();
+class RenderTest {
+		
+	public:
+		static void draw();
+
+
+};
+
 

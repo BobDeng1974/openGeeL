@@ -47,6 +47,7 @@ namespace geeL {
 		std::string plCountName = "plCount";
 		std::string dlCountName = "dlCount";
 		std::string slCountName = "slCount";
+		std::string rpCountName = "rpCount";
 
 		LightManager();
 		~LightManager();
@@ -71,6 +72,7 @@ namespace geeL {
 		IBLMap& addReflectionProbe(const IBLMap& probe);
 
 		void removeReflectionProbe(DynamicCubeMap& probe);
+		void bindReflectionProbes(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const;
 		void drawReflectionProbes() const;
 
 		void bind(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const;

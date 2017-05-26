@@ -13,7 +13,7 @@
 namespace geeL {
 
 	class Camera;
-	class DeferredLighting;
+	class SceneRender;
 	class SceneCamera;
 	class DefaultPostProcess;
 	class MaterialFactory;
@@ -24,7 +24,7 @@ namespace geeL {
 	class DeferredRenderer : public Renderer, public WorldMapProvider {
 
 	public:
-		DeferredRenderer(RenderWindow& window, InputManager& inputManager, DeferredLighting& lighting,
+		DeferredRenderer(RenderWindow& window, InputManager& inputManager, SceneRender& lighting,
 			RenderContext& context, DefaultPostProcess& def, const MaterialFactory& factory);
 
 		~DeferredRenderer();
@@ -60,7 +60,7 @@ namespace geeL {
 		ColorBuffer frameBuffer1;
 		ColorBuffer frameBuffer2;
 		RenderTime renderTime;
-		DeferredLighting& lighting;
+		SceneRender& lighting;
 
 		unsigned int defaultBuffer;
 		float ssaoResolution;

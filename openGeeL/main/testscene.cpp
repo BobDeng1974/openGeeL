@@ -144,7 +144,7 @@ namespace {
 			MeshRenderer& plane = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/plane.obj"),
 				meshTransform2, CullingMode::cullFront, "Floor");
 
-			scene.AddMeshRenderer(plane);
+			scene.addMeshRenderer(plane);
 			if (physics != nullptr) physics->addPlane(vec3(0.f, 1.f, 0.f), meshTransform2, RigidbodyProperties(0.f, false));
 
 			plane.iterateMaterials([&](MaterialContainer& container) {
@@ -157,7 +157,7 @@ namespace {
 			Transform& meshTransform3 = transformFactory.CreateTransform(vec3(-9.f, -3.f, 11.0f), vec3(0.5f, 0.5f, 0.5f), vec3(0.3f, 0.3f, 0.3f));
 			MeshRenderer& box1 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/empire/EmpireState_lp.obj"),
 				meshTransform3, CullingMode::cullFront, "Empire State");
-			scene.AddMeshRenderer(box1);
+			scene.addMeshRenderer(box1);
 
 			box1.iterateMaterials([&](MaterialContainer& container) {
 				container.setFloatValue("Roughness", 0.5f);
@@ -168,7 +168,7 @@ namespace {
 			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 2.f, 4.f), vec3(0.f), vec3(1.f, 1.f, 1.f));
 			MeshRenderer& sphere1 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/sphere.obj"),
 				meshTransform4, CullingMode::cullFront, "Sphere");
-			scene.AddMeshRenderer(sphere1);
+			scene.addMeshRenderer(sphere1);
 			//if (physics != nullptr) physics->addSphere(1.f, meshTransform4, RigidbodyProperties(10.f, false));
 			//if (physics != nullptr) physics->addMesh(sphere1.getModel(), meshTransform4, RigidbodyProperties(10.f, false));
 
@@ -181,7 +181,7 @@ namespace {
 			Transform& meshTransform5 = transformFactory.CreateTransform(vec3(0.0f, 0.5f, -2.0f), vec3(0.5f, 0.5f, 0.5f), vec3(5.2f, 2.2f, 1.2f));
 			MeshRenderer& box = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/cube.obj"),
 				meshTransform5, CullingMode::cullFront, "Box");
-			scene.AddMeshRenderer(box);
+			scene.addMeshRenderer(box);
 
 			box.iterateMaterials([&](MaterialContainer& container) {
 				container.setFloatValue("Roughness", 0.3f);
@@ -193,12 +193,12 @@ namespace {
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 			MeshRenderer& cyborg = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/cyborg/Cyborg.obj"),
 				meshTransform6, CullingMode::cullFront, "Cyborg");
-			scene.AddMeshRenderer(cyborg);
+			scene.addMeshRenderer(cyborg);
 
 			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.2f, 0.2f, 0.2f));
 			nanoRenderer = &meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/nanosuit/nanosuit.obj"),
 				meshTransform1, CullingMode::cullFront, "Nano");
-			scene.AddMeshRenderer(*nanoRenderer);
+			scene.addMeshRenderer(*nanoRenderer);
 
 			/*
 			float scale = 0.05f;
@@ -223,7 +223,7 @@ namespace {
 
 
 
-void draw() {
+void RenderTest::draw() {
 	
 	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
 	InputManager manager = InputManager();
@@ -241,13 +241,13 @@ void draw() {
 	LightManager lightManager = LightManager();
 	RenderPipeline shaderManager = RenderPipeline(materialFactory);
 	
-	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, meshFactory, materialFactory);
+	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
 	WorldPhysics physics = WorldPhysics();
 	scene.setPhysics(&physics);
 
-	BilateralFilter blur = BilateralFilter(1, 0.5f);
+	BilateralFilter blur = BilateralFilter(1, 0.7f);
 	DefaultPostProcess def = DefaultPostProcess();
-	SSAO ssao = SSAO(blur, 4.f);
+	SSAO ssao = SSAO(blur, 3.f);
 	RenderContext context = RenderContext();
 	DeferredLighting lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, materialFactory);
@@ -311,7 +311,7 @@ void draw() {
 
 	SobelFilter sobel = SobelFilter(15);
 	SobelBlur sobelBlur = SobelBlur(sobel);
-	VolumetricLight vol = VolumetricLight(*spotLight, 0.3f, 1.f, 160);
+	VolumetricLight vol = VolumetricLight(*spotLight, 0.1f, 1.f, 160);
 	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.4f);
 
 	ColorCorrection colorCorrect = ColorCorrection();
@@ -341,7 +341,7 @@ void draw() {
 	renderer.addEffect(colorCorrect);
 	postLister.add(colorCorrect);
 
-	//renderer.addEffect(fxaa);
+	renderer.addEffect(fxaa);
 
 	renderer.linkInformation();
 	renderer.render();

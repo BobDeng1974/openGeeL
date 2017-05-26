@@ -202,7 +202,7 @@ namespace geeL {
 
 	const RenderTexture& ColorBuffer::getTexture(unsigned int position) const {
 		if (position >= buffers.size())
-			throw "Committed postion out of bounds";
+			throw "Committed position out of bounds";
 
 		return *buffers[position];
 	}

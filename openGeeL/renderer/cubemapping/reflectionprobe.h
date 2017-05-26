@@ -20,6 +20,9 @@ namespace geeL {
 			Transform& transform, unsigned int resolution, float width = 50.f, float height = 50.f, float depth = 50.f, 
 			std::string name = "ReflectionProbe");
 
+		virtual void bind(const Camera& camera, const Shader& shader,
+			const std::string& name, ShaderTransformSpace space) const;
+
 		virtual void update();
 
 	private:

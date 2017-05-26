@@ -1,14 +1,13 @@
 #ifndef DEFERREDLIGHTING_H
 #define DEFERREDLIGHTING_H
 
-#include "postprocessing.h"
-#include "../utility/worldinformation.h"
+#include "scenerender.h"
 
 namespace geeL {
 
 	class RenderScene;
 
-	class DeferredLighting : public PostProcessingEffect, public WorldMapRequester, public CameraRequester {
+	class DeferredLighting : public SceneRender {
 
 	public:
 		DeferredLighting(RenderScene& scene);
@@ -22,7 +21,6 @@ namespace geeL {
 		virtual void bindValues();
 
 	private:
-		RenderScene& scene;
 		ShaderLocation invViewLocation;
 		ShaderLocation originLocation;
 

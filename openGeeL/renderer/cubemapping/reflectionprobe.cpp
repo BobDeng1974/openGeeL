@@ -6,6 +6,7 @@
 #include "../framebuffer/cubebuffer.h"
 #include "../transformation/transform.h"
 #include "../shader/shader.h"
+#include "../shader/sceneshader.h"
 #include "../cameras/camera.h"
 #include "reflectionprobe.h"
 
@@ -31,6 +32,26 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
+
+
+	void ReflectionProbe::bind(const Camera& camera, const Shader& shader,
+		const std::string& name, ShaderTransformSpace space) const {
+
+		vec3 offset = vec3(width, height, depth);
+		vec3 minPos = transform.getPosition() - offset;
+		vec3 maxPos = transform.getPosition() + offset;
+
+		switch (space) {
+			case ShaderTransformSpace::View:
+				shader.setVector3(name + "minPosition", camera.TranslateToViewSpace(minPos));
+				shader.setVector3(name + "maxPosition", camera.TranslateToViewSpace(maxPos));
+				break;
+			case ShaderTransformSpace::World:
+				shader.setVector3(name + "minPosition", minPos);
+				shader.setVector3(name + "maxPosition", maxPos);
+				break;
+		}
 	}
 
 	void ReflectionProbe::update() {

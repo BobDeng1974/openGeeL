@@ -17,7 +17,7 @@ namespace geeL {
 		IrradianceMap(const CubeMap& environmentMap, CubeBuffer& frameBuffer, unsigned int resolution = 32);
 		~IrradianceMap();
 
-		virtual void bind(const Shader& shader, std::string name) const;
+		virtual void draw(const Shader& shader, std::string name) const;
 		virtual void add(Shader& shader, std::string name) const;
 
 		virtual void update();
