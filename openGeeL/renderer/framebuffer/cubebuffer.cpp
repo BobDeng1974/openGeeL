@@ -61,4 +61,9 @@ namespace geeL {
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 
+	std::string CubeBuffer::toString() const {
+		return "Cube buffer " + std::to_string(info.fbo) + 
+			"\n -- Texture " + std::to_string(textureID) + "\n";
+	}
+
 }

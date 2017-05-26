@@ -28,6 +28,8 @@ namespace geeL {
 		const RenderTexture& getPositionDepth() const;
 		const RenderTexture& getNormalMetallic() const;
 
+		virtual std::string toString() const;
+
 	private:
 		RenderTexture diffuseSpec;
 		RenderTexture positionDepth;

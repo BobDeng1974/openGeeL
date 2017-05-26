@@ -18,6 +18,8 @@ namespace geeL {
 
 		void resize(unsigned int width, unsigned int height);
 
+		virtual std::string toString() const;
+
 	private:
 		unsigned int textureID, rbo;
 

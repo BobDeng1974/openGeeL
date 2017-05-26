@@ -16,7 +16,7 @@ namespace geeL {
 	}
 
 
-	void BlurredPostEffect::setBuffer(const ColorBuffer& buffer) {
+	void BlurredPostEffect::setBuffer(unsigned int buffer) {
 		PostProcessingEffect::setBuffer(buffer);
 
 		effect.setBuffer(buffer);

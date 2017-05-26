@@ -100,4 +100,13 @@ namespace geeL {
 		return normalMet;
 	}
 
+	std::string GBuffer::toString() const {
+		std::string s = "GBuffer " + std::to_string(info.fbo) + "\n"
+			+ "--DiffuseSpec " + std::to_string(diffuseSpec.getID()) + "\n"
+			+ "--PositionDepth " + std::to_string(positionDepth.getID()) + "\n"
+			+ "--NormalMetallic " + std::to_string(normalMet.getID()) + "\n";
+
+		return s;
+	}
+
 }

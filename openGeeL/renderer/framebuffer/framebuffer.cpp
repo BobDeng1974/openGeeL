@@ -207,5 +207,21 @@ namespace geeL {
 		return *buffers[position];
 	}
 
+	std::string ColorBuffer::toString() const {
+		std::string s =  "Color buffer " + std::to_string(info.fbo) + "\n";
+
+		unsigned int counter = 0;
+		for (auto it = buffers.begin(); it != buffers.end(); it++) {
+			RenderTexture* texture = *it;
+
+			std::string line = "--Texture " + std::to_string(counter) + ": " + std::to_string(texture->getID()) + "\n";
+			s += line;
+
+			counter++;
+		}
+
+		return s;
+	}
+
 	
 }

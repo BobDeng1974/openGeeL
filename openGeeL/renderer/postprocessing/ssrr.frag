@@ -44,7 +44,7 @@ void main() {
 		vec3 reflectionColor = getReflection(fragPos, reflectionDirection, normal);
 
 		vec3 halfwayDirection = normalize(reflectionDirection + viewDirection);
-		float NdotL = dot(normal, viewDirection);
+		float NdotL = doto(normal, reflectionDirection);
 
 		//BRDF
 		float ndf = calculateNormalDistrubution(normal, halfwayDirection, roughness);

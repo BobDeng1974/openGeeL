@@ -13,7 +13,7 @@ namespace geeL {
 		BlurredPostEffect(PostProcessingEffect& effect, PostProcessingEffect& blur, 
 			float effectResolution = 1.f, float blurResolution = 1.f);
 
-		virtual void setBuffer(const ColorBuffer& buffer);
+		virtual void setBuffer(unsigned int buffer);
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 		virtual void draw();

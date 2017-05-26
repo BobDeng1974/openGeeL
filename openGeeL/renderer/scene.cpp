@@ -226,8 +226,6 @@ namespace geeL {
 	}
 
 	void RenderScene::addMeshRenderer(MeshRenderer& renderer) {
-		std::cout << renderer.getName() << ", " << renderer.transform.getID() << "\n";
-
 		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
 			//Init shader if it hasn't been added to the scene yet
 			addShader(shader);

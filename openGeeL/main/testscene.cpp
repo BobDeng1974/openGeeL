@@ -264,6 +264,8 @@ void RenderTest::draw() {
 	//Transform& probeTransform = transFactory.CreateTransform(vec3(0.f, 0.f, 10.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	//DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024);
 
+	//EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv3/Tropical_Beach_3k.hdr");
+	//EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv1/Playa_Sunrise.hdr");
 	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
 	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 1024);
 	IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
@@ -301,7 +303,7 @@ void RenderTest::draw() {
 	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.3f, 0.3f);
 	
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 14.f, 100.f, 0.3f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 8.f, 100.f, 0.3f);
 
 	FXAA fxaa = FXAA();
 

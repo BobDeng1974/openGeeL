@@ -4,6 +4,7 @@
 #include <functional>
 #include <glew.h>
 #include <vector>
+#include <string>
 #include "../texturing/texture.h"
 #include "../texturing/rendertexture.h"
 
@@ -47,6 +48,8 @@ namespace geeL {
 		unsigned int getWidth() const;
 		unsigned int getHeight() const;
 
+		virtual std::string toString() const = 0;
+
 	};
 
 
@@ -69,6 +72,8 @@ namespace geeL {
 		const RenderTexture& getTexture(unsigned int position = 0) const;
 		
 		void resize(int width, int height);
+
+		virtual std::string toString() const;
 
 	private:
 		unsigned int rbo;
