@@ -5,7 +5,7 @@ in vec2 TexCoords;
 out vec4 color;
 
 const float PI = 3.14159265359;
-const float epsilon = 0.01f;
+const float epsilon = 0.002f;
 const int maxSteps = 50;
 
 const vec2 resolution = vec2(1920, 1080);
@@ -31,7 +31,6 @@ vec3 raymarch(vec3 position, vec3 direction);
 vec3 directIllumination(vec3 position, vec3 direction, vec3 normal, vec3 albedo);
 vec3 indirectIllumination(vec3 position, vec3 direction, vec3 normal, vec3 albedo);
 vec3 lightIllumination(vec3 position, vec3 normal, vec3 albedo);
-vec3 lightIllumination2(vec3 position, vec3 normal, vec3 albedo);
 vec3 pointLightIllumination(vec3 position, vec3 normal, PointLight light);
 
 float shadow(vec3 position, vec3 direction, float dist);
@@ -110,6 +109,19 @@ vec3 raymarch(vec3 position, vec3 direction) {
 	return vec3(0.f);
 }
 
+vec4 distanceScene(vec3 position) {
+	vec3 rep = repetitionFactor(position, vec3(1.f));
+
+	float sphere1 = distanceSphere(rep, 0.2f);
+	float box1 = distanceBox(rep, vec3(0.1f, 0.1f, 0.1f));
+	float plane1  = distancePlane(position, vec3(0.f, -1.f, 0.f));
+
+	if(sphere1 < plane1)
+		return vec4(0.1f, 0.1f, 0.f, sphere1);
+	else
+		return vec4(0.f, 0.2f, 0.2f, plane1);
+}
+
 vec3 directIllumination(vec3 position, vec3 direction, vec3 normal, vec3 albedo) {
 	float fresnel = 0.2f;
 
@@ -157,23 +169,7 @@ vec3 lightIllumination(vec3 position, vec3 normal, vec3 albedo) {
 	dir = normalize(dir);
 
 	vec3 lightColor = pointLightIllumination(position, normal, light) * 
-		shadow(position + (20.f * epsilon) * dir, dir, dist, 1);
-
-	return lightColor * albedo;
-}
-
-vec3 lightIllumination2(vec3 position, vec3 normal, vec3 albedo) {
-	PointLight light;
-	light.position = vec3(0.5f, -0.5f, 1.f);
-	//light.position = vec3(3.5f, -0.5f, 1.f);
-	light.color = vec3(0.1f, 0.1f, 0.2f) * 10.f;
-
-	vec3 dir = light.position - position;
-	float dist = length(dir);
-	dir = normalize(dir);
-
-	vec3 lightColor = pointLightIllumination(position, normal, light) * 
-		shadow(position + (10.f * epsilon) * dir, dir, dist);
+		shadow(position + (20.f * epsilon) * dir, dir, dist, 10);
 
 	return lightColor * albedo;
 }
@@ -220,7 +216,7 @@ float shadow(vec3 position, vec3 direction, float dist, float size) {
 
 vec3 reflection(vec3 position, vec3 direction, vec3 normal) {
 	vec3 reflection = normalize(reflect(direction, normal));
-	vec3 startPos = position + reflection * (5.f * epsilon);
+	vec3 startPos = position + reflection * (50.f * epsilon);
 
 	float s = 0.f;
 	for(int i = 0; i < maxSteps / 4; i++) {
@@ -283,18 +279,7 @@ vec3 getNormal(vec3 position) {
 		));
 }
 
-vec4 distanceScene(vec3 position) {
-	vec3 rep = repetitionFactor(position, vec3(1.f));
 
-	float sphere1 = distanceSphere(rep, 0.2f);
-	float box1 = distanceBox(rep, vec3(0.1f, 0.1f, 0.1f));
-	float plane1  = distancePlane(position, vec3(0.f, -1.f, 0.f));
-
-	if(sphere1 < plane1)
-		return vec4(0.1f, 0.1f, 0.f, sphere1);
-	else
-		return vec4(0.f, 0.2f, 0.2f, plane1);
-}
 
 float distanceSphere(vec3 position, float radius) {
 	return length(position) - radius;

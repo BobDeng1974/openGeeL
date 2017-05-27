@@ -3,8 +3,8 @@
 #include "raymarchscene.h"
 
 int main() {
-	RenderTest::draw();
-	//RaymarchTest::draw();
+	//RenderTest::draw();
+	RaymarchTest::draw();
 
 	return 0;
 }

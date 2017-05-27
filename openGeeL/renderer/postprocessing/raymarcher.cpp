@@ -1,4 +1,4 @@
-#include <iostream>
+#include "../utility/vectorextension.h"
 #include "../transformation/transform.h"
 #include "../cameras/camera.h"
 #include "raymarcher.h"
