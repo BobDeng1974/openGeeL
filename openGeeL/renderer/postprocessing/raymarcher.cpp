@@ -12,9 +12,9 @@ namespace geeL {
 	void RayMarcher::bindValues() {
 		Transform& transform = camera->transform;
 
-		shader.setVector3("camera.position", transform.getPosition());
-		shader.setVector3("camera.forward", transform.getForwardDirection());
-		shader.setVector3("camera.up", transform.getUpDirection());
-		shader.setVector3("camera.right", transform.getRightDirection());
+		shader.setVector3("camera.position", -transform.getPosition());
+		shader.setVector3("camera.forward", -transform.getForwardDirection());
+		shader.setVector3("camera.up", -transform.getUpDirection());
+		shader.setVector3("camera.right", -transform.getRightDirection());
 	}
 }

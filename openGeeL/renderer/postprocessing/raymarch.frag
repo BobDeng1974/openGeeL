@@ -61,27 +61,22 @@ float doto(vec3 a, vec3 b);
 void main() { 
 	float focal = 1.f;
 
-	vec3 eye = -camera.position;
-	vec3 right = normalize(-camera.right);
-	vec3 up = normalize(-camera.up);
-	vec3 forward = normalize(cross(right, up));
-
 	vec2 uv = 2.f * TexCoords - vec2(1.f);
 	uv.y = uv.y / (float(resolution.x) / float(resolution.y));
 
-	forward = normalize(right * uv.x + up * uv.y + forward * focal);
-	vec3 result = raymarch(eye, forward);
+	vec3 forward = normalize(camera.right * uv.x + camera.up * uv.y + camera.forward * focal);
+	vec3 result = raymarch(camera.position, forward);
 
 	/*
 	vec2 offset = vec2(1.f) / resolution;
-	vec3 f1 = normalize(right * (uv.x - offset.x) + up * uv.y + forward * focal);
-	vec3 f2 = normalize(right * (uv.x + offset.x) + up * uv.y + forward * focal);
-	vec3 f3 = normalize(right * uv.x + up * (uv.y - offset.y) + forward * focal);
-	vec3 f4 = normalize(right * uv.x + up * (uv.y + offset.y) + forward * focal);
+	vec3 f1 = normalize(camera.right * (uv.x - offset.x) + camera.up * uv.y + camera.forward * focal);
+	vec3 f2 = normalize(camera.right * (uv.x + offset.x) + camera.up * uv.y + camera.forward * focal);
+	vec3 f3 = normalize(camera.right * uv.x + camera.up * (uv.y - offset.y) + camera.forward * focal);
+	vec3 f4 = normalize(camera.right * uv.x + camera.up * (uv.y + offset.y) + camera.forward * focal);
 
 	//4x super sampling
-	vec3 result = (raymarch(eye, f1) + raymarch(eye, f2) + 
-		raymarch(eye, f3) + raymarch(eye, f4)) / 4.f;
+	vec3 result = (raymarch(camera.position, f1) + raymarch(camera.position, f2) + 
+		raymarch(camera.position, f3) + raymarch(camera.position, f4)) / 4.f;
 	*/
 
 	color = vec4(result, 1.f);
