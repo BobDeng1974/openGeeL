@@ -26,7 +26,7 @@ struct Camera {
 uniform Camera camera;
 
 
-vec3 raymarch(vec3 position, vec3 direction, int steps);
+vec3 raymarch(vec3 position, vec3 direction);
 
 vec3 directIllumination(vec3 position, vec3 direction, vec3 normal, vec3 albedo);
 vec3 indirectIllumination(vec3 position, vec3 direction, vec3 normal, vec3 albedo);
@@ -71,7 +71,7 @@ void main() {
 	uv.y = uv.y / (float(resolution.x) / float(resolution.y));
 
 	forward = normalize(right * uv.x + up * uv.y + forward * focal);
-	vec3 result = raymarch(eye, forward, maxSteps);
+	vec3 result = raymarch(eye, forward);
 
 	/*
 	vec2 offset = vec2(1.f) / resolution;
@@ -81,18 +81,18 @@ void main() {
 	vec3 f4 = normalize(right * uv.x + up * (uv.y + offset.y) + forward * focal);
 
 	//4x super sampling
-	vec3 result = (raymarch(eye, f1, maxSteps) + raymarch(eye, f2, maxSteps) + 
-		raymarch(eye, f3, maxSteps) + raymarch(eye, f4, maxSteps)) / 4.f;
+	vec3 result = (raymarch(eye, f1) + raymarch(eye, f2) + 
+		raymarch(eye, f3) + raymarch(eye, f4)) / 4.f;
 	*/
 
 	color = vec4(result, 1.f);
 }
 
 
-vec3 raymarch(vec3 position, vec3 direction, int steps) {
+vec3 raymarch(vec3 position, vec3 direction) {
 
 	float s = 0.f;
-	for(int i = 0; i < steps; i++) {
+	for(int i = 0; i < maxSteps; i++) {
 		vec3 pos = position + s * direction;
 		vec4 a = distanceScene(pos);	
 		float d = a.w;
