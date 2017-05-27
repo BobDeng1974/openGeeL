@@ -316,6 +316,16 @@ namespace geeL {
 		return children.begin();
 	}
 
+	std::string Transform::toString() const {
+		return "Transform " + getName() + ": " + std::to_string(id) + "\n"
+			+ "--Position: " + VectorExtension::vectorString(position) + "\n"
+			+ "--Rotation: " + VectorExtension::vectorString(getEulerAngles()) + "\n"
+			+ "--Scale:    " + VectorExtension::vectorString(scaling) + "\n"
+			+ "--Forward:  " + VectorExtension::vectorString(forward) + "\n"
+			+ "--Up:       " + VectorExtension::vectorString(up) + "\n"
+			+ "--Right:    " + VectorExtension::vectorString(right) + "\n";
+	}
+
 	list<Transform*>::iterator Transform::childrenEnd() {
 		return children.end();
 	}

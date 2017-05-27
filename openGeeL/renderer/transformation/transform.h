@@ -92,6 +92,8 @@ namespace geeL {
 		const std::string& getName() const;
 		void setName(std::string& name);
 
+		virtual std::string toString() const;
+
 	private:
 		unsigned int id;
 		std::string name;

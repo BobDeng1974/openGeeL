@@ -12,6 +12,10 @@ namespace geeL {
 	void RayMarcher::bindValues() {
 		Transform& transform = camera->transform;
 
+		//std::cout << transform.getPosition().x << ", " << transform.getPosition().y << ", " << transform.getPosition().z << "\n";
+		//std::cout << transform.getEulerAngles().x << ", " << transform.getEulerAngles().y << ", " << transform.getEulerAngles().z << "\n";
+		//std::cout << ".............\n";
+
 		shader.setVector3("camera.position", transform.getPosition());
 		shader.setVector3("camera.forward", transform.getForwardDirection());
 		shader.setVector3("camera.up", transform.getUpDirection());

@@ -28,7 +28,7 @@ void RaymarchTest::draw() {
 	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	TransformFactory transFactory = TransformFactory(world);
 
-	geeL::Transform& cameraTransform = Transform(vec3(0.0f, 0.0f, -1.0f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	geeL::Transform& cameraTransform = Transform(vec3(1.f, 0.8f, -0.9f), vec3(70.f, 70.f, 180.f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
 
 	MaterialFactory materialFactory = MaterialFactory();
