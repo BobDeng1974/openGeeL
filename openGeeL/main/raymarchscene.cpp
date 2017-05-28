@@ -20,7 +20,7 @@ using namespace geeL;
 
 void RaymarchTest::draw() {
 
-	RenderWindow window = RenderWindow("Raymarch", 1920, 1080, WindowMode::Windowed);
+	RenderWindow window = RenderWindow("Raymarch", 1920, 1080, WindowMode::Fullscreen);
 	InputManager manager = InputManager();
 	manager.defineButton("Forward", GLFW_KEY_W);
 	manager.defineButton("Forward", GLFW_KEY_A);
