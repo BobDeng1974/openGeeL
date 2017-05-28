@@ -86,6 +86,8 @@ namespace geeL {
 		void processVertices(std::vector<V>& vertices, aiMesh* mesh);
 		void processIndices(std::vector<unsigned int>& indices, aiMesh* mesh);
 		void processBones(std::vector<SkinnedVertex>& vertices, std::map<std::string, MeshBoneData>& bones, aiMesh* mesh);
+
+		void processMaterial(DefaultMaterialContainer& material, aiMesh* mesh, const aiScene* scene);
 		void processTextures(std::vector<TextureMap*>& textures, std::string directory, aiMesh* mesh, const aiScene* scene);
 		void processAnimations(SkinnedModel& model, const aiScene* scene);
 

@@ -113,8 +113,7 @@ namespace geeL {
 
 			DefaultMaterialContainer& mat = factory.CreateMaterial();
 			mat.addTextures(textures);
-			mat.setRoughness(0.4f);
-			mat.setMetallic(0.2f);
+			processMaterial(mat, mesh, scene);
 
 			model.addMesh(StaticMesh(vertices, indices, mat));
 		}
@@ -170,8 +169,7 @@ namespace geeL {
 
 			DefaultMaterialContainer& mat = factory.CreateMaterial();
 			mat.addTextures(textures);
-			mat.setRoughness(0.4f);
-			mat.setMetallic(0.2f);
+			processMaterial(mat, mesh, scene);
 
 			model.addMesh(SkinnedMesh(vertices, indices, bones, mat));
 		}
@@ -280,6 +278,40 @@ namespace geeL {
 				//Populate vertices with bone weights
 				vertices[j].addBone(j, weight.mWeight);
 			}
+		}
+	}
+
+	void MeshFactory::processMaterial(DefaultMaterialContainer& mat, aiMesh* mesh, const aiScene* scene) {
+		if (mesh->mMaterialIndex >= 0) {
+			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+
+			aiString name;
+			if (AI_SUCCESS == material->Get(AI_MATKEY_NAME, name))
+				mat.name = name.data;
+
+			glm::vec3 color = glm::vec3();
+			aiColor3D buffer;
+
+			if (AI_SUCCESS == material->Get(AI_MATKEY_COLOR_DIFFUSE, buffer)) {
+				color = glm::vec3(buffer.r, buffer.g, buffer.b);
+				mat.setColor(color);
+			}
+			else
+				mat.setColor(glm::vec3(0.5f));
+
+			if (AI_SUCCESS == material->Get(AI_MATKEY_COLOR_SPECULAR, buffer)) {
+				float specular = (buffer.r + buffer.g + buffer.b) / 3.f;
+				mat.setRoughness(1.f - specular);
+			}
+			else
+				mat.setRoughness(0.4f);
+
+			if (AI_SUCCESS == material->Get(AI_MATKEY_COLOR_EMISSIVE, buffer)) {
+				float metallic = (buffer.r + buffer.g + buffer.b) / 3.f;
+				mat.setMetallic(metallic);
+			}
+			else
+				mat.setMetallic(0.2f);
 		}
 	}
 

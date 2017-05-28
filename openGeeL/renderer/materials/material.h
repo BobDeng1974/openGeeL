@@ -19,7 +19,7 @@ namespace geeL {
 
 	public:
 		const MaterialType type;
-		const std::string name;
+		std::string name;
 
 		MaterialContainer(std::string name = "material", MaterialType type = Opaque)
 			: type(type), name(name) {}

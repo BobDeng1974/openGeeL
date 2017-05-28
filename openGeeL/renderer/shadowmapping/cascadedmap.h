@@ -5,7 +5,7 @@
 #include <mat4x4.hpp>
 #include "shadowmap.h"
 
-#define MAPCOUNT 3
+#define MAPCOUNT 4
 
 namespace geeL {
 

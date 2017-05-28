@@ -56,7 +56,7 @@ void main() {
 		float denom = 4.f * doto(viewDirection, normal) * NdotL + 0.001f; 
 		vec3  brdf  = nom / denom;
 
-		color = vec4(result + reflectionColor * brdf * NdotL , 1.f);
+		color = vec4(result + reflectionColor * brdf * NdotL, 1.f);
 	}
 	else 
 		color = vec4(result, 1.f);

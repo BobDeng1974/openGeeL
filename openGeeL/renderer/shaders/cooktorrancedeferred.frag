@@ -31,7 +31,7 @@ struct SpotLight {
 	bool useCookie;
 };
 
-const int DIRECTIONAL_SHADOWMAP_COUNT = 3;
+const int DIRECTIONAL_SHADOWMAP_COUNT = 4;
 
 struct DirectionalLight {
 	sampler2D shadowMap;

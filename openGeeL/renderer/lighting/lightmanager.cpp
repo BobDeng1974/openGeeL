@@ -25,9 +25,9 @@ using namespace glm;
 namespace geeL {
 
 	LightManager::LightManager() : ambient(ambient),
-			dlShader(new Shader("renderer/shaders/shadowmapping.vert", "renderer/shaders/empty.frag")),
-			plShader(new Shader("renderer/shaders/empty.vert", "renderer/shaders/shadowmapping.gs", 
-			"renderer/shaders/shadowmapping.frag")) {}
+		dlShader(new Shader("renderer/shaders/shadowmapping.vert", "renderer/shaders/empty.frag")),
+		plShader(new Shader("renderer/shaders/empty.vert", "renderer/shaders/shadowmapping.gs", 
+				"renderer/shaders/shadowmapping.frag")) {}
 
 
 	LightManager::~LightManager() {
@@ -55,7 +55,7 @@ namespace geeL {
 		dirLights.push_back(std::move(d));
 
 		//SimpleDirectionalLightMap* map = new SimpleDirectionalLightMap(*light, shadowBias, 100.f);
-		CascadedDirectionalShadowMap* map = new CascadedDirectionalShadowMap(*light, camera, shadowBias, 512, 512);
+		CascadedDirectionalShadowMap* map = new CascadedDirectionalShadowMap(*light, camera, shadowBias, 1024, 1024);
 		light->setShadowMap(*map);
 
 		onAdd(light, dirLights.back());

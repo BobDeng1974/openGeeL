@@ -47,12 +47,12 @@ namespace geeL {
 
 
 	void CascadedDirectionalShadowMap::setCascades(const SceneCamera& camera) {
-		float step = 1.f / (float)MAPCOUNT;
 		float near = camera.getNearPlane();
 		float far = camera.getFarPlane();
 
 		for (unsigned int i = 0; i < MAPCOUNT; i++) {
-			float s = (i + 1.f) * step;
+			float s = ((float)i / (float)MAPCOUNT);
+			s *= s; //Quadratic mapping of distances
 
 			float cascadeEnd = s * far + (1.f - s) * near;
 			shadowMaps[i].cascadeEnd = cascadeEnd;

@@ -110,10 +110,9 @@ vec4 scene1(vec3 position) {
 	float sphere1 = distanceSphere(rep, 0.2f);
 	float plane1  = distancePlane(position, vec3(0.f, -1.f, 0.f));
 
-	if(sphere1 < plane1)
-		return vec4(0.1f, 0.1f, 0.f, sphere1);
-	else
-		return vec4(0.f, 0.2f, 0.2f, plane1);
+	float pick = step(sphere1, plane1);
+	return pick * vec4(0.1f, 0.1f, 0.f, sphere1) + 
+		(1.f - pick) * vec4(0.f, 0.2f, 0.2f, plane1);
 }
 
 vec4 scene2(vec3 position) {
@@ -127,10 +126,9 @@ vec4 scene3(vec3 position) {
 	float sphere1 = distanceSphere(position, 0.2f);
 	float plane1  = distancePlane(position, vec3(0.f, -1.f, 0.f));
 
-	if(sphere1 < plane1)
-		return vec4(0.1f, 0.1f, 0.f, sphere1);
-	else
-		return vec4(0.f, 0.2f, 0.2f, plane1);
+	float pick = step(sphere1, plane1);
+	return pick * vec4(0.1f, 0.1f, 0.f, sphere1) + 
+		(1.f - pick) * vec4(0.f, 0.2f, 0.2f, plane1);
 }
 
 vec4 distanceScene(vec3 position) {
