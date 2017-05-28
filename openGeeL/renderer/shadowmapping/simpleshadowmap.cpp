@@ -15,10 +15,10 @@ using namespace glm;
 
 namespace geeL {
 
-	SimpleShadowMap::SimpleShadowMap(const Light& light, float shadowBias, float farPlane) 
+	SimpleShadowMap::SimpleShadowMap(const Light& light, float shadowBias, float farPlane, ShadowmapResolution resolution)
 		: ShadowMap(light), shadowBias(shadowBias), dynamicBias(shadowBias), farPlane(farPlane) {
 		
-		setResolution(ShadowmapResolution::Adaptive);
+		setResolution(resolution);
 	}
 
 
@@ -127,8 +127,9 @@ namespace geeL {
 	}
 
 
-	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight& light, float shadowBias, float farPlane)
-		: SimpleShadowMap(light, shadowBias, farPlane), spotLight(light) {
+	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight& light, float shadowBias, 
+		float farPlane, ShadowmapResolution resolution)
+			: SimpleShadowMap(light, shadowBias, farPlane, resolution), spotLight(light) {
 	
 		init();
 	}
@@ -187,8 +188,9 @@ namespace geeL {
 	}
 
 
-	SimplePointLightMap::SimplePointLightMap(const PointLight& light, float shadowBias, float farPlane)
-		: SimpleShadowMap(light, shadowBias, farPlane), pointLight(light) {
+	SimplePointLightMap::SimplePointLightMap(const PointLight& light, float shadowBias, 
+		float farPlane, ShadowmapResolution resolution)
+			: SimpleShadowMap(light, shadowBias, farPlane, resolution), pointLight(light) {
 	
 		lightTransforms.reserve(6);
 		computeLightTransform();
@@ -310,8 +312,9 @@ namespace geeL {
 
 
 
-	SimpleDirectionalLightMap::SimpleDirectionalLightMap(const DirectionalLight& light, float shadowBias, float farPlane)
-		: SimpleShadowMap(light, shadowBias, farPlane), directionalLight(light) {
+	SimpleDirectionalLightMap::SimpleDirectionalLightMap(const DirectionalLight& light, 
+		float shadowBias, float farPlane, ShadowmapResolution resolution)
+			: SimpleShadowMap(light, shadowBias, farPlane, resolution), directionalLight(light) {
 	
 		setResolution(ShadowmapResolution::High);
 		init();

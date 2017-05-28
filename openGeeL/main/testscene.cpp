@@ -121,7 +121,7 @@ namespace {
 			float lightIntensity = 100.f;
 
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(7, 5, 5), vec3(-180.0f, 0, -50), vec3(1.f, 1.f, 1.f));
-			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996 , lightIntensity *0.535 , lightIntensity*0.379));
+			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996 , lightIntensity *0.535 , lightIntensity*0.379), defPLShadowMapConfig);
 
 			lightIntensity = 100.f;
 			float angle = glm::cos(glm::radians(25.5f));
@@ -131,7 +131,7 @@ namespace {
 				ColorType::GammaSpace, WrapMode::Repeat, FilterMode::Linear);
 
 			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-9, 5, 0), vec3(-264.0f, 0, -5), vec3(1.f, 1.f, 1.f));
-			spotLight = &lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle);
+			spotLight = &lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle, defSLShadowMapConfig);
 			spotLight->setLightCookie(texture);
 
 			lightIntensity = 0.5f;

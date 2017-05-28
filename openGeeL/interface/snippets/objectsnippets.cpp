@@ -44,7 +44,7 @@ namespace geeL {
 				
 				unsigned int counter = 0;
 				mesh.iterateMaterials([&](MaterialContainer& container) {
-					std::string name = "Material " + std::to_string(counter);
+					std::string name = "Material " + std::to_string(counter) + ": " + container.name;
 					nk_layout_row_dynamic(context, 30, 1);
 					nk_label(context, name.c_str(), NK_TEXT_LEFT);
 
@@ -97,6 +97,7 @@ namespace geeL {
 	CameraSnippet::CameraSnippet(SceneCamera& cam) : SceneObjectSnippet(cam), cam(cam) {}
 
 	void CameraSnippet::draw(GUIContext* context) {
+		SceneObjectSnippet::draw(context);
 
 		float speed = GUISnippets::drawBarFloat(context, cam.getSpeed(), 0.f, 30.f, 0.1f, "Speed");
 		cam.setSpeed(speed);

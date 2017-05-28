@@ -1,6 +1,7 @@
 #ifndef SIMPLESHADOWMAP_H
 #define SIMPLESHADOWMAP_H
 
+#include <vector>
 #include "shadowmap.h"
 
 namespace geeL {
@@ -23,7 +24,7 @@ namespace geeL {
 	class SimpleShadowMap : public ShadowMap {
 
 	public:
-		SimpleShadowMap(const Light& light, float shadowBias, float farPlane);
+		SimpleShadowMap(const Light& light, float shadowBias, float farPlane, ShadowmapResolution resolution);
 
 		virtual void bindData(const Shader& shader, const std::string& name) = 0;
 		virtual void bindMap(Shader& shader, const std::string& name);
@@ -70,7 +71,8 @@ namespace geeL {
 	class SimpleSpotLightMap : public SimpleShadowMap {
 
 	public:
-		SimpleSpotLightMap(const SpotLight& light, float shadowBias, float farPlane);
+		SimpleSpotLightMap(const SpotLight& light, float shadowBias, float farPlane, 
+			ShadowmapResolution resolution = ShadowmapResolution::Adaptive);
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 
@@ -90,7 +92,8 @@ namespace geeL {
 	class SimplePointLightMap : public SimpleShadowMap {
 
 	public:
-		SimplePointLightMap(const PointLight& light, float shadowBias, float farPlane);
+		SimplePointLightMap(const PointLight& light, float shadowBias, float farPlane, 
+			ShadowmapResolution resolution = ShadowmapResolution::Adaptive);
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 
@@ -117,7 +120,8 @@ namespace geeL {
 	class SimpleDirectionalLightMap : public SimpleShadowMap {
 
 	public:
-		SimpleDirectionalLightMap(const DirectionalLight& light, float shadowBias, float farPlane);
+		SimpleDirectionalLightMap(const DirectionalLight& light, float shadowBias, float farPlane, 
+			ShadowmapResolution resolution = ShadowmapResolution::Adaptive);
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 

@@ -47,38 +47,44 @@ namespace geeL {
 			delete *it;
 	}
 
-	DirectionalLight& LightManager::addDirectionalLight(const SceneCamera& camera, Transform& transform, vec3 diffuse, float shadowBias) {
+	DirectionalLight& LightManager::addDirectionalLight(const SceneCamera& camera, Transform& transform, 
+		vec3 diffuse, ShadowMapConfiguration config) {
+		
 		DirectionalLight* light = new DirectionalLight(transform, diffuse);
 		
 		size_t index = dirLights.size();
 		DLightBinding d = DLightBinding(light, index, dlName);
 		dirLights.push_back(std::move(d));
 
-		//SimpleDirectionalLightMap* map = new SimpleDirectionalLightMap(*light, shadowBias, 100.f);
-		CascadedDirectionalShadowMap* map = new CascadedDirectionalShadowMap(*light, camera, shadowBias, 1024, 1024);
-		light->setShadowMap(*map);
+		if (config.useShadowMap) {
+			//SimpleDirectionalLightMap* map = new SimpleDirectionalLightMap(*light, shadowBias, 100.f);
+			CascadedDirectionalShadowMap* map = new CascadedDirectionalShadowMap(*light, camera, config.shadowBias, 1024, 1024);
+			light->setShadowMap(*map);
+		}
 
 		onAdd(light, dirLights.back());
 		return *light;
 	}
 
 	
-	PointLight& LightManager::addPointLight(Transform& transform, vec3 diffuse, float shadowBias) {
+	PointLight& LightManager::addPointLight(Transform& transform, vec3 diffuse, ShadowMapConfiguration config) {
 		PointLight* light = new PointLight(transform, diffuse);
 		
 		size_t index = pointLights.size();
 		PLightBinding p = PLightBinding(light, index, plName);
 		pointLights.push_back(std::move(p));
 
-		SimplePointLightMap* map = new SimplePointLightMap(*light, shadowBias, 100.f);
-		light->setShadowMap(*map);
+		if (config.useShadowMap) {
+			SimplePointLightMap* map = new SimplePointLightMap(*light, config.shadowBias, config.farPlane, config.resolution);
+			light->setShadowMap(*map);
+		}
 		
 		onAdd(light, pointLights.back());
 		return *light;
 	}
 
 	SpotLight& LightManager::addSpotlight(Transform& transform, vec3 diffuse,
-		float angle, float outerAngle, float shadowBias) {
+		float angle, float outerAngle, ShadowMapConfiguration config) {
 
 		SpotLight* light = new SpotLight(transform, diffuse, angle, outerAngle);
 
@@ -86,8 +92,10 @@ namespace geeL {
 		SLightBinding s = SLightBinding(light, index, slName);
 		spotLights.push_back(std::move(s));
 
-		SimpleSpotLightMap* map = new SimpleSpotLightMap(*light, shadowBias, 100.f);
-		light->setShadowMap(*map);
+		if (config.useShadowMap) {
+			SimpleSpotLightMap* map = new SimpleSpotLightMap(*light, config.shadowBias, config.farPlane, config.resolution);
+			light->setShadowMap(*map);
+		}
 		
 		onAdd(light, spotLights.back());
 		return *light;

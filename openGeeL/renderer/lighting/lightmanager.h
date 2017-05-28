@@ -6,6 +6,7 @@
 #include <set>
 #include <string>
 #include <vec3.hpp>
+#include "../shadowmapping/shadowmapconf.h"
 
 #define MAX_POINTLIGHTS 5
 #define MAX_DIRECTIONALLIGHTS 5
@@ -53,16 +54,15 @@ namespace geeL {
 		~LightManager();
 
 		//Add and create directional light
-		DirectionalLight& addDirectionalLight(const SceneCamera& camera, Transform& transform, glm::vec3 diffuse,
-			float shadowBias = 0.00002f);
+		DirectionalLight& addDirectionalLight(const SceneCamera& camera, 
+			Transform& transform, glm::vec3 diffuse, ShadowMapConfiguration config);
 	
 		//Add and create point light
-		PointLight& addPointLight(Transform& transform, glm::vec3 diffuse,
-			float shadowBias = 0.0001f);
+		PointLight& addPointLight(Transform& transform, glm::vec3 diffuse, ShadowMapConfiguration config);
 	
 		//Add and create spotlight
 		SpotLight& addSpotlight(Transform& transform, glm::vec3 diffuse,
-			float angle, float outerAngle, float shadowBias = 0.0001f);
+			float angle, float outerAngle, ShadowMapConfiguration config);
 
 		void removeLight(DirectionalLight& light);
 		void removeLight(PointLight& light);

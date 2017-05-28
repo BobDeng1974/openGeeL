@@ -121,14 +121,14 @@ namespace {
 			float lightIntensity = 100.f;
 
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(7.1f, 4.9f, 2.4f), vec3(-180.0f, 0, -50), vec3(1.f, 1.f, 1.f));
-			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379));
+			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), defPLShadowMapConfig);
 
 			lightIntensity = 100.f;
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
 
 			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(0.8f, 2.7f, 3.4f), vec3(79.8f, 18.8f, -23), vec3(1.f, 1.f, 1.f));
-			spotLight4 = &lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle);
+			spotLight4 = &lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle, defSLShadowMapConfig);
 
 
 			float scale = 0.01f;
