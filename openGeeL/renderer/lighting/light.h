@@ -40,12 +40,16 @@ namespace geeL {
 		void setShadowMap(ShadowMap& map);
 
 		//Add shadow map to given shader
-		virtual void addShadowmap(Shader& shader, const std::string& name);
+		void addShadowmap(Shader& shader, const std::string& name);
 
 		//Remove shadow map from given shader
-		virtual void removeShadowmap(Shader& shader);
+		void removeShadowmap(Shader& shader);
 
-		virtual void renderShadowmap(const SceneCamera* const camera, 
+		void renderShadowmap(const SceneCamera* const camera, 
+			std::function<void(const Shader&)> renderCall, const Shader& shader);
+
+		//Draw shadow map no matter the lights properties. E.g. if it is static or not
+		void renderShadowmapForced(const SceneCamera* const camera,
 			std::function<void(const Shader&)> renderCall, const Shader& shader);
 
 		//Computes experienced intensity at given point. Ranges between 0 and 1

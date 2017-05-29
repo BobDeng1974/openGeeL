@@ -118,14 +118,14 @@ namespace {
 
 			float lightIntensity = 100.f;
 
-			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(0.01f, 9.4f, -0.1f), vec3(-180.0f, 0, -50), vec3(1.f, 1.f, 1.f));
+			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(0.01f, 9.4f, -0.1f), vec3(-180.0f, 0, -50), vec3(1.f), true);
 			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity * 0.69, lightIntensity * 0.32, lightIntensity * 0.22), defPLShadowMapConfig);
 
 			lightIntensity = 100.f;
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
 
-			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-23.4f, 18.6f, -8.7f), vec3(123.1f, 58.5f, -23), vec3(1.f, 1.f, 1.f));
+			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-23.4f, 18.6f, -8.7f), vec3(123.1f, 58.5f, -23), vec3(1.f), true);
 			spotLight3 = &lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity * 0.79f, lightIntensity * 0.8f, lightIntensity * 0.54f), angle, outerAngle, defSLShadowMapConfig);
 
 			float scale = 0.05f;
@@ -229,8 +229,8 @@ void BedroomScene::draw() {
 
 	SobelFilter sobel = SobelFilter(15);
 	SobelBlur sobelBlur = SobelBlur(sobel);
-	VolumetricLight vol = VolumetricLight(*spotLight3, 1.5f, 12.f, 250);
-	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.2f, 0.2f);
+	VolumetricLight vol = VolumetricLight(*spotLight3, 1.5f, 14.f, 250);
+	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.25f, 0.25f);
 
 	ColorCorrection colorCorrect = ColorCorrection();
 

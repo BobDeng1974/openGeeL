@@ -120,7 +120,7 @@ namespace {
 
 			float lightIntensity = 100.f;
 
-			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(7, 5, 5), vec3(-180.0f, 0, -50), vec3(1.f, 1.f, 1.f));
+			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(7, 5, 5), vec3(-180.0f, 0, -50), vec3(1.f));
 			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996 , lightIntensity *0.535 , lightIntensity*0.379), defPLShadowMapConfig);
 
 			lightIntensity = 100.f;
@@ -130,12 +130,12 @@ namespace {
 			ImageTexture& texture = materialFactory.CreateTexture("resources/textures/cookie.png", 
 				ColorType::GammaSpace, WrapMode::Repeat, FilterMode::Linear);
 
-			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-9, 5, 0), vec3(-264.0f, 0, -5), vec3(1.f, 1.f, 1.f));
+			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-9, 5, 0), vec3(-264.0f, 0, -5), vec3(1.f));
 			spotLight = &lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle, defSLShadowMapConfig);
 			spotLight->setLightCookie(texture);
 
 			lightIntensity = 0.5f;
-			//geeL::Transform& lightTransform3 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(-120, -30, -180), vec3(1.f, 1.f, 1.f));
+			//geeL::Transform& lightTransform3 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(-120, -30, -180), vec3(1.f));
 			//&lightManager.addDirectionalLight(scene.getCamera(), lightTransform3, glm::vec3(lightIntensity, lightIntensity, lightIntensity));
 
 			float height = -2.f;
@@ -153,7 +153,7 @@ namespace {
 				container.setVectorValue("Color", vec3(0.4f, 0.4f, 0.4f));
 			});
 
-			Transform& meshTransform3 = transformFactory.CreateTransform(vec3(-9.f, -3.f, 11.0f), vec3(0.5f, 0.5f, 0.5f), vec3(0.3f, 0.3f, 0.3f));
+			Transform& meshTransform3 = transformFactory.CreateTransform(vec3(-9.f, -3.f, 11.0f), vec3(0.5f, 0.5f, 0.5f), vec3(0.3f));
 			MeshRenderer& box1 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/empire/EmpireState_lp.obj"),
 				meshTransform3, CullingMode::cullFront, "Empire State");
 			scene.addMeshRenderer(box1);
@@ -164,7 +164,7 @@ namespace {
 			});
 
 
-			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 2.f, 4.f), vec3(0.f), vec3(1.f, 1.f, 1.f));
+			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 2.f, 4.f), vec3(0.f), vec3(1.f));
 			MeshRenderer& sphere1 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/sphere.obj"),
 				meshTransform4, CullingMode::cullFront, "Sphere");
 			scene.addMeshRenderer(sphere1);
@@ -190,12 +190,12 @@ namespace {
 			});
 
 
-			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(1.f));
 			MeshRenderer& cyborg = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/cyborg/Cyborg.obj"),
 				meshTransform6, CullingMode::cullFront, "Cyborg");
 			scene.addMeshRenderer(cyborg);
 
-			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.2f, 0.2f, 0.2f), true);
+			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.2f));
 			nanoRenderer = &meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/nanosuit/nanosuit.obj"),
 				meshTransform1, CullingMode::cullFront, "Nano");
 			scene.addMeshRenderer(*nanoRenderer);
@@ -264,8 +264,8 @@ void RenderTest::draw() {
 	//DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024);
 
 	//EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv3/Tropical_Beach_3k.hdr");
-	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv1/Playa_Sunrise.hdr");
-	//EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
+	//EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv1/Playa_Sunrise.hdr");
+	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
 	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 1024);
 	IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 

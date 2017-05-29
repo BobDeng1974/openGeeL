@@ -85,6 +85,8 @@ namespace geeL {
 		void bindShadowmap(Shader& shader, PointLight& light) const;
 		void bindShadowmap(Shader& shader, SpotLight& light) const;
 
+		//Draw shadow maps no matter the lights properties. E.g.if they are static or not
+		void drawShadowmapsForced(const RenderScene& scene, const SceneCamera* const camera) const;
 		void drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera) const;
 
 		void iterDirectionalLights(std::function<void(DirectionalLight&)> function);

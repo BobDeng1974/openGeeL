@@ -274,8 +274,6 @@ namespace geeL {
 			const PLightBinding& binding = *it;
 			Light& light = *binding.light;
 			light.addShadowmap(shader, binding.getName() + "shadowMap");
-
-
 		}
 		
 		for (auto it = dirLights.begin(); it != dirLights.end(); it++) {
@@ -294,6 +292,7 @@ namespace geeL {
 	}
 
 	void LightManager::drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera) const {
+		glCullFace(GL_BACK);
 
 		for(auto it = pointLights.begin(); it != pointLights.end(); it++) {
 			const PLightBinding& binding = *it;
@@ -318,6 +317,38 @@ namespace geeL {
 				light.renderShadowmap(camera,
 					[&](const Shader& shader) { scene.drawStaticObjects(shader); }, *dlShader);
 		}	
+
+		glCullFace(GL_FRONT);
+	}
+
+	void LightManager::drawShadowmapsForced(const RenderScene& scene, const SceneCamera* const camera) const {
+		glCullFace(GL_BACK);
+
+		for (auto it = pointLights.begin(); it != pointLights.end(); it++) {
+			const PLightBinding& binding = *it;
+			Light& light = *binding.light;
+			if (light.isActive())
+				light.renderShadowmapForced(camera,
+					[&](const Shader& shader) { scene.drawStaticObjects(shader); }, *plShader);
+		}
+
+		for (auto it = dirLights.begin(); it != dirLights.end(); it++) {
+			const DLightBinding& binding = *it;
+			Light& light = *binding.light;
+			if (light.isActive())
+				light.renderShadowmapForced(camera,
+					[&](const Shader& shader) { scene.drawStaticObjects(shader); }, *dlShader);
+		}
+
+		for (auto it = spotLights.begin(); it != spotLights.end(); it++) {
+			const SLightBinding& binding = *it;
+			Light& light = *binding.light;
+			if (light.isActive())
+				light.renderShadowmapForced(camera,
+					[&](const Shader& shader) { scene.drawStaticObjects(shader); }, *dlShader);
+		}
+
+		glCullFace(GL_FRONT);
 	}
 
 

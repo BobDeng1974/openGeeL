@@ -78,7 +78,6 @@ namespace geeL {
 			ssao->init(*ssaoScreen, *ssaoBuffer);
 		}
 		
-		
 		lighting.init(screen, frameBuffer1);
 		scene->init();
 		
@@ -117,9 +116,7 @@ namespace geeL {
 			//Hacky: Read camera depth from geometry pass and write it into the scene
 			scene->forwardScreenInfo(gBuffer.screenInfo);
 
-			glCullFace(GL_BACK);
 			scene->lightManager.drawShadowmaps(*scene, &scene->getCamera());
-			glCullFace(GL_FRONT);
 			renderTime.update(RenderPass::Shadow);
 
 			//SSAO pass
@@ -195,9 +192,7 @@ namespace geeL {
 		//Geometry pass
 		gBuffer.fill(geometryPassFunc);
 
-		glCullFace(GL_BACK);
 		scene->lightManager.drawShadowmaps(*scene, &scene->getCamera());
-		glCullFace(GL_FRONT);
 
 		//SSAO pass
 		if (ssao != nullptr) {
@@ -216,9 +211,7 @@ namespace geeL {
 		//Geometry pass
 		gBuffer.fill([this, camera] () { scene->drawDeferred(camera); });
 
-		glCullFace(GL_BACK);
 		scene->lightManager.drawShadowmaps(*scene, nullptr);
-		glCullFace(GL_FRONT);
 
 		//SSAO pass
 		if (ssao != nullptr) {
