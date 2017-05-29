@@ -274,6 +274,8 @@ namespace geeL {
 			const PLightBinding& binding = *it;
 			Light& light = *binding.light;
 			light.addShadowmap(shader, binding.getName() + "shadowMap");
+
+
 		}
 		
 		for (auto it = dirLights.begin(); it != dirLights.end(); it++) {

@@ -11,15 +11,15 @@ namespace geeL {
 	}
 
 	Transform& TransformFactory::CreateTransform(Transform& parent) {
-		return parent.AddChild(new Transform(parent));
+		return parent.AddChild(new Transform());
 	}
 
-	Transform& TransformFactory::CreateTransform(vec3 position, vec3 rotation, vec3 scaling) {
-		return CreateTransform(world, position, rotation, scaling);
+	Transform& TransformFactory::CreateTransform(vec3 position, vec3 rotation, vec3 scaling, bool isStatic) {
+		return CreateTransform(world, position, rotation, scaling, isStatic);
 	}
 
-	Transform& TransformFactory::CreateTransform(Transform& parent, vec3 position, vec3 rotation, vec3 scaling) {
-		return parent.AddChild(new Transform(position, rotation, scaling));
+	Transform& TransformFactory::CreateTransform(Transform& parent, vec3 position, vec3 rotation, vec3 scaling, bool isStatic) {
+		return parent.AddChild(new Transform(position, rotation, scaling, isStatic));
 	}
 
 	Transform& TransformFactory::getWorldTransform() {

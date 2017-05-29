@@ -26,8 +26,6 @@ namespace geeL {
 	class Light : public SceneObject {
 
 	public:
-		vec3 diffuse;
-
 		Light(Transform& transform, vec3 diffuse, const std::string& name = "Light");
 		~Light();
 
@@ -53,8 +51,13 @@ namespace geeL {
 		//Computes experienced intensity at given point. Ranges between 0 and 1
 		virtual float getIntensity(glm::vec3 point) const;
 
+		//Returns diffuse color of this light
+		vec3 getColor() const;
+		void setColor(vec3 color);
 
 	protected:
+		vec3 diffuse;
+
 		unsigned int shadowmapFBO;
 		unsigned int shadowmapID;
 

@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include "scripting/component.h"
+#include "transformation\transform.h"
 #include "sceneobject.h"
 
 using namespace std;
@@ -34,7 +35,12 @@ namespace geeL {
 	}
 
 	void SceneObject::setActive(bool active) {
-		this->active = active;
+		if (this->active != active) {
+			if (!transform.isStatic)
+				this->active = active;
+			else
+				std::cout << "Can't de-/activate static objects\n";
+		}
 	}
 
 	std::string SceneObject::getName() const {

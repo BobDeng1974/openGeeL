@@ -7,6 +7,7 @@
 #include "../transformation/transform.h"
 #include "../scene.h"
 #include "../shadowmapping/shadowmap.h"
+#include "../utility/vectorextension.h"
 #include "light.h"
 
 using namespace std;
@@ -33,7 +34,6 @@ namespace geeL {
 
 	void Light::setShadowMap(ShadowMap& map) {
 		shadowMap = &map;
-
 	}
 
 	void Light::bind(const Camera& camera, const Shader& shader, const std::string& name, ShaderTransformSpace space) const {
@@ -74,4 +74,14 @@ namespace geeL {
 		
 		return 1.f / (distance * distance);
 	}
+
+	vec3 Light::getColor() const {
+		return diffuse;
+	}
+
+	void Light::setColor(vec3 color) {
+		if (!transform.isStatic && !VectorExtension::equals(diffuse, color))
+			diffuse = color;
+	}
+
 }

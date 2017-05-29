@@ -78,9 +78,10 @@ namespace geeL {
 			ssao->init(*ssaoScreen, *ssaoBuffer);
 		}
 		
+		
 		lighting.init(screen, frameBuffer1);
 		scene->init();
-
+		
 		//Init all effects
 		bool chooseBuffer = true;
 		for (auto effect = effects.begin(); effect != effects.end(); effect++) {

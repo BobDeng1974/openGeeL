@@ -19,8 +19,11 @@ namespace geeL {
 	void SceneObjectSnippet::draw(GUIContext* context) {
 
 		int active = !obj.isActive();
+		nk_layout_row_dynamic(context, 30, 2);
 		nk_checkbox_label(context, "Active", &active);
 		obj.setActive(!active);
+
+		nk_label(context, obj.transform.isStatic ? "STATIC" : "DYNAMIC", NK_TEXT_CENTERED);
 
 		GUISnippets::drawTransform(context, obj.transform);
 	}
@@ -80,7 +83,10 @@ namespace geeL {
 		std::string id = light.getName() + " #" + std::to_string(light.transform.getID());
 		if (nk_tree_push(context, NK_TREE_NODE, id.c_str(), NK_MINIMIZED)) {
 			SceneObjectSnippet::draw(context);
-			GUISnippets::drawColor(context, light.diffuse);
+
+			vec3 color = light.getColor();
+			GUISnippets::drawColor(context, color);
+			light.setColor(color);
 
 			//float bias = GUISnippets::drawBarFloat(context, light.getShadowBias(), 0.f, 0.02f, 0.0001f, "Shadow Bias");
 			//light.setShadowBias(bias);

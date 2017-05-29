@@ -22,12 +22,12 @@ namespace geeL {
 
 		//Creates and and returns a transform with
 		//world transform as parent
-		Transform& CreateTransform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling);
+		Transform& CreateTransform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling, bool isStatic = false);
 
 		//Creates and and returns a transform with
 		//committed transform as parent
 		Transform& CreateTransform(Transform& parent, 
-			glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling);
+			glm::vec3 position, glm::vec3 rotation, glm::vec3 scaling, bool isStatic = false);
 
 		Transform& getWorldTransform();
 

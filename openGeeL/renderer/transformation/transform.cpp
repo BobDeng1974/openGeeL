@@ -14,24 +14,21 @@ namespace geeL {
 
 	unsigned int idCounter = 0;
 
-	Transform::Transform() : matrix(mat4()), parent(nullptr), status(TransformUpdateStatus::None) {
-		isStatic = true;
-
+	Transform::Transform() : matrix(mat4()), isStatic(true), parent(nullptr), status(TransformUpdateStatus::None) {
 		id = idCounter;
 		idCounter++;
 	}
 
-	Transform::Transform(mat4& matrix) : matrix(matrix), parent(nullptr) {
+	Transform::Transform(mat4& matrix, bool isStatic) : matrix(matrix), isStatic(isStatic), parent(nullptr) {
 		setMatrix(matrix);
 		status = TransformUpdateStatus::None; //Set status here since 'setMatrix' already changed it
 
-		isStatic = true;
 		id = idCounter;
 		idCounter++;
 	}
 
-	Transform::Transform(vec3 position, glm::quat rotation, vec3 scaling) 
-		: position(position), rotation(rotation), scaling(scaling), parent(nullptr), status(TransformUpdateStatus::None) {
+	Transform::Transform(vec3 position, glm::quat rotation, vec3 scaling, bool isStatic)
+		: position(position), rotation(rotation), scaling(scaling), isStatic(isStatic), parent(nullptr), status(TransformUpdateStatus::None) {
 
 		translationMatrix = glm::translate(glm::mat4(1.f), position);
 		rotationMatrix = glm::toMat4(this->rotation);
@@ -39,13 +36,12 @@ namespace geeL {
 		updateDirections();
 		resetMatrix();
 
-		isStatic = true;
 		id = idCounter;
 		idCounter++;
 	}
 
-	Transform::Transform(vec3 position, vec3 rotation, vec3 scaling)
-		: position(position), scaling(scaling), parent(nullptr), status(TransformUpdateStatus::None) {
+	Transform::Transform(vec3 position, vec3 rotation, vec3 scaling, bool isStatic)
+		: position(position), scaling(scaling), isStatic(isStatic), parent(nullptr), status(TransformUpdateStatus::None) {
 		
 		setEulerAnglesInternal(rotation);
 		translationMatrix = glm::translate(glm::mat4(1.f), position);
@@ -54,7 +50,6 @@ namespace geeL {
 		updateDirections();
 		resetMatrix();
 
-		isStatic = true;
 		id = idCounter;
 		idCounter++;
 	}
@@ -100,7 +95,7 @@ namespace geeL {
 
 
 	void Transform::setPosition(const vec3& position) {
-		if (!VectorExtension::equals(this->position, position)) {
+		if (!isStatic && !VectorExtension::equals(this->position, position)) {
 			this->position = position;
 
 			translationMatrix[3][0] = position.x;
@@ -112,7 +107,7 @@ namespace geeL {
 	}
 
 	void Transform::setRotation(const glm::quat& quaternion) {
-		if (!VectorExtension::equals(rotation, quaternion)) {
+		if (!isStatic && !VectorExtension::equals(rotation, quaternion)) {
 			rotation = quaternion;
 			rotationMatrix = glm::toMat4(rotation);
 			updateDirections();
@@ -122,6 +117,7 @@ namespace geeL {
 	}
 
 	void Transform::setMatrix(const mat4& matrix) {
+		if (isStatic) return;
 
 		//Extract position from matrix
 		position.x = matrix[3][0];
@@ -173,14 +169,14 @@ namespace geeL {
 	}
 
 	void Transform::setEulerAngles(const vec3& eulerAngles) {
-		if (!VectorExtension::equals(glm::eulerAngles(rotation), eulerAngles)) {
+		if (!isStatic && !VectorExtension::equals(glm::eulerAngles(rotation), eulerAngles)) {
 			setEulerAnglesInternal(eulerAngles);
 			status = TransformUpdateStatus::NeedsUpdate;
 		}
 	}
 
 	void Transform::setScaling(const vec3& scaling) {
-		if (!VectorExtension::equals(this->scaling, scaling)) {
+		if (!isStatic && !VectorExtension::equals(this->scaling, scaling)) {
 			this->scaling = scaling;
 
 			scaleMatrix[0][0] = scaling.x;
@@ -193,6 +189,8 @@ namespace geeL {
 
 
 	void Transform::translate(const vec3& translation) {
+		if (isStatic) return;
+
 		position += translation;
 
 		translationMatrix[3][0] += translation.x;
@@ -203,6 +201,8 @@ namespace geeL {
 	}
 
 	void Transform::rotate(const vec3& axis, float angle) {
+		if (isStatic) return;
+
 		glm::quat localRotation;
 		float angleHalf = angle * 0.5f;
 		float sinAngleHalf = sinf(angleHalf);
@@ -221,6 +221,8 @@ namespace geeL {
 	}
 
 	void Transform::scale(const vec3& scalar) {
+		if (isStatic) return;
+
 		scaling += scalar;
 
 		scaleMatrix[0][0] += scalar.x;
@@ -239,8 +241,6 @@ namespace geeL {
 		forward = vec3(rotationMatrix[1][0], rotationMatrix[1][1], rotationMatrix[1][2]);
 		up = vec3(rotationMatrix[2][0], rotationMatrix[2][1], rotationMatrix[2][2]);
 	}
-
-
 	
 
 	void Transform::resetMatrix() {

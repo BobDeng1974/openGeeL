@@ -119,7 +119,7 @@ namespace {
 			float lightIntensity = 100.f;
 
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(0.01f, 9.4f, -0.1f), vec3(-180.0f, 0, -50), vec3(1.f, 1.f, 1.f));
-			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity * 0.68, lightIntensity * 0.42, lightIntensity * 0.29), defPLShadowMapConfig);
+			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity * 0.69, lightIntensity * 0.32, lightIntensity * 0.22), defPLShadowMapConfig);
 
 			lightIntensity = 100.f;
 			float angle = glm::cos(glm::radians(25.5f));
@@ -168,7 +168,7 @@ void BedroomScene::draw() {
 	scene.setPhysics(&physics);
 
 	BilateralFilter blur = BilateralFilter(1, 0.7f);
-	DefaultPostProcess def = DefaultPostProcess(2.f);
+	DefaultPostProcess def = DefaultPostProcess(5.f);
 	SSAO ssao = SSAO(blur, 10.f);
 	RenderContext context = RenderContext();
 	DeferredLighting lighting = DeferredLighting(scene);
@@ -229,7 +229,7 @@ void BedroomScene::draw() {
 
 	SobelFilter sobel = SobelFilter(15);
 	SobelBlur sobelBlur = SobelBlur(sobel);
-	VolumetricLight vol = VolumetricLight(*spotLight3, 1.5f, 12.f, 150);
+	VolumetricLight vol = VolumetricLight(*spotLight3, 1.5f, 12.f, 250);
 	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.2f, 0.2f);
 
 	ColorCorrection colorCorrect = ColorCorrection();

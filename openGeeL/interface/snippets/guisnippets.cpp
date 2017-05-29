@@ -69,6 +69,7 @@ namespace geeL {
 
 	void GUISnippets::drawTransform(GUIContext* context, Transform& transform) {
 
+		nk_layout_row_dynamic(context, 20, 1);
 		std::string name = "Transform(" + std::to_string(transform.getID()) + "):";
 		if (nk_combo_begin_label(context, name.c_str(), nk_vec2(nk_widget_width(context), 400))) {
 

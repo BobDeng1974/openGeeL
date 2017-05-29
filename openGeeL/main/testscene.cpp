@@ -195,7 +195,7 @@ namespace {
 				meshTransform6, CullingMode::cullFront, "Cyborg");
 			scene.addMeshRenderer(cyborg);
 
-			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.2f, 0.2f, 0.2f));
+			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.2f, 0.2f, 0.2f), true);
 			nanoRenderer = &meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/nanosuit/nanosuit.obj"),
 				meshTransform1, CullingMode::cullFront, "Nano");
 			scene.addMeshRenderer(*nanoRenderer);

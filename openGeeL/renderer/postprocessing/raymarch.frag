@@ -7,7 +7,7 @@ out vec4 color;
 const float PI = 3.14159265359;
 const float epsilon = 0.002f;
 const int maxSteps = 50;
-const int sceneID = 1;
+const int sceneID = 3;
 
 const vec2 resolution = vec2(1920, 1080);
 
@@ -188,7 +188,7 @@ vec3 lightIllumination(vec3 position, vec3 normal, vec3 albedo) {
 	dir = normalize(dir);
 
 	vec3 lightColor = pointIllumination(position, normal, light) * 
-		shadow(position + (20.f * epsilon) * dir, dir, dist, 10);
+		shadow(position + (20.f * epsilon) * dir, dir, dist, 20);
 
 	return lightColor * albedo;
 }

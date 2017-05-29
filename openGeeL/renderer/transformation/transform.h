@@ -23,12 +23,12 @@ namespace geeL {
 	class Transform {
 
 	public:
-		bool isStatic;
+		const bool isStatic;
 
 		Transform();
-		Transform(mat4& matrix);
-		Transform(vec3 position, glm::quat rotation, vec3 scaling);
-		Transform(vec3 position, vec3 rotation, vec3 scaling);
+		Transform(mat4& matrix, bool isStatic = false);
+		Transform(vec3 position, glm::quat rotation, vec3 scaling, bool isStatic = false);
+		Transform(vec3 position, vec3 rotation, vec3 scaling, bool isStatic = false);
 		~Transform();
 		
 		const glm::vec3& getPosition() const;
