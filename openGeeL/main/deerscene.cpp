@@ -85,18 +85,16 @@
 #include "../renderer/animation/animator.h"
 #include "../renderer/animation/skeleton.h"
 
-#include "arthouse.h"
+#include "deerscene.h"
 
 #define pi 3.141592f
 
 using namespace geeL;
 
 
-SpotLight* spotLight4 = nullptr;
-
 namespace {
 
-	class TestScene4 : public SceneControlObject {
+	class TestScene5 : public SceneControlObject {
 
 	public:
 		LightManager& lightManager;
@@ -109,7 +107,7 @@ namespace {
 		MeshRenderer* nanoRenderer;
 
 
-		TestScene4(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
+		TestScene5(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
 			RenderPipeline& shaderManager, RenderScene& scene, TransformFactory& transformFactory, Physics* physics)
 			: SceneControlObject(scene),
 			materialFactory(materialFactory), meshFactory(meshFactory), lightManager(lightManager),
@@ -118,44 +116,28 @@ namespace {
 
 		virtual void init() {
 
-			float lightIntensity = 10.f;
+			float lightIntensity = 7.f;
 
-			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-0.9f, 1.9f, 0.4f), vec3(-180.0f, 0, -50), vec3(1.f, 1.f, 1.f), true);
-			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 100.f);
+			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-0.29f, 0.39f, 1.80f), vec3(-180.0f, 0, -50), vec3(1.f));
+			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Huge, 100.f);
 			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config);
 
-			lightIntensity = 100.f;
-			float angle = glm::cos(glm::radians(25.5f));
-			float outerAngle = glm::cos(glm::radians(27.5f));
-
-			ImageTexture& texture = materialFactory.CreateTexture("resources/textures/cookie.png",
-				ColorType::GammaSpace, WrapMode::Repeat, FilterMode::Linear);
-
-			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-14.88f, 0.4f, -1.88f), vec3(90.f, -56.24f, 179.f), vec3(1.f, 1.f, 1.f), true);
-			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Huge, 100.f);
-			spotLight4 = &lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle, config2);
-			spotLight4->setLightCookie(texture);
-
-			float scale = 0.008f;
-			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(scale));
-			MeshRenderer& studio = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/art/artStudio.obj"),
-				meshTransform2, CullingMode::cullFront, "Studio");
-			scene.addMeshRenderer(studio);
+			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(0.1f, 0.1f, 0.1f));
+			MeshRenderer& deer = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/deer/scene2.obj"),
+				meshTransform2, CullingMode::cullFront, "Deer");
+			scene.addMeshRenderer(deer);
 		}
 
 		virtual void draw(const SceneCamera& camera) {}
 
 		virtual void quit() {}
 	};
-
-
 }
 
 
+void DeerScene::draw() {
 
-void ArthouseScene::draw() {
-	
-	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
+	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Fullscreen);
 	InputManager manager = InputManager();
 	manager.defineButton("Forward", GLFW_KEY_W);
 	manager.defineButton("Forward", GLFW_KEY_A);
@@ -163,21 +145,19 @@ void ArthouseScene::draw() {
 	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	TransformFactory transFactory = TransformFactory(world);
 
-	geeL::Transform& cameraTransform = Transform(vec3(2.93f, 0.71f, -0.59f), vec3(90.f, 76.86f, 179.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
+	geeL::Transform& cameraTransform = Transform(vec3(-0.03f, 0.17f, 2.66f), vec3(-91.59f, 2.78f, -3.f), vec3(1.f, 1.f, 1.f));
+	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 25.f, window.width, window.height, 0.1f, 100.f);
 
 	MaterialFactory materialFactory = MaterialFactory();
 	MeshFactory meshFactory = MeshFactory(materialFactory);
 	LightManager lightManager = LightManager();
 	RenderPipeline shaderManager = RenderPipeline(materialFactory);
-	
+
 	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
-	WorldPhysics physics = WorldPhysics();
-	scene.setPhysics(&physics);
 
 	BilateralFilter blur = BilateralFilter(1, 0.7f);
-	DefaultPostProcess def = DefaultPostProcess(2.f);
-	SSAO ssao = SSAO(blur, 2.f);
+	DefaultPostProcess def = DefaultPostProcess(1.f);
+	SSAO ssao = SSAO(blur, 0.5f);
 	RenderContext context = RenderContext();
 	DeferredLighting lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, materialFactory);
@@ -191,62 +171,37 @@ void ArthouseScene::draw() {
 	BRDFIntegrationMap brdfInt = BRDFIntegrationMap();
 	CubeMapFactory cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
 
-	Transform& probeTransform = transFactory.CreateTransform(vec3(-6.9f, 1.9f, 2.3f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	Transform& probeTransform = transFactory.CreateTransform(vec3(-0.13f, 0.13f, 0.52f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024, 20, 20, 20);
 
-	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv1/Playa_Sunrise.hdr");
+	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv4/WinterForest_Ref.hdr");
 	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 1024);
 	IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
 	Skybox skybox = Skybox(envCubeMap);
 	scene.setSkybox(skybox);
 	lightManager.addReflectionProbe(probe);
-	
+
 	renderer.setScene(scene);
 	scene.addRequester(ssao);
 
-	SceneControlObject& testScene = TestScene4(materialFactory, meshFactory, 
-		lightManager, shaderManager, scene, transFactory, &physics);
+	SceneControlObject& testScene = TestScene5(materialFactory, meshFactory,
+		lightManager, shaderManager, scene, transFactory, nullptr);
 
 	renderer.addObject(&testScene);
 	renderer.initObjects();
 
-	GUIRenderer gui = GUIRenderer(window, context);
-	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
-	objectLister.add(camera);
-	gui.addElement(objectLister);
-	PostProcessingEffectLister postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
-	gui.addElement(postLister);
-	SystemInformation sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
-	gui.addElement(sysInfo);
 
-	renderer.addGUIRenderer(&gui);
-	
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR();
-	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.6f, 0.6f);
-	
-	BloomFilter filter = BloomFilter();
-	GaussianBlur& blur5 = GaussianBlur();
-	Bloom bloom = Bloom(filter, blur5, 0.4f, 0.2f);
+	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.8f, 0.8f);
 
-	postLister.add(def);
-	postLister.add(ssao);
+	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.3f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 30.f, 100.f, 0.3f);
+	renderer.addEffect(dof, dof);
 
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
-
-	SobelFilter sobel = SobelFilter(15);
-	SobelBlur sobelBlur = SobelBlur(sobel);
-
-	GaussianBlur ayy = GaussianBlur();
-	VolumetricLight vol = VolumetricLight(*spotLight4, 0.02f, 1.f, 150);
-	BlurredPostEffect volSmooth = BlurredPostEffect(vol, ayy, 0.3f, 0.5f);
-
-	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
-	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
-	scene.addRequester(vol);
-	postLister.add(volSmooth, lightSnippet);
 
 	FXAA fxaa = FXAA();
 	renderer.addEffect(fxaa);

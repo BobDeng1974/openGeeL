@@ -230,7 +230,7 @@ void BedroomScene::draw() {
 	SobelFilter sobel = SobelFilter(15);
 	SobelBlur sobelBlur = SobelBlur(sobel);
 	VolumetricLight vol = VolumetricLight(*spotLight3, 1.5f, 14.f, 250);
-	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.25f, 0.25f);
+	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.25f, 0.2f);
 
 	ColorCorrection colorCorrect = ColorCorrection();
 
@@ -238,7 +238,7 @@ void BedroomScene::draw() {
 	postLister.add(ssao);
 
 	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
-	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
+	//renderer.addEffect(volSmooth, { &vol, &sobelBlur });
 	scene.addRequester(vol);
 	postLister.add(volSmooth, lightSnippet);
 
