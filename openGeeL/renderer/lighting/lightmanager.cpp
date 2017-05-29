@@ -56,7 +56,7 @@ namespace geeL {
 		DLightBinding d = DLightBinding(light, index, dlName);
 		dirLights.push_back(std::move(d));
 
-		if (config.useShadowMap) {
+		if (config.useShadowMap()) {
 			//SimpleDirectionalLightMap* map = new SimpleDirectionalLightMap(*light, shadowBias, 100.f);
 			CascadedDirectionalShadowMap* map = new CascadedDirectionalShadowMap(*light, camera, config.shadowBias, 1024, 1024);
 			light->setShadowMap(*map);
@@ -74,8 +74,9 @@ namespace geeL {
 		PLightBinding p = PLightBinding(light, index, plName);
 		pointLights.push_back(std::move(p));
 
-		if (config.useShadowMap) {
-			SimplePointLightMap* map = new SimplePointLightMap(*light, config.shadowBias, config.farPlane, config.resolution);
+		if (config.useShadowMap()) {
+			SimplePointLightMap* map = new SimplePointLightMap(*light, config.shadowBias, 
+				config.farPlane, config.type, config.resolution);
 			light->setShadowMap(*map);
 		}
 		
@@ -92,8 +93,9 @@ namespace geeL {
 		SLightBinding s = SLightBinding(light, index, slName);
 		spotLights.push_back(std::move(s));
 
-		if (config.useShadowMap) {
-			SimpleSpotLightMap* map = new SimpleSpotLightMap(*light, config.shadowBias, config.farPlane, config.resolution);
+		if (config.useShadowMap()) {
+			SimpleSpotLightMap* map = new SimpleSpotLightMap(*light, config.shadowBias, 
+				config.farPlane, config.type, config.resolution);
 			light->setShadowMap(*map);
 		}
 		

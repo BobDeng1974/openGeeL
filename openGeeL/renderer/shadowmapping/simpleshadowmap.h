@@ -12,19 +12,12 @@ namespace geeL {
 	class PointLight;
 	class DirectionalLight;
 
-	enum class ShadowmapResolution {
-		Adaptive = 0,
-		Small = 128,
-		Medium = 256,
-		High = 512,
-		VeryHigh = 1024
-	};
-
 
 	class SimpleShadowMap : public ShadowMap {
 
 	public:
-		SimpleShadowMap(const Light& light, float shadowBias, float farPlane, ShadowmapResolution resolution);
+		SimpleShadowMap(const Light& light, float shadowBias, float farPlane, 
+			ShadowMapType type, ShadowmapResolution resolution);
 
 		virtual void bindData(const Shader& shader, const std::string& name) = 0;
 		virtual void bindMap(Shader& shader, const std::string& name);
@@ -72,7 +65,7 @@ namespace geeL {
 
 	public:
 		SimpleSpotLightMap(const SpotLight& light, float shadowBias, float farPlane, 
-			ShadowmapResolution resolution = ShadowmapResolution::Adaptive);
+			ShadowMapType type = ShadowMapType::Soft, ShadowmapResolution resolution = ShadowmapResolution::Adaptive);
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 
@@ -93,7 +86,7 @@ namespace geeL {
 
 	public:
 		SimplePointLightMap(const PointLight& light, float shadowBias, float farPlane, 
-			ShadowmapResolution resolution = ShadowmapResolution::Adaptive);
+			ShadowMapType type = ShadowMapType::Soft, ShadowmapResolution resolution = ShadowmapResolution::Adaptive);
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 
@@ -121,7 +114,7 @@ namespace geeL {
 
 	public:
 		SimpleDirectionalLightMap(const DirectionalLight& light, float shadowBias, float farPlane, 
-			ShadowmapResolution resolution = ShadowmapResolution::Adaptive);
+			ShadowMapType type = ShadowMapType::Soft, ShadowmapResolution resolution = ShadowmapResolution::Adaptive);
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 

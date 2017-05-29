@@ -20,7 +20,7 @@ namespace geeL {
 	class CascadedShadowMap : public ShadowMap {
 
 	public:
-		CascadedShadowMap(const Light& light, float shadowBias, unsigned int width, unsigned int height) 
+		CascadedShadowMap(const Light& light, float shadowBias, unsigned int width, unsigned int height)
 			: ShadowMap(light), shadowBias(shadowBias), width(width), height(height) {}
 
 		virtual void bindData(const Shader& shader, const std::string& name) = 0;

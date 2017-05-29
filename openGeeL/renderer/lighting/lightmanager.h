@@ -6,7 +6,7 @@
 #include <set>
 #include <string>
 #include <vec3.hpp>
-#include "../shadowmapping/shadowmapconf.h"
+#include "../shadowmapping/shadowmapconfig.h"
 
 #define MAX_POINTLIGHTS 5
 #define MAX_DIRECTIONALLIGHTS 5

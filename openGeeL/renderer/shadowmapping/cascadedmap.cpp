@@ -64,6 +64,7 @@ namespace geeL {
 
 	void CascadedDirectionalShadowMap::bindData(const Shader& shader, const std::string& name) {
 		shader.setFloat(name + "bias", shadowBias);
+		shader.setInteger(name + "type", (int)type);
 
 		for (unsigned int i = 0; i < MAPCOUNT; i++) {
 			shader.setMat4(name + "lightTransforms[" + std::to_string(i) + "]", shadowMaps[i].lightTransform);

@@ -11,7 +11,7 @@ struct PointLight {
 	float bias;
 	float farPlane;
 
-	bool useShadowmap;
+	int type; //0: No 1: Hard 2: Soft shadow
 };
 
 struct SpotLight {
@@ -27,7 +27,7 @@ struct SpotLight {
     float outerAngle;
 	float bias;
 
-	bool useShadowmap;
+	int type; //0: No 1: Hard 2: Soft shadow
 	bool useCookie;
 };
 
@@ -42,7 +42,7 @@ struct DirectionalLight {
     vec3 diffuse;
 
 	float bias;
-	bool useShadowmap;
+	int type; //0: No 1: Hard 2: Soft shadow
 };
 
 struct ReflectionProbe {
@@ -259,7 +259,7 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal,
 
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
 		viewDirection, light.position, light.diffuse, albedo, roughness, metallic);
-	float shadow = light.useShadowmap ? 1.0f - calculatePointLightShadows(index, normal, fragPosition) : 1.f;
+	float shadow = 1.f - calculatePointLightShadows(index, normal, fragPosition);
 	
     return shadow * reflectance;
 }
@@ -278,8 +278,8 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal,
 		viewDirection, light.position, light.diffuse, albedo, roughness, metallic);
 
 	vec3 coords = vec3(0.f);
-	float shadow = light.useShadowmap ? 1.0f - calculateSpotLightShadows(index, normal, fragPosition, coords) : 1.f;
-	float cookie = texture(light.cookie, coords.xy).r * float(light.useCookie);
+	float shadow = 1.f - calculateSpotLightShadows(index, normal, fragPosition, coords);
+	float cookie = light.useCookie ? texture(light.cookie, coords.xy).r : 1.f;
 
     return shadow * reflectance * intensity * cookie;
 }
@@ -289,7 +289,7 @@ vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal,
 	
 	vec3 reflectance = calculateReflectanceDirectional(fragPosition, normal, 
 		viewDirection, light.direction, light.diffuse, albedo, roughness, metallic);
-	float shadow = light.useShadowmap ? 1.f - calculateDirectionalLightShadows(index, normal, fragPosition) : 1.f;
+	float shadow = 1.f - calculateDirectionalLightShadows(index, normal, fragPosition);
 	
     return shadow * reflectance;
 }
@@ -431,18 +431,30 @@ vec2 sampleDirections2D[16] = vec2[](
 
 float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 
+	//No shadow
+	if(pointLights[i].type == 0)
+		return 0.f;
+	
 	vec4 posLightSpace = inverseView * vec4(origin + fragPosition - pointLights[i].position, 1);
 	vec3 direction = posLightSpace.xyz;
 	float curDepth = length(direction) / pointLights[i].farPlane;
 
 	//Dont' draw shadow when too far away from the viewer or from light
 	float camDistance = length(fragPosition) / pointLights[i].farPlane;
-	if(camDistance > 10.0f || curDepth > 1.f)
-		return 0.0f;
+	if(camDistance > 10.f || curDepth > 1.f)
+		return 0.f;
 	else {
 		float minBias = pointLights[i].bias;
 		vec3 dir = normalize(pointLights[i].position - fragPosition);
 		float bias = max((minBias * 10.f) * (1.f - abs(dot(norm, dir))), minBias);
+
+		//Hard shadow
+		if(pointLights[i].type == 1) {
+			float depth = texture(pointLights[i].shadowMap, direction).r;
+			return curDepth - bias > depth ? 1.f : 0.f; 
+		}
+
+		//Soft shadow
 
 		vec2 size = textureSize(pointLights[i].shadowMap, 0);
 		float mag = (size.x + size.y) * 0.035f;
@@ -476,9 +488,14 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 }
 
 float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 coords) {
+
 	vec4 posLightSpace = spotLights[i].lightTransform * inverseView * vec4(fragPosition, 1.0f);
 	coords = posLightSpace.xyz / posLightSpace.w;
 	coords = coords * 0.5f + 0.5f;
+
+	//No shadow. Called after coordinate computation since these are needed for light cookie regardless
+	if(spotLights[i].type == 0.f)
+		return 0.f;
 
 	//Don't draw shadow when outside of farPlane region.
     if(coords.z > 1.f)
@@ -488,6 +505,14 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 
 		vec3 lightDir =  spotLights[i].position - fragPosition;
 		float bias = max((minBias * 10.0f) * (1.0f - dot(norm, lightDir)), minBias);
 		float curDepth = coords.z - bias;
+
+		//Hard shadow
+		if(spotLights[i].type == 1) {
+			float depth = texture(spotLights[i].shadowMap, coords.xy).r;
+			return curDepth - bias > depth ? 1.f : 0.f; 
+		}
+
+		//Soft shadow
 
 		float shadow = 0.f;
 		vec2 texelSize = 0.5f / textureSize(spotLights[i].shadowMap, 0);
@@ -504,6 +529,11 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 
 }
 
 float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
+
+	if(directionalLights[i].type == 0)
+		return 0.f;
+
+	//TODO: implement hard shadows
 
 	int smIndex = 0;
 	float xOffset = 0;

@@ -1,6 +1,7 @@
 #ifndef SHADOWMAP_H
 #define SHADOWMAP_H
 
+#include "shadowmapconfig.h"
 #include "../lighting/light.h"
 
 namespace geeL {
@@ -8,7 +9,8 @@ namespace geeL {
 	class ShadowMap {
 
 	public:
-		ShadowMap(const Light& light) : light(light) {}
+		ShadowMap(const Light& light, ShadowMapType type = ShadowMapType::Soft) 
+			: light(light), type(type) {}
 
 		virtual void bindData(const Shader& shader, const std::string& name) = 0;
 		virtual void bindMap(Shader& shader, const std::string& name) = 0;
@@ -23,6 +25,7 @@ namespace geeL {
 		virtual unsigned int getID() const = 0;
 
 	protected:
+		const ShadowMapType type;
 		const Light& light;
 
 	};

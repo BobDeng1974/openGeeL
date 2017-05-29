@@ -38,10 +38,11 @@ namespace geeL {
 
 	void Light::bind(const Camera& camera, const Shader& shader, const std::string& name, ShaderTransformSpace space) const {
 		shader.setVector3(name + "diffuse", diffuse);
-		shader.setInteger(name + "useShadowmap", (shadowMap != nullptr));
 
 		if (shadowMap != nullptr)
 			shadowMap->bindData(shader, name);
+		else
+			shader.setInteger(name + "type", 0);
 	}
 			
 

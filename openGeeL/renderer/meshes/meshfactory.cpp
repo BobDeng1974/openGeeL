@@ -209,7 +209,7 @@ namespace geeL {
 				vertex.normal = vector;
 			}
 			else
-				vertex.normal = glm::vec3(0.f, 0.f, 0.f);
+				vertex.normal = glm::vec3(0.f);
 
 			if (mesh->mTangents != nullptr) {
 				vector.x = mesh->mTangents[i].x;
@@ -219,7 +219,7 @@ namespace geeL {
 				vertex.tangent = vector;
 			}
 			else
-				vertex.tangent = glm::vec3(0.f, 0.f, 0.f);
+				vertex.tangent = glm::vec3(0.f);
 
 			if (mesh->mBitangents != nullptr) {
 				vector.x = mesh->mBitangents[i].x;
@@ -229,7 +229,7 @@ namespace geeL {
 				vertex.bitangent = vector;
 			}
 			else
-				vertex.bitangent = glm::vec3(0.f, 0.f, 0.f);
+				vertex.bitangent = glm::vec3(0.f);
 
 			//Check for texture coordinates
 			if (mesh->mTextureCoords[0]) {
