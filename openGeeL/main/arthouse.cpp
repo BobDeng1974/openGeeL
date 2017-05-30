@@ -164,7 +164,7 @@ void ArthouseScene::draw() {
 	TransformFactory transFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(2.93f, 0.71f, -0.59f), vec3(90.f, 76.86f, 179.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
+	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 45.f, window.width, window.height, 0.1f, 100.f);
 
 	MaterialFactory materialFactory = MaterialFactory();
 	MeshFactory meshFactory = MeshFactory(materialFactory);
@@ -220,7 +220,7 @@ void ArthouseScene::draw() {
 	SystemInformation sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
 	gui.addElement(sysInfo);
 
-	renderer.addGUIRenderer(&gui);
+	//renderer.addGUIRenderer(&gui);
 	
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR();

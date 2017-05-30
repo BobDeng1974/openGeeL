@@ -7,7 +7,7 @@ out vec4 color;
 const float PI = 3.14159265359;
 const float epsilon = 0.002f;
 const int maxSteps = 50;
-const int sceneID = 3;
+const int sceneID = 1;
 
 const vec2 resolution = vec2(1920, 1080);
 

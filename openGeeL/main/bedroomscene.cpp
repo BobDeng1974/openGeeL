@@ -116,21 +116,22 @@ namespace {
 
 		virtual void init() {
 
-			float lightIntensity = 100.f;
-
+			float lightIntensity = 50.f;
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(0.01f, 9.4f, -0.1f), vec3(-180.0f, 0, -50), vec3(1.f), true);
-			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity * 0.69, lightIntensity * 0.32, lightIntensity * 0.22), defPLShadowMapConfig);
+			ShadowMapConfiguration config = ShadowMapConfiguration(0.0001f, ShadowMapType::Hard, ShadowmapResolution::Huge, 100.f);
+			lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity * 0.69, lightIntensity * 0.32, lightIntensity * 0.22), config);
 
 			lightIntensity = 100.f;
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
 
-			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-23.4f, 18.6f, -8.7f), vec3(123.1f, 58.5f, -23), vec3(1.f), true);
-			spotLight3 = &lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity * 0.79f, lightIntensity * 0.8f, lightIntensity * 0.54f), angle, outerAngle, defSLShadowMapConfig);
+			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-23.4f, 19.69f, -8.7f), vec3(123.4f, 58.5f, 2.9f), vec3(1.f), true);
+			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.0001f, ShadowMapType::Hard, ShadowmapResolution::Huge, 100.f);
+			spotLight3 = &lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity * 0.85f, lightIntensity * 0.87f, lightIntensity * 0.66f), angle, outerAngle, config2);
 
 			float scale = 0.05f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(scale));
-			MeshRenderer& bedroom = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/bedroom/Bedroom.obj"),
+			MeshRenderer& bedroom = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/bedroom/Bedroom2.obj"),
 				meshTransform2, CullingMode::cullFront, "Bedroom");
 			scene.addMeshRenderer(bedroom);
 		}
@@ -168,7 +169,7 @@ void BedroomScene::draw() {
 	scene.setPhysics(&physics);
 
 	BilateralFilter blur = BilateralFilter(1, 0.7f);
-	DefaultPostProcess def = DefaultPostProcess(5.f);
+	DefaultPostProcess def = DefaultPostProcess(9.f);
 	SSAO ssao = SSAO(blur, 10.f);
 	RenderContext context = RenderContext();
 	DeferredLighting lighting = DeferredLighting(scene);
@@ -183,7 +184,7 @@ void BedroomScene::draw() {
 	BRDFIntegrationMap brdfInt = BRDFIntegrationMap();
 	CubeMapFactory cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
 
-	Transform& probeTransform = transFactory.CreateTransform(vec3(0.5f, 7.1f, 2.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	Transform& probeTransform = transFactory.CreateTransform(vec3(0.5f, 7.1f, 5.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024, 20, 20, 20);
 
 	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv3/Tropical_Beach_3k.hdr");
@@ -203,7 +204,6 @@ void BedroomScene::draw() {
 	renderer.addObject(&testScene);
 	renderer.initObjects();
 
-
 	GUIRenderer gui = GUIRenderer(window, context);
 	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
 	objectLister.add(camera);
@@ -212,45 +212,34 @@ void BedroomScene::draw() {
 	gui.addElement(postLister);
 	SystemInformation sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
 	gui.addElement(sysInfo);
-	renderer.addGUIRenderer(&gui);
+	//renderer.addGUIRenderer(&gui);
 
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR();
 	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.5f, 0.5f);
 	
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 5.f, 100.f, 0.3f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 4.f, 100.f, 0.3f);
 
-	FXAA fxaa = FXAA();
-
-	BloomFilter filter = BloomFilter();
-	GaussianBlur& blur5 = GaussianBlur();
-	Bloom bloom = Bloom(filter, blur5, 0.4f, 0.2f);
-
-	SobelFilter sobel = SobelFilter(15);
-	SobelBlur sobelBlur = SobelBlur(sobel);
-	VolumetricLight vol = VolumetricLight(*spotLight3, 1.5f, 14.f, 250);
-	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.25f, 0.2f);
-
-	ColorCorrection colorCorrect = ColorCorrection();
+	GaussianBlur ayy = GaussianBlur();
+	VolumetricLight vol = VolumetricLight(*spotLight3, 0.7f, 14.f, 250);
+	BlurredPostEffect volSmooth = BlurredPostEffect(vol, ayy, 0.25f, 0.2f);
 
 	postLister.add(def);
 	postLister.add(ssao);
 
 	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
-	//renderer.addEffect(volSmooth, { &vol, &sobelBlur });
+	renderer.addEffect(volSmooth, { &vol});
 	scene.addRequester(vol);
 	postLister.add(volSmooth, lightSnippet);
 
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 
-	//renderer.addEffect(dof, dof);
-	//postLister.add(dof);
+	renderer.addEffect(dof, dof);
+	postLister.add(dof);
 
-	renderer.addEffect(colorCorrect);
-	postLister.add(colorCorrect);
-
+	FXAA fxaa = FXAA();
 	renderer.addEffect(fxaa);
 
 	renderer.linkInformation();

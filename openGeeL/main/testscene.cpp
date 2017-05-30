@@ -130,7 +130,7 @@ namespace {
 			ImageTexture& texture = materialFactory.CreateTexture("resources/textures/cookie.png", 
 				ColorType::GammaSpace, WrapMode::Repeat, FilterMode::Linear);
 
-			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-9, 5, 0), vec3(-264.0f, 0, -5), vec3(1.f));
+			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(0.9f, 5, -22.f), vec3(96.f, -0.1f, -5), vec3(1.f));
 			spotLight = &lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle, defSLShadowMapConfig);
 			spotLight->setLightCookie(texture);
 
@@ -140,7 +140,7 @@ namespace {
 
 			float height = -2.f;
 			
-			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(100.2f, 0.2f, 100.2f));
+			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(20.f, 0.2f, 20.f));
 			MeshRenderer& plane = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/plane.obj"),
 				meshTransform2, CullingMode::cullFront, "Floor");
 
@@ -148,17 +148,17 @@ namespace {
 			if (physics != nullptr) physics->addPlane(vec3(0.f, 1.f, 0.f), meshTransform2, RigidbodyProperties(0.f, false));
 
 			plane.iterateMaterials([&](MaterialContainer& container) {
-				container.setFloatValue("Roughness", 0.35f);
+				container.setFloatValue("Roughness", 0.25f);
 				container.setFloatValue("Metallic", 0.f);
 				container.setVectorValue("Color", vec3(0.4f, 0.4f, 0.4f));
 			});
 
-			Transform& meshTransform3 = transformFactory.CreateTransform(vec3(-9.f, -3.f, 11.0f), vec3(0.5f, 0.5f, 0.5f), vec3(0.3f));
-			MeshRenderer& box1 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/empire/EmpireState_lp.obj"),
+			Transform& meshTransform3 = transformFactory.CreateTransform(vec3(-9.f, -3.f, -10.0f), vec3(0.5f, 0.5f, 0.5f), vec3(0.3f));
+			MeshRenderer& state = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/empire/EmpireState_lp.obj"),
 				meshTransform3, CullingMode::cullFront, "Empire State");
-			scene.addMeshRenderer(box1);
+			//scene.addMeshRenderer(state);
 
-			box1.iterateMaterials([&](MaterialContainer& container) {
+			state.iterateMaterials([&](MaterialContainer& container) {
 				container.setFloatValue("Roughness", 0.5f);
 				container.setVectorValue("Color", vec3(0.5f, 0.5f, 0.5f));
 			});
@@ -167,7 +167,7 @@ namespace {
 			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 2.f, 4.f), vec3(0.f), vec3(1.f));
 			MeshRenderer& sphere1 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/sphere.obj"),
 				meshTransform4, CullingMode::cullFront, "Sphere");
-			scene.addMeshRenderer(sphere1);
+			//scene.addMeshRenderer(sphere1);
 			//if (physics != nullptr) physics->addSphere(1.f, meshTransform4, RigidbodyProperties(10.f, false));
 			//if (physics != nullptr) physics->addMesh(sphere1.getModel(), meshTransform4, RigidbodyProperties(10.f, false));
 
@@ -181,7 +181,7 @@ namespace {
 			Transform& meshTransform5 = transformFactory.CreateTransform(vec3(0.0f, 0.5f, -2.0f), vec3(0.5f, 0.5f, 0.5f), vec3(5.2f, 2.2f, 1.2f));
 			MeshRenderer& box = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/cube.obj"),
 				meshTransform5, CullingMode::cullFront, "Box");
-			scene.addMeshRenderer(box);
+			//scene.addMeshRenderer(box);
 
 			box.iterateMaterials([&](MaterialContainer& container) {
 				container.setFloatValue("Roughness", 0.3f);

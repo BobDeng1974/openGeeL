@@ -126,6 +126,12 @@ namespace {
 			MeshRenderer& deer = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/deer/scene2.obj"),
 				meshTransform2, CullingMode::cullFront, "Deer");
 			scene.addMeshRenderer(deer);
+
+
+			deer.iterateMaterials([&](MaterialContainer& container) {
+				container.setFloatValue("Metallic", 0.2f);
+			});
+
 		}
 
 		virtual void draw(const SceneCamera& camera) {}
@@ -137,7 +143,7 @@ namespace {
 
 void DeerScene::draw() {
 
-	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Fullscreen);
+	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
 	InputManager manager = InputManager();
 	manager.defineButton("Forward", GLFW_KEY_W);
 	manager.defineButton("Forward", GLFW_KEY_A);
@@ -146,7 +152,7 @@ void DeerScene::draw() {
 	TransformFactory transFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(-0.03f, 0.17f, 2.66f), vec3(-91.59f, 2.78f, -3.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 25.f, window.width, window.height, 0.1f, 100.f);
+	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 1.f, 0.45f, 25.f, window.width, window.height, 0.01f, 100.f);
 
 	MaterialFactory materialFactory = MaterialFactory();
 	MeshFactory meshFactory = MeshFactory(materialFactory);

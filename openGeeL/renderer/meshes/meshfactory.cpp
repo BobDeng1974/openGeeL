@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include <mat4x4.hpp>
 #include "../../dependencies/assimp/Importer.hpp"
 #include "../../dependencies/assimp/scene.h"
@@ -300,14 +301,14 @@ namespace geeL {
 				mat.setColor(glm::vec3(0.5f));
 
 			if (AI_SUCCESS == material->Get(AI_MATKEY_COLOR_SPECULAR, buffer)) {
-				float specular = (buffer.r + buffer.g + buffer.b) / 3.f;
+				float specular = std::min((buffer.r + buffer.g + buffer.b) / 3.f, 1.f);
 				mat.setRoughness(1.f - specular);
 			}
 			else
 				mat.setRoughness(0.4f);
 
 			if (AI_SUCCESS == material->Get(AI_MATKEY_COLOR_EMISSIVE, buffer)) {
-				float metallic = (buffer.r + buffer.g + buffer.b) / 3.f;
+				float metallic = std::min((buffer.r + buffer.g + buffer.b) / 3.f, 1.f);
 				mat.setMetallic(metallic);
 			}
 			else

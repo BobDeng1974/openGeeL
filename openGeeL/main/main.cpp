@@ -6,10 +6,10 @@
 #include "deerscene.h"
 
 int main() {
-	//ArthouseScene::draw();
-	//BedroomScene::draw();
+	BedroomScene::draw();
+	//DeerScene::draw();
 	//ScieneScene::draw();
-	DeerScene::draw();
+	//ArthouseScene::draw();
 
 	//RenderTest::draw();
 	//RaymarchTest::draw();

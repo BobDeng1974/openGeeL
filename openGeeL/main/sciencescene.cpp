@@ -212,7 +212,7 @@ void ScieneScene::draw() {
 	SystemInformation sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
 	gui.addElement(sysInfo);
 
-	renderer.addGUIRenderer(&gui);
+	//renderer.addGUIRenderer(&gui);
 	
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR();
@@ -221,18 +221,10 @@ void ScieneScene::draw() {
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.3f);
 	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 5.f, 100.f, 0.3f);
 
-	FXAA fxaa = FXAA();
-
-	BloomFilter filter = BloomFilter();
-	GaussianBlur& blur5 = GaussianBlur();
-	Bloom bloom = Bloom(filter, blur5, 0.4f, 0.2f);
-
 	SobelFilter sobel = SobelFilter(15);
 	SobelBlur sobelBlur = SobelBlur(sobel);
 	VolumetricLight vol = VolumetricLight(*spotLight2, 0.05f, 6.f, 100);
 	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.3f, 0.3f);
-
-	ColorCorrection colorCorrect = ColorCorrection();
 
 	postLister.add(def);
 	postLister.add(ssao);
@@ -248,9 +240,7 @@ void ScieneScene::draw() {
 	renderer.addEffect(dof, dof);
 	postLister.add(dof);
 
-	renderer.addEffect(colorCorrect);
-	postLister.add(colorCorrect);
-
+	FXAA fxaa = FXAA();
 	renderer.addEffect(fxaa);
 
 	renderer.linkInformation();

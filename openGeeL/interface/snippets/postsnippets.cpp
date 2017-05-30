@@ -145,7 +145,7 @@ namespace geeL {
 	}
 
 	void SSAOSnippet::draw(GUIContext* context) {
-		float radius = GUISnippets::drawBarFloat(context, ssao.getRadius(), 0.5f, 25.f, 0.1f, "Radius");
+		float radius = GUISnippets::drawBarFloat(context, ssao.getRadius(), 0.5f, 100.f, 0.1f, "Radius");
 		ssao.setRadius(radius);
 	}
 
