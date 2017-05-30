@@ -4,12 +4,14 @@
 #include "bedroomscene.h"
 #include "arthouse.h"
 #include "deerscene.h"
+#include "sponzascene.h"
 
 int main() {
-	BedroomScene::draw();
+	//BedroomScene::draw();
 	//DeerScene::draw();
 	//ScieneScene::draw();
 	//ArthouseScene::draw();
+	SponzaScene::draw();
 
 	//RenderTest::draw();
 	//RaymarchTest::draw();

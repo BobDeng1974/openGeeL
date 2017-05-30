@@ -324,9 +324,14 @@ namespace geeL {
 			loadMaterialTextures(textures, material, aiTextureType_DIFFUSE, MapType::Diffuse, directory, ColorType::GammaSpace);
 			loadMaterialTextures(textures, material, aiTextureType_SPECULAR, MapType::Specular, directory, ColorType::RGBA);
 			loadMaterialTextures(textures, material, aiTextureType_HEIGHT, MapType::Normal, directory, ColorType::RGBA);
-			loadMaterialTextures(textures, material, aiTextureType_AMBIENT, MapType::Reflection, directory, ColorType::RGBA);
+			//loadMaterialTextures(textures, material, aiTextureType_AMBIENT, MapType::Reflection, directory, ColorType::RGBA);
 			loadMaterialTextures(textures, material, aiTextureType_EMISSIVE, MapType::Metallic, directory, ColorType::RGBA);
 		}
+	}
+
+	bool endsWith(const std::string& str, const std::string& suffix) {
+		return str.size() >= suffix.size() &&
+			str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
 	}
 
 
@@ -337,9 +342,13 @@ namespace geeL {
 			aiString str;
 			mat->GetTexture(aiType, i, &str);
 
-			string fileName = directory + "/" + string(str.C_Str());
+			std::string name = string(str.C_Str());
+			//Dirty quick fix to detect linear spaced TGA images
+			ColorType ct = (type == MapType::Diffuse && endsWith(name, ".tga")) ? ColorType::RGBA : colorType;
+
+			string fileName = directory + "/" + name;
 			TextureMap& texture = factory.CreateTextureMap(fileName, type, 
-				colorType, WrapMode::Repeat, FilterMode::Bilinear);
+				ct, WrapMode::Repeat, FilterMode::Bilinear);
 			textures.push_back(&texture);
 		}
 	}
