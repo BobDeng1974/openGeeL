@@ -2,7 +2,7 @@
 #define SHADOWMAP_H
 
 #include "shadowmapconfig.h"
-#include "../lighting/light.h"
+#include "../lights/light.h"
 
 namespace geeL {
 

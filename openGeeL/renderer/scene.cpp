@@ -14,7 +14,7 @@
 #include "cubemapping\skybox.h"
 #include "utility\screeninfo.h"
 #include "physics\physics.h"
-#include "lighting\lightmanager.h"
+#include "lights\lightmanager.h"
 #include "pipeline.h"
 #include "transformation\transform.h"
 #include "utility\worldinformation.h"

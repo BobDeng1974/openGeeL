@@ -8,7 +8,7 @@
 #include <vec4.hpp>
 #include "../shader/shader.h"
 #include "../cameras/camera.h"
-#include "../lighting/light.h"
+#include "../lights/light.h"
 #include "../transformation/transform.h"
 #include "cascadedmap.h"
 #include <iostream>

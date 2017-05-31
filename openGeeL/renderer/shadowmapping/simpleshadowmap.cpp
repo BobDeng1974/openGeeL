@@ -6,9 +6,9 @@
 #include "../utility/screeninfo.h"
 #include "../shader/shader.h"
 #include "../transformation/transform.h"
-#include "../lighting/spotlight.h"
-#include "../lighting/pointlight.h"
-#include "../lighting/directionallight.h"
+#include "../lights/spotlight.h"
+#include "../lights/pointlight.h"
+#include "../lights/directionallight.h"
 #include "simpleshadowmap.h"
 #include <iostream>
 

@@ -2,7 +2,7 @@
 #define SCENERENDER_H
 
 #include "../utility/worldinformation.h"
-#include "postprocessing.h"
+#include "../postprocessing/postprocessing.h"
 
 namespace geeL {
 

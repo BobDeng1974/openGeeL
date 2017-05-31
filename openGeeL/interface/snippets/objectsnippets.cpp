@@ -5,7 +5,7 @@
 #include "../../renderer/materials/defaultmaterial.h"
 #include "../../renderer/materials/genericmaterial.h"
 #include "../../renderer/meshes/meshrenderer.h"
-#include "../../renderer/lighting/light.h"
+#include "../../renderer/lights/light.h"
 #include  "../../renderer/sceneobject.h"
 #include "../snippets/guisnippets.h"
 #include "../guiwrapper.h"

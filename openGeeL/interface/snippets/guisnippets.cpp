@@ -1,6 +1,6 @@
 #include "../../renderer/materials/defaultmaterial.h"
 #include "../../renderer/materials/genericmaterial.h"
-#include "../../renderer/lighting/light.h"
+#include "../../renderer/lights/light.h"
 #include "../../renderer/transformation/transform.h"
 #include "../guiwrapper.h"
 #include "guisnippets.h"

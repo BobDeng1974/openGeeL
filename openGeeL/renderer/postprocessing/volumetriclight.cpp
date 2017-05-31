@@ -1,5 +1,5 @@
 #include "../transformation/transform.h"
-#include "../lighting/spotlight.h"
+#include "../lights/spotlight.h"
 #include "volumetriclight.h"
 #include "../scene.h"
 #include "../shader/sceneshader.h"

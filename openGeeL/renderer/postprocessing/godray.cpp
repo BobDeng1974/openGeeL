@@ -2,7 +2,7 @@
 #include <glew.h>
 #include <gtc/matrix_transform.hpp>
 #include "../transformation/transform.h"
-#include "../lighting/directionallight.h"
+#include "../lights/directionallight.h"
 #include "../cameras/camera.h"
 #include "../primitives/screenquad.h"
 #include "../scene.h"

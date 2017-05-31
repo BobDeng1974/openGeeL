@@ -14,10 +14,10 @@
 #include "../postprocessing/ssao.h"
 #include "../postprocessing/postprocessing.h"
 #include "../cameras/camera.h"
-#include "../lighting/lightmanager.h"
+#include "../lights/lightmanager.h"
 #include "../scene.h"
 #include "../../interface/guirenderer.h"
-#include "../postprocessing/deferredlighting.h"
+#include "../lighting/deferredlighting.h"
 #include "deferredrenderer.h"
 
 #define fps 10
