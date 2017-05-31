@@ -13,6 +13,7 @@ namespace geeL {
 	class ColorCorrection;
 	class DefaultPostProcess;
 	class DepthOfFieldBlurred;
+	class FXAA;
 	class GodRay;
 	class SSAO;
 	class VolumetricLight;
@@ -32,6 +33,7 @@ namespace geeL {
 		void add(Bloom& bloom);
 		void add(ColorCorrection& color);
 		void add(DepthOfFieldBlurred& dof);
+		void add(FXAA& fxaa);
 		void add(GodRay& ray);
 		void add(VolumetricLight& light);
 		void add(SSAO& ssao);

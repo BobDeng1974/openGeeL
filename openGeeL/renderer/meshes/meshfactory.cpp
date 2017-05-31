@@ -348,7 +348,7 @@ namespace geeL {
 
 			string fileName = directory + "/" + name;
 			TextureMap& texture = factory.CreateTextureMap(fileName, type, 
-				ct, WrapMode::Repeat, FilterMode::Bilinear);
+				ct, WrapMode::Repeat, FilterMode::Bilinear, AnisotropicFilter::Medium);
 			textures.push_back(&texture);
 		}
 	}

@@ -70,6 +70,11 @@ namespace geeL {
 		snippets.push_back(snippet);
 	}
 
+	void PostProcessingEffectLister::add(FXAA& fxaa) {
+		FXAASnippet* snippet = new FXAASnippet(fxaa);
+		snippets.push_back(snippet);
+	}
+
 	void PostProcessingEffectLister::add(GodRay& ray) {
 		GodRaySnippet* snippet = new GodRaySnippet(ray);
 		snippets.push_back(snippet);

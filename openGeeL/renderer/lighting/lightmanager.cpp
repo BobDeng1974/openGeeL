@@ -57,7 +57,7 @@ namespace geeL {
 		dirLights.push_back(std::move(d));
 
 		if (config.useShadowMap()) {
-			//SimpleDirectionalLightMap* map = new SimpleDirectionalLightMap(*light, shadowBias, 100.f);
+			//SimpleDirectionalLightMap* map = new SimpleDirectionalLightMap(*light, config.shadowBias, 100.f);
 			CascadedDirectionalShadowMap* map = new CascadedDirectionalShadowMap(*light, camera, config.shadowBias, 1024, 1024);
 			light->setShadowMap(*map);
 		}

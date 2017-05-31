@@ -6,6 +6,7 @@
 #include "../../renderer/postprocessing/dof.h"
 #include "../../renderer/postprocessing/godray.h"
 #include "../../renderer/postprocessing/ssao.h"
+#include "../../renderer/postprocessing/fxaa.h"
 #include "../../renderer/postprocessing/volumetriclight.h"
 #include "postsnippets.h"
 #include <iostream>
@@ -22,6 +23,8 @@ namespace geeL {
 	BloomSnippet::BloomSnippet(Bloom& bloom) : bloom(bloom) {}
 
 	DepthOfFieldBlurredSnippet::DepthOfFieldBlurredSnippet(DepthOfFieldBlurred& dof) : dof(dof) {}
+
+	FXAASnippet::FXAASnippet(FXAA& fxaa) : fxaa(fxaa) {}
 
 	GodRaySnippet::GodRaySnippet(GodRay& ray) : ray(ray) {}
 
@@ -113,6 +116,23 @@ namespace geeL {
 
 	std::string DepthOfFieldBlurredSnippet::toString() const {
 		return "Depth of Field";
+	}
+
+
+	void FXAASnippet::draw(GUIContext* context) {
+		float blurMin = GUISnippets::drawBarFloat(context, fxaa.getBlurMin(), 0.f, 0.5f, 0.0001f, "Blur Min");
+		fxaa.setBlurMin(blurMin);
+
+		float fxaaMin = GUISnippets::drawBarFloat(context, fxaa.getFXAAMin(), 0.f, 0.5f, 0.0001f, "FXAA Min");
+		fxaa.setFXAAMin(fxaaMin);
+
+		float fxaaClamp = GUISnippets::drawBarFloat(context, fxaa.getFXAAClamp(), 1.f, 16.f, 0.1f, "FXAA Clamp");
+		fxaa.setFXAAClamp(fxaaClamp);
+
+	}
+
+	std::string FXAASnippet::toString() const {
+		return "FXAA";
 	}
 
 

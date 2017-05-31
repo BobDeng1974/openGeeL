@@ -6,9 +6,10 @@ out vec4 color;
 
 uniform sampler2D image;
 
-const float FXAA_CLAMP = 8.f;
-const float FXAA_MIN = 1.f / 128.f;
-const float BLUR_MIN = 0.05f;
+uniform float FXAA_CLAMP;
+uniform float FXAA_MIN;
+uniform float BLUR_MIN;
+
 const vec3  luminance = vec3(0.299f, 0.587f, 0.114f);
 
 void main() {

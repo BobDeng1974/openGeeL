@@ -10,6 +10,7 @@ namespace geeL {
 	class ColorCorrection;
 	class DefaultPostProcess;
 	class DepthOfFieldBlurred;
+	class FXAA;
 	class GodRay;
 	class SSAO;
 	class VolumetricLight;
@@ -83,6 +84,19 @@ namespace geeL {
 
 	private:
 		DepthOfFieldBlurred& dof;
+
+	};
+
+	class FXAASnippet : public GUISnippet {
+
+	public:
+		FXAASnippet(FXAA& fxaa);
+
+		virtual void draw(GUIContext* context);
+		virtual std::string toString() const;
+
+	private:
+		FXAA& fxaa;
 
 	};
 
