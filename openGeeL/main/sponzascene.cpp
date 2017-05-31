@@ -106,7 +106,7 @@ namespace {
 		MeshFactory& meshFactory;
 		Physics* physics;
 
-		MeshRenderer* nanoRenderer;
+		PointLight* point;
 
 
 		TestScene6(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
@@ -117,24 +117,38 @@ namespace {
 
 
 		virtual void init() {
-
-			float lightIntensity = 100.f;
-			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(11.7f, 0.6f, -1.1f), vec3(-180.0f, 0, -50), vec3(1.f), true);
+			float lightIntensity = 3500.f;
+			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-2.4f, 45.6f, -4.6f), vec3(0.f), vec3(1.f), true);
 			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Huge, 100.f);
-			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.15f , lightIntensity *0.14f, lightIntensity*0.12f), config);
+			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f , lightIntensity * 0.9f, lightIntensity * 0.9f), config);
 
-			Transform& lightTransform3 = transformFactory.CreateTransform(vec3(-0.3f, 5.f, -0.5f), vec3(-180.0f, 0, -50), vec3(1.f), true);
-			&lightManager.addPointLight(lightTransform3, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config);
+			lightIntensity = 0.5f;
+			Transform& lightTransform3 = transformFactory.CreateTransform(vec3(15.15f, 0.62f, -5.11f), vec3(0.f), vec3(1.f), true);
+			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::High, 100.f);
+			&lightManager.addPointLight(lightTransform3, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config2);
+
+			Transform& lightTransform4 = transformFactory.CreateTransform(vec3(-8.15f, 0.62f, 4.48f), vec3(0.f), vec3(1.f), true);
+			&lightManager.addPointLight(lightTransform4, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config2);
+
+			lightIntensity = 55.f;
+			Transform& lightTransform5 = transformFactory.CreateTransform(vec3(2.55f, 3.62f, 4.08f), vec3(0.f), vec3(1.f));
+			ShadowMapConfiguration config3 = ShadowMapConfiguration(0.001f, ShadowMapType::Hard, ShadowmapResolution::High, 100.f);
+			point = &lightManager.addPointLight(lightTransform5, glm::vec3(lightIntensity *0.148f, lightIntensity *0.0625f, lightIntensity*0.125f), config3);
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.01f));
 			MeshRenderer& sponz = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
 				meshTransform6, CullingMode::cullFront, "Sponza");
 			scene.addMeshRenderer(sponz);
-
 		}
 
+		float step = 0.01f;
 		virtual void draw(const SceneCamera& camera) {
+			vec3 position = point->transform.getPosition();
 
+			if (position.x > 12.5f || position.x < -7.f)
+				step = -step;
+
+			point->transform.translate(vec3(step, 0.f, 0.f));
 		}
 
 		virtual void quit() {}
@@ -142,10 +156,9 @@ namespace {
 }
 
 
-
 void SponzaScene::draw() {
 	
-	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
+	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Fullscreen);
 	InputManager manager = InputManager();
 	manager.defineButton("Forward", GLFW_KEY_W);
 	manager.defineButton("Forward", GLFW_KEY_A);
@@ -153,21 +166,19 @@ void SponzaScene::draw() {
 	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	TransformFactory transFactory = TransformFactory(world);
 
-	geeL::Transform& cameraTransform = Transform(vec3(-9.34f, -0.34f, -0.44f), vec3(-90.f, -90.f, 0.f), vec3(1.f, 1.f, 1.f));
+	geeL::Transform& cameraTransform = Transform(vec3(-7.36f, 4.76f, -1.75f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
 
 	MaterialFactory materialFactory = MaterialFactory();
 	MeshFactory meshFactory = MeshFactory(materialFactory);
 	LightManager lightManager = LightManager();
 	RenderPipeline shaderManager = RenderPipeline(materialFactory);
-	
 	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
-	WorldPhysics physics = WorldPhysics();
-	//scene.setPhysics(&physics);
+	Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 
 	BilateralFilter blur = BilateralFilter(1, 0.7f);
-	DefaultPostProcess def = DefaultPostProcess();
-	SSAO ssao = SSAO(blur, 2.f);
+	DefaultPostProcess def = DefaultPostProcess(4.f);
+	SSAO ssao = SSAO(blur, 2.5f);
 	RenderContext context = RenderContext();
 	DeferredLighting lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, materialFactory);
@@ -176,24 +187,27 @@ void SponzaScene::draw() {
 
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 		[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
-
+	
 	CubeBuffer cubeBuffer = CubeBuffer();
 	BRDFIntegrationMap brdfInt = BRDFIntegrationMap();
 	CubeMapFactory cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
 
-	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
-	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 1024);
-	IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
+	Transform& probeTransform = transFactory.CreateTransform(vec3(15.15f, 0.62f, -4.11f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024);
+
+	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv4/MonValley_G_DirtRoad_3k.hdr");
+	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 256);
+	//IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
 	Skybox skybox = Skybox(envCubeMap);
 	scene.setSkybox(skybox);
-	lightManager.addReflectionProbe(iblMap);
+	lightManager.addReflectionProbe(probe);
 	
 	renderer.setScene(scene);
 	scene.addRequester(ssao);
 
 	SceneControlObject& testScene = TestScene6(materialFactory, meshFactory, 
-		lightManager, shaderManager, scene, transFactory, &physics);
+		lightManager, shaderManager, scene, transFactory, nullptr);
 
 	renderer.addObject(&testScene);
 	renderer.initObjects();
@@ -208,30 +222,22 @@ void SponzaScene::draw() {
 	gui.addElement(sysInfo);
 	renderer.addGUIRenderer(&gui);
 	
-	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
-	GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 35);
-	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
-
-	GaussianBlur& blur4 = GaussianBlur();
-	SSRR& ssrr = SSRR();
-	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.3f, 0.3f);
-	
-	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 8.f, 100.f, 0.3f);
-
-	
 	postLister.add(def);
 	postLister.add(ssao);
 
+	GaussianBlur& blur4 = GaussianBlur();
+	SSRR& ssrr = SSRR();
+	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.8f, 0.8f);
+	renderer.addEffect(ssrrSmooth, ssrr);
+	scene.addRequester(ssrr);
+
+	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
+	GodRay& ray = GodRay(vec3(-2.4f, 45.6f, -4.6f), 35);
+	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
 	GodRaySnippet godRaySnippet = GodRaySnippet(ray);
 	renderer.addEffect(raySmooth);
 	scene.addRequester(ray);
 	postLister.add(raySmooth, godRaySnippet);
-
-	//renderer.addEffect(ssrrSmooth, ssrr);
-	//scene.addRequester(ssrr);
-	//renderer.addEffect(dof, dof);
-	//postLister.add(dof);
 
 	FXAA fxaa = FXAA();
 	//renderer.addEffect(fxaa);

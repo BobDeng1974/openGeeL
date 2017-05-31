@@ -241,6 +241,7 @@ void BedroomScene::draw() {
 
 	FXAA fxaa = FXAA();
 	renderer.addEffect(fxaa);
+	postLister.add(fxaa);
 
 	renderer.linkInformation();
 	renderer.render();
