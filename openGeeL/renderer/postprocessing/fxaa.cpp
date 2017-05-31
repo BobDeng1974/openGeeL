@@ -2,21 +2,26 @@
 
 namespace geeL {
 
-	FXAA::FXAA(float blurMin, float fxaaMin, float fxaaClamp)
+	FXAA::FXAA(float minColorDiff, float fxaaMul, float fxaaMin, float fxaaClamp)
 		: PostProcessingEffect("renderer/postprocessing/fxaa.frag"), 
-			blurMin(blurMin), fxaaMin(fxaaMin), fxaaClamp(fxaaClamp) {}
+			blurMin(minColorDiff), fxaaMul(fxaaMul), fxaaMin(fxaaMin), fxaaClamp(fxaaClamp) {}
 
 
 	void FXAA::init(ScreenQuad& screen, const FrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
-		shader.setFloat("BLUR_MIN", blurMin);
+		shader.setFloat("DIFF_THRESHOLD", blurMin);
+		shader.setFloat("FXAA_REDUCE_MUL", fxaaMul);
 		shader.setFloat("FXAA_MIN", fxaaMin);
 		shader.setFloat("FXAA_CLAMP", fxaaClamp);
 	}
 
 	float FXAA::getBlurMin() const {
 		return blurMin;
+	}
+
+	float FXAA::getFXAAMul() const {
+		return fxaaMul;
 	}
 
 	float FXAA::getFXAAMin() const {
@@ -32,12 +37,21 @@ namespace geeL {
 			blurMin = value;
 
 			shader.use();
-			shader.setFloat("BLUR_MIN", blurMin);
+			shader.setFloat("DIFF_THRESHOLD", blurMin);
+		}
+	}
+
+	void FXAA::setFXAAMul(float value) {
+		if (fxaaMul != value && value >= 0.f && value <= 1.f) {
+			fxaaMul = value;
+
+			shader.use();
+			shader.setFloat("FXAA_REDUCE_MUL", fxaaMul);
 		}
 	}
 
 	void FXAA::setFXAAMin(float value) {
-		if (fxaaMin != value && value >= 0.f && value <= 1.f) {
+		if (fxaaMin != value && value >= 0.f) {
 			fxaaMin = value;
 
 			shader.use();
@@ -46,7 +60,7 @@ namespace geeL {
 	}
 
 	void FXAA::setFXAAClamp(float value) {
-		if (fxaaClamp != value && value >= 0.f && value <= 10.f) {
+		if (fxaaClamp != value && value >= 0.f) {
 			fxaaClamp = value;
 
 			shader.use();

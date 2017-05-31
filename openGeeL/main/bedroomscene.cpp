@@ -243,7 +243,7 @@ void BedroomScene::draw() {
 	renderer.addEffect(dof, dof);
 	postLister.add(dof);
 
-	FXAA fxaa = FXAA();
+	FXAA fxaa = FXAA(0.f, 0.f);
 	renderer.addEffect(fxaa);
 	postLister.add(fxaa);
 

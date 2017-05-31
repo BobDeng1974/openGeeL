@@ -7,8 +7,9 @@ out vec4 color;
 uniform sampler2D image;
 
 uniform float FXAA_CLAMP;
+uniform float FXAA_REDUCE_MUL;
 uniform float FXAA_MIN;
-uniform float BLUR_MIN;
+uniform float DIFF_THRESHOLD;
 
 const vec3  luminance = vec3(0.299f, 0.587f, 0.114f);
 
@@ -29,13 +30,13 @@ void main() {
 		(lumaTL + lumaBL) - (lumaTR + lumaBR));
 
 	//Only blur if threshold for blur direction is reached
-	if(length(blurDirection) < BLUR_MIN) {
+	if(length(blurDirection) < DIFF_THRESHOLD) {
 		color = vec4(texture2D(image, TexCoords).rgb, 1.0f);
 		return;
 	}
 	else {
 		//Scale min value with mean luminance
-		float minValue = max((lumaTL + lumaTR + lumaBL + lumaBR) * (0.25f * FXAA_MIN), 0.001f); 
+		float minValue = max((lumaTL + lumaTR + lumaBL + lumaBR) * (0.25f * FXAA_REDUCE_MUL), FXAA_MIN); 
 		float normalize = 1.f / min(abs(blurDirection.x + minValue), abs(blurDirection.y) + minValue);
 
 		blurDirection = blurDirection * normalize;
@@ -47,13 +48,12 @@ void main() {
 			(texture2D(image, TexCoords + (vec2(-0.15f) * blurDirection)).rgb + 
 			texture2D(image, TexCoords + (vec2(0.15f) * blurDirection)).rgb);
 
-		vec3 result2 = 0.5f * 
+		vec3 result2 = result1 * 0.5f + 0.25f * 
 			(texture2D(image, TexCoords + (vec2(-0.6f) * blurDirection)).rgb + 
 			texture2D(image, TexCoords + (vec2(0.6f) * blurDirection)).rgb);
 
 		float lumaResult = dot(luminance, result2);
 
-	
 		if(lumaResult > lumaMin && lumaResult < lumaMax)
 			color = vec4(result2, 1.0f);
 		else

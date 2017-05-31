@@ -244,7 +244,8 @@ void SponzaScene::draw() {
 	postLister.add(raySmooth, godRaySnippet);
 
 	FXAA fxaa = FXAA();
-	//renderer.addEffect(fxaa);
+	renderer.addEffect(fxaa);
+	postLister.add(fxaa);
 
 	renderer.linkInformation();
 	renderer.render();

@@ -120,15 +120,17 @@ namespace geeL {
 
 
 	void FXAASnippet::draw(GUIContext* context) {
-		float blurMin = GUISnippets::drawBarFloat(context, fxaa.getBlurMin(), 0.f, 0.5f, 0.0001f, "Blur Min");
+		float blurMin = GUISnippets::drawBarFloat(context, fxaa.getBlurMin(), 0.f, 0.1f, 0.0001f, "Blur Min");
 		fxaa.setBlurMin(blurMin);
 
-		float fxaaMin = GUISnippets::drawBarFloat(context, fxaa.getFXAAMin(), 0.f, 0.5f, 0.0001f, "FXAA Min");
+		float fxaaMul = GUISnippets::drawBarFloat(context, fxaa.getFXAAMul(), 0.f, 0.5f, 0.0001f, "FXAA Factor");
+		fxaa.setFXAAMul(fxaaMul);
+
+		float fxaaMin = GUISnippets::drawBarFloat(context, fxaa.getFXAAMin(), 0.f, 0.001f, 0.0001f, "FXAA Min");
 		fxaa.setFXAAMin(fxaaMin);
 
-		float fxaaClamp = GUISnippets::drawBarFloat(context, fxaa.getFXAAClamp(), 1.f, 16.f, 0.1f, "FXAA Clamp");
+		float fxaaClamp = GUISnippets::drawBarFloat(context, fxaa.getFXAAClamp(), 1.f, 32.f, 0.1f, "FXAA Clamp");
 		fxaa.setFXAAClamp(fxaaClamp);
-
 	}
 
 	std::string FXAASnippet::toString() const {

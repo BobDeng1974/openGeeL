@@ -212,7 +212,7 @@ void DeerScene::draw() {
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 
-	FXAA fxaa = FXAA();
+	FXAA fxaa = FXAA(0.f, 0.f);
 	renderer.addEffect(fxaa);
 
 	renderer.linkInformation();

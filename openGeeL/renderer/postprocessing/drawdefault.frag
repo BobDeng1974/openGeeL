@@ -21,5 +21,5 @@ void main() {
 	result = pow(result.rgb, vec3(0.4545f));
 	
 	float dither = texture(noiseMap, TexCoords * noiseScale.xy).r * 0.003f;
-	color = vec4(result + dither, 1.0f);
+	color = vec4(result + dither, 1.f);
 }
