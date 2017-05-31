@@ -31,10 +31,12 @@ namespace geeL {
 		ImageTexture() {}
 		ImageTexture(const ImageTexture& texture);
 		ImageTexture(const char* fileName, ColorType colorType = ColorType::RGBA,
-			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest);
+			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest, 
+			AnisotropicFilter filter = AnisotropicFilter::Medium);
 
 		ImageTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height,
-			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest);
+			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest,
+			AnisotropicFilter filter = AnisotropicFilter::Medium);
 
 		virtual unsigned int getID() const;
 		virtual void remove();
@@ -55,7 +57,8 @@ namespace geeL {
 		TextureMap(const TextureMap& map);
 		TextureMap(const char* fileName, 
 			MapType textureTpe = MapType::Diffuse, ColorType colorType = ColorType::RGBA,
-			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest);
+			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest,
+			AnisotropicFilter filter = AnisotropicFilter::Medium);
 
 		virtual void bind(const Shader& shader, std::string name, int texLayer = 0) const;
 		virtual void draw(const Shader& shader, int texLayer = 0) const;

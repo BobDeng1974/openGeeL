@@ -1,8 +1,11 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <limits.h>
 #include "texture.h"
 
 namespace geeL {
+
+	AnisotropicFilter Texture::maxAnisotropy;
 
 	void Texture::initColorType(ColorType type, int width, int height, unsigned char* image) {
 		switch (type) {
@@ -55,23 +58,34 @@ namespace geeL {
 
 	void Texture::initWrapMode(WrapMode mode) {
 		switch (mode) {
-		case WrapMode::Repeat:
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			case WrapMode::Repeat:
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+					break;
+			case WrapMode::MirrorRepeat:
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 				break;
-		case WrapMode::MirrorRepeat:
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-			break;
-		case WrapMode::ClampEdge:
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			break;
-		case WrapMode::ClampBorder:
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-			break;
+			case WrapMode::ClampEdge:
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+				break;
+			case WrapMode::ClampBorder:
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+				break;
 		}
+	}
+
+	void Texture::initAnisotropyFilter(AnisotropicFilter filter) {
+		float maxValue = 0.f;
+		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxValue);
+
+		maxValue = std::fmin(maxValue, (float)filter);
+		maxValue = std::fmin(maxValue, (float)maxAnisotropy);
+
+		if(maxValue > 0.f)
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxValue);
 	}
 
 	void Texture::mipmap() const {
@@ -90,6 +104,11 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
+
+	
+	void Texture::setMaxAnisotropyAmount(AnisotropicFilter value) {
+		maxAnisotropy = value;
 	}
 
 }

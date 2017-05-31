@@ -13,7 +13,7 @@ namespace geeL {
 	ImageTexture::ImageTexture(const ImageTexture& texture) 
 		: path(texture.path), id(texture.getID()) {}
 
-	ImageTexture::ImageTexture(const char* fileName, ColorType colorType, WrapMode wrapMode, FilterMode filterMode)
+	ImageTexture::ImageTexture(const char* fileName, ColorType colorType, WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter)
 		: path(fileName) {
 		
 		int imgWidth, imgHeight;
@@ -28,20 +28,22 @@ namespace geeL {
 
 		Texture::initWrapMode(wrapMode);
 		Texture::initFilterMode(filterMode);
+		Texture::initAnisotropyFilter(filter);
 
 		stbi_image_free(image);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	ImageTexture::ImageTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height,
-		WrapMode wrapMode, FilterMode filterMode) {
+		WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter) {
 
 		glGenTextures(1, &id);
 		glBindTexture(GL_TEXTURE_2D, id);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, &colors[0]);
 
 		Texture::initFilterMode(filterMode);
-		Texture::initWrapMode(wrapMode),
+		Texture::initWrapMode(wrapMode);
+		Texture::initAnisotropyFilter(filter);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
@@ -57,8 +59,9 @@ namespace geeL {
 
 	TextureMap::TextureMap(const TextureMap& map) : ImageTexture(map), type(map.type) {}
 
-	TextureMap::TextureMap(const char* fileName, MapType type, ColorType colorType, WrapMode wrapMode, FilterMode filterMode)
-		: ImageTexture(fileName, colorType, wrapMode, filterMode), type(type) {}
+	TextureMap::TextureMap(const char* fileName, MapType type, ColorType colorType, 
+		WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter)
+			: ImageTexture(fileName, colorType, wrapMode, filterMode, filter), type(type) {}
 
 
 	void TextureMap::bind(const Shader& shader, std::string name, int texLayer) const {

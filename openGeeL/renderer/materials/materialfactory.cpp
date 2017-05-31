@@ -29,19 +29,19 @@ namespace geeL {
 
 
 	ImageTexture& MaterialFactory::CreateTexture(std::string filePath, ColorType colorType,
-		WrapMode wrapMode, FilterMode filterMode) {
+		WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter) {
 
 		if (textures.find(filePath) == textures.end())
-			textures[filePath] = ImageTexture(filePath.c_str(), colorType, wrapMode, filterMode);
+			textures[filePath] = ImageTexture(filePath.c_str(), colorType, wrapMode, filterMode, filter);
 
 		return textures[filePath];
 	}
 
 	TextureMap& MaterialFactory::CreateTextureMap(string filePath, MapType type, ColorType colorType, 
-		WrapMode wrapMode, FilterMode filterMode) {
+		WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter) {
 		
 		if (textureMaps.find(filePath) == textureMaps.end())
-			textureMaps[filePath] = TextureMap(filePath.c_str(),  type, colorType, wrapMode, filterMode);
+			textureMaps[filePath] = TextureMap(filePath.c_str(),  type, colorType, wrapMode, filterMode, filter);
 
 		return textureMaps[filePath];
 	}
