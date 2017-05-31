@@ -40,6 +40,7 @@
 #include "../renderer/meshes/skinnedrenderer.h"
 #include "../renderer/meshes/meshfactory.h"
 
+#include "../renderer/lighting/ibl.h"
 #include "../renderer/lighting/deferredlighting.h"
 #include "../renderer/postprocessing/postprocessing.h"
 #include "../renderer/postprocessing/colorcorrection.h"
@@ -211,8 +212,10 @@ void ScieneScene::draw() {
 	gui.addElement(postLister);
 	SystemInformation sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
 	gui.addElement(sysInfo);
-
 	//renderer.addGUIRenderer(&gui);
+
+	ImageBasedLighting ibl = ImageBasedLighting(scene);
+	renderer.addEffect(ibl, ibl);
 	
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR();

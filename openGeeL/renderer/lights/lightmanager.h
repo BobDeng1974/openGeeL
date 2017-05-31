@@ -72,13 +72,16 @@ namespace geeL {
 		IBLMap& addReflectionProbe(const IBLMap& probe);
 
 		void removeReflectionProbe(DynamicCubeMap& probe);
+
+		//Add all reflection probes to given shader
+		void addReflectionProbes(Shader& shader) const;
 		void bindReflectionProbes(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const;
 		void drawReflectionProbes() const;
 
 		void bind(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const;
 		void bind(const Camera& camera, const SceneShader& shader) const;
 
-		void bindReflectionProbes(Shader& shader) const;
+		
 		void bindShadowMaps(Shader& shader) const;
 
 		void bindShadowmap(Shader& shader, DirectionalLight& light) const;

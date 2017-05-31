@@ -19,11 +19,11 @@
 
 #include "../renderer/cameras/camera.h"
 #include "../renderer/cameras/perspectivecamera.h"
-#include "../renderer/lighting/light.h"
-#include "../renderer/lighting/lightmanager.h"
-#include "../renderer/lighting/pointlight.h"
-#include "../renderer/lighting/directionallight.h"
-#include "../renderer/lighting/spotlight.h"
+#include "../renderer/lights/light.h"
+#include "../renderer/lights/lightmanager.h"
+#include "../renderer/lights/pointlight.h"
+#include "../renderer/lights/directionallight.h"
+#include "../renderer/lights/spotlight.h"
 #include "../renderer/renderer/deferredrenderer.h"
 
 #include "../renderer/transformation/transform.h"
@@ -40,7 +40,8 @@
 #include "../renderer/meshes/skinnedrenderer.h"
 #include "../renderer/meshes/meshfactory.h"
 
-#include "../renderer/postprocessing/deferredlighting.h"
+#include "../renderer/lighting/ibl.h"
+#include "../renderer/lighting/deferredlighting.h"
 #include "../renderer/postprocessing/postprocessing.h"
 #include "../renderer/postprocessing/colorcorrection.h"
 #include "../renderer/postprocessing/gammacorrection.h"
@@ -290,9 +291,11 @@ void RenderTest::draw() {
 	gui.addElement(postLister);
 	SystemInformation sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
 	gui.addElement(sysInfo);
-
 	renderer.addGUIRenderer(&gui);
 	
+	ImageBasedLighting ibl = ImageBasedLighting(scene);
+	renderer.addEffect(ibl, ibl);
+
 	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 	GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 15);
 	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);

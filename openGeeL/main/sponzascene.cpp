@@ -41,6 +41,7 @@
 #include "../renderer/meshes/meshfactory.h"
 
 #include "../renderer/lighting/deferredlighting.h"
+#include "../renderer/lighting/ibl.h"
 #include "../renderer/postprocessing/postprocessing.h"
 #include "../renderer/postprocessing/colorcorrection.h"
 #include "../renderer/postprocessing/gammacorrection.h"
@@ -224,6 +225,9 @@ void SponzaScene::draw() {
 	
 	postLister.add(def);
 	postLister.add(ssao);
+
+	ImageBasedLighting ibl = ImageBasedLighting(scene);
+	renderer.addEffect(ibl, ibl);
 
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR();

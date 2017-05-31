@@ -316,10 +316,8 @@ namespace geeL {
 
 		//Init all post processing effects with two alternating framebuffers
 		//Current effect will then always read from one and write to the other
-		if (effects.size() % 2 == 0)
-			effect.setBuffer(frameBuffer1);
-		else
-			effect.setBuffer(frameBuffer2);
+		const ColorBuffer& buffer = (effects.size() % 2 == 0) ? frameBuffer1 : frameBuffer2;
+		effect.setBuffer(buffer);
 	}
 
 

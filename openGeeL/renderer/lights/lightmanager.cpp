@@ -164,6 +164,15 @@ namespace geeL {
 		reflectionProbes.remove(&probe);
 	}
 
+	void LightManager::addReflectionProbes(Shader& shader) const {
+		shader.use();
+
+		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
+			DynamicCubeMap& probe = **it;
+			probe.add(shader, "skybox.");
+		}
+	}
+
 	void LightManager::bindReflectionProbes(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const {
 		shader.use();
 
@@ -260,14 +269,7 @@ namespace geeL {
 			light.addShadowmap(shader, binding->getName() + "shadowMap");
 	}
 
-	void LightManager::bindReflectionProbes(Shader& shader) const {
-		shader.use();
-
-		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
-			DynamicCubeMap& probe = **it;
-			probe.add(shader, "skybox.");
-		}
-	}
+	
 
 	void LightManager::bindShadowMaps(Shader& shader) const {
 		shader.use();
