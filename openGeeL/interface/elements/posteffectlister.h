@@ -16,6 +16,7 @@ namespace geeL {
 	class FXAA;
 	class GodRay;
 	class SSAO;
+	class SSRR;
 	class VolumetricLight;
 
 	class PostProcessingEffectLister : public GUIElement {
@@ -37,6 +38,7 @@ namespace geeL {
 		void add(GodRay& ray);
 		void add(VolumetricLight& light);
 		void add(SSAO& ssao);
+		void add(SSRR& ssrr);
 
 	private:
 		std::list<GUISnippet*> snippets;

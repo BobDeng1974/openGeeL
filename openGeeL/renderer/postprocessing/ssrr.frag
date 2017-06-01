@@ -11,6 +11,10 @@ uniform sampler2D gPositionDepth;
 uniform sampler2D gNormalMet;
 uniform sampler2D gSpecular;
 
+uniform int stepCount = 60;
+uniform	float stepSize = 0.2f;
+uniform	float stepGain = 1.02f;
+
 uniform mat4 projection;
 uniform int effectOnly;
 
@@ -63,15 +67,14 @@ void main() {
 }
 
 vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal) {
-	int stepCount = 60;
-	float stepSize = 0.2f;
-	float stepGain = 1.02f;
+	
+	float _stepSize = stepSize; 
 
 	vec3 reflectionColor = vec3(0.f);
 	vec3 currPosition = fragPos;
 	int i = 0;
 	while(i < stepCount) {
-		currPosition = currPosition + reflectionDir * stepSize;
+		currPosition = currPosition + reflectionDir * _stepSize;
 		float depth = currPosition.z;
 		
 		vec4 currPosProj = transformToClip(currPosition);
@@ -90,7 +93,7 @@ vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal) {
 			float angle = abs(dot(normalize(sampledPosition - fragPos), normalize(reflectionDir)));
 			if(angle > 0.9995f || abs(currDepth - depth) < 0.3f) {
 
-				vec3 left  = currPosition - reflectionDir * stepSize;
+				vec3 left  = currPosition - reflectionDir * _stepSize;
 				vec3 right = currPosition;
 				for(int i = 0; i < 5; i++) {
 				
@@ -110,15 +113,15 @@ vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal) {
 				vec3 reflectedNormal = normalize(texture(gNormalMet, currPosProj.xy).rgb);
 				float dotNR = abs(dot(normal, reflectedNormal));
 
-				//Discard if surface normal and reflected surface normal are too similar. In this case
-				//the backside of reflected surface should be used, but isn't visible to viewer
+				//Discard when surface normal and reflected surface normal are too similar. In this case
+				//the backside of reflected surface should have been used, but isn't visible to viewer
 				reflectionColor = step(dotNR, 0.33f) * texture(image, currPosProj.xy).rgb;
 
 				break;
 			}
 		}
 
-		stepSize *= stepGain;
+		_stepSize *= stepGain;
 		i++;
 	}
 

@@ -234,6 +234,8 @@ void SponzaScene::draw() {
 	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.8f, 0.8f);
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
+	SSRRSnippet ssrrSnippet = SSRRSnippet(ssrr);
+	postLister.add(ssrrSmooth, ssrrSnippet);
 
 	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 	GodRay& ray = GodRay(vec3(-2.4f, 45.6f, -4.6f), 35);

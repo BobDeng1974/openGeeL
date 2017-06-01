@@ -6,6 +6,7 @@
 #include "../../renderer/postprocessing/dof.h"
 #include "../../renderer/postprocessing/godray.h"
 #include "../../renderer/postprocessing/ssao.h"
+#include "../../renderer/postprocessing/ssrr.h"
 #include "../../renderer/postprocessing/fxaa.h"
 #include "../../renderer/postprocessing/volumetriclight.h"
 #include "postsnippets.h"
@@ -31,6 +32,8 @@ namespace geeL {
 	VolumetricLightSnippet::VolumetricLightSnippet(VolumetricLight& light) : light(light) {}
 
 	SSAOSnippet::SSAOSnippet(SSAO& ssao) : ssao(ssao) {}
+
+	SSRRSnippet::SSRRSnippet(SSRR& ssrr) : ssrr(ssrr) {}
 
 
 	void DefaultSnippet::draw(GUIContext* context) {
@@ -166,6 +169,7 @@ namespace geeL {
 		return "Volumetric Light";
 	}
 
+
 	void SSAOSnippet::draw(GUIContext* context) {
 		float radius = GUISnippets::drawBarFloat(context, ssao.getRadius(), 0.5f, 100.f, 0.1f, "Radius");
 		ssao.setRadius(radius);
@@ -173,6 +177,22 @@ namespace geeL {
 
 	std::string SSAOSnippet::toString() const {
 		return "SSAO";
+	}
+
+
+	void SSRRSnippet::draw(GUIContext* context) {
+		unsigned int samples = GUISnippets::drawBarInteger(context, ssrr.getSampleCount(), 1, 200, 1, "Sample Count");
+		ssrr.setSampleCount(samples);
+
+		float size = GUISnippets::drawBarFloat(context, ssrr.getSampleSize(), 0.01f, 1.f, 0.001f, "Sample Size");
+		ssrr.setSampleSize(size);
+
+		float gain = GUISnippets::drawBarFloat(context, ssrr.getSampleSizeGain(), 1.f, 1.5f, 0.001f, "Sample Gain");
+		ssrr.setSampleSizeGain(gain);
+	}
+
+	std::string SSRRSnippet::toString() const {
+		return "Reflections(SSRR)";
 	}
 
 

@@ -89,4 +89,9 @@ namespace geeL {
 		SSAOSnippet* snippet = new SSAOSnippet(ssao);
 		snippets.push_back(snippet);
 	}
+
+	void PostProcessingEffectLister::add(SSRR& ssrr) {
+		SSRRSnippet* snippet = new SSRRSnippet(ssrr);
+		snippets.push_back(snippet);
+	}
 }

@@ -13,6 +13,7 @@ namespace geeL {
 	class FXAA;
 	class GodRay;
 	class SSAO;
+	class SSRR;
 	class VolumetricLight;
 	
 
@@ -139,6 +140,19 @@ namespace geeL {
 
 	private:
 		SSAO& ssao;
+
+	};
+
+	class SSRRSnippet : public GUISnippet {
+
+	public:
+		SSRRSnippet(SSRR& ssrr);
+
+		virtual void draw(GUIContext* context);
+		virtual std::string toString() const;
+
+	private:
+		SSRR& ssrr;
 
 	};
 
