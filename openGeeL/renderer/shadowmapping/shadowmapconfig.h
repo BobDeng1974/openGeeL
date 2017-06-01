@@ -11,9 +11,10 @@ namespace geeL {
 
 	enum class ShadowmapResolution {
 		Adaptive = 0,
-		Small = 128,
-		Medium = 256,
-		High = 512,
+		Tiny = 128,
+		Small = 256,
+		Medium = 512,
+		High = 768,
 		VeryHigh = 1024,
 		Huge = 4096
 	};

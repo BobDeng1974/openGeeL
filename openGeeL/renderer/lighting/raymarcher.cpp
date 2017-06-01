@@ -6,7 +6,7 @@
 namespace geeL {
 
 	RayMarcher::RayMarcher(RenderScene& scene) 
-		: SceneRender(scene, "renderer/postprocessing/raymarch.frag") {}
+		: SceneRender(scene, "renderer/lighting/raymarch.frag") {}
 
 
 	void RayMarcher::bindValues() {

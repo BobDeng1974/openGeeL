@@ -125,7 +125,7 @@ namespace {
 
 			lightIntensity = 0.5f;
 			Transform& lightTransform3 = transformFactory.CreateTransform(vec3(15.15f, 0.62f, -5.11f), vec3(0.f), vec3(1.f), true);
-			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::High);
+			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Medium);
 			&lightManager.addPointLight(lightTransform3, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config2);
 
 			Transform& lightTransform4 = transformFactory.CreateTransform(vec3(-8.15f, 0.62f, 4.48f), vec3(0.f), vec3(1.f), true);
@@ -133,7 +133,7 @@ namespace {
 
 			lightIntensity = 55.f;
 			Transform& lightTransform5 = transformFactory.CreateTransform(vec3(2.55f, 3.62f, 4.08f), vec3(0.f), vec3(1.f));
-			ShadowMapConfiguration config3 = ShadowMapConfiguration(0.001f, ShadowMapType::Soft, ShadowmapResolution::High, 8.f, 10);
+			ShadowMapConfiguration config3 = ShadowMapConfiguration(0.001f, ShadowMapType::Soft, ShadowmapResolution::High, 5.f, 10);
 			point = &lightManager.addPointLight(lightTransform5, glm::vec3(lightIntensity *0.148f, lightIntensity *0.0625f, lightIntensity*0.125f), config3);
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.01f));
@@ -238,7 +238,7 @@ void SponzaScene::draw() {
 	postLister.add(ssrrSmooth, ssrrSnippet);
 
 	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
-	GodRay& ray = GodRay(vec3(-2.4f, 45.6f, -4.6f), 35);
+	GodRay& ray = GodRay(vec3(-2.4f, 45.6f, -4.6f), 20);
 	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
 	GodRaySnippet godRaySnippet = GodRaySnippet(ray);
 	renderer.addEffect(raySmooth);

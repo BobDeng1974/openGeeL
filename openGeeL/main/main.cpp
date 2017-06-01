@@ -7,11 +7,11 @@
 #include "sponzascene.h"
 
 int main() {
-	//BedroomScene::draw();
+	BedroomScene::draw();
 	//DeerScene::draw();
 	//ScieneScene::draw();
 	//ArthouseScene::draw();
-	SponzaScene::draw();
+	//SponzaScene::draw();
 
 	//RenderTest::draw();
 	//RaymarchTest::draw();
