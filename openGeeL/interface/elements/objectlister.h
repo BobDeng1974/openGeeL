@@ -13,6 +13,8 @@ namespace geeL {
 	class MeshRenderer;
 	class Light;
 	class RenderScene;
+	class ShadowMapSnippet;
+	class SimpleShadowMap;
 
 	class ObjectLister : public GUIElement {
 
@@ -28,11 +30,15 @@ namespace geeL {
 		void add(PerspectiveCamera& cam);
 		void add(MeshRenderer& mesh);
 		void add(Light& light);
+		void add(Light& light, ShadowMapSnippet& mapSnippet);
+
+		ShadowMapSnippet& createSnippet(SimpleShadowMap& map);
 
 	private:
 		std::list<GUISnippet*> lightSnippets;
 		std::list<GUISnippet*> objectSnippets;
 		std::list<GUISnippet*> cameraSnippets;
+		std::list<GUISnippet*> otherSnippets;
 		RenderScene& scene;
 
 	};

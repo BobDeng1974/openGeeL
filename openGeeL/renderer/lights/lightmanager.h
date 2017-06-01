@@ -55,14 +55,14 @@ namespace geeL {
 
 		//Add and create directional light
 		DirectionalLight& addDirectionalLight(const SceneCamera& camera, 
-			Transform& transform, glm::vec3 diffuse, ShadowMapConfiguration config);
+			Transform& transform, glm::vec3 diffuse, const ShadowMapConfiguration& config);
 	
 		//Add and create point light
-		PointLight& addPointLight(Transform& transform, glm::vec3 diffuse, ShadowMapConfiguration config);
+		PointLight& addPointLight(Transform& transform, glm::vec3 diffuse, const ShadowMapConfiguration& config);
 	
 		//Add and create spotlight
 		SpotLight& addSpotlight(Transform& transform, glm::vec3 diffuse,
-			float angle, float outerAngle, ShadowMapConfiguration config);
+			float angle, float outerAngle, const ShadowMapConfiguration& config);
 
 		void removeLight(DirectionalLight& light);
 		void removeLight(PointLight& light);
@@ -92,6 +92,7 @@ namespace geeL {
 		void drawShadowmapsForced(const RenderScene& scene, const SceneCamera* const camera) const;
 		void drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera) const;
 
+		void iterLights(std::function<void(Light&)> function);
 		void iterDirectionalLights(std::function<void(DirectionalLight&)> function);
 		void iterPointLights(std::function<void(PointLight&)> function);
 		void iterSpotLights(std::function<void(SpotLight&)> function);

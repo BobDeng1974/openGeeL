@@ -15,6 +15,7 @@ namespace geeL {
 	class Shader;
 	class SceneShader;
 
+
 	//Class that can forward scene information into rendering pipeline
 	class RenderPipeline {
 

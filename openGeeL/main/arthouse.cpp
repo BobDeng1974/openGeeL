@@ -122,7 +122,7 @@ namespace {
 			float lightIntensity = 10.f;
 
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-0.9f, 1.9f, 0.4f), vec3(-180.0f, 0, -50), vec3(1.f, 1.f, 1.f), true);
-			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 100.f);
+			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Soft, ShadowmapResolution::Huge);
 			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config);
 
 			lightIntensity = 100.f;
@@ -133,7 +133,7 @@ namespace {
 				ColorType::GammaSpace, WrapMode::Repeat, FilterMode::Linear);
 
 			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-14.88f, 0.4f, -1.88f), vec3(90.f, -56.24f, 179.f), vec3(1.f, 1.f, 1.f), true);
-			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Huge, 100.f);
+			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Huge);
 			spotLight4 = &lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle, config2);
 			spotLight4->setLightCookie(texture);
 
@@ -220,7 +220,7 @@ void ArthouseScene::draw() {
 	gui.addElement(postLister);
 	SystemInformation sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
 	gui.addElement(sysInfo);
-	//renderer.addGUIRenderer(&gui);
+	renderer.addGUIRenderer(&gui);
 
 	ImageBasedLighting ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);

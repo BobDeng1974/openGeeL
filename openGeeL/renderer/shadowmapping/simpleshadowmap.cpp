@@ -16,10 +16,11 @@ using namespace glm;
 
 namespace geeL {
 
-	SimpleShadowMap::SimpleShadowMap(const Light& light, float shadowBias, float farPlane, ShadowMapType type, ShadowmapResolution resolution)
-		: ShadowMap(light, type), shadowBias(shadowBias), dynamicBias(shadowBias), farPlane(farPlane) {
+	SimpleShadowMap::SimpleShadowMap(const Light& light, const ShadowMapConfiguration& config)
+		: ShadowMap(light, config.type), shadowBias(config.shadowBias), dynamicBias(config.shadowBias), farPlane(config.farPlane), 
+			softShadowResolution(config.softShadowResolution), softShadowScale(config.softShadowScale) {
 		
-		setResolution(resolution);
+		setResolution(config.resolution);
 	}
 
 
@@ -53,6 +54,8 @@ namespace geeL {
 
 	void SimpleShadowMap::bindData(const Shader& shader, const std::string& name) {
 		shader.setFloat(name + "bias", dynamicBias);
+		shader.setInteger(name + "resolution", softShadowResolution);
+		shader.setFloat(name + "scale", softShadowScale);
 		shader.setInteger(name + "type", (int)type);
 	}
 
@@ -128,10 +131,28 @@ namespace geeL {
 			dynamicBias = bias;
 	}
 
+	int SimpleShadowMap::getSoftShadowResolution() const {
+		return softShadowResolution;
+	}
 
-	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight& light, float shadowBias, 
-		float farPlane, ShadowMapType type, ShadowmapResolution resolution)
-			: SimpleShadowMap(light, shadowBias, farPlane, type, resolution), spotLight(light) {
+	void SimpleShadowMap::setSoftShadowResolution(unsigned int resolution) {
+		if (resolution != softShadowResolution && resolution < 100)
+			softShadowResolution = resolution;
+	}
+
+
+	float SimpleShadowMap::getSoftShadowScale() const {
+		return softShadowScale;
+	}
+
+	void SimpleShadowMap::setSoftShadowScale(float scale) {
+		if (scale != softShadowScale && scale > 0.f)
+			softShadowScale = scale;
+	}
+
+
+	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config)
+		: SimpleShadowMap(light, config), spotLight(light) {
 	
 		init();
 	}
@@ -191,9 +212,8 @@ namespace geeL {
 	}
 
 
-	SimplePointLightMap::SimplePointLightMap(const PointLight& light, float shadowBias, 
-		float farPlane, ShadowMapType type, ShadowmapResolution resolution)
-			: SimpleShadowMap(light, shadowBias, farPlane, type, resolution), pointLight(light) {
+	SimplePointLightMap::SimplePointLightMap(const PointLight& light, const ShadowMapConfiguration& config)
+		: SimpleShadowMap(light, config), pointLight(light) {
 	
 		lightTransforms.reserve(6);
 		computeLightTransform();
@@ -316,9 +336,8 @@ namespace geeL {
 
 
 
-	SimpleDirectionalLightMap::SimpleDirectionalLightMap(const DirectionalLight& light, 
-		float shadowBias, float farPlane, ShadowMapType type, ShadowmapResolution resolution)
-			: SimpleShadowMap(light, shadowBias, farPlane, type, resolution), directionalLight(light) {
+	SimpleDirectionalLightMap::SimpleDirectionalLightMap(const DirectionalLight& light, const ShadowMapConfiguration& config)
+		: SimpleShadowMap(light, config), directionalLight(light) {
 	
 		setResolution(ShadowmapResolution::High);
 		init();

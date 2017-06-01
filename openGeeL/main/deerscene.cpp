@@ -120,7 +120,7 @@ namespace {
 			float lightIntensity = 7.f;
 
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-0.29f, 0.39f, 1.80f), vec3(-180.0f, 0, -50), vec3(1.f));
-			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Huge, 100.f);
+			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 2.f, 15);
 			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config);
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(0.1f, 0.1f, 0.1f));
@@ -197,6 +197,16 @@ void DeerScene::draw() {
 
 	renderer.addObject(&testScene);
 	renderer.initObjects();
+
+	GUIRenderer gui = GUIRenderer(window, context);
+	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
+	objectLister.add(camera);
+	gui.addElement(objectLister);
+	PostProcessingEffectLister postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
+	gui.addElement(postLister);
+	SystemInformation sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
+	gui.addElement(sysInfo);
+	renderer.addGUIRenderer(&gui);
 
 	ImageBasedLighting ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);

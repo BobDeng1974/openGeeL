@@ -11,6 +11,8 @@ struct PointLight {
 	float bias;
 	float farPlane;
 
+	int resolution;
+	float scale;
 	int type; //0: No 1: Hard 2: Soft shadow
 };
 
@@ -27,6 +29,8 @@ struct SpotLight {
     float outerAngle;
 	float bias;
 
+	int resolution;
+	float scale;
 	int type; //0: No 1: Hard 2: Soft shadow
 	bool useCookie;
 };
@@ -332,7 +336,7 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 		//Soft shadow
 
 		vec2 size = textureSize(pointLights[i].shadowMap, 0);
-		float mag = (size.x + size.y) * 0.035f;
+		float mag = (size.x + size.y) * (1.f / pow(pointLights[i].scale, 2));
 		float dist = length(fragPosition - pointLights[i].position);
 		float diskRadius = (1.f + (dist / 150.f)) / mag;
 
@@ -349,7 +353,7 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 			return testShadow;
 		else {
 			float shadow = 0.f;
-			int samples = 50;
+			int samples = pointLights[i].resolution;
 			for(int j = 0; j < samples; j++) {
 				int index = int(20.0f * random(floor(fragPosition.xyz * 1000.0f), j)) % 20;
 
@@ -390,8 +394,8 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 
 		//Soft shadow
 
 		float shadow = 0.f;
-		vec2 texelSize = 0.5f / textureSize(spotLights[i].shadowMap, 0);
-		int samples = 8;
+		vec2 texelSize = spotLights[i].scale / textureSize(spotLights[i].shadowMap, 0);
+		int samples = spotLights[i].resolution;
 		for(int j = 0; j < samples; j++) {
 			int index = int(20.0f * random(floor(fragPosition.xyz * 1000.0f), j)) % 20;
 

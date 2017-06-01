@@ -11,7 +11,6 @@ namespace geeL {
 	public:
 		FXAA(float minColorDiff = 0.01f, float fxaaMul = 0.125f, float fxaaMin = 0.00001f, float fxaaClamp = 8.f);
 
-
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
 		float getBlurMin() const;
@@ -24,11 +23,8 @@ namespace geeL {
 		void setFXAAMin(float value);
 		void setFXAAClamp(float value);
 
-
 	private:
 		float blurMin, fxaaMul, fxaaMin, fxaaClamp;
-
-
 
 	};
 }

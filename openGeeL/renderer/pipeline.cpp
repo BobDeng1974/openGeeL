@@ -3,7 +3,7 @@
 #include <list>
 #include "shader/sceneshader.h"
 #include "cameras/camera.h"
-#include "lighting/lightmanager.h"
+#include "lights/lightmanager.h"
 #include "materials/materialfactory.h"
 #include "scene.h"
 #include "pipeline.h"

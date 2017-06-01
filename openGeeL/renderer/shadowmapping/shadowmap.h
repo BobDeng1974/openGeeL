@@ -12,6 +12,7 @@ namespace geeL {
 		ShadowMap(const Light& light, ShadowMapType type = ShadowMapType::Soft) 
 			: light(light), type(type) {}
 
+
 		virtual void bindData(const Shader& shader, const std::string& name) = 0;
 		virtual void bindMap(Shader& shader, const std::string& name) = 0;
 		virtual void removeMap(Shader& shader) = 0;
@@ -24,11 +25,16 @@ namespace geeL {
 
 		virtual unsigned int getID() const = 0;
 
+		ShadowMapType getType() const {
+			return type;
+		}
+
 	protected:
 		const ShadowMapType type;
 		const Light& light;
 
 	};
+	
 }
 
 #endif

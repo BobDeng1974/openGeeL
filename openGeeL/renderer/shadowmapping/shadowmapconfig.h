@@ -26,11 +26,13 @@ namespace geeL {
 		const ShadowMapType type;
 		const float shadowBias;
 		const float farPlane;
+		const float softShadowScale;
+		const unsigned int softShadowResolution;
 		const ShadowmapResolution resolution;
 
 		ShadowMapConfiguration();
 		ShadowMapConfiguration(float bias, ShadowMapType type, ShadowmapResolution resolution = ShadowmapResolution::Adaptive,
-			float farPlane = 100);
+			float softShadowScale = 1.f, unsigned int softShadowResolution = 8, float farPlane = 100);
 
 		bool useShadowMap() const;
 
@@ -38,7 +40,7 @@ namespace geeL {
 
 
 	static ShadowMapConfiguration noShadowMapConfig    = ShadowMapConfiguration();
-	static ShadowMapConfiguration defPLShadowMapConfig = ShadowMapConfiguration(0.0001f, ShadowMapType::Soft);
+	static ShadowMapConfiguration defPLShadowMapConfig = ShadowMapConfiguration(0.0001f, ShadowMapType::Soft, ShadowmapResolution::Adaptive, 4.f, 16);
 	static ShadowMapConfiguration defSLShadowMapConfig = ShadowMapConfiguration(0.0001f, ShadowMapType::Soft);
 	static ShadowMapConfiguration defDLShadowMapConfig = ShadowMapConfiguration(0.00002f, ShadowMapType::Soft);
 

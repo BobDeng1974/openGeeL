@@ -7,6 +7,7 @@
 #include "../../renderer/lights/spotlight.h"
 #include "../../renderer/lights/pointlight.h"
 #include "../../renderer/lights/lightmanager.h"
+#include "../../renderer/shadowmapping/simpleshadowmap.h"
 #include "../../renderer/scene.h"
 #include "../snippets/objectsnippets.h"
 #include "../guiwrapper.h"
@@ -23,19 +24,23 @@ namespace geeL {
 			add(renderer);
 		});
 
-		
 		LightManager& manager = scene.lightManager;
+		manager.iterLights([this](Light& light) {
+			ShadowMapSnippet* snippet = nullptr;
 
-		manager.iterDirectionalLights([this](DirectionalLight& light) {
-			add(light);
-		});
+			//Hacky: Read specific shadow map type via casting
+			ShadowMap* map = light.getShadowMap();
+			if (map != nullptr) {
+				SimpleShadowMap* simpleMap = static_cast<SimpleShadowMap*>(map);
 
-		manager.iterPointLights([this](PointLight& light) {
-			add(light);
-		});
+				if (simpleMap != nullptr)
+					snippet = &createSnippet(*simpleMap);
+			}
 
-		manager.iterSpotLights([this](SpotLight& light) {
-			add(light);
+			if (snippet != nullptr)
+				add(light, *snippet);
+			else
+				add(light);
 		});
 	}
 
@@ -47,6 +52,9 @@ namespace geeL {
 			delete *it;
 
 		for (auto it = cameraSnippets.begin(); it != cameraSnippets.end(); it++)
+			delete *it;
+
+		for (auto it = otherSnippets.begin(); it != otherSnippets.end(); it++)
 			delete *it;
 	}
 
@@ -115,5 +123,17 @@ namespace geeL {
 	void ObjectLister::add(Light& light) {
 		LightSnippet* snippet = new LightSnippet(light);
 		lightSnippets.push_back(snippet);
+	}
+
+	void ObjectLister::add(Light& light, ShadowMapSnippet& mapSnippet) {
+		LightSnippet* snippet = new LightSnippet(light, mapSnippet);
+		lightSnippets.push_back(snippet);
+	}
+
+	ShadowMapSnippet& ObjectLister::createSnippet(SimpleShadowMap& map) {
+		ShadowMapSnippet* snippet = new ShadowMapSnippet(map);
+		otherSnippets.push_back(snippet);
+
+		return *snippet;
 	}
 }

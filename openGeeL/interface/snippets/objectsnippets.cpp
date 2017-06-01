@@ -7,6 +7,7 @@
 #include "../../renderer/meshes/meshrenderer.h"
 #include "../../renderer/lights/light.h"
 #include  "../../renderer/sceneobject.h"
+#include "../../renderer/shadowmapping/simpleshadowmap.h"
 #include "../snippets/guisnippets.h"
 #include "../guiwrapper.h"
 #include "objectsnippets.h"
@@ -76,7 +77,12 @@ namespace geeL {
 	}
 
 
-	LightSnippet::LightSnippet(Light& light) : SceneObjectSnippet(light), light(light) {}
+	LightSnippet::LightSnippet(Light& light) 
+		: SceneObjectSnippet(light), light(light), snippet(nullptr) {}
+
+	LightSnippet::LightSnippet(Light& light, ShadowMapSnippet& snippet) 
+		: SceneObjectSnippet(light), light(light), snippet(&snippet) {}
+
 
 	void LightSnippet::draw(GUIContext* context) {
 
@@ -87,9 +93,9 @@ namespace geeL {
 			vec3 color = light.getColor();
 			GUISnippets::drawColor(context, color);
 			light.setColor(color);
-
-			//float bias = GUISnippets::drawBarFloat(context, light.getShadowBias(), 0.f, 0.02f, 0.0001f, "Shadow Bias");
-			//light.setShadowBias(bias);
+			
+			if (snippet != nullptr)
+				snippet->draw(context);
 			
 			nk_tree_pop(context);
 		}
@@ -141,5 +147,32 @@ namespace geeL {
 
 	std::string PerspectiveCameraSnippet::toString() const {
 		return "Perspective Camera";
+	}
+
+
+	ShadowMapSnippet::ShadowMapSnippet(SimpleShadowMap& map) : map(map) {}
+
+	void ShadowMapSnippet::draw(GUIContext* context) {
+		ShadowMapType type = map.getType();
+		
+		if (type != ShadowMapType::None) {
+			nk_label(context, "Shadow Map", NK_TEXT_LEFT);
+
+			float bias = GUISnippets::drawBarFloat(context, map.getShadowBias(), 0.f, 0.02f, 0.0001f, "Shadow Bias");
+			map.setShadowBias(bias);
+
+
+			if (type == ShadowMapType::Soft) {
+				int resolution = GUISnippets::drawBarInteger(context, map.getSoftShadowResolution(), 1, 100, 1, "Resolution");
+				map.setSoftShadowResolution(resolution);
+
+				float scale = GUISnippets::drawBarFloat(context, map.getSoftShadowScale(), 0.f, 20.f, 0.1f, "Scale");
+				map.setSoftShadowScale(scale);
+			}
+		}
+	}
+
+	std::string ShadowMapSnippet::toString() const {
+		return "Shadow Map";
 	}
 }

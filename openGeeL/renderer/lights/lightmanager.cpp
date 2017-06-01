@@ -48,7 +48,7 @@ namespace geeL {
 	}
 
 	DirectionalLight& LightManager::addDirectionalLight(const SceneCamera& camera, Transform& transform, 
-		vec3 diffuse, ShadowMapConfiguration config) {
+		vec3 diffuse, const ShadowMapConfiguration& config) {
 		
 		DirectionalLight* light = new DirectionalLight(transform, diffuse);
 		
@@ -67,7 +67,7 @@ namespace geeL {
 	}
 
 	
-	PointLight& LightManager::addPointLight(Transform& transform, vec3 diffuse, ShadowMapConfiguration config) {
+	PointLight& LightManager::addPointLight(Transform& transform, vec3 diffuse, const ShadowMapConfiguration& config) {
 		PointLight* light = new PointLight(transform, diffuse);
 		
 		size_t index = pointLights.size();
@@ -75,8 +75,7 @@ namespace geeL {
 		pointLights.push_back(std::move(p));
 
 		if (config.useShadowMap()) {
-			SimplePointLightMap* map = new SimplePointLightMap(*light, config.shadowBias, 
-				config.farPlane, config.type, config.resolution);
+			SimplePointLightMap* map = new SimplePointLightMap(*light, config);
 			light->setShadowMap(*map);
 		}
 		
@@ -85,7 +84,7 @@ namespace geeL {
 	}
 
 	SpotLight& LightManager::addSpotlight(Transform& transform, vec3 diffuse,
-		float angle, float outerAngle, ShadowMapConfiguration config) {
+		float angle, float outerAngle, const ShadowMapConfiguration& config) {
 
 		SpotLight* light = new SpotLight(transform, diffuse, angle, outerAngle);
 
@@ -94,8 +93,7 @@ namespace geeL {
 		spotLights.push_back(std::move(s));
 
 		if (config.useShadowMap()) {
-			SimpleSpotLightMap* map = new SimpleSpotLightMap(*light, config.shadowBias, 
-				config.farPlane, config.type, config.resolution);
+			SimpleSpotLightMap* map = new SimpleSpotLightMap(*light, config);
 			light->setShadowMap(*map);
 		}
 		
@@ -355,6 +353,23 @@ namespace geeL {
 		glCullFace(GL_FRONT);
 	}
 
+
+	void LightManager::iterLights(std::function<void(Light&)> function) {
+		for (auto it = dirLights.begin(); it != dirLights.end(); it++) {
+			DLightBinding& binding = *it;
+			function(*binding.light);
+		}
+
+		for (auto it = pointLights.begin(); it != pointLights.end(); it++) {
+			PLightBinding& binding = *it;
+			function(*binding.light);
+		}
+
+		for (auto it = spotLights.begin(); it != spotLights.end(); it++) {
+			SLightBinding& binding = *it;
+			function(*binding.light);
+		}
+	}
 
 	void LightManager::iterDirectionalLights(std::function<void(DirectionalLight&)> function) {
 		for (auto it = dirLights.begin(); it != dirLights.end(); it++) {
