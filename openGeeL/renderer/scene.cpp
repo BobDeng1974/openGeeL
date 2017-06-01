@@ -144,8 +144,22 @@ namespace geeL {
 			}
 		}
 	}
+
+	void RenderScene::drawObjects(SceneShader& shader) const {
+		pipeline.dynamicBind(*camera, lightManager, shader);
+
+		for (auto it = renderObjects.begin(); it != renderObjects.end(); it++) {
+			auto& elements = it->second;
+			for (auto et = elements.begin(); et != elements.end(); et++) {
+				const MeshRenderer& object = *et->second;
+
+				if (object.isActive())
+					object.drawExclusive(shader);
+			}
+		}
+	}
 	
-	void RenderScene::drawObjects(const Shader& shader) const {
+	void RenderScene::drawGeometry(const Shader& shader) const {
 		drawStaticObjects(shader);
 		drawSkinnedObjects(shader);
 	}
@@ -155,7 +169,7 @@ namespace geeL {
 
 		iterRenderObjects([&](const MeshRenderer& object) {
 			if (object.isActive())
-				object.drawExclusive(shader);
+				object.drawGeometry(shader);
 		});
 	}
 
@@ -164,7 +178,7 @@ namespace geeL {
 
 		iterSkinnedObjects([&](const MeshRenderer& object) {
 			if (object.isActive())
-				object.drawExclusive(shader);
+				object.drawGeometry(shader);
 		});
 	}
 

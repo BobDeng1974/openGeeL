@@ -51,9 +51,11 @@ namespace geeL {
 		//are linked to given shader
 		virtual void draw(SceneShader& shader) const;
 
-		//Draw all meshes exclusively with the given shader. No material properties will be used and face
-		//culling options of objects won't be forced
-		virtual void drawExclusive(const Shader& shader) const;
+		//Draw all meshes and materials exclusively with the given shader.
+		virtual void drawExclusive(SceneShader& shader) const;
+
+		//Draw only the meshes without material properties with given shader
+		virtual void drawGeometry(const Shader& shader) const;
 
 		//Customize material of given mesh (If it is actually part of this mesh renderer)
 		void changeMaterial(Material&& material, const Mesh& mesh);

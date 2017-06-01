@@ -57,7 +57,10 @@ namespace geeL {
 		void drawForward(const Camera& camera) const;
 	
 		//Draw all objects in the scene with given shader
-		void drawObjects(const Shader& shader) const;
+		void drawObjects(SceneShader& shader) const;
+
+		//Draw the geometry of all objects in the scene with given shader
+		void drawGeometry(const Shader& shader) const;
 
 		//Draw all static objects in the scene with given shader
 		void drawStaticObjects(const Shader& shader) const;

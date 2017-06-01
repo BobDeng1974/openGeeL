@@ -76,7 +76,35 @@ namespace geeL{
 		uncullFaces();
 	}
 
-	void MeshRenderer::drawExclusive(const Shader& shader) const {
+	void MeshRenderer::drawExclusive(SceneShader& shader) const {
+		cullFaces();
+
+		shader.use();
+		shader.setModelMatrix(transform.getMatrix());
+		shader.bindMatrices();
+
+		for (auto it = materials.begin(); it != materials.end(); it++) {
+			const list<MaterialMapping>& elements = it->second;
+
+			for (auto et = elements.begin(); et != elements.end(); et++) {
+				const MaterialMapping& mapping = *et;
+
+				//Draw individual material
+				const Material& mat = mapping.material;
+				const MaterialContainer& container = mat.getMaterialContainer();
+				container.bindTextures(shader);
+				container.bind(shader);
+
+				//Draw mesh
+				const Mesh& mesh = *mapping.mesh;
+				mesh.draw();
+			}
+		}
+
+		uncullFaces();
+	}
+
+	void MeshRenderer::drawGeometry(const Shader& shader) const {
 		shader.use();
 		shader.setMat4("model", transform.getMatrix());
 
