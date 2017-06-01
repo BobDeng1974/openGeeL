@@ -5,13 +5,24 @@ using namespace std;
 
 namespace geeL {
 
-	SceneShader::SceneShader() : Shader(), shader(""), space(ShaderTransformSpace::View), cameraName("camera"), 
+	SceneShader::SceneShader() : Shader(), shader(""), space(ShaderTransformSpace::View), cameraName("camera"),
 		skyboxName("skybox"), view(nullptr), model(nullptr) {}
 
-	SceneShader::SceneShader(const FragmentShader& fragmentPath, ShaderTransformSpace space, bool animated, string cameraName, string skyboxName)
-			: Shader(chooseVertexShader(fragmentPath, animated).c_str(), fragmentPath.path.c_str()), 
-				shader(fragmentPath), space(space), cameraName(cameraName), skyboxName(skyboxName), view(nullptr), model(nullptr) {
-	
+	SceneShader::SceneShader(const std::string& vertexPath, const FragmentShader& fragmentPath, 
+		ShaderTransformSpace space, bool animated, string cameraName, string skyboxName)
+			: Shader(vertexPath.c_str(), fragmentPath.path.c_str()), shader(fragmentPath), space(space), 
+				cameraName(cameraName), skyboxName(skyboxName), view(nullptr), model(nullptr) {
+
+		viewLocation = getLocation("viewMatrix");
+		modelLocation = getLocation("model");
+		modelViewLocation = getLocation("modelView");
+	}
+
+	SceneShader::SceneShader(const std::string& vertexPath, const std::string& geometryPath, const FragmentShader& fragmentPath, 
+		ShaderTransformSpace space, bool animated, string cameraName, string skyboxName)
+			: Shader(vertexPath.c_str(), geometryPath.c_str(), fragmentPath.path.c_str()), shader(fragmentPath), space(space), cameraName(cameraName), 
+				skyboxName(skyboxName), view(nullptr), model(nullptr) {
+
 		viewLocation = getLocation("viewMatrix");
 		modelLocation = getLocation("model");
 		modelViewLocation = getLocation("modelView");
@@ -31,12 +42,12 @@ namespace geeL {
 	}
 
 	void SceneShader::bindViewMatrix() const {
-		if(view != nullptr)
+		if (view != nullptr)
 			setMat4(viewLocation, *view);
 	}
 
 	void SceneShader::bindModel() const {
-		if(model != nullptr)
+		if (model != nullptr)
 			setMat4(modelLocation, *model);
 	}
 
@@ -46,17 +57,4 @@ namespace geeL {
 		}
 	}
 
-
-	std::string SceneShader::chooseVertexShader(const FragmentShader& fragmentPath, bool animated) {
-		if (animated && fragmentPath.deferred)
-			vertexPath = "renderer/shaders/gbufferanim.vert";
-		else if(!animated && fragmentPath.deferred)
-			vertexPath = "renderer/shaders/gbuffer.vert";
-		else if (animated && !fragmentPath.deferred)
-			vertexPath = "renderer/shaders/lighting.vert"; //TODO: add skinned forward shader
-		else if (!animated && !fragmentPath.deferred)
-			vertexPath = "renderer/shaders/lighting.vert";
-
-		return vertexPath;
-	}
 }

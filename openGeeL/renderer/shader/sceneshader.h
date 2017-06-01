@@ -10,14 +10,13 @@ namespace geeL {
 
 	struct FragmentShader {
 		const std::string path;
-		const bool deferred;
 		const bool useLight;
 		const bool useCamera;
 		const bool useSkybox;
 
 
-		FragmentShader(std::string path, bool deferred = true, bool useLight = true, bool useCamera = true, bool useSkybox = true) 
-			: path(path), deferred(deferred), useLight(useLight), useCamera(useCamera), useSkybox(useSkybox) {}
+		FragmentShader(std::string path, bool useLight = true, bool useCamera = true, bool useSkybox = true)
+			: path(path), useLight(useLight), useCamera(useCamera), useSkybox(useSkybox) {}
 	};
 
 	enum class ShaderTransformSpace {
@@ -35,12 +34,14 @@ namespace geeL {
 
 		SceneShader();
 
-		SceneShader(const FragmentShader& fragmentPath, ShaderTransformSpace space, bool animated = false,
+		SceneShader(const std::string& vertexPath, const FragmentShader& fragmentPath, ShaderTransformSpace space, bool animated = false,
 			std::string cameraName = "camera", std::string skyboxName = "skybox");
+
+		SceneShader(const std::string& vertexPath, const std::string& geometryPath, const FragmentShader& fragmentPath, 
+			ShaderTransformSpace space, bool animated = false, std::string cameraName = "camera", std::string skyboxName = "skybox");
 
 		void changeShader(const FragmentShader& shader);
 
-		bool SceneShader::getDeferred() const;
 		bool SceneShader::getUseLight() const;
 		bool SceneShader::getUseCamera() const;
 		bool SceneShader::getUseSkybox() const;
@@ -68,14 +69,7 @@ namespace geeL {
 		ShaderLocation modelLocation;
 		ShaderLocation modelViewLocation;
 
-		std::string chooseVertexShader(const FragmentShader& fragmentPath, bool animated);
-
 	};
-
-
-	inline bool SceneShader::getDeferred() const {
-		return shader.deferred;
-	}
 
 	inline bool SceneShader::getUseLight() const {
 		return shader.useLight;
@@ -95,4 +89,3 @@ namespace geeL {
 }
 
 #endif 
-
