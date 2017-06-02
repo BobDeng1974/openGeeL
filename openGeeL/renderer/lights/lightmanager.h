@@ -23,7 +23,7 @@ namespace geeL {
 	class SceneCamera;
 	class PointLight;
 	class SpotLight;
-	class Shader;
+	class RenderShader;
 	class ShadowMap;
 	class SceneShader;
 	class RenderScene;
@@ -74,19 +74,19 @@ namespace geeL {
 		void removeReflectionProbe(DynamicCubeMap& probe);
 
 		//Add all reflection probes to given shader
-		void addReflectionProbes(Shader& shader) const;
-		void bindReflectionProbes(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const;
+		void addReflectionProbes(RenderShader& shader) const;
+		void bindReflectionProbes(const Camera& camera, const RenderShader& shader, ShaderTransformSpace space) const;
 		void drawReflectionProbes() const;
 
-		void bind(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const;
+		void bind(const Camera& camera, const RenderShader& shader, ShaderTransformSpace space) const;
 		void bind(const Camera& camera, const SceneShader& shader) const;
 
 		
-		void bindShadowMaps(Shader& shader) const;
+		void bindShadowMaps(RenderShader& shader) const;
 
-		void bindShadowmap(Shader& shader, DirectionalLight& light) const;
-		void bindShadowmap(Shader& shader, PointLight& light) const;
-		void bindShadowmap(Shader& shader, SpotLight& light) const;
+		void bindShadowmap(RenderShader& shader, DirectionalLight& light) const;
+		void bindShadowmap(RenderShader& shader, PointLight& light) const;
+		void bindShadowmap(RenderShader& shader, SpotLight& light) const;
 
 		//Draw shadow maps no matter the lights properties. E.g.if they are static or not
 		void drawShadowmapsForced(const RenderScene& scene, const SceneCamera* const camera) const;
@@ -101,15 +101,15 @@ namespace geeL {
 		void addLightRemoveListener(std::function<void(Light const *, ShadowMap const *)> listener);
 
 		//Add shader that shall be updated when lights are added/removed
-		void addShaderListener(Shader& shader);
+		void addShaderListener(RenderShader& shader);
 
 		const glm::vec3& getAmbientColor() const;
 		void setAmbientColor(const glm::vec3& color);
 
 	private:
 		glm::vec3 ambient;
-		Shader* dlShader; //Shader for spot and directional light shadow map
-		Shader* plShader; //Shader for point light shadow maps
+		RenderShader* dlShader; //RenderShader for spot and directional light shadow map
+		RenderShader* plShader; //RenderShader for point light shadow maps
 
 		std::list<DLightBinding> dirLights;
 		std::list<SLightBinding> spotLights;
@@ -118,7 +118,7 @@ namespace geeL {
 
 		std::list<std::function<void(Light const *, ShadowMap const *)>> addListener;
 		std::list<std::function<void(Light const *, ShadowMap const *)>> removeListener;
-		std::set<Shader*> shaderListener;
+		std::set<RenderShader*> shaderListener;
 
 		void onRemove(Light* light, LightBinding& binding);
 		void onAdd(Light* light, LightBinding& binding);

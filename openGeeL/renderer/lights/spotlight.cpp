@@ -2,7 +2,7 @@
 #include <glew.h>
 #include <string>
 #include <gtc/matrix_transform.hpp>
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "../shader/sceneshader.h"
 #include "../texturing/imagetexture.h"
 #include "../transformation/transform.h"
@@ -20,7 +20,7 @@ namespace geeL {
 			: Light(transform, diffuse, name), angle(angle), outerAngle(outerAngle), lightCookie(nullptr) {}
 
 
-	void SpotLight::bind(const Camera& camera, const Shader& shader, const string& name, ShaderTransformSpace space) const {
+	void SpotLight::bind(const Camera& camera, const RenderShader& shader, const string& name, ShaderTransformSpace space) const {
 		Light::bind(camera, shader, name, space);
 
 		switch (space) {
@@ -51,7 +51,7 @@ namespace geeL {
 		return 0;
 	}
 
-	void SpotLight::addLightCookie(Shader& shader, const string& name) {
+	void SpotLight::addLightCookie(RenderShader& shader, const string& name) {
 		if(lightCookie != nullptr)
 			shader.addMap(lightCookie->getID(), name, GL_TEXTURE_2D);
 	}

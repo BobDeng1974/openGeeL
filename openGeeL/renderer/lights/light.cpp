@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <string>
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "../shader/sceneshader.h"
 #include "../cameras/camera.h"
 #include "../transformation/transform.h"
@@ -36,7 +36,7 @@ namespace geeL {
 		shadowMap = &map;
 	}
 
-	void Light::bind(const Camera& camera, const Shader& shader, const std::string& name, ShaderTransformSpace space) const {
+	void Light::bind(const Camera& camera, const RenderShader& shader, const std::string& name, ShaderTransformSpace space) const {
 		shader.setVector3(name + "diffuse", diffuse);
 
 		if (shadowMap != nullptr)
@@ -50,25 +50,25 @@ namespace geeL {
 		bind(camera, shader, name, shader.getSpace());
 	}
 
-	void Light::addShadowmap(Shader& shader, const std::string& name) {
+	void Light::addShadowmap(RenderShader& shader, const std::string& name) {
 		if (shadowMap != nullptr)
 			shadowMap->bindMap(shader, name);
 	}
 
-	void Light::removeShadowmap(Shader& shader) {
+	void Light::removeShadowmap(RenderShader& shader) {
 		if (shadowMap != nullptr)
 			shadowMap->removeMap(shader);
 	}
 
 	void Light::renderShadowmap(const SceneCamera* const camera, 
-		std::function<void(const Shader&)> renderCall, const Shader& shader) {
+		std::function<void(const RenderShader&)> renderCall, const RenderShader& shader) {
 
 		if (shadowMap != nullptr && !transform.isStatic)
 			shadowMap->draw(camera, renderCall, shader);
 	}
 
 	void Light::renderShadowmapForced(const SceneCamera* const camera,
-		std::function<void(const Shader&)> renderCall, const Shader& shader) {
+		std::function<void(const RenderShader&)> renderCall, const RenderShader& shader) {
 
 		if (shadowMap != nullptr)
 			shadowMap->draw(camera, renderCall, shader);

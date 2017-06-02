@@ -6,7 +6,7 @@
 #include "../cameras/camera.h"
 #include "../framebuffer/gbuffer.h"
 #include "../transformation/transform.h"
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "../shader/sceneshader.h"
 #include "../shadowmapping/shadowmap.h"
 #include "../shadowmapping/simpleshadowmap.h"
@@ -25,9 +25,9 @@ using namespace glm;
 namespace geeL {
 
 	LightManager::LightManager() : ambient(ambient),
-		dlShader(new Shader("renderer/shaders/shadowmapping.vert", "renderer/shaders/empty.frag")),
-		plShader(new Shader("renderer/shaders/empty.vert", "renderer/shaders/shadowmapping.gs", 
-				"renderer/shaders/shadowmapping.frag")) {}
+		dlShader(new RenderShader("renderer/shadowmapping/shadowmapping.vert", "renderer/shaders/empty.frag")),
+		plShader(new RenderShader("renderer/shaders/empty.vert", "renderer/shadowmapping/shadowmapping.geom", 
+				"renderer/shadowmapping/shadowmapping.frag")) {}
 
 
 	LightManager::~LightManager() {
@@ -162,7 +162,7 @@ namespace geeL {
 		reflectionProbes.remove(&probe);
 	}
 
-	void LightManager::addReflectionProbes(Shader& shader) const {
+	void LightManager::addReflectionProbes(RenderShader& shader) const {
 		shader.use();
 
 		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
@@ -171,7 +171,7 @@ namespace geeL {
 		}
 	}
 
-	void LightManager::bindReflectionProbes(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const {
+	void LightManager::bindReflectionProbes(const Camera& camera, const RenderShader& shader, ShaderTransformSpace space) const {
 		shader.use();
 
 		unsigned int rpCount = 0;
@@ -193,7 +193,7 @@ namespace geeL {
 		}
 	}
 
-	void LightManager::bind(const Camera& camera, const Shader& shader, ShaderTransformSpace space) const {
+	void LightManager::bind(const Camera& camera, const RenderShader& shader, ShaderTransformSpace space) const {
 		shader.use();
 
 		unsigned int plCount = 0;
@@ -237,7 +237,7 @@ namespace geeL {
 	}
 
 
-	void LightManager::bindShadowmap(Shader& shader, PointLight& light) const {
+	void LightManager::bindShadowmap(RenderShader& shader, PointLight& light) const {
 		//Find corresponding light binding
 		const PLightBinding* binding = getBinding<PLightBinding, PointLight,
 			std::list<PLightBinding>>(light, pointLights);
@@ -247,7 +247,7 @@ namespace geeL {
 			light.addShadowmap(shader, binding->getName() + "shadowMap");
 	}
 
-	void LightManager::bindShadowmap(Shader& shader, SpotLight& light) const {
+	void LightManager::bindShadowmap(RenderShader& shader, SpotLight& light) const {
 		//Find corresponding light binding
 		const SLightBinding* binding = getBinding<SLightBinding, SpotLight, 
 			std::list<SLightBinding>>(light, spotLights);
@@ -257,7 +257,7 @@ namespace geeL {
 			light.addShadowmap(shader, binding->getName() + "shadowMap");
 	}
 
-	void LightManager::bindShadowmap(Shader& shader, DirectionalLight& light) const {
+	void LightManager::bindShadowmap(RenderShader& shader, DirectionalLight& light) const {
 		//Find corresponding light binding
 		const DLightBinding* binding = getBinding<DLightBinding, DirectionalLight,
 			std::list<DLightBinding>>(light, dirLights);
@@ -269,7 +269,7 @@ namespace geeL {
 
 	
 
-	void LightManager::bindShadowMaps(Shader& shader) const {
+	void LightManager::bindShadowMaps(RenderShader& shader) const {
 		shader.use();
 
 		for (auto it = pointLights.begin(); it != pointLights.end(); it++) {
@@ -301,7 +301,7 @@ namespace geeL {
 			Light& light = *binding.light;
 			if (light.isActive())
 				light.renderShadowmap(camera,
-					[&](const Shader& shader) { scene.drawStaticObjects(shader); }, *plShader);
+					[&](const RenderShader& shader) { scene.drawStaticObjects(shader); }, *plShader);
 		}
 
 		for (auto it = dirLights.begin(); it != dirLights.end(); it++) {
@@ -309,7 +309,7 @@ namespace geeL {
 			Light& light = *binding.light;
 			if (light.isActive())
 				light.renderShadowmap(camera,
-					[&](const Shader& shader) { scene.drawStaticObjects(shader); }, *dlShader);
+					[&](const RenderShader& shader) { scene.drawStaticObjects(shader); }, *dlShader);
 		}
 
 		for (auto it = spotLights.begin(); it != spotLights.end(); it++) {
@@ -317,7 +317,7 @@ namespace geeL {
 			Light& light = *binding.light;
 			if (light.isActive())
 				light.renderShadowmap(camera,
-					[&](const Shader& shader) { scene.drawStaticObjects(shader); }, *dlShader);
+					[&](const RenderShader& shader) { scene.drawStaticObjects(shader); }, *dlShader);
 		}	
 
 		glCullFace(GL_FRONT);
@@ -331,7 +331,7 @@ namespace geeL {
 			Light& light = *binding.light;
 			if (light.isActive())
 				light.renderShadowmapForced(camera,
-					[&](const Shader& shader) { scene.drawStaticObjects(shader); }, *plShader);
+					[&](const RenderShader& shader) { scene.drawStaticObjects(shader); }, *plShader);
 		}
 
 		for (auto it = dirLights.begin(); it != dirLights.end(); it++) {
@@ -339,7 +339,7 @@ namespace geeL {
 			Light& light = *binding.light;
 			if (light.isActive())
 				light.renderShadowmapForced(camera,
-					[&](const Shader& shader) { scene.drawStaticObjects(shader); }, *dlShader);
+					[&](const RenderShader& shader) { scene.drawStaticObjects(shader); }, *dlShader);
 		}
 
 		for (auto it = spotLights.begin(); it != spotLights.end(); it++) {
@@ -347,7 +347,7 @@ namespace geeL {
 			Light& light = *binding.light;
 			if (light.isActive())
 				light.renderShadowmapForced(camera,
-					[&](const Shader& shader) { scene.drawStaticObjects(shader); }, *dlShader);
+					[&](const RenderShader& shader) { scene.drawStaticObjects(shader); }, *dlShader);
 		}
 
 		glCullFace(GL_FRONT);
@@ -401,7 +401,7 @@ namespace geeL {
 		removeListener.push_back(listener);
 	}
 
-	void LightManager::addShaderListener(Shader& shader) {
+	void LightManager::addShaderListener(RenderShader& shader) {
 		shaderListener.insert(&shader);
 	}
 
@@ -412,7 +412,7 @@ namespace geeL {
 		}
 
 		for (auto it = shaderListener.begin(); it != shaderListener.end(); it++) {
-			Shader& shader = **it;
+			RenderShader& shader = **it;
 			light->addShadowmap(shader, binding.getName() + "shadowMap");
 		}
 	}
@@ -424,7 +424,7 @@ namespace geeL {
 		}
 
 		for (auto it = shaderListener.begin(); it != shaderListener.end(); it++) {
-			Shader& shader = **it;
+			RenderShader& shader = **it;
 			light->removeShadowmap(shader);
 		}
 	}

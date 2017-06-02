@@ -2,7 +2,7 @@
 #include <glew.h>
 #include <gtc/matrix_transform.hpp>
 #include <string>
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "../shader/sceneshader.h"
 #include "../transformation/transform.h"
 #include "../meshes/meshrenderer.h"
@@ -19,7 +19,7 @@ namespace geeL {
 		: Light(transform, diffuse, name) {}
 
 
-	void PointLight::bind(const Camera& camera, const Shader& shader,
+	void PointLight::bind(const Camera& camera, const RenderShader& shader,
 		const string& name, ShaderTransformSpace space) const {
 		Light::bind(camera, shader, name, space);
 
