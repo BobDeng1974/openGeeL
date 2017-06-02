@@ -4,6 +4,7 @@
 #include <map>
 #include <list>
 #include <string>
+#include <vec2.hpp>
 #include <vec3.hpp>
 #include <mat4x4.hpp>
 
@@ -37,17 +38,12 @@ namespace geeL {
 	class Shader {
 
 	public:
-		unsigned int program;
 		unsigned int mapBindingPos;
 		unsigned int mapOffset = 0;
 		std::string name;
 
-		Shader() : mapBindingPos(0) {}
-		Shader(const char* vertexPath, const char* fragmentPath);
-		Shader(const char* vertexPath, const char* geometryPath, const char* fragmentPath);
-
-
 		void use() const;
+		unsigned int getProgram() const;
 
 		//Add a new map to the shader
 		void addMap(TextureID id, const std::string& name, unsigned int type = GL_TEXTURE_2D);
@@ -83,17 +79,26 @@ namespace geeL {
 		void setMat4(ShaderLocation location, const glm::mat4& value) const;
 
 	protected:
-		void init(const char* vertexPath, const char* fragmentPath);
-		void init(const char* vertexPath, const char* geometryPath, const char* fragmentPath);
+		Shader() : mapBindingPos(0) {}
+
+		unsigned int program;
 
 	private:
 		std::map<std::string, TextureBinding> maps;
 
 		//Bind all added maps to the shader
-		void bindShadowMaps();
+		void bindMaps();
 
 	};
+
+
+	inline unsigned int Shader::getProgram() const {
+		return program;
+	}
+
+
 }
 
 #endif
+
 

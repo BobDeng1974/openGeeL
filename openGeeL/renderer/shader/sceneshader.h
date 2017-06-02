@@ -3,7 +3,7 @@
 
 #include <string>
 #include "defshading.h"
-#include "shader.h"
+#include "rendershader.h"
 
 namespace geeL {
 
@@ -27,7 +27,7 @@ namespace geeL {
 
 	//Special shader container that is intented for the use in scene drawing.
 	//It therefore holds additional scene information.
-	class SceneShader : public Shader {
+	class SceneShader : public RenderShader {
 
 	public:
 		std::string cameraName, skyboxName;
