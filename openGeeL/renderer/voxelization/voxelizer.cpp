@@ -13,7 +13,6 @@ namespace geeL {
 		voxelShader = new SceneShader("renderer/voxelization/voxelize.vert", "renderer/voxelization/voxelize.geom", 
 			frag, ShaderTransformSpace::World);
 
-		init();
 	}
 
 	Voxelizer::~Voxelizer() {
@@ -21,13 +20,8 @@ namespace geeL {
 	}
 
 
-	void Voxelizer::init() {
-		BufferUtility::generateAtomicBuffer(atomicBuffer);
-		voxelize();
-
-	}
-
 	void Voxelizer::voxelize() {
+		BufferUtility::generateAtomicBuffer(atomicBuffer);
 
 		//Pass 1: Get number of voxels and generate buffers accordingly
 		voxelizeScene(false);
