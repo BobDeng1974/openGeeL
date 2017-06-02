@@ -6,6 +6,7 @@
 #include "deerscene.h"
 #include "sponzascene.h"
 #include "giscene.h"
+#include <iostream>
 
 int main() {
 	//BedroomScene::draw();

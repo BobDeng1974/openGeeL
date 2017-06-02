@@ -83,5 +83,13 @@ namespace geeL {
 		return voxelAmount;
 	}
 
+	unsigned int Voxelizer::getDimensions() const {
+		return dimensions;
+	}
+
+	unsigned int Voxelizer::getVoxelPositions() const {
+		return voxelPosition.texture;
+	}
+
 
 }

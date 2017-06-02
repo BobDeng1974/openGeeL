@@ -199,7 +199,7 @@ void GlobalIlluminationScene::draw() {
 	Voxelizer voxelizer = Voxelizer(scene);
 	VoxelOctree octree = VoxelOctree(voxelizer);
 
-
+	octree.buildOctree();
 
 	ImageBasedLighting ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);

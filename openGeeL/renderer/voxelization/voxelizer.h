@@ -18,6 +18,10 @@ namespace geeL {
 		void voxelize();
 
 		unsigned int getVoxelAmount() const;
+		unsigned int getDimensions() const;
+
+		//Returns ID of data structure that stores voxel positions
+		unsigned int getVoxelPositions() const;
 
 	private:
 		unsigned int dimensions, atomicBuffer, voxelAmount;

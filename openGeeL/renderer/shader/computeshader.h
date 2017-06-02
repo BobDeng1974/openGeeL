@@ -11,7 +11,7 @@ namespace geeL {
 		ComputeShader(const char* shaderPath);
 
 
-		void invoke(unsigned int x, unsigned int y, unsigned int z);
+		static void invoke(unsigned int x, unsigned int y, unsigned int z);
 
 	};
 

@@ -31,6 +31,8 @@ namespace geeL {
 		TextureBuffer nodeDiffuse;  //Stores color of child nodes
 		Voxelizer& voxelizer;
 
+		//Stores surface information in leaf nodes
+		void buildLeafNodes();
 
 		//Computes the maximum possible node amount
 		void computeMaximum();
