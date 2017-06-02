@@ -9,10 +9,10 @@ out vec3 vPosition;
 out vec2 vTexCoords;
 
 
-void main {
+void main() {
 	vNormal = norm;
 	vPosition = position;
 	vTexCoords = texCoords;
 		
-	gl_Position = vec3(position, 1.f);
+	gl_Position = vec4(position, 1.f);
 }

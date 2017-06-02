@@ -178,7 +178,7 @@ void SponzaScene::draw() {
 	Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 
 	BilateralFilter blur = BilateralFilter(1, 0.7f);
-	DefaultPostProcess def = DefaultPostProcess(4.f);
+	DefaultPostProcess def = DefaultPostProcess(3.5f);
 	SSAO ssao = SSAO(blur, 2.5f);
 	RenderContext context = RenderContext();
 	DeferredLighting lighting = DeferredLighting(scene);

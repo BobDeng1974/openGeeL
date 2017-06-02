@@ -142,6 +142,14 @@ namespace geeL {
 		return location;
 	}
 
+	ShaderLocation Shader::setVector2(string name, const glm::vec2& value) const {
+		ShaderLocation location = glGetUniformLocation(program, name.c_str());
+		glUniform2f(glGetUniformLocation(program, name.c_str()),
+			value.x, value.y);
+
+		return location;
+	}
+
 	ShaderLocation Shader::setVector3(string name, const glm::vec3& value) const {
 		ShaderLocation location = glGetUniformLocation(program, name.c_str());
 		glUniform3f(glGetUniformLocation(program, name.c_str()),
@@ -164,6 +172,10 @@ namespace geeL {
 
 	void Shader::setFloat(ShaderLocation location, float value) const {
 		glUniform1f(location, value);
+	}
+
+	void Shader::setVector2(ShaderLocation location, const glm::vec2& value) const {
+		glUniform2f(location, value.x, value.y);
 	}
 
 	void Shader::setVector3(ShaderLocation location, const glm::vec3& value) const {
