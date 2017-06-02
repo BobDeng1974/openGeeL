@@ -20,12 +20,12 @@ namespace geeL {
 	public:
 		SimpleShadowMap(const Light& light, const ShadowMapConfiguration& config);
 
-		virtual void bindData(const Shader& shader, const std::string& name) = 0;
-		virtual void bindMap(Shader& shader, const std::string& name);
-		virtual void removeMap(Shader& shader);
+		virtual void bindData(const RenderShader& shader, const std::string& name) = 0;
+		virtual void bindMap(RenderShader& shader, const std::string& name);
+		virtual void removeMap(RenderShader& shader);
 
 		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const Shader&)> renderCall, const Shader& shader) = 0;
+			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader) = 0;
 
 		virtual unsigned int getID() const;
 
@@ -73,10 +73,10 @@ namespace geeL {
 	public:
 		SimpleSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config);
 
-		virtual void bindData(const Shader& shader, const std::string& name);
+		virtual void bindData(const RenderShader& shader, const std::string& name);
 
 		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const Shader&)> renderCall, const Shader& shader);
+			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader);
 
 	private:
 		const SpotLight& spotLight;
@@ -93,12 +93,12 @@ namespace geeL {
 	public:
 		SimplePointLightMap(const PointLight& light, const ShadowMapConfiguration& config);
 
-		virtual void bindData(const Shader& shader, const std::string& name);
+		virtual void bindData(const RenderShader& shader, const std::string& name);
 
 		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const Shader&)> renderCall, const Shader& shader);
+			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader);
 
-		virtual void bindMap(Shader& shader, const std::string& name);
+		virtual void bindMap(RenderShader& shader, const std::string& name);
 
 	protected:
 		virtual void init();
@@ -120,10 +120,10 @@ namespace geeL {
 	public:
 		SimpleDirectionalLightMap(const DirectionalLight& light, const ShadowMapConfiguration& config);
 
-		virtual void bindData(const Shader& shader, const std::string& name);
+		virtual void bindData(const RenderShader& shader, const std::string& name);
 
 		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const Shader&)> renderCall, const Shader& shader);
+			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader);
 
 	private:
 		const DirectionalLight& directionalLight;

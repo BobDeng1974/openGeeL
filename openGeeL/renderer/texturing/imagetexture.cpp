@@ -3,7 +3,7 @@
 #include <glfw3.h>
 #include "stb_image.h"
 #include "imagetexture.h"
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include <iostream>
 
 using namespace std;
@@ -64,11 +64,11 @@ namespace geeL {
 			: ImageTexture(fileName, colorType, wrapMode, filterMode, filter), type(type) {}
 
 
-	void TextureMap::bind(const Shader& shader, std::string name, int texLayer) const {
-		glUniform1i(glGetUniformLocation(shader.program, name.c_str()), texLayer);
+	void TextureMap::bind(const RenderShader& shader, std::string name, int texLayer) const {
+		glUniform1i(glGetUniformLocation(shader.getProgram(), name.c_str()), texLayer);
 	}
 
-	void TextureMap::draw(const Shader& shader, int texLayer) const {
+	void TextureMap::draw(const RenderShader& shader, int texLayer) const {
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 

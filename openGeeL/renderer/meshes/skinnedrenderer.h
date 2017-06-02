@@ -19,7 +19,7 @@ namespace geeL {
 
 		virtual void draw(bool deferred = true) const;
 		virtual void draw(const SceneShader& shader) const;
-		virtual void draw(const Shader& shader) const;
+		virtual void draw(const RenderShader& shader) const;
 
 		Skeleton& getSkeleton();
 		SkinnedModel& getSkinnedModel();
@@ -30,7 +30,7 @@ namespace geeL {
 		Skeleton* skeleton;
 		SkinnedModel* skinnedModel;
 
-		void loadSkeleton(const Shader& shader) const;
+		void loadSkeleton(const RenderShader& shader) const;
 	};
 
 }

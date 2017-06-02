@@ -6,7 +6,7 @@
 
 namespace geeL {
 
-	class Shader;
+	class RenderShader;
 
 	//BRDF integration map that stores information for splitsum approximated IBL
 	class BRDFIntegrationMap : public Texture {
@@ -18,7 +18,7 @@ namespace geeL {
 		virtual unsigned int getID() const;
 		virtual void remove();
 
-		virtual void add(Shader& shader, std::string name) const;
+		virtual void add(RenderShader& shader, std::string name) const;
 
 	private:
 		unsigned int id;

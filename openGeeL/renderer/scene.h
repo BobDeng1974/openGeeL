@@ -13,7 +13,7 @@ namespace geeL {
 	class SceneRequester;
 	class LightManager;
 	class Skybox;
-	class Shader;
+	class RenderShader;
 	class RenderPipeline;
 	class SceneShader;
 	class MeshRenderer;
@@ -60,16 +60,16 @@ namespace geeL {
 		void drawObjects(SceneShader& shader) const;
 
 		//Draw the geometry of all objects in the scene with given shader
-		void drawGeometry(const Shader& shader) const;
+		void drawGeometry(const RenderShader& shader) const;
 
 		//Draw all static objects in the scene with given shader
-		void drawStaticObjects(const Shader& shader) const;
+		void drawStaticObjects(const RenderShader& shader) const;
 
 		//Draw all skinned objects in the scene with given shader
-		void drawSkinnedObjects(const Shader& shader) const;
+		void drawSkinnedObjects(const RenderShader& shader) const;
 
 		void setSkybox(Skybox& skybox);
-		void bindSkybox(Shader& shader) const;
+		void bindSkybox(RenderShader& shader) const;
 
 		//Draw skybox
 		void drawSkybox() const;

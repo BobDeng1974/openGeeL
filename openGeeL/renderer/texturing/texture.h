@@ -5,7 +5,7 @@
 
 namespace geeL {
 
-class Shader;
+class RenderShader;
 
 	enum class ColorType {
 		GammaSpace,

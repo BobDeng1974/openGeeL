@@ -1,6 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "tonemapping.h"
 
 namespace geeL {

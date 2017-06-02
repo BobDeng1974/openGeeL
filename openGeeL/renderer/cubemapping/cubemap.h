@@ -6,7 +6,7 @@
 namespace geeL {
 
 	class Camera;
-	class Shader;
+	class RenderShader;
 
 	enum class ShaderTransformSpace;
 
@@ -14,13 +14,13 @@ namespace geeL {
 	class CubeMap {
 
 	public:
-		virtual void draw(const Shader& shader, std::string name) const;
+		virtual void draw(const RenderShader& shader, std::string name) const;
 
-		virtual void bind(const Camera& camera, const Shader& shader,
+		virtual void bind(const Camera& camera, const RenderShader& shader,
 			const std::string& name, ShaderTransformSpace space) const {}
 
-		virtual void add(Shader& shader, std::string name) const;
-		virtual void remove(Shader& shader, unsigned int id) const;
+		virtual void add(RenderShader& shader, std::string name) const;
+		virtual void remove(RenderShader& shader, unsigned int id) const;
 
 		virtual unsigned int getID() const;
 

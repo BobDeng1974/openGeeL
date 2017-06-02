@@ -6,7 +6,7 @@
 #include <vector>
 #include <vec3.hpp>
 #include <vec4.hpp>
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "../cameras/camera.h"
 #include "../lights/light.h"
 #include "../transformation/transform.h"
@@ -62,7 +62,7 @@ namespace geeL {
 		}
 	}
 
-	void CascadedDirectionalShadowMap::bindData(const Shader& shader, const std::string& name) {
+	void CascadedDirectionalShadowMap::bindData(const RenderShader& shader, const std::string& name) {
 		shader.setFloat(name + "bias", shadowBias);
 		shader.setInteger(name + "type", (int)type);
 
@@ -72,17 +72,17 @@ namespace geeL {
 		}
 	}
 
-	void CascadedDirectionalShadowMap::bindMap(Shader& shader, const std::string& name) {
+	void CascadedDirectionalShadowMap::bindMap(RenderShader& shader, const std::string& name) {
 		shader.addMap(ID, name);
 	}
 
-	void CascadedDirectionalShadowMap::removeMap(Shader& shader) {
+	void CascadedDirectionalShadowMap::removeMap(RenderShader& shader) {
 		shader.removeMap(ID);
 	}
 
 
 	void CascadedDirectionalShadowMap::draw(const SceneCamera* const camera,
-		std::function<void(const Shader&)> renderCall, const Shader& shader) {
+		std::function<void(const RenderShader&)> renderCall, const RenderShader& shader) {
 
 		//TODO: Develop backup strategy for when scene camera is not available
 		if(camera != nullptr)

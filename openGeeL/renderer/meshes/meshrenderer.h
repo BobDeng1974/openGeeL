@@ -15,7 +15,7 @@ namespace geeL {
 	class Mesh;
 	class Model;
 	class SceneShader;
-	class Shader;
+	class RenderShader;
 	class Skeleton;
 	class SkinnedModel;
 	class StaticModel;
@@ -55,7 +55,7 @@ namespace geeL {
 		virtual void drawExclusive(SceneShader& shader) const;
 
 		//Draw only the meshes without material properties with given shader
-		virtual void drawGeometry(const Shader& shader) const;
+		virtual void drawGeometry(const RenderShader& shader) const;
 
 		//Customize material of given mesh (If it is actually part of this mesh renderer)
 		void changeMaterial(Material&& material, const Mesh& mesh);

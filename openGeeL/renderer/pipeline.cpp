@@ -24,8 +24,8 @@ namespace geeL {
 			lightManager.bindShadowMaps(shader);
 		}
 		if (shader.getUseCamera()) {
-			glUniformBlockBinding(shader.program,
-				glGetUniformBlockIndex(shader.program, "cameraMatrices"),
+			glUniformBlockBinding(shader.getProgram(),
+				glGetUniformBlockIndex(shader.getProgram(), "cameraMatrices"),
 				getUniformBindingPoint(camID));
 
 			camera.uniformBind(camID);

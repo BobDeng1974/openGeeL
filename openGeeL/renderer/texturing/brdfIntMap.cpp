@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "../primitives/screenquad.h"
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "stb_image.h"
 #include "brdfIntMap.h"
 
@@ -9,7 +9,7 @@ namespace geeL {
 
 	BRDFIntegrationMap::BRDFIntegrationMap() {
 
-		Shader* shader = new Shader("renderer/shaders/screen.vert", "renderer/texturing/brdfIntMap.frag");
+		RenderShader* shader = new RenderShader("renderer/shaders/screen.vert", "renderer/texturing/brdfIntMap.frag");
 
 		unsigned int resolution = 512;
 		unsigned int fbo, rbo;
@@ -58,7 +58,7 @@ namespace geeL {
 		glDeleteTextures(1, &id);
 	}
 
-	void BRDFIntegrationMap::add(Shader& shader, std::string name) const {
+	void BRDFIntegrationMap::add(RenderShader& shader, std::string name) const {
 		shader.addMap(id, name);
 	}
 }

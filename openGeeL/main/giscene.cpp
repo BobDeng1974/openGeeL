@@ -6,7 +6,7 @@
 #include <gtc/type_ptr.hpp>
 #include <iostream>
 #include <vector>
-#include "../renderer/shader/shader.h"
+#include "../renderer/shader/rendershader.h"
 #include "../renderer/renderer/splitrenderer.h"
 #include "../renderer/renderer/rendercontext.h"
 
@@ -80,6 +80,7 @@
 #include "../renderer/animation/skeleton.h"
 
 #include "../renderer/voxelization/voxelizer.h"
+#include "../renderer/voxelization/voxeloctree.h"
 
 #include "giscene.h"
 
@@ -196,6 +197,9 @@ void GlobalIlluminationScene::draw() {
 
 
 	Voxelizer voxelizer = Voxelizer(scene);
+	VoxelOctree octree = VoxelOctree(voxelizer);
+
+
 
 	ImageBasedLighting ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);

@@ -1,6 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "../primitives/screenquad.h"
 #include "sobel.h"
 #include "gaussianblur.h"

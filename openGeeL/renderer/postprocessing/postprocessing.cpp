@@ -1,6 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "../primitives/screenquad.h"
 #include "../framebuffer/framebuffer.h"
 #include "postprocessing.h"
@@ -13,7 +13,7 @@ namespace geeL {
 		: PostProcessingEffect("renderer/shaders/screen.vert", fragmentPath) {}
 
 	PostProcessingEffect::PostProcessingEffect(string vertexPath, string fragmentPath)
-		: shader(Shader(vertexPath.c_str(), fragmentPath.c_str())), onlyEffect(false) {}
+		: shader(RenderShader(vertexPath.c_str(), fragmentPath.c_str())), onlyEffect(false) {}
 
 	unsigned int PostProcessingEffect::getBuffer() const {
 		return shader.getMap("image");

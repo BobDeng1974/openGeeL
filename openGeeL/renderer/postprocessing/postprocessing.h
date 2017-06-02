@@ -4,7 +4,7 @@
 #include <list>
 #include <string>
 #include "../renderer.h"
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 
 typedef unsigned int GLuint;
 
@@ -13,7 +13,7 @@ namespace geeL {
 	struct FrameBufferInformation;
 	class FrameBuffer;
 	class ColorBuffer;
-	class Shader;
+	class RenderShader;
 	class ScreenQuad;
 	class Texture;
 
@@ -51,7 +51,7 @@ namespace geeL {
 		virtual bool getEffectOnly() const;
 
 	protected:
-		Shader shader;
+		RenderShader shader;
 		ScreenQuad* screen;
 		bool onlyEffect;
 

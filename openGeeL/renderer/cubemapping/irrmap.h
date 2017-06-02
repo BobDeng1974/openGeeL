@@ -6,7 +6,7 @@
 namespace geeL {
 
 	class CubeBuffer;
-	class Shader;
+	class RenderShader;
 
 	//Cubemap that stores irradiance from another cubemap
 	class IrradianceMap : public DynamicCubeMap {
@@ -17,14 +17,14 @@ namespace geeL {
 		IrradianceMap(const CubeMap& environmentMap, CubeBuffer& frameBuffer, unsigned int resolution = 32);
 		~IrradianceMap();
 
-		virtual void draw(const Shader& shader, std::string name) const;
-		virtual void add(Shader& shader, std::string name) const;
+		virtual void draw(const RenderShader& shader, std::string name) const;
+		virtual void add(RenderShader& shader, std::string name) const;
 
 		virtual void update();
 
 	private:
 		CubeBuffer& frameBuffer;
-		Shader* conversionShader;
+		RenderShader* conversionShader;
 		unsigned int resolution;
 
 	};

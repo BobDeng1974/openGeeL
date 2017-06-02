@@ -42,7 +42,7 @@ namespace geeL {
 		DefaultMaterialContainer& CreateMaterial();
 
 		//Creates and returns a new materials with given shading
-		GenericMaterialContainer& CreateMaterial(Shader& shader);
+		GenericMaterialContainer& CreateMaterial(RenderShader& shader);
 
 		//Creates and returns a new shader program with given file paths
 		//for vertex and fragment shaders

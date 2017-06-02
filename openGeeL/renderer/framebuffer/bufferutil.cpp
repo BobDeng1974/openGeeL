@@ -4,6 +4,11 @@
 
 namespace geeL {
 
+	TextureBuffer::~TextureBuffer() {
+		glDeleteTextures(1, &texture);
+		glDeleteBuffers(1, &buffer);
+	}
+
 	void BufferUtility::generateAtomicBuffer(unsigned int& buffer) {
 		if (buffer)
 			glDeleteBuffers(1, &buffer);

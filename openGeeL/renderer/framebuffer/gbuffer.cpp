@@ -2,7 +2,7 @@
 #include <glew.h>
 #include <climits>
 #include <iostream>
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "../renderer.h"
 #include "gbuffer.h"
 

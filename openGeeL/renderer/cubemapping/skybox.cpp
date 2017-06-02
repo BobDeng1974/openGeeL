@@ -3,7 +3,7 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 #include "../cameras/camera.h"
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "../primitives/screencube.h"
 #include "irrmap.h"
 #include "cubemap.h"
@@ -12,7 +12,7 @@
 namespace geeL {
 
 	Skybox::Skybox(const CubeMap& cubeMap) : cubeMap(cubeMap),
-		shader(Shader("renderer/cubemapping/skybox.vert", "renderer/cubemapping/skybox.frag")) {}
+		shader(RenderShader("renderer/cubemapping/skybox.vert", "renderer/cubemapping/skybox.frag")) {}
 
 
 	void Skybox::draw(const Camera& camera) const {
@@ -29,7 +29,7 @@ namespace geeL {
 		glDepthFunc(GL_LESS);
 	}
 
-	void Skybox::bind(Shader& shader) const {
+	void Skybox::bind(RenderShader& shader) const {
 		cubeMap.add(shader, "skybox.");
 	}
 

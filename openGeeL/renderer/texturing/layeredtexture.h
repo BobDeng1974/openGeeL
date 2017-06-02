@@ -18,8 +18,8 @@ namespace geeL {
 		//if more than one texture of each type is added (e.g. two normal maps)
 		void addTexture(std::string name, TextureMap& texture);
 
-		virtual void bind(const Shader& shader, std::string name, int texLayer = 0) const;
-		virtual void draw(const Shader& shader, int texLayer = 0) const;
+		virtual void bind(const RenderShader& shader, std::string name, int texLayer = 0) const;
+		virtual void draw(const RenderShader& shader, int texLayer = 0) const;
 
 		virtual unsigned int getID() const;
 		virtual void remove();

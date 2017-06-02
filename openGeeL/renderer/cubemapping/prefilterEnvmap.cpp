@@ -2,7 +2,7 @@
 #include <glew.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "../framebuffer/framebuffer.h"
 #include "../framebuffer/cubebuffer.h"
 #include "../primitives/screencube.h"
@@ -15,7 +15,7 @@ using namespace glm;
 namespace geeL {
 
 	PrefilteredEnvironmentMap::PrefilteredEnvironmentMap(const CubeMap& environmentMap, CubeBuffer& frameBuffer, unsigned int resolution)
-		: environmentMap(environmentMap), frameBuffer(frameBuffer), conversionShader(new Shader("renderer/cubemapping/envconvert.vert",
+		: environmentMap(environmentMap), frameBuffer(frameBuffer), conversionShader(new RenderShader("renderer/cubemapping/envconvert.vert",
 			"renderer/cubemapping/prefilterEnvmap.frag")), resolution(resolution) {
 
 		glGenTextures(1, &id);
@@ -40,7 +40,7 @@ namespace geeL {
 	}
 
 
-	void PrefilteredEnvironmentMap::add(Shader& shader, std::string name) const {
+	void PrefilteredEnvironmentMap::add(RenderShader& shader, std::string name) const {
 		shader.addMap(id, name + "prefilterEnv", GL_TEXTURE_CUBE_MAP);
 	}
 

@@ -12,7 +12,7 @@ namespace geeL {
 	class LightManager;
 	class MaterialFactory;
 	class RenderScene;
-	class Shader;
+	class RenderShader;
 	class SceneShader;
 
 

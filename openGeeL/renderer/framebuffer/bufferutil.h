@@ -9,6 +9,7 @@ namespace geeL {
 		unsigned int texture;
 		unsigned int buffer;
 
+		~TextureBuffer();
 	};
 
 

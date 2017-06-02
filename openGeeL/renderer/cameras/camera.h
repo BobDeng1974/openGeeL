@@ -14,7 +14,7 @@ namespace geeL {
 
 	class InputManager;
 	class Transform;
-	class Shader;
+	class RenderShader;
 	class SceneShader;
 
 
@@ -31,7 +31,7 @@ namespace geeL {
 		const glm::mat4& getProjectionMatrix() const;
 
 		void bind(const SceneShader& shader) const;
-		void bindPosition(const Shader& shader, std::string name = "cameraPosition") const;
+		void bindPosition(const RenderShader& shader, std::string name = "cameraPosition") const;
 		void uniformBind(int uniformID) const;
 
 		//Translate vector from world to screen space of this camera

@@ -39,7 +39,7 @@ namespace geeL {
 		shader.setMat4("projection", projectionMatrix);
 	}
 
-	void Camera::bindPosition(const Shader& shader, std::string name) const {
+	void Camera::bindPosition(const RenderShader& shader, std::string name) const {
 		shader.use();
 		shader.setVector3(name, transform.getPosition());
 	}

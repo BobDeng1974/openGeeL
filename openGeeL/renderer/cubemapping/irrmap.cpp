@@ -2,7 +2,7 @@
 #include <glew.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "../framebuffer/framebuffer.h"
 #include "../framebuffer/cubebuffer.h"
 #include "../primitives/screencube.h"
@@ -15,7 +15,7 @@ namespace geeL {
 
 	IrradianceMap::IrradianceMap(const CubeMap& environmentMap, CubeBuffer& frameBuffer, unsigned int resolution)
 		: environmentMap(environmentMap), frameBuffer(frameBuffer), 
-			conversionShader(new Shader("renderer/cubemapping/envconvert.vert", 
+			conversionShader(new RenderShader("renderer/cubemapping/envconvert.vert", 
 				"renderer/cubemapping/irrmap.frag")), resolution(resolution) {
 
 		glGenTextures(1, &id);
@@ -38,11 +38,11 @@ namespace geeL {
 		delete conversionShader;
 	}
 
-	void IrradianceMap::draw(const Shader& shader, std::string name) const {
+	void IrradianceMap::draw(const RenderShader& shader, std::string name) const {
 		environmentMap.draw(shader, name);
 	}
 
-	void IrradianceMap::add(Shader& shader, std::string name) const {
+	void IrradianceMap::add(RenderShader& shader, std::string name) const {
 		//shader.addMap(environmentMap.getID(), name + "albedo", GL_TEXTURE_CUBE_MAP);
 		shader.addMap(id, name + "irradiance", GL_TEXTURE_CUBE_MAP);
 	}

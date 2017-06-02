@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <vec4.hpp>
 #include <mat4x4.hpp>
-#include "shader\shader.h"
+#include "shader\rendershader.h"
 #include "shader\sceneshader.h"
 #include "materials\material.h"
 #include "meshes\mesh.h"
@@ -159,12 +159,12 @@ namespace geeL {
 		}
 	}
 	
-	void RenderScene::drawGeometry(const Shader& shader) const {
+	void RenderScene::drawGeometry(const RenderShader& shader) const {
 		drawStaticObjects(shader);
 		drawSkinnedObjects(shader);
 	}
 
-	void RenderScene::drawStaticObjects(const Shader& shader) const {
+	void RenderScene::drawStaticObjects(const RenderShader& shader) const {
 		shader.use();
 
 		iterRenderObjects([&](const MeshRenderer& object) {
@@ -173,7 +173,7 @@ namespace geeL {
 		});
 	}
 
-	void RenderScene::drawSkinnedObjects(const Shader& shader) const {
+	void RenderScene::drawSkinnedObjects(const RenderShader& shader) const {
 		shader.use();
 
 		iterSkinnedObjects([&](const MeshRenderer& object) {
@@ -204,7 +204,7 @@ namespace geeL {
 			skybox->draw(camera);
 	}
 
-	void RenderScene::bindSkybox(Shader& shader) const {
+	void RenderScene::bindSkybox(RenderShader& shader) const {
 		if (skybox != nullptr)
 			skybox->bind(shader);
 	}

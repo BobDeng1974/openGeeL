@@ -3,7 +3,7 @@
 #include <list>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "../texturing/envmap.h"
 #include "../framebuffer/framebuffer.h"
 #include "../framebuffer/cubebuffer.h"
@@ -16,7 +16,7 @@ namespace geeL {
 
 	EnvironmentCubeMap::EnvironmentCubeMap(const EnvironmentMap& map, CubeBuffer& frameBuffer, unsigned int resolution)
 		: map(map), frameBuffer(frameBuffer), resolution(resolution), 
-			conversionShader(new Shader("renderer/cubemapping/envconvert.vert", 
+			conversionShader(new RenderShader("renderer/cubemapping/envconvert.vert", 
 				"renderer/cubemapping/envconvert.frag")) {
 
 		//Init cubemap without textures

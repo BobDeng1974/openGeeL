@@ -1,5 +1,5 @@
 #include "../cameras/camera.h"
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "../shader/sceneshader.h"
 #include "../lights/lightmanager.h"
 #include "../scene.h"

@@ -23,12 +23,12 @@ namespace geeL {
 		CascadedShadowMap(const Light& light, float shadowBias, unsigned int width, unsigned int height)
 			: ShadowMap(light), shadowBias(shadowBias), width(width), height(height) {}
 
-		virtual void bindData(const Shader& shader, const std::string& name) = 0;
-		virtual void bindMap(Shader& shader, const std::string& name) = 0;
-		virtual void removeMap(Shader& shader) = 0;
+		virtual void bindData(const RenderShader& shader, const std::string& name) = 0;
+		virtual void bindMap(RenderShader& shader, const std::string& name) = 0;
+		virtual void removeMap(RenderShader& shader) = 0;
 
 		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const Shader&)> renderCall, const Shader& shader) = 0;
+			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader) = 0;
 
 		//Returns ID of first (nearest) shadow map
 		virtual unsigned int getID() const = 0;
@@ -46,12 +46,12 @@ namespace geeL {
 		CascadedDirectionalShadowMap(const Light& light, const SceneCamera& camera, 
 			float shadowBias, unsigned int width, unsigned int height);
 
-		virtual void bindData(const Shader& shader, const std::string& name);
-		virtual void bindMap(Shader& shader, const std::string& name);
-		virtual void removeMap(Shader& shader);
+		virtual void bindData(const RenderShader& shader, const std::string& name);
+		virtual void bindMap(RenderShader& shader, const std::string& name);
+		virtual void removeMap(RenderShader& shader);
 
 		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const Shader&)> renderCall, const Shader& shader);
+			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader);
 
 		//Set split planes (between cameras near and far clip plane)
 		void setCascades(const SceneCamera& camera);

@@ -7,7 +7,7 @@
 namespace geeL {
 
 	class CubeBuffer;
-	class Shader;
+	class RenderShader;
 	class EnvironmentMap;
 
 	//Cubemap that uses an environment map as a base
@@ -20,7 +20,7 @@ namespace geeL {
 	private:
 		const EnvironmentMap& map;
 		CubeBuffer& frameBuffer;
-		Shader* conversionShader;
+		RenderShader* conversionShader;
 		unsigned int resolution;
 
 		void update();

@@ -4,7 +4,7 @@
 #include <gtc/matrix_transform.hpp>
 #include "../cameras/camera.h"
 #include "../utility/screeninfo.h"
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "../transformation/transform.h"
 #include "../lights/spotlight.h"
 #include "../lights/pointlight.h"
@@ -52,7 +52,7 @@ namespace geeL {
 	}
 
 
-	void SimpleShadowMap::bindData(const Shader& shader, const std::string& name) {
+	void SimpleShadowMap::bindData(const RenderShader& shader, const std::string& name) {
 		shader.setFloat(name + "bias", dynamicBias);
 		shader.setInteger(name + "resolution", softShadowResolution);
 		shader.setFloat(name + "scale", softShadowScale);
@@ -60,11 +60,11 @@ namespace geeL {
 	}
 
 
-	void SimpleShadowMap::bindMap(Shader& shader, const std::string& name) {
+	void SimpleShadowMap::bindMap(RenderShader& shader, const std::string& name) {
 		shader.addMap(id, name, GL_TEXTURE_2D);
 	}
 
-	void SimpleShadowMap::removeMap(Shader& shader) {
+	void SimpleShadowMap::removeMap(RenderShader& shader) {
 		shader.removeMap(id);
 	}
 
@@ -158,14 +158,14 @@ namespace geeL {
 	}
 
 
-	void SimpleSpotLightMap::bindData(const Shader& shader, const std::string& name) {
+	void SimpleSpotLightMap::bindData(const RenderShader& shader, const std::string& name) {
 		SimpleShadowMap::bindData(shader, name);
 
 		shader.setMat4(name + "lightTransform", lightTransform);
 	}
 
 	void SimpleSpotLightMap::draw(const SceneCamera* const camera,
-		std::function<void(const Shader&)> renderCall, const Shader& shader) {
+		std::function<void(const RenderShader&)> renderCall, const RenderShader& shader) {
 
 		//Write light transform into shader
 		computeLightTransform();
@@ -222,13 +222,13 @@ namespace geeL {
 	}
 
 
-	void SimplePointLightMap::bindData(const Shader& shader, const std::string& name) {
+	void SimplePointLightMap::bindData(const RenderShader& shader, const std::string& name) {
 		SimpleShadowMap::bindData(shader, name);
 
 		shader.setFloat(name + "farPlane", farPlane);
 	}
 
-	void SimplePointLightMap::bindMap(Shader& shader, const std::string& name) {
+	void SimplePointLightMap::bindMap(RenderShader& shader, const std::string& name) {
 		shader.addMap(id, name, GL_TEXTURE_CUBE_MAP);
 	}
 
@@ -260,7 +260,7 @@ namespace geeL {
 	}
 
 	void SimplePointLightMap::draw(const SceneCamera* const camera,
-		std::function<void(const Shader&)> renderCall, const Shader& shader) {
+		std::function<void(const RenderShader&)> renderCall, const RenderShader& shader) {
 
 		//Write light transforms of cubemap faces into shader
 		computeLightTransform();
@@ -344,14 +344,14 @@ namespace geeL {
 	}
 
 
-	void SimpleDirectionalLightMap::bindData(const Shader& shader, const std::string& name) {
+	void SimpleDirectionalLightMap::bindData(const RenderShader& shader, const std::string& name) {
 		SimpleShadowMap::bindData(shader, name);
 
 		shader.setMat4(name + "lightTransform", lightTransform);
 	}
 
 	void SimpleDirectionalLightMap::draw(const SceneCamera* const camera,
-		std::function<void(const Shader&)> renderCall, const Shader& shader) {
+		std::function<void(const RenderShader&)> renderCall, const RenderShader& shader) {
 
 		//Write light transform into shader
 		computeLightTransform();

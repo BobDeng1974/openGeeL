@@ -35,7 +35,7 @@ namespace geeL {
 		/*
 		for (auto it = materials->begin(); it != materials->end(); it++) {
 			Material& material = *it->second;
-			const Shader& shader = material.getShader();
+			const RenderShader& shader = material.getShader();
 			shader.use();
 
 			//Load materials into shader
@@ -68,7 +68,7 @@ namespace geeL {
 		uncullFaces();
 	}
 
-	void SkinnedMeshRenderer::draw(const Shader& shader) const {
+	void SkinnedMeshRenderer::draw(const RenderShader& shader) const {
 		//TODO: Load relevant bone transforms into materials
 		shader.use();
 		shader.setMat4("model", transform.getMatrix());
@@ -84,7 +84,7 @@ namespace geeL {
 		return *skinnedModel;
 	}
 
-	void SkinnedMeshRenderer::loadSkeleton(const Shader& shader) const {
+	void SkinnedMeshRenderer::loadSkeleton(const RenderShader& shader) const {
 		skinnedModel->iterateMeshes([&](const SkinnedMesh& mesh) {
 			for (auto et = mesh.bonesBeginConst(); et != mesh.bonesEndBegin(); et++) {
 				const MeshBoneData& data = et->second;

@@ -1,5 +1,5 @@
 #include <vec3.hpp>
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "../primitives/screenquad.h"
 #include "../framebuffer/framebuffer.h"
 #include "../texturing/imagetexture.h"

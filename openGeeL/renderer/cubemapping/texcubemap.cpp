@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "stb_image.h"
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "texcubemap.h"
 
 using namespace std;

@@ -63,7 +63,7 @@ namespace geeL {
 		return *mat;
 	}
 
-	GenericMaterialContainer& MaterialFactory::CreateMaterial(Shader& shader) {
+	GenericMaterialContainer& MaterialFactory::CreateMaterial(RenderShader& shader) {
 		GenericMaterialContainer* mat = new GenericMaterialContainer();
 		container.push_back(mat);
 

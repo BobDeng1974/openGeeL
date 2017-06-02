@@ -60,8 +60,8 @@ namespace geeL {
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest,
 			AnisotropicFilter filter = AnisotropicFilter::Medium);
 
-		virtual void bind(const Shader& shader, std::string name, int texLayer = 0) const;
-		virtual void draw(const Shader& shader, int texLayer = 0) const;
+		virtual void bind(const RenderShader& shader, std::string name, int texLayer = 0) const;
+		virtual void draw(const RenderShader& shader, int texLayer = 0) const;
 
 		std::string getTypeAsString() const;
 	};

@@ -104,7 +104,7 @@ namespace geeL{
 		uncullFaces();
 	}
 
-	void MeshRenderer::drawGeometry(const Shader& shader) const {
+	void MeshRenderer::drawGeometry(const RenderShader& shader) const {
 		shader.use();
 		shader.setMat4("model", transform.getMatrix());
 

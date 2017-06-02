@@ -5,7 +5,7 @@
 #include "../framebuffer/framebuffer.h"
 #include "../framebuffer/cubebuffer.h"
 #include "../transformation/transform.h"
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "../shader/sceneshader.h"
 #include "../cameras/camera.h"
 #include "reflectionprobe.h"
@@ -35,7 +35,7 @@ namespace geeL {
 	}
 
 
-	void ReflectionProbe::bind(const Camera& camera, const Shader& shader,
+	void ReflectionProbe::bind(const Camera& camera, const RenderShader& shader,
 		const std::string& name, ShaderTransformSpace space) const {
 
 		vec3 offset = vec3(width, height, depth);

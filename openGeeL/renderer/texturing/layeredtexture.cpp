@@ -2,7 +2,7 @@
 #include <glew.h>
 #include <glfw3.h>
 #include <algorithm>
-#include "../shader/shader.h"
+#include "../shader/rendershader.h"
 #include "imagetexture.h"
 #include "layeredtexture.h"
 
@@ -32,7 +32,7 @@ namespace geeL {
 		textures.push_back(pair<string, TextureMap*>(name, &texture));
 	}
 
-	void LayeredTexture::bind(const Shader& shader, std::string name, int texLayer) const {
+	void LayeredTexture::bind(const RenderShader& shader, std::string name, int texLayer) const {
 
 		int counter = 0;
 		for_each(textures.begin(), textures.end(), [&](pair<std::string, TextureMap*> tex) {
@@ -43,7 +43,7 @@ namespace geeL {
 		});
 	}
 
-	void LayeredTexture::draw(const Shader& shader, int texLayer) const {
+	void LayeredTexture::draw(const RenderShader& shader, int texLayer) const {
 		int layer = GL_TEXTURE0 + texLayer;
 
 		int counter = 0;
