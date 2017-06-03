@@ -8,6 +8,7 @@ namespace geeL {
 	class RenderScene;
 	class SceneShader;
 
+	//Voxelized scene and stores voxels into a buffer list
 	class Voxelizer {
 
 	public:
@@ -23,9 +24,15 @@ namespace geeL {
 		//Returns ID of data structure that stores voxel positions
 		unsigned int getVoxelPositions() const;
 
+		//Returns ID of data structure that stores voxel colors
+		unsigned int getVoxelColors() const;
+
+		//Returns ID of data structure that stores voxel normals
+		unsigned int getVoxelNormals() const;
+
 	private:
 		unsigned int dimensions, atomicBuffer, voxelAmount;
-		TextureBuffer voxelPosition, voxelNormal, voxelColor;
+		TextureBuffer voxelPositions, voxelNormals, voxelColors;
 		SceneShader* voxelShader;
 		const RenderScene& scene;
 

@@ -32,9 +32,9 @@ namespace geeL {
 			sizeof(unsigned int), GL_MAP_READ_BIT | GL_MAP_WRITE_BIT);
 
 		voxelAmount = count[0];
-		BufferUtility::generateTextureBuffer(voxelAmount * sizeof(unsigned int), GL_R32UI, voxelPosition);
-		BufferUtility::generateTextureBuffer(voxelAmount * sizeof(unsigned int), GL_RGBA8, voxelColor);
-		BufferUtility::generateTextureBuffer(voxelAmount * sizeof(unsigned int), GL_RGBA16F, voxelNormal);
+		BufferUtility::generateTextureBuffer(voxelAmount * sizeof(unsigned int), GL_R32UI, voxelPositions);
+		BufferUtility::generateTextureBuffer(voxelAmount * sizeof(unsigned int), GL_RGBA8, voxelColors);
+		BufferUtility::generateTextureBuffer(voxelAmount * sizeof(unsigned int), GL_RGBA16F, voxelNormals);
 
 		//Reset counter
 		memset(count, 0, sizeof(unsigned int));
@@ -63,9 +63,9 @@ namespace geeL {
 		voxelShader->setInteger("drawVoxel", (int)drawVoxel);
 
 		if (drawVoxel) {
-			glBindImageTexture(0, voxelPosition.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGB10_A2UI);
-			glBindImageTexture(1, voxelColor.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
-			glBindImageTexture(2, voxelNormal.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA16F);
+			glBindImageTexture(0, voxelPositions.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGB10_A2UI);
+			glBindImageTexture(1, voxelColors.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
+			glBindImageTexture(2, voxelNormals.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA16F);
 			voxelShader->setInteger("voxelPosition", 0);
 		}
 
@@ -88,7 +88,15 @@ namespace geeL {
 	}
 
 	unsigned int Voxelizer::getVoxelPositions() const {
-		return voxelPosition.texture;
+		return voxelPositions.texture;
+	}
+
+	unsigned int Voxelizer::getVoxelColors() const {
+		return voxelColors.texture;
+	}
+
+	unsigned int Voxelizer::getVoxelNormals() const {
+		return voxelNormals.texture;
 	}
 
 

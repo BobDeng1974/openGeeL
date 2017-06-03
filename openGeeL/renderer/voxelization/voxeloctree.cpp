@@ -12,28 +12,29 @@ namespace geeL {
 		flagShader = new ComputeShader("renderer/voxelization/nodeFlag.com.glsl");
 		allocShader = new ComputeShader("renderer/voxelization/nodeAlloc.com.glsl");
 		initShader = new ComputeShader("renderer/voxelization/nodeInit.com.glsl");
+		fillLeavesShader = new ComputeShader("renderer/voxelization/leavesFill.com.glsl");
 
 		computeMaximum();
-		nodeLevels.push_back(1); //Root has always one node
 	}
 
 	VoxelOctree::~VoxelOctree() {
 		delete flagShader;
 		delete allocShader;
 		delete initShader;
+		delete fillLeavesShader;
 	}
 
 
-	void VoxelOctree::buildOctree() {
+	void VoxelOctree::build() {
 
 		//voxelizer.voxelize();
+
+		nodeLevels.clear();
+		nodeLevels.push_back(1); //Root has always one node
 
 		BufferUtility::generateTextureBuffer(maxNodes * sizeof(unsigned int), GL_R32UI, nodeIndicies);
 		BufferUtility::generateTextureBuffer(maxNodes * sizeof(unsigned int), GL_R32UI, nodeDiffuse);
 		BufferUtility::generateAtomicBuffer(nodeCounter);
-
-		unsigned int nodeOffset  = 0; //Offset in 1D data structure to nodes in current level
-		unsigned int allocOffset = 1; //Offset in 1D data structure to free space (Where nodes of next level will be allocated)
 
 		unsigned int numVoxels  = voxelizer.getVoxelAmount();
 		unsigned int dataWidth  = 1024;	//Note: hardcoded in shaders
@@ -43,11 +44,25 @@ namespace geeL {
 		unsigned int groupWidth  = dataWidth / 8; 
 		unsigned int groupHeight = (dataHeight + 7) / 8;
 
-		for (int i = 0; i < maxLevel; i++) {
 
+		buildOctree(dataWidth, groupWidth, groupHeight);
+		buildLeafNodes(groupWidth, groupHeight);
+		mipmapOctree();
+
+		glDeleteBuffers(1, &nodeCounter);
+		nodeCounter = 0;
+	}
+
+
+	void VoxelOctree::buildOctree(uint dataWidth, uint groupWidth, uint groupHeight) {
+		unsigned int nodeOffset  = 0; //Offset in 1D data structure to nodes in current level
+		unsigned int allocOffset = 1; //Offset in 1D data structure to free space (Where nodes of next level will be allocated)
+		unsigned int dataHeight;
+
+		for (int i = 0; i < maxLevel; i++) {
 			//Determine whether nodes should have children or not
 			flagShader->use();
-			flagShader->setInteger("numVoxels", numVoxels);
+			flagShader->setInteger("numVoxels", voxelizer.getVoxelAmount());
 			flagShader->setInteger("level", i);
 			flagShader->setInteger("dimensions", voxelizer.getDimensions());
 			glBindImageTexture(0, voxelizer.getVoxelPositions(), 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGB10_A2UI);
@@ -57,7 +72,6 @@ namespace geeL {
 			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
 			//Allocate tiles for new children (1 tile = 8 children nodes)
-			
 			unsigned int currNodes = nodeLevels[i]; //Node amount in current level
 			allocShader->use();
 			initShader->setInteger("numNodes", currNodes);
@@ -93,28 +107,52 @@ namespace geeL {
 			glBindImageTexture(1, nodeDiffuse.texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
 
 			dataHeight = (allocatedNodes + (dataWidth - 1)) / dataWidth;
-			unsigned int initGroupHeight = (dataHeight + 7) / 8; 
+			unsigned int initGroupHeight = (dataHeight + 7) / 8;
 			initShader->invoke(groupWidth, initGroupHeight, 1);
 			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
-
 			//Update offsets
 			nodeLevels.push_back(allocatedNodes);
-			nodeOffset += nodeLevels[i]; 
+			nodeOffset += nodeLevels[i];
 			//nodeOffset = allocOffset;
 			allocOffset += allocatedNodes;
 		}
 
-
-		buildLeafNodes();
-
-		glDeleteBuffers(1, &nodeCounter);
-		nodeCounter = 0;
 	}
 
-	void VoxelOctree::buildLeafNodes() {
+	void VoxelOctree::buildLeafNodes(uint width, uint height) {
+		//Determine which leaf nodes have children or not
+		flagShader->use();
+		flagShader->setInteger("numVoxels", voxelizer.getVoxelAmount());
+		flagShader->setInteger("level", maxLevel);
+		flagShader->setInteger("dimensions", voxelizer.getDimensions());
+		glBindImageTexture(0, voxelizer.getVoxelPositions(), 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGB10_A2UI);
+		glBindImageTexture(1, nodeIndicies.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
+
+		flagShader->invoke(width, height, 1);
+		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+
+
+		//Write voxel information into leaves
+		fillLeavesShader->use();
+		fillLeavesShader->setInteger("numVoxels", voxelizer.getVoxelAmount());
+		flagShader->setInteger("level", maxLevel);
+		flagShader->setInteger("dimensions", voxelizer.getDimensions());
+
+		glBindImageTexture(0, nodeIndicies.texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+		glBindImageTexture(1, nodeDiffuse.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
+		glBindImageTexture(2, voxelizer.getVoxelPositions(), 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGB10_A2UI);
+		glBindImageTexture(3, voxelizer.getVoxelColors(), 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
+
+		fillLeavesShader->invoke(width, height, 1);
+		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+	}
+
+
+	void VoxelOctree::mipmapOctree() {
 		//TODO: implement this
 	}
+
 
 	void VoxelOctree::computeMaximum() {
 		maxNodes = 1;
