@@ -60,15 +60,15 @@ void main() {
 
 	int nodeIndex = getNodeIndex(position, lvl);
 	unsigned int rgb8 = imageLoad(nodeDiffuse, nodeIndex).r;
-	vec4 diffuse = convRGBA8toVec4(rgb8);
+	vec4 diffuse = convRGBA8toVec4(rgb8).rgba / 255 ;
 
 	color = diffuse;
-	//color = vec4(vec3(nodeIndex / 100.f), 1.f);
-	
 
 	//Visualize basic scene on left side
 	if(TexCoords.x < 0.4f)
 		color = vec4(baseColor, 1.f);
+	else if(TexCoords.y > 0.5f)
+		color = vec4(vec3(nodeIndex / 100.f), 1.f);
 }
 
 

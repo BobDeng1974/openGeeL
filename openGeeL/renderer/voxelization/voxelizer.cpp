@@ -4,6 +4,8 @@
 #include <iostream>
 #include <gtc/matrix_transform.hpp>
 #include "../shader/sceneshader.h"
+#include "../cameras/camera.h"
+#include "../transformation/transform.h"
 #include "../scene.h"
 #include "../lights/lightmanager.h"
 #include "voxelizer.h"
@@ -38,16 +40,13 @@ namespace geeL {
 		BufferUtility::generateTextureBuffer(voxelAmount * sizeof(unsigned int), GL_RGBA8, voxelColors);
 		BufferUtility::generateTextureBuffer(voxelAmount * sizeof(unsigned int), GL_RGBA16F, voxelNormals);
 
-		//std::cout << voxelAmount << "\n";
-
 		BufferUtility::resetAtomicBuffer(atomicBuffer, count);
-
 
 		//Pass 2: Draw and store voxels in previously created buffers 
 		voxelizeScene(true);
 		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
-		//BufferUtility::resetAtomicBuffer(atomicBuffer);
+		BufferUtility::resetAtomicBuffer(atomicBuffer);
 	}
 
 	void Voxelizer::voxelizeScene(bool drawVoxel) const {
@@ -59,7 +58,8 @@ namespace geeL {
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 
 		//Create transform matrices for X-, Y- and Z-axis
-		mat4 proj   = glm::ortho(-100.f, 100.f, -100.f, 100.f, -100.f, 100.f);
+		float scale = 100.f;
+		mat4 proj   = glm::ortho(-scale, scale, -scale, scale, -scale, scale);
 		mat4 transX = proj * glm::lookAt(vec3(2.f, 0.f, 0.f), vec3(0.f), vec3(0.f, 1.f, 0.f));
 		mat4 transY = proj * glm::lookAt(vec3(0.f, 2.f, 0.f), vec3(0.f), vec3(0.f, 0.f, -1.f));
 		mat4 transZ = proj * glm::lookAt(vec3(0.f, 0.f, 2.f), vec3(0.f), vec3(0.f, 1.f, 0.f));
@@ -70,6 +70,9 @@ namespace geeL {
 		voxelShader->setMat4("transformZ", transZ);
 		voxelShader->setVector2("resolution", glm::vec2(dimensions));
 		voxelShader->setInteger("drawVoxel", (int)drawVoxel);
+
+		const Camera& camera = scene.getCamera();
+		voxelShader->setVector3("cameraPosition", camera.transform.getPosition());
 
 		glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicBuffer);
 

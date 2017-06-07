@@ -41,28 +41,26 @@ void main() {
 	float metaFlag = mod(material.mapFlags / 1000, 10);
 
 	//Discard fragment when material type is cutout and alpha value is very low
-	if(material.type == 1 && diffFlag == 1 && texture(material.diffuse, textureCoordinates).a < 0.1f)
-		discard;
-	else {
-		gPositionDepth.xyz = fragPosition;
-		gPositionDepth.a = clipDepth; 
+	discard(material.type == 1 && texture(material.diffuse, textureCoordinates).a < 0.1f);
+		
+	gPositionDepth.xyz = fragPosition;
+	gPositionDepth.a = clipDepth; 
     
-		vec3 norm = normalize(normal);
+	vec3 norm = normalize(normal);
 	
-		if(normFlag == 1) {
-			norm = texture(material.normal, textureCoordinates).rgb;
-			norm = normalize(norm * 2.0f - 1.0f);
-			norm = normalize(TBN * norm);
-		}
-
-		gNormalMet.rgb = norm;
-		gNormalMet.a = (metaFlag == 1) ? texture(material.metal, textureCoordinates).r : material.metallic;
-
-		vec3 texColor = (diffFlag == 1) ? texture(material.diffuse, textureCoordinates).rgb : material.color;
-		//Interpret roughness as (1 - specuarlity)
-		vec3 speColor = (specFlag == 1) ? 1.f - texture(material.specular, textureCoordinates).rgb : vec3(material.roughness); 
-		gDiffuseSpec.rgb = texColor;
-		gDiffuseSpec.a = speColor.r;
+	if(normFlag == 1) {
+		norm = texture(material.normal, textureCoordinates).rgb;
+		norm = normalize(norm * 2.0f - 1.0f);
+		norm = normalize(TBN * norm);
 	}
+
+	gNormalMet.rgb = norm;
+	gNormalMet.a = (metaFlag == 1) ? texture(material.metal, textureCoordinates).r : material.metallic;
+
+	vec3 texColor = (diffFlag == 1) ? texture(material.diffuse, textureCoordinates).rgb : material.color;
+	//Interpret roughness as (1 - specuarlity)
+	vec3 speColor = (specFlag == 1) ? 1.f - texture(material.specular, textureCoordinates).rgb : vec3(material.roughness); 
+	gDiffuseSpec.rgb = texColor;
+	gDiffuseSpec.a = speColor.r;
     
 } 
