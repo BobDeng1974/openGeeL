@@ -79,6 +79,7 @@
 #include "../renderer/animation/animator.h"
 #include "../renderer/animation/skeleton.h"
 
+#include "../renderer/lighting/conetracer.h"
 #include "../renderer/voxelization/voxelizer.h"
 #include "../renderer/voxelization/voxeloctree.h"
 
@@ -112,12 +113,12 @@ namespace {
 
 
 		virtual void init() {
-			float lightIntensity = 3200.f;
-			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-2.4f, 45.6f, -4.6f), vec3(0.f), vec3(1.f), true);
-			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Huge);
+			float lightIntensity = 300.f;
+			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(144.f, 82.2f, 132.f), vec3(0.f), vec3(1.f), true);
+			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Huge, 1.f, 8U, 150.f);
 			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
 
-			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.01f));
+			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(150.f, 18.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
 			MeshRenderer& sponz = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
 				meshTransform6, CullingMode::cullFront, "Sponza");
 			scene.addMeshRenderer(sponz);
@@ -139,8 +140,8 @@ void GlobalIlluminationScene::draw() {
 	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	TransformFactory transFactory = TransformFactory(world);
 
-	geeL::Transform& cameraTransform = Transform(vec3(-7.36f, 4.76f, -1.75f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
+	geeL::Transform& cameraTransform = Transform(vec3(41.f, 40.2f, 115.0f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f, 1.f, 1.f));
+	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 15.f, 0.45f, 60.f, window.width, window.height, 0.1f, 500.f);
 
 	MaterialFactory materialFactory = MaterialFactory();
 	MeshFactory meshFactory = MeshFactory(materialFactory);
@@ -195,22 +196,19 @@ void GlobalIlluminationScene::draw() {
 	postLister.add(def);
 	postLister.add(ssao);
 
-
 	Voxelizer voxelizer = Voxelizer(scene);
 	VoxelOctree octree = VoxelOctree(voxelizer);
 
-	octree.build();
-
-	ImageBasedLighting ibl = ImageBasedLighting(scene);
-	renderer.addEffect(ibl, ibl);
+	VoxelConeTracer tracer = VoxelConeTracer(scene, octree, voxelizer);
+	renderer.addEffect(tracer, tracer);
 
 	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 	GodRay& ray = GodRay(vec3(-2.4f, 45.6f, -4.6f), 20);
 	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
 	GodRaySnippet godRaySnippet = GodRaySnippet(ray);
-	renderer.addEffect(raySmooth);
-	scene.addRequester(ray);
-	postLister.add(raySmooth, godRaySnippet);
+	//renderer.addEffect(raySmooth);
+	//scene.addRequester(ray);
+	//postLister.add(raySmooth, godRaySnippet);
 
 	FXAA fxaa = FXAA();
 	renderer.addEffect(fxaa);
