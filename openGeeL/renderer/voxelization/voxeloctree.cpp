@@ -1,5 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <iostream>
 #include "../shader/computeshader.h"
 #include "voxelizer.h"
 #include "voxeloctree.h"
@@ -27,7 +28,7 @@ namespace geeL {
 
 	void VoxelOctree::build() {
 
-		//voxelizer.voxelize();
+		voxelizer.voxelize();
 
 		nodeLevels.clear();
 		nodeLevels.push_back(1); //Root has always one node
@@ -44,13 +45,22 @@ namespace geeL {
 		unsigned int groupWidth  = dataWidth / 8; 
 		unsigned int groupHeight = (dataHeight + 7) / 8;
 
-
 		buildOctree(dataWidth, groupWidth, groupHeight);
 		buildLeafNodes(groupWidth, groupHeight);
 		mipmapOctree();
 
 		glDeleteBuffers(1, &nodeCounter);
 		nodeCounter = 0;
+	}
+
+	void VoxelOctree::bind(const Shader& shader) const {
+		shader.use();
+		shader.setInteger("level", maxLevel);
+		shader.setInteger("dimensions", voxelizer.getDimensions());
+
+		glBindImageTexture(0, nodeIndicies.texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+		glBindImageTexture(1, nodeDiffuse.texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+		glBindImageTexture(2, voxelizer.getVoxelPositions(), 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGB10_A2UI);
 	}
 
 
@@ -71,18 +81,19 @@ namespace geeL {
 			flagShader->invoke(groupWidth, groupHeight, 1);
 			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
+			
 			//Allocate tiles for new children (1 tile = 8 children nodes)
 			unsigned int currNodes = nodeLevels[i]; //Node amount in current level
 			allocShader->use();
-			initShader->setInteger("numNodes", currNodes);
-			initShader->setInteger("nodeOffset", nodeOffset);
-			initShader->setInteger("allocOffset", allocOffset);
+			allocShader->setInteger("numNodes", currNodes);
+			allocShader->setInteger("nodeOffset", nodeOffset);
+			allocShader->setInteger("allocOffset", allocOffset);
 
 			glBindImageTexture(0, nodeIndicies.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
 			glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, nodeCounter);
 
 			unsigned int allocGroupWidth = (currNodes + 63) / 64;
-			initShader->invoke(allocGroupWidth, 1, 1);
+			allocShader->invoke(allocGroupWidth, 1, 1);
 			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_ATOMIC_COUNTER_BARRIER_BIT);
 
 
@@ -96,6 +107,8 @@ namespace geeL {
 			glBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint), &reset);
 			glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
 
+
+			std::cout << i << ": " << allocatedTiles << "\n";
 
 			//Initialize new node tiles
 			unsigned int allocatedNodes = 8 * allocatedTiles;

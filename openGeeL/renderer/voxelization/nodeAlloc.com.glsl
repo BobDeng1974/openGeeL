@@ -26,7 +26,6 @@ void main() {
 		offset = atomicCounterIncrement(nodeCounter); //Generate start index
 		offset *= 8;								  //Add offset for 8 child nodes									
 		offset += allocOffset;						  //Offset to free allocation space
-
 		offset |= 0x80000000;						  //Add child flag again
 
 		imageStore(nodeIndicies, nodeOffset + int(index), uvec4(offset, 0, 0, 0));

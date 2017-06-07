@@ -3,12 +3,12 @@
 layout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
 
-in vec3 vNormal[];
 in vec3 vPosition[];
+in vec3 vNormal[];
 in vec2 vTexCoords[];
 
-out vec3 normal;
 out vec3 fragPosition;
+out vec3 normal;
 out vec2 texCoords;
 
 flat out int  axis;	//X-, Y- or Z-axis for projection in fragment shader
@@ -81,9 +81,9 @@ void main() {
 	vec3 n2 = cross(e2, vec3(0.f, 0.f, 1.f));
 
 	//Dilate the triangle
-	position[0].xy = position[0].xy + pl * ((e2.xy / dot(e2.xy, n0.xy)) + (e0.xy / dot(e0.xy, n2.xy)) );
-	position[1].xy = position[1].xy + pl * ((e0.xy / dot(e0.xy, n1.xy)) + (e1.xy / dot(e1.xy, n0.xy)) );
-	position[2].xy = position[2].xy + pl * ((e1.xy / dot(e1.xy, n2.xy)) + (e2.xy / dot(e2.xy, n1.xy)) );
+	position[0].xy = position[0].xy + pl * ((e2.xy / dot(e2.xy, n0.xy)) + (e0.xy / dot(e0.xy, n2.xy)));
+	position[1].xy = position[1].xy + pl * ((e0.xy / dot(e0.xy, n1.xy)) + (e1.xy / dot(e1.xy, n0.xy)));
+	position[2].xy = position[2].xy + pl * ((e1.xy / dot(e1.xy, n2.xy)) + (e2.xy / dot(e2.xy, n1.xy)));
 
 
 	//Write vertices

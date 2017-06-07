@@ -9,6 +9,7 @@ typedef unsigned int uint;
 namespace geeL {
 
 	class ComputeShader;
+	class Shader;
 	class Voxelizer;
 
 	//Sparse voxel octree implementation
@@ -19,6 +20,7 @@ namespace geeL {
 		~VoxelOctree();
 
 		void build();
+		void bind(const Shader& shader) const;
 
 	private:
 		unsigned int maxLevel, maxNodes;

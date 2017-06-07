@@ -13,6 +13,8 @@ uniform int numVoxels;
 
 //Atomic average method from OpenGL Insight chapter 22
 void imageAtomicRGBA8Avg(vec4 val, int coord, layout(r32ui) uimageBuffer buf);
+vec4 convRGBA8ToVec4(in uint val);
+uint convVec4ToRGBA8(in vec4 val);
 
 
 void main() {
@@ -26,7 +28,7 @@ void main() {
 	uvec3 umin = uvec3(0, 0, 0);
 	uvec3 umax = uvec3(dim, dim, dim);
 
-	uvec4 vP = imageLoad(voxelPositions, int(voxelIndex));  //Position of voxel
+	uvec4 position = imageLoad(voxelPositions, int(voxelIndex));  //Position of voxel
 	vec4 diffuse = imageLoad(voxelColors, int(voxelIndex)); //Color of voxel
 
 	int nodeIndex = 0; //Set index to root node (0)
@@ -37,31 +39,34 @@ void main() {
 
 		dim /= 2;
 		uvec3 box; //Spacial index of subnode
-		box.x = uint(vP.x > (umin.x + dim));
-		box.y = uint(vP.y > (umin.y + dim));
-		box.z = uint(vP.y > (umin.z + dim));
+		//box.x = uint(position.x > (umin.x + dim));
+		//box.y = uint(position.y > (umin.y + dim));
+		//box.z = uint(position.y > (umin.z + dim));
+		box = clamp(ivec3(1 + position.xyz - umin - dim), 0, 1);
 
 		umin += box * dim;
 
 		unsigned int childIndex; //Spacial position translated into index
-		childIndex = box.x + 4 * box.y + 2 + box.z;
+		childIndex = box.x + 4 * box.y + 2 * box.z;
 		nodeIndex += int(childIndex);
 
 
 		node = imageLoad(nodeIndicies, nodeIndex).r;
-	}
 
-	imageAtomicRGBA8Avg(diffuse, nodeIndex, nodeColors);
+		//Write voxlels into leaf nodes as well as parent nodes to
+		//achieve mipmapping
+		imageAtomicRGBA8Avg(diffuse, nodeIndex, nodeColors);
+	}
 }
 
 
 vec4 convRGBA8ToVec4(in uint val) {
-    return vec4( float( (val&0x000000FF) ), float( (val&0x0000FF00)>>8U),
-	             float( (val&0x00FF0000)>>16U), float( (val&0xFF000000)>>24U) );
+    return vec4( float((val&0x000000FF)), float((val&0x0000FF00)>>8U),
+	             float((val&0x00FF0000)>>16U), float((val&0xFF000000)>>24U) );
 }
 
 uint convVec4ToRGBA8(in vec4 val) {
-    return ( uint(val.w)&0x000000FF)<<24U | (uint(val.z)&0x000000FF)<<16U | (uint(val.y)&0x000000FF)<<8U | (uint(val.x)&0x000000FF);
+    return (uint(val.w)&0x000000FF)<<24U | (uint(val.z)&0x000000FF)<<16U | (uint(val.y)&0x000000FF)<<8U | (uint(val.x)&0x000000FF);
 }
 
 void imageAtomicRGBA8Avg(vec4 val, int coord, layout(r32ui) uimageBuffer buf) {
@@ -76,7 +81,7 @@ void imageAtomicRGBA8Avg(vec4 val, int coord, layout(r32ui) uimageBuffer buf) {
        prev = cur;
 	   vec4 rval = convRGBA8ToVec4(cur);
 	   rval.xyz = rval.xyz*rval.w;
-	   vec4 curVal = rval +  val;
+	   vec4 curVal = rval + val;
 	   curVal.xyz /= curVal.w;
 	   newVal = convVec4ToRGBA8(curVal);
 	}

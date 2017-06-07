@@ -1,12 +1,12 @@
 #version 430
 
-flat in int  axis;
-flat in vec4 AABB;
 
-in vec3 normal;
 in vec3 fragPosition;
+in vec3 normal;
 in vec2 texCoords;
 
+flat in int  axis;
+flat in vec4 AABB;
 
 layout(location = 0) out vec4 gl_FragColor;
 layout(pixel_center_integer) in vec4 gl_FragCoord;
@@ -19,15 +19,13 @@ uniform layout(binding = 2, rgba16f) imageBuffer voxelNormals;
 //Atomic counter that is used to index above 1D textures
 layout (binding = 0, offset = 0) uniform atomic_uint voxelCount;
 
-uniform sampler2D diffuse;
 uniform vec2 resolution;
-uniform bool drawVoxel; 
+uniform bool drawVoxel;
 
 //Mesh voxelization according to
 //https://developer.nvidia.com/content/basics-gpu-voxelization and
 //https://github.com/otaku690/SparseVoxelOctree
 void main() {
-
 	//Discard if fragment is outside of triangles bounding box
 	discard(fragPosition.x < AABB.x || fragPosition.y < AABB.y 
 		|| fragPosition.x > AABB.z || fragPosition.y > AABB.w);
@@ -53,7 +51,7 @@ void main() {
 	if(!drawVoxel) return; //Return in this case since we only want to count voxels
 
 	//Example implementation. Should be later replaced with proper shading
-	vec3 color = texture(diffuse, texCoords).rgb;
+	vec3 color = vec3(0.1, 0.2, 0.3) * 0.01f;//texture(diffuse, texCoords).rgb;
 	vec3 normal = normal;
 
 	imageStore(voxelPositions, int(index), coords);

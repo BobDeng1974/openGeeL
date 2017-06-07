@@ -1,18 +1,23 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <glm.hpp>
+#include <iostream>
+#include <gtc/matrix_transform.hpp>
 #include "../shader/sceneshader.h"
 #include "../scene.h"
 #include "../lights/lightmanager.h"
 #include "voxelizer.h"
 
+using namespace glm;
+
 namespace geeL {
 
 	Voxelizer::Voxelizer(const RenderScene& scene, unsigned int dimensions) : scene(scene), dimensions(dimensions) {
-		FragmentShader frag = FragmentShader("renderer/voxelization/voxelize.frag");
+		FragmentShader frag = FragmentShader("renderer/voxelization/voxelize.frag", true, false);
 		voxelShader = new SceneShader("renderer/voxelization/voxelize.vert", "renderer/voxelization/voxelize.geom", 
 			frag, ShaderTransformSpace::World);
 
+		BufferUtility::generateAtomicBuffer(atomicBuffer);
 	}
 
 	Voxelizer::~Voxelizer() {
@@ -21,30 +26,28 @@ namespace geeL {
 
 
 	void Voxelizer::voxelize() {
-		BufferUtility::generateAtomicBuffer(atomicBuffer);
 
 		//Pass 1: Get number of voxels and generate buffers accordingly
 		voxelizeScene(false);
 		glMemoryBarrier(GL_ATOMIC_COUNTER_BARRIER_BIT);
 
-		glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicBuffer);
-		unsigned int* count = (unsigned int*)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, 
-			sizeof(unsigned int), GL_MAP_READ_BIT | GL_MAP_WRITE_BIT);
+		unsigned int* count = BufferUtility::getAtomicBufferCount(atomicBuffer);
 
 		voxelAmount = count[0];
 		BufferUtility::generateTextureBuffer(voxelAmount * sizeof(unsigned int), GL_R32UI, voxelPositions);
 		BufferUtility::generateTextureBuffer(voxelAmount * sizeof(unsigned int), GL_RGBA8, voxelColors);
 		BufferUtility::generateTextureBuffer(voxelAmount * sizeof(unsigned int), GL_RGBA16F, voxelNormals);
 
-		//Reset counter
-		memset(count, 0, sizeof(unsigned int));
-		glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
-		glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+		//std::cout << voxelAmount << "\n";
+
+		BufferUtility::resetAtomicBuffer(atomicBuffer, count);
 
 
 		//Pass 2: Draw and store voxels in previously created buffers 
 		voxelizeScene(true);
 		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+
+		//BufferUtility::resetAtomicBuffer(atomicBuffer);
 	}
 
 	void Voxelizer::voxelizeScene(bool drawVoxel) const {
@@ -55,24 +58,32 @@ namespace geeL {
 		glDisable(GL_DEPTH_TEST);
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 
-		//Bind to location 0
-		glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicBuffer);
+		//Create transform matrices for X-, Y- and Z-axis
+		mat4 proj   = glm::ortho(-100.f, 100.f, -100.f, 100.f, -100.f, 100.f);
+		mat4 transX = proj * glm::lookAt(vec3(2.f, 0.f, 0.f), vec3(0.f), vec3(0.f, 1.f, 0.f));
+		mat4 transY = proj * glm::lookAt(vec3(0.f, 2.f, 0.f), vec3(0.f), vec3(0.f, 0.f, -1.f));
+		mat4 transZ = proj * glm::lookAt(vec3(0.f, 0.f, 2.f), vec3(0.f), vec3(0.f, 1.f, 0.f));
 
 		voxelShader->use();
+		voxelShader->setMat4("transformX", transX);
+		voxelShader->setMat4("transformY", transY);
+		voxelShader->setMat4("transformZ", transZ);
 		voxelShader->setVector2("resolution", glm::vec2(dimensions));
 		voxelShader->setInteger("drawVoxel", (int)drawVoxel);
+
+		glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicBuffer);
 
 		if (drawVoxel) {
 			glBindImageTexture(0, voxelPositions.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGB10_A2UI);
 			glBindImageTexture(1, voxelColors.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
 			glBindImageTexture(2, voxelNormals.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA16F);
-			voxelShader->setInteger("voxelPosition", 0);
+
+			//scene.lightManager.bindShadowMaps(*voxelShader);
 		}
 
 		//Render scene
-		scene.lightManager.bindShadowMaps(*voxelShader);
 		scene.drawObjects(*voxelShader);
-
+		
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
