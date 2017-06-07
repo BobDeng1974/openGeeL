@@ -4,6 +4,7 @@
 #include "../../renderer/transformation/transform.h"
 #include "../guiwrapper.h"
 #include "guisnippets.h"
+#include <cmath>
 #include <iostream>
 
 namespace geeL {
@@ -73,10 +74,11 @@ namespace geeL {
 		std::string name = "Transform(" + std::to_string(transform.getID()) + "):";
 		if (nk_combo_begin_label(context, name.c_str(), nk_vec2(nk_widget_width(context), 400))) {
 
-			glm::vec3 pos = drawVector2(context, transform.getPosition(), "P", 100.f, 0.1f);
+			glm::vec3 pos = drawVector2(context, transform.getPosition(), "P", 1000.f, 0.1f);
 			transform.setPosition(pos);
 
-			glm::vec3 rot = drawVector2(context, transform.getEulerAngles(), "R", 360.f, 0.1f);
+			glm::vec3 rot = drawVector2(context, transform.getEulerAngles(), "R", 3600.f, 0.1f);
+			rot = glm::vec3(fmod(rot.x, 360.f), fmod(rot.y, 360.f), fmod(rot.z, 360.f));
 			transform.setEulerAngles(rot);
 
 			glm::vec3 scale = drawVector2(context, transform.getScaling(), "S", 100.f, 0.1f);
