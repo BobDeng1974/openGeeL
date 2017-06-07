@@ -80,8 +80,7 @@ namespace geeL{
 		cullFaces();
 
 		shader.use();
-		shader.setModelMatrix(transform.getMatrix());
-		shader.bindMatrices();
+		shader.setMat4("model", transform.getMatrix());
 
 		for (auto it = materials.begin(); it != materials.end(); it++) {
 			const list<MaterialMapping>& elements = it->second;

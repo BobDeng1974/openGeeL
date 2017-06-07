@@ -20,6 +20,7 @@ namespace geeL {
 	RenderShader::RenderShader(const char* vertexPath, const char* geometryPath, const char* fragmentPath)
 		: Shader() {
 
+		name = fragmentPath;
 		init(vertexPath, geometryPath, fragmentPath);
 	}
 

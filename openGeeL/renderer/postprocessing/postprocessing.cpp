@@ -1,5 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <iostream>
 #include "../shader/rendershader.h"
 #include "../primitives/screenquad.h"
 #include "../framebuffer/framebuffer.h"
