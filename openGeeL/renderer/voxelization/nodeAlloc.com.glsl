@@ -14,8 +14,8 @@ uniform layout(binding = 0, r32ui) uimageBuffer nodeIndicies;
 void main() {
 	unsigned int index = gl_GlobalInvocationID.x;
 
-	if(index >= numNodes)
-		return; //Should never happen
+	//Filter out abundant calls of work group
+	if(index >= numNodes) return;
 
 	unsigned int childIndex = imageLoad(nodeIndicies, nodeOffset + int(index)).r;
 	

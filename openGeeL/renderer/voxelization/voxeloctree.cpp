@@ -60,7 +60,6 @@ namespace geeL {
 
 		glBindImageTexture(0, nodeIndicies.texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
 		glBindImageTexture(1, nodeDiffuse.texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
-		glBindImageTexture(2, voxelizer.getVoxelPositions(), 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGB10_A2UI);
 	}
 
 
@@ -88,7 +87,6 @@ namespace geeL {
 			allocShader->setInteger("numNodes", currNodes);
 			allocShader->setInteger("nodeOffset", nodeOffset);
 			allocShader->setInteger("allocOffset", allocOffset);
-
 			glBindImageTexture(0, nodeIndicies.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
 			glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, nodeCounter);
 
@@ -134,6 +132,7 @@ namespace geeL {
 	}
 
 	void VoxelOctree::buildLeafNodes(uint width, uint height) {
+		//TODO: Integrate this into fillLeavesShader later on
 		//Determine which leaf nodes have children or not
 		flagShader->use();
 		flagShader->setInteger("numVoxels", voxelizer.getVoxelAmount());
@@ -149,8 +148,8 @@ namespace geeL {
 		//Write voxel information into leaves
 		fillLeavesShader->use();
 		fillLeavesShader->setInteger("numVoxels", voxelizer.getVoxelAmount());
-		flagShader->setInteger("level", maxLevel);
-		flagShader->setInteger("dimensions", voxelizer.getDimensions());
+		fillLeavesShader->setInteger("level", maxLevel);
+		fillLeavesShader->setInteger("dimensions", voxelizer.getDimensions());
 
 		glBindImageTexture(0, nodeIndicies.texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
 		glBindImageTexture(1, nodeDiffuse.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);

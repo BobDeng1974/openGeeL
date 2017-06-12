@@ -20,8 +20,8 @@ uint convVec4ToRGBA8(in vec4 val);
 void main() {
 	unsigned int voxelIndex = gl_GlobalInvocationID.y * 1024 + gl_GlobalInvocationID.x;
 	
-	if(voxelIndex >= numVoxels)
-	    return; //Should never happen
+	//Filter out abundant calls of work group
+	if(voxelIndex >= numVoxels) return;
 
 	//Dimensions of root node
 	unsigned int dim = dimensions;
@@ -39,17 +39,16 @@ void main() {
 
 		dim /= 2;
 		uvec3 box; //Spacial index of subnode
-		//box.x = uint(position.x > (umin.x + dim));
-		//box.y = uint(position.y > (umin.y + dim));
-		//box.z = uint(position.y > (umin.z + dim));
+		box.x = uint(position.x > (umin.x + dim));
+		box.y = uint(position.y > (umin.y + dim));
+		box.z = uint(position.y > (umin.z + dim));
 		box = clamp(ivec3(1 + position.xyz - umin - dim), 0, 1);
 
 		umin += box * dim;
 
-		unsigned int childIndex; //Spacial position translated into index
-		childIndex = box.x + 4 * box.y + 2 * box.z;
+		//Spacial position translated into index
+		unsigned int childIndex = box.x + 4 * box.y + 2 * box.z;
 		nodeIndex += int(childIndex);
-
 
 		node = imageLoad(nodeIndicies, nodeIndex).r;
 
@@ -57,6 +56,7 @@ void main() {
 		//achieve mipmapping
 		imageAtomicRGBA8Avg(diffuse, nodeIndex, nodeColors);
 	}
+
 }
 
 

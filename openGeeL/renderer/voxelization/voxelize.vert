@@ -14,7 +14,8 @@ void main() {
 	vec4 pos = model * vec4(position, 1.f);
 	vPosition = pos.xyz;
 	vNormal = norm;
+	//vNormal = transpose(inverse(mat3(model))) * norm;
 	vTexCoords = texCoords;
 		
-	gl_Position = vec4(position, 1.f);
+	gl_Position = pos;
 }

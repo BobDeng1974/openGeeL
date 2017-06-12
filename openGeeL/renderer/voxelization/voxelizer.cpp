@@ -44,7 +44,7 @@ namespace geeL {
 
 		//Pass 2: Draw and store voxels in previously created buffers 
 		voxelizeScene(true);
-		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_ATOMIC_COUNTER_BARRIER_BIT);
 
 		BufferUtility::resetAtomicBuffer(atomicBuffer);
 	}
@@ -52,17 +52,21 @@ namespace geeL {
 	void Voxelizer::voxelizeScene(bool drawVoxel) const {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, dimensions, dimensions);
+		//glOrtho(-50.0 * dimensions, 50.0 * dimensions, -50.0 * dimensions, 50.0 * dimensions, 1.0, -1.0);
 
+		//glScissor(0, 0, dimensions * 10000.f, dimensions * 10000.f);
+		//glEnable(GL_SCISSOR_TEST);
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 
 		//Create transform matrices for X-, Y- and Z-axis
-		float scale = 100.f;
-		mat4 proj   = glm::ortho(-scale, scale, -scale, scale, -scale, scale);
+		float scale = 1.f;
+		mat4 proj = glm::ortho(-scale, scale, -scale, scale, -scale, scale);
+		//proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 2.0f - 1.0f, 3.0f);
 		mat4 transX = proj * glm::lookAt(vec3(2.f, 0.f, 0.f), vec3(0.f), vec3(0.f, 1.f, 0.f));
 		mat4 transY = proj * glm::lookAt(vec3(0.f, 2.f, 0.f), vec3(0.f), vec3(0.f, 0.f, -1.f));
-		mat4 transZ = proj * glm::lookAt(vec3(0.f, 0.f, 2.f), vec3(0.f), vec3(0.f, 1.f, 0.f));
+		mat4 transZ = proj * glm::lookAt(vec3(0.f, 0.f, 2.f), vec3(0.f),  vec3(0.f, 1.f, 0.f));
 
 		voxelShader->use();
 		voxelShader->setMat4("transformX", transX);

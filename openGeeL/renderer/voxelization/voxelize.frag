@@ -32,7 +32,6 @@ void main() {
 	discard(fragPosition.x < AABB.x || fragPosition.y < AABB.y 
 		|| fragPosition.x > AABB.z || fragPosition.y > AABB.w);
 
-
 	uvec4 tCoords = uvec4(gl_FragCoord.x, gl_FragCoord.y, resolution.x * gl_FragCoord.z, 0.f);
 	uvec4 coords;
 	if(axis == 1) {

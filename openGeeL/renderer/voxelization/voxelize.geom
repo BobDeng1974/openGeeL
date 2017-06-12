@@ -22,6 +22,29 @@ uniform mat4 transformZ;
 uniform vec2 resolution;
 
 
+mat4 lookAt(vec3 eye, vec3 center, vec3 up) {
+	vec3 f = normalize(center - eye);
+	vec3 s = normalize(cross(f, up));
+	vec3 u = cross(s, f);
+
+	mat4 mat;
+	mat[0][0] = s.x;
+	mat[1][0] = s.y;
+	mat[2][0] = s.z;
+	mat[0][1] = u.x;
+	mat[1][1] = u.y;
+	mat[2][1] = u.z;
+	mat[0][2] =-f.x;
+	mat[1][2] =-f.y;
+	mat[2][2] =-f.z;
+	mat[3][0] =-dot(s, eye);
+	mat[3][1] =-dot(u, eye);
+	mat[3][2] = dot(f, eye);
+
+	return mat;
+}
+
+
 //Mesh voxelization according to
 //https://developer.nvidia.com/content/basics-gpu-voxelization and
 //https://github.com/otaku690/SparseVoxelOctree
@@ -38,7 +61,7 @@ void main() {
 	mat4 transform;
 	float maxFace = max(NdotX, max(NdotY, NdotZ));
 	if(maxFace == NdotX) {
-		transform = transformX;		
+		transform = transformX;
 		axis = 1;
 	}
 	else if(maxFace == NdotY) {
@@ -66,6 +89,7 @@ void main() {
 	gAABB.xy = min(position[0].xy, min(position[1].xy, position[2].xy));
 	gAABB.zw = max(position[0].xy, max(position[1].xy, position[2].xy));
 
+
 	//Enlarge by half pixel
 	gAABB.xy -= hPixel;
 	gAABB.zw += hPixel;
@@ -81,9 +105,9 @@ void main() {
 	vec3 n2 = cross(e2, vec3(0.f, 0.f, 1.f));
 
 	//Dilate the triangle
-	position[0].xy = position[0].xy + pl * ((e2.xy / dot(e2.xy, n0.xy)) + (e0.xy / dot(e0.xy, n2.xy)));
-	position[1].xy = position[1].xy + pl * ((e0.xy / dot(e0.xy, n1.xy)) + (e1.xy / dot(e1.xy, n0.xy)));
-	position[2].xy = position[2].xy + pl * ((e1.xy / dot(e1.xy, n2.xy)) + (e2.xy / dot(e2.xy, n1.xy)));
+	position[0].xy += pl * ((e2.xy / dot(e2.xy, n0.xy)) + (e0.xy / dot(e0.xy, n2.xy)));
+	position[1].xy += pl * ((e0.xy / dot(e0.xy, n1.xy)) + (e1.xy / dot(e1.xy, n0.xy)));
+	position[2].xy += pl * ((e1.xy / dot(e1.xy, n2.xy)) + (e2.xy / dot(e2.xy, n1.xy)));
 
 
 	//Write vertices

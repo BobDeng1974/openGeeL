@@ -12,8 +12,8 @@ uniform layout(binding = 1, r32ui) coherent uimageBuffer nodeDiffuse;
 void main() {
 	unsigned int index = gl_GlobalInvocationID.y * 1024 + gl_GlobalInvocationID.x;
 
-	if(index >= numNodes)
-		return; //Should never happen
+	//Filter out abundant calls of work group
+	if(index >= numNodes) return;
 
 	imageStore(nodeIndicies, int(allocOffset + index), uvec4(0));
 	imageStore(nodeDiffuse,  int(allocOffset + index), uvec4(0));
