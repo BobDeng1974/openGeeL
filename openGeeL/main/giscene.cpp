@@ -130,7 +130,7 @@ namespace {
 }
 
 
-void GlobalIlluminationScene::draw() {
+void VoxelScene::draw() {
 
 	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
 	InputManager manager = InputManager();

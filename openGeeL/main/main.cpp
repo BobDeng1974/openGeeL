@@ -11,11 +11,11 @@
 int main() {
 	//BedroomScene::draw();
 	//DeerScene::draw();
-	//ScieneScene::draw();
+	ScieneScene::draw();
 	//ArthouseScene::draw();
 	//SponzaScene::draw();
 	
-	GlobalIlluminationScene::draw();
+	//VoxelScene::draw();
 	//RenderTest::draw();
 	//RaymarchTest::draw();
 

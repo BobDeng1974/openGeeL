@@ -158,6 +158,9 @@ namespace geeL {
 		if (type != ShadowMapType::None) {
 			nk_label(context, "Shadow Map", NK_TEXT_LEFT);
 
+			float intensity = GUISnippets::drawBarFloat(context, map.getIntensity(), 0.f, 1.f, 0.001f, "Shadow Intensity");
+			map.setIntensity(intensity);
+
 			float bias = GUISnippets::drawBarFloat(context, map.getShadowBias(), 0.f, 0.02f, 0.0001f, "Shadow Bias");
 			map.setShadowBias(bias);
 

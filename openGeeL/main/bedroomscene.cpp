@@ -213,7 +213,7 @@ void BedroomScene::draw() {
 	gui.addElement(postLister);
 	SystemInformation sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
 	gui.addElement(sysInfo);
-	//renderer.addGUIRenderer(&gui);
+	renderer.addGUIRenderer(&gui);
 
 	ImageBasedLighting ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);
@@ -239,6 +239,8 @@ void BedroomScene::draw() {
 
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
+	SSRRSnippet ssrrSnippet = SSRRSnippet(ssrr);
+	postLister.add(ssrrSmooth, ssrrSnippet);
 
 	renderer.addEffect(dof, dof);
 	postLister.add(dof);

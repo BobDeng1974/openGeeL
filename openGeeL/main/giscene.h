@@ -1,6 +1,6 @@
 #pragma once
 
-class GlobalIlluminationScene {
+class VoxelScene {
 
 public:
 	static void draw();

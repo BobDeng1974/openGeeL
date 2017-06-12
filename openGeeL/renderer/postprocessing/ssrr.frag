@@ -20,7 +20,11 @@ uniform int effectOnly;
 
 float border = 1.f;
 
-vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal);
+vec3 getReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float roughness);
+vec3 getReflection(vec3 fragPos, vec3 normal, vec3 reflectionDirection, float roughness);
+vec3 getReflectionFussy(vec3 fragPos, vec3 normal, vec3 reflectionDirection, float roughness);
+
+
 vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness);
 float calculateNormalDistrubution(vec3 normal, vec3 halfway, float roughness);
 float calculateGeometryFunctionSmith(vec3 normal, vec3 viewDirection, vec3 lightDirection, float roughness);
@@ -30,6 +34,8 @@ float doto(vec3 a, vec3 b);
 vec3 interpolate(vec3 a, vec3 b, float i);
 float interpolatei(vec3 a, vec3 b, vec3 v);
 vec4 transformToClip(vec3 vector);
+vec2 hammersleySeq(int i, int count);
+vec3 generateSampledVector(float roughness, vec2 samp);
 
 
 void main() {
@@ -38,42 +44,82 @@ void main() {
 	float depth = -fragPos.z;
 	float roughness = texture(gSpecular, TexCoords).w; 
 	
+	
 	vec3 normal = normalize(texture(gNormalMet, TexCoords).rgb);
 	vec3 reflectionDirection = normalize(reflect(fragPos, normal));
 
 	//DBranch to filter out large bunch of pixels
 	if(depth > 0.1f && roughness < 0.99f) {
-		vec3 viewDirection = normalize(-fragPos);
-		float metallic = texture(gNormalMet, TexCoords).w;
-		vec3 reflectionColor = getReflection(fragPos, reflectionDirection, normal);
-
-		vec3 halfwayDirection = normalize(reflectionDirection + viewDirection);
-		float NdotL = doto(normal, reflectionDirection);
-
-		//BRDF
-		float ndf = calculateNormalDistrubution(normal, halfwayDirection, roughness);
-		float geo = calculateGeometryFunctionSmith(normal, viewDirection, reflectionDirection, roughness);
-		vec3 fres = calculateFresnelTerm(doto(halfwayDirection, viewDirection), reflectionColor, metallic, roughness);
-
-		//Lighting equation
-		vec3  nom   = geo * fres * ndf;
-		float denom = 4.f * doto(viewDirection, normal) * NdotL + 0.001f; 
-		vec3  brdf  = nom / denom;
-
-		color = vec4(result + reflectionColor * brdf * NdotL, 1.f);
+		color = vec4(result + getReflection(fragPos, normal, reflectionDirection, roughness), 1.f);
+		//color = vec4(result + getReflectionFussy(fragPos, normal, reflectionDirection, roughness), 1.f);
 	}
 	else 
 		color = vec4(result, 1.f);
 }
 
-vec3 getReflection(vec3 fragPos, vec3 reflectionDir, vec3 normal) {
+
+vec3 getReflection(vec3 fragPos, vec3 normal, vec3 reflectionDirection, float roughness) {
+	vec3 viewDirection = normalize(-fragPos);
+	float metallic = texture(gNormalMet, TexCoords).w;
+
+	vec3 reflectionColor = getReflectionColor(fragPos, reflectionDirection, normal, roughness);
+	vec3 halfwayDirection = normalize(reflectionDirection + viewDirection);
+	float NdotL = doto(normal, reflectionDirection);
+
+	//BRDF
+	float ndf = calculateNormalDistrubution(normal, halfwayDirection, roughness);
+	float geo = calculateGeometryFunctionSmith(normal, viewDirection, reflectionDirection, roughness);
+	vec3 fres = calculateFresnelTerm(doto(halfwayDirection, viewDirection), reflectionColor, metallic, roughness);
+
+	//Lighting equation
+	vec3  nom   = geo * fres * ndf;
+	float denom = 4.f * doto(viewDirection, normal) * NdotL + 0.001f; 
+	vec3  brdf  = nom / denom;
+
+	return reflectionColor * brdf * NdotL;
+}
+
+vec3 getReflectionFussy(vec3 fragPos, vec3 normal, vec3 reflectionDirection, float roughness) {
+	vec3 viewDirection = normalize(-fragPos);
+	float metallic = texture(gNormalMet, TexCoords).w;
+
+	vec3 right = cross(reflectionDirection, normal);
+	vec3 up = cross(reflectionDirection, right);
+	float NoV = doto(normal, viewDirection);
+
+	vec3 radiance = vec3(0.f);
+	int sampleCount = 10;
+	for(int i = 0; i < sampleCount; i++) {
+		vec3 sampleVector = generateSampledVector(roughness, hammersleySeq(i, sampleCount));
+		sampleVector = sampleVector.x * right + sampleVector.y * up + sampleVector.z * reflectionDirection; //To world coordinates
+		sampleVector = normalize(sampleVector);
+		vec3 reflectionColor = getReflectionColor(fragPos, sampleVector, normal, roughness);
+
+		vec3 halfway = normalize(sampleVector + viewDirection);
+		float cosT = doto(sampleVector, normal);
+		cosT = clamp(cosT, 0.f, 1.f);
+		float sinT = sqrt(1.f - cosT * cosT);
+
+		float theta = doto(halfway, viewDirection);
+		vec3  fresnel = calculateFresnelTerm(theta, reflectionColor, metallic, roughness);
+		float geo = calculateGeometryFunctionSmith(normal, viewDirection, sampleVector, roughness);
+		float denom =  1.f / (4.f * NoV * doto(halfway, normal) + 0.001f); 
+
+		radiance += reflectionColor * geo * fresnel * sinT * denom;
+	}
+
+	return radiance / float(sampleCount);
+}
+
+vec3 getReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float roughness) {
 	
-	float _stepSize = stepSize; 
+	float _stepSize = stepSize * (1.f - roughness); 
+	float _stepCount = stepCount * (1.f - roughness);
 
 	vec3 reflectionColor = vec3(0.f);
 	vec3 currPosition = fragPos;
 	int i = 0;
-	while(i < stepCount) {
+	while(i < _stepCount) {
 		currPosition = currPosition + reflectionDir * _stepSize;
 		float depth = currPosition.z;
 		
@@ -197,4 +243,32 @@ float interpolatei(vec3 a, vec3 b, vec3 v) {
 
 float doto(vec3 a, vec3 b) {
 	return max(dot(a, b), 0.0f);
+}
+
+
+//Hammersley sequence according to
+//http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html
+vec2 hammersleySeq(int i, int count) {
+
+	uint bits = i;
+	bits = (bits << 16u) | (bits >> 16u);
+    bits = ((bits & 0x55555555u) << 1u) | ((bits & 0xAAAAAAAAu) >> 1u);
+    bits = ((bits & 0x33333333u) << 2u) | ((bits & 0xCCCCCCCCu) >> 2u);
+    bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & 0xF0F0F0F0u) >> 4u);
+    bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & 0xFF00FF00u) >> 8u);
+    float j = float(bits) * 2.3283064365386963e-10;
+
+	return vec2(float(i) / float(count), j);
+}
+
+
+vec3 generateSampledVector(float roughness, vec2 samp) {
+	float e1 = samp.x;
+	float e2 = samp.y;
+
+	float theta = atan((roughness * sqrt(e1)) / sqrt(1.f - e2));
+	//float theta = atan((roughness * roughness * sqrt(e1)) / sqrt(1.f - e2));
+	float phi   = 2.f * PI * e2;
+
+	return vec3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
 }
