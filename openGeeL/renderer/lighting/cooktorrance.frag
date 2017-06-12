@@ -8,6 +8,7 @@ struct PointLight {
     vec3 position;
     vec3 diffuse;
 
+	float shadowIntensity;
 	float bias;
 	float farPlane;
 
@@ -27,6 +28,7 @@ struct SpotLight {
 
     float angle;
     float outerAngle;
+	float shadowIntensity;
 	float bias;
 
 	int resolution;
@@ -240,7 +242,7 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal,
 
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
 		viewDirection, light.position, light.diffuse, albedo, roughness, metallic);
-	float shadow = 1.f - calculatePointLightShadows(index, normal, fragPosition);
+	float shadow = 1.f - light.shadowIntensity * calculatePointLightShadows(index, normal, fragPosition);
 	
     return shadow * reflectance;
 }
@@ -259,7 +261,7 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal,
 		viewDirection, light.position, light.diffuse, albedo, roughness, metallic);
 
 	vec3 coords = vec3(0.f);
-	float shadow = 1.f - calculateSpotLightShadows(index, normal, fragPosition, coords);
+	float shadow = 1.f - light.shadowIntensity * calculateSpotLightShadows(index, normal, fragPosition, coords);
 	float cookie = light.useCookie ? texture(light.cookie, coords.xy).r : 1.f;
 
     return shadow * reflectance * intensity * cookie;

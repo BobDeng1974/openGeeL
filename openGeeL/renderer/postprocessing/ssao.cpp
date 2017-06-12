@@ -42,7 +42,7 @@ namespace geeL {
 			noise.push_back(sample);
 		}
 
-		noiseTexture = ImageTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::Nearest);
+		noiseTexture = ImageTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::None);
 	}
 
 	void SSAO::init(ScreenQuad& screen, const FrameBuffer& buffer) {
@@ -56,7 +56,7 @@ namespace geeL {
 			shader.setVector3("samples[" + to_string(i) + "]", kernel[i]);
 		
 		tempBuffer.init(buffer.getWidth(), buffer.getHeight(), ColorType::Single,
-			FilterMode::Nearest, WrapMode::Repeat, false);
+			FilterMode::None, WrapMode::Repeat, false);
 
 		blur.init(screen, buffer);
 		blur.setBuffer(tempBuffer.getTexture().getID());

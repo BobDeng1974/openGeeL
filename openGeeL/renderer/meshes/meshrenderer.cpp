@@ -77,8 +77,6 @@ namespace geeL{
 	}
 
 	void MeshRenderer::drawExclusive(SceneShader& shader) const {
-		cullFaces();
-
 		shader.use();
 		shader.setMat4("model", transform.getMatrix());
 
@@ -99,8 +97,6 @@ namespace geeL{
 				mesh.draw();
 			}
 		}
-
-		uncullFaces();
 	}
 
 	void MeshRenderer::drawGeometry(const RenderShader& shader) const {

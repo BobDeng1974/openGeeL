@@ -25,14 +25,14 @@ namespace geeL {
 		//Creates and returns a new texture from given file path or 
 		//returns an existing texture if it already uses this file
 		ImageTexture& CreateTexture(std::string filePath, ColorType colorType = ColorType::RGBA,
-			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest, 
+			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::None, 
 			AnisotropicFilter filter = AnisotropicFilter::Medium);
 
 		//Creates and returns a new texture map from given file path or 
 		//returns an existing texture if it already uses this file
 		TextureMap& CreateTextureMap(std::string filePath,
 			MapType type = MapType::Diffuse, ColorType colorType = ColorType::RGBA,
-			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest,
+			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::None,
 			AnisotropicFilter filter = AnisotropicFilter::Medium);
 
 		//Create and returns new environment map or returns existing one if file is already in use

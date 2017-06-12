@@ -10,7 +10,7 @@ namespace geeL {
 
 	public:
 		ShadowMap(const Light& light, ShadowMapType type = ShadowMapType::Soft) 
-			: light(light), type(type) {}
+			: light(light), type(type), intensity(1.f) {}
 
 
 		virtual void bindData(const RenderShader& shader, const std::string& name) = 0;
@@ -25,15 +25,31 @@ namespace geeL {
 
 		virtual unsigned int getID() const = 0;
 
-		ShadowMapType getType() const {
-			return type;
-		}
+		float getIntensity() const;
+		void setIntensity(float value);
+
+		ShadowMapType getType() const;
 
 	protected:
+		float intensity;
 		const ShadowMapType type;
 		const Light& light;
 
 	};
+
+
+	inline float ShadowMap::getIntensity() const {
+		return intensity;
+	}
+
+	inline void ShadowMap::setIntensity(float value) {
+		if (intensity != value && value > 0.f && value < 1.f)
+			intensity = value;
+	}
+
+	inline ShadowMapType ShadowMap::getType() const {
+		return type;
+	}
 	
 }
 

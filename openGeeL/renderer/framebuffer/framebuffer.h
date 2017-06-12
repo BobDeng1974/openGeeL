@@ -64,7 +64,7 @@ namespace geeL {
 		void init(unsigned int width, unsigned int height, std::vector<RenderTexture*>&& colorBuffers, bool useDepth = true);
 
 		void init(unsigned int width, unsigned int height, ColorType colorType = ColorType::RGBA16,
-			FilterMode filterMode = FilterMode::Nearest, WrapMode wrapMode = WrapMode::ClampBorder, bool useDepth = true);
+			FilterMode filterMode = FilterMode::None, WrapMode wrapMode = WrapMode::ClampBorder, bool useDepth = true);
 
 		virtual void fill(std::function<void()> drawCall);
 		void fill(Drawer& drawer, bool setFBO = true) const;

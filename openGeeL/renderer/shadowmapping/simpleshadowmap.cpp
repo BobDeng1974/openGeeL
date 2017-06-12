@@ -54,6 +54,7 @@ namespace geeL {
 
 	void SimpleShadowMap::bindData(const RenderShader& shader, const std::string& name) {
 		shader.setFloat(name + "bias", dynamicBias);
+		shader.setFloat(name + "shadowIntensity", intensity);
 		shader.setInteger(name + "resolution", softShadowResolution);
 		shader.setFloat(name + "scale", softShadowScale);
 		shader.setInteger(name + "type", (int)type);
