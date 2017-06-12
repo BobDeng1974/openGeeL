@@ -18,6 +18,7 @@ class RenderShader;
 	};
 
 	enum class FilterMode {
+		None,
 		Nearest,
 		Linear,
 		Bilinear,

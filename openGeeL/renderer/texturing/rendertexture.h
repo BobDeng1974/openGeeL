@@ -12,7 +12,7 @@ namespace geeL {
 		RenderTexture() {}
 		RenderTexture(const RenderTexture& texture);
 		RenderTexture(unsigned int width, unsigned int height, ColorType colorType = ColorType::RGBA,
-			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::Nearest);
+			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::None);
 
 
 		virtual unsigned int getID() const;
