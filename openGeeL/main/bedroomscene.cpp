@@ -220,7 +220,7 @@ void BedroomScene::draw() {
 
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR();
-	//SSRRFussy& ssrr = SSRRFussy();
+	//MultisampledSSRR& ssrr = MultisampledSSRR();
 	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.5f, 0.5f);
 	
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.3f);

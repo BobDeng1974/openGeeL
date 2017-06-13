@@ -38,10 +38,10 @@ namespace geeL {
 
 	//Multisampled raycasted reflections as post effect that computes
 	//indirect specular BRDF component in screen space
-	class SSRRFussy : public SSRR {
+	class MultisampledSSRR : public SSRR {
 
 	public:
-		SSRRFussy(unsigned int sampleCount = 25, unsigned int stepCount = 30, 
+		MultisampledSSRR(unsigned int sampleCount = 25, unsigned int stepCount = 30, 
 			float stepSize = 0.2f, float stepSizeGain = 1.04f);
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);

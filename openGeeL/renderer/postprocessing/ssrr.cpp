@@ -77,21 +77,21 @@ namespace geeL {
 	}
 
 
-	SSRRFussy::SSRRFussy(unsigned int sampleCount, unsigned int stepCount, float stepSize, float stepSizeGain)
+	MultisampledSSRR::MultisampledSSRR(unsigned int sampleCount, unsigned int stepCount, float stepSize, float stepSizeGain)
 		: SSRR("renderer/postprocessing/ssrr2.frag", stepCount, stepSize, stepSizeGain), samples(sampleCount) {}
 
 
-	void SSRRFussy::init(ScreenQuad & screen, const FrameBuffer & buffer) {
+	void MultisampledSSRR::init(ScreenQuad & screen, const FrameBuffer & buffer) {
 		SSRR::init(screen, buffer);
 
 		shader.setInteger("sampleCount", samples);
 	}
 
-	unsigned int SSRRFussy::getSampleCount() const {
+	unsigned int MultisampledSSRR::getSampleCount() const {
 		return samples;
 	}
 
-	void SSRRFussy::setSampleCount(unsigned int samples) {
+	void MultisampledSSRR::setSampleCount(unsigned int samples) {
 		if (this->samples != samples && samples < 100) {
 			this->samples = samples;
 
