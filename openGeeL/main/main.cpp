@@ -9,9 +9,9 @@
 #include <iostream>
 
 int main() {
-	//BedroomScene::draw();
+	BedroomScene::draw();
 	//DeerScene::draw();
-	ScieneScene::draw();
+	//ScieneScene::draw();
 	//ArthouseScene::draw();
 	//SponzaScene::draw();
 	

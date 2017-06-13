@@ -181,18 +181,25 @@ namespace geeL {
 
 
 	void SSRRSnippet::draw(GUIContext* context) {
-		unsigned int samples = GUISnippets::drawBarInteger(context, ssrr.getSampleCount(), 1, 200, 1, "Sample Count");
-		ssrr.setSampleCount(samples);
+		//Lazy quick fix to allow fussy SSRR in GUI
+		SSRRFussy* fussy = static_cast<SSRRFussy*>(&ssrr);
+		if (fussy != nullptr) {
+			unsigned int samples = GUISnippets::drawBarInteger(context, fussy->getSampleCount(), 1, 100, 1, "Sample Count");
+			fussy->setSampleCount(samples);
+		}
 
-		float size = GUISnippets::drawBarFloat(context, ssrr.getSampleSize(), 0.01f, 1.f, 0.001f, "Sample Size");
-		ssrr.setSampleSize(size);
+		unsigned int steps = GUISnippets::drawBarInteger(context, ssrr.getStepCount(), 1, 200, 1, "Step Count");
+		ssrr.setStepCount(steps);
 
-		float gain = GUISnippets::drawBarFloat(context, ssrr.getSampleSizeGain(), 1.f, 1.5f, 0.001f, "Sample Gain");
-		ssrr.setSampleSizeGain(gain);
+		float size = GUISnippets::drawBarFloat(context, ssrr.getStepSize(), 0.01f, 1.f, 0.001f, "Step Size");
+		ssrr.setStepSize(size);
+
+		float gain = GUISnippets::drawBarFloat(context, ssrr.getStepSizeGain(), 1.f, 1.5f, 0.001f, "Step Gain");
+		ssrr.setStepSizeGain(gain);
 	}
 
 	std::string SSRRSnippet::toString() const {
-		return "Reflections(SSRR)";
+		return "SSRR";
 	}
 
 
