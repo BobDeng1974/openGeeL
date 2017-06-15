@@ -22,7 +22,7 @@ uniform mat4 transformZ;
 uniform vec2 resolution;
 
 void voxelizeSimple();
-void voxelizConservative();
+void voxelizeConservative();
 
 
 //Mesh voxelization according to
@@ -30,7 +30,7 @@ void voxelizConservative();
 //https://github.com/otaku690/SparseVoxelOctree
 void main() {
 	voxelizeSimple();
-	//voxelizConservative();
+	//voxelizeConservative();
 }
 
 void voxelizeSimple() {
@@ -49,7 +49,7 @@ void voxelizeSimple() {
 		normal = vNormal[i];
 		texCoords = vTexCoords[i];
 
-		vec3 frag = vPosition[i] / 256.f;
+		vec3 frag = vPosition[i] / resolution.x;
 		if(maxFace == NdotX)
 			gl_Position = vec4(frag.y, frag.z, 0.f, 1.f);
 		else if(maxFace == NdotY)
@@ -63,7 +63,7 @@ void voxelizeSimple() {
 	EndPrimitive();
 }
 
-void voxelizConservative() {
+void voxelizeConservative() {
 
 	vec3 span1 = vPosition[1] - vPosition[0];
 	vec3 span2 = vPosition[2] - vPosition[0];

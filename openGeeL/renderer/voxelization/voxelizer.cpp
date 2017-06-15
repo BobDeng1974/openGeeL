@@ -40,8 +40,6 @@ namespace geeL {
 		BufferUtility::generateTextureBuffer(voxelAmount * sizeof(unsigned int), GL_RGBA8, voxelColors);
 		BufferUtility::generateTextureBuffer(voxelAmount * sizeof(unsigned int), GL_RGBA16F, voxelNormals);
 
-		std::cout << voxelAmount << "\n";
-
 		BufferUtility::resetAtomicBuffer(atomicBuffer, count);
 
 		//Pass 2: Draw and store voxels in previously created buffers 
@@ -62,7 +60,7 @@ namespace geeL {
 		//Create transform matrices for X-, Y- and Z-axis
 		float scale = 1.f;
 		mat4 proj = glm::ortho(-scale, scale, -scale, scale, -scale, scale);
-		proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 2.0f - 1.0f, 3.0f);
+		proj = glm::ortho(-1.f, 1.f, -1.f, 1.f, 1.f, 3.f);
 		mat4 transX = proj * glm::lookAt(vec3(2.f, 0.f, 0.f), vec3(0.f), vec3(0.f, 1.f, 0.f));
 		mat4 transY = proj * glm::lookAt(vec3(0.f, 2.f, 0.f), vec3(0.f), vec3(0.f, 0.f, -1.f));
 		mat4 transZ = proj * glm::lookAt(vec3(0.f, 0.f, 2.f), vec3(0.f),  vec3(0.f, 1.f, 0.f));

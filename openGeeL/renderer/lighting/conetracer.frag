@@ -41,7 +41,7 @@ void main() {
 	//float dist = -posView.z / 100.f;
 	//dist = dist * dist;
 	//dist = 1.f - dist;
-	int lvl = level - 1;//1 + int(dist * float(level - 1));
+	int lvl = level;//1 + int(dist * float(level - 1));
 
 	int nodeIndex;
 	bool hit = sampleOctree(position, lvl, nodeIndex);

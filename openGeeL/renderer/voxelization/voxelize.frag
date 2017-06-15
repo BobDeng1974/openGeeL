@@ -49,7 +49,7 @@ void main() {
 	if(!drawVoxel) return; //Return in this case since we only want to count voxels
 
 	//Example implementation. Should be later replaced with proper shading
-	vec3 color = getIrradiance() * 0.05f;
+	vec3 color = vec3(1.0f) - exp(-getIrradiance() * 2.2f); // Tone mapping
 
 	imageStore(voxelPositions, int(index), coords);
 	imageStore(voxelNormals, int(index), vec4(normal, 0.f));
@@ -199,8 +199,9 @@ vec3 getIrradiance() {
 	for(int i = 0; i < slCount; i++)
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
 
-	return albedo;
-	//return irradiance;
+	irradiance = vec3(1.f) - exp(-irradiance * 2.2f); // Tone mapping
+
+	return irradiance;
 }
 
 

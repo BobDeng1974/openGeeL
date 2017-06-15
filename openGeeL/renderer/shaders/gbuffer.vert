@@ -23,7 +23,7 @@ uniform mat4 modelView;
 void main() {	
 	vec4 localPosition = modelView * vec4(position, 1.0f);
 
-	normal = transpose(inverse(mat3(modelView))) * norm;
+	normal = normalize(transpose(inverse(mat3(modelView))) * norm);
 	fragPosition = vec3(localPosition);
 	textureCoordinates = texCoords;
 
