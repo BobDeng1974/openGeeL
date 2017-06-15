@@ -24,6 +24,8 @@ namespace geeL {
 
 	Voxelizer::~Voxelizer() {
 		delete voxelShader;
+
+		glDeleteBuffers(1, &atomicBuffer);
 	}
 
 

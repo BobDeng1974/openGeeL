@@ -1,4 +1,6 @@
 #include "../shader/sceneshader.h"
+#include "../texturing/imagetexture.h"
+#include "../texturing/envmap.h"
 #include "genericmaterial.h"
 #include "defaultmaterial.h"
 #include "material.h"
@@ -28,6 +30,21 @@ namespace geeL {
 
 		for (auto material = container.begin(); material != container.end(); material++)
 			delete *material;
+
+		for (auto it = textures.begin(); it != textures.end(); it++) {
+			ImageTexture& tex = it->second;
+			tex.remove();
+		}
+
+		for (auto it = textureMaps.begin(); it != textureMaps.end(); it++) {
+			TextureMap& tex = it->second;
+			tex.remove();
+		}
+
+		for (auto it = envMaps.begin(); it != envMaps.end(); it++) {
+			EnvironmentMap& tex = it->second;
+			tex.remove();
+		}
 	}
 
 
