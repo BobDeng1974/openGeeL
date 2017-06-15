@@ -9,13 +9,13 @@
 #include <iostream>
 
 int main() {
-	BedroomScene::draw();
+	//BedroomScene::draw();
 	//DeerScene::draw();
 	//ScieneScene::draw();
 	//ArthouseScene::draw();
 	//SponzaScene::draw();
 	
-	//VoxelScene::draw();
+	VoxelScene::draw();
 	//RenderTest::draw();
 	//RaymarchTest::draw();
 

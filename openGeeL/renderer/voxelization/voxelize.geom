@@ -7,7 +7,7 @@ in vec3 vPosition[];
 in vec3 vNormal[];
 in vec2 vTexCoords[];
 
-out vec3 fragPosition;
+out vec4 fragPosition;
 out vec3 normal;
 out vec2 texCoords;
 
@@ -21,34 +21,19 @@ uniform mat4 transformZ;
 
 uniform vec2 resolution;
 
-
-mat4 lookAt(vec3 eye, vec3 center, vec3 up) {
-	vec3 f = normalize(center - eye);
-	vec3 s = normalize(cross(f, up));
-	vec3 u = cross(s, f);
-
-	mat4 mat;
-	mat[0][0] = s.x;
-	mat[1][0] = s.y;
-	mat[2][0] = s.z;
-	mat[0][1] = u.x;
-	mat[1][1] = u.y;
-	mat[2][1] = u.z;
-	mat[0][2] =-f.x;
-	mat[1][2] =-f.y;
-	mat[2][2] =-f.z;
-	mat[3][0] =-dot(s, eye);
-	mat[3][1] =-dot(u, eye);
-	mat[3][2] = dot(f, eye);
-
-	return mat;
-}
+void voxelizeSimple();
+void voxelizConservative();
 
 
 //Mesh voxelization according to
 //https://developer.nvidia.com/content/basics-gpu-voxelization and
 //https://github.com/otaku690/SparseVoxelOctree
 void main() {
+	voxelizeSimple();
+	//voxelizConservative();
+}
+
+void voxelizeSimple() {
 	vec3 span1 = vPosition[1] - vPosition[0];
 	vec3 span2 = vPosition[2] - vPosition[0];
 	vec3 faceNormal = normalize(cross(span1, span2));
@@ -56,10 +41,41 @@ void main() {
 	float NdotX = abs(faceNormal.x);
 	float NdotY = abs(faceNormal.y);
 	float NdotZ = abs(faceNormal.z);
+	float maxFace = max(NdotX, max(NdotY, NdotZ));
+
+
+	for(int i = 0; i < 3; i++) {
+		fragPosition = vec4(vPosition[i], 1.f);
+		normal = vNormal[i];
+		texCoords = vTexCoords[i];
+
+		vec3 frag = vPosition[i] / 256.f;
+		if(maxFace == NdotX)
+			gl_Position = vec4(frag.y, frag.z, 0.f, 1.f);
+		else if(maxFace == NdotY)
+			gl_Position = vec4(frag.x, frag.z, 0.f, 1.f);
+		else
+			gl_Position = vec4(frag.x, frag.y, 0.f, 1.f);
+			
+		EmitVertex();
+	}
+
+	EndPrimitive();
+}
+
+void voxelizConservative() {
+
+	vec3 span1 = vPosition[1] - vPosition[0];
+	vec3 span2 = vPosition[2] - vPosition[0];
+	vec3 faceNormal = normalize(cross(span1, span2));
+
+	float NdotX = abs(faceNormal.x);
+	float NdotY = abs(faceNormal.y);
+	float NdotZ = abs(faceNormal.z);
+	float maxFace = max(NdotX, max(NdotY, NdotZ));
 
 	//Find axis that presents the largest face area
 	mat4 transform;
-	float maxFace = max(NdotX, max(NdotY, NdotZ));
 	if(maxFace == NdotX) {
 		transform = transformX;
 		axis = 1;
@@ -79,7 +95,6 @@ void main() {
 	position[1] = transform * gl_in[1].gl_Position;
 	position[2] = transform * gl_in[2].gl_Position;
 
-
 	//Enlarge triangle to enable conservative rasterization
 	vec2  hPixel = vec2(1.f / resolution); //Dimensions of half a pixel cell
 	float pl = 1.4142135637309 / resolution.x;
@@ -93,7 +108,6 @@ void main() {
 	//Enlarge by half pixel
 	gAABB.xy -= hPixel;
 	gAABB.zw += hPixel;
-
 	AABB = gAABB;
 
 	//Triangle edges and corresponding normals
@@ -111,23 +125,14 @@ void main() {
 
 
 	//Write vertices
-	gl_Position = position[0];
-	fragPosition = position[0].xyz;
-	normal = vNormal[0];
-	texCoords = vTexCoords[0];
-	EmitVertex();
+	for(int i = 0; i < 3; i++) {
+		gl_Position = position[i];
+		fragPosition = position[i];
+		normal = vNormal[i];
+		texCoords = vTexCoords[i];
 
-	gl_Position = position[1];
-	fragPosition = position[1].xyz;
-	normal = vNormal[1];
-	texCoords = vTexCoords[1];
-	EmitVertex();
-
-	gl_Position = position[2];
-	fragPosition = position[2].xyz;
-	normal = vNormal[2];
-	texCoords = vTexCoords[2];
-	EmitVertex();
+		EmitVertex();
+	}
 
 	EndPrimitive();
 }

@@ -1,7 +1,7 @@
 #version 430
 
 
-in vec3 fragPosition;
+in vec4 fragPosition;
 in vec3 normal;
 in vec2 texCoords;
 
@@ -9,7 +9,7 @@ flat in int  axis;
 flat in vec4 AABB;
 
 layout(location = 0) out vec4 gl_FragColor;
-layout(pixel_center_integer) in vec4 gl_FragCoord;
+///*layout(pixel_center_integer)*/ in vec4 gl_FragCoord;
 
 //Voxel data is stored in these 1D textures to be later integrated into concrete data structures
 uniform layout(binding = 0, rgb10_a2ui) uimageBuffer voxelPositions;
@@ -24,15 +24,50 @@ uniform bool drawVoxel;
 
 vec3 getIrradiance();
 
+vec4 getFragCoords() {
+	vec4 fragCoords;
+	fragCoords.xy = (0.5f + (0.5f * fragPosition.xy / fragPosition.w)) * resolution;
+	fragCoords.z = 0.5f + (0.5f * fragPosition.z / fragPosition.w);
+	fragCoords.w = 1.f / fragPosition.w;
+
+	return fragCoords;
+}
+
+uvec4 voxelizeSimple();
+uvec4 voxelizeConservative();
+
+
 //Mesh voxelization according to
 //https://developer.nvidia.com/content/basics-gpu-voxelization and
 //https://github.com/otaku690/SparseVoxelOctree
 void main() {
+	uvec4 coords = voxelizeSimple();
+	//uvec4 coords = voxelizeConservative();
+
+
+	uint index = atomicCounterIncrement(voxelCount);
+	if(!drawVoxel) return; //Return in this case since we only want to count voxels
+
+	//Example implementation. Should be later replaced with proper shading
+	vec3 color = getIrradiance() * 0.05f;
+
+	imageStore(voxelPositions, int(index), coords);
+	imageStore(voxelNormals, int(index), vec4(normal, 0.f));
+	imageStore(voxelColors, int(index), vec4(color, 0.f));
+}
+
+
+uvec4 voxelizeSimple() {
+	return uvec4(fragPosition);
+}
+
+uvec4 voxelizeConservative() {
 	//Discard if fragment is outside of triangles bounding box
 	discard(fragPosition.x < AABB.x || fragPosition.y < AABB.y 
 		|| fragPosition.x > AABB.z || fragPosition.y > AABB.w);
 
-	uvec4 tCoords = uvec4(gl_FragCoord.x, gl_FragCoord.y, resolution.x * gl_FragCoord.z, 0.f);
+	vec4 fragCoords = getFragCoords();
+	uvec4 tCoords = uvec4(fragCoords.x, fragCoords.y, resolution.x * fragCoords.z, 0.f);
 	uvec4 coords;
 	if(axis == 1) {
 	    coords.x = int(resolution.x) - tCoords.z;
@@ -47,17 +82,7 @@ void main() {
 	else
 	    coords = tCoords;
 
-
-	uint index = atomicCounterIncrement(voxelCount);
-	if(!drawVoxel) return; //Return in this case since we only want to count voxels
-
-	//Example implementation. Should be later replaced with proper shading
-	vec3 color = getIrradiance() * 0.04f;
-	vec3 normal = normal;
-
-	imageStore(voxelPositions, int(index), coords);
-	imageStore(voxelNormals, int(index), vec4(normal, 0.f));
-	imageStore(voxelColors, int(index), vec4(color, 0.f));
+	return coords;
 }
 
 
@@ -162,17 +187,17 @@ vec3 getIrradiance() {
 	float roughness, metallic;
 	readMaterialProperties(albedo, norm, roughness, metallic);
 	
-	vec3 viewDirection = normalize(cameraPosition - fragPosition);
+	vec3 viewDirection = normalize(cameraPosition - fragPosition.xyz);
 
 	vec3 irradiance = vec3(0.f);
 	for(int i = 0; i < plCount; i++) 
-		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
+		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
        
 	for(int i = 0; i < dlCount; i++) 
-        irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
+        irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
 
 	for(int i = 0; i < slCount; i++)
-		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
+		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
 
 	return albedo;
 	//return irradiance;

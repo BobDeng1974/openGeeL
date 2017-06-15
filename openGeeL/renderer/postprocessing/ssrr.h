@@ -26,6 +26,7 @@ namespace geeL {
 
 	protected:
 		SSRR(std::string fragmentPath, int sampleCount = 60, float sampleSize = 0.2f, float sampleSizeGain = 1.02f);
+
 		virtual void bindValues();
 
 	private:

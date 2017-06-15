@@ -196,13 +196,13 @@ vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection,
 	vec3 fres = calculateFresnelTerm(doto(halfwayDirection, viewDirection), albedo, metallic, roughness);
 
 	vec3 ks = fres;
-    vec3 kd = vec3(1.0f) - ks;
-    kd *= 1.0f - metallic;
+    vec3 kd = vec3(1.f) - ks;
+    kd *= 1.f - metallic;
 
 	//Lighting equation
 	vec3  nom   = ndf * geo * ks; //Fresnel term equivalent to kS
 	//add small fraction to prevent ill behaviour when dividing by zero (shadows no longer additive)
-	float denom =  4.0f * doto(viewDirection, normal) * NdotL + 0.001f; 
+	float denom =  4.f * doto(viewDirection, normal) * NdotL + 0.001f; 
 	vec3  brdf  = nom / denom;
 
 	return ((kd * albedo / PI + brdf) * radiance) * NdotL; 
@@ -225,13 +225,13 @@ vec3 calculateReflectanceDirectional(vec3 fragPosition, vec3 normal, vec3 viewDi
 	vec3 fres = calculateFresnelTerm(doto(halfwayDirection, viewDirection), albedo, metallic, roughness);
 
 	vec3 ks = fres;
-    vec3 kd = vec3(1.0f) - ks;
-    kd *= 1.0f - metallic;
+    vec3 kd = vec3(1.f) - ks;
+    kd *= 1.f - metallic;
 
 	//Lighting equation
 	vec3  nom   = ndf * geo * fres; //Fresnel term equivalent to kS
 	//add small fraction to prevent ill behaviour when dividing by zero (shadows no longer additive)
-	float denom =  4.0f * doto(viewDirection, normal) * NdotL + 0.001f; 
+	float denom =  4.f * doto(viewDirection, normal) * NdotL + 0.001f; 
 	vec3  brdf  = nom / denom;
 
 	return ((kd * albedo / PI + brdf) * radiance) * NdotL; 

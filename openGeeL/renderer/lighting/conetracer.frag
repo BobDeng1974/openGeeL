@@ -29,19 +29,6 @@ bool sampleOctree(vec3 position, int maxLevel, out int nodeIndex);
 
 void main() {
 	
-	/*
-	float amount = 70000.f;
-	int ayyIndex = int(TexCoords.x * amount);
-	unsigned int ayy = imageLoad(nodeDiffuse, ayyIndex).r;
-	color = convRGBA8toVec4(ayy) / 255;
-	//return;
-
-	unsigned int ayy2 = imageLoad(nodeIndicies, ayyIndex).r;
-	unsigned int index = (ayy2 & 0x7FFFFFFF);
-	color = vec4(vec3(float(index) / (amount * 50.f)), 1.f);
-	return;
-	*/
-
 	vec3 baseColor = texture(image, TexCoords).rgb;
 	vec3 posView  = texture(gPositionDepth, TexCoords).rgb;
 	vec3 normView = texture(gNormalMet, TexCoords).rgb;
@@ -54,14 +41,14 @@ void main() {
 	//float dist = -posView.z / 100.f;
 	//dist = dist * dist;
 	//dist = 1.f - dist;
-	int lvl = level;//1 + int(dist * float(level - 1));
+	int lvl = level - 1;//1 + int(dist * float(level - 1));
 
 	int nodeIndex;
 	bool hit = sampleOctree(position, lvl, nodeIndex);
 	
 	if(hit) {
 		unsigned int rgb8 = imageLoad(nodeDiffuse, nodeIndex).r;
-		vec4 diffuse = convRGBA8toVec4(rgb8).rgba / 255 ;
+		vec4 diffuse = convRGBA8toVec4(rgb8).rgba / 255;
 
 		color = diffuse;
 	}
@@ -71,8 +58,6 @@ void main() {
 	//Visualize basic scene on left side
 	if(TexCoords.x < 0.4f)
 		color = vec4(baseColor, 1.f);
-	else if(TexCoords.y > 0.5f)
-		color = vec4(vec3(nodeIndex / 100.f), 1.f);
 }
 
 
@@ -93,11 +78,8 @@ bool sampleOctree(vec3 position, int maxLevel, out int nodeIndex) {
 		nodeIndex = int(node & 0x7FFFFFFF);
 		
 		dim /= 2;
-		uvec3 box; //Spacial index of subnode
-		//box.x = uint(position.x > (umin.x + dim));
-		//box.y = uint(position.y > (umin.y + dim));
-		//box.z = uint(position.y > (umin.z + dim));
-		box = clamp(ivec3(1 + position - umin - dim), 0, 1);
+		//Spacial index of subnode
+		uvec3 box = clamp(ivec3(1 + position - umin - dim), 0, 1);
 		umin += box * dim;
 
 		//Spacial position translated into index
