@@ -221,7 +221,7 @@ float shadow(vec3 position, vec3 direction, float dist, float size) {
 	float penumbra = 1.f;
 
 	for(float i = 0.f; i < dist;) {
-		float d = distanceScene(position + i * direction).w;		
+		float d = distanceScene(position + i * direction).w;
 
 		if(d < epsilon)
 			return 0.f;

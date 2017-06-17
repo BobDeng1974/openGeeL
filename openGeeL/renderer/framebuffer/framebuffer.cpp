@@ -13,6 +13,7 @@ namespace geeL {
 
 	FrameBuffer::FrameBuffer(const FrameBuffer& buffer) : info(buffer.info) {}
 
+
 	void FrameBuffer::bind() const {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 	}

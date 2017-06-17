@@ -118,7 +118,7 @@ namespace {
 			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Huge, 1.f, 8U, 150.f);
 			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
 
-			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(150.f, 18.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
+			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(150.f, 28.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
 			MeshRenderer& sponz = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
 				meshTransform6, CullingMode::cullFront, "Sponza");
 			scene.addMeshRenderer(sponz);
@@ -156,7 +156,7 @@ void VoxelScene::draw() {
 	RenderContext context = RenderContext();
 	DeferredLighting lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, materialFactory);
-	renderer.addSSAO(ssao, 0.5f);
+	//renderer.addSSAO(ssao, 0.5f);
 	renderer.init();
 
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =

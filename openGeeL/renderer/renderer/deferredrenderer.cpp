@@ -217,7 +217,7 @@ namespace geeL {
 		if (ssao != nullptr) {
 			ssao->setCamera(camera);
 			ssaoBuffer->fill(*ssao);
-			ssao->setCamera(scene->getCamera());
+			ssao->updateCamera(scene->getCamera());
 		}
 
 		FrameBuffer::resetSize(buffer.getWidth(), buffer.getHeight());
@@ -243,7 +243,7 @@ namespace geeL {
 	void DeferredRenderer::lightingPass(const Camera& camera) {
 		lighting.setCamera(camera);
 		lighting.draw();
-		lighting.setCamera(scene->getCamera());
+		lighting.updateCamera(scene->getCamera());
 	}
 
 

@@ -53,13 +53,9 @@ namespace geeL {
 	class CameraRequester : public SceneRequester {
 
 	public:
-		virtual void updateCamera(SceneCamera& camera) {
-			this->camera = &camera;
-		}
+		virtual void updateCamera(SceneCamera& camera);
 
-		void setCamera(const Camera& camera) {
-			this->camera = &camera;
-		}
+		void setCamera(const Camera& camera);
 
 	protected:
 		const Camera* camera = nullptr;
@@ -72,6 +68,15 @@ namespace geeL {
 
 	inline WorldMaps operator&(WorldMaps a, WorldMaps b) {
 		return static_cast<WorldMaps>(static_cast<int>(a) & static_cast<int>(b));
+	}
+
+
+	inline void CameraRequester::updateCamera(SceneCamera& camera) {
+		this->camera = &camera;
+	}
+
+	inline void CameraRequester::setCamera(const Camera& camera) {
+		this->camera = &camera;
 	}
 
 }
