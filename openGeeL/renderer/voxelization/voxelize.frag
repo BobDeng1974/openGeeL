@@ -4,6 +4,7 @@
 in vec4 fragPosition;
 in vec3 normal;
 in vec2 texCoords;
+in mat3 TBN;
 
 flat in int  axis;
 flat in vec4 AABB;
@@ -44,12 +45,11 @@ void main() {
 	uvec4 coords = voxelizeSimple();
 	//uvec4 coords = voxelizeConservative();
 
-
 	uint index = atomicCounterIncrement(voxelCount);
 	if(!drawVoxel) return; //Return in this case since we only want to count voxels
 
 	//Example implementation. Should be later replaced with proper shading
-	vec3 color = getIrradiance(); // Tone mapping
+	vec3 color = getIrradiance();
 
 	imageStore(voxelPositions, int(index), coords);
 	imageStore(voxelNormals, int(index), vec4(normal, 0.f));
@@ -201,7 +201,8 @@ vec3 getIrradiance() {
 
 	irradiance = vec3(1.f) - exp(-irradiance * 2.2f); // Tone mapping
 
-	return irradiance;
+	return albedo * 0.05f;
+	//return irradiance;
 }
 
 
@@ -217,18 +218,13 @@ void readMaterialProperties(out vec3 albedo, out vec3 norm, out float roughness,
 	discard(material.type == 1 && texture(material.diffuse, texCoords).a < 0.1f);
 
 	norm = normalize(normal);
-
-	//TODO: build TBN matrix to read normal maps
-	/*
 	if(normFlag == 1) {
-		norm = texture(material.normal, textureCoordinates).rgb;
-		norm = normalize(norm * 2.0f - 1.0f);
+		norm = texture(material.normal, texCoords).rgb;
+		norm = normalize(norm * 2.f - 1.f);
 		norm = normalize(TBN * norm);
 	}
-	*/
 
 	albedo = (diffFlag == 1) ? texture(material.diffuse, texCoords).rgb : material.color;
-
 	roughness = (specFlag == 1) ? 1.f - texture(material.specular, texCoords).r : material.roughness; 
 	metallic = (metaFlag == 1) ? texture(material.metal, texCoords).r : material.metallic;
 }

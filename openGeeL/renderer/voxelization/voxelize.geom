@@ -6,10 +6,12 @@ layout (triangle_strip, max_vertices = 3) out;
 in vec3 vPosition[];
 in vec3 vNormal[];
 in vec2 vTexCoords[];
+in mat3 gTBN[];
 
 out vec4 fragPosition;
 out vec3 normal;
 out vec2 texCoords;
+out mat3 TBN;
 
 flat out int  axis;	//X-, Y- or Z-axis for projection in fragment shader
 flat out vec4 AABB; //Primitve for AABB test in fragment shader
@@ -64,7 +66,6 @@ void voxelizeSimple() {
 }
 
 void voxelizeConservative() {
-
 	vec3 span1 = vPosition[1] - vPosition[0];
 	vec3 span2 = vPosition[2] - vPosition[0];
 	vec3 faceNormal = normalize(cross(span1, span2));
@@ -130,6 +131,7 @@ void voxelizeConservative() {
 		fragPosition = position[i];
 		normal = vNormal[i];
 		texCoords = vTexCoords[i];
+		TBN = gTBN[i];
 
 		EmitVertex();
 	}
