@@ -202,7 +202,7 @@ vec3 getIrradiance() {
 	irradiance = vec3(1.f) - exp(-irradiance * 2.2f); // Tone mapping
 
 	return albedo * 0.05f;
-	//return irradiance;
+	return irradiance;
 }
 
 

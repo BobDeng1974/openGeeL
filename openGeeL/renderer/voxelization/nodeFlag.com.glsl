@@ -32,11 +32,8 @@ void main() {
 		nodeIndex = int(node & 0x7FFFFFFF); //Remove child flag
 
 		dim /= 2;
-		uvec3 box; //Spacial index of subnode
-		//box.x = uint(position.x > (umin.x + dim));
-		//box.y = uint(position.y > (umin.y + dim));
-		//box.z = uint(position.y > (umin.z + dim));
-		box = clamp(ivec3(1 + position.xyz - umin - dim), 0, 1);
+		//Spacial index of subnode
+		uvec3 box = clamp(ivec3(1 + position.xyz - umin - dim), 0, 1);
 		umin += box * dim;
 
 		//Spacial position translated into index

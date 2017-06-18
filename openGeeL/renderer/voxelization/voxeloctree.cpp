@@ -14,6 +14,7 @@ namespace geeL {
 		allocShader = new ComputeShader("renderer/voxelization/nodeAlloc.com.glsl");
 		initShader = new ComputeShader("renderer/voxelization/nodeInit.com.glsl");
 		fillLeavesShader = new ComputeShader("renderer/voxelization/leavesFill.com.glsl");
+		mipmapShader = new ComputeShader("renderer/voxelization/nodeMipmap.com.glsl");
 
 		computeMaximum();
 	}
@@ -27,7 +28,6 @@ namespace geeL {
 
 
 	void VoxelOctree::build() {
-
 		voxelizer.voxelize();
 
 		nodeLevels.clear();
@@ -106,8 +106,6 @@ namespace geeL {
 			glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
 
 
-			std::cout << i << ": " << allocatedTiles << "\n";
-
 			//Initialize new node tiles
 			unsigned int allocatedNodes = 8 * allocatedTiles;
 			initShader->use();
@@ -132,26 +130,14 @@ namespace geeL {
 	}
 
 	void VoxelOctree::buildLeafNodes(uint width, uint height) {
-		//TODO: Integrate this into fillLeavesShader later on
-		//Determine which leaf nodes have children or not
-		flagShader->use();
-		flagShader->setInteger("numVoxels", voxelizer.getVoxelAmount());
-		flagShader->setInteger("level", maxLevel);
-		flagShader->setInteger("dimensions", voxelizer.getDimensions());
-		glBindImageTexture(0, voxelizer.getVoxelPositions(), 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGB10_A2UI);
-		glBindImageTexture(1, nodeIndicies.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
-
-		flagShader->invoke(width, height, 1);
-		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
-
-
+		
 		//Write voxel information into leaves
 		fillLeavesShader->use();
 		fillLeavesShader->setInteger("numVoxels", voxelizer.getVoxelAmount());
 		fillLeavesShader->setInteger("level", maxLevel);
 		fillLeavesShader->setInteger("dimensions", voxelizer.getDimensions());
 
-		glBindImageTexture(0, nodeIndicies.texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+		glBindImageTexture(0, nodeIndicies.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
 		glBindImageTexture(1, nodeDiffuse.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
 		glBindImageTexture(2, voxelizer.getVoxelPositions(), 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGB10_A2UI);
 		glBindImageTexture(3, voxelizer.getVoxelColors(), 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
@@ -162,7 +148,25 @@ namespace geeL {
 
 
 	void VoxelOctree::mipmapOctree() {
-		//TODO: implement this
+		unsigned int nodeOffset = 0;
+		for (int i = 0; i < nodeLevels.size() - 1; i++)
+			nodeOffset += nodeLevels[i];
+
+		for (int i = maxLevel - 1; i > 0; i--) {
+			nodeOffset -= nodeLevels[i];
+
+			unsigned int currNodes = nodeLevels[i];
+			mipmapShader->use();
+			mipmapShader->setInteger("numNodes", currNodes);
+			mipmapShader->setInteger("nodeOffset", nodeOffset);
+
+			glBindImageTexture(0, nodeIndicies.texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+			glBindImageTexture(1, nodeDiffuse.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
+
+			unsigned int allocGroupWidth = (currNodes + 63) / 64;
+			allocShader->invoke(allocGroupWidth, 1, 1);
+			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+		}
 	}
 
 

@@ -31,6 +31,7 @@ namespace geeL {
 		ComputeShader* allocShader;
 		ComputeShader* initShader;
 		ComputeShader* fillLeavesShader;
+		ComputeShader* mipmapShader;
 
 		TextureBuffer nodeIndicies; //Stores indicies of child nodes
 		TextureBuffer nodeDiffuse;  //Stores color of child nodes

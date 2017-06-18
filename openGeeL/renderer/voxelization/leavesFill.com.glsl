@@ -38,12 +38,8 @@ void main() {
 		nodeIndex = int(node & 0x7FFFFFFF); //Remove child flag
 
 		dim /= 2;
-		uvec3 box; //Spacial index of subnode
-		box.x = uint(position.x > (umin.x + dim));
-		box.y = uint(position.y > (umin.y + dim));
-		box.z = uint(position.y > (umin.z + dim));
-		box = clamp(ivec3(1 + position.xyz - umin - dim), 0, 1);
-
+		//Spacial index of subnode
+		uvec3 box = clamp(ivec3(1 + position.xyz - umin - dim), 0, 1);
 		umin += box * dim;
 
 		//Spacial position translated into index
@@ -51,12 +47,14 @@ void main() {
 		nodeIndex += int(childIndex);
 
 		node = imageLoad(nodeIndicies, nodeIndex).r;
-
-		//Write voxlels into leaf nodes as well as parent nodes to
-		//achieve mipmapping
-		imageAtomicRGBA8Avg(diffuse, nodeIndex, nodeColors);
 	}
 
+	//Write voxlel colors into leaf nodes
+	imageAtomicRGBA8Avg(diffuse, nodeIndex, nodeColors);
+
+	//Mark leaf node as non-empty
+	node |= 0x80000000;
+	imageStore(nodeIndicies, nodeIndex, uvec4(node, 0, 0, 0));
 }
 
 
@@ -73,11 +71,11 @@ void imageAtomicRGBA8Avg(vec4 val, int coord, layout(r32ui) uimageBuffer buf) {
     val.rgb *= 255.0;
 	val.a = 1;
 
-	uint newVal = convVec4ToRGBA8( val );
+	uint newVal = convVec4ToRGBA8(val);
 	uint prev = 0;
 	uint cur;
 	
-	while((cur = imageAtomicCompSwap( buf, coord, prev, newVal)) != prev) {
+	while((cur = imageAtomicCompSwap(buf, coord, prev, newVal)) != prev) {
        prev = cur;
 	   vec4 rval = convRGBA8ToVec4(cur);
 	   rval.xyz = rval.xyz*rval.w;
