@@ -53,7 +53,7 @@ void main() {
 
 	imageStore(voxelPositions, int(index), coords);
 	imageStore(voxelNormals, int(index), vec4(normal, 0.f));
-	imageStore(voxelColors, int(index), vec4(color, 0.f));
+	imageStore(voxelColors, int(index), vec4(color, 1.f));
 }
 
 

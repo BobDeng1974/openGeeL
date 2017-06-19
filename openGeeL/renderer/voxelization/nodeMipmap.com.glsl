@@ -40,7 +40,9 @@ void main() {
 			nodeIndex++;
 		}
 
-		color /= count;
+		color.rgb /= count;
+		color.a /= 8.f; 
+
 		uint rgba8 = convVec4ToRGBA8(color * 255.f);
 		imageStore(nodeDiffuse, nodeOffset + int(index), uvec4(rgba8, 0, 0, 0));
 	}

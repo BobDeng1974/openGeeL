@@ -1,5 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <cmath>
 #include <iostream>
 #include "../shader/computeshader.h"
 #include "voxelizer.h"
@@ -8,13 +9,17 @@
 namespace geeL {
 
 	VoxelOctree::VoxelOctree(Voxelizer& voxelizer, unsigned int treeLevels) 
-		: voxelizer(voxelizer), maxLevel(treeLevels), nodeCounter(0) {
+		: voxelizer(voxelizer), nodeCounter(0) {
 	
 		flagShader = new ComputeShader("renderer/voxelization/nodeFlag.com.glsl");
 		allocShader = new ComputeShader("renderer/voxelization/nodeAlloc.com.glsl");
 		initShader = new ComputeShader("renderer/voxelization/nodeInit.com.glsl");
 		fillLeavesShader = new ComputeShader("renderer/voxelization/leavesFill.com.glsl");
 		mipmapShader = new ComputeShader("renderer/voxelization/nodeMipmap.com.glsl");
+
+		//Clamp tree levels
+		unsigned int levelMax = log(voxelizer.getDimensions()) / log(2) - 1;
+		maxLevel = (treeLevels > levelMax) ? levelMax : treeLevels;
 
 		computeMaximum();
 	}

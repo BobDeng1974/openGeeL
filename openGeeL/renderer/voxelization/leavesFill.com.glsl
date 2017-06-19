@@ -69,8 +69,7 @@ uint convVec4ToRGBA8(in vec4 val) {
 }
 
 void imageAtomicRGBA8Avg(vec4 val, int coord, layout(r32ui) uimageBuffer buf) {
-    val.rgb *= 255.0;
-	val.a = 1;
+    val *= 255.f;
 
 	uint newVal = convVec4ToRGBA8(val);
 	uint prev = 0;
@@ -80,10 +79,10 @@ void imageAtomicRGBA8Avg(vec4 val, int coord, layout(r32ui) uimageBuffer buf) {
        prev = cur;
 	   
 	   vec4 rval = convRGBA8ToVec4(cur);
-	   rval.xyz = rval.xyz * rval.w;
+	   rval.xyz = rval.xyz * (rval.w / 255.f);
 
 	   vec4 curVal = rval + val;
-	   curVal.xyz /= curVal.w;
+	   curVal.xyz /= (curVal.w / 255.f);
 
 	   newVal = convVec4ToRGBA8(curVal);
 	}
