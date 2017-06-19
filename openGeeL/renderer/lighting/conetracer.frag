@@ -47,9 +47,11 @@ vec4 getColor(int nodeIndex);
 float getLevel(float dist);
 int getLevelDimension(int lvl);
 
+float getNodeBorderDistance(vec3 position, vec3 direction, int depth);
+float planeIntersection(vec3 rayO, vec3 rayD, vec3 planeO, vec3 planeN);
+
 float doto(vec3 a, vec3 b);
 vec4 convRGBA8toVec4(uint val);
-float planeIntersection(vec3 rayO, vec3 rayD, vec3 planeO, vec3 planeN);
 vec4 mix2D(vec4 p00, vec4 p10, vec4 p01, vec4 p11, float x, float y);
 vec4 mix3D(vec4 p000, vec4 p100, vec4 p010, vec4 p110, vec4 p001, vec4 p101, vec4 p011, vec4 p111, vec3 weight);
 
@@ -78,7 +80,9 @@ void main() {
 	vec3 irradiance = calculateReflectance(position, normal, view, refl, radiance.rgb, albedo, roughness, metallic);
 	color = vec4(radiance.rgb, 1.f);
 	//color = vec4(baseColor + luma * irradiance, 1.f);
-	//color = getFragmentColor(position, level - 1);
+
+	//if(TexCoords.x >0.5f)
+	//	color = getFragmentColor(position, level - 1);
 }
 
 
@@ -90,42 +94,24 @@ vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition) {
 	int counter = 0;
 	int nodeIndex;
 	float lvl = level;
-	vec3 pos = position;
+
+	//Move position into direction of voxel border to avoid 
+	//sampling neighboring voxels when direction is steep
+	vec3 camDir = normalize(camPosition - position);
+	vec3 halfDir = normalize(camDir + direction);
+	float borderDist = getNodeBorderDistance(position, halfDir, int(lvl));
+	vec3 pos = position + borderDist * halfDir;
 
 	int minStepSize = getLevelDimension(int(lvl + 1));
-	float minDist = float(getLevelDimension(int(lvl)));
-	
-	//float viewDist = length(position - camPosition);
-	//float newLVL = getLevel(viewDist);
-	//float minDist = float(getLevelDimension(int(newLVL)));
-
+	float minDist = 0.f;
 	float dist = minDist;
 	
 	while(!hit && counter < minStep) {
-
 		pos += minDist * direction;
 		hit = sampleOctreeLvl(pos, int(lvl), nodeIndex, depth);
 
-		int stepSize = getLevelDimension(depth + 1);
-		ivec3 posFloor = (ivec3(pos) / stepSize) * stepSize;
-		ivec3 posCeil  = ((ivec3(pos) + stepSize) / stepSize) * stepSize; 
-
-		float distances[6];
-		distances[0] = planeIntersection(pos, direction, vec3(posFloor), vec3(1.f, 0.f, 0.f));
-		distances[1] = planeIntersection(pos, direction, vec3(posFloor), vec3(0.f, 1.f, 0.f));
-		distances[2] = planeIntersection(pos, direction, vec3(posFloor), vec3(0.f, 0.f, 1.f));
-		distances[3] = planeIntersection(pos, direction, vec3(posCeil),  vec3(1.f, 0.f, 0.f));
-		distances[4] = planeIntersection(pos, direction, vec3(posCeil),  vec3(0.f, 1.f, 0.f));
-		distances[5] = planeIntersection(pos, direction, vec3(posCeil),  vec3(0.f, 0.f, 1.f));
-
-		minDist = FLOAT_MAX;
-		for(int i = 0; i < 6; i++)
-			minDist = min(minDist, distances[i]);
-
-		//Add little offset to avoid placement into same tree node
-		minDist += 0.1f;
+		minDist = getNodeBorderDistance(pos, direction, depth);
 		dist += minDist;
-
 		//lvl = log(dimensions / dist) / log(2) + 1.f;
 
 		counter++;
@@ -137,6 +123,7 @@ vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition) {
 	//return linearFilter(pos, int(lvl), nodeIndex);
 	return getColor(nodeIndex);
 }
+
 
 
 vec4 getFragmentColor(vec3 position, int lvl) {
@@ -260,6 +247,45 @@ vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection,
 //Helper functions......................................................................................................................
 
 
+float getNodeBorderDistance(vec3 position, vec3 direction, int depth) {
+	int stepSize = getLevelDimension(depth + 1);
+	ivec3 posFloor = (ivec3(position) / stepSize) * stepSize;
+	ivec3 posCeil  = ((ivec3(position) + stepSize) / stepSize) * stepSize; 
+
+	float distances[6];
+	distances[0] = planeIntersection(position, direction, vec3(posFloor), vec3(1.f, 0.f, 0.f));
+	distances[1] = planeIntersection(position, direction, vec3(posFloor), vec3(0.f, 1.f, 0.f));
+	distances[2] = planeIntersection(position, direction, vec3(posFloor), vec3(0.f, 0.f, 1.f));
+	distances[3] = planeIntersection(position, direction, vec3(posCeil),  vec3(1.f, 0.f, 0.f));
+	distances[4] = planeIntersection(position, direction, vec3(posCeil),  vec3(0.f, 1.f, 0.f));
+	distances[5] = planeIntersection(position, direction, vec3(posCeil),  vec3(0.f, 0.f, 1.f));
+
+	float minDist = FLOAT_MAX;
+	for(int i = 0; i < 6; i++)
+		minDist = min(minDist, distances[i]);
+
+	//Add little offset to avoid placement into same tree node
+	minDist += 0.1f;
+
+	return minDist;
+}
+
+
+float planeIntersection(vec3 rayO, vec3 rayD, vec3 planeO, vec3 planeN) {
+	float v = dot(planeN, rayD) + epsilon;
+	vec3 a = planeO - rayO;
+	float d = dot(a, planeN) / v;
+
+	//float pick = step(d, 0.f);
+	//return (pick * d) + ((1.f - pick) * FLOAT_MAX);
+
+	if(d > epsilon)
+		return d;
+
+	return FLOAT_MAX;
+}
+
+
 vec4 linearFilter(vec3 position, int lvl, int fallBack) {
 	int dim = getLevelDimension(lvl);
 	ivec3 posFloor = (ivec3(position) / dim) * dim;
@@ -334,20 +360,6 @@ float doto(vec3 a, vec3 b) {
 vec4 convRGBA8toVec4(uint val) {
 	return vec4(float((val&0x000000FF)), float((val&0x0000FF00)>>8U),
 				float((val&0x00FF0000)>>16U), float((val&0xFF000000)>>24U));
-}
-
-float planeIntersection(vec3 rayO, vec3 rayD, vec3 planeO, vec3 planeN) {
-	float v = dot(planeN, rayD) + epsilon;
-	vec3 a = planeO - rayO;
-	float d = dot(a, planeN) / v;
-
-	//float pick = step(d, 0.f);
-	//return (pick * d) + ((1.f - pick) * FLOAT_MAX);
-
-	if(d > epsilon)
-		return d;
-
-	return FLOAT_MAX;
 }
 
 vec4 mix2D(vec4 p00, vec4 p10, vec4 p01, vec4 p11, float x, float y) {
