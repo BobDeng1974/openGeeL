@@ -11,7 +11,7 @@ uniform float FXAA_REDUCE_MUL;
 uniform float FXAA_MIN;
 uniform float DIFF_THRESHOLD;
 
-const vec3  luminance = vec3(0.299f, 0.587f, 0.114f);
+const vec3 luminance = vec3(0.299f, 0.587f, 0.114f);
 
 void main() {
 	vec2 texOffset = 1.f / textureSize(image, 0); 

@@ -3,6 +3,7 @@
 const float PI = 3.14159265359;
 const float epsilon = 0.000001f;
 const float FLOAT_MAX = 100000.f;
+const vec3  luminance = vec3(0.299f, 0.587f, 0.114f);
 
 in vec2 TexCoords;
 
@@ -25,21 +26,22 @@ uniform sampler2D gNormalMet;
 uniform sampler2D gDiffuseSpec;
 
 
-vec4 getFragmentColor(vec3 position);
+vec4 getFragmentColor(vec3 position, int lvl);
 
 //Traverse octree to obtain sample node and return if nonempty node was hit
 bool sampleOctree(vec3 position, int maxLevel, out int nodeIndex);
 //Traverse octree to obtain sample node and return reached level
 bool sampleOctreeLvl(vec3 position, int maxLevel, out int nodeIndex, out int lvl);
 
-vec4 raymarchOctree(vec3 position, vec3 direction);
+vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition);
 
 vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection, 
 	vec3 lightDirection, vec3 radiance, vec3 albedo, float roughness, float metallic);
 
 
-vec4 linearFilter(vec3 position, int lvl);
+vec4 linearFilter(vec3 position, int lvl, int nodeIndex);
 vec4 linearMipmap(vec3 position, float level);
+vec4 linearMipmapAndFilter(vec3 position, float level, int nodeIndex);
 
 vec4 getColor(int nodeIndex);
 float getLevel(float dist);
@@ -65,69 +67,81 @@ void main() {
 	vec3 normal = normalize((inverseView * vec4(origin + normView, 1.f)).xyz);
 	vec3 view = normalize((inverseView * vec4(origin + viewView, 1.f)).xyz);
 	vec3 refl = normalize(reflect(-view, normal));
+	vec3 camPosition =(inverseView * vec4(vec3(0.f), 1.f)).xyz;
 
 	vec3 albedo = diffSpec.rgb;
 	float roughness = diffSpec.w;
 	float metallic = normMet.w;
+	float luma = dot(luminance, baseColor);
 
-	vec4 radiance = raymarchOctree(position, refl);
-	//vec3 irradiance = calculateReflectance(position, normal, view, refl, radiance.rgb, albedo, roughness, metallic);
+	vec4 radiance = raymarchOctree(position, refl, camPosition);
+	vec3 irradiance = calculateReflectance(position, normal, view, refl, radiance.rgb, albedo, roughness, metallic);
 	color = vec4(radiance.rgb, 1.f);
-
-	//color = getFragmentColor(position);
+	//color = vec4(baseColor + luma * irradiance, 1.f);
+	//color = getFragmentColor(position, level - 1);
 }
 
 
 
-vec4 raymarchOctree(vec3 position, vec3 direction) {
+vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition) {
 	
 	bool hit = false;
 	int depth = 0;
 	int counter = 0;
 	int nodeIndex;
 	float lvl = level;
-	int minStepSize = getLevelDimension(int(lvl));
+	vec3 pos = position;
 
-	vec3 pos = position + minStepSize * direction;
+	int minStepSize = getLevelDimension(int(lvl + 1));
+	float minDist = float(getLevelDimension(int(lvl)));
+	
+	//float viewDist = length(position - camPosition);
+	//float newLVL = getLevel(viewDist);
+	//float minDist = float(getLevelDimension(int(newLVL)));
+
+	float dist = minDist;
 	
 	while(!hit && counter < minStep) {
+
+		pos += minDist * direction;
 		hit = sampleOctreeLvl(pos, int(lvl), nodeIndex, depth);
 
-		if(hit) break;
 		int stepSize = getLevelDimension(depth + 1);
-		stepSize = max(stepSize, minStepSize);
-
 		ivec3 posFloor = (ivec3(pos) / stepSize) * stepSize;
 		ivec3 posCeil  = ((ivec3(pos) + stepSize) / stepSize) * stepSize; 
 
 		float distances[6];
-		float offset = 1.f;
-		distances[0] = planeIntersection(pos, direction, vec3(posFloor), vec3(1.f, 0.f, 0.f)) + offset;
-		distances[1] = planeIntersection(pos, direction, vec3(posFloor), vec3(0.f, 1.f, 0.f)) + offset;
-		distances[2] = planeIntersection(pos, direction, vec3(posFloor), vec3(0.f, 0.f, 1.f)) + offset;
+		distances[0] = planeIntersection(pos, direction, vec3(posFloor), vec3(1.f, 0.f, 0.f));
+		distances[1] = planeIntersection(pos, direction, vec3(posFloor), vec3(0.f, 1.f, 0.f));
+		distances[2] = planeIntersection(pos, direction, vec3(posFloor), vec3(0.f, 0.f, 1.f));
 		distances[3] = planeIntersection(pos, direction, vec3(posCeil),  vec3(1.f, 0.f, 0.f));
 		distances[4] = planeIntersection(pos, direction, vec3(posCeil),  vec3(0.f, 1.f, 0.f));
 		distances[5] = planeIntersection(pos, direction, vec3(posCeil),  vec3(0.f, 0.f, 1.f));
 
-		float minDist = FLOAT_MAX;
+		minDist = FLOAT_MAX;
 		for(int i = 0; i < 6; i++)
 			minDist = min(minDist, distances[i]);
 
-		pos += minDist * direction;
+		//Add little offset to avoid placement into same tree node
+		minDist += 0.1f;
+		dist += minDist;
+
+		//lvl = log(dimensions / dist) / log(2) + 1.f;
+
 		counter++;
 	}
 
-	if(!hit)
-		return vec4(1.f);
+	//if(!hit)
+	//	return getFragmentColor(position, level);
 
-	return linearFilter(pos, level);
+	//return linearFilter(pos, int(lvl), nodeIndex);
 	return getColor(nodeIndex);
 }
 
 
-vec4 getFragmentColor(vec3 position) {
+vec4 getFragmentColor(vec3 position, int lvl) {
 	int nodeIndex;
-	sampleOctree(position, level, nodeIndex);
+	sampleOctree(position, lvl, nodeIndex);
 
 	return getColor(nodeIndex);
 }
@@ -141,7 +155,7 @@ bool sampleOctreeLvl(vec3 position, int maxLevel, out int nodeIndex, out int lvl
 	
 	//Dimensions of root node
 	unsigned int dim = dimensions;
-	uvec3 umin = uvec3(0, 0, 0);
+	uvec3 umin = uvec3(0);
 
 	nodeIndex = 0; //Set index to root node (0)
 	unsigned int node = imageLoad(nodeIndicies, nodeIndex).r;
@@ -168,11 +182,8 @@ bool sampleOctreeLvl(vec3 position, int maxLevel, out int nodeIndex, out int lvl
 	}
 
 	lvl = maxLevel;
-	return true;
+	return (node & 0x80000000) != 0;
 }
-
-
-
 
 
 
@@ -249,30 +260,31 @@ vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection,
 //Helper functions......................................................................................................................
 
 
-vec4 linearFilter(vec3 position, int lvl) {
+vec4 linearFilter(vec3 position, int lvl, int fallBack) {
 	int dim = getLevelDimension(lvl);
-	ivec3 posFloor = ivec3(floor(position)); 
-	ivec3 posCeil  = ivec3(ceil(position));
-
-	posFloor = (posFloor / dim) * dim;
-	posCeil  = ((posCeil + dim) / dim) * dim; 
+	ivec3 posFloor = (ivec3(position) / dim) * dim;
+	ivec3 posCeil  = ((ivec3(position) + dim) / dim) * dim; 
 
 	vec3 posFrag = position - posFloor;
 	posFrag /= dim;
 
 	int samples[8];
-	sampleOctree(vec3(posFloor), lvl, samples[0]);
-	sampleOctree(vec3(posCeil.x, posFloor.y, posFloor.z), lvl, samples[1]);
-	sampleOctree(vec3(posFloor.x, posCeil.y, posFloor.z), lvl, samples[2]);
-	sampleOctree(vec3(posCeil.x, posCeil.y, posFloor.z), lvl, samples[3]);
-	sampleOctree(vec3(posFloor.x, posFloor.y, posCeil.z), lvl, samples[4]);
-	sampleOctree(vec3(posCeil.x, posFloor.y, posCeil.z), lvl, samples[5]);
-	sampleOctree(vec3(posFloor.x, posCeil.y, posCeil.z), lvl, samples[6]);
-	sampleOctree(vec3(posCeil), lvl, samples[7]);
+	bool hits[8];
+	hits[0] = sampleOctree(vec3(posFloor), lvl, samples[0]);
+	hits[1] = sampleOctree(vec3(posCeil.x, posFloor.y, posFloor.z), lvl, samples[1]);
+	hits[2] = sampleOctree(vec3(posFloor.x, posCeil.y, posFloor.z), lvl, samples[2]);
+	hits[3] = sampleOctree(vec3(posCeil.x, posCeil.y, posFloor.z), lvl, samples[3]);
+	hits[4] = sampleOctree(vec3(posFloor.x, posFloor.y, posCeil.z), lvl, samples[4]);
+	hits[5] = sampleOctree(vec3(posCeil.x, posFloor.y, posCeil.z), lvl, samples[5]);
+	hits[6] = sampleOctree(vec3(posFloor.x, posCeil.y, posCeil.z), lvl, samples[6]);
+	hits[7] = sampleOctree(vec3(posCeil), lvl, samples[7]);
 
 	vec4 p[8];
-	for(int i = 0; i < 8; i++)
-		p[i] = getColor(samples[i]);
+	for(int i = 0; i < 8; i++) {
+		float hit = float(hits[i]);
+		p[i] = hit * getColor(samples[i]) + (1.f - hit) * getColor(fallBack);
+	}
+		
 
 	return mix3D(p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], posFrag); 
 }
@@ -281,8 +293,18 @@ vec4 linearMipmap(vec3 position, float level) {
 	int floorLevel = int(floor(level));
 	float fragLevel = level - float(floorLevel);
 
-	vec4 a = linearFilter(position, floorLevel);
-	vec4 b = linearFilter(position, int(ceil(level)));
+	vec4 a = getFragmentColor(position, floorLevel);
+	vec4 b = getFragmentColor(position, int(ceil(level)));
+
+	return mix(a, b, fragLevel); 
+}
+
+vec4 linearMipmapAndFilter(vec3 position, float level, int fallBack) {
+	int floorLevel = int(floor(level));
+	float fragLevel = level - float(floorLevel);
+
+	vec4 a = linearFilter(position, floorLevel, fallBack);
+	vec4 b = linearFilter(position, int(ceil(level)), fallBack);
 
 	return mix(a, b, fragLevel); 
 }
@@ -294,11 +316,11 @@ vec4 getColor(int nodeIndex) {
 }
 
 float getLevel(float dist) {
-	float d = dist / farClip; //Clamp in clip range
-	d *= d;
-	d = 1.f - d;
+	float d = abs(dist) / farClip; //Clamp in clip range
+	d = pow(d, 0.8f);
 
-	return 1.f + d * float(level - 1);
+	float lvl = float(level);
+	return lvl - d * lvl;
 }
 
 int getLevelDimension(int lvl) {

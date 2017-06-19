@@ -123,10 +123,8 @@ namespace geeL {
 			//Update offsets
 			nodeLevels.push_back(allocatedNodes);
 			nodeOffset += nodeLevels[i];
-			//nodeOffset = allocOffset;
 			allocOffset += allocatedNodes;
 		}
-
 	}
 
 	void VoxelOctree::buildLeafNodes(uint width, uint height) {

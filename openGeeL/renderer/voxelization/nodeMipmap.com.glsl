@@ -9,8 +9,6 @@ uniform layout(binding = 0, r32ui) uimageBuffer nodeIndicies;
 uniform layout(binding = 1, r32ui) uimageBuffer nodeDiffuse;
 
 
-//Atomic average method from OpenGL Insight chapter 22
-void imageAtomicRGBA8Avg(vec4 val, int coord, layout(r32ui) uimageBuffer buf);
 vec4 convRGBA8ToVec4(in uint val);
 uint convVec4ToRGBA8(in vec4 val);
 
@@ -29,16 +27,20 @@ void main() {
 	if((childIndex & 0x80000000) != 0) {
 		int nodeIndex = int(childIndex & 0x7FFFFFFF); //Remove child flag
 
+		float count = 0.f;
 		vec4 color = vec4(0.f);
 		for(int i = 0; i < 8; i++) {
-			color += getColor(nodeIndex);
+			unsigned int node = imageLoad(nodeIndicies, nodeIndex).r;
+
+			if((node & 0x80000000) != 0) {
+				color += getColor(nodeIndex);
+				count += 1.f;
+			}
+			
 			nodeIndex++;
 		}
 
-		color /= 8.f;
-
-		//imageAtomicRGBA8Avg(color, nodeOffset + int(index), nodeDiffuse);
-
+		color /= count;
 		uint rgba8 = convVec4ToRGBA8(color * 255.f);
 		imageStore(nodeDiffuse, nodeOffset + int(index), uvec4(rgba8, 0, 0, 0));
 	}
@@ -52,28 +54,12 @@ vec4 getColor(int nodeIndex) {
 
 
 vec4 convRGBA8ToVec4(in uint val) {
-    return vec4( float((val&0x000000FF)), float((val&0x0000FF00)>>8U),
-	             float((val&0x00FF0000)>>16U), float((val&0xFF000000)>>24U) );
+    return vec4(float((val&0x000000FF)), float((val&0x0000FF00)>>8U),
+	    float((val&0x00FF0000)>>16U), float((val&0xFF000000)>>24U));
 }
 
 uint convVec4ToRGBA8(in vec4 val) {
-    return (uint(val.w)&0x000000FF)<<24U | (uint(val.z)&0x000000FF)<<16U | (uint(val.y)&0x000000FF)<<8U | (uint(val.x)&0x000000FF);
+    return (uint(val.w)&0x000000FF)<<24U | (uint(val.z)&0x000000FF)<<16U 
+		| (uint(val.y)&0x000000FF)<<8U | (uint(val.x)&0x000000FF);
 }
 
-void imageAtomicRGBA8Avg(vec4 val, int coord, layout(r32ui) uimageBuffer buf) {
-    val.rgb *= 255.0;
-	val.a = 1;
-
-	uint newVal = convVec4ToRGBA8(val);
-	uint prev = 0;
-	uint cur;
-	
-	while((cur = imageAtomicCompSwap(buf, coord, prev, newVal)) != prev) {
-       prev = cur;
-	   vec4 rval = convRGBA8ToVec4(cur);
-	   rval.xyz = rval.xyz*rval.w;
-	   vec4 curVal = rval + val;
-	   curVal.xyz /= curVal.w;
-	   newVal = convVec4ToRGBA8(curVal);
-	}
-}

@@ -59,12 +59,13 @@ void main() {
 
 
 vec4 convRGBA8ToVec4(in uint val) {
-    return vec4( float((val&0x000000FF)), float((val&0x0000FF00)>>8U),
-	             float((val&0x00FF0000)>>16U), float((val&0xFF000000)>>24U) );
+    return vec4(float((val&0x000000FF)), float((val&0x0000FF00)>>8U),
+	    float((val&0x00FF0000)>>16U), float((val&0xFF000000)>>24U));
 }
 
 uint convVec4ToRGBA8(in vec4 val) {
-    return (uint(val.w)&0x000000FF)<<24U | (uint(val.z)&0x000000FF)<<16U | (uint(val.y)&0x000000FF)<<8U | (uint(val.x)&0x000000FF);
+    return (uint(val.w)&0x000000FF)<<24U | (uint(val.z)&0x000000FF)<<16U 
+		| (uint(val.y)&0x000000FF)<<8U | (uint(val.x)&0x000000FF);
 }
 
 void imageAtomicRGBA8Avg(vec4 val, int coord, layout(r32ui) uimageBuffer buf) {
@@ -77,10 +78,13 @@ void imageAtomicRGBA8Avg(vec4 val, int coord, layout(r32ui) uimageBuffer buf) {
 	
 	while((cur = imageAtomicCompSwap(buf, coord, prev, newVal)) != prev) {
        prev = cur;
+	   
 	   vec4 rval = convRGBA8ToVec4(cur);
-	   rval.xyz = rval.xyz*rval.w;
+	   rval.xyz = rval.xyz * rval.w;
+
 	   vec4 curVal = rval + val;
 	   curVal.xyz /= curVal.w;
+
 	   newVal = convVec4ToRGBA8(curVal);
 	}
 }
