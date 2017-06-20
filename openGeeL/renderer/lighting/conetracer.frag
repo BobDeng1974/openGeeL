@@ -51,6 +51,7 @@ float getNodeBorderDistance(vec3 position, vec3 direction, int depth);
 float planeIntersection(vec3 rayO, vec3 rayD, vec3 planeO, vec3 planeN);
 
 float doto(vec3 a, vec3 b);
+vec3 getClosestAxisNormal(vec3 v);
 vec4 convRGBA8toVec4(uint val);
 vec4 mix2D(vec4 p00, vec4 p10, vec4 p01, vec4 p11, float x, float y);
 vec4 mix3D(vec4 p000, vec4 p100, vec4 p010, vec4 p110, vec4 p001, vec4 p101, vec4 p011, vec4 p111, vec3 weight);
@@ -79,9 +80,8 @@ void main() {
 	vec4 radiance = raymarchOctree(position, refl, camPosition);
 	vec3 irradiance = calculateReflectance(position, normal, view, refl, radiance.rgb, albedo, roughness, metallic);
 	color = vec4(radiance.rgb, 1.f);
-	//color = vec4(vec3(radiance.a), 1.f);
-	//color = vec4(baseColor + luma * irradiance, 1.f);
 
+	//color = vec4(baseColor + irradiance, 1.f);
 	//color = getFragmentColor(position, level);
 }
 
@@ -99,6 +99,7 @@ vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition) {
 	//sampling neighboring voxels when direction is steep
 	vec3 camDir = normalize(camPosition - position);
 	vec3 halfDir = normalize(camDir + direction);
+	halfDir = getClosestAxisNormal(halfDir);
 	float borderDist = getNodeBorderDistance(position, halfDir, int(lvl));
 	vec3 pos = position + borderDist * halfDir;
 
@@ -123,8 +124,8 @@ vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition) {
 
 	color /= color.a;
 
-	//if(!hit)
-	//	return getFragmentColor(position, level);
+	if(!hit)
+		return getFragmentColor(position, level);
 
 	//return linearMipmap(pos, lvl);
 	//return linearFilter(pos, int(lvl), nodeIndex);
@@ -363,6 +364,25 @@ int getLevelDimension(int lvl) {
 
 float doto(vec3 a, vec3 b) {
 	return max(dot(a, b), 0.0f);
+}
+
+vec3 getClosestAxisNormal(vec3 v) {
+	vec3 a = abs(v);
+	
+	float XgY = step(a.y, a.x);
+	float XgZ = step(a.z, a.x);
+	float YgZ = step(a.z, a.y);
+
+	float maxX = XgY * XgZ;
+	float maxY = ((1.f - XgY) * YgZ) * 2.f;
+	float maxZ = ((1.f - XgZ) * (1.f - YgZ)) * 3.f;
+
+	int maxAxis = int(max(maxX, max(maxY, maxZ))) - 1;
+
+	vec3 normal = vec3(0.f);
+	normal[maxAxis] = v[maxAxis] / a[maxAxis];
+
+	return normal;
 }
 
 vec4 convRGBA8toVec4(uint val) {
