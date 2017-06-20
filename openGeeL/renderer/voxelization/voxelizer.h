@@ -36,6 +36,7 @@ namespace geeL {
 		SceneShader* voxelShader;
 		const RenderScene& scene;
 
+		void initVoxelShader() const;
 		void voxelizeScene(bool drawVoxel) const;
 
 	};

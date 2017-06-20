@@ -20,6 +20,7 @@ namespace geeL {
 			frag, ShaderTransformSpace::World);
 
 		BufferUtility::generateAtomicBuffer(atomicBuffer);
+		voxelShader->mapOffset = 1;
 	}
 
 	Voxelizer::~Voxelizer() {
@@ -30,6 +31,7 @@ namespace geeL {
 
 
 	void Voxelizer::voxelize() {
+		initVoxelShader();
 
 		//Pass 1: Get number of voxels and generate buffers accordingly
 		voxelizeScene(false);
@@ -51,6 +53,28 @@ namespace geeL {
 		BufferUtility::resetAtomicBuffer(atomicBuffer);
 	}
 
+	void Voxelizer::initVoxelShader() const {
+
+		//Create transform matrices for X-, Y- and Z-axis
+		float scale = 1.f;
+		mat4 proj = glm::ortho(-scale, scale, -scale, scale, -scale, scale);
+		proj = glm::ortho(-1.f, 1.f, -1.f, 1.f, 1.f, 3.f);
+		mat4 transX = proj * glm::lookAt(vec3(2.f, 0.f, 0.f), vec3(0.f), vec3(0.f, 1.f, 0.f));
+		mat4 transY = proj * glm::lookAt(vec3(0.f, 2.f, 0.f), vec3(0.f), vec3(0.f, 0.f, -1.f));
+		mat4 transZ = proj * glm::lookAt(vec3(0.f, 0.f, 2.f), vec3(0.f), vec3(0.f, 1.f, 0.f));
+
+		voxelShader->use();
+		voxelShader->setMat4("transformX", transX);
+		voxelShader->setMat4("transformY", transY);
+		voxelShader->setMat4("transformZ", transZ);
+		voxelShader->setVector2("resolution", glm::vec2(dimensions));
+
+		const Camera& camera = scene.getCamera();
+		voxelShader->setVector3("cameraPosition", camera.transform.getPosition());
+
+		scene.lightManager.bindShadowMaps(*voxelShader);
+	}
+
 	void Voxelizer::voxelizeScene(bool drawVoxel) const {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, dimensions, dimensions);
@@ -58,24 +82,9 @@ namespace geeL {
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
-		
-		//Create transform matrices for X-, Y- and Z-axis
-		float scale = 1.f;
-		mat4 proj = glm::ortho(-scale, scale, -scale, scale, -scale, scale);
-		proj = glm::ortho(-1.f, 1.f, -1.f, 1.f, 1.f, 3.f);
-		mat4 transX = proj * glm::lookAt(vec3(2.f, 0.f, 0.f), vec3(0.f), vec3(0.f, 1.f, 0.f));
-		mat4 transY = proj * glm::lookAt(vec3(0.f, 2.f, 0.f), vec3(0.f), vec3(0.f, 0.f, -1.f));
-		mat4 transZ = proj * glm::lookAt(vec3(0.f, 0.f, 2.f), vec3(0.f),  vec3(0.f, 1.f, 0.f));
 
 		voxelShader->use();
-		voxelShader->setMat4("transformX", transX);
-		voxelShader->setMat4("transformY", transY);
-		voxelShader->setMat4("transformZ", transZ);
-		voxelShader->setVector2("resolution", glm::vec2(dimensions));
 		voxelShader->setInteger("drawVoxel", (int)drawVoxel);
-
-		const Camera& camera = scene.getCamera();
-		voxelShader->setVector3("cameraPosition", camera.transform.getPosition());
 
 		glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicBuffer);
 
@@ -83,8 +92,6 @@ namespace geeL {
 			glBindImageTexture(0, voxelPositions.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGB10_A2UI);
 			glBindImageTexture(1, voxelColors.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
 			glBindImageTexture(2, voxelNormals.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA16F);
-
-			//scene.lightManager.bindShadowMaps(*voxelShader);
 		}
 
 		//Render scene

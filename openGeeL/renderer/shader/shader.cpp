@@ -34,7 +34,7 @@ namespace geeL {
 			glUniform1i(glGetUniformLocation(program, name.c_str()), mapOffset + offset);
 
 			maps[name] = TextureBinding(id, type, offset, name);
-			mapBindingPos++;
+			mapBindingPos = maps.size() + mapOffset;
 		}
 	}
 

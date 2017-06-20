@@ -82,12 +82,7 @@ void main() {
 	//color = vec4(vec3(radiance.a), 1.f);
 	//color = vec4(baseColor + luma * irradiance, 1.f);
 
-	
-	color = getFragmentColor(position, level);
-
-	if(TexCoords.x >0.5f)
-		color = vec4(baseColor, 1.f);
-		
+	//color = getFragmentColor(position, level);
 }
 
 
@@ -121,7 +116,7 @@ vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition) {
 		minDist = getNodeBorderDistance(pos, direction, depth);
 
 		dist += minDist;
-		lvl = log(dimensions / dist) / log(2) + 1.f;
+		//lvl = log(dimensions / dist) / log(2) + 1.f;
 
 		counter++;
 	}
