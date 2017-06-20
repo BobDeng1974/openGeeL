@@ -79,10 +79,15 @@ void main() {
 	vec4 radiance = raymarchOctree(position, refl, camPosition);
 	vec3 irradiance = calculateReflectance(position, normal, view, refl, radiance.rgb, albedo, roughness, metallic);
 	color = vec4(radiance.rgb, 1.f);
+	//color = vec4(vec3(radiance.a), 1.f);
 	//color = vec4(baseColor + luma * irradiance, 1.f);
 
-	//if(TexCoords.x >0.5f)
-	//	color = getFragmentColor(position, level - 1);
+	
+	color = getFragmentColor(position, level);
+
+	if(TexCoords.x >0.5f)
+		color = vec4(baseColor, 1.f);
+		
 }
 
 
@@ -93,7 +98,7 @@ vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition) {
 	int depth = 0;
 	int counter = 0;
 	int nodeIndex;
-	float lvl = level;
+	float lvl = level ;
 
 	//Move position into direction of voxel border to avoid 
 	//sampling neighboring voxels when direction is steep
@@ -106,25 +111,30 @@ vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition) {
 	float minDist = 0.f;
 	float dist = minDist;
 	
-	while(!hit && counter < minStep) {
+	vec4 color = vec4(0.f);
+	while((color.a < 0.5f) && counter < minStep) {
 		pos += minDist * direction;
-		hit = sampleOctreeLvl(pos, int(lvl), nodeIndex, depth);
+		hit = sampleOctreeLvl(pos, int(floor(lvl)), nodeIndex, depth);
 
+		float rest = 1.f - color.a;
+		color += getColor(nodeIndex) * rest;
 		minDist = getNodeBorderDistance(pos, direction, depth);
+
 		dist += minDist;
-		//lvl = log(dimensions / dist) / log(2) + 1.f;
+		lvl = log(dimensions / dist) / log(2) + 1.f;
 
 		counter++;
 	}
 
+	color /= color.a;
+
 	//if(!hit)
 	//	return getFragmentColor(position, level);
 
+	//return linearMipmap(pos, lvl);
 	//return linearFilter(pos, int(lvl), nodeIndex);
-	return getColor(nodeIndex);
+	return color;
 }
-
-
 
 vec4 getFragmentColor(vec3 position, int lvl) {
 	int nodeIndex;
@@ -338,7 +348,10 @@ vec4 linearMipmapAndFilter(vec3 position, float level, int fallBack) {
 
 vec4 getColor(int nodeIndex) {
 	unsigned int rgb8 = imageLoad(nodeDiffuse, nodeIndex).r;
-	return convRGBA8toVec4(rgb8).rgba / 255;
+	vec4 col = convRGBA8toVec4(rgb8).rgba / 255;
+	col.rgb = pow(col.rgb, vec3(2.2f)); //Gamma correction
+
+	return col;
 }
 
 float getLevel(float dist) {

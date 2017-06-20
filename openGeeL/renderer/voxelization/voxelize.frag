@@ -199,9 +199,10 @@ vec3 getIrradiance() {
 	for(int i = 0; i < slCount; i++)
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
 
-	irradiance = vec3(1.f) - exp(-irradiance * 2.2f); // Tone mapping
+	irradiance = 1.f - exp(-irradiance * 1.f); // Tone mapping
+	irradiance = pow(irradiance, vec3(0.4545f)); //Gamma 
 
-	return albedo * 0.05f;
+	//return albedo * 0.05f;
 	return irradiance;
 }
 
@@ -225,6 +226,7 @@ void readMaterialProperties(out vec3 albedo, out vec3 norm, out float roughness,
 	}
 
 	albedo = (diffFlag == 1) ? texture(material.diffuse, texCoords).rgb : material.color;
+	
 	roughness = (specFlag == 1) ? 1.f - texture(material.specular, texCoords).r : material.roughness; 
 	metallic = (metaFlag == 1) ? texture(material.metal, texCoords).r : material.metallic;
 }
@@ -287,8 +289,8 @@ vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection,
 	vec3  radiance = lightDiffuse * attenuation;
 
 	//BRDF
-	float ndf = calculateNormalDistrubution(normal, halfwayDirection, roughness);
-	float geo = calculateGeometryFunctionSmith(normal, viewDirection, lightDirection, roughness);
+	//float ndf = calculateNormalDistrubution(normal, halfwayDirection, roughness);
+	//float geo = calculateGeometryFunctionSmith(normal, viewDirection, lightDirection, roughness);
 	vec3 fres = calculateFresnelTerm(doto(halfwayDirection, viewDirection), albedo, metallic, roughness);
 
 	vec3 ks = fres;
@@ -296,12 +298,13 @@ vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection,
     kd *= 1.0f - metallic;
 
 	//Lighting equation
-	vec3  nom   = ndf * geo * ks; //Fresnel term equivalent to kS
+	//vec3  nom   = ndf * geo * ks; //Fresnel term equivalent to kS
 	//add small fraction to prevent ill behaviour when dividing by zero (shadows no longer additive)
-	float denom =  4.0f * doto(viewDirection, normal) * NdotL + 0.001f; 
-	vec3  brdf  = nom / denom;
+	//float denom =  4.0f * doto(viewDirection, normal) * NdotL + 0.001f; 
+	//vec3  brdf  = nom / denom;
 
-	return ((kd * albedo / PI + brdf) * radiance) * NdotL; 
+	return (kd * albedo / PI) * radiance * NdotL; //Return only diffuse term
+	//return ((kd * albedo / PI + brdf) * radiance) * NdotL; 
 }
 
 //Reflectance equation with Cook-Torrance BRDF for directional light
