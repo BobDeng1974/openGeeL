@@ -14,7 +14,7 @@ namespace geeL {
 	class VoxelConeTracer : public SceneRender {
 
 	public:
-		VoxelConeTracer(RenderScene& scene, VoxelOctree& octree, int minStep = 8);
+		VoxelConeTracer(RenderScene& scene, VoxelOctree& octree, int minStep = 5);
 		VoxelConeTracer(RenderScene& scene, VoxelTexture& texture, int minStep = 8);
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);

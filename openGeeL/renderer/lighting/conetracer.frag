@@ -25,7 +25,7 @@ uniform sampler2D gPositionDepth;
 uniform sampler2D gNormalMet;
 uniform sampler2D gDiffuseSpec;
 
-vec3 indirectDiffuse(vec3 position, vec3 direction, vec3 camPosition, vec3 viewDirection, vec3 albedo);
+vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 camPosition, vec3 reflection, vec3 albedo);
 vec3 indirectSpecular(vec3 position, vec3 direction, vec3 camPosition, float roughness);
 
 vec4 getFragmentColor(vec3 position, int lvl);
@@ -72,29 +72,28 @@ void main() {
 	vec3 normal = normalize((inverseView * vec4(origin + normView, 1.f)).xyz);
 	vec3 view = normalize((inverseView * vec4(origin + viewView, 1.f)).xyz);
 	vec3 refl = normalize(reflect(-view, normal));
-	vec3 camPosition =(inverseView * vec4(vec3(0.f), 1.f)).xyz;
+	vec3 camPosition = (inverseView * vec4(vec3(0.f), 1.f)).xyz;
 
 	vec3 albedo = diffSpec.rgb;
 	float roughness = diffSpec.w;
 	float metallic = normMet.w;
 	float luma = dot(luminance, baseColor);
 
-	//vec3 indirectDiffuse = indirectDiffuse(position, refl, camPosition, view, albedo);
+	vec3 indirectDiffuse = indirectDiffuse(position, normal, camPosition, refl, albedo);
 	vec3 indirectSpecular = indirectSpecular(position, refl, camPosition, roughness);
 
 	//color = vec4(indirectSpecular(position, refl, camPosition, roughness), 1.f);
-	color = vec4(baseColor + indirectSpecular, 1.f);
+	color = vec4(baseColor + indirectDiffuse + indirectSpecular, 1.f);
 
 	//color = vec4(baseColor + irradiance, 1.f);
 	//color = getFragmentColor(position, level);
 }
 
 
-vec3 indirectDiffuse(vec3 position, vec3 direction, vec3 camPosition, vec3 viewDirection, vec3 albedo) {
+vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 camPosition, vec3 reflection, vec3 albedo) {
 
-	vec3 up = direction;
-	vec3 right = cross(direction, viewDirection);
-	vec3 forward = cross(direction, right);
+	vec3 right = cross(normal, reflection);
+	vec3 forward = cross(normal, right);
 	
 	vec3 sampleVectors[6];
 	sampleVectors[0] = vec3(0.f, 1.f, 0.f);
@@ -105,7 +104,7 @@ vec3 indirectDiffuse(vec3 position, vec3 direction, vec3 camPosition, vec3 viewD
 	sampleVectors[5] = vec3(-0.824f, 0.5f, 0.268f);
 
 	for(int i = 0; i < 6; i++) 
-		sampleVectors[i] = forward * sampleVectors[i].x + up * sampleVectors[i].y + right * sampleVectors[i].z;
+		sampleVectors[i] = forward * sampleVectors[i].x + normal * sampleVectors[i].y + right * sampleVectors[i].z;
 
 	float weights[2];
 	weights[0] = PI / 4.f;
@@ -172,9 +171,8 @@ vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition, int maxLeve
 	}
 
 	color /= color.a;
-
-	//if(!hit)
-	//	return getFragmentColor(position, level);
+	color = clamp(color, 0.f, 1.f);
+	//color += getFragmentColor(position, level) * float(!hit); //Add fallback color if nothing was hit
 
 	//return linearFilter(pos, int(lvl), nodeIndex);
 	return color;
@@ -203,11 +201,6 @@ bool sampleOctreeLvl(vec3 position, int maxLevel, out int nodeIndex, out int lvl
 
 	//Iterate through the levels and find suitable child node for voxel 
 	for(int i = 0; i < maxLevel; i++) {
-		if((node & 0x80000000) == 0) {
-			lvl = i;
-			return false;
-		}
-
 		nodeIndex = int(node & 0x7FFFFFFF);
 		
 		dim /= 2;
@@ -218,8 +211,12 @@ bool sampleOctreeLvl(vec3 position, int maxLevel, out int nodeIndex, out int lvl
 		//Spacial position translated into index
 		unsigned int childIndex = box.x + 4 * box.y + 2 * box.z;
 		nodeIndex += int(childIndex);
-
 		node = imageLoad(nodeIndicies, nodeIndex).r;
+
+		if((node & 0x80000000) == 0) {
+			lvl = i + 1;
+			return false;
+		}
 	}
 
 	lvl = maxLevel;
@@ -330,13 +327,8 @@ float planeIntersection(vec3 rayO, vec3 rayD, vec3 planeO, vec3 planeN) {
 	vec3 a = planeO - rayO;
 	float d = dot(a, planeN) / v;
 
-	//float pick = step(d, 0.f);
-	//return (pick * d) + ((1.f - pick) * FLOAT_MAX);
-
-	if(d > epsilon)
-		return d;
-
-	return FLOAT_MAX;
+	float pick = step(epsilon, d);
+	return (pick * d) + ((1.f - pick) * FLOAT_MAX);
 }
 
 
