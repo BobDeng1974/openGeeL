@@ -22,13 +22,13 @@ namespace geeL {
 		glGenTextures(1, &id);
 		glBindTexture(GL_TEXTURE_2D, id);
 
-		Texture::initColorType(colorType, imgWidth, imgHeight, image);
+		Texture2D::initColorType(colorType, imgWidth, imgHeight, image);
 
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		Texture::initWrapMode(wrapMode);
-		Texture::initFilterMode(filterMode);
-		Texture::initAnisotropyFilter(filter);
+		Texture2D::initWrapMode(wrapMode);
+		Texture2D::initFilterMode(filterMode);
+		Texture2D::initAnisotropyFilter(filter);
 
 		stbi_image_free(image);
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -41,9 +41,9 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, id);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, &colors[0]);
 
-		Texture::initFilterMode(filterMode);
-		Texture::initWrapMode(wrapMode);
-		Texture::initAnisotropyFilter(filter);
+		Texture2D::initFilterMode(filterMode);
+		Texture2D::initWrapMode(wrapMode);
+		Texture2D::initAnisotropyFilter(filter);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}

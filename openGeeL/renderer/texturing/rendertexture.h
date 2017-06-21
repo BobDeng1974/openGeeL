@@ -6,7 +6,7 @@
 namespace geeL {
 
 	//Texture that is intended to be rendered into
-	class RenderTexture : public Texture {
+	class RenderTexture : public Texture2D {
 
 	public:
 		RenderTexture() {}

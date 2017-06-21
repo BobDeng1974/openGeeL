@@ -7,7 +7,7 @@ namespace geeL {
 
 	AnisotropicFilter Texture::maxAnisotropy;
 
-	void Texture::initColorType(ColorType type, int width, int height, unsigned char* image) {
+	void Texture2D::initColorType(ColorType type, int width, int height, unsigned char* image) {
 		switch (type) {
 			case ColorType::GammaSpace:
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
@@ -34,7 +34,7 @@ namespace geeL {
 	}
 
 
-	void Texture::initFilterMode(FilterMode mode) {
+	void Texture2D::initFilterMode(FilterMode mode) {
 		switch (mode) {
 			case FilterMode::None:
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -60,7 +60,7 @@ namespace geeL {
 	}
 
 
-	void Texture::initWrapMode(WrapMode mode) {
+	void Texture2D::initWrapMode(WrapMode mode) {
 		switch (mode) {
 			case WrapMode::Repeat:
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -81,7 +81,7 @@ namespace geeL {
 		}
 	}
 
-	void Texture::initAnisotropyFilter(AnisotropicFilter filter) {
+	void Texture2D::initAnisotropyFilter(AnisotropicFilter filter) {
 		float maxValue = 0.f;
 		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxValue);
 
@@ -92,13 +92,13 @@ namespace geeL {
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxValue);
 	}
 
-	void Texture::mipmap() const {
+	void Texture2D::mipmap() const {
 		glBindTexture(GL_TEXTURE_2D, getID());
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void Texture::mipmap(unsigned int id) {
+	void Texture::mipmap2D(unsigned int id) {
 		glBindTexture(GL_TEXTURE_2D, id);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);

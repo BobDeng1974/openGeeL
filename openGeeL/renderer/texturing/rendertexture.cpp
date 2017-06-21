@@ -13,9 +13,9 @@ namespace geeL {
 		glGenTextures(1, &id);
 		glBindTexture(GL_TEXTURE_2D, id);
 
-		Texture::initColorType(colorType, width, height, 0);
-		Texture::initWrapMode(wrapMode);
-		Texture::initFilterMode(filterMode);
+		Texture2D::initColorType(colorType, width, height, 0);
+		Texture2D::initWrapMode(wrapMode);
+		Texture2D::initFilterMode(filterMode);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 

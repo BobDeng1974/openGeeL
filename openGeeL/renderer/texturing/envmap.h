@@ -7,7 +7,7 @@
 namespace geeL {
 
 	//2D equirectangular map of an 3D environment with HDR
-	class EnvironmentMap : public Texture {
+	class EnvironmentMap : public Texture2D {
 
 	public:
 		EnvironmentMap() {}
