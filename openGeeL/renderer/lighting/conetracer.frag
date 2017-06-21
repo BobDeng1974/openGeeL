@@ -25,6 +25,8 @@ uniform sampler2D gPositionDepth;
 uniform sampler2D gNormalMet;
 uniform sampler2D gDiffuseSpec;
 
+vec3 indirectDiffuse(vec3 position, vec3 direction, vec3 camPosition, vec3 viewDirection, vec3 albedo);
+vec3 indirectSpecular(vec3 position, vec3 direction, vec3 camPosition, float roughness);
 
 vec4 getFragmentColor(vec3 position, int lvl);
 
@@ -33,7 +35,7 @@ bool sampleOctree(vec3 position, int maxLevel, out int nodeIndex);
 //Traverse octree to obtain sample node and return reached level
 bool sampleOctreeLvl(vec3 position, int maxLevel, out int nodeIndex, out int lvl);
 
-vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition);
+vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition, int maxLevel);
 
 vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection, 
 	vec3 lightDirection, vec3 radiance, vec3 albedo, float roughness, float metallic);
@@ -77,23 +79,67 @@ void main() {
 	float metallic = normMet.w;
 	float luma = dot(luminance, baseColor);
 
-	vec4 radiance = raymarchOctree(position, refl, camPosition);
-	vec3 irradiance = calculateReflectance(position, normal, view, refl, radiance.rgb, albedo, roughness, metallic);
-	color = vec4(radiance.rgb, 1.f);
+	//vec3 indirectDiffuse = indirectDiffuse(position, refl, camPosition, view, albedo);
+	vec3 indirectSpecular = indirectSpecular(position, refl, camPosition, roughness);
+
+	//color = vec4(indirectSpecular(position, refl, camPosition, roughness), 1.f);
+	color = vec4(baseColor + indirectSpecular, 1.f);
 
 	//color = vec4(baseColor + irradiance, 1.f);
 	//color = getFragmentColor(position, level);
 }
 
 
+vec3 indirectDiffuse(vec3 position, vec3 direction, vec3 camPosition, vec3 viewDirection, vec3 albedo) {
 
-vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition) {
+	vec3 up = direction;
+	vec3 right = cross(direction, viewDirection);
+	vec3 forward = cross(direction, right);
+	
+	vec3 sampleVectors[6];
+	sampleVectors[0] = vec3(0.f, 1.f, 0.f);
+	sampleVectors[1] = vec3(0.f, 0.5f, 0.866f);
+	sampleVectors[2] = vec3(0.824f, 0.5f, 0.268f);
+	sampleVectors[3] = vec3(0.51f, 0.5f, -0.7f);
+	sampleVectors[4] = vec3(-0.51f, 0.5f, -0.7f);
+	sampleVectors[5] = vec3(-0.824f, 0.5f, 0.268f);
+
+	for(int i = 0; i < 6; i++) 
+		sampleVectors[i] = forward * sampleVectors[i].x + up * sampleVectors[i].y + right * sampleVectors[i].z;
+
+	float weights[2];
+	weights[0] = PI / 4.f;
+	weights[1] = (3.f * PI) / 20.f;
+
+	int lvl = level - 3;
+	vec3 color = vec3(0.f);
+	color += weights[0] * raymarchOctree(position, sampleVectors[0], camPosition, lvl).rgb;
+	color += weights[1] * raymarchOctree(position, sampleVectors[1], camPosition, lvl).rgb;
+	color += weights[1] * raymarchOctree(position, sampleVectors[2], camPosition, lvl).rgb;
+	color += weights[1] * raymarchOctree(position, sampleVectors[3], camPosition, lvl).rgb;
+	color += weights[1] * raymarchOctree(position, sampleVectors[4], camPosition, lvl).rgb;
+	color += weights[1] * raymarchOctree(position, sampleVectors[5], camPosition, lvl).rgb;
+
+	return color * albedo;
+}
+
+
+vec3 indirectSpecular(vec3 position, vec3 direction, vec3 camPosition, float roughness) {
+	vec4 radiance = raymarchOctree(position, direction, camPosition, level);
+	//vec3 irradiance = calculateReflectance(position, normal, view, refl, radiance.rgb, albedo, roughness, metallic);
+
+	return radiance.rgb * (1.f - roughness);
+}
+
+
+
+vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition, int maxLevel) {
 	
 	bool hit = false;
 	int depth = 0;
 	int counter = 0;
 	int nodeIndex;
-	float lvl = level ;
+	float lvl = maxLevel;
 
 	//Move position into direction of voxel border to avoid 
 	//sampling neighboring voxels when direction is steep
@@ -101,11 +147,13 @@ vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition) {
 	vec3 halfDir = normalize(camDir + direction);
 	halfDir = getClosestAxisNormal(halfDir);
 	float borderDist = getNodeBorderDistance(position, halfDir, int(lvl));
-	vec3 pos = position + borderDist * halfDir;
+	float borderDistProj = borderDist / dot(direction, halfDir); //Projection of border dist onto direction vector
+	
+	vec3 pos = position + borderDistProj * direction;
 
-	int minStepSize = getLevelDimension(int(lvl + 1));
+	//int minStepSize = getLevelDimension(int(lvl + 1));
 	float minDist = 0.f;
-	float dist = minDist;
+	float dist = borderDistProj;
 	
 	vec4 color = vec4(0.f);
 	while((color.a < 0.5f) && counter < minStep) {
@@ -114,20 +162,20 @@ vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition) {
 
 		float rest = 1.f - color.a;
 		color += getColor(nodeIndex) * rest;
+		//color += linearMipmap(pos, lvl) * rest;
 		minDist = getNodeBorderDistance(pos, direction, depth);
 
 		dist += minDist;
-		//lvl = log(dimensions / dist) / log(2) + 1.f;
+		lvl = log(dimensions / (dist)) / log(2) + 1.f;
 
 		counter++;
 	}
 
 	color /= color.a;
 
-	if(!hit)
-		return getFragmentColor(position, level);
+	//if(!hit)
+	//	return getFragmentColor(position, level);
 
-	//return linearMipmap(pos, lvl);
 	//return linearFilter(pos, int(lvl), nodeIndex);
 	return color;
 }

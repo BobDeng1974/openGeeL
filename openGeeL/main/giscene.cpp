@@ -116,7 +116,7 @@ namespace {
 			float lightIntensity = 200.f;
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(144.f, 82.2f, 132.f), vec3(0.f), vec3(1.f), true);
 			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Huge, 1.f, 8U, 150.f);
-			lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
+			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(150.f, 28.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
 			MeshRenderer& sponz = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),

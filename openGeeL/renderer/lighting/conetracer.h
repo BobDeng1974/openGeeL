@@ -12,7 +12,7 @@ namespace geeL {
 	class VoxelConeTracer : public SceneRender {
 
 	public:
-		VoxelConeTracer(RenderScene& scene, VoxelOctree& octree, Voxelizer& voxelizer, int minStep = 15);
+		VoxelConeTracer(RenderScene& scene, VoxelOctree& octree, Voxelizer& voxelizer, int minStep = 8);
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
