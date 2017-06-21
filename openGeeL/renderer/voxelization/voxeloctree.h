@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "../framebuffer/bufferutil.h"
+#include "voxelstructure.h"
 
 typedef unsigned int uint;
 
@@ -13,14 +14,14 @@ namespace geeL {
 	class Voxelizer;
 
 	//Sparse voxel octree implementation
-	class VoxelOctree {
+	class VoxelOctree : public VoxelStructure {
 
 	public:
 		VoxelOctree(Voxelizer& voxelizer, unsigned int treeLevels = 7);
 		~VoxelOctree();
 
-		void build();
-		void bind(const Shader& shader) const;
+		virtual void build();
+		virtual void bind(const Shader& shader) const;
 
 	private:
 		unsigned int maxLevel, maxNodes;

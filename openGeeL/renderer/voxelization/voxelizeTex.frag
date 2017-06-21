@@ -1,3 +1,4 @@
+
 #version 430
 
 
@@ -10,32 +11,17 @@ flat in int  axis;
 flat in vec4 AABB;
 
 layout(location = 0) out vec4 gl_FragColor;
-///*layout(pixel_center_integer)*/ in vec4 gl_FragCoord;
 
-//Voxel data is stored in these 1D textures to be later integrated into concrete data structures
-uniform layout(binding = 0, rgb10_a2ui) uimageBuffer voxelPositions;
-uniform layout(binding = 1, rgba8) imageBuffer voxelColors;
-uniform layout(binding = 2, rgba16f) imageBuffer voxelNormals;
+layout(RGBA8) uniform image3D voxelTexture;
 
-//Atomic counter that is used to index above 1D textures
-layout (binding = 0, offset = 0) uniform atomic_uint voxelCount;
 
 uniform vec2 resolution;
 uniform bool drawVoxel;
 
 vec3 getIrradiance();
 
-vec4 getFragCoords() {
-	vec4 fragCoords;
-	fragCoords.xy = (0.5f + (0.5f * fragPosition.xy / fragPosition.w)) * resolution;
-	fragCoords.z = 0.5f + (0.5f * fragPosition.z / fragPosition.w);
-	fragCoords.w = 1.f / fragPosition.w;
-
-	return fragCoords;
-}
 
 uvec4 voxelizeSimple();
-uvec4 voxelizeConservative();
 
 
 //Mesh voxelization according to
@@ -43,45 +29,14 @@ uvec4 voxelizeConservative();
 //https://github.com/otaku690/SparseVoxelOctree
 void main() {
 	uvec4 coords = voxelizeSimple();
-	//uvec4 coords = voxelizeConservative();
-
-	uint index = atomicCounterIncrement(voxelCount);
-	if(!drawVoxel) return; //Return in this case since we only want to count voxels
-
 	vec3 color = getIrradiance();
 
-	imageStore(voxelPositions, int(index), coords);
-	imageStore(voxelNormals, int(index), vec4(normal, 0.f));
-	imageStore(voxelColors, int(index), vec4(color, 1.f));
+	imageStore(voxelTexture, coords, vec4(color, 1.f));
 }
 
 
 uvec4 voxelizeSimple() {
 	return uvec4(fragPosition);
-}
-
-uvec4 voxelizeConservative() {
-	//Discard if fragment is outside of triangles bounding box
-	discard(fragPosition.x < AABB.x || fragPosition.y < AABB.y 
-		|| fragPosition.x > AABB.z || fragPosition.y > AABB.w);
-
-	vec4 fragCoords = getFragCoords();
-	uvec4 tCoords = uvec4(fragCoords.x, fragCoords.y, resolution.x * fragCoords.z, 0.f);
-	uvec4 coords;
-	if(axis == 1) {
-	    coords.x = int(resolution.x) - tCoords.z;
-		coords.z = tCoords.x;
-		coords.y = tCoords.y;
-	}
-	else if(axis == 2) {
-	    coords.z = tCoords.y;
-		coords.y = int(resolution.x) - tCoords.z;
-		coords.x = tCoords.x;
-	}
-	else
-	    coords = tCoords;
-
-	return coords;
 }
 
 

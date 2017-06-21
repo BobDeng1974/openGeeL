@@ -8,11 +8,14 @@ namespace geeL {
 	class SceneCamera;
 	class Voxelizer;
 	class VoxelOctree;
+	class VoxelStructure;
+	class VoxelTexture;
 
 	class VoxelConeTracer : public SceneRender {
 
 	public:
-		VoxelConeTracer(RenderScene& scene, VoxelOctree& octree, Voxelizer& voxelizer, int minStep = 8);
+		VoxelConeTracer(RenderScene& scene, VoxelOctree& octree, int minStep = 8);
+		VoxelConeTracer(RenderScene& scene, VoxelTexture& texture, int minStep = 8);
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
@@ -23,8 +26,7 @@ namespace geeL {
 	private:
 		int minStep;
 		SceneCamera* sceneCamera;
-		Voxelizer& voxelizer;
-		VoxelOctree& octree;
+		VoxelStructure& voxelStructure;
 
 		ShaderLocation farPlaneLocation;
 		ShaderLocation invViewLocation;

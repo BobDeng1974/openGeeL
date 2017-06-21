@@ -1,12 +1,20 @@
 #include "../voxelization/voxelizer.h"
 #include "../voxelization/voxeloctree.h"
+#include "../voxelization/voxeltexture.h"
+#include "../voxelization/voxelstructure.h"
 #include "../scene.h"
 #include "conetracer.h"
 
 namespace geeL {
 
-	VoxelConeTracer::VoxelConeTracer(RenderScene& scene, VoxelOctree& octree, Voxelizer& voxelizer, int minStep) :
-		SceneRender(scene, "renderer/lighting/conetracer.frag"), octree(octree), voxelizer(voxelizer), minStep(minStep) {}
+	VoxelConeTracer::VoxelConeTracer(RenderScene& scene, VoxelOctree& octree, int minStep) :
+		SceneRender(scene, "renderer/lighting/conetracer.frag"), voxelStructure(octree), minStep(minStep) {}
+
+	VoxelConeTracer::VoxelConeTracer(RenderScene& scene, VoxelTexture& texture, int minStep) :
+		SceneRender(scene, "renderer/lighting/conetracerTex.frag"), voxelStructure(texture), minStep(minStep) {
+	
+		texture.bindTexture(shader, "voxelTexture");
+	}
 
 
 	void VoxelConeTracer::init(ScreenQuad& screen, const FrameBuffer& buffer) {
@@ -14,7 +22,7 @@ namespace geeL {
 
 		shader.setInteger("minStep", minStep);
 
-		octree.build();
+		voxelStructure.build();
 
 		farPlaneLocation = shader.getLocation("farClip");
 		invViewLocation = shader.getLocation("inverseView");
@@ -22,7 +30,7 @@ namespace geeL {
 	}
 
 	void VoxelConeTracer::bindValues() {
-		octree.bind(shader);
+		voxelStructure.bind(shader);
 
 		shader.setFloat(farPlaneLocation, scene.getCamera().getFarPlane());
 		shader.setMat4(invViewLocation, camera->getInverseViewMatrix());
