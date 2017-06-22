@@ -14,6 +14,8 @@ namespace geeL {
 		virtual unsigned int getID() const;
 		virtual void remove();
 
+		void mipmap() const;
+
 	private:
 		unsigned int id;
 		std::vector<float> buffer;

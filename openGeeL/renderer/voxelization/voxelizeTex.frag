@@ -12,7 +12,7 @@ flat in vec4 AABB;
 
 layout(location = 0) out vec4 gl_FragColor;
 
-layout(RGBA8) uniform image3D voxelTexture;
+layout(binding = 0, rgba8) uniform image3D voxelTexture;
 
 
 uniform vec2 resolution;
@@ -21,22 +21,9 @@ uniform bool drawVoxel;
 vec3 getIrradiance();
 
 
-uvec4 voxelizeSimple();
-
-
-//Mesh voxelization according to
-//https://developer.nvidia.com/content/basics-gpu-voxelization and
-//https://github.com/otaku690/SparseVoxelOctree
 void main() {
-	uvec4 coords = voxelizeSimple();
-	vec3 color = getIrradiance();
 
-	imageStore(voxelTexture, coords, vec4(color, 1.f));
-}
-
-
-uvec4 voxelizeSimple() {
-	return uvec4(fragPosition);
+	imageStore(voxelTexture, ivec3(fragPosition * 0.5f), vec4(getIrradiance(), 1.f));
 }
 
 
@@ -161,7 +148,7 @@ vec3 getIrradiance() {
 	irradiance = 1.f - exp(-irradiance * 1.f); // Tone mapping
 	irradiance = pow(irradiance, vec3(0.4545f)); //Gamma 
 
-	//return albedo;
+	return albedo;
 	return irradiance;
 }
 

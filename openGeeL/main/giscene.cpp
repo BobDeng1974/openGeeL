@@ -82,6 +82,7 @@
 #include "../renderer/lighting/conetracer.h"
 #include "../renderer/voxelization/voxelizer.h"
 #include "../renderer/voxelization/voxeloctree.h"
+#include "../renderer/voxelization/voxeltexture.h"
 
 #include "giscene.h"
 
@@ -198,17 +199,12 @@ void VoxelScene::draw() {
 
 	Voxelizer voxelizer = Voxelizer(scene);
 	VoxelOctree octree = VoxelOctree(voxelizer);
+	VoxelTexture tex = VoxelTexture(scene);
 
-	VoxelConeTracer tracer = VoxelConeTracer(scene, octree, voxelizer);
+	//VoxelConeTracer tracer = VoxelConeTracer(scene, octree);
+	VoxelConeTracer tracer = VoxelConeTracer(scene, tex);
 	renderer.addEffect(tracer, tracer);
 
-	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
-	GodRay& ray = GodRay(vec3(-2.4f, 45.6f, -4.6f), 20);
-	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
-	GodRaySnippet godRaySnippet = GodRaySnippet(ray);
-	//renderer.addEffect(raySmooth);
-	//scene.addRequester(ray);
-	//postLister.add(raySmooth, godRaySnippet);
 
 	FXAA fxaa = FXAA();
 	renderer.addEffect(fxaa);

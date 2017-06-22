@@ -29,4 +29,10 @@ namespace geeL {
 		glDeleteTextures(1, &id);
 	}
 
+	void Texture3D::mipmap() const {
+		glBindTexture(GL_TEXTURE_3D, id);
+		glGenerateMipmap(GL_TEXTURE_3D);
+		glBindTexture(GL_TEXTURE_3D, 0);
+	}
+
 }

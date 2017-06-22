@@ -1,6 +1,9 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "../texturing/texture3D.h"
+#include "../lights/lightmanager.h"
+#include "../transformation/transform.h"
+#include "../cameras/camera.h"
 #include "../shader/sceneshader.h"
 #include "../scene.h"
 #include "voxeltexture.h"
@@ -8,16 +11,13 @@
 namespace geeL {
 
 	VoxelTexture::VoxelTexture(const RenderScene& scene, unsigned int dimensions) 
-		: scene(scene), dimensions(dimensions){
+		: scene(scene), dimensions(dimensions), texture(new Texture3D(dimensions, dimensions, dimensions, 7)) {
 
 		FragmentShader frag = FragmentShader("renderer/voxelization/voxelizeTex.frag", true, false);
 		voxelShader = new SceneShader("renderer/voxelization/voxelize.vert", "renderer/voxelization/voxelize.geom",
 			frag, ShaderTransformSpace::World);
 
 		voxelShader->mapOffset = 1;
-
-		texture = new Texture3D(dimensions, dimensions, dimensions, 7);
-		bindTexture(*voxelShader, "voxelTexture");
 	}
 
 	VoxelTexture::~VoxelTexture() {
@@ -33,16 +33,21 @@ namespace geeL {
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);	
-		glDisable(GL_BLEND);
 
 		voxelShader->use();
+		voxelShader->setVector2("resolution", glm::vec2(dimensions));
+
+		const Camera& camera = scene.getCamera();
+		voxelShader->setVector3("cameraPosition", camera.transform.getPosition());
+
+		scene.lightManager.bindShadowMaps(*voxelShader);
+
 		glBindImageTexture(0, texture->getID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA8);
 
 		//Render scene
 		scene.drawObjects(*voxelShader);
 
-		glBindTexture(GL_TEXTURE_3D, texture->getID());
-		glGenerateMipmap(GL_TEXTURE_3D);;
+		texture->mipmap();
 
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
