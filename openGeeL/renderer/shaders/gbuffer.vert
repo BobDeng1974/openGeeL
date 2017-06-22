@@ -19,18 +19,18 @@ out mat3 TBN;
 out float clipDepth;
 
 uniform mat4 modelView;
+uniform mat3 transInvModelView;
 
 void main() {	
 	vec4 localPosition = modelView * vec4(position, 1.0f);
 
-	normal = normalize(transpose(inverse(mat3(modelView))) * norm);
+	normal = normalize(transInvModelView * norm);
 	fragPosition = vec3(localPosition);
 	textureCoordinates = texCoords;
 
-	mat3 normalMat = transpose(inverse(mat3(modelView)));
-	vec3 T = normalize(normalMat * tangent);
-	vec3 B = normalize(normalMat * bitangent);
-	vec3 N = normalize(normalMat * norm);
+	vec3 T = normalize(transInvModelView * tangent);
+	vec3 B = normalize(transInvModelView * bitangent);
+	vec3 N = normalize(transInvModelView * norm);
 	TBN = mat3(T, B, N);
 
     gl_Position = projection * localPosition;

@@ -68,6 +68,7 @@ namespace geeL {
 		ShaderLocation viewLocation;
 		ShaderLocation modelLocation;
 		ShaderLocation modelViewLocation;
+		ShaderLocation transInvModelViewLocation;
 
 	};
 

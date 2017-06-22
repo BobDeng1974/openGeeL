@@ -1,5 +1,5 @@
+#include <gtc/matrix_transform.hpp>
 #include "sceneshader.h"
-#include <iostream>
 
 using namespace std;
 
@@ -16,6 +16,7 @@ namespace geeL {
 		viewLocation = getLocation("viewMatrix");
 		modelLocation = getLocation("model");
 		modelViewLocation = getLocation("modelView");
+		transInvModelViewLocation = getLocation("transInvModelView");
 	}
 
 	SceneShader::SceneShader(const std::string& vertexPath, const std::string& geometryPath, const FragmentShader& fragmentPath, 
@@ -26,6 +27,7 @@ namespace geeL {
 		viewLocation = getLocation("viewMatrix");
 		modelLocation = getLocation("model");
 		modelViewLocation = getLocation("modelView");
+		transInvModelViewLocation = getLocation("transInvModelView");
 	}
 
 
@@ -53,7 +55,11 @@ namespace geeL {
 
 	void SceneShader::bindMatrices() const {
 		if (view != nullptr && model != nullptr) {
-			setMat4(modelViewLocation, (*view) * (*model));
+			glm::mat4 modelView = (*view) * (*model);
+			glm::mat3 transInvModelView = glm::transpose(glm::inverse(glm::mat3(modelView)));
+
+			setMat4(modelViewLocation, modelView);
+			setMat3(transInvModelViewLocation, transInvModelView);
 		}
 	}
 

@@ -70,12 +70,14 @@ namespace geeL {
 		ShaderLocation setFloat(std::string name, float value) const;
 		ShaderLocation setVector2(std::string name, const glm::vec2& value) const;
 		ShaderLocation setVector3(std::string name, const glm::vec3& value) const;
+		ShaderLocation setMat3(std::string name, const glm::mat3& value) const;
 		ShaderLocation setMat4(std::string name, const glm::mat4& value) const;
 
 		void setInteger(ShaderLocation location, int value) const;
 		void setFloat(ShaderLocation location, float value) const;
 		void setVector2(ShaderLocation location, const glm::vec2& value) const;
 		void setVector3(ShaderLocation location, const glm::vec3& value) const;
+		void setMat3(ShaderLocation location, const glm::mat3& value) const;
 		void setMat4(ShaderLocation location, const glm::mat4& value) const;
 
 	protected:

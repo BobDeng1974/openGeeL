@@ -116,38 +116,42 @@ namespace geeL {
 
 	ShaderLocation Shader::setInteger(string name, int value) const {
 		ShaderLocation location = glGetUniformLocation(program, name.c_str());
-		glUniform1i(glGetUniformLocation(program, name.c_str()), value);
+		glUniform1i(location, value);
 
 		return location;
 	}
 
 	ShaderLocation Shader::setFloat(string name, float value) const {
 		ShaderLocation location = glGetUniformLocation(program, name.c_str());
-		glUniform1f(glGetUniformLocation(program, name.c_str()), value);
+		glUniform1f(location , value);
 
 		return location;
 	}
 
 	ShaderLocation Shader::setVector2(string name, const glm::vec2& value) const {
 		ShaderLocation location = glGetUniformLocation(program, name.c_str());
-		glUniform2f(glGetUniformLocation(program, name.c_str()),
-			value.x, value.y);
+		glUniform2f(location, value.x, value.y);
 
 		return location;
 	}
 
 	ShaderLocation Shader::setVector3(string name, const glm::vec3& value) const {
 		ShaderLocation location = glGetUniformLocation(program, name.c_str());
-		glUniform3f(glGetUniformLocation(program, name.c_str()),
-			value.x, value.y, value.z);
+		glUniform3f(location, value.x, value.y, value.z);
+
+		return location;
+	}
+
+	ShaderLocation Shader::setMat3(std::string name, const glm::mat3 & value) const {
+		ShaderLocation location = glGetUniformLocation(program, name.c_str());
+		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(value));
 
 		return location;
 	}
 
 	ShaderLocation Shader::setMat4(string name, const glm::mat4& value) const {
 		ShaderLocation location = glGetUniformLocation(program, name.c_str());
-		glUniformMatrix4fv(glGetUniformLocation(program, name.c_str()), 1, GL_FALSE,
-			glm::value_ptr(value));
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 
 		return location;
 	}
@@ -166,6 +170,10 @@ namespace geeL {
 
 	void Shader::setVector3(ShaderLocation location, const glm::vec3& value) const {
 		glUniform3f(location, value.x, value.y, value.z);
+	}
+
+	void Shader::setMat3(ShaderLocation location, const glm::mat3 & value) const {
+		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(value));
 	}
 
 	void Shader::setMat4(ShaderLocation location, const glm::mat4& value) const {
