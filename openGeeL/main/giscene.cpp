@@ -114,8 +114,9 @@ namespace {
 
 
 		virtual void init() {
-			float lightIntensity = 200.f;
-			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(144.f, 82.2f, 132.f), vec3(0.f), vec3(1.f), true);
+			float lightIntensity = 500.f;
+			//Transform& lightTransform1 = transformFactory.CreateTransform(vec3(144.f, 82.2f, 132.f), vec3(0.f), vec3(1.f));
+			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(131.f, 72.2f, 128.f), vec3(0.f), vec3(1.f), true);
 			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Huge, 1.f, 8U, 150.f);
 			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
 
@@ -197,12 +198,13 @@ void VoxelScene::draw() {
 	postLister.add(def);
 	postLister.add(ssao);
 
-	Voxelizer voxelizer = Voxelizer(scene);
-	VoxelOctree octree = VoxelOctree(voxelizer);
-	VoxelTexture tex = VoxelTexture(scene);
-
+	//Voxelizer voxelizer = Voxelizer(scene);
+	//VoxelOctree octree = VoxelOctree(voxelizer);
 	//VoxelConeTracer tracer = VoxelConeTracer(scene, octree);
+
+	VoxelTexture tex = VoxelTexture(scene);
 	VoxelConeTracer tracer = VoxelConeTracer(scene, tex);
+
 	renderer.addEffect(tracer, tracer);
 
 

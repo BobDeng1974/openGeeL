@@ -15,7 +15,7 @@ namespace geeL {
 
 	public:
 		VoxelConeTracer(RenderScene& scene, VoxelOctree& octree, int minStep = 5);
-		VoxelConeTracer(RenderScene& scene, VoxelTexture& texture, int minStep = 8);
+		VoxelConeTracer(RenderScene& scene, VoxelTexture& texture, int minStep = 10);
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);

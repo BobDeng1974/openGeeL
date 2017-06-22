@@ -354,7 +354,8 @@ namespace geeL {
 					currBuffer = gBuffer.getNormalMetallic().getID();
 					break;
 				case 3:
-					currBuffer = ssaoBuffer->getTexture().getID();
+					if(ssao != nullptr)
+						currBuffer = ssaoBuffer->getTexture().getID();
 					break;
 			}
 
