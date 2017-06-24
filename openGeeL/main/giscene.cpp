@@ -203,6 +203,7 @@ void SponzaGIScene::draw() {
 	VoxelConeTracer tracer = VoxelConeTracer(scene, tex);
 
 	renderer.addEffect(tracer, tracer);
+	postLister.add(tracer);
 
 
 	FXAA fxaa = FXAA();

@@ -15,6 +15,7 @@ namespace geeL {
 	class SSAO;
 	class SSRR;
 	class VolumetricLight;
+	class VoxelConeTracer;
 	
 
 	class DefaultSnippet : public GUISnippet {
@@ -153,6 +154,19 @@ namespace geeL {
 
 	private:
 		SSRR& ssrr;
+
+	};
+
+	class ConeTracerSnippet : public GUISnippet {
+
+	public:
+		ConeTracerSnippet(VoxelConeTracer& tracer);
+
+		virtual void draw(GUIContext* context);
+		virtual std::string toString() const;
+
+	private:
+		VoxelConeTracer& tracer;
 
 	};
 

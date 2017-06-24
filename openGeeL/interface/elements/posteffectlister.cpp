@@ -94,4 +94,9 @@ namespace geeL {
 		SSRRSnippet* snippet = new SSRRSnippet(ssrr);
 		snippets.push_back(snippet);
 	}
+
+	void PostProcessingEffectLister::add(VoxelConeTracer& tracer) {
+		ConeTracerSnippet* snippet = new ConeTracerSnippet(tracer);
+		snippets.push_back(snippet);
+	}
 }

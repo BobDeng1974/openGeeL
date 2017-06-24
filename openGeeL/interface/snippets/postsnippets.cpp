@@ -1,4 +1,5 @@
 #include "../guiwrapper.h"
+#include "../../renderer/lighting/conetracer.h"
 #include "../../renderer/postprocessing/drawdefault.h"
 #include "../../renderer/postprocessing/blurredeffect.h"
 #include "../../renderer/postprocessing/colorcorrection.h"
@@ -34,6 +35,8 @@ namespace geeL {
 	SSAOSnippet::SSAOSnippet(SSAO& ssao) : ssao(ssao) {}
 
 	SSRRSnippet::SSRRSnippet(SSRR& ssrr) : ssrr(ssrr) {}
+
+	ConeTracerSnippet::ConeTracerSnippet(VoxelConeTracer & tracer) : tracer(tracer) {}
 
 
 	void DefaultSnippet::draw(GUIContext* context) {
@@ -202,5 +205,16 @@ namespace geeL {
 		return "SSRR";
 	}
 
+
+	
+
+	void ConeTracerSnippet::draw(GUIContext* context) {
+		unsigned int steps = GUISnippets::drawBarInteger(context, tracer.getSampleSize(), 1, 50, 1, "Sample Size");
+		tracer.setSampleSize(steps);
+	}
+
+	std::string ConeTracerSnippet::toString() const {
+		return "Voxel Cone Tracer";
+	}
 
 }

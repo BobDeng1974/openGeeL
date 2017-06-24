@@ -43,4 +43,17 @@ namespace geeL {
 		addBuffer(*maps[WorldMaps::DiffuseRoughness], "gDiffuseSpec");
 	}
 
+	int VoxelConeTracer::getSampleSize() const {
+		return minStep;
+	}
+
+	void VoxelConeTracer::setSampleSize(unsigned int size) {
+		if (size != minStep && size < 50) {
+			minStep = size;
+
+			shader.use();
+			shader.setInteger("minStep", minStep);
+		}
+	}
+
 }

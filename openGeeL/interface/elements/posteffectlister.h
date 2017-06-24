@@ -18,6 +18,7 @@ namespace geeL {
 	class SSAO;
 	class SSRR;
 	class VolumetricLight;
+	class VoxelConeTracer;
 
 	class PostProcessingEffectLister : public GUIElement {
 
@@ -39,6 +40,7 @@ namespace geeL {
 		void add(VolumetricLight& light);
 		void add(SSAO& ssao);
 		void add(SSRR& ssrr);
+		void add(VoxelConeTracer& tracer);
 
 	private:
 		std::list<GUISnippet*> snippets;
