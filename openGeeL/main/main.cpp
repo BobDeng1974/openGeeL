@@ -14,8 +14,8 @@ int main() {
 	//ScieneScene::draw();
 	//ArthouseScene::draw();
 	//SponzaScene::draw();
-	
-	VoxelScene::draw();
+	SponzaGIScene::draw();
+
 	//RenderTest::draw();
 	//RaymarchTest::draw();
 

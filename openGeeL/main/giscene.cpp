@@ -117,10 +117,10 @@ namespace {
 			float lightIntensity = 500.f;
 			//Transform& lightTransform1 = transformFactory.CreateTransform(vec3(144.f, 82.2f, 132.f), vec3(0.f), vec3(1.f));
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(131.f, 72.2f, 128.f), vec3(0.f), vec3(1.f), true);
-			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Huge, 1.f, 8U, 150.f);
+			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 20.f, 15U, 150.f);
 			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
 
-			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(150.f, 28.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
+			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(152.f, 24.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
 			MeshRenderer& sponz = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
 				meshTransform6, CullingMode::cullFront, "Sponza");
 			scene.addMeshRenderer(sponz);
@@ -132,7 +132,7 @@ namespace {
 }
 
 
-void VoxelScene::draw() {
+void SponzaGIScene::draw() {
 
 	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
 	InputManager manager = InputManager();
@@ -153,8 +153,7 @@ void VoxelScene::draw() {
 	Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 
 	BilateralFilter blur = BilateralFilter(1, 0.7f);
-	DefaultPostProcess def = DefaultPostProcess(3.5f);
-	SSAO ssao = SSAO(blur, 2.5f);
+	DefaultPostProcess def = DefaultPostProcess(10.f);
 	RenderContext context = RenderContext();
 	DeferredLighting lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, materialFactory);
@@ -177,7 +176,6 @@ void VoxelScene::draw() {
 	lightManager.addReflectionProbe(iblMap);
 
 	renderer.setScene(scene);
-	scene.addRequester(ssao);
 
 	SceneControlObject& testScene = TestScene7(materialFactory, meshFactory,
 		lightManager, shaderManager, scene, transFactory, nullptr);
@@ -196,7 +194,6 @@ void VoxelScene::draw() {
 	renderer.addGUIRenderer(&gui);
 
 	postLister.add(def);
-	postLister.add(ssao);
 
 	//Voxelizer voxelizer = Voxelizer(scene);
 	//VoxelOctree octree = VoxelOctree(voxelizer);

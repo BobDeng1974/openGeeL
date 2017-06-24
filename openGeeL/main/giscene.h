@@ -1,6 +1,6 @@
 #pragma once
 
-class VoxelScene {
+class SponzaGIScene {
 
 public:
 	static void draw();
