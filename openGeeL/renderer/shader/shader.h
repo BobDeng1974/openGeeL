@@ -64,14 +64,14 @@ namespace geeL {
 		//and loading maps from other sources will also override this call
 		void loadMaps(std::list<TextureID>& maps, unsigned int type = GL_TEXTURE_2D) const;
 
-		ShaderLocation getLocation(std::string name) const;
+		ShaderLocation getLocation(const std::string& name) const;
 
-		ShaderLocation setInteger(std::string name, int value) const;
-		ShaderLocation setFloat(std::string name, float value) const;
-		ShaderLocation setVector2(std::string name, const glm::vec2& value) const;
-		ShaderLocation setVector3(std::string name, const glm::vec3& value) const;
-		ShaderLocation setMat3(std::string name, const glm::mat3& value) const;
-		ShaderLocation setMat4(std::string name, const glm::mat4& value) const;
+		ShaderLocation setInteger(const std::string& name, int value) const;
+		ShaderLocation setFloat(const std::string& name, float value) const;
+		ShaderLocation setVector2(const std::string& name, const glm::vec2& value) const;
+		ShaderLocation setVector3(const std::string& name, const glm::vec3& value) const;
+		ShaderLocation setMat3(const std::string& name, const glm::mat3& value) const;
+		ShaderLocation setMat4(const std::string& name, const glm::mat4& value) const;
 
 		void setInteger(ShaderLocation location, int value) const;
 		void setFloat(ShaderLocation location, float value) const;

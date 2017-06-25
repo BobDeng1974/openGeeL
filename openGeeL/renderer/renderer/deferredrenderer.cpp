@@ -109,6 +109,8 @@ namespace geeL {
 			renderTime.reset();
 			glEnable(GL_DEPTH_TEST);
 
+			updateSceneControlObjects();
+
 			//Geometry pass
 			gBuffer.fill(geometryPassFunc);
 			renderTime.update(RenderPass::Geometry);
@@ -229,9 +231,6 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::geometryPass() {
-		for (size_t i = 0; i < objects.size(); i++)
-			objects[i]->draw(scene->getCamera());
-
 		scene->update();
 		scene->drawDeferred();
 	}

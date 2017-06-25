@@ -62,6 +62,8 @@ namespace geeL {
 		GUIRenderer*  gui;
 
 		RenderScene* scene;
+
+		void updateSceneControlObjects();
 	
 		std::vector<SceneControlObject*> objects;
 

@@ -56,11 +56,10 @@ void main() {
 	vec3 albedo = diffSpec.rgb;
 	float roughness = diffSpec.w;
 	float metallic = normMet.w;
-	float luma = dot(luminance, baseColor);
 
 	vec3 indirectDiffuse = indirectDiffuse(position, normal, albedo);
 	vec3 indirectSpecular = indirectSpecular(position, refl, normal, roughness);
-	color = vec4(indirectDiffuse + indirectSpecular, 1.f);
+
 	color = vec4(baseColor + indirectDiffuse + indirectSpecular, 1.f);
 }
 

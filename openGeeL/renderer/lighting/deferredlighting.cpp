@@ -16,12 +16,14 @@ namespace geeL {
 		PostProcessingEffect::init(screen, buffer);
 
 		scene.lightManager.bindShadowMaps(shader);
+
 		invViewLocation = shader.getLocation("inverseView");
 		originLocation = shader.getLocation("origin");
 	}
 
 	void DeferredLighting::bindValues() {
 		scene.lightManager.bind(*camera, shader, ShaderTransformSpace::View);
+
 		shader.setMat4(invViewLocation, camera->getInverseViewMatrix());
 		shader.setVector3(originLocation, camera->GetOriginInViewSpace());
 	}

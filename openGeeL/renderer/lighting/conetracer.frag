@@ -25,35 +25,36 @@ uniform sampler2D gPositionDepth;
 uniform sampler2D gNormalMet;
 uniform sampler2D gDiffuseSpec;
 
-vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 camPosition, vec3 reflection, vec3 albedo);
-vec3 indirectSpecular(vec3 position, vec3 direction, vec3 camPosition, float roughness);
+
+vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo);
+vec3 indirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness);
 
 vec4 getFragmentColor(vec3 position, int lvl);
-
-//Traverse octree to obtain sample node and return if nonempty node was hit
-bool sampleOctree(vec3 position, int maxLevel, out int nodeIndex);
-//Traverse octree to obtain sample node and return reached level
-bool sampleOctreeLvl(vec3 position, int maxLevel, out int nodeIndex, out int lvl);
-
 vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition, int maxLevel);
+vec4 raymarchOctreeMirror(vec3 position, vec3 direction, vec3 normal, int maxLevel);
 
-vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection, 
-	vec3 lightDirection, vec3 radiance, vec3 albedo, float roughness, float metallic);
+//Traverse octree to obtain sample node and return reached level
+bool sampleOctreeNearest(vec3 position, int maxLevel, out vec4 col, out int depth);
+bool sampleOctreeLinear(vec3 position, int maxLevel, out vec4 col, out int depth);
+bool sampleOctreeMipmap(vec3 position, float lvl, out vec4 col, out int depth);
+bool sampleOctreeLinearMipmap(vec3 position, float lvl, out vec4 col, out int depth);
 
 
-vec4 linearFilter(vec3 position, int lvl, int nodeIndex);
-vec4 linearMipmap(vec3 position, float level);
-vec4 linearMipmapAndFilter(vec3 position, float level, int nodeIndex);
+vec4 getColorNearest(int nodeIndex);
+vec4 getColorLinear(int parentIndex, vec3 factor);
+vec4 getColorMipmap(int index1, int index2, float factor);
+vec4 getColorLinearMipmap(int index1, int index2, vec3 fac1, vec3 fac2, float level);
 
-vec4 getColor(int nodeIndex);
-float getLevel(float dist);
-int getLevelDimension(int lvl);
+float getLevelDimensionFloat(float lvl);
+int   getLevelDimension(int lvl);
 
 float getNodeBorderDistance(vec3 position, vec3 direction, int depth);
 float planeIntersection(vec3 rayO, vec3 rayD, vec3 planeO, vec3 planeN);
 
 float doto(vec3 a, vec3 b);
 vec3 getClosestAxisNormal(vec3 v);
+vec3 orthogonal(vec3 v);
+
 vec4 convRGBA8toVec4(uint val);
 vec4 mix2D(vec4 p00, vec4 p10, vec4 p01, vec4 p11, float x, float y);
 vec4 mix3D(vec4 p000, vec4 p100, vec4 p010, vec4 p110, vec4 p001, vec4 p101, vec4 p011, vec4 p111, vec3 weight);
@@ -77,22 +78,18 @@ void main() {
 	vec3 albedo = diffSpec.rgb;
 	float roughness = diffSpec.w;
 	float metallic = normMet.w;
-	float luma = dot(luminance, baseColor);
 
-	vec3 indirectDiffuse = indirectDiffuse(position, normal, camPosition, refl, albedo);
-	vec3 indirectSpecular = indirectSpecular(position, refl, camPosition, roughness);
+	//vec3 indirectDiffuse = indirectDiffuse(position, normal, albedo);
+	//vec3 indirectSpecular = indirectSpecular(position, refl, normal, roughness);
+	vec3 indirectSpecular = raymarchOctreeMirror(position, refl, normal, level).rgb * (1.f - roughness);
 
-	//color = vec4(indirectSpecular(position, refl, camPosition, roughness), 1.f);
-	color = vec4(baseColor + indirectDiffuse + indirectSpecular, 1.f);
-
-	//color = vec4(baseColor + irradiance, 1.f);
-	//color = getFragmentColor(position, level);
+	color = vec4(indirectSpecular, 1.f);
+	//color = vec4(baseColor + indirectDiffuse + indirectSpecular, 1.f);
 }
 
 
-vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 camPosition, vec3 reflection, vec3 albedo) {
-
-	vec3 right = cross(normal, reflection);
+vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo) {
+	vec3 right = cross(normal, orthogonal(normal));
 	vec3 forward = cross(normal, right);
 	
 	vec3 sampleVectors[6];
@@ -112,28 +109,32 @@ vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 camPosition, vec3 reflecti
 
 	int lvl = level - 3;
 	vec3 color = vec3(0.f);
-	color += weights[0] * raymarchOctree(position, sampleVectors[0], camPosition, lvl).rgb;
-	color += weights[1] * raymarchOctree(position, sampleVectors[1], camPosition, lvl).rgb;
-	color += weights[1] * raymarchOctree(position, sampleVectors[2], camPosition, lvl).rgb;
-	color += weights[1] * raymarchOctree(position, sampleVectors[3], camPosition, lvl).rgb;
-	color += weights[1] * raymarchOctree(position, sampleVectors[4], camPosition, lvl).rgb;
-	color += weights[1] * raymarchOctree(position, sampleVectors[5], camPosition, lvl).rgb;
+	color += weights[0] * raymarchOctree(position, sampleVectors[0], normal, lvl).rgb;
+	color += weights[1] * raymarchOctree(position, sampleVectors[1], normal, lvl).rgb;
+	color += weights[1] * raymarchOctree(position, sampleVectors[2], normal, lvl).rgb;
+	color += weights[1] * raymarchOctree(position, sampleVectors[3], normal, lvl).rgb;
+	color += weights[1] * raymarchOctree(position, sampleVectors[4], normal, lvl).rgb;
+	color += weights[1] * raymarchOctree(position, sampleVectors[5], normal, lvl).rgb;
 
 	return color * albedo;
 }
 
-
-vec3 indirectSpecular(vec3 position, vec3 direction, vec3 camPosition, float roughness) {
-	vec4 radiance = raymarchOctree(position, direction, camPosition, level);
-	//vec3 irradiance = calculateReflectance(position, normal, view, refl, radiance.rgb, albedo, roughness, metallic);
+vec3 indirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness) {
+	vec4 radiance = raymarchOctree(position, direction, normal, level);
 
 	return radiance.rgb * (1.f - roughness);
 }
 
 
+vec4 getFragmentColor(vec3 position, int lvl) {
+	int nodeIndex;
+	vec4 col = vec4(0.f);
+	sampleOctreeNearest(position, lvl, col, nodeIndex);
 
-vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition, int maxLevel) {
-	
+	return col;
+}
+
+vec4 raymarchOctree(vec3 position, vec3 direction, vec3 normal, int maxLevel) {
 	bool hit = false;
 	int depth = 0;
 	int counter = 0;
@@ -142,27 +143,24 @@ vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition, int maxLeve
 
 	//Move position into direction of voxel border to avoid 
 	//sampling neighboring voxels when direction is steep
-	vec3 camDir = normalize(camPosition - position);
-	vec3 halfDir = normalize(camDir + direction);
-	halfDir = getClosestAxisNormal(halfDir);
-	float borderDist = getNodeBorderDistance(position, halfDir, int(lvl));
-	float borderDistProj = borderDist / dot(direction, halfDir); //Projection of border dist onto direction vector
+	vec3 halfDir = getClosestAxisNormal(normal);
+	float borderDist = getNodeBorderDistance(position, halfDir, int(lvl - 2));
 	
-	vec3 pos = position + borderDistProj * direction;
+	vec3 pos = position + borderDist * halfDir;
 
-	//int minStepSize = getLevelDimension(int(lvl + 1));
-	float minDist = 0.f;
-	float dist = borderDistProj;
+	float minDist = 0.1f;
+	float dist = 0.1f;
 	
 	vec4 color = vec4(0.f);
-	while((color.a < 0.5f) && counter < minStep) {
+	while((color.a < 0.5f) && counter < 15) {
 		pos += minDist * direction;
-		hit = sampleOctreeLvl(pos, int(floor(lvl)), nodeIndex, depth);
+		vec4 currColor = vec4(0.f);
+		hit = sampleOctreeMipmap(pos, lvl, currColor, depth);
 
 		float rest = 1.f - color.a;
-		color += getColor(nodeIndex) * rest;
-		//color += linearMipmap(pos, lvl) * rest;
+		color += currColor * rest;
 		minDist = getNodeBorderDistance(pos, direction, depth);
+		//minDist = getLevelDimensionFloat(lvl + 1) * (3.f / 2.f);
 
 		dist += minDist;
 		lvl = log(dimensions / (dist)) / log(2) + 1.f;
@@ -172,31 +170,137 @@ vec4 raymarchOctree(vec3 position, vec3 direction, vec3 camPosition, int maxLeve
 
 	color /= color.a;
 	color = clamp(color, 0.f, 1.f);
-	//color += getFragmentColor(position, level) * float(!hit); //Add fallback color if nothing was hit
 
-	//return linearFilter(pos, int(lvl), nodeIndex);
 	return color;
 }
 
-vec4 getFragmentColor(vec3 position, int lvl) {
+vec4 raymarchOctreeMirror(vec3 position, vec3 direction, vec3 normal, int maxLevel) {
+	bool hit = false;
+	int depth = 0;
+	int counter = 0;
 	int nodeIndex;
-	sampleOctree(position, lvl, nodeIndex);
+	float lvl = maxLevel;
 
-	return getColor(nodeIndex);
+	//Move position into direction of voxel border to avoid 
+	//sampling neighboring voxels when direction is steep
+	vec3 halfDir = getClosestAxisNormal(normal);
+	float borderDist = getNodeBorderDistance(position, halfDir, int(lvl));
+	float borderDistProj = borderDist / dot(direction, halfDir); //Projection of border dist onto direction vector
+	
+	vec3 pos = position + borderDistProj * direction;
+	float minDist = 0.f;
+	
+	vec4 color = vec4(0.f);
+	while((color.a < 0.5f) && counter < 15) {
+		pos += minDist * direction;
+
+		vec4 currColor = vec4(0.f);
+		hit = sampleOctreeNearest(pos, int(floor(lvl)), currColor, depth);
+
+		float rest = 1.f - color.a;
+		color += currColor * rest;
+
+		minDist = getNodeBorderDistance(pos, direction, depth);
+		counter++;
+	}
+
+	color /= color.a;
+	color = clamp(color, 0.f, 1.f);
+	color += getFragmentColor(position, level) * float(!hit); //Add fallback color if nothing was hit
+
+	return color;
 }
 
-bool sampleOctree(vec3 position, int maxLevel, out int nodeIndex) {
-	int lvl;
-	return sampleOctreeLvl(position, maxLevel, nodeIndex, lvl);
-}
 
-bool sampleOctreeLvl(vec3 position, int maxLevel, out int nodeIndex, out int lvl) {
+
+bool sampleOctreeNearest(vec3 position, int maxLevel, out vec4 col, out int depth) {
 	
 	//Dimensions of root node
 	unsigned int dim = dimensions;
 	uvec3 umin = uvec3(0);
 
-	nodeIndex = 0; //Set index to root node (0)
+	int nodeIndex = 0;
+	unsigned int node = imageLoad(nodeIndicies, nodeIndex).r;
+
+	//Iterate through the levels and find suitable child node for voxel 
+	for(int i = 0; i < maxLevel; i++) {
+		nodeIndex = int(node & 0x7FFFFFFF);
+		
+		dim /= 2;
+		//Spacial index of subnode
+		vec3 frag = position - umin;
+		uvec3 box = clamp(ivec3(1 + frag - dim), 0, 1);
+		umin += box * dim;
+
+		//Spacial position translated into index
+		unsigned int childIndex = box.x + 4 * box.y + 2 * box.z;
+		nodeIndex += int(childIndex);
+		node = imageLoad(nodeIndicies, nodeIndex).r;
+
+		if((node & 0x80000000) == 0) {
+			col = getColorNearest(nodeIndex);
+
+			depth = i + 1;
+			return false;
+		}
+	}
+
+	col = getColorNearest(nodeIndex);
+
+	depth = maxLevel;
+	return (node & 0x80000000) != 0;
+}
+
+bool sampleOctreeLinear(vec3 position, int maxLevel, out vec4 col, out int depth) {
+	
+	//Dimensions of root node
+	unsigned int dim = dimensions;
+	uvec3 umin = uvec3(0);
+	vec3 frag = vec3(0.f);
+
+	int parentIndex = 0;
+	int nodeIndex = 0; //Set index to root node (0)
+	unsigned int node = imageLoad(nodeIndicies, nodeIndex).r;
+
+	//Iterate through the levels and find suitable child node for voxel 
+	for(int i = 0; i < maxLevel; i++) {
+		nodeIndex = int(node & 0x7FFFFFFF);
+		
+		frag = (position - umin) / dim;
+		dim /= 2;
+		//Spacial index of subnode
+		uvec3 box = clamp(ivec3(1 + position - umin - dim), 0, 1);
+		umin += box * dim;
+
+		//Spacial position translated into index
+		unsigned int childIndex = box.x + 4 * box.y + 2 * box.z;
+		parentIndex = nodeIndex;
+		nodeIndex += int(childIndex);
+		node = imageLoad(nodeIndicies, nodeIndex).r;
+
+		if((node & 0x80000000) == 0) {
+			col = getColorLinear(parentIndex, frag);
+
+			depth = i + 1;
+			return false;
+		}
+	}
+
+	col = getColorLinear(parentIndex, frag);
+
+	depth = maxLevel;
+	return (node & 0x80000000) != 0;
+}
+
+bool sampleOctreeMipmap(vec3 position, float lvl, out vec4 col, out int depth) {
+	int maxLevel = int(ceil(lvl));
+
+	//Dimensions of root node
+	unsigned int dim = dimensions;
+	uvec3 umin = uvec3(0);
+
+	int parentIndex = 0;
+	int nodeIndex = 0;
 	unsigned int node = imageLoad(nodeIndicies, nodeIndex).r;
 
 	//Iterate through the levels and find suitable child node for voxel 
@@ -210,89 +314,30 @@ bool sampleOctreeLvl(vec3 position, int maxLevel, out int nodeIndex, out int lvl
 
 		//Spacial position translated into index
 		unsigned int childIndex = box.x + 4 * box.y + 2 * box.z;
+		parentIndex = nodeIndex;
 		nodeIndex += int(childIndex);
 		node = imageLoad(nodeIndicies, nodeIndex).r;
 
 		if((node & 0x80000000) == 0) {
-			lvl = i + 1;
+			col = getColorMipmap(parentIndex, nodeIndex, lvl);
+
+			depth = i + 1;
 			return false;
 		}
 	}
 
-	lvl = maxLevel;
+	col = getColorMipmap(parentIndex, nodeIndex, lvl);
+
+	depth = maxLevel;
 	return (node & 0x80000000) != 0;
 }
 
+bool sampleOctreeLinearMipmap(vec3 position, float lvl, out vec4 col, out int depth) {
+	//TODO: implement this
 
-
-//Lighting.................................................................................................................................
-
-//Compute fresnel term with Fresnel-Schlick approximation
-vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness) {
-	vec3 F0 = vec3(0.04);
-    F0 = mix(F0, albedo, metallic);
-
-	//Simplified term withouth roughness included
-    //return F0 + (1.0f - F0) * pow(1.0f - theta, 5.0f);
-	vec3 fres = F0 + (max(vec3(1.0f - roughness), F0) - F0) * pow(1.0f - theta, 5.0f);
-	return clamp(fres, 0.f, 1.f);
+	return false;
 }
 
-//Trowbridge-Reitz GGX normal distribution function
-float calculateNormalDistrubution(vec3 normal, vec3 halfway, float roughness) {
-    float a = roughness * roughness;
-    float NdotH  = doto(normal, halfway);
-    float NdotH2 = NdotH * NdotH;
-	
-    float denom  = (NdotH2 * (a - 1.0f) + 1.0f);
-    denom = PI * denom * denom;
-    return a / denom;
-}
-
-float calculateGeometryFunctionSchlick(float NdotV, float roughness) {
-    float r = (roughness + 1.0f);
-    float k = (r * r) / 8.0f;
-
-    float nom   = NdotV;
-    float denom = NdotV * (1.0f - k) + k;
-	
-    return nom / denom;
-}
-
-float calculateGeometryFunctionSmith(vec3 normal, vec3 viewDirection, vec3 lightDirection, float roughness) {
-    float NdotV = doto(normal, viewDirection);
-    float NdotL = doto(normal, lightDirection);
-    float ggx2  = calculateGeometryFunctionSchlick(NdotV, roughness);
-    float ggx1  = calculateGeometryFunctionSchlick(NdotL, roughness);
-	
-    return ggx1 * ggx2;
-}
-
-//Reflectance equation with Cook-Torrance BRDF
-vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection, 
-	vec3 lightDirection, vec3 radiance, vec3 albedo, float roughness, float metallic) {
-	
-	vec3 halfwayDirection = normalize(lightDirection + viewDirection);
-	float NdotL = doto(normal, lightDirection);     
-
-	//BRDF
-	float ndf = calculateNormalDistrubution(normal, halfwayDirection, roughness);
-	float geo = calculateGeometryFunctionSmith(normal, viewDirection, lightDirection, roughness);
-	vec3 fres = calculateFresnelTerm(doto(halfwayDirection, viewDirection), albedo, metallic, roughness);
-
-	vec3 ks = fres;
-    vec3 kd = vec3(1.f) - ks;
-    kd *= 1.f - metallic;
-
-	//Lighting equation
-	vec3  nom   = ndf * geo * ks; //Fresnel term equivalent to kS
-	//add small fraction to prevent ill behaviour when dividing by zero (shadows no longer additive)
-	float denom =  4.f * doto(viewDirection, normal) * NdotL + 0.001f; 
-	vec3  brdf  = nom / denom;
-
-	return brdf * radiance * NdotL; 
-	//return ((kd * albedo / PI + brdf) * radiance) * NdotL; 
-}
 
 
 //Helper functions......................................................................................................................
@@ -332,57 +377,9 @@ float planeIntersection(vec3 rayO, vec3 rayD, vec3 planeO, vec3 planeN) {
 }
 
 
-vec4 linearFilter(vec3 position, int lvl, int fallBack) {
-	int dim = getLevelDimension(lvl);
-	ivec3 posFloor = (ivec3(position) / dim) * dim;
-	ivec3 posCeil  = ((ivec3(position) + dim) / dim) * dim; 
-
-	vec3 posFrag = position - posFloor;
-	posFrag /= dim;
-
-	int samples[8];
-	bool hits[8];
-	hits[0] = sampleOctree(vec3(posFloor), lvl, samples[0]);
-	hits[1] = sampleOctree(vec3(posCeil.x, posFloor.y, posFloor.z), lvl, samples[1]);
-	hits[2] = sampleOctree(vec3(posFloor.x, posCeil.y, posFloor.z), lvl, samples[2]);
-	hits[3] = sampleOctree(vec3(posCeil.x, posCeil.y, posFloor.z), lvl, samples[3]);
-	hits[4] = sampleOctree(vec3(posFloor.x, posFloor.y, posCeil.z), lvl, samples[4]);
-	hits[5] = sampleOctree(vec3(posCeil.x, posFloor.y, posCeil.z), lvl, samples[5]);
-	hits[6] = sampleOctree(vec3(posFloor.x, posCeil.y, posCeil.z), lvl, samples[6]);
-	hits[7] = sampleOctree(vec3(posCeil), lvl, samples[7]);
-
-	vec4 p[8];
-	for(int i = 0; i < 8; i++) {
-		float hit = float(hits[i]);
-		p[i] = hit * getColor(samples[i]) + (1.f - hit) * getColor(fallBack);
-	}
-		
-
-	return mix3D(p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], posFrag); 
-}
-
-vec4 linearMipmap(vec3 position, float level) {
-	int floorLevel = int(floor(level));
-	float fragLevel = level - float(floorLevel);
-
-	vec4 a = getFragmentColor(position, floorLevel);
-	vec4 b = getFragmentColor(position, int(ceil(level)));
-
-	return mix(a, b, fragLevel); 
-}
-
-vec4 linearMipmapAndFilter(vec3 position, float level, int fallBack) {
-	int floorLevel = int(floor(level));
-	float fragLevel = level - float(floorLevel);
-
-	vec4 a = linearFilter(position, floorLevel, fallBack);
-	vec4 b = linearFilter(position, int(ceil(level)), fallBack);
-
-	return mix(a, b, fragLevel); 
-}
 
 
-vec4 getColor(int nodeIndex) {
+vec4 getColorNearest(int nodeIndex) {
 	unsigned int rgb8 = imageLoad(nodeDiffuse, nodeIndex).r;
 	vec4 col = convRGBA8toVec4(rgb8).rgba / 255;
 	col.rgb = pow(col.rgb, vec3(2.2f)); //Gamma correction
@@ -390,16 +387,54 @@ vec4 getColor(int nodeIndex) {
 	return col;
 }
 
-float getLevel(float dist) {
-	float d = abs(dist) / farClip; //Clamp in clip range
-	d = pow(d, 0.8f);
+vec4 getColorLinear(int parentIndex, vec3 factor) {
+	uvec3 childBoxes[8];
+	childBoxes[0] = uvec3(0, 0, 0);
+	childBoxes[1] = uvec3(1, 0, 0);
+	childBoxes[2] = uvec3(0, 1, 0);
+	childBoxes[3] = uvec3(1, 1, 0);
+	childBoxes[4] = uvec3(0, 0, 0);
+	childBoxes[5] = uvec3(0, 0, 1);
+	childBoxes[6] = uvec3(0, 1, 1);
+	childBoxes[7] = uvec3(1, 1, 1);
 
-	float lvl = float(level);
-	return lvl - d * lvl;
+	vec4 p[8]; //Colors of child nodes
+	for(int i = 0; i < 8; i++) {
+		unsigned int offset = childBoxes[i].x + 4 * childBoxes[i].y + 2 * childBoxes[i].z;  
+		int index = parentIndex + int(offset);
+
+		p[i] = getColorNearest(index);
+	}
+
+	return mix3D(p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], factor); 
 }
+
+vec4 getColorMipmap(int index1, int index2, float level) {
+	float factor = level - floor(level); 
+
+	vec4 col1 = getColorNearest(index1);
+	vec4 col2 = getColorNearest(index2);
+
+	return mix(col1, col2, factor);
+}
+
+vec4 getColorLinearMipmap(int index1, int index2, vec3 fac1, vec3 fac2, float level) {
+	float factor = level - floor(level); 
+
+	vec4 col1 = getColorLinear(index1, fac1);
+	vec4 col2 = getColorLinear(index2, fac2);
+
+	return mix(col1, col2, factor);
+}
+
+
 
 int getLevelDimension(int lvl) {
 	return dimensions / int(pow(2, lvl - 1));
+}
+
+float getLevelDimensionFloat(float lvl) {
+	return float(dimensions) / pow(2.f, lvl - 1.f);
 }
 
 float doto(vec3 a, vec3 b) {
@@ -424,6 +459,14 @@ vec3 getClosestAxisNormal(vec3 v) {
 
 	return normal;
 }
+
+vec3 orthogonal(vec3 v) {
+	v = normalize(v);
+	vec3 o = vec3(1.f, 0.f, 0.f);
+
+	return abs(dot(v, o)) > 0.999f ? cross(v, vec3(0.f, 1.f, 0.f)) : cross(v, o);
+}
+
 
 vec4 convRGBA8toVec4(uint val) {
 	return vec4(float((val&0x000000FF)), float((val&0x0000FF00)>>8U),

@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include "scene.h"
 #include "window.h"
 #include "scripting\scenecontrolobject.h"
 #include "inputmanager.h"
@@ -44,6 +45,11 @@ namespace geeL{
 
 	void Renderer::setScene(RenderScene& scene) {
 		this->scene = &scene;
+	}
+
+	void Renderer::updateSceneControlObjects() {
+		for (size_t i = 0; i < objects.size(); i++)
+			objects[i]->draw(scene->getCamera());
 	}
 
 }

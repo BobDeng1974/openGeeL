@@ -157,7 +157,6 @@ void SponzaGIScene::draw() {
 	RenderContext context = RenderContext();
 	DeferredLighting lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, materialFactory);
-	//renderer.addSSAO(ssao, 0.5f);
 	renderer.init();
 
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
@@ -205,6 +204,10 @@ void SponzaGIScene::draw() {
 	renderer.addEffect(tracer, tracer);
 	postLister.add(tracer);
 
+	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.5f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 35.f, 500.f, 0.8f);
+	//renderer.addEffect(dof, dof);
+	//postLister.add(dof);
 
 	FXAA fxaa = FXAA();
 	renderer.addEffect(fxaa);
