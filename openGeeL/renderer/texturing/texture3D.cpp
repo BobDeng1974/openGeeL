@@ -35,4 +35,8 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_3D, 0);
 	}
 
+	void Texture3D::bind() const {
+		glBindTexture(GL_TEXTURE_3D, id);
+	}
+
 }

@@ -13,11 +13,16 @@ using namespace std;
 namespace geeL {
 
 	static unsigned int activeShader = 0;
+	
 	void Shader::use() const {
 		if (program != activeShader) {
 			glUseProgram(program);
 			activeShader = program;
 		}
+	}
+
+	Shader::~Shader() {
+		glDeleteProgram(program);
 	}
 
 	void Shader::addMap(TextureID id, const std::string& name, unsigned int type) {

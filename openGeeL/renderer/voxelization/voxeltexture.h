@@ -23,6 +23,7 @@ namespace geeL {
 
 		//Bind underlying 3D voxel texture into given shader
 		void bindTexture(Shader& shader, const std::string& name);
+		void clearTexture();
 
 	private:
 		unsigned int dimensions;

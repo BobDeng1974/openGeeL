@@ -8,7 +8,7 @@
 
 namespace geeL {
 
-	class LayeredTexture : public Texture {
+	class LayeredTexture : public Texture2D {
 
 	public:
 		int mapFlags;

@@ -64,8 +64,6 @@ void main() {
 }
 
 
-
-
 vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo) {
 	//Move position into direction of voxel border to avoid 
 	//sampling neighboring voxels when direction is steep

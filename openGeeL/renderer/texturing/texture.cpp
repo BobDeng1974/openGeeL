@@ -7,6 +7,45 @@ namespace geeL {
 
 	AnisotropicFilter Texture::maxAnisotropy;
 
+
+	void Texture::clear(ColorType type, unsigned int id) {
+		switch (type) {
+			case ColorType::Single:
+			case ColorType::RGB:
+			case ColorType::RGB16: {
+				float colors[3] = { 0, 0, 0 };
+				glClearTexImage(id, 0, GL_RGB, GL_FLOAT, &colors);
+				break;
+			}
+			case ColorType::GammaSpace:
+			case ColorType::RGBA:
+			case ColorType::RGBA16:
+			case ColorType::RGBA32: {
+				float colors2[4] = { 0, 0, 0, 0 };
+				glClearTexImage(id, 0, GL_RGBA, GL_FLOAT, &colors2);
+				break;
+			}
+		}
+	}
+
+	void Texture::mipmap2D(unsigned int id) {
+		glBindTexture(GL_TEXTURE_2D, id);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	void Texture::mipmapCube(unsigned int id) {
+		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
+
+
+	void Texture::setMaxAnisotropyAmount(AnisotropicFilter value) {
+		maxAnisotropy = value;
+	}
+
+
 	void Texture2D::initColorType(ColorType type, int width, int height, unsigned char* image) {
 		switch (type) {
 			case ColorType::GammaSpace:
@@ -98,21 +137,10 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void Texture::mipmap2D(unsigned int id) {
-		glBindTexture(GL_TEXTURE_2D, id);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-
-	void Texture::mipmapCube(unsigned int id) {
-		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	void Texture2D::bind() const {
+		glBindTexture(GL_TEXTURE_2D, getID());
 	}
 
 	
-	void Texture::setMaxAnisotropyAmount(AnisotropicFilter value) {
-		maxAnisotropy = value;
-	}
 
 }

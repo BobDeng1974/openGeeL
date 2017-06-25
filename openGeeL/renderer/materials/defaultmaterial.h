@@ -44,7 +44,6 @@ namespace geeL {
 		virtual void setVectorValue(std::string name, const glm::vec3& value);
 
 	private:
-		
 		float roughness;
 		float metallic;
 		LayeredTexture textureStack;

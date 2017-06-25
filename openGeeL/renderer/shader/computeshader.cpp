@@ -58,7 +58,7 @@ namespace geeL {
 			cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << endl;
 		}
 
-		//glDeleteShader(shader);
+		glDeleteShader(shader);
 	}
 
 	void ComputeShader::invoke(unsigned int x, unsigned int y, unsigned int z) {

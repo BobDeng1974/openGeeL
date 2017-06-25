@@ -15,6 +15,7 @@ namespace geeL {
 		virtual void remove();
 
 		void mipmap() const;
+		virtual void bind() const;
 
 	private:
 		unsigned int id;

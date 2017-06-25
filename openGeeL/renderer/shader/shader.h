@@ -42,6 +42,8 @@ namespace geeL {
 		unsigned int mapOffset = 0;
 		std::string name;
 
+		~Shader();
+
 		void use() const;
 		unsigned int getProgram() const;
 

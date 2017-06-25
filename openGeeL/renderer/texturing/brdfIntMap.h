@@ -9,7 +9,7 @@ namespace geeL {
 	class RenderShader;
 
 	//BRDF integration map that stores information for splitsum approximated IBL
-	class BRDFIntegrationMap : public Texture {
+	class BRDFIntegrationMap : public Texture2D {
 
 	public:
 		BRDFIntegrationMap();

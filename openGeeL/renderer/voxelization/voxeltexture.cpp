@@ -64,4 +64,9 @@ namespace geeL {
 		shader.addMap(texture->getID(), name, GL_TEXTURE_3D);
 	}
 
+	void VoxelTexture::clearTexture() {
+		texture->bind();
+		Texture::clear(ColorType::RGBA, texture->getID());
+	}
+
 }
