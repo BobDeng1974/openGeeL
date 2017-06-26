@@ -16,7 +16,8 @@ uniform vec3 origin;
 
 uniform int dimensions;
 uniform float farClip;
-uniform int minStep;
+uniform int maxStepSpecular;
+uniform int maxStepDiffuse;
 
 uniform sampler3D voxelTexture;
 uniform sampler2D image;
@@ -57,10 +58,12 @@ void main() {
 	float roughness = posRough.w;
 	float metallic = normMet.w;
 
-	vec3 indirectDiffuse = indirectDiffuse(position, normal, albedo.rgb);
-	vec3 indirectSpecular = indirectSpecular(position, refl, normal, roughness);
+	vec3 indirectDiff = indirectDiffuse(position, normal, albedo.rgb);
+	vec3 indirectSpec = indirectSpecular(position, refl, normal, roughness);
+	vec3 solidColor = baseColor + indirectDiff + indirectSpec;
 
-	color = vec4(baseColor + indirectDiffuse + indirectSpecular, 1.f);
+
+	color = vec4(solidColor, 1.f);
 }
 
 
@@ -125,7 +128,7 @@ vec4 traceIndirectSpecular(vec3 position, vec3 direction, vec3 normal, float rou
 	float lvl = 0.f;
 	int counter = 0;
 	vec4 color = vec4(0.f);
-	while((color.a < 1.f) && counter < minStep) {
+	while((color.a < 1.f) && counter < maxStepSpecular) {
 		pos = startPos + dist * direction;
 		float rest = 1.f - color.a;
 		color += getFragmentColor(pos, lvl) * rest;
@@ -149,7 +152,7 @@ vec4 traceIndirectDiffuse(vec3 position, vec3 direction, float spread) {
 	float lvl = 0.f;
 	int counter = 0;
 	vec4 color = vec4(0.f);
-	while((color.a < 1.f) && counter < minStep) {
+	while((color.a < 1.f) && counter < maxStepDiffuse) {
 		pos = position + dist * direction;
 		float rest = 1.f - color.a;
 		color += getFragmentColor(pos, 0.8f + lvl) * rest;

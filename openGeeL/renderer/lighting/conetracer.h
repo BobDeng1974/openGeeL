@@ -14,20 +14,23 @@ namespace geeL {
 	class VoxelConeTracer : public SceneRender {
 
 	public:
-		VoxelConeTracer(RenderScene& scene, VoxelOctree& octree, int minStep = 5);
-		VoxelConeTracer(RenderScene& scene, VoxelTexture& texture, int minStep = 15);
+		VoxelConeTracer(RenderScene& scene, VoxelOctree& octree, int maxStep = 5);
+		VoxelConeTracer(RenderScene& scene, VoxelTexture& texture, int maxStepSpecular = 15, int maxStepDiffuse = 10);
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
-		int getSampleSize() const;
-		void setSampleSize(unsigned int size);
+		int getSpecularSampleSize() const;
+		int getDiffuseSampleSize() const;
+
+		void setSpecularSampleSize(unsigned int size);
+		void setDiffuseSampleSize(unsigned int size);
 
 	protected:
 		virtual void bindValues();
 
 	private:
-		int minStep;
+		int maxStepSpecular, maxStepDiffuse;
 		SceneCamera* sceneCamera;
 		VoxelStructure& voxelStructure;
 

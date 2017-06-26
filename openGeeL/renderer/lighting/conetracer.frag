@@ -15,7 +15,8 @@ uniform vec3 origin;
 uniform int level;
 uniform int dimensions;
 uniform float farClip;
-uniform int minStep;
+uniform int maxStepSpecular;
+uniform int maxStepDiffuse;
 
 uniform layout (binding = 0, r32ui) uimageBuffer nodeIndicies;
 uniform layout (binding = 1, r32ui) uimageBuffer nodeDiffuse;

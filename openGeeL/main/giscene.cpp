@@ -118,12 +118,8 @@ namespace {
 			//Transform& lightTransform1 = transformFactory.CreateTransform(vec3(144.f, 82.2f, 132.f), vec3(0.f), vec3(1.f));
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(131.f, 72.2f, 128.f), vec3(0.f), vec3(1.f), true);
 			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 20.f, 15U, 150.f);
-			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
+			lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
 
-			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(152.f, 24.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
-			MeshRenderer& sponz = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
-				meshTransform6, CullingMode::cullFront, "Sponza");
-			scene.addMeshRenderer(sponz);
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 32.f, 121.0f), vec3(0.f, 0.f, 0.f), vec3(3.f));
 			MeshRenderer& cube = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/cube.obj"),
@@ -136,6 +132,11 @@ namespace {
 				container.setVectorValue("Color", vec3(0.1f));
 			});
 
+
+			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(152.f, 24.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
+			MeshRenderer& sponz = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
+				meshTransform6, CullingMode::cullFront, "Sponza");
+			scene.addMeshRenderer(sponz);
 		}
 
 		virtual void draw(const SceneCamera& camera) {}

@@ -204,13 +204,14 @@ namespace geeL {
 	std::string SSRRSnippet::toString() const {
 		return "SSRR";
 	}
-
-
 	
 
 	void ConeTracerSnippet::draw(GUIContext* context) {
-		unsigned int steps = GUISnippets::drawBarInteger(context, tracer.getSampleSize(), 1, 50, 1, "Sample Size");
-		tracer.setSampleSize(steps);
+		unsigned int specSteps = GUISnippets::drawBarInteger(context, tracer.getSpecularSampleSize(), 1, 100, 1, "Specular Size");
+		tracer.setSpecularSampleSize(specSteps);
+
+		unsigned int diffSteps = GUISnippets::drawBarInteger(context, tracer.getDiffuseSampleSize(), 1, 50, 1, "Diffuse Size");
+		tracer.setDiffuseSampleSize(diffSteps);
 	}
 
 	std::string ConeTracerSnippet::toString() const {
