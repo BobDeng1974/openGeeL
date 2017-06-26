@@ -38,6 +38,8 @@ vec3 getClosestAxisNormal(vec3 v);
 float getNodeBorderDistance(vec3 position, vec3 direction, int stepSize);
 vec3 orthogonal(vec3 v);
 
+vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness);
+float doto(vec3 a, vec3 b);
 
 void main() {
 	vec4 normMet  = texture(gNormalMet, TexCoords);
@@ -58,12 +60,22 @@ void main() {
 	float roughness = posRough.w;
 	float metallic = normMet.w;
 
-	vec3 indirectDiff = indirectDiffuse(position, normal, albedo.rgb);
-	vec3 indirectSpec = indirectSpecular(position, refl, normal, roughness);
+	vec3 ks = calculateFresnelTerm(doto(normal, view), albedo.rgb, metallic, roughness);
+	vec3 kd = 1.f - ks;
+
+	vec3 indirectDiff = indirectDiffuse(position, normal, albedo.rgb) * kd;
+	vec3 indirectSpec = indirectSpecular(position, refl, normal, roughness) * ks;// (1.f - roughness);
 	vec3 solidColor = baseColor + indirectDiff + indirectSpec;
+	
+	if(albedo.a < 1.f) {
+		float refIndex = dot(kd, luminance);
+		vec3 refrDir = refract(-view, normal, refIndex);
+		vec3 refractionColor = indirectSpecular(position, refrDir, normal, roughness);
 
-
-	color = vec4(solidColor, 1.f);
+		color = vec4(mix(refractionColor, solidColor, albedo.a), 1.f);
+	}
+	else
+		color = vec4(solidColor, 1.f);
 }
 
 
@@ -110,10 +122,9 @@ vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo) {
 
 
 vec3 indirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness) {
-	float specularity = (1.f - roughness);
 	vec4 radiance = traceIndirectSpecular(position, direction, normal, roughness);
 
-	return radiance.rgb * specularity;
+	return radiance.rgb;
 }
 
 vec4 traceIndirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness) {
@@ -237,6 +248,21 @@ vec3 orthogonal(vec3 v) {
 	vec3 o = vec3(1.f, 0.f, 0.f);
 
 	return abs(dot(v, o)) > 0.999f ? cross(v, vec3(0.f, 1.f, 0.f)) : cross(v, o);
+}
+
+//Compute fresnel term with Fresnel-Schlick approximation
+vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness) {
+	vec3 F0 = vec3(0.04f);
+    F0 = mix(F0, albedo, metallic);
+
+	//Simplified term withouth roughness included
+    //return F0 + (1.0f - F0) * pow(1.0f - theta, 5.0f);
+	vec3 fres = F0 + (max(vec3(1.0f - roughness), F0) - F0) * pow(1.0f - theta, 5.0f);
+	return clamp(fres, 0.f, 1.f);
+}
+
+float doto(vec3 a, vec3 b) {
+	return max(dot(a, b), 0.0f);
 }
 
 
