@@ -21,7 +21,7 @@ namespace geeL {
 	class GenericMaterialContainer : public MaterialContainer {
 
 	public:
-		GenericMaterialContainer(std::string name = "material", MaterialType type = Opaque);
+		GenericMaterialContainer(std::string name = "material");
 
 		void addTexture(std::string name, TextureMap& texture);
 		void addTextures(std::vector<TextureMap*> textures);

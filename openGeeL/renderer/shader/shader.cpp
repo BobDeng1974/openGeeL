@@ -147,7 +147,14 @@ namespace geeL {
 		return location;
 	}
 
-	ShaderLocation Shader::setMat3(const string& name, const glm::mat3 & value) const {
+	ShaderLocation Shader::setVector4(const std::string & name, const glm::vec4& value) const {
+		ShaderLocation location = glGetUniformLocation(program, name.c_str());
+		glUniform4f(location, value.x, value.y, value.z, value.w);
+
+		return location;
+	}
+
+	ShaderLocation Shader::setMat3(const string& name, const glm::mat3& value) const {
 		ShaderLocation location = glGetUniformLocation(program, name.c_str());
 		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(value));
 
@@ -175,6 +182,10 @@ namespace geeL {
 
 	void Shader::setVector3(ShaderLocation location, const glm::vec3& value) const {
 		glUniform3f(location, value.x, value.y, value.z);
+	}
+
+	void Shader::setVector4(ShaderLocation location, const glm::vec4& value) const {
+		glUniform4f(location, value.x, value.y, value.z, value.w);
 	}
 
 	void Shader::setMat3(ShaderLocation location, const glm::mat3 & value) const {

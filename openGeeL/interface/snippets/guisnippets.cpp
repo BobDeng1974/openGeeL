@@ -127,6 +127,9 @@ namespace geeL {
 	}
 
 	void GUISnippets::drawMaterial(GUIContext* context, DefaultMaterialContainer* material) {
+		float transparency = drawBarFloat(context, material->getTransparency(), 0.f, 1.0f, 0.001f, "Transparency");
+		material->setTransparency(transparency);
+
 		float roughness = drawBarFloat(context, material->getRoughness(), 0.f, 1.0f, 0.001f, "Roughness");
 		material->setRoughness(roughness);
 

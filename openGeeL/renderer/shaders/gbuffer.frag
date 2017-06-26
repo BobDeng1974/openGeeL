@@ -11,10 +11,9 @@ struct Material {
 	sampler2D metal;
 
 	int mapFlags;
-	int type; //0 = Opaque, 1 = Cutout, 2 = Transparent
 	float roughness;
 	float metallic;
-	vec3  color;
+	vec4  color;
 };
 
 in vec3 normal;
@@ -40,8 +39,10 @@ void main() {
 	float normFlag = mod(material.mapFlags / 100, 10);
 	float metaFlag = mod(material.mapFlags / 1000, 10);
 
-	//Discard fragment when material type is cutout and alpha value is very low
-	discard(material.type == 1 && texture(material.diffuse, textureCoordinates).a < 0.1f);
+	vec4 diffuse = (diffFlag == 1) ? texture(material.diffuse, textureCoordinates) : material.color;
+
+	//Discard fragment if alpha value is very low
+	discard(diffuse.a < 0.1f);
 		
 	gPositionDepth.xyz = fragPosition;
 	gPositionDepth.a = clipDepth; 
@@ -57,10 +58,9 @@ void main() {
 	gNormalMet.rgb = norm;
 	gNormalMet.a = (metaFlag == 1) ? texture(material.metal, textureCoordinates).r : material.metallic;
 
-	vec3 texColor = (diffFlag == 1) ? texture(material.diffuse, textureCoordinates).rgb : material.color;
 	//Interpret roughness as (1 - specuarlity)
 	vec3 speColor = (specFlag == 1) ? 1.f - texture(material.specular, textureCoordinates).rgb : vec3(material.roughness); 
-	gDiffuseSpec.rgb = texColor;
+	gDiffuseSpec.rgb = diffuse.rgb;
 	gDiffuseSpec.a = speColor.r;
     
 } 

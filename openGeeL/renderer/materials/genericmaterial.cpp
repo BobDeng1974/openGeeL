@@ -11,8 +11,8 @@ using namespace std;
 
 namespace geeL {
 
-	GenericMaterialContainer::GenericMaterialContainer(string name, MaterialType type) 
-		: MaterialContainer(name, type) {}
+	GenericMaterialContainer::GenericMaterialContainer(string name) 
+		: MaterialContainer(name) {}
 
 
 	void GenericMaterialContainer::addTexture(string name, TextureMap& texture) {
@@ -55,7 +55,6 @@ namespace geeL {
 		textureStack.draw(shader);
 
 		shader.setInteger("material.mapFlags", textureStack.mapFlags);
-		shader.setFloat("material.type", (float)type);
 
 		//GLint location;
 		for (auto it = floatParameters.begin(); it != floatParameters.end(); it++) {

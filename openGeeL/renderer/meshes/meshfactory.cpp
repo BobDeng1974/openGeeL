@@ -293,6 +293,8 @@ namespace geeL {
 			glm::vec3 color = glm::vec3();
 			aiColor3D buffer;
 
+			mat.setTransparency(0.f);
+
 			if (AI_SUCCESS == material->Get(AI_MATKEY_COLOR_DIFFUSE, buffer)) {
 				color = glm::vec3(buffer.r, buffer.g, buffer.b);
 				mat.setColor(color);

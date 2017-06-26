@@ -11,8 +11,8 @@ using namespace std;
 
 namespace geeL {
 
-	DefaultMaterialContainer::DefaultMaterialContainer(MaterialType type) 
-		: MaterialContainer("material", type) {}
+	DefaultMaterialContainer::DefaultMaterialContainer() 
+		: MaterialContainer("material"), transparency(1.f) {}
 
 
 	void DefaultMaterialContainer::addTexture(std::string name, TextureMap& texture) {
@@ -28,6 +28,10 @@ namespace geeL {
 		}
 	}
 
+	float DefaultMaterialContainer::getTransparency() const {
+		return transparency;
+	}
+
 	float DefaultMaterialContainer::getRoughness() const {
 		return roughness;
 	}
@@ -40,12 +44,19 @@ namespace geeL {
 		return color;
 	}
 
+	void DefaultMaterialContainer::setTransparency(float value) {
+		if (value != transparency && value >= 0.f && value <= 1.f)
+			transparency = value;
+	}
+
 	void DefaultMaterialContainer::setRoughness(float value) {
-		roughness = value;
+		if (value != roughness && value >= 0.f && value <= 1.f)
+			roughness = value;
 	}
 
 	void DefaultMaterialContainer::setMetallic(float value) {
-		metallic = value;
+		if (value != metallic && value >= 0.f && value <= 1.f)
+			metallic = value;
 	}
 
 	void DefaultMaterialContainer::setColor(glm::vec3 value) {
@@ -106,9 +117,8 @@ namespace geeL {
 		textureStack.draw(shader);
 
 		shader.setInteger("material.mapFlags", textureStack.mapFlags);
-		shader.setFloat("material.type", (float)type);
 		shader.setFloat("material.roughness", roughness);
 		shader.setFloat("material.metallic", metallic);
-		shader.setVector3("material.color", color);
+		shader.setVector4("material.color", glm::vec4(color, transparency));
 	}
 }

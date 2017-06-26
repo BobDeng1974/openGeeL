@@ -96,10 +96,9 @@ struct Material {
 	sampler2D metal;
 
 	int mapFlags;
-	int type; //0 = Opaque, 1 = Cutout, 2 = Transparent
 	float roughness;
 	float metallic;
-	vec3  color;
+	vec4  color;
 };
 
 struct PointLight {
@@ -219,8 +218,10 @@ void readMaterialProperties(out vec3 albedo, out vec3 norm, out float roughness,
 	float normFlag = mod(material.mapFlags / 100, 10);
 	float metaFlag = mod(material.mapFlags / 1000, 10);
 
-	//Discard fragment when material type is cutout and alpha value is very low
-	discard(material.type == 1 && texture(material.diffuse, texCoords).a < 0.1f);
+	vec4 diffuse = (diffFlag == 1) ? texture(material.diffuse, texCoords) : material.color;
+
+	//Discard fragment if alpha value is very low
+	discard(diffuse.a < 0.1f);
 
 	norm = normalize(normal);
 	if(normFlag == 1) {
@@ -229,8 +230,7 @@ void readMaterialProperties(out vec3 albedo, out vec3 norm, out float roughness,
 		norm = normalize(TBN * norm);
 	}
 
-	albedo = (diffFlag == 1) ? texture(material.diffuse, texCoords).rgb : material.color;
-	
+	albedo = diffuse.rgb;
 	roughness = (specFlag == 1) ? 1.f - texture(material.specular, texCoords).r : material.roughness; 
 	metallic = (metaFlag == 1) ? texture(material.metal, texCoords).r : material.metallic;
 }

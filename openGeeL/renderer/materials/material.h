@@ -18,11 +18,10 @@ namespace geeL {
 	class MaterialContainer {
 
 	public:
-		const MaterialType type;
 		std::string name;
 
-		MaterialContainer(std::string name = "material", MaterialType type = Opaque)
-			: type(type), name(name) {}
+		MaterialContainer(std::string name = "material")
+			: name(name) {}
 
 		virtual void bindTextures(SceneShader& shader) const = 0;
 		virtual void bind(SceneShader& shader) const = 0;
