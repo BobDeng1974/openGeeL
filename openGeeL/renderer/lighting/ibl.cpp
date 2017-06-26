@@ -27,8 +27,8 @@ namespace geeL {
 	}
 
 	void ImageBasedLighting::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
-		addBuffer(*maps[WorldMaps::DiffuseRoughness], "gDiffuseSpec");
-		addBuffer(*maps[WorldMaps::PositionDepth], "gPositionDepth");
+		addBuffer(*maps[WorldMaps::Diffuse], "gDiffuse");
+		addBuffer(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
 		addBuffer(*maps[WorldMaps::NormalMetallic], "gNormalMet");
 
 		auto ssao = maps.find(WorldMaps::SSAO);

@@ -13,10 +13,10 @@ namespace geeL {
 
 	enum class WorldMaps {
 		None = 0,
-		DiffuseRoughness = 1,
-		PositionDepth = 2,
+		Diffuse = 1,
+		PositionRoughness = 2,
 		NormalMetallic = 4,
-		SSAO = 8
+		SSAO = 8,
 	};
 
 

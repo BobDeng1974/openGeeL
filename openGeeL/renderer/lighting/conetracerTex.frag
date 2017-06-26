@@ -20,9 +20,9 @@ uniform int minStep;
 
 uniform sampler3D voxelTexture;
 uniform sampler2D image;
-uniform sampler2D gPositionDepth;
+uniform sampler2D gPositionRoughness;
 uniform sampler2D gNormalMet;
-uniform sampler2D gDiffuseSpec;
+uniform sampler2D gDiffuse;
 
 vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo);
 vec3 indirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness);
@@ -40,10 +40,10 @@ vec3 orthogonal(vec3 v);
 
 void main() {
 	vec4 normMet  = texture(gNormalMet, TexCoords);
-	vec4 diffSpec = texture(gDiffuseSpec, TexCoords);
+	vec4 posRough = texture(gPositionRoughness, TexCoords);
 
 	vec3 baseColor = texture(image, TexCoords).rgb;
-	vec3 posView  = texture(gPositionDepth, TexCoords).rgb;
+	vec3 posView  = posRough.rgb;
 	vec3 normView = normalize(normMet.rgb);
 	vec3 viewView = normalize(-posView);
 
@@ -53,11 +53,11 @@ void main() {
 	vec3 refl = normalize(reflect(-view, normal));
 	vec3 camPosition = (inverseView * vec4(vec3(0.f), 1.f)).xyz;
 
-	vec3 albedo = diffSpec.rgb;
-	float roughness = diffSpec.w;
+	vec4 albedo = texture(gDiffuse, TexCoords);
+	float roughness = posRough.w;
 	float metallic = normMet.w;
 
-	vec3 indirectDiffuse = indirectDiffuse(position, normal, albedo);
+	vec3 indirectDiffuse = indirectDiffuse(position, normal, albedo.rgb);
 	vec3 indirectSpecular = indirectSpecular(position, refl, normal, roughness);
 
 	color = vec4(baseColor + indirectDiffuse + indirectSpecular, 1.f);

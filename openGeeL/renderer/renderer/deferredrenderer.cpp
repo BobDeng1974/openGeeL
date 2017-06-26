@@ -297,9 +297,10 @@ namespace geeL {
 	void DeferredRenderer::linkInformation() const {
 
 		map<WorldMaps, const Texture*> worldMaps;
-		worldMaps[WorldMaps::DiffuseRoughness] = &gBuffer.getDiffuseSpecular();
-		worldMaps[WorldMaps::PositionDepth]    = &gBuffer.getPositionDepth();
-		worldMaps[WorldMaps::NormalMetallic]   = &gBuffer.getNormalMetallic();
+		worldMaps[WorldMaps::Diffuse] = &gBuffer.getDiffuse();
+		worldMaps[WorldMaps::PositionRoughness] = &gBuffer.getPositionRoughness();
+		worldMaps[WorldMaps::NormalMetallic] = &gBuffer.getNormalMetallic();
+
 
 		if(ssao != nullptr)
 			worldMaps[WorldMaps::SSAO] = &ssaoBuffer->getTexture();
@@ -347,7 +348,7 @@ namespace geeL {
 					currBuffer = defaultBuffer;
 					break;
 				case 1:
-					currBuffer = gBuffer.getDiffuseSpecular().getID();
+					currBuffer = gBuffer.getDiffuse().getID();
 					break;
 				case 2:
 					currBuffer = gBuffer.getNormalMetallic().getID();

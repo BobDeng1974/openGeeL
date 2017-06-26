@@ -89,7 +89,7 @@ namespace geeL {
 		glGenFramebuffers(1, &info.fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 
-		int amount = min(3, (int)colorBuffers.size());
+		int amount = min(3, (int)buffers.size());
 		if (colorBuffers.size() > 3)
 			std::cout << "Only first 3 textures are used in color buffer\n";
 

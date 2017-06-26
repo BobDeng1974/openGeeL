@@ -24,15 +24,15 @@ namespace geeL {
 		//Returns depth of current drawn image
 		float getDepth() const;
 
-		const RenderTexture& getDiffuseSpecular() const;
-		const RenderTexture& getPositionDepth() const;
+		const RenderTexture& getDiffuse() const;
+		const RenderTexture& getPositionRoughness() const;
 		const RenderTexture& getNormalMetallic() const;
 
 		virtual std::string toString() const;
 
 	private:
-		RenderTexture diffuseSpec;
-		RenderTexture positionDepth;
+		RenderTexture diffuse;
+		RenderTexture positionRough;
 		RenderTexture normalMet;
 		float depthPos;
 

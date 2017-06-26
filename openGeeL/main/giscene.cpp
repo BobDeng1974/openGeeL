@@ -128,7 +128,7 @@ namespace {
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 32.f, 121.0f), vec3(0.f, 0.f, 0.f), vec3(3.f));
 			MeshRenderer& cube = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/cube.obj"),
 				meshTransform2, CullingMode::cullFront, "Cube");
-			//scene.addMeshRenderer(cube);
+			scene.addMeshRenderer(cube);
 
 			cube.iterateMaterials([&](MaterialContainer& container) {
 				container.setFloatValue("Roughness", 0.35f);

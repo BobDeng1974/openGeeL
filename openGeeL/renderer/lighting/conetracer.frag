@@ -21,9 +21,9 @@ uniform layout (binding = 0, r32ui) uimageBuffer nodeIndicies;
 uniform layout (binding = 1, r32ui) uimageBuffer nodeDiffuse;
 
 uniform sampler2D image;
-uniform sampler2D gPositionDepth;
+uniform sampler2D gPositionRoughness;
 uniform sampler2D gNormalMet;
-uniform sampler2D gDiffuseSpec;
+uniform sampler2D gDiffuse;
 
 
 vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo);
@@ -62,10 +62,10 @@ vec4 mix3D(vec4 p000, vec4 p100, vec4 p010, vec4 p110, vec4 p001, vec4 p101, vec
 
 void main() {
 	vec4 normMet  = texture(gNormalMet, TexCoords);
-	vec4 diffSpec = texture(gDiffuseSpec, TexCoords);
+	vec4 posRough = texture(gPositionRoughness, TexCoords);
 
 	vec3 baseColor = texture(image, TexCoords).rgb;
-	vec3 posView  = texture(gPositionDepth, TexCoords).rgb;
+	vec3 posView  = posRough.rgb;
 	vec3 normView = normalize(normMet.rgb);
 	vec3 viewView = normalize(-posView);
 
@@ -75,8 +75,8 @@ void main() {
 	vec3 refl = normalize(reflect(-view, normal));
 	vec3 camPosition = (inverseView * vec4(vec3(0.f), 1.f)).xyz;
 
-	vec3 albedo = diffSpec.rgb;
-	float roughness = diffSpec.w;
+	vec3 albedo = texture(gDiffuse, TexCoords).rgb;
+	float roughness = posRough.a;
 	float metallic = normMet.w;
 
 	//vec3 indirectDiffuse = indirectDiffuse(position, normal, albedo);

@@ -106,7 +106,7 @@ namespace geeL {
 		: BilateralFilter("renderer/postprocessing/bilateraldepth.frag", strength, sigma) {}
 
 	void BilateralDepthFilter::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		addBuffer(*maps[WorldMaps::PositionDepth], "gPositionDepth");
+		addBuffer(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
 	}
 
 
@@ -138,6 +138,6 @@ namespace geeL {
 	}
 
 	void  SobelBlur::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		sobel.setBuffer(*maps[WorldMaps::PositionDepth]);
+		sobel.setBuffer(*maps[WorldMaps::PositionRoughness]);
 	}
 }

@@ -7,9 +7,8 @@ in vec2 TexCoords;
 out vec4 color;
 
 uniform sampler2D image;
-uniform sampler2D gPositionDepth;
+uniform sampler2D gPositionRoughness;
 uniform sampler2D gNormalMet;
-uniform sampler2D gSpecular;
 
 uniform int stepCount = 60;
 uniform	float stepSize = 0.2f;
@@ -36,9 +35,11 @@ vec4 transformToClip(vec3 vector);
 
 void main() {
 	vec3 result = step(effectOnly, 0.f) * texture(image, TexCoords).rgb;
-	vec3 fragPos = texture(gPositionDepth, TexCoords).xyz;
+
+	vec4 posRough = texture(gPositionRoughness, TexCoords);
+	vec3 fragPos = posRough.xyz;
 	float depth = -fragPos.z;
-	float roughness = texture(gSpecular, TexCoords).w; 
+	float roughness = posRough.w; 
 	
 	vec3 normal = normalize(texture(gNormalMet, TexCoords).rgb);
 	vec3 reflectionDirection = normalize(reflect(fragPos, normal));
@@ -87,7 +88,7 @@ vec3 getReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float rou
 		float depth = currPosition.z;
 		
 		vec4 currPosProj = transformToClip(currPosition);
-		vec3 sampledPosition = texture(gPositionDepth, currPosProj.xy).xyz;
+		vec3 sampledPosition = texture(gPositionRoughness, currPosProj.xy).xyz;
 		float currDepth = sampledPosition.z;
 
 		//Break when reaching border of image
@@ -107,7 +108,7 @@ vec3 getReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float rou
 				for(int i = 0; i < 5; i++) {
 				
 					currPosition = interpolate(left, right, 0.5f);
-					currDepth    = texture(gPositionDepth, currPosProj.xy).z;
+					currDepth    = texture(gPositionRoughness, currPosProj.xy).z;
 					currPosProj  = transformToClip(currPosition);
 
 					float leftDep = abs(left.z - currDepth);

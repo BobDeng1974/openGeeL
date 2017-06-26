@@ -1,8 +1,8 @@
 #version 430 core
 
-layout (location = 0) out vec4 gPositionDepth;
+layout (location = 0) out vec4 gPositionRough;
 layout (location = 1) out vec4 gNormalMet;
-layout (location = 2) out vec4 gDiffuseSpec;
+layout (location = 2) out vec4 gDiffuse;
 
 in vec3 normal;
 in vec3 fragPosition;
@@ -38,22 +38,24 @@ void main() {
 	//Discard fragment if alpha value is very low
 	//discard(diffuse.a < 0.1f);
 		
-	gPositionDepth.xyz = fragPosition;
+	gPositionRough.xyz = fragPosition;
     
 	vec3 norm = normalize(normal);
-	
 	if(normFlag == 1) {
 		norm = texture(material.normal, textureCoordinates).rgb;
 		norm = normalize(norm * 2.0f - 1.0f);
 		norm = normalize(TBN * norm);
 	}
 
-	gNormalMet.rgb = norm;
-	gNormalMet.a = (metaFlag == 1) ? texture(material.metal, textureCoordinates).r : material.metallic;
-
 	//Interpret roughness as (1 - specuarlity)
-	vec3 speColor = (specFlag == 1) ? 1.f - texture(material.specular, textureCoordinates).rgb : vec3(material.roughness); 
-	gDiffuseSpec.rgb = diffuse.rgb;
-	gDiffuseSpec.a = speColor.r;
-    
+	vec3 speColor = (specFlag == 1) ? 1.f - texture(material.specular, textureCoordinates).rgb : vec3(material.roughness);
+	float metallic = (metaFlag == 1) ? texture(material.metal, textureCoordinates).r : material.metallic;
+
+	gNormalMet.rgb = norm;
+	gNormalMet.a = metallic;
+	
+	gDiffuse = diffuse;
+
+	gPositionRough.a = speColor.r;
+
 } 

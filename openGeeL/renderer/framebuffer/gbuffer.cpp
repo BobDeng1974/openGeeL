@@ -11,13 +11,13 @@ namespace geeL {
 	GBuffer::GBuffer() {}
 
 	GBuffer::GBuffer(const GBuffer& buffer) : FrameBuffer(buffer), screenInfo(buffer.screenInfo), 
-		diffuseSpec(buffer.diffuseSpec), positionDepth(buffer.positionDepth), 
+		diffuse(buffer.diffuse), positionRough(buffer.positionRough), 
 		normalMet(buffer.normalMet), depthPos(buffer.depthPos) {}
 
 	GBuffer::~GBuffer() {
-		positionDepth.remove();
+		positionRough.remove();
 		normalMet.remove();
-		diffuseSpec.remove();
+		diffuse.remove();
 	}
 
 
@@ -29,13 +29,13 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 
 		//Create attachements for all color buffers
-		positionDepth = RenderTexture(width, height, ColorType::RGBA16);
+		positionRough = RenderTexture(width, height, ColorType::RGBA16);
 		normalMet = RenderTexture(width, height, ColorType::RGBA16);
-		diffuseSpec = RenderTexture(width, height, ColorType::RGBA);
+		diffuse = RenderTexture(width, height, ColorType::RGBA);
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, positionDepth.getID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, positionRough.getID(), 0);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, normalMet.getID(), 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, diffuseSpec.getID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, diffuse.getID(), 0);
 		unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
 		glDrawBuffers(3, attachments);
 
@@ -88,12 +88,12 @@ namespace geeL {
 		return depthPos;
 	}
 
-	const RenderTexture& GBuffer::getDiffuseSpecular() const {
-		return diffuseSpec;
+	const RenderTexture& GBuffer::getDiffuse() const {
+		return diffuse;
 	}
 
-	const RenderTexture& GBuffer::getPositionDepth() const {
-		return positionDepth;
+	const RenderTexture& GBuffer::getPositionRoughness() const {
+		return positionRough;
 	}
 
 	const RenderTexture& GBuffer::getNormalMetallic() const {
@@ -102,8 +102,8 @@ namespace geeL {
 
 	std::string GBuffer::toString() const {
 		std::string s = "GBuffer " + std::to_string(info.fbo) + "\n"
-			+ "--DiffuseSpec " + std::to_string(diffuseSpec.getID()) + "\n"
-			+ "--PositionDepth " + std::to_string(positionDepth.getID()) + "\n"
+			+ "--Diffuse " + std::to_string(diffuse.getID()) + "\n"
+			+ "--PositionRoughness " + std::to_string(positionRough.getID()) + "\n"
 			+ "--NormalMetallic " + std::to_string(normalMet.getID()) + "\n";
 
 		return s;

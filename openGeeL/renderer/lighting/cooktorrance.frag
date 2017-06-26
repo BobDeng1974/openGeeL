@@ -60,9 +60,9 @@ uniform int plCount;
 uniform int dlCount;
 uniform int slCount;
 
-uniform sampler2D gPositionDepth;
+uniform sampler2D gPositionRoughness;
 uniform sampler2D gNormalMet;
-uniform sampler2D gDiffuseSpec;
+uniform sampler2D gDiffuse;
 
 uniform mat4 projection;
 uniform mat4 inverseView;
@@ -100,18 +100,18 @@ float random(vec3 seed, int i);
 float luminance(vec3 color);
 
 void main() {
-	vec3 fragPosition = texture(gPositionDepth, textureCoordinates).rgb;
+	vec4 posRough = texture(gPositionRoughness, textureCoordinates);
+	vec3 fragPosition = posRough.rgb;
 
 	//Discard pixel if it is not connected to any position in scene (Will be rendered black anyway)
 	discard(length(fragPosition) <= 0.001f);
 
 	vec4 normMet  = texture(gNormalMet, textureCoordinates);
-	vec4 diffSpec = texture(gDiffuseSpec, textureCoordinates);
 
     vec3 normal		  = normMet.rgb;
-    vec3 albedo		  = diffSpec.rgb;
+    vec3 albedo		  = texture(gDiffuse, textureCoordinates).rgb;
 
-	float roughness	  = diffSpec.a;
+	float roughness	  = posRough.a;
 	float metallic    = normMet.a;
 
 	vec3  viewDirection = normalize(-fragPosition);

@@ -16,9 +16,9 @@ in vec2 textureCoordinates;
 layout (location = 0) out vec4 color;
 
 uniform sampler2D image;  
-uniform sampler2D gPositionDepth;
+uniform sampler2D gPositionRoughness;
 uniform sampler2D gNormalMet;
-uniform sampler2D gDiffuseSpec;
+uniform sampler2D gDiffuse;
 
 uniform sampler2D ssao;
 uniform int useSSAO;
@@ -43,7 +43,8 @@ float doto(vec3 a, vec3 b);
 
 void main() {
 	vec3 base = texture(image, textureCoordinates).rgb;
-	vec3 fragPosition = texture(gPositionDepth, textureCoordinates).rgb;
+	vec4 posRough = texture(gPositionRoughness, textureCoordinates);
+	vec3 fragPosition = posRough.rgb;
 
 	//Discard pixel if it is not connected to any position in scene (Will be rendered black anyway)
 	if(length(fragPosition) <= 0.001f) {
@@ -52,12 +53,11 @@ void main() {
 	}
 
 	vec4 normMet  = texture(gNormalMet, textureCoordinates);
-	vec4 diffSpec = texture(gDiffuseSpec, textureCoordinates);
 
     vec3 normal		  = normMet.rgb;
-    vec3 albedo		  = diffSpec.rgb;
+    vec3 albedo		  = texture(gDiffuse, textureCoordinates).rgb;
 
-	float roughness	  = diffSpec.a;
+	float roughness	  = posRough.a;
 	float metallic    = normMet.a;
 	float occlusion   = (useSSAO == 1) ? texture(ssao, textureCoordinates).r : 1.f;
 
