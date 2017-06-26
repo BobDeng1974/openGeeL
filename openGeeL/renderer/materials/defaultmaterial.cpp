@@ -59,12 +59,14 @@ namespace geeL {
 			metallic = value;
 	}
 
-	void DefaultMaterialContainer::setColor(glm::vec3 value) {
+	void DefaultMaterialContainer::setColor(const glm::vec3& value) {
 		color = value;
 	}
 
 	float DefaultMaterialContainer::getFloatValue(std::string name) const {
-		if (name == "Roughness")
+		if (name == "Transparency")
+			return transparency;
+		else if (name == "Roughness")
 			return roughness;
 		if (name == "Metallic")
 			return metallic;
@@ -87,10 +89,12 @@ namespace geeL {
 	}
 
 	void  DefaultMaterialContainer::setFloatValue(std::string name, float value) {
-		if (name == "Roughness")
-			roughness = value;
+		if (name == "Transparency")
+			setTransparency(value);
+		else if (name == "Roughness")
+			setRoughness(value);
 		else if (name == "Metallic")
-			metallic = value;
+			setMetallic(value);
 		else
 			cout << "Value '" + name + "' not present in material\n";
 	}
@@ -101,7 +105,7 @@ namespace geeL {
 
 	void  DefaultMaterialContainer::setVectorValue(std::string name, const glm::vec3& value) {
 		if (name == "Color")
-			color = value;
+			setColor(value);
 		else 
 			cout << "Value '" + name + "' not present in material\n";
 	}

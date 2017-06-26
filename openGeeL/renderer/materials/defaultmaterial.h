@@ -32,7 +32,7 @@ namespace geeL {
 		void setTransparency(float value);
 		void setRoughness(float value);
 		void setMetallic(float value);
-		void setColor(glm::vec3 value);
+		void setColor(const glm::vec3& value);
 
 		virtual void bindTextures(SceneShader& shader) const;
 		virtual void bind(SceneShader& shader) const;
