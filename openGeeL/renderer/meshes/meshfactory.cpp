@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <limits>
 #include <mat4x4.hpp>
 #include "../../dependencies/assimp/Importer.hpp"
@@ -347,9 +348,13 @@ namespace geeL {
 			ColorType ct = (type == MapType::Diffuse && endsWith(name, ".tga")) ? ColorType::RGBA : colorType;
 
 			string fileName = directory + "/" + name;
-			TextureMap& texture = factory.CreateTextureMap(fileName, type, 
-				ct, WrapMode::Repeat, FilterMode::Bilinear, AnisotropicFilter::Medium);
-			textures.push_back(&texture);
+			std::ifstream ifile(fileName);
+
+			if ((bool)ifile) {
+				TextureMap& texture = factory.CreateTextureMap(fileName, type,
+					ct, WrapMode::Repeat, FilterMode::Bilinear, AnisotropicFilter::Medium);
+				textures.push_back(&texture);
+			}
 		}
 	}
 
