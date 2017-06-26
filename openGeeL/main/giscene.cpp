@@ -121,16 +121,16 @@ namespace {
 			lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
 
 
-			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 32.f, 121.0f), vec3(0.f, 0.f, 0.f), vec3(3.f, 3.f, 0.5f));
-			MeshRenderer& cube = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/cube.obj"),
-				meshTransform2, CullingMode::cullFront, "Cube");
-			//scene.addMeshRenderer(cube);
+			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 121.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
+			MeshRenderer& buddha = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/classics/buddha.obj"),
+				meshTransform2, CullingMode::cullFront, "Buddha");
+			scene.addMeshRenderer(buddha);
 
-			cube.iterateMaterials([&](MaterialContainer& container) {
-				container.setFloatValue("Transparency", 0.f);
-				container.setFloatValue("Roughness", 0.35f);
-				container.setFloatValue("Metallic", 0.f);
-				container.setVectorValue("Color", vec3(0.1f));
+			buddha.iterateMaterials([&](MaterialContainer& container) {
+				container.setFloatValue("Transparency", 0.1f);
+				container.setFloatValue("Roughness", 0.15f);
+				container.setFloatValue("Metallic", 0.4f);
+				container.setVectorValue("Color", vec3(0.4f));
 			});
 
 
@@ -182,11 +182,8 @@ void SponzaGIScene::draw() {
 
 	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv4/MonValley_G_DirtRoad_3k.hdr");
 	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 256);
-	IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
-
 	Skybox skybox = Skybox(envCubeMap);
 	scene.setSkybox(skybox);
-	lightManager.addReflectionProbe(iblMap);
 
 	renderer.setScene(scene);
 
