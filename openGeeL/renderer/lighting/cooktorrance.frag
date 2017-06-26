@@ -139,7 +139,7 @@ void main() {
 
 //Compute fresnel term with Fresnel-Schlick approximation
 vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness) {
-	vec3 F0 = vec3(0.04);
+	vec3 F0 = vec3(0.04f);
     F0 = mix(F0, albedo, metallic);
 
 	//Simplified term withouth roughness included

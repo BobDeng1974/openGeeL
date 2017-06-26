@@ -21,6 +21,7 @@ namespace geeL {
 		virtual void bindValues();
 
 	private:
+		ShaderLocation projectionLocation;
 		ShaderLocation invViewLocation;
 		ShaderLocation originLocation;
 

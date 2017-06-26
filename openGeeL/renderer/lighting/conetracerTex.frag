@@ -28,7 +28,7 @@ vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo);
 vec3 indirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness);
 
 vec4 traceIndirectDiffuse(vec3 position, vec3 direction, float spread);
-vec4 traceIndirectSpecular(vec3 position, vec3 direction, vec3 normal, float specularity);
+vec4 traceIndirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness);
 
 vec4 sampleTexture(vec3 position, vec3 direction, float levelGain);
 vec4 getFragmentColor(vec3 position, float lvl);
@@ -108,12 +108,12 @@ vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo) {
 
 vec3 indirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness) {
 	float specularity = (1.f - roughness);
-	vec4 radiance = traceIndirectSpecular(position, direction, normal, specularity);
+	vec4 radiance = traceIndirectSpecular(position, direction, normal, roughness);
 
 	return radiance.rgb * specularity;
 }
 
-vec4 traceIndirectSpecular(vec3 position, vec3 direction, vec3 normal, float specularity) {
+vec4 traceIndirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness) {
 	//Move position into direction of voxel border to avoid 
 	//sampling neighboring voxels when direction is steep
 	vec3 halfDir = getClosestAxisNormal(normal);
@@ -130,7 +130,7 @@ vec4 traceIndirectSpecular(vec3 position, vec3 direction, vec3 normal, float spe
 		float rest = 1.f - color.a;
 		color += getFragmentColor(pos, lvl) * rest;
 
-		lvl = specularity * log2(1 + dist * 0.33f);
+		lvl = roughness * log2(1 + dist * 0.33f);
 		dist += pow(2.f, lvl) * THREEHALFS;
 
 		counter++;

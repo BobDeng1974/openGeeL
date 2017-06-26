@@ -17,6 +17,7 @@ namespace geeL {
 
 		scene.lightManager.bindShadowMaps(shader);
 
+		projectionLocation = shader.getLocation("projection");
 		invViewLocation = shader.getLocation("inverseView");
 		originLocation = shader.getLocation("origin");
 	}
@@ -24,7 +25,7 @@ namespace geeL {
 	void DeferredLighting::bindValues() {
 		scene.lightManager.bind(*camera, shader, ShaderTransformSpace::View);
 
-		shader.setMat4("projection", camera->getProjectionMatrix());
+		shader.setMat4(projectionLocation, camera->getProjectionMatrix());
 		shader.setMat4(invViewLocation, camera->getInverseViewMatrix());
 		shader.setVector3(originLocation, camera->GetOriginInViewSpace());
 	}

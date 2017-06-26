@@ -10,7 +10,6 @@ namespace geeL {
 		: GaussianBlur(strength, "renderer/postprocessing/dofblur.frag"), threshold(threshold) {}
 
 	void DepthOfFieldBlur::bindValues() {
-		shader.setInteger("gPositionDepth", shader.mapOffset + 1);
 		shader.setFloat("threshold", threshold);
 
 		GaussianBlur::bindValues();

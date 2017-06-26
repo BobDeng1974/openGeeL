@@ -124,6 +124,18 @@ namespace {
 			MeshRenderer& sponz = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
 				meshTransform6, CullingMode::cullFront, "Sponza");
 			scene.addMeshRenderer(sponz);
+
+			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 32.f, 121.0f), vec3(0.f, 0.f, 0.f), vec3(3.f));
+			MeshRenderer& cube = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/cube.obj"),
+				meshTransform2, CullingMode::cullFront, "Cube");
+			//scene.addMeshRenderer(cube);
+
+			cube.iterateMaterials([&](MaterialContainer& container) {
+				container.setFloatValue("Roughness", 0.35f);
+				container.setFloatValue("Metallic", 0.f);
+				container.setVectorValue("Color", vec3(0.1f));
+			});
+
 		}
 
 		virtual void draw(const SceneCamera& camera) {}
@@ -153,7 +165,7 @@ void SponzaGIScene::draw() {
 	Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 
 	BilateralFilter blur = BilateralFilter(1, 0.7f);
-	DefaultPostProcess def = DefaultPostProcess(10.f);
+	DefaultPostProcess def = DefaultPostProcess(15.f);
 	RenderContext context = RenderContext();
 	DeferredLighting lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, materialFactory);
