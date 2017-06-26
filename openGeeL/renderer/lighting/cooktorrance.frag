@@ -64,6 +64,7 @@ uniform sampler2D gPositionDepth;
 uniform sampler2D gNormalMet;
 uniform sampler2D gDiffuseSpec;
 
+uniform mat4 projection;
 uniform mat4 inverseView;
 uniform vec3 origin;
 
@@ -418,7 +419,7 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	int smIndex = 0;
 	float xOffset = 0;
 	float yOffset = 0;
-	float clipDepth = texture(gPositionDepth, textureCoordinates).w;
+	float clipDepth = (projection * vec4(fragPosition, 1.f)).z;
 	for(int k = 0; k < DIRECTIONAL_SHADOWMAP_COUNT; k++) {
 		if(clipDepth < directionalLights[i].cascadeEndClip[k]) {
 			xOffset = mod(float(k), 2.f);

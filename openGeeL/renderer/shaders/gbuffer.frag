@@ -4,6 +4,12 @@ layout (location = 0) out vec4 gPositionDepth;
 layout (location = 1) out vec4 gNormalMet;
 layout (location = 2) out vec4 gDiffuseSpec;
 
+in vec3 normal;
+in vec3 fragPosition;
+in vec2 textureCoordinates;
+in mat3 TBN;
+
+
 struct Material {
 	sampler2D diffuse;
 	sampler2D specular;
@@ -16,20 +22,8 @@ struct Material {
 	vec4  color;
 };
 
-in vec3 normal;
-in vec3 fragPosition;
-in vec2 textureCoordinates;
-in mat3 TBN;
-in float clipDepth;
-
 uniform Material material;
 
-const float NEAR = 0.1;
-const float FAR = 100.0f;
-float LinearizeDepth(float depth) {
-    float z = depth * 2.0 - 1.0; // Back to NDC 
-    return (2.0f * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR));	
-}
 
 void main() {    
 
@@ -42,10 +36,9 @@ void main() {
 	vec4 diffuse = (diffFlag == 1) ? texture(material.diffuse, textureCoordinates) : material.color;
 
 	//Discard fragment if alpha value is very low
-	discard(diffuse.a < 0.1f);
+	//discard(diffuse.a < 0.1f);
 		
 	gPositionDepth.xyz = fragPosition;
-	gPositionDepth.a = clipDepth; 
     
 	vec3 norm = normalize(normal);
 	

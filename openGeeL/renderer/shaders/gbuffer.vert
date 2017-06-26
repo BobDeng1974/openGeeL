@@ -16,7 +16,6 @@ out vec3 normal;
 out vec3 fragPosition;
 out vec2 textureCoordinates;
 out mat3 TBN;
-out float clipDepth;
 
 uniform mat4 modelView;
 uniform mat3 transInvModelView;
@@ -34,5 +33,4 @@ void main() {
 	TBN = mat3(T, B, N);
 
     gl_Position = projection * localPosition;
-	clipDepth = gl_Position.z;
 } 
