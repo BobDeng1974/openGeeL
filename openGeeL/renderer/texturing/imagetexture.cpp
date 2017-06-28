@@ -80,8 +80,6 @@ namespace geeL {
 				return "specular";
 			case MapType::Normal:
 				return "normal";
-			case MapType::Reflection:
-				return "reflection";
 		}
 
 		return "";

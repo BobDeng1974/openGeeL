@@ -17,7 +17,6 @@ namespace geeL {
 		Diffuse,
 		Specular,
 		Normal,
-		Reflection,
 		Metallic
 	};
 

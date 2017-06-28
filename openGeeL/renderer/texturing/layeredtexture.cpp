@@ -24,9 +24,6 @@ namespace geeL {
 			case MapType::Metallic:
 				mapFlags += 1000;
 				break;
-			case MapType::Reflection:
-				mapFlags += 10000;
-				break;
 		}
 
 		textures.push_back(pair<string, TextureMap*>(name, &texture));
