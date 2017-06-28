@@ -13,11 +13,11 @@ namespace geeL {
 
 	MaterialFactory::MaterialFactory(const GBuffer& buffer) :
 		forwardShader(new SceneShader("renderer/shaders/lighting.vert", FragmentShader("renderer/shaders/lighting.frag"), 
-			ShaderTransformSpace::World, false)),
+			ShaderTransformSpace::World)),
 		deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", FragmentShader(buffer.getFragmentPath(), false), 
-			ShaderTransformSpace::View, false)),
-		deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", FragmentShader(buffer.getFragmentPath(), false),
-			ShaderTransformSpace::View, true)) {
+			ShaderTransformSpace::View)),
+		deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", FragmentShader(buffer.getFragmentPath()),
+			ShaderTransformSpace::View)) {
 	
 		shaders.push_back(forwardShader);
 	}
