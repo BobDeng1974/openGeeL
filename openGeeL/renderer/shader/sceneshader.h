@@ -34,11 +34,11 @@ namespace geeL {
 
 		SceneShader();
 
-		SceneShader(const std::string& vertexPath, const FragmentShader& fragmentPath, ShaderTransformSpace space, bool animated = false,
+		SceneShader(const std::string& vertexPath, const FragmentShader& fragmentPath, ShaderTransformSpace space,
 			std::string cameraName = "camera", std::string skyboxName = "skybox");
 
 		SceneShader(const std::string& vertexPath, const std::string& geometryPath, const FragmentShader& fragmentPath, 
-			ShaderTransformSpace space, bool animated = false, std::string cameraName = "camera", std::string skyboxName = "skybox");
+			ShaderTransformSpace space, std::string cameraName = "camera", std::string skyboxName = "skybox");
 
 		void changeShader(const FragmentShader& shader);
 

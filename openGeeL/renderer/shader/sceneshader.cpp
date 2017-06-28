@@ -9,7 +9,7 @@ namespace geeL {
 		skyboxName("skybox"), view(nullptr), model(nullptr) {}
 
 	SceneShader::SceneShader(const std::string& vertexPath, const FragmentShader& fragmentPath, 
-		ShaderTransformSpace space, bool animated, string cameraName, string skyboxName)
+		ShaderTransformSpace space, string cameraName, string skyboxName)
 			: RenderShader(vertexPath.c_str(), fragmentPath.path.c_str()), shader(fragmentPath), space(space), 
 				cameraName(cameraName), skyboxName(skyboxName), view(nullptr), model(nullptr) {
 
@@ -20,7 +20,7 @@ namespace geeL {
 	}
 
 	SceneShader::SceneShader(const std::string& vertexPath, const std::string& geometryPath, const FragmentShader& fragmentPath, 
-		ShaderTransformSpace space, bool animated, string cameraName, string skyboxName)
+		ShaderTransformSpace space, string cameraName, string skyboxName)
 			: RenderShader(vertexPath.c_str(), geometryPath.c_str(), fragmentPath.path.c_str()), shader(fragmentPath), space(space), cameraName(cameraName), 
 				skyboxName(skyboxName), view(nullptr), model(nullptr) {
 

@@ -48,6 +48,7 @@ namespace geeL {
 		//Creates and returns a new shader program with given file paths
 		//for vertex and fragment shaders
 		SceneShader& CreateShader(DefaultShading shading, std::string fragmentPath);
+		SceneShader& CreateShader(std::string fragmentPath, bool animated = false);
 
 		std::list<MaterialContainer*>::iterator materialsBegin();
 		std::list<MaterialContainer*>::iterator materialsEnd();

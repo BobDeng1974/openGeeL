@@ -89,24 +89,21 @@ namespace geeL {
 	}
 
 	SceneShader& MaterialFactory::CreateShader(DefaultShading shading, string fragmentPath) {
-		bool animated = false;
 		std::string vertexPath;
 
 		switch (shading) {
-		case DefaultShading::DeferredStatic:
-			vertexPath = "renderer/shaders/gbuffer.vert";
-			break;
-		case DefaultShading::DeferredSkinned:
-			vertexPath = "renderer/shaders/gbufferanim.vert";
-			animated = true;
-			break;
-		case DefaultShading::ForwardStatic:
-			vertexPath = "renderer/shaders/lighting.vert";
-			break;
-		case DefaultShading::ForwardSkinned:
-			vertexPath = "renderer/shaders/lighting.vert"; //TODO: create actual shader
-			animated = true;
-			break;
+			case DefaultShading::DeferredStatic:
+				vertexPath = "renderer/shaders/gbuffer.vert";
+				break;
+			case DefaultShading::DeferredSkinned:
+				vertexPath = "renderer/shaders/gbufferanim.vert";
+				break;
+			case DefaultShading::ForwardStatic:
+				vertexPath = "renderer/shaders/lighting.vert";
+				break;
+			case DefaultShading::ForwardSkinned:
+				vertexPath = "renderer/shaders/lighting.vert"; //TODO: create actual shader
+				break;
 		}
 
 		FragmentShader frag = FragmentShader(fragmentPath);
@@ -114,7 +111,17 @@ namespace geeL {
 		ShaderTransformSpace space = (shading == DefaultShading::DeferredSkinned) || (shading == DefaultShading::DeferredStatic) ?
 			ShaderTransformSpace::View : ShaderTransformSpace::World;
 
-		shaders.push_back(new SceneShader(vertexPath, frag, space, animated));
+		shaders.push_back(new SceneShader(vertexPath, frag, space));
+		return *shaders.back();
+	}
+
+	SceneShader& MaterialFactory::CreateShader(std::string fragmentPath, bool animated) {
+		std::string vertexPath = animated ? "renderer/shaders/lighting.vert"
+			: "renderer/shaders/lighting.vert"; //TODO: create actual shader
+
+		FragmentShader frag = FragmentShader(fragmentPath);
+
+		shaders.push_back(new SceneShader(vertexPath, frag, ShaderTransformSpace::World));
 		return *shaders.back();
 	}
 	
