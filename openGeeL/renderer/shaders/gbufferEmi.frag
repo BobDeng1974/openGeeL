@@ -3,6 +3,7 @@
 layout (location = 0) out vec4 gPositionRough;
 layout (location = 1) out vec4 gNormalMet;
 layout (location = 2) out vec4 gDiffuse;
+layout (location = 3) out vec3 gEmissivity;
 
 in vec3 normal;
 in vec3 fragPosition;
@@ -19,7 +20,9 @@ struct Material {
 	int mapFlags;
 	float roughness;
 	float metallic;
+
 	vec4  color;
+	vec3 emissivity;
 };
 
 uniform Material material;
@@ -54,4 +57,6 @@ void main() {
 	gPositionRough.xyz = fragPosition;
 	gPositionRough.a = speColor.r;
 	gDiffuse = diffuse;
+
+	gEmissivity.rgb = material.emissivity;
 } 

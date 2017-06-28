@@ -33,6 +33,7 @@ namespace geeL {
 		const RenderTexture& getDiffuse() const;
 		const RenderTexture& getPositionRoughness() const;
 		const RenderTexture& getNormalMetallic() const;
+		const RenderTexture& getEmissivity() const;
 
 		std::string getFragmentPath() const;
 		virtual std::string toString() const;
@@ -41,8 +42,11 @@ namespace geeL {
 		RenderTexture diffuse;
 		RenderTexture positionRough;
 		RenderTexture normalMet;
+		RenderTexture emissivity;
 		GBufferContent content;
 		float depthPos;
+
+		void initTextures(int width, int height);
 
 	};
 }

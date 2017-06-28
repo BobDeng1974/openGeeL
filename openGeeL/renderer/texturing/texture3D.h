@@ -9,6 +9,7 @@ namespace geeL {
 	class Texture3D : public Texture {
 
 	public:
+		Texture3D() : id(0) {}
 		Texture3D(unsigned int width, unsigned int height, unsigned int depth, unsigned int levels);
 
 		virtual unsigned int getID() const;

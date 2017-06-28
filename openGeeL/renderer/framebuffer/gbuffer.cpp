@@ -10,15 +10,15 @@ namespace geeL {
 
 	GBuffer::GBuffer(GBufferContent content) : content(content) {}
 
-
 	GBuffer::GBuffer(const GBuffer& buffer) : FrameBuffer(buffer), screenInfo(buffer.screenInfo), 
 		diffuse(buffer.diffuse), positionRough(buffer.positionRough), 
-		normalMet(buffer.normalMet), depthPos(buffer.depthPos) {}
+		normalMet(buffer.normalMet), emissivity(buffer.emissivity), depthPos(buffer.depthPos) {}
 
 	GBuffer::~GBuffer() {
 		positionRough.remove();
 		normalMet.remove();
 		diffuse.remove();
+		emissivity.remove();
 	}
 
 
@@ -30,15 +30,7 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 
 		//Create attachements for all color buffers
-		positionRough = RenderTexture(width, height, ColorType::RGBA16);
-		normalMet = RenderTexture(width, height, ColorType::RGBA16);
-		diffuse = RenderTexture(width, height, ColorType::RGBA);
-
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, positionRough.getID(), 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, normalMet.getID(), 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, diffuse.getID(), 0);
-		unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
-		glDrawBuffers(3, attachments);
+		initTextures(width, height);
 
 		// Create a renderbuffer object for depth and stencil attachment
 		unsigned int rbo;
@@ -101,22 +93,52 @@ namespace geeL {
 		return normalMet;
 	}
 
+	const RenderTexture& GBuffer::getEmissivity() const {
+		return emissivity;
+	}
+
 	std::string GBuffer::getFragmentPath() const {
 		switch (content) {
 			case GBufferContent::DefaultEmissive:
-				return "renderer/shaders/gbuffer2.frag";
+				return "renderer/shaders/gbufferEmi.frag";
 			default:
 				return "renderer/shaders/gbuffer.frag";
 		}
 	}
 
 	std::string GBuffer::toString() const {
-		std::string s = "GBuffer " + std::to_string(info.fbo) + "\n"
+		return "GBuffer " + std::to_string(info.fbo) + "\n"
 			+ "--Diffuse " + std::to_string(diffuse.getID()) + "\n"
 			+ "--PositionRoughness " + std::to_string(positionRough.getID()) + "\n"
 			+ "--NormalMetallic " + std::to_string(normalMet.getID()) + "\n";
+	}
 
-		return s;
+	void GBuffer::initTextures(int width, int height) {
+		positionRough = RenderTexture(width, height, ColorType::RGBA16);
+		normalMet = RenderTexture(width, height, ColorType::RGBA16);
+		diffuse = RenderTexture(width, height, ColorType::RGBA);
+		
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, positionRough.getID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, normalMet.getID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, diffuse.getID(), 0);
+		
+		switch (content) {
+			case GBufferContent::DefaultEmissive: {
+				emissivity = RenderTexture(width, height, ColorType::RGB);
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, emissivity.getID(), 0);
+
+				unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
+				glDrawBuffers(4, attachments);
+				break;
+			}
+			default: {
+				emissivity = RenderTexture();
+
+				unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+				glDrawBuffers(3, attachments);
+				break;
+			}
+		}
 	}
 
 }

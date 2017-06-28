@@ -63,6 +63,9 @@ uniform int slCount;
 uniform sampler2D gPositionRoughness;
 uniform sampler2D gNormalMet;
 uniform sampler2D gDiffuse;
+uniform sampler2D gEmissivity;
+
+uniform bool useEmissivity;
 
 uniform mat4 projection;
 uniform mat4 inverseView;
@@ -108,16 +111,17 @@ void main() {
 
 	vec4 normMet  = texture(gNormalMet, textureCoordinates);
 
-    vec3 normal		  = normMet.rgb;
-    vec3 albedo		  = texture(gDiffuse, textureCoordinates).rgb;
+    vec3 normal		= normMet.rgb;
+    vec3 albedo		= texture(gDiffuse, textureCoordinates).rgb;
+	vec3 emissivity = useEmissivity ? texture(gEmissivity, textureCoordinates).rgb : vec3(0.f);
 
-	float roughness	  = posRough.a;
-	float metallic    = normMet.a;
+	float roughness	= posRough.a;
+	float metallic  = normMet.a;
 
 	vec3  viewDirection = normalize(-fragPosition);
 
 
-	vec3 irradiance = vec3(0.f, 0.f, 0.f);
+	vec3 irradiance = albedo * emissivity;
 	for(int i = 0; i < plCount; i++) {
 		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
 		//irradiance += calculateVolumetricLightColor(fragPosition, pointLights[i].position, pointLights[i].diffuse, 0.001f);
@@ -130,7 +134,6 @@ void main() {
 
 	for(int i = 0; i < slCount; i++)
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
-
 
 	color = vec4(irradiance, 1.f);
 }

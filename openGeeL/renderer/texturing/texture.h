@@ -45,6 +45,7 @@ class RenderShader;
 
 	public:
 		virtual unsigned int getID() const = 0;
+		virtual bool isEmpty() const;
 
 		//Remove texture from GPU memory
 		virtual void remove() = 0;
@@ -74,6 +75,11 @@ class RenderShader;
 		static void initAnisotropyFilter(AnisotropicFilter filter);
 
 	};
+
+
+	inline bool Texture::isEmpty() const {
+		return getID() == 0;
+	}
 
 }
 

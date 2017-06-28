@@ -6,6 +6,7 @@
 #include <gtc/type_ptr.hpp>
 #include <iostream>
 #include <vector>
+#include "../renderer/framebuffer/gbuffer.h"
 #include "../renderer/shader/rendershader.h"
 #include "../renderer/renderer/splitrenderer.h"
 #include "../renderer/renderer/rendercontext.h"
@@ -121,17 +122,16 @@ namespace {
 			lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
 
 
-			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 154.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
+			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 121.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
 			MeshRenderer& buddha = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/classics/buddha.obj"),
 				meshTransform2, CullingMode::cullFront, "Buddha");
 			scene.addMeshRenderer(buddha);
 
 			buddha.iterateMaterials([&](MaterialContainer& container) {
-				//container.setFloatValue("Transparency", 0.01f);
+				container.setFloatValue("Transparency", 0.01f);
 				container.setFloatValue("Roughness", 0.15f);
 				container.setFloatValue("Metallic", 0.4f);
 				container.setVectorValue("Color", vec3(0.1f));
-				container.setVectorValue("Emissivity", vec3(0.5f, 0.1f, 0.3f) * 5.f);
 			});
 
 
@@ -139,6 +139,11 @@ namespace {
 			MeshRenderer& sponz = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
 				meshTransform6, CullingMode::cullFront, "Sponza");
 			scene.addMeshRenderer(sponz);
+
+			sponz.iterateMaterials([&](MaterialContainer& container) {
+				if(container.name == "fabric_g")
+					container.setVectorValue("Emissivity", vec3(0.5f, 0.1f, 0.3f) * 0.05f);
+			});
 		}
 
 		virtual void draw(const SceneCamera& camera) {}
@@ -158,7 +163,7 @@ void SponzaGIScene::draw() {
 	geeL::Transform& cameraTransform = Transform(vec3(41.f, 40.2f, 115.0f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 15.f, 0.45f, 60.f, window.width, window.height, 0.1f, 500.f);
 
-	GBuffer gBuffer = GBuffer();
+	GBuffer& gBuffer = GBuffer(GBufferContent::DefaultEmissive);
 	gBuffer.init(window.width, window.height);
 	MaterialFactory materialFactory = MaterialFactory(gBuffer);
 	MeshFactory meshFactory = MeshFactory(materialFactory);

@@ -5,7 +5,6 @@
 #include <vector>
 #include "../primitives/screenquad.h"
 #include "../framebuffer/framebuffer.h"
-#include "../framebuffer/gbuffer.h"
 #include "../utility/worldinformation.h"
 #include "../utility/rendertime.h"
 #include "../renderer.h"
@@ -13,6 +12,7 @@
 namespace geeL {
 
 	class Camera;
+	class GBuffer;
 	class SceneRender;
 	class SceneCamera;
 	class DefaultPostProcess;
@@ -56,7 +56,7 @@ namespace geeL {
 		std::vector<PostProcessingEffect*> effects;
 		std::list<WorldMapRequester*> requester;
 		ScreenQuad screen;
-		GBuffer gBuffer;
+		GBuffer& gBuffer;
 		ColorBuffer frameBuffer1;
 		ColorBuffer frameBuffer2;
 		RenderTime renderTime;

@@ -6,6 +6,7 @@
 #include <gtc/type_ptr.hpp>
 #include <iostream>
 #include <vector>
+#include "../renderer/framebuffer/gbuffer.h"
 #include "../renderer/shader/rendershader.h"
 #include "../renderer/renderer/splitrenderer.h"
 #include "../renderer/renderer/rendercontext.h"

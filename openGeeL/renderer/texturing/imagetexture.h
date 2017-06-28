@@ -27,7 +27,7 @@ namespace geeL {
 	public:
 		std::string path;
 
-		ImageTexture() {}
+		ImageTexture() : id(0) {}
 		ImageTexture(const ImageTexture& texture);
 		ImageTexture(const char* fileName, ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::None, 

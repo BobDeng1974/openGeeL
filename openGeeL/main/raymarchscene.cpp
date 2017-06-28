@@ -1,6 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <glfw3.h>
+#include "../renderer/framebuffer/gbuffer.h"
 #include "../renderer/inputmanager.h"
 #include "../renderer/window.h"
 #include "../renderer/renderer/deferredrenderer.h"

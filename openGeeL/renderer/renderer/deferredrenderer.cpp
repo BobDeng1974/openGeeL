@@ -9,6 +9,7 @@
 #include "../postprocessing/drawdefault.h"
 #include "../texturing/imagetexture.h"
 #include "../window.h"
+#include "../framebuffer/gbuffer.h"
 #include "../scripting/scenecontrolobject.h"
 #include "../inputmanager.h"
 #include "../postprocessing/ssao.h"
@@ -54,8 +55,6 @@ namespace geeL {
 
 		inputManager->addCallback(func);
 		inputManager->init(window);
-
-		//gBuffer.init(window->width, window->height);
 
 		if (ssao != nullptr) {
 			ssaoBuffer = new ColorBuffer();
@@ -301,6 +300,9 @@ namespace geeL {
 		worldMaps[WorldMaps::PositionRoughness] = &gBuffer.getPositionRoughness();
 		worldMaps[WorldMaps::NormalMetallic] = &gBuffer.getNormalMetallic();
 
+		const RenderTexture* emissivity = &gBuffer.getEmissivity();
+		if (!emissivity->isEmpty())
+			worldMaps[WorldMaps::Emissivity] = emissivity;
 
 		if(ssao != nullptr)
 			worldMaps[WorldMaps::SSAO] = &ssaoBuffer->getTexture();
@@ -351,7 +353,7 @@ namespace geeL {
 					currBuffer = gBuffer.getDiffuse().getID();
 					break;
 				case 2:
-					currBuffer = gBuffer.getNormalMetallic().getID();
+					currBuffer = gBuffer.getEmissivity().getID();
 					break;
 				case 3:
 					if(ssao != nullptr)
