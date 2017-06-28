@@ -40,8 +40,12 @@ namespace geeL {
 		return metallic;
 	}
 
-	glm::vec3 DefaultMaterialContainer::getColor() const {
+	const glm::vec3& DefaultMaterialContainer::getColor() const {
 		return color;
+	}
+
+	const glm::vec3 & DefaultMaterialContainer::getEmissivity() const {
+		return emissivity;
 	}
 
 	void DefaultMaterialContainer::setTransparency(float value) {
@@ -61,6 +65,10 @@ namespace geeL {
 
 	void DefaultMaterialContainer::setColor(const glm::vec3& value) {
 		color = value;
+	}
+
+	void DefaultMaterialContainer::setEmissivity(const glm::vec3& value) {
+		emissivity = value;
 	}
 
 	float DefaultMaterialContainer::getFloatValue(std::string name) const {
@@ -83,6 +91,8 @@ namespace geeL {
 	glm::vec3 DefaultMaterialContainer::getVectorValue(std::string name) const {
 		if (name == "Color")
 			return color;
+		else if (name == "Emissivity")
+			return emissivity;
 
 		cout << "Value '" + name + "' not present in material\n";
 		return glm::vec3();
@@ -106,6 +116,8 @@ namespace geeL {
 	void  DefaultMaterialContainer::setVectorValue(std::string name, const glm::vec3& value) {
 		if (name == "Color")
 			setColor(value);
+		else if (name == "Emissivity")
+			setEmissivity(value);
 		else 
 			cout << "Value '" + name + "' not present in material\n";
 	}
@@ -124,5 +136,6 @@ namespace geeL {
 		shader.setFloat("material.roughness", roughness);
 		shader.setFloat("material.metallic", metallic);
 		shader.setVector4("material.color", glm::vec4(color, transparency));
+		shader.setVector3("material.emissivity", emissivity);
 	}
 }

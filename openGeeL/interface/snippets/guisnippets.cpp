@@ -142,6 +142,15 @@ namespace geeL {
 
 		drawColor(context, color);
 		material->setColor(glm::vec3(color.r / 255.f, color.g / 255.f, color.b / 255.f));
+
+		/*
+		nk_layout_row_dynamic(context, 20, 1);
+		glm::vec3 emissivity = material->getEmissivity();
+		emissivity = glm::vec3(emissivity.r * 255.f, emissivity.g * 255.f, emissivity.b * 255.f);
+
+		drawColor(context, emissivity);
+		material->setEmissivity(glm::vec3(emissivity.r / 255.f, emissivity.g / 255.f, emissivity.b / 255.f));
+		*/
 	}
 
 }

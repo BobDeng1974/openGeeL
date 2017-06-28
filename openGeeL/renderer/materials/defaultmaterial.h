@@ -15,10 +15,7 @@ namespace geeL {
 	//Material class with default shading
 	class DefaultMaterialContainer : public MaterialContainer {
 
-
 	public:
-		glm::vec3 color;
-
 		DefaultMaterialContainer();
 
 		void addTexture(std::string name, TextureMap& texture);
@@ -27,12 +24,14 @@ namespace geeL {
 		float getTransparency() const;
 		float getRoughness() const;
 		float getMetallic() const;
-		glm::vec3 getColor() const;
+		const glm::vec3& getColor() const;
+		const glm::vec3& getEmissivity() const;
 
 		void setTransparency(float value);
 		void setRoughness(float value);
 		void setMetallic(float value);
 		void setColor(const glm::vec3& value);
+		void setEmissivity(const glm::vec3& value);
 
 		virtual void bindTextures(SceneShader& shader) const;
 		virtual void bind(SceneShader& shader) const;
@@ -46,6 +45,7 @@ namespace geeL {
 		virtual void setVectorValue(std::string name, const glm::vec3& value);
 
 	private:
+		glm::vec3 color, emissivity;
 		float transparency;
 		float roughness;
 		float metallic;

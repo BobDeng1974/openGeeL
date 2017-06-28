@@ -40,7 +40,9 @@ struct Material {
 	int mapFlags;
 	float roughness;
 	float metallic;
-	vec4  color;
+
+	vec4 color;
+	vec3 emissivity;
 };
 
 struct PointLight {
@@ -144,6 +146,7 @@ vec3 getIrradiance() {
 	for(int i = 0; i < slCount; i++)
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
 
+	irradiance += albedo * material.emissivity;
 	irradiance = 1.f - exp(-irradiance * 1.f); // Tone mapping
 	irradiance = pow(irradiance, vec3(0.4545f)); //Gamma 
 

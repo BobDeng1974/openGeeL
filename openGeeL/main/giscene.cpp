@@ -121,16 +121,17 @@ namespace {
 			lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
 
 
-			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 121.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
+			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 154.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
 			MeshRenderer& buddha = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/classics/buddha.obj"),
 				meshTransform2, CullingMode::cullFront, "Buddha");
 			scene.addMeshRenderer(buddha);
 
 			buddha.iterateMaterials([&](MaterialContainer& container) {
-				container.setFloatValue("Transparency", 0.01f);
+				//container.setFloatValue("Transparency", 0.01f);
 				container.setFloatValue("Roughness", 0.15f);
 				container.setFloatValue("Metallic", 0.4f);
 				container.setVectorValue("Color", vec3(0.1f));
+				container.setVectorValue("Emissivity", vec3(0.5f, 0.1f, 0.3f) * 5.f);
 			});
 
 
