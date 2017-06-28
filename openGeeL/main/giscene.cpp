@@ -158,7 +158,9 @@ void SponzaGIScene::draw() {
 	geeL::Transform& cameraTransform = Transform(vec3(41.f, 40.2f, 115.0f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 15.f, 0.45f, 60.f, window.width, window.height, 0.1f, 500.f);
 
-	MaterialFactory materialFactory = MaterialFactory();
+	GBuffer gBuffer = GBuffer();
+	gBuffer.init(window.width, window.height);
+	MaterialFactory materialFactory = MaterialFactory(gBuffer);
 	MeshFactory meshFactory = MeshFactory(materialFactory);
 	LightManager lightManager = LightManager();
 	RenderPipeline shaderManager = RenderPipeline(materialFactory);
@@ -169,7 +171,7 @@ void SponzaGIScene::draw() {
 	DefaultPostProcess def = DefaultPostProcess(15.f);
 	RenderContext context = RenderContext();
 	DeferredLighting lighting = DeferredLighting(scene);
-	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, materialFactory);
+	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer, materialFactory);
 	renderer.init();
 
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =

@@ -155,7 +155,9 @@ void DeerScene::draw() {
 	geeL::Transform& cameraTransform = Transform(vec3(-0.03f, 0.17f, 2.66f), vec3(-91.59f, 2.78f, -3.f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 1.f, 0.45f, 25.f, window.width, window.height, 0.01f, 100.f);
 
-	MaterialFactory materialFactory = MaterialFactory();
+	GBuffer gBuffer = GBuffer();
+	gBuffer.init(window.width, window.height);
+	MaterialFactory materialFactory = MaterialFactory(gBuffer);
 	MeshFactory meshFactory = MeshFactory(materialFactory);
 	LightManager lightManager = LightManager();
 	RenderPipeline shaderManager = RenderPipeline(materialFactory);
@@ -167,7 +169,7 @@ void DeerScene::draw() {
 	SSAO ssao = SSAO(blur, 0.5f);
 	RenderContext context = RenderContext();
 	DeferredLighting lighting = DeferredLighting(scene);
-	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, materialFactory);
+	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer, materialFactory);
 	renderer.addSSAO(ssao, 0.5f);
 	renderer.init();
 

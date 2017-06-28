@@ -27,9 +27,9 @@ using namespace std;
 namespace geeL {
 
 	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, SceneRender& lighting,
-		RenderContext& context, DefaultPostProcess& def, const MaterialFactory& factory)
+		RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer, const MaterialFactory& factory)
 			: Renderer(window, inputManager, context), frameBuffer1(ColorBuffer()), frameBuffer2(ColorBuffer()),
-				gBuffer(GBuffer()), screen(ScreenQuad()), ssao(nullptr), lighting(lighting),
+				gBuffer(gBuffer), screen(ScreenQuad()), ssao(nullptr), lighting(lighting),
 				toggle(0), factory(factory) {
 
 		effects.push_back(&def);
@@ -55,7 +55,7 @@ namespace geeL {
 		inputManager->addCallback(func);
 		inputManager->init(window);
 
-		gBuffer.init(window->width, window->height);
+		//gBuffer.init(window->width, window->height);
 
 		if (ssao != nullptr) {
 			ssaoBuffer = new ColorBuffer();

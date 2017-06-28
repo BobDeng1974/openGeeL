@@ -160,7 +160,9 @@ void BedroomScene::draw() {
 	geeL::Transform& cameraTransform = Transform(vec3(5.4f, 10.0f, -2.9f), vec3(70.f, 50.f, -175.f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
 
-	MaterialFactory materialFactory = MaterialFactory();
+	GBuffer gBuffer = GBuffer();
+	gBuffer.init(window.width, window.height);
+	MaterialFactory materialFactory = MaterialFactory(gBuffer);
 	MeshFactory meshFactory = MeshFactory(materialFactory);
 	LightManager lightManager = LightManager();
 	RenderPipeline shaderManager = RenderPipeline(materialFactory);
@@ -174,7 +176,7 @@ void BedroomScene::draw() {
 	SSAO ssao = SSAO(blur, 10.f);
 	RenderContext context = RenderContext();
 	DeferredLighting lighting = DeferredLighting(scene);
-	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, materialFactory);
+	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer, materialFactory);
 	renderer.addSSAO(ssao, 0.5f);
 	renderer.init();
 

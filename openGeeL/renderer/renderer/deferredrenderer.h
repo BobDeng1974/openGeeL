@@ -25,7 +25,7 @@ namespace geeL {
 
 	public:
 		DeferredRenderer(RenderWindow& window, InputManager& inputManager, SceneRender& lighting,
-			RenderContext& context, DefaultPostProcess& def, const MaterialFactory& factory);
+			RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer, const MaterialFactory& factory);
 
 		~DeferredRenderer();
 

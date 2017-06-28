@@ -7,13 +7,19 @@
 
 namespace geeL {
 
+	enum class GBufferContent {
+		Default,
+		DefaultEmissive
+	};
+
+
 	//Special framebuffer that holds various scene render information like colors, normals and positions
 	class GBuffer : public FrameBuffer {
 
 	public:
 		ScreenInfo screenInfo;
 
-		GBuffer();
+		GBuffer(GBufferContent content = GBufferContent::Default);
 		GBuffer(const GBuffer& buffer);
 		~GBuffer();
 
@@ -28,12 +34,14 @@ namespace geeL {
 		const RenderTexture& getPositionRoughness() const;
 		const RenderTexture& getNormalMetallic() const;
 
+		std::string getFragmentPath() const;
 		virtual std::string toString() const;
 
 	private:
 		RenderTexture diffuse;
 		RenderTexture positionRough;
 		RenderTexture normalMet;
+		GBufferContent content;
 		float depthPos;
 
 	};

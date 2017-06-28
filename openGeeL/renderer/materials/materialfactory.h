@@ -10,6 +10,7 @@
 
 namespace geeL {
 
+	class GBuffer;
 	class Material;
 	class MaterialContainer;
 	class DefaultMaterialContainer;
@@ -19,7 +20,7 @@ namespace geeL {
 	class MaterialFactory {
 
 	public:
-		MaterialFactory();
+		MaterialFactory(const GBuffer& buffer);
 		~MaterialFactory();
 
 		//Creates and returns a new texture from given file path or 

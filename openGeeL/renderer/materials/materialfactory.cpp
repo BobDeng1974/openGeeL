@@ -1,6 +1,7 @@
 #include "../shader/sceneshader.h"
 #include "../texturing/imagetexture.h"
 #include "../texturing/envmap.h"
+#include "../framebuffer/gbuffer.h"
 #include "genericmaterial.h"
 #include "defaultmaterial.h"
 #include "material.h"
@@ -10,12 +11,12 @@ using namespace std;
 
 namespace geeL {
 
-	MaterialFactory::MaterialFactory() : 
+	MaterialFactory::MaterialFactory(const GBuffer& buffer) :
 		forwardShader(new SceneShader("renderer/shaders/lighting.vert", FragmentShader("renderer/shaders/lighting.frag"), 
 			ShaderTransformSpace::World, false)),
-		deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", FragmentShader("renderer/shaders/gbuffer.frag", false), 
+		deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", FragmentShader(buffer.getFragmentPath(), false), 
 			ShaderTransformSpace::View, false)),
-		deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", FragmentShader("renderer/shaders/gbuffer.frag", false), 
+		deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", FragmentShader(buffer.getFragmentPath(), false),
 			ShaderTransformSpace::View, true)) {
 	
 		shaders.push_back(forwardShader);

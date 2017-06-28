@@ -8,7 +8,8 @@
 
 namespace geeL {
 
-	GBuffer::GBuffer() {}
+	GBuffer::GBuffer(GBufferContent content) : content(content) {}
+
 
 	GBuffer::GBuffer(const GBuffer& buffer) : FrameBuffer(buffer), screenInfo(buffer.screenInfo), 
 		diffuse(buffer.diffuse), positionRough(buffer.positionRough), 
@@ -98,6 +99,15 @@ namespace geeL {
 
 	const RenderTexture& GBuffer::getNormalMetallic() const {
 		return normalMet;
+	}
+
+	std::string GBuffer::getFragmentPath() const {
+		switch (content) {
+			case GBufferContent::DefaultEmissive:
+				return "renderer/shaders/gbuffer2.frag";
+			default:
+				return "renderer/shaders/gbuffer.frag";
+		}
 	}
 
 	std::string GBuffer::toString() const {

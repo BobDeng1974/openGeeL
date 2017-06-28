@@ -162,7 +162,9 @@ void ScieneScene::draw() {
 	geeL::Transform& cameraTransform = Transform(vec3(0.0f, 2.0f, 9.0f), vec3(-90.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
 
-	MaterialFactory materialFactory = MaterialFactory();
+	GBuffer gBuffer = GBuffer();
+	gBuffer.init(window.width, window.height);
+	MaterialFactory materialFactory = MaterialFactory(gBuffer);
 	MeshFactory meshFactory = MeshFactory(materialFactory);
 	LightManager lightManager = LightManager();
 	RenderPipeline shaderManager = RenderPipeline(materialFactory);
@@ -176,7 +178,7 @@ void ScieneScene::draw() {
 	SSAO ssao = SSAO(blur, 3.f);
 	RenderContext context = RenderContext();
 	DeferredLighting lighting = DeferredLighting(scene);
-	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, materialFactory);
+	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer, materialFactory);
 	renderer.addSSAO(ssao, 0.5f);
 	renderer.init();
 

@@ -170,7 +170,9 @@ void SponzaScene::draw() {
 	geeL::Transform& cameraTransform = Transform(vec3(-7.36f, 4.76f, -1.75f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
 
-	MaterialFactory materialFactory = MaterialFactory();
+	GBuffer gBuffer = GBuffer();
+	gBuffer.init(window.width, window.height);
+	MaterialFactory materialFactory = MaterialFactory(gBuffer);
 	MeshFactory meshFactory = MeshFactory(materialFactory);
 	LightManager lightManager = LightManager();
 	RenderPipeline shaderManager = RenderPipeline(materialFactory);
@@ -182,7 +184,7 @@ void SponzaScene::draw() {
 	SSAO ssao = SSAO(blur, 2.5f);
 	RenderContext context = RenderContext();
 	DeferredLighting lighting = DeferredLighting(scene);
-	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, materialFactory);
+	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer, materialFactory);
 	renderer.addSSAO(ssao, 0.5f);
 	renderer.init();
 
