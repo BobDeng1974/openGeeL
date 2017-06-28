@@ -127,10 +127,10 @@ namespace {
 			scene.addMeshRenderer(buddha);
 
 			buddha.iterateMaterials([&](MaterialContainer& container) {
-				container.setFloatValue("Transparency", 0.1f);
+				container.setFloatValue("Transparency", 0.01f);
 				container.setFloatValue("Roughness", 0.15f);
 				container.setFloatValue("Metallic", 0.4f);
-				container.setVectorValue("Color", vec3(0.4f));
+				container.setVectorValue("Color", vec3(0.1f));
 			});
 
 
@@ -142,16 +142,14 @@ namespace {
 
 		virtual void draw(const SceneCamera& camera) {}
 		virtual void quit() {}
+
 	};
 }
 
 
 void SponzaGIScene::draw() {
-
 	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
 	InputManager manager = InputManager();
-	manager.defineButton("Forward", GLFW_KEY_W);
-	manager.defineButton("Forward", GLFW_KEY_A);
 
 	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	TransformFactory transFactory = TransformFactory(world);
@@ -177,9 +175,6 @@ void SponzaGIScene::draw() {
 		[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
 
 	CubeBuffer cubeBuffer = CubeBuffer();
-	BRDFIntegrationMap brdfInt = BRDFIntegrationMap();
-	CubeMapFactory cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
-
 	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv4/MonValley_G_DirtRoad_3k.hdr");
 	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 256);
 	Skybox skybox = Skybox(envCubeMap);
@@ -216,7 +211,7 @@ void SponzaGIScene::draw() {
 	postLister.add(tracer);
 
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.5f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 35.f, 500.f, 0.8f);
+	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 35.f, camera.getFarPlane(), 0.8f);
 	//renderer.addEffect(dof, dof);
 	//postLister.add(dof);
 

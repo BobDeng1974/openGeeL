@@ -18,6 +18,8 @@ uniform int dimensions;
 uniform float farClip;
 uniform int maxStepSpecular;
 uniform int maxStepDiffuse;
+uniform float specularLOD;
+uniform float diffuseLOD;
 
 uniform sampler3D voxelTexture;
 uniform sampler2D image;
@@ -139,13 +141,15 @@ vec4 traceIndirectSpecular(vec3 position, vec3 direction, vec3 normal, float rou
 	float lvl = 0.f;
 	int counter = 0;
 	vec4 color = vec4(0.f);
-	while((color.a < 1.f) && counter < maxStepSpecular) {
+
+	int dynamicStep = int((1.f - roughness * roughness) * float(maxStepSpecular));
+	while((color.a < 1.f) && counter < dynamicStep) {
 		pos = startPos + dist * direction;
 		float rest = 1.f - color.a;
 		color += getFragmentColor(pos, lvl) * rest;
 
 		lvl = roughness * log2(1 + dist * 0.33f);
-		dist += pow(2.f, lvl) * THREEHALFS;
+		dist += pow(2.f, lvl) * THREEHALFS * specularLOD;
 
 		counter++;
 	}
@@ -169,7 +173,7 @@ vec4 traceIndirectDiffuse(vec3 position, vec3 direction, float spread) {
 		color += getFragmentColor(pos, 0.8f + lvl) * rest;
 
 		lvl = log2(1.f + dist * spread);
-		dist += pow(2.f, lvl) * THREEHALFS;
+		dist += pow(2.f, lvl) * THREEHALFS * diffuseLOD;
 
 		counter++;
 	}

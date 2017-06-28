@@ -20,17 +20,22 @@ namespace geeL {
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
-		int getSpecularSampleSize() const;
-		int getDiffuseSampleSize() const;
+		unsigned int getSpecularSampleSize() const;
+		unsigned int getDiffuseSampleSize() const;
+		unsigned int getSpecularLOD() const;
+		unsigned int getDiffuseLOD() const;
 
 		void setSpecularSampleSize(unsigned int size);
 		void setDiffuseSampleSize(unsigned int size);
+		void setSpecularLOD(unsigned int level);
+		void setDiffuseLOD(unsigned int level);
 
 	protected:
 		virtual void bindValues();
 
 	private:
-		int maxStepSpecular, maxStepDiffuse;
+		unsigned int maxStepSpecular, maxStepDiffuse;
+		float specularLOD, diffuseLOD;
 		SceneCamera* sceneCamera;
 		VoxelStructure& voxelStructure;
 

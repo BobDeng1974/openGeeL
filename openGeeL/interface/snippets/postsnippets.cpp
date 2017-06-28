@@ -207,8 +207,14 @@ namespace geeL {
 	
 
 	void ConeTracerSnippet::draw(GUIContext* context) {
+		unsigned int specLOD = GUISnippets::drawBarInteger(context, tracer.getSpecularLOD(), 1, 10, 1, "Specular LOD");
+		tracer.setSpecularLOD(specLOD);
+
 		unsigned int specSteps = GUISnippets::drawBarInteger(context, tracer.getSpecularSampleSize(), 1, 100, 1, "Specular Size");
 		tracer.setSpecularSampleSize(specSteps);
+
+		unsigned int diffLOD = GUISnippets::drawBarInteger(context, tracer.getDiffuseLOD(), 1, 10, 1, "Diffuse LOD");
+		tracer.setDiffuseLOD(diffLOD);
 
 		unsigned int diffSteps = GUISnippets::drawBarInteger(context, tracer.getDiffuseSampleSize(), 1, 50, 1, "Diffuse Size");
 		tracer.setDiffuseSampleSize(diffSteps);
