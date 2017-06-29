@@ -10,9 +10,9 @@ namespace geeL {
 	class EnvironmentMap : public Texture2D {
 
 	public:
-		EnvironmentMap() {}
+		EnvironmentMap() : Texture2D(ColorType::RGB32) {}
 		EnvironmentMap(const EnvironmentMap& map);
-		EnvironmentMap(std::string fileName);
+		EnvironmentMap(const std::string& fileName);
 		
 		virtual unsigned int getID() const;
 		virtual void remove();

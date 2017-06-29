@@ -26,7 +26,7 @@ namespace geeL {
 
 
 	void VoxelTexture::build() {
-		Texture::clear(ColorType::RGBA, texture->getID());
+		texture->clear();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, dimensions, dimensions);
@@ -62,7 +62,7 @@ namespace geeL {
 	}
 
 	void VoxelTexture::bindTexture(Shader & shader, const std::string& name) {
-		shader.addMap(texture->getID(), name, GL_TEXTURE_3D);
+		shader.addMap(texture->getID(), name, TextureType::Texture3D);
 	}
 
 	void VoxelTexture::clearTexture() {

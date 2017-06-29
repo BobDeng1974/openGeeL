@@ -31,7 +31,7 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-		Texture::mipmapCube(id);
+		Texture::mipmap(TextureType::TextureCube, id);
 		conversionShader->mapOffset = 1;
 	}
 
@@ -41,7 +41,7 @@ namespace geeL {
 
 
 	void PrefilteredEnvironmentMap::add(RenderShader& shader, std::string name) const {
-		shader.addMap(id, name + "prefilterEnv", GL_TEXTURE_CUBE_MAP);
+		shader.addMap(id, name + "prefilterEnv", TextureType::TextureCube);
 	}
 
 
@@ -63,7 +63,7 @@ namespace geeL {
 
 		conversionShader->setInteger("environmentMap", conversionShader->mapOffset);
 		std::list<unsigned int> maps = { environmentMap.getID() };
-		conversionShader->loadMaps(maps, GL_TEXTURE_CUBE_MAP);
+		conversionShader->loadMaps(maps, TextureType::TextureCube);
 
 		unsigned int mipLevels = 5;
 		//Generate mipmaps according to roughness strength

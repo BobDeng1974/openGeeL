@@ -14,7 +14,7 @@ namespace geeL {
 	}
 
 	void CubeMap::add(RenderShader& shader, std::string name) const {
-		shader.addMap(id, name + "albedo", GL_TEXTURE_CUBE_MAP);
+		shader.addMap(id, name + "albedo", TextureType::TextureCube);
 	}
 
 	void CubeMap::remove(RenderShader& shader, unsigned int id) const {

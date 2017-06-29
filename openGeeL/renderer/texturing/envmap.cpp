@@ -8,23 +8,22 @@ using namespace std;
 
 namespace geeL {
 
-	EnvironmentMap::EnvironmentMap(const EnvironmentMap& map) : id(map.getID()) {}
+	EnvironmentMap::EnvironmentMap(const EnvironmentMap& map) 
+		: Texture2D(map), id(map.getID()) {}
 
-	EnvironmentMap::EnvironmentMap(string fileName) {
+	EnvironmentMap::EnvironmentMap(const string& fileName) : Texture2D(ColorType::RGB32) {
 
 		stbi_set_flip_vertically_on_load(true);
 		int width, height, nrComponents;
-		float *image = stbi_loadf(fileName.c_str(), &width, &height, &nrComponents, 0);
+		float* image = stbi_loadf(fileName.c_str(), &width, &height, &nrComponents, 0);
 		
 		if (image) {
 			glGenTextures(1, &id);
 			glBindTexture(GL_TEXTURE_2D, id);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, image);
 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			initWrapMode(WrapMode::ClampEdge);
+			initFilterMode(FilterMode::Linear);
 
 			stbi_image_free(image);
 		}

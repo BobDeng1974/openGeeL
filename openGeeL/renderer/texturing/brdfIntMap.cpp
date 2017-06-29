@@ -7,7 +7,7 @@
 
 namespace geeL {
 
-	BRDFIntegrationMap::BRDFIntegrationMap() {
+	BRDFIntegrationMap::BRDFIntegrationMap() : Texture2D(ColorType::Single) {
 
 		RenderShader* shader = new RenderShader("renderer/shaders/screen.vert", "renderer/texturing/brdfIntMap.frag");
 
@@ -48,7 +48,9 @@ namespace geeL {
 		delete shader;
 	}
 
-	BRDFIntegrationMap::BRDFIntegrationMap(const BRDFIntegrationMap& map) : id(map.getID()) {}
+	BRDFIntegrationMap::BRDFIntegrationMap(const BRDFIntegrationMap& map) 
+		: Texture2D(map), id(map.getID()) {}
+
 
 	unsigned int BRDFIntegrationMap::getID() const {
 		return id;

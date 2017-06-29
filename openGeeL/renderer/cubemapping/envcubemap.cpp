@@ -67,7 +67,7 @@ namespace geeL {
 		});
 
 		//Mip map rendered environment map
-		Texture::mipmapCube(id);
+		Texture::mipmap(TextureType::TextureCube, id);
 	}
 
 }

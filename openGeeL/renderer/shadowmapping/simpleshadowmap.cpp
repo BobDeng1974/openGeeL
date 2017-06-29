@@ -62,7 +62,7 @@ namespace geeL {
 
 
 	void SimpleShadowMap::bindMap(RenderShader& shader, const std::string& name) {
-		shader.addMap(id, name, GL_TEXTURE_2D);
+		shader.addMap(id, name, TextureType::Texture2D);
 	}
 
 	void SimpleShadowMap::removeMap(RenderShader& shader) {
@@ -230,7 +230,7 @@ namespace geeL {
 	}
 
 	void SimplePointLightMap::bindMap(RenderShader& shader, const std::string& name) {
-		shader.addMap(id, name, GL_TEXTURE_CUBE_MAP);
+		shader.addMap(id, name, TextureType::TextureCube);
 	}
 
 	void SimplePointLightMap::init() {

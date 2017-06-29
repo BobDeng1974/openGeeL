@@ -25,7 +25,7 @@ namespace geeL {
 		glDeleteProgram(program);
 	}
 
-	void Shader::addMap(TextureID id, const std::string& name, unsigned int type) {
+	void Shader::addMap(TextureID id, const std::string& name, TextureType type) {
 		auto it = maps.find(name);
 		//Update texture ID if a binding with same name already exists
 		if (it != maps.end()) {
@@ -38,13 +38,13 @@ namespace geeL {
 			unsigned int offset = maps.size();
 			glUniform1i(glGetUniformLocation(program, name.c_str()), mapOffset + offset);
 
-			maps[name] = TextureBinding(id, type, offset, name);
+			maps[name] = TextureBinding(id, (int)type, offset, name);
 			mapBindingPos = maps.size() + mapOffset;
 		}
 	}
 
-	void Shader::addMap(const Texture& texture, const std::string& name, unsigned int type) {
-		addMap(texture.getID(), name, type);
+	void Shader::addMap(const Texture& texture, const std::string& name) {
+		addMap(texture.getID(), name, texture.getTextureType());
 	}
 
 	void Shader::removeMap(TextureID id) {
@@ -105,12 +105,14 @@ namespace geeL {
 		}
 	}
 
-	void Shader::loadMaps(std::list<TextureID>& maps, unsigned int type) const {
+	void Shader::loadMaps(std::list<TextureID>& maps, TextureType type) const {
+		int textureType = (int)type;
+
 		int layer = GL_TEXTURE0;
 		int counter = mapOffset;
 		for (auto it = maps.begin(); it != maps.end(); it++) {
 			glActiveTexture(layer + counter);
-			glBindTexture(type, *it);
+			glBindTexture(textureType, *it);
 			counter++;
 		}
 	}

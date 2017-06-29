@@ -44,7 +44,7 @@ namespace geeL {
 
 	void IrradianceMap::add(RenderShader& shader, std::string name) const {
 		//shader.addMap(environmentMap.getID(), name + "albedo", GL_TEXTURE_CUBE_MAP);
-		shader.addMap(id, name + "irradiance", GL_TEXTURE_CUBE_MAP);
+		shader.addMap(id, name + "irradiance", TextureType::TextureCube);
 	}
 
 	void IrradianceMap::update() {
@@ -67,7 +67,7 @@ namespace geeL {
 		conversionShader->setInteger("environmentMap", conversionShader->mapOffset);
 
 		std::list<unsigned int> maps = { environmentMap.getID() };
-		conversionShader->loadMaps(maps, GL_TEXTURE_CUBE_MAP);
+		conversionShader->loadMaps(maps, TextureType::TextureCube);
 		
 		frameBuffer.fill([&](unsigned int side) {
 			conversionShader->setMat4("view", views[side]);

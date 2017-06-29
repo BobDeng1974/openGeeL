@@ -11,10 +11,10 @@ using namespace std;
 namespace geeL {
 
 	ImageTexture::ImageTexture(const ImageTexture& texture) 
-		: path(texture.path), id(texture.getID()) {}
+		: Texture2D(texture), path(texture.path), id(texture.getID()) {}
 
 	ImageTexture::ImageTexture(const char* fileName, ColorType colorType, WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter)
-		: path(fileName) {
+		: Texture2D(colorType), path(fileName) {
 		
 		int imgWidth, imgHeight;
 		unsigned char* image = stbi_load(fileName, &imgWidth, &imgHeight, 0, STBI_rgb_alpha);
@@ -22,20 +22,19 @@ namespace geeL {
 		glGenTextures(1, &id);
 		glBindTexture(GL_TEXTURE_2D, id);
 
-		Texture2D::initColorType(colorType, imgWidth, imgHeight, image);
+		initColorType(imgWidth, imgHeight, image);
+		initWrapMode(wrapMode);
+		initFilterMode(filterMode);
+		initAnisotropyFilter(filter);
 
 		glGenerateMipmap(GL_TEXTURE_2D);
-
-		Texture2D::initWrapMode(wrapMode);
-		Texture2D::initFilterMode(filterMode);
-		Texture2D::initAnisotropyFilter(filter);
 
 		stbi_image_free(image);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	ImageTexture::ImageTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height,
-		WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter) {
+		WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter) : Texture2D(colorType) {
 
 		glGenTextures(1, &id);
 		glBindTexture(GL_TEXTURE_2D, id);
@@ -43,7 +42,8 @@ namespace geeL {
 
 		Texture2D::initFilterMode(filterMode);
 		Texture2D::initWrapMode(wrapMode);
-		Texture2D::initAnisotropyFilter(filter);
+		
+		initAnisotropyFilter(filter);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}

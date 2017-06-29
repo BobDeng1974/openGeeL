@@ -5,17 +5,18 @@
 namespace geeL {
 
 	RenderTexture::RenderTexture(const RenderTexture& texture) 
-		: id(texture.getID()), width(texture.width), height(texture.height) {}
+		: Texture2D(texture), id(texture.getID()), width(texture.width), height(texture.height) {}
 
-	RenderTexture::RenderTexture(unsigned int width, unsigned int height, ColorType colorType, 
-		WrapMode wrapMode, FilterMode filterMode) : width(width), height(height) {
+	RenderTexture::RenderTexture(unsigned int width, unsigned int height, 
+		ColorType colorType, WrapMode wrapMode, FilterMode filterMode) 
+			: Texture2D(colorType), width(width), height(height) {
 
 		glGenTextures(1, &id);
 		glBindTexture(GL_TEXTURE_2D, id);
 
-		Texture2D::initColorType(colorType, width, height, 0);
-		Texture2D::initWrapMode(wrapMode);
-		Texture2D::initFilterMode(filterMode);
+		initColorType(width, height, 0);
+		initWrapMode(wrapMode);
+		initFilterMode(filterMode);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 

@@ -1,18 +1,19 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include <iostream>
+#include "texturetype.h"
 
 namespace geeL {
 
-class RenderShader;
+	class RenderShader;
 
 	enum class ColorType {
 		GammaSpace,
 		Single,
 		RGB,
-		RGBA,
 		RGB16,
+		RGB32,
+		RGBA,
 		RGBA16,
 		RGBA32
 	};
@@ -45,19 +46,27 @@ class RenderShader;
 
 	public:
 		virtual unsigned int getID() const = 0;
-		virtual bool isEmpty() const;
-
+		virtual TextureType getTextureType() const = 0;
+		
 		//Remove texture from GPU memory
 		virtual void remove() = 0;
-		virtual void bind() const = 0;
+		virtual void bind() const;
+		virtual void clear();
+		virtual bool isEmpty() const;
+
+		virtual void initColorType(int width, int height, unsigned char* image);
+		virtual void initFilterMode(FilterMode mode);
+		virtual void initWrapMode(WrapMode mode) = 0;
+		virtual void initAnisotropyFilter(AnisotropicFilter filter);
 
 		static void clear(ColorType type, unsigned int id);
-		static void mipmap2D(unsigned int id);
-		static void mipmapCube(unsigned int id);
-		
+		static void mipmap(TextureType type, unsigned int id);
 		static void setMaxAnisotropyAmount(AnisotropicFilter value);
 
 	protected:
+		Texture(ColorType colorType) : colorType(colorType) {}
+
+		ColorType colorType;
 		static AnisotropicFilter maxAnisotropy;
 
 	};
@@ -67,18 +76,22 @@ class RenderShader;
 
 	public:
 		void mipmap() const;
-		virtual void bind() const;
+		
+		virtual void initWrapMode(WrapMode mode);
+		virtual TextureType getTextureType() const;
 
-		static void initColorType(ColorType type, int width, int height, unsigned char* image);
-		static void initFilterMode(FilterMode mode);
-		static void initWrapMode(WrapMode mode);
-		static void initAnisotropyFilter(AnisotropicFilter filter);
+	protected:
+		Texture2D(ColorType colorType) : Texture(colorType) {}
 
 	};
 
 
 	inline bool Texture::isEmpty() const {
 		return getID() == 0;
+	}
+
+	inline TextureType Texture2D::getTextureType() const {
+		return TextureType::Texture2D;
 	}
 
 }

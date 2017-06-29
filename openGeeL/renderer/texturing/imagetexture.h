@@ -6,8 +6,6 @@
 #include <vec3.hpp>
 #include "texture.h"
 
-typedef int GLint;
-typedef unsigned int GLuint;
 #define GL_REPEAT 0x2901 
 #define GL_LINEAR 0x2601
 
@@ -27,7 +25,7 @@ namespace geeL {
 	public:
 		std::string path;
 
-		ImageTexture() : id(0) {}
+		ImageTexture() : Texture2D(ColorType::Single), id(0) {}
 		ImageTexture(const ImageTexture& texture);
 		ImageTexture(const char* fileName, ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::None, 

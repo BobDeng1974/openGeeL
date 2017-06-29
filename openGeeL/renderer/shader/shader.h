@@ -7,8 +7,7 @@
 #include <vec2.hpp>
 #include <vec3.hpp>
 #include <mat4x4.hpp>
-
-#define GL_TEXTURE_2D 0x0DE1
+#include "../texturing/texturetype.h"
 
 typedef int ShaderLocation;
 typedef unsigned int TextureID;
@@ -48,8 +47,8 @@ namespace geeL {
 		unsigned int getProgram() const;
 
 		//Add a new map to the shader
-		void addMap(TextureID id, const std::string& name, unsigned int type = GL_TEXTURE_2D);
-		void addMap(const Texture& texture, const std::string& name, unsigned int type = GL_TEXTURE_2D);
+		void addMap(TextureID id, const std::string& name, TextureType type = TextureType::Texture2D);
+		void addMap(const Texture& texture, const std::string& name);
 		TextureID getMap(const std::string& name) const;
 
 		//Remove map with given ID from shader (if it exists)
@@ -64,7 +63,7 @@ namespace geeL {
 		//Loads committed maps into the shader
 		//IMPORTANT: no binding is taken care of, multiple calls will override previous one
 		//and loading maps from other sources will also override this call
-		void loadMaps(std::list<TextureID>& maps, unsigned int type = GL_TEXTURE_2D) const;
+		void loadMaps(std::list<TextureID>& maps, TextureType type = TextureType::Texture2D) const;
 
 		ShaderLocation getLocation(const std::string& name) const;
 
