@@ -117,7 +117,7 @@ namespace geeL {
 			//Hacky: Read camera depth from geometry pass and write it into the scene
 			scene->forwardScreenInfo(gBuffer.screenInfo);
 
-			scene->lightManager.drawShadowmaps(*scene, &scene->getCamera());
+			scene->lightManager.draw(*scene, &scene->getCamera());
 			renderTime.update(RenderPass::Shadow);
 
 			//SSAO pass
@@ -338,35 +338,30 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::toggleBuffer(bool next) {
-		int bufferSize = 4;
-		int max = int(bufferSize + effects.size());
+
+		std::vector<unsigned int> buffers = { defaultBuffer, gBuffer.getDiffuse().getID(), gBuffer.getNormalMetallic().getID() };
+
+		const RenderTexture& emisTex = gBuffer.getEmissivity();
+		if (!emisTex.isEmpty())
+			buffers.push_back(emisTex.getID());
+		if (ssao != nullptr)
+			buffers.push_back(ssaoBuffer->getTexture().getID());
+
+		//int bufferSize = 4;
+		int max = int(buffers.size() + effects.size());
 		int i = next ? 1 : -1;
 		toggle = abs((toggle + i) % max);
 
 		unsigned int currBuffer = 1;
-		if (toggle < bufferSize) {
-			switch (toggle) {
-				case 0:
-					currBuffer = defaultBuffer;
-					break;
-				case 1:
-					currBuffer = gBuffer.getDiffuse().getID();
-					break;
-				case 2:
-					currBuffer = gBuffer.getEmissivity().getID();
-					break;
-				case 3:
-					if(ssao != nullptr)
-						currBuffer = ssaoBuffer->getTexture().getID();
-					break;
-			}
+		if (toggle < buffers.size()) {
+			currBuffer = buffers[toggle];
 
 			isolatedEffect = nullptr;
 		}
 		else {
 			currBuffer = frameBuffer2.getTexture().getID();
 
-			int index = toggle - bufferSize;
+			int index = toggle - buffers.size();
 			isolatedEffect = effects[index];
 		}
 

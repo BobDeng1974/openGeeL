@@ -14,6 +14,7 @@
 #include "../cubemapping/reflectionprobe.h"
 #include "../cubemapping/iblmap.h"
 #include "../framebuffer/cubebuffer.h"
+#include "../voxelization/voxelstructure.h"
 #include "../scene.h"
 #include "light.h"
 #include "lightbinding.h"
@@ -24,7 +25,7 @@ using namespace glm;
 
 namespace geeL {
 
-	LightManager::LightManager() : ambient(ambient),
+	LightManager::LightManager() : ambient(ambient), voxelStructure(nullptr),
 		dlShader(new RenderShader("renderer/shadowmapping/shadowmapping.vert", "renderer/shaders/empty.frag")),
 		plShader(new RenderShader("renderer/shaders/empty.vert", "renderer/shadowmapping/shadowmapping.geom", 
 				"renderer/shadowmapping/shadowmapping.frag")) {}
@@ -257,6 +258,7 @@ namespace geeL {
 			light.addShadowmap(shader, binding->getName() + "shadowMap");
 	}
 
+	
 	void LightManager::bindShadowmap(RenderShader& shader, DirectionalLight& light) const {
 		//Find corresponding light binding
 		const DLightBinding* binding = getBinding<DLightBinding, DirectionalLight,
@@ -266,8 +268,6 @@ namespace geeL {
 		if (binding != nullptr)
 			light.addShadowmap(shader, binding->getName() + "shadowMap");
 	}
-
-	
 
 	void LightManager::bindShadowMaps(RenderShader& shader) const {
 		shader.use();
@@ -292,6 +292,12 @@ namespace geeL {
 			light.addLightCookie(shader, binding.getName() + "cookie");
 		}
 	}
+
+	void LightManager::draw(const RenderScene& scene, const SceneCamera* const camera) {
+		drawShadowmaps(scene, camera);
+		drawVoxelStructure();
+	}
+
 
 	void LightManager::drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera) const {
 		glCullFace(GL_BACK);
@@ -323,6 +329,7 @@ namespace geeL {
 		glCullFace(GL_FRONT);
 	}
 
+	
 	void LightManager::drawShadowmapsForced(const RenderScene& scene, const SceneCamera* const camera) const {
 		glCullFace(GL_BACK);
 
@@ -351,6 +358,16 @@ namespace geeL {
 		}
 
 		glCullFace(GL_FRONT);
+	}
+
+
+	void LightManager::addVoxelStructure(VoxelStructure& structure) {
+		voxelStructure = &structure;
+	}
+
+	void LightManager::drawVoxelStructure() {
+		if (voxelStructure != nullptr)
+			voxelStructure->build();
 	}
 
 

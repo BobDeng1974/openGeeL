@@ -28,6 +28,7 @@ namespace geeL {
 	class SceneShader;
 	class RenderScene;
 	class Transform;
+	class VoxelStructure;
 
 	class LightBinding;
 	class DLightBinding;
@@ -81,16 +82,21 @@ namespace geeL {
 		void bind(const Camera& camera, const RenderShader& shader, ShaderTransformSpace space) const;
 		void bind(const Camera& camera, const SceneShader& shader) const;
 
-		
 		void bindShadowMaps(RenderShader& shader) const;
 
 		void bindShadowmap(RenderShader& shader, DirectionalLight& light) const;
 		void bindShadowmap(RenderShader& shader, PointLight& light) const;
 		void bindShadowmap(RenderShader& shader, SpotLight& light) const;
 
+		//Update all internal structures depending on their state
+		void draw(const RenderScene& scene, const SceneCamera* const camera);
+
 		//Draw shadow maps no matter the lights properties. E.g.if they are static or not
 		void drawShadowmapsForced(const RenderScene& scene, const SceneCamera* const camera) const;
 		void drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera) const;
+
+		void addVoxelStructure(VoxelStructure& structure);
+		void drawVoxelStructure();
 
 		void iterLights(std::function<void(Light&)> function);
 		void iterDirectionalLights(std::function<void(DirectionalLight&)> function);
@@ -108,6 +114,7 @@ namespace geeL {
 
 	private:
 		glm::vec3 ambient;
+		VoxelStructure* voxelStructure;
 		RenderShader* dlShader; //RenderShader for spot and directional light shadow map
 		RenderShader* plShader; //RenderShader for point light shadow maps
 

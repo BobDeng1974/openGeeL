@@ -142,7 +142,7 @@ namespace {
 
 			sponz.iterateMaterials([&](MaterialContainer& container) {
 				if(container.name == "fabric_g")
-					container.setVectorValue("Emissivity", vec3(0.5f, 0.1f, 0.3f) * 0.05f);
+					container.setVectorValue("Emissivity", vec3(0.08f));
 			});
 		}
 
@@ -217,6 +217,7 @@ void SponzaGIScene::draw() {
 
 	renderer.addEffect(tracer, tracer);
 	postLister.add(tracer);
+	//lightManager.addVoxelStructure(tex);
 
 	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.5f);
 	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 35.f, camera.getFarPlane(), 0.8f);

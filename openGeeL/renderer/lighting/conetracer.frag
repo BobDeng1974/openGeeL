@@ -196,7 +196,8 @@ vec4 raymarchOctreeMirror(vec3 position, vec3 direction, vec3 normal, int maxLev
 		pos += minDist * direction;
 
 		vec4 currColor = vec4(0.f);
-		hit = sampleOctreeNearest(pos, int(floor(lvl)), currColor, depth);
+		//hit = sampleOctreeNearest(pos, int(floor(lvl)), currColor, depth);
+		hit = sampleOctreeLinear(pos, int(floor(lvl)), currColor, depth);
 
 		float rest = 1.f - color.a;
 		color += currColor * rest;
