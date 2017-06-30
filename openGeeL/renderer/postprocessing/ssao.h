@@ -17,6 +17,10 @@ namespace geeL {
 
 	public:
 		SSAO(PostProcessingEffect& blur, float radius = 5.f);
+		SSAO(const SSAO& other);
+		~SSAO();
+
+		SSAO& operator= (const SSAO& other);
 
 		//Empty setter since base image isn't needed for SSAO
 		virtual void setBuffer(unsigned int buffer) {}
@@ -36,7 +40,7 @@ namespace geeL {
 		float radius;
 		unsigned int sampleCount = 32;
 
-		ImageTexture noiseTexture;
+		ImageTexture* noiseTexture;
 		std::vector<glm::vec3> kernel;
 		std::vector<glm::vec3> noise;
 		PostProcessingEffect& blur;

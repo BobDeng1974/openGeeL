@@ -11,7 +11,10 @@ namespace geeL {
 
 	public:
 		DefaultPostProcess(float exposure = 1.f);
+		DefaultPostProcess(const DefaultPostProcess& other);
 		~DefaultPostProcess();
+
+		DefaultPostProcess& operator= (const DefaultPostProcess& other);
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 

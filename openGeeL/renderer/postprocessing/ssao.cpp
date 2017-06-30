@@ -42,7 +42,23 @@ namespace geeL {
 			noise.push_back(sample);
 		}
 
-		noiseTexture = ImageTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::None);
+		noiseTexture = new ImageTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::None);
+	}
+
+	SSAO::SSAO(const SSAO & other) : PostProcessingEffect(other), radius(other.radius), blur(other.blur), noise(other.noise) {
+		noiseTexture = new ImageTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::None);
+	}
+
+	SSAO::~SSAO() {
+		delete noiseTexture;
+	}
+
+	
+	SSAO & SSAO::operator=(const SSAO& other) {
+		if (&other != this) {
+			SSAO s(other);
+			*this = std::move(s);
+		}
 	}
 
 	void SSAO::init(ScreenQuad& screen, const FrameBuffer& buffer) {
@@ -89,7 +105,7 @@ namespace geeL {
 	void SSAO::addWorldInformation(map<WorldMaps, const Texture*> maps) {
 		addBuffer(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
 		addBuffer(*maps[WorldMaps::NormalMetallic], "gNormalMet");
-		addBuffer(noiseTexture, "noiseTexture");
+		addBuffer(*noiseTexture, "noiseTexture");
 	}
 
 	float SSAO::getRadius() const {

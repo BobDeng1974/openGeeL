@@ -26,10 +26,10 @@ namespace geeL {
 		std::string path;
 
 		ImageTexture() : Texture2D(ColorType::None), id(0) {}
-		ImageTexture(const ImageTexture& texture);
 		ImageTexture(const char* fileName, ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::None, 
 			AnisotropicFilter filter = AnisotropicFilter::Medium);
+		~ImageTexture();
 
 		ImageTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::None,
@@ -41,6 +41,10 @@ namespace geeL {
 	protected:
 		unsigned int id;
 
+	private:
+		ImageTexture(const ImageTexture& other) = delete;
+		ImageTexture& operator= (const ImageTexture& other) = delete;
+
 	};
 
 
@@ -51,7 +55,6 @@ namespace geeL {
 		MapType type;
 		
 		TextureMap() {}
-		TextureMap(const TextureMap& map);
 		TextureMap(const char* fileName, 
 			MapType textureTpe = MapType::Diffuse, ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::None,
@@ -61,6 +64,11 @@ namespace geeL {
 		virtual void draw(const RenderShader& shader, int texLayer = 0) const;
 
 		std::string getTypeAsString() const;
+
+	private:
+		TextureMap(const TextureMap& other) = delete;
+		TextureMap& operator= (const TextureMap& other) = delete;
+
 	};
 
 }

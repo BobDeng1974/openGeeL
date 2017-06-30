@@ -10,9 +10,6 @@ using namespace std;
 
 namespace geeL {
 
-	ImageTexture::ImageTexture(const ImageTexture& texture) 
-		: Texture2D(texture), path(texture.path), id(texture.getID()) {}
-
 	ImageTexture::ImageTexture(const char* fileName, ColorType colorType, WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter)
 		: Texture2D(colorType), path(fileName) {
 		
@@ -31,6 +28,10 @@ namespace geeL {
 
 		stbi_image_free(image);
 		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	ImageTexture::~ImageTexture() {
+		remove();
 	}
 
 	ImageTexture::ImageTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height,
@@ -56,8 +57,6 @@ namespace geeL {
 		glDeleteTextures(1, &id);
 	}
 
-
-	TextureMap::TextureMap(const TextureMap& map) : ImageTexture(map), type(map.type) {}
 
 	TextureMap::TextureMap(const char* fileName, MapType type, ColorType colorType, 
 		WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter)

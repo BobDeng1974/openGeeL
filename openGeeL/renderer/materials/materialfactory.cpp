@@ -33,18 +33,18 @@ namespace geeL {
 			delete *material;
 
 		for (auto it = textures.begin(); it != textures.end(); it++) {
-			ImageTexture& tex = it->second;
-			tex.remove();
+			ImageTexture* tex = it->second;
+			delete tex;
 		}
 
 		for (auto it = textureMaps.begin(); it != textureMaps.end(); it++) {
-			TextureMap& tex = it->second;
-			tex.remove();
+			TextureMap* tex = it->second;
+			delete tex;
 		}
 
 		for (auto it = envMaps.begin(); it != envMaps.end(); it++) {
-			EnvironmentMap& tex = it->second;
-			tex.remove();
+			EnvironmentMap* tex = it->second;
+			delete tex;
 		}
 	}
 
@@ -53,25 +53,25 @@ namespace geeL {
 		WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter) {
 
 		if (textures.find(filePath) == textures.end())
-			textures[filePath] = ImageTexture(filePath.c_str(), colorType, wrapMode, filterMode, filter);
+			textures[filePath] = new ImageTexture(filePath.c_str(), colorType, wrapMode, filterMode, filter);
 
-		return textures[filePath];
+		return *textures[filePath];
 	}
 
 	TextureMap& MaterialFactory::CreateTextureMap(string filePath, MapType type, ColorType colorType, 
 		WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter) {
 		
 		if (textureMaps.find(filePath) == textureMaps.end())
-			textureMaps[filePath] = TextureMap(filePath.c_str(),  type, colorType, wrapMode, filterMode, filter);
+			textureMaps[filePath] = new TextureMap(filePath.c_str(),  type, colorType, wrapMode, filterMode, filter);
 
-		return textureMaps[filePath];
+		return *textureMaps[filePath];
 	}
 
 	EnvironmentMap& MaterialFactory::CreateEnvironmentMap(string filePath) {
 		if (envMaps.find(filePath) == envMaps.end())
-			envMaps[filePath] = EnvironmentMap(filePath);
+			envMaps[filePath] = new EnvironmentMap(filePath);
 
-		return envMaps[filePath];
+		return *envMaps[filePath];
 	}
 
 	DefaultMaterialContainer& MaterialFactory::CreateMaterial() {
@@ -149,11 +149,11 @@ namespace geeL {
 		return shaders.end();
 	}
 
-	map<string, TextureMap>::const_iterator MaterialFactory::texturesBegin() const {
+	map<string, TextureMap*>::const_iterator MaterialFactory::texturesBegin() const {
 		return textureMaps.begin();
 	}
 
-	map<string, TextureMap>::const_iterator MaterialFactory::texturesEnd() const {
+	map<string, TextureMap*>::const_iterator MaterialFactory::texturesEnd() const {
 		return textureMaps.end();
 	}
 

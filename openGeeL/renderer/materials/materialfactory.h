@@ -59,8 +59,8 @@ namespace geeL {
 		std::list<SceneShader*>::iterator shadersBegin();
 		std::list<SceneShader*>::iterator shadersEnd();
 
-		std::map<std::string, TextureMap>::const_iterator texturesBegin() const;
-		std::map<std::string, TextureMap>::const_iterator texturesEnd() const;
+		std::map<std::string, TextureMap*>::const_iterator texturesBegin() const;
+		std::map<std::string, TextureMap*>::const_iterator texturesEnd() const;
 
 		SceneShader& getDefaultShader(DefaultShading shading) const;
 
@@ -74,11 +74,12 @@ namespace geeL {
 		SceneShader* forwardShader;
 		SceneShader* deferredShader;
 		SceneShader* deferredAnimatedShader;
+
 		std::list<MaterialContainer*> container;
 		std::list<SceneShader*> shaders;
-		std::map<std::string, ImageTexture> textures;
-		std::map<std::string, TextureMap> textureMaps;
-		std::map<std::string, EnvironmentMap> envMaps;
+		std::map<std::string, ImageTexture*> textures;
+		std::map<std::string, TextureMap*> textureMaps;
+		std::map<std::string, EnvironmentMap*> envMaps;
 
 	};
 }

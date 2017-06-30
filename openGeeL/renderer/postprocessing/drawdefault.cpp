@@ -15,9 +15,22 @@ namespace geeL {
 		noise = new ImageTexture("resources/textures/noise.png", ColorType::Single);
 	}
 
+	DefaultPostProcess::DefaultPostProcess(const DefaultPostProcess & other) 
+		: PostProcessingEffect(other), exposure(other.exposure) {
+
+		noise = new ImageTexture("resources/textures/noise.png", ColorType::Single);
+	}
+
 	DefaultPostProcess::~DefaultPostProcess() {
 		noise->remove();
 		delete noise;
+	}
+
+	DefaultPostProcess & DefaultPostProcess::operator=(const DefaultPostProcess& other) {
+		if (&other != this) {
+			DefaultPostProcess s(other);
+			*this = std::move(s);
+		}
 	}
 
 
