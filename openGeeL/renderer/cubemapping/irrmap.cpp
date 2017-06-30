@@ -2,6 +2,7 @@
 #include <glew.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
+#include "../texturing/rendertexturecube.h"
 #include "../shader/rendershader.h"
 #include "../framebuffer/framebuffer.h"
 #include "../framebuffer/cubebuffer.h"
@@ -14,28 +15,18 @@ namespace geeL {
 
 
 	IrradianceMap::IrradianceMap(const CubeMap& environmentMap, CubeBuffer& frameBuffer, unsigned int resolution)
-		: environmentMap(environmentMap), frameBuffer(frameBuffer), 
+		: DynamicCubeMap(new RenderTextureCube(resolution)), environmentMap(environmentMap), frameBuffer(frameBuffer),
 			conversionShader(new RenderShader("renderer/cubemapping/envconvert.vert", 
-				"renderer/cubemapping/irrmap.frag")), resolution(resolution) {
-
-		glGenTextures(1, &id);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-		for (unsigned int side = 0; side < 6; side++)
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, 0, GL_RGB16F, 
-				resolution, resolution, 0, GL_RGB, GL_FLOAT, nullptr);
-
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+				"renderer/cubemapping/irrmap.frag")) {
 
 		conversionShader->mapOffset = 1;
-		conversionShader->addMap(environmentMap.getID(), "environmentMap", TextureType::TextureCube);
+		conversionShader->addMap(environmentMap.getTexture(), "environmentMap");
 	}
 
 	IrradianceMap::~IrradianceMap() {
+		texture->remove();
+
+		delete texture;
 		delete conversionShader;
 	}
 
@@ -44,11 +35,11 @@ namespace geeL {
 	}
 
 	void IrradianceMap::add(RenderShader& shader, std::string name) const {
-		shader.addMap(id, name + "irradiance", TextureType::TextureCube);
+		shader.addMap(*texture, name + "irradiance");
 	}
 
 	void IrradianceMap::update() {
-		frameBuffer.init(resolution, id);
+		frameBuffer.init(*texture);
 
 		glm::mat4 projection = perspective(90.0f, 1.0f, 0.1f, 10.0f);
 		glm::mat4 views[] = {
@@ -70,5 +61,10 @@ namespace geeL {
 			conversionShader->setMat4("view", views[side]);
 			SCREENCUBE.drawComplete();
 		});
+
+	}
+
+	unsigned int IrradianceMap::getID() const {
+		return texture->getID();
 	}
 }

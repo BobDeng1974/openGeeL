@@ -2,52 +2,43 @@
 #include <glew.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
+#include "../texturing/rendertexturecube.h"
 #include "../shader/rendershader.h"
 #include "../framebuffer/framebuffer.h"
 #include "../framebuffer/cubebuffer.h"
 #include "../primitives/screencube.h"
 #include "prefilterEnvmap.h"
 
-#include <iostream>
-
 using namespace glm;
 
 namespace geeL {
 
 	PrefilteredEnvironmentMap::PrefilteredEnvironmentMap(const CubeMap& environmentMap, CubeBuffer& frameBuffer, unsigned int resolution)
-		: environmentMap(environmentMap), frameBuffer(frameBuffer), conversionShader(new RenderShader("renderer/cubemapping/envconvert.vert",
-			"renderer/cubemapping/prefilterEnvmap.frag")), resolution(resolution) {
+		: DynamicCubeMap(new RenderTextureCube(resolution, WrapMode::ClampEdge, FilterMode::Trilinear)), environmentMap(environmentMap), 
+			frameBuffer(frameBuffer), conversionShader(new RenderShader("renderer/cubemapping/envconvert.vert",
+			"renderer/cubemapping/prefilterEnvmap.frag")) {
 
-		glGenTextures(1, &id);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-		for (unsigned int side = 0; side < 6; side++)
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, 0, GL_RGB16F,
-				resolution, resolution, 0, GL_RGB, GL_FLOAT, nullptr);
+		texture->mipmap();
 
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-
-		Texture::mipmap(TextureType::TextureCube, id);
 		conversionShader->mapOffset = 1;
-		conversionShader->addMap(environmentMap.getID(), "environmentMap", TextureType::TextureCube);
+		conversionShader->addMap(environmentMap.getTexture(), "environmentMap");
 	}
 
 	PrefilteredEnvironmentMap::~PrefilteredEnvironmentMap() {
+		texture->remove();
+
+		delete texture;
 		delete conversionShader;
 	}
 
 
 	void PrefilteredEnvironmentMap::add(RenderShader& shader, std::string name) const {
-		shader.addMap(id, name + "prefilterEnv", TextureType::TextureCube);
+		shader.addMap(*texture, name + "prefilterEnv");
 	}
 
 
 	void PrefilteredEnvironmentMap::update() {
-		frameBuffer.init(resolution, id);
+		frameBuffer.init(*texture);
 
 		glm::mat4 projection = perspective(90.0f, 1.0f, 0.1f, 10.0f);
 		glm::mat4 views[] = {
@@ -68,7 +59,7 @@ namespace geeL {
 		for (unsigned int mip = 0; mip < mipLevels; mip++) {
 			float roughness = (float)mip / (float)(mipLevels - 1);
 			conversionShader->setFloat("roughness", roughness);
-			unsigned int mipResolution = resolution * std::pow(0.5f, mip);
+			unsigned int mipResolution = texture->getResolution() * std::pow(0.5f, mip);
 			
 			frameBuffer.resize(mipResolution, mipResolution);
 			frameBuffer.fill([&](unsigned int side) {

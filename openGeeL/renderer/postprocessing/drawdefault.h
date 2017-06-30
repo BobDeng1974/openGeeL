@@ -5,10 +5,13 @@
 
 namespace geeL {
 
+	class ImageTexture;
+
 	class DefaultPostProcess : public PostProcessingEffect {
 
 	public:
 		DefaultPostProcess(float exposure = 1.f);
+		~DefaultPostProcess();
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
@@ -18,6 +21,7 @@ namespace geeL {
 
 	protected:
 		float exposure;
+		ImageTexture* noise;
 		ShaderLocation exposureLocation;
 
 	};

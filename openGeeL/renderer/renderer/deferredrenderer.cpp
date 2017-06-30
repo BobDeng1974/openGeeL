@@ -145,7 +145,7 @@ namespace geeL {
 
 				//Draw isolated effect
 				isolatedEffect->effectOnly(true);
-				isolatedEffect->setBuffer(frameBuffer1.getTexture().getID());
+				isolatedEffect->setBuffer(frameBuffer1);
 				frameBuffer2.fill(*isolatedEffect);
 
 				def->draw();

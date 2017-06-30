@@ -5,6 +5,8 @@
 
 namespace geeL {
 
+	class TextureCube;
+
 	class CubeBuffer : public FrameBuffer {
 
 	public:
@@ -13,6 +15,7 @@ namespace geeL {
 		~CubeBuffer();
 
 		void init(unsigned int resolution, unsigned int textureID);
+		void init(const TextureCube& texture);
 
 		virtual void fill(std::function<void()> drawCall);
 		void fill(std::function<void(unsigned int)> drawCall, unsigned int mipLevel = 0);

@@ -23,7 +23,6 @@ namespace geeL {
 	private:
 		RenderShader* conversionShader;
 		CubeBuffer& frameBuffer;
-		unsigned int resolution;
 
 	};
 }

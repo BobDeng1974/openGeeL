@@ -10,15 +10,21 @@ using namespace glm;
 namespace geeL {
 
 	DefaultPostProcess::DefaultPostProcess(float exposure)
-		: PostProcessingEffect("renderer/postprocessing/drawdefault.frag"), exposure(exposure) {}
+		: PostProcessingEffect("renderer/postprocessing/drawdefault.frag"), exposure(exposure) {
+	
+		noise = new ImageTexture("resources/textures/noise.png", ColorType::Single);
+	}
+
+	DefaultPostProcess::~DefaultPostProcess() {
+		noise->remove();
+		delete noise;
+	}
 
 
 	void DefaultPostProcess::init(ScreenQuad& screen, const FrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
-		ImageTexture noise = ImageTexture("resources/textures/noise.png", ColorType::Single);
-		shader.addMap(noise.getID(), "noiseMap");
-
+		shader.addMap(*noise, "noiseMap");
 		shader.setVector3("noiseScale",
 			vec3(float(buffer.getWidth()) / 255.f, float(buffer.getHeight()) / 255.f, 0.f));
 

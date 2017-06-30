@@ -1,3 +1,4 @@
+#include "../texturing/rendertexturecube.h"
 #include "cubebuffer.h"
 
 namespace geeL {
@@ -25,6 +26,10 @@ namespace geeL {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	}
+
+	void CubeBuffer::init(const TextureCube& texture) {
+		init(texture.getResolution(), texture.getID());
 	}
 
 

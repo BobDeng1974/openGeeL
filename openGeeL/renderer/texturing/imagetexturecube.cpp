@@ -1,22 +1,24 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "stb_image.h"
-#include "../shader/rendershader.h"
-#include "texcubemap.h"
+#include "imagetexturecube.h"
 
 using namespace std;
 
 namespace geeL {
 
-	TexturedCubeMap::TexturedCubeMap(string rightPath, string leftPath, string topPath,
-		string bottomPath, string backPath, string frontPath) {
+	ImageTextureCube::ImageTextureCube(const string& rightPath, const string& leftPath, const string& topPath,
+		const string& bottomPath, const string& backPath, const string& frontPath, WrapMode wrapMode, FilterMode filterMode) 
+			: TextureCube(ColorType::GammaSpace) {
 
 		glGenTextures(1, &id);
 		glActiveTexture(GL_TEXTURE0);
 
 		int width, height;
 		unsigned char* image;
-		
+
+		resolution = (width + height) / 2;
+
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
 		image = stbi_load(rightPath.c_str(), &width, &height, 0, STBI_rgb);
@@ -37,14 +39,16 @@ namespace geeL {
 		image = stbi_load(frontPath.c_str(), &width, &height, 0, STBI_rgb);
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		initFilterMode(filterMode);
+		initWrapMode(wrapMode);
+
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-		
 		stbi_image_free(image);
+	}
+
+
+	void ImageTextureCube::remove() {
+		glDeleteTextures(1, &id);
 	}
 
 }

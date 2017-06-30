@@ -59,7 +59,7 @@ namespace geeL {
 			FilterMode::None, WrapMode::Repeat, false);
 
 		blur.init(screen, buffer);
-		blur.setBuffer(tempBuffer.getTexture().getID());
+		blur.setBuffer(tempBuffer);
 
 		projectionLocation = shader.getLocation("projection");
 	}

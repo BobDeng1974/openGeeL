@@ -21,7 +21,6 @@ namespace geeL {
 		const EnvironmentMap& map;
 		CubeBuffer& frameBuffer;
 		RenderShader* conversionShader;
-		unsigned int resolution;
 
 		void update();
 

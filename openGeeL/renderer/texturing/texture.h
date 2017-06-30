@@ -102,6 +102,22 @@ namespace geeL {
 	};
 
 
+	class TextureCube : public Texture {
+
+	public:
+		void mipmap() const;
+
+		virtual void initWrapMode(WrapMode mode);
+		virtual TextureType getTextureType() const;
+
+		virtual unsigned int getResolution() const = 0;
+
+	protected:
+		TextureCube(ColorType colorType) : Texture(colorType) {}
+
+	};
+
+
 
 	inline ColorType Texture::getColorType() const {
 		return colorType;
@@ -117,6 +133,10 @@ namespace geeL {
 
 	inline TextureType Texture3D::getTextureType() const {
 		return TextureType::Texture3D;
+	}
+
+	inline TextureType TextureCube::getTextureType() const {
+		return TextureType::TextureCube;
 	}
 
 	

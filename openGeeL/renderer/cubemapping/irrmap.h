@@ -22,10 +22,11 @@ namespace geeL {
 
 		virtual void update();
 
+		virtual unsigned int getID() const;
+
 	private:
 		CubeBuffer& frameBuffer;
 		RenderShader* conversionShader;
-		unsigned int resolution;
 
 	};
 }

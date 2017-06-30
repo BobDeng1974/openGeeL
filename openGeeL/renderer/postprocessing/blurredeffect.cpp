@@ -43,7 +43,7 @@ namespace geeL {
 	void BlurredPostEffect::bindValues() {
 		effectBuffer.fill(effect);
 
-		blur.setBuffer(effectBuffer.getTexture().getID());
+		blur.setBuffer(effectBuffer);
 		blurBuffer.fill(blur);
 
 		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);

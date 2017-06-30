@@ -7,6 +7,7 @@ namespace geeL {
 
 	class Camera;
 	class RenderShader;
+	class TextureCube;
 
 	enum class ShaderTransformSpace;
 
@@ -24,8 +25,13 @@ namespace geeL {
 
 		virtual unsigned int getID() const;
 
+		const TextureCube& getTexture() const;
+		TextureCube& getTexture();
+
 	protected:
-		unsigned int id;
+		CubeMap(TextureCube* texture) : texture(texture) {}
+
+		TextureCube* texture;
 
 	};
 
@@ -35,6 +41,9 @@ namespace geeL {
 
 	public:
 		virtual void update() = 0;
+
+	protected:
+		DynamicCubeMap(TextureCube* texture) : CubeMap(texture) {}
 
 	};
 }
