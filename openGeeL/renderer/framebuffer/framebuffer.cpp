@@ -1,4 +1,4 @@
-#define GLEW_STATIC
+﻿#define GLEW_STATIC
 #include <glew.h>
 #include <array>
 #include <list>

@@ -18,8 +18,6 @@ namespace geeL {
 		virtual unsigned int getID() const;
 		virtual void remove();
 
-		virtual void add(RenderShader& shader, std::string name) const;
-
 	private:
 		unsigned int id;
 

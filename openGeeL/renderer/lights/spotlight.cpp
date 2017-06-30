@@ -53,7 +53,7 @@ namespace geeL {
 
 	void SpotLight::addLightCookie(RenderShader& shader, const string& name) {
 		if(lightCookie != nullptr)
-			shader.addMap(lightCookie->getID(), name, TextureType::Texture2D);
+			shader.addMap(*lightCookie, name);
 	}
 
 

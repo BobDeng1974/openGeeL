@@ -19,6 +19,8 @@ namespace geeL {
 		normalMet.remove();
 		diffuse.remove();
 		emissivity.remove();
+
+		remove();
 	}
 
 

@@ -52,7 +52,7 @@ namespace geeL {
 
 	void Light::addShadowmap(RenderShader& shader, const std::string& name) {
 		if (shadowMap != nullptr)
-			shadowMap->bindMap(shader, name);
+			shader.addMap(*shadowMap, name);
 	}
 
 	void Light::removeShadowmap(RenderShader& shader) {
@@ -72,6 +72,11 @@ namespace geeL {
 
 		if (shadowMap != nullptr)
 			shadowMap->draw(camera, renderCall, shader);
+	}
+
+	void Light::remove() {
+		if (shadowMap != nullptr)
+			shadowMap->remove();
 	}
 
 	float Light::getIntensity(glm::vec3 point) const {

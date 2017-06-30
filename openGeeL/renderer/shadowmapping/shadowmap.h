@@ -1,20 +1,19 @@
 #ifndef SHADOWMAP_H
 #define SHADOWMAP_H
 
+#include "../texturing/texture.h"
 #include "shadowmapconfig.h"
 #include "../lights/light.h"
 
 namespace geeL {
 
-	class ShadowMap {
+	class ShadowMap : public Texture {
 
 	public:
 		ShadowMap(const Light& light, ShadowMapType type = ShadowMapType::Soft) 
-			: light(light), type(type), intensity(1.f) {}
-
+			: Texture(ColorType::None), light(light), type(type), intensity(1.f) {}
 
 		virtual void bindData(const RenderShader& shader, const std::string& name) = 0;
-		virtual void bindMap(RenderShader& shader, const std::string& name) = 0;
 		virtual void removeMap(RenderShader& shader) = 0;
 
 		//Render function for shadow maps. Takes current scene camera, render function
@@ -24,6 +23,8 @@ namespace geeL {
 			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader) = 0;
 
 		virtual unsigned int getID() const = 0;
+		virtual TextureType getTextureType() const = 0;
+		virtual void remove() = 0;
 
 		float getIntensity() const;
 		void setIntensity(float value);

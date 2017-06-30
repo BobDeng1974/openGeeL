@@ -20,7 +20,7 @@ namespace geeL {
 
 
 	//Simple 2D Texutre loaded from image file
-	class ImageTexture : Texture2D {
+	class ImageTexture : public Texture2D {
 
 	public:
 		std::string path;

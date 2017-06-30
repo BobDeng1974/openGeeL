@@ -1,5 +1,6 @@
 #include "../texturing/brdfIntMap.h"
 #include "irrmap.h"
+#include "../shader/rendershader.h"
 #include "prefilterEnvmap.h"
 #include "iblmap.h"
 
@@ -20,7 +21,8 @@ namespace geeL {
 	}
 
 	void IBLMap::add(RenderShader& shader, std::string name) const {
-		brdfIntMap.add(shader, "BRDFIntegrationMap");
+		shader.addMap(brdfIntMap, "BRDFIntegrationMap");
+
 		irrMap.add(shader, name);
 		preEnvMap.add(shader, name);
 	}
@@ -43,7 +45,8 @@ namespace geeL {
 	}
 
 	void DynamicIBLMap::add(RenderShader& shader, std::string name) const {
-		brdfIntMap.add(shader, "BRDFIntegrationMap");
+		shader.addMap(brdfIntMap, "BRDFIntegrationMap");
+
 		baseMap.add(shader, name);
 		irrMap.add(shader, name);
 		preEnvMap.add(shader, name);

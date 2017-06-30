@@ -21,6 +21,7 @@ namespace geeL {
 	}
 
 	VoxelTexture::~VoxelTexture() {
+		texture->remove();
 		delete texture;
 	}
 
@@ -62,7 +63,7 @@ namespace geeL {
 	}
 
 	void VoxelTexture::bindTexture(Shader & shader, const std::string& name) {
-		shader.addMap(texture->getID(), name, TextureType::Texture3D);
+		shader.addMap(*texture, name);
 	}
 
 	void VoxelTexture::clearTexture() {

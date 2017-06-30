@@ -12,7 +12,7 @@ namespace geeL {
 
 	public:
 		int mapFlags;
-		LayeredTexture() : Texture2D(ColorType::Single), mapFlags(0) {}
+		LayeredTexture() : Texture2D(ColorType::None), mapFlags(0) {}
 
 		//Add texture. Ill behaviour possible (and not checked)
 		//if more than one texture of each type is added (e.g. two normal maps)

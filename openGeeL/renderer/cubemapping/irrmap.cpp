@@ -32,6 +32,7 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 		conversionShader->mapOffset = 1;
+		conversionShader->addMap(environmentMap.getID(), "environmentMap", TextureType::TextureCube);
 	}
 
 	IrradianceMap::~IrradianceMap() {
@@ -43,7 +44,6 @@ namespace geeL {
 	}
 
 	void IrradianceMap::add(RenderShader& shader, std::string name) const {
-		//shader.addMap(environmentMap.getID(), name + "albedo", GL_TEXTURE_CUBE_MAP);
 		shader.addMap(id, name + "irradiance", TextureType::TextureCube);
 	}
 
@@ -64,11 +64,8 @@ namespace geeL {
 
 		conversionShader->use();
 		conversionShader->setMat4("projection", projection);
-		conversionShader->setInteger("environmentMap", conversionShader->mapOffset);
+		conversionShader->loadMaps();
 
-		std::list<unsigned int> maps = { environmentMap.getID() };
-		conversionShader->loadMaps(maps, TextureType::TextureCube);
-		
 		frameBuffer.fill([&](unsigned int side) {
 			conversionShader->setMat4("view", views[side]);
 			SCREENCUBE.drawComplete();

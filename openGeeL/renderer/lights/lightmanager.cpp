@@ -35,14 +35,26 @@ namespace geeL {
 		delete dlShader;
 		delete plShader;
 
-		for (auto it = pointLights.begin(); it != pointLights.end(); it++)
-			delete (*it).light;
+		for (auto it = pointLights.begin(); it != pointLights.end(); it++) {
+			Light* light = (*it).light;
+			light->remove();
 
-		for (auto it = dirLights.begin(); it != dirLights.end(); it++)
-			delete (*it).light;
+			delete light;
+		}
+			
+		for (auto it = dirLights.begin(); it != dirLights.end(); it++) {
+			Light* light = (*it).light;
+			light->remove();
 
-		for (auto it = spotLights.begin(); it != spotLights.end(); it++)
-			delete (*it).light;
+			delete light;
+		}
+
+		for (auto it = spotLights.begin(); it != spotLights.end(); it++) {
+			Light* light = (*it).light;
+			light->remove();
+
+			delete light;
+		}
 
 		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++)
 			delete *it;

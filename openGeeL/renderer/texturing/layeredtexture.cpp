@@ -11,6 +11,10 @@ using namespace std;
 namespace geeL {
 
 	void LayeredTexture::addTexture(string name, TextureMap& texture) {
+		//Set color type to the one of the first added map
+		if (textures.size() == 0)
+			colorType = texture.getColorType();
+
 		switch (texture.type) {
 			case MapType::Diffuse:
 				mapFlags += 1;
@@ -54,6 +58,12 @@ namespace geeL {
 	}
 
 	unsigned int LayeredTexture::getID() const {
+		auto it = textures.begin();
+		TextureMap* map = it->second;
+
+		if (map != nullptr)
+			return map->getID();
+
 		return 0;
 	}
 

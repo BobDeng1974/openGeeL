@@ -24,8 +24,7 @@ namespace geeL {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 
 			0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		initFilterMode(FilterMode::Linear);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 		GLfloat borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -70,10 +69,6 @@ namespace geeL {
 			shader.setMat4(name + "lightTransforms[" + std::to_string(i) + "]", shadowMaps[i].lightTransform);
 			shader.setFloat(name + "cascadeEndClip[" + std::to_string(i) + "]", shadowMaps[i].cascadeEndClip);
 		}
-	}
-
-	void CascadedDirectionalShadowMap::bindMap(RenderShader& shader, const std::string& name) {
-		shader.addMap(ID, name);
 	}
 
 	void CascadedDirectionalShadowMap::removeMap(RenderShader& shader) {
@@ -150,5 +145,16 @@ namespace geeL {
 	unsigned int CascadedDirectionalShadowMap::getID() const {
 		return ID;
 	}
+
+	TextureType CascadedDirectionalShadowMap::getTextureType() const {
+		return TextureType::Texture2D;
+	}
+
+	void CascadedDirectionalShadowMap::remove() {
+		glDeleteTextures(1, &ID);
+		glDeleteFramebuffers(1, &fbo);
+	}
+
+	
 
 }

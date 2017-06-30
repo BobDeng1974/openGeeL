@@ -8,6 +8,7 @@ namespace geeL {
 	class RenderShader;
 
 	enum class ColorType {
+		None,
 		GammaSpace,
 		Single,
 		RGB,
@@ -47,6 +48,7 @@ namespace geeL {
 	public:
 		virtual unsigned int getID() const = 0;
 		virtual TextureType getTextureType() const = 0;
+		virtual ColorType getColorType() const;
 		
 		//Remove texture from GPU memory
 		virtual void remove() = 0;
@@ -56,7 +58,7 @@ namespace geeL {
 
 		virtual void initColorType(int width, int height, unsigned char* image);
 		virtual void initFilterMode(FilterMode mode);
-		virtual void initWrapMode(WrapMode mode) = 0;
+		virtual void initWrapMode(WrapMode mode);
 		virtual void initAnisotropyFilter(AnisotropicFilter filter);
 
 		static void clear(ColorType type, unsigned int id);
@@ -86,6 +88,11 @@ namespace geeL {
 	};
 
 
+
+	inline ColorType Texture::getColorType() const {
+		return colorType;
+	}
+
 	inline bool Texture::isEmpty() const {
 		return getID() == 0;
 	}
@@ -94,6 +101,7 @@ namespace geeL {
 		return TextureType::Texture2D;
 	}
 
+	
 }
 
 #endif

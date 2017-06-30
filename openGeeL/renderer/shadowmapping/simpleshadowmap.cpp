@@ -32,8 +32,7 @@ namespace geeL {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
 			width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		initFilterMode(FilterMode::Linear);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 		GLfloat borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -61,14 +60,14 @@ namespace geeL {
 	}
 
 
-	void SimpleShadowMap::bindMap(RenderShader& shader, const std::string& name) {
-		shader.addMap(id, name, TextureType::Texture2D);
-	}
-
 	void SimpleShadowMap::removeMap(RenderShader& shader) {
 		shader.removeMap(id);
 	}
 
+	void SimpleShadowMap::remove() {
+		glDeleteTextures(1, &id);
+		glDeleteFramebuffers(1, &fbo);
+	}
 
 	void SimpleShadowMap::adaptShadowmap(const SceneCamera* const camera) {
 
@@ -186,6 +185,10 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	TextureType SimpleSpotLightMap::getTextureType() const {
+		return TextureType::Texture2D;
+	}
+
 	void SimpleSpotLightMap::computeLightTransform() {
 		Transform& transform = light.transform;
 
@@ -229,8 +232,8 @@ namespace geeL {
 		shader.setFloat(name + "farPlane", farPlane);
 	}
 
-	void SimplePointLightMap::bindMap(RenderShader& shader, const std::string& name) {
-		shader.addMap(id, name, TextureType::TextureCube);
+	TextureType SimplePointLightMap::getTextureType() const {
+		return TextureType::TextureCube;
 	}
 
 	void SimplePointLightMap::init() {
@@ -244,8 +247,7 @@ namespace geeL {
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
 				width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		initFilterMode(FilterMode::Linear);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
@@ -366,6 +368,10 @@ namespace geeL {
 
 		renderCall(shader);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	TextureType SimpleDirectionalLightMap::getTextureType() const {
+		return TextureType::Texture2D;
 	}
 
 

@@ -75,6 +75,10 @@ namespace geeL {
 		}
 	}
 
+	void Texture::initWrapMode(WrapMode mode) {
+		std::cout << "This texture type doens't support wrapping\n";
+	}
+
 	void Texture::initAnisotropyFilter(AnisotropicFilter filter) {
 		float maxValue = 0.f;
 		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxValue);

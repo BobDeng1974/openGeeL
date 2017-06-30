@@ -33,6 +33,9 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
+		conversionShader->mapOffset = 1;
+		conversionShader->addMap(map.getID(), "environmentMap", TextureType::Texture2D);
+
 		update();
 	}
 
@@ -56,10 +59,7 @@ namespace geeL {
 
 		conversionShader->use();
 		conversionShader->setMat4("projection", projection);
-		conversionShader->setInteger("environmentMap", conversionShader->mapOffset);
-
-		std::list<unsigned int> maps = { map.getID() };
-		conversionShader->loadMaps(maps);
+		conversionShader->loadMaps();
 
 		frameBuffer.fill([&](unsigned int side) {
 			conversionShader->setMat4("view", views[side]);

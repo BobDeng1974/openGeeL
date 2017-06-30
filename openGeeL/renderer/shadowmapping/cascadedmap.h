@@ -24,7 +24,6 @@ namespace geeL {
 			: ShadowMap(light), shadowBias(shadowBias), width(width), height(height) {}
 
 		virtual void bindData(const RenderShader& shader, const std::string& name) = 0;
-		virtual void bindMap(RenderShader& shader, const std::string& name) = 0;
 		virtual void removeMap(RenderShader& shader) = 0;
 
 		virtual void draw(const SceneCamera* const camera,
@@ -32,6 +31,8 @@ namespace geeL {
 
 		//Returns ID of first (nearest) shadow map
 		virtual unsigned int getID() const = 0;
+		virtual TextureType getTextureType() const = 0;
+		virtual void remove() = 0;
 
 	protected:
 		unsigned int fbo, width, height;
@@ -47,7 +48,6 @@ namespace geeL {
 			float shadowBias, unsigned int width, unsigned int height);
 
 		virtual void bindData(const RenderShader& shader, const std::string& name);
-		virtual void bindMap(RenderShader& shader, const std::string& name);
 		virtual void removeMap(RenderShader& shader);
 
 		virtual void draw(const SceneCamera* const camera,
@@ -57,6 +57,8 @@ namespace geeL {
 		void setCascades(const SceneCamera& camera);
 
 		virtual unsigned int getID() const;
+		virtual TextureType getTextureType() const;
+		virtual void remove();
 
 	private:
 		unsigned int ID;

@@ -33,6 +33,7 @@ namespace geeL {
 
 		Texture::mipmap(TextureType::TextureCube, id);
 		conversionShader->mapOffset = 1;
+		conversionShader->addMap(environmentMap.getID(), "environmentMap", TextureType::TextureCube);
 	}
 
 	PrefilteredEnvironmentMap::~PrefilteredEnvironmentMap() {
@@ -60,10 +61,7 @@ namespace geeL {
 
 		conversionShader->use();
 		conversionShader->setMat4("projection", projection);
-
-		conversionShader->setInteger("environmentMap", conversionShader->mapOffset);
-		std::list<unsigned int> maps = { environmentMap.getID() };
-		conversionShader->loadMaps(maps, TextureType::TextureCube);
+		conversionShader->loadMaps();
 
 		unsigned int mipLevels = 5;
 		//Generate mipmaps according to roughness strength
@@ -77,8 +75,8 @@ namespace geeL {
 				conversionShader->setMat4("view", views[side]);
 				SCREENCUBE.drawComplete();
 			}, mip);
-
 		}
+
 	}
 
 }
