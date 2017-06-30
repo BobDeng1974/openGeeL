@@ -64,7 +64,4 @@ namespace geeL {
 
 	}
 
-	unsigned int IrradianceMap::getID() const {
-		return texture->getID();
-	}
 }
