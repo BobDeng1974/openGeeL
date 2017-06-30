@@ -88,6 +88,20 @@ namespace geeL {
 	};
 
 
+	class Texture3D : public Texture {
+
+	public:
+		void mipmap() const;
+
+		virtual void initWrapMode(WrapMode mode);
+		virtual TextureType getTextureType() const;
+
+	protected:
+		Texture3D(ColorType colorType) : Texture(colorType) {}
+
+	};
+
+
 
 	inline ColorType Texture::getColorType() const {
 		return colorType;
@@ -99,6 +113,10 @@ namespace geeL {
 
 	inline TextureType Texture2D::getTextureType() const {
 		return TextureType::Texture2D;
+	}
+
+	inline TextureType Texture3D::getTextureType() const {
+		return TextureType::Texture3D;
 	}
 
 	

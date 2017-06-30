@@ -9,7 +9,7 @@ namespace geeL {
 	class RenderScene;
 	class SceneShader;
 	class Shader;
-	class Texture3D;
+	class RenderTexture3D;
 
 
 	class VoxelTexture : public VoxelStructure {
@@ -29,7 +29,7 @@ namespace geeL {
 		unsigned int dimensions;
 		const RenderScene& scene;
 		SceneShader* voxelShader;
-		Texture3D* texture;
+		RenderTexture3D* texture;
 
 	};
 

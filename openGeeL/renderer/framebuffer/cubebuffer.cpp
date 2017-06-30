@@ -9,6 +9,10 @@ namespace geeL {
 
 	CubeBuffer::CubeBuffer(const CubeBuffer& buffer) : FrameBuffer(buffer), rbo(buffer.rbo) {}
 
+	CubeBuffer::~CubeBuffer() {
+		remove();
+	}
+
 	void CubeBuffer::init(unsigned int resolution, unsigned int textureID) {
 		this->textureID = textureID;
 		info.width = resolution;

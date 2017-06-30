@@ -9,7 +9,7 @@ namespace geeL {
 	class RenderTexture : public Texture2D {
 
 	public:
-		RenderTexture() : Texture2D(ColorType::Single), id(0) {}
+		RenderTexture() : Texture2D(ColorType::None), id(0) {}
 		RenderTexture(const RenderTexture& texture);
 		RenderTexture(unsigned int width, unsigned int height, ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::None);
