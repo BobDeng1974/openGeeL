@@ -10,7 +10,6 @@ namespace geeL {
 
 	public:
 		RenderTexture() : Texture2D(ColorType::None), id(0) {}
-		RenderTexture(const RenderTexture& texture);
 		RenderTexture(unsigned int width, unsigned int height, ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::None);
 		
@@ -19,6 +18,9 @@ namespace geeL {
 
 	private:
 		unsigned int id, width, height;
+
+		RenderTexture(const RenderTexture& other) = delete;
+		RenderTexture& operator= (const RenderTexture& other) = delete;
 
 	};
 

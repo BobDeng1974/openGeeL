@@ -19,10 +19,8 @@ namespace geeL {
 	public:
 		ScreenInfo screenInfo;
 
-		GBuffer(GBufferContent content = GBufferContent::Default);
+		GBuffer(unsigned int width, unsigned int height, GBufferContent content = GBufferContent::Default);
 		~GBuffer();
-
-		void init(int width, int height);
 
 		virtual void fill(std::function<void()> drawCall);
 
@@ -38,16 +36,17 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	private:
-		RenderTexture diffuse;
-		RenderTexture positionRough;
-		RenderTexture normalMet;
-		RenderTexture emissivity;
+		RenderTexture* diffuse;
+		RenderTexture* positionRough;
+		RenderTexture* normalMet;
+		RenderTexture* emissivity;
 		GBufferContent content;
 		float depthPos;
 
 		GBuffer(const GBuffer& other) = delete;
 		GBuffer& operator= (const GBuffer& other) = delete;
 
+		void init(int width, int height);
 		void initTextures(int width, int height);
 
 	};

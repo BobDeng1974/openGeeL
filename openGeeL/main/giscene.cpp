@@ -163,8 +163,7 @@ void SponzaGIScene::draw() {
 	geeL::Transform& cameraTransform = Transform(vec3(41.f, 40.2f, 115.0f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 15.f, 0.45f, 60.f, window.width, window.height, 0.1f, 500.f);
 
-	GBuffer& gBuffer = GBuffer(GBufferContent::DefaultEmissive);
-	gBuffer.init(window.width, window.height);
+	GBuffer& gBuffer = GBuffer(window.width, window.height, GBufferContent::DefaultEmissive);
 	MaterialFactory& materialFactory = MaterialFactory(gBuffer);
 	MeshFactory& meshFactory = MeshFactory(materialFactory);
 	LightManager lightManager;
