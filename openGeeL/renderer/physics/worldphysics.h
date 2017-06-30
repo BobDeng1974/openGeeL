@@ -45,6 +45,9 @@ namespace geeL {
 
 		PhysicsWorld* world;
 
+		WorldPhysics(const WorldPhysics& other) = delete;
+		WorldPhysics& operator= (const WorldPhysics& other) = delete;
+
 		void init();
 		void addRigidbody(Collider* collider, Transform& transform, RigidbodyProperties properties);
 

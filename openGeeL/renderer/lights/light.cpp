@@ -74,11 +74,6 @@ namespace geeL {
 			shadowMap->draw(camera, renderCall, shader);
 	}
 
-	void Light::remove() {
-		if (shadowMap != nullptr)
-			shadowMap->remove();
-	}
-
 	float Light::getIntensity(glm::vec3 point) const {
 		float distance = length(transform.getPosition() - point);
 

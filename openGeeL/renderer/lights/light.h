@@ -52,9 +52,6 @@ namespace geeL {
 		void renderShadowmapForced(const SceneCamera* const camera,
 			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader);
 
-		//Remove data from GPU memory.
-		void remove();
-
 		//Computes experienced intensity at given point. Ranges between 0 and 1
 		virtual float getIntensity(glm::vec3 point) const;
 

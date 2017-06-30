@@ -37,22 +37,16 @@ namespace geeL {
 
 		for (auto it = pointLights.begin(); it != pointLights.end(); it++) {
 			Light* light = (*it).light;
-			light->remove();
-
 			delete light;
 		}
 			
 		for (auto it = dirLights.begin(); it != dirLights.end(); it++) {
 			Light* light = (*it).light;
-			light->remove();
-
 			delete light;
 		}
 
 		for (auto it = spotLights.begin(); it != spotLights.end(); it++) {
 			Light* light = (*it).light;
-			light->remove();
-
 			delete light;
 		}
 

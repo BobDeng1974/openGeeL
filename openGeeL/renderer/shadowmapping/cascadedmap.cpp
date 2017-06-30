@@ -15,7 +15,6 @@
 
 namespace geeL {
 
-
 	CascadedDirectionalShadowMap::~CascadedDirectionalShadowMap() {
 		remove();
 	}
