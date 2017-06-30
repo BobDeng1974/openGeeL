@@ -7,6 +7,8 @@
 #include <map>
 #include "../shader/sceneshader.h"
 #include "../postprocessing/drawdefault.h"
+#include "../texturing/texture.h"
+#include "../texturing/rendertexture.h"
 #include "../texturing/imagetexture.h"
 #include "../window.h"
 #include "../framebuffer/gbuffer.h"
@@ -89,10 +91,10 @@ namespace geeL {
 
 		//Set color buffer of default effect depending on the amount of added effects
 		defaultBuffer = (effects.size() % 2 == 0)
-			? frameBuffer2.getTexture().getID()
-			: frameBuffer1.getTexture().getID();
+			? &frameBuffer2.getTexture()
+			: &frameBuffer1.getTexture();
 
-		effects.front()->setBuffer(defaultBuffer);
+		effects.front()->setBuffer(*defaultBuffer);
 	}
 
 	void DeferredRenderer::render() {
@@ -338,34 +340,35 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::toggleBuffer(bool next) {
-
-		std::vector<unsigned int> buffers = { defaultBuffer, gBuffer.getDiffuse().getID(), gBuffer.getNormalMetallic().getID() };
+		
+		std::vector<const Texture2D*> buffers = { defaultBuffer, &gBuffer.getDiffuse(), &gBuffer.getNormalMetallic() };
 
 		const RenderTexture& emisTex = gBuffer.getEmissivity();
 		if (!emisTex.isEmpty())
-			buffers.push_back(emisTex.getID());
+			buffers.push_back(&emisTex);
 		if (ssao != nullptr)
-			buffers.push_back(ssaoBuffer->getTexture().getID());
+			buffers.push_back(&ssaoBuffer->getTexture());
 
 		//int bufferSize = 4;
 		int max = int(buffers.size() + effects.size());
 		int i = next ? 1 : -1;
 		toggle = abs((toggle + i) % max);
 
-		unsigned int currBuffer = 1;
+		const Texture2D* currBuffer = defaultBuffer;
 		if (toggle < buffers.size()) {
 			currBuffer = buffers[toggle];
 
 			isolatedEffect = nullptr;
 		}
 		else {
-			currBuffer = frameBuffer2.getTexture().getID();
+			currBuffer = &frameBuffer2.getTexture();
 
 			int index = toggle - buffers.size();
 			isolatedEffect = effects[index];
 		}
 
-		effects.front()->setBuffer(currBuffer);
+		effects.front()->setBuffer(*currBuffer);
+		
 	}
 
 	const RenderTime& DeferredRenderer::getRenderTime() const {

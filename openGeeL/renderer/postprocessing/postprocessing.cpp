@@ -21,7 +21,7 @@ namespace geeL {
 	}
 
 	void PostProcessingEffect::setBuffer(const ColorBuffer& buffer) {
-		setBuffer(buffer.getTexture().getID());
+		setBuffer(buffer.getTexture());
 	}
 
 	void PostProcessingEffect::setBuffer(const Texture& texture) {

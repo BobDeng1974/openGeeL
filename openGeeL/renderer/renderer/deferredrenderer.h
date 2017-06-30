@@ -19,6 +19,7 @@ namespace geeL {
 	class MaterialFactory;
 	class SSAO;
 	class PostProcessingEffect;
+	class Texture2D;
 	class WorldPostProcessingEffect;
 
 	class DeferredRenderer : public Renderer, public WorldMapProvider {
@@ -62,7 +63,7 @@ namespace geeL {
 		RenderTime renderTime;
 		SceneRender& lighting;
 
-		unsigned int defaultBuffer;
+		const Texture2D* defaultBuffer;
 		float ssaoResolution;
 		SSAO* ssao;
 		ScreenQuad* ssaoScreen = nullptr;
