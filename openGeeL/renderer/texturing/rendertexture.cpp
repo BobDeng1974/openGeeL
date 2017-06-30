@@ -17,6 +17,10 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
+	RenderTexture::~RenderTexture() {
+		remove();
+	}
+
 	unsigned int RenderTexture::getID() const {
 		return id;
 	}

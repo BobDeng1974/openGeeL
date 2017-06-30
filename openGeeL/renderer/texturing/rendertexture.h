@@ -12,7 +12,8 @@ namespace geeL {
 		RenderTexture() : Texture2D(ColorType::None), id(0) {}
 		RenderTexture(unsigned int width, unsigned int height, ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::None);
-		
+		~RenderTexture();
+
 		virtual unsigned int getID() const;
 		virtual void remove();
 
