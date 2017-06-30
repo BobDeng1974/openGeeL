@@ -20,7 +20,6 @@ namespace geeL {
 		ScreenInfo screenInfo;
 
 		GBuffer(GBufferContent content = GBufferContent::Default);
-		GBuffer(const GBuffer& buffer);
 		~GBuffer();
 
 		void init(int width, int height);
@@ -45,6 +44,9 @@ namespace geeL {
 		RenderTexture emissivity;
 		GBufferContent content;
 		float depthPos;
+
+		GBuffer(const GBuffer& other) = delete;
+		GBuffer& operator= (const GBuffer& other) = delete;
 
 		void initTextures(int width, int height);
 

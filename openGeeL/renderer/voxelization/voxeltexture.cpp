@@ -21,7 +21,6 @@ namespace geeL {
 	}
 
 	VoxelTexture::~VoxelTexture() {
-		texture->remove();
 		delete texture;
 	}
 

@@ -48,8 +48,9 @@ namespace geeL {
 		delete shader;
 	}
 
-	BRDFIntegrationMap::BRDFIntegrationMap(const BRDFIntegrationMap& map) 
-		: Texture2D(map), id(map.getID()) {}
+	BRDFIntegrationMap::~BRDFIntegrationMap() {
+		remove();
+	}
 
 
 	unsigned int BRDFIntegrationMap::getID() const {

@@ -38,6 +38,9 @@ namespace geeL {
 		unsigned int fbo, width, height;
 		float shadowBias;
 
+		CascadedShadowMap(const CascadedShadowMap& other) = delete;
+		CascadedShadowMap& operator= (const CascadedShadowMap& other) = delete;
+
 	};
 
 
@@ -46,6 +49,7 @@ namespace geeL {
 	public:
 		CascadedDirectionalShadowMap(const Light& light, const SceneCamera& camera, 
 			float shadowBias, unsigned int width, unsigned int height);
+		~CascadedDirectionalShadowMap();
 
 		virtual void bindData(const RenderShader& shader, const std::string& name);
 		virtual void removeMap(RenderShader& shader);

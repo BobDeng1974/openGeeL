@@ -15,6 +15,11 @@
 
 namespace geeL {
 
+
+	CascadedDirectionalShadowMap::~CascadedDirectionalShadowMap() {
+		remove();
+	}
+
 	CascadedDirectionalShadowMap::CascadedDirectionalShadowMap(const Light& light, const SceneCamera& camera, 
 		float shadowBias, unsigned int width, unsigned int height)
 			: CascadedShadowMap(light, shadowBias, width, height) {
@@ -154,7 +159,5 @@ namespace geeL {
 		glDeleteTextures(1, &ID);
 		glDeleteFramebuffers(1, &fbo);
 	}
-
-	
 
 }

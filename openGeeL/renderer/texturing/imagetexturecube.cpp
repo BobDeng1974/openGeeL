@@ -46,6 +46,10 @@ namespace geeL {
 		stbi_image_free(image);
 	}
 
+	ImageTextureCube::~ImageTextureCube() {
+		remove();
+	}
+
 
 	void ImageTextureCube::remove() {
 		glDeleteTextures(1, &id);

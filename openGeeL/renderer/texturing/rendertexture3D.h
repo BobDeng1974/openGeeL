@@ -13,6 +13,7 @@ namespace geeL {
 		RenderTexture3D() : Texture3D(ColorType::Single), id(0) {}
 		RenderTexture3D(unsigned int width, unsigned int height, unsigned int depth, unsigned int levels, 
 			WrapMode wrapMode = WrapMode::ClampBorder, FilterMode filterMode = FilterMode::Trilinear);
+		~RenderTexture3D();
 
 		virtual unsigned int getID() const;
 		virtual void remove();
@@ -20,6 +21,9 @@ namespace geeL {
 	private:
 		unsigned int id;
 		std::vector<float> buffer;
+
+		RenderTexture3D(const RenderTexture3D& other) = delete;
+		RenderTexture3D& operator= (const RenderTexture3D& other) = delete;
 
 	};
 

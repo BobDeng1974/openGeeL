@@ -33,6 +33,10 @@ namespace geeL {
 
 	private:
 		Debugger* debugger;
+
+		RenderWindow(const RenderWindow& other) = delete;
+		RenderWindow& operator= (const RenderWindow& other) = delete;
+
 	};
 }
 

@@ -15,6 +15,7 @@ namespace geeL {
 		ImageTextureCube(const std::string& rightPath, const std::string& leftPath, const std::string& topPath,
 			const std::string& bottomPath, const std::string& backPath, const std::string& frontPath, 
 			WrapMode wrapMode = WrapMode::ClampEdge, FilterMode filterMode = FilterMode::Linear);
+		~ImageTextureCube();
 
 		virtual unsigned int getID() const;
 		virtual void remove();
@@ -23,6 +24,9 @@ namespace geeL {
 
 	private:
 		unsigned int id, resolution;
+
+		ImageTextureCube(const ImageTextureCube& other) = delete;
+		ImageTextureCube& operator= (const ImageTextureCube& other) = delete;
 
 	};
 

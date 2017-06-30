@@ -225,34 +225,31 @@ namespace {
 
 
 void RenderTest::draw() {
-	
-	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
-	InputManager manager = InputManager();
-	manager.defineButton("Forward", GLFW_KEY_W);
-	manager.defineButton("Forward", GLFW_KEY_A);
+	RenderWindow& window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
+	InputManager manager;
 
-	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	TransformFactory transFactory = TransformFactory(world);
+	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	TransformFactory& transFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(0.0f, 2.0f, 9.0f), vec3(-90.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
+	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
 
-	GBuffer gBuffer = GBuffer();
+	GBuffer gBuffer;
 	gBuffer.init(window.width, window.height);
-	MaterialFactory materialFactory = MaterialFactory(gBuffer);
-	MeshFactory meshFactory = MeshFactory(materialFactory);
-	LightManager lightManager = LightManager();
-	RenderPipeline shaderManager = RenderPipeline(materialFactory);
+	MaterialFactory& materialFactory = MaterialFactory(gBuffer);
+	MeshFactory& meshFactory = MeshFactory(materialFactory);
+	LightManager lightManager;
+	RenderPipeline& shaderManager = RenderPipeline(materialFactory);
 	
-	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
-	WorldPhysics physics = WorldPhysics();
+	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
+	WorldPhysics& physics = WorldPhysics();
 	scene.setPhysics(&physics);
 
-	BilateralFilter blur = BilateralFilter(1, 0.7f);
-	DefaultPostProcess def = DefaultPostProcess();
-	SSAO ssao = SSAO(blur, 3.f);
-	RenderContext context = RenderContext();
-	DeferredLighting lighting = DeferredLighting(scene);
+	BilateralFilter& blur = BilateralFilter(1, 0.7f);
+	DefaultPostProcess& def = DefaultPostProcess();
+	SSAO& ssao = SSAO(blur, 3.f);
+	RenderContext context;
+	DeferredLighting& lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer, materialFactory);
 	renderer.addSSAO(ssao, 0.5f);
 	renderer.init();
@@ -260,9 +257,9 @@ void RenderTest::draw() {
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 		[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
 
-	CubeBuffer cubeBuffer = CubeBuffer();
-	BRDFIntegrationMap brdfInt = BRDFIntegrationMap();
-	CubeMapFactory cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
+	CubeBuffer cubeBuffer;
+	BRDFIntegrationMap brdfInt;
+	CubeMapFactory& cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
 
 	//Transform& probeTransform = transFactory.CreateTransform(vec3(0.f, 0.f, 10.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	//DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024);
@@ -270,10 +267,10 @@ void RenderTest::draw() {
 	//EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv3/Tropical_Beach_3k.hdr");
 	//EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv1/Playa_Sunrise.hdr");
 	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
-	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 1024);
+	EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 1024);
 	IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
-	Skybox skybox = Skybox(envCubeMap);
+	Skybox& skybox = Skybox(envCubeMap);
 	scene.setSkybox(skybox);
 	lightManager.addReflectionProbe(iblMap);
 	
@@ -286,42 +283,42 @@ void RenderTest::draw() {
 	renderer.addObject(&testScene);
 	renderer.initObjects();
 
-	GUIRenderer gui = GUIRenderer(window, context);
-	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
+	GUIRenderer& gui = GUIRenderer(window, context);
+	ObjectLister& objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
 	objectLister.add(camera);
 	gui.addElement(objectLister);
-	PostProcessingEffectLister postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
+	PostProcessingEffectLister& postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
 	gui.addElement(postLister);
-	SystemInformation sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
+	SystemInformation& sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
 	gui.addElement(sysInfo);
 	renderer.addGUIRenderer(&gui);
 	
-	ImageBasedLighting ibl = ImageBasedLighting(scene);
+	ImageBasedLighting& ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);
 
 	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 	GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 15);
-	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
+	BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
 
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR();
-	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.3f, 0.3f);
+	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.3f, 0.3f);
 	
-	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 8.f, 100.f, 0.3f);
+	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.3f);
+	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 8.f, 100.f, 0.3f);
 
-	FXAA fxaa = FXAA();
+	FXAA& fxaa = FXAA();
 
-	BloomFilter filter = BloomFilter();
+	BloomFilter& filter = BloomFilter();
 	GaussianBlur& blur5 = GaussianBlur();
-	Bloom bloom = Bloom(filter, blur5, 0.4f, 0.2f);
+	Bloom& bloom = Bloom(filter, blur5, 0.4f, 0.2f);
 
-	SobelFilter sobel = SobelFilter(15);
-	SobelBlur sobelBlur = SobelBlur(sobel);
-	VolumetricLight vol = VolumetricLight(*spotLight, 0.1f, 1.f, 160);
-	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.4f);
+	SobelFilter& sobel = SobelFilter(15);
+	SobelBlur& sobelBlur = SobelBlur(sobel);
+	VolumetricLight& vol = VolumetricLight(*spotLight, 0.1f, 1.f, 160);
+	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.4f);
 
-	ColorCorrection colorCorrect = ColorCorrection();
+	ColorCorrection& colorCorrect = ColorCorrection();
 
 	postLister.add(def);
 	postLister.add(ssao);
@@ -334,7 +331,7 @@ void RenderTest::draw() {
 	//renderer.addEffect(bloom);
 	//postLister.add(bloom);
 
-	GodRaySnippet godRaySnippet = GodRaySnippet(ray);
+	GodRaySnippet& godRaySnippet = GodRaySnippet(ray);
 	renderer.addEffect(raySmooth);
 	scene.addRequester(ray);
 	postLister.add(raySmooth, godRaySnippet);

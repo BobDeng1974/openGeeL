@@ -8,8 +8,6 @@ namespace geeL {
 		glGenRenderbuffers(1, &rbo);
 	}
 
-	CubeBuffer::CubeBuffer(const CubeBuffer& buffer) : FrameBuffer(buffer), rbo(buffer.rbo) {}
-
 	CubeBuffer::~CubeBuffer() {
 		remove();
 	}

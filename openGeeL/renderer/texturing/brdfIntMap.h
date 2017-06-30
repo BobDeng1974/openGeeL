@@ -13,13 +13,16 @@ namespace geeL {
 
 	public:
 		BRDFIntegrationMap();
-		BRDFIntegrationMap(const BRDFIntegrationMap& map);
+		~BRDFIntegrationMap();
 
 		virtual unsigned int getID() const;
 		virtual void remove();
 
 	private:
 		unsigned int id;
+
+		BRDFIntegrationMap(const BRDFIntegrationMap& other) = delete;
+		BRDFIntegrationMap& operator= (const BRDFIntegrationMap& other) = delete;
 
 	};
 }

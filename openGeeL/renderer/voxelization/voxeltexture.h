@@ -26,6 +26,9 @@ namespace geeL {
 		void clearTexture();
 
 	private:
+		VoxelTexture(const VoxelTexture& other);
+		VoxelTexture& operator= (const VoxelTexture& other);
+
 		unsigned int dimensions;
 		const RenderScene& scene;
 		SceneShader* voxelShader;

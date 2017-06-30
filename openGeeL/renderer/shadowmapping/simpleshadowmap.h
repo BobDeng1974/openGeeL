@@ -19,6 +19,7 @@ namespace geeL {
 
 	public:
 		SimpleShadowMap(const Light& light, const ShadowMapConfiguration& config);
+		~SimpleShadowMap();
 
 		virtual void bindData(const RenderShader& shader, const std::string& name) = 0;
 		virtual void removeMap(RenderShader& shader);
@@ -46,6 +47,9 @@ namespace geeL {
 		float shadowBias, dynamicBias, farPlane, softShadowScale;
 		unsigned int id, fbo, width, height, softShadowResolution;
 		ShadowmapResolution resolution;
+
+		SimpleShadowMap(const SimpleShadowMap& other) = delete;
+		SimpleShadowMap& operator= (const SimpleShadowMap& other) = delete;
 
 		virtual void init();
 

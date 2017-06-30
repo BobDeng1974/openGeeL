@@ -20,28 +20,25 @@
 using namespace geeL;
 
 void RaymarchTest::draw() {
+	RenderWindow& window = RenderWindow("Raymarch", 1920, 1080, WindowMode::Fullscreen);
+	InputManager manager;
 
-	RenderWindow window = RenderWindow("Raymarch", 1920, 1080, WindowMode::Fullscreen);
-	InputManager manager = InputManager();
-	manager.defineButton("Forward", GLFW_KEY_W);
-	manager.defineButton("Forward", GLFW_KEY_A);
-
-	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	TransformFactory transFactory = TransformFactory(world);
+	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	TransformFactory& transFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(1.2f, 1.2f, -1.3f), vec3(70.f, 70.f, 180.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
+	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
 
-	GBuffer gBuffer = GBuffer();
+	GBuffer gBuffer;
 	gBuffer.init(window.width, window.height);
-	MaterialFactory materialFactory = MaterialFactory(gBuffer);
-	LightManager lightManager = LightManager();
-	RenderPipeline pipeline = RenderPipeline(materialFactory);
-	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, camera, materialFactory);
+	MaterialFactory &materialFactory = MaterialFactory(gBuffer);
+	LightManager& lightManager = LightManager();
+	RenderPipeline& pipeline = RenderPipeline(materialFactory);
+	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, camera, materialFactory);
 
-	DefaultPostProcess def = DefaultPostProcess(2.f);
-	RenderContext context = RenderContext();
-	RayMarcher raymarch = RayMarcher(scene);
+	DefaultPostProcess& def = DefaultPostProcess(2.f);
+	RenderContext& context = RenderContext();
+	RayMarcher& raymarch = RayMarcher(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, raymarch, context, def, gBuffer, materialFactory);
 	renderer.setScene(scene);
 	renderer.init();

@@ -149,34 +149,31 @@ namespace {
 
 
 void BedroomScene::draw() {
-	
-	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
-	InputManager manager = InputManager();
-	manager.defineButton("Forward", GLFW_KEY_W);
-	manager.defineButton("Forward", GLFW_KEY_A);
+	RenderWindow& window = RenderWindow("Bedroom", 1920, 1080, WindowMode::Windowed);
+	InputManager manager;
 
-	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	TransformFactory transFactory = TransformFactory(world);
+	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	TransformFactory& transFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(5.4f, 10.0f, -2.9f), vec3(70.f, 50.f, -175.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
+	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
 
-	GBuffer gBuffer = GBuffer();
+	GBuffer gBuffer;
 	gBuffer.init(window.width, window.height);
-	MaterialFactory materialFactory = MaterialFactory(gBuffer);
-	MeshFactory meshFactory = MeshFactory(materialFactory);
-	LightManager lightManager = LightManager();
-	RenderPipeline shaderManager = RenderPipeline(materialFactory);
+	MaterialFactory& materialFactory = MaterialFactory(gBuffer);
+	MeshFactory& meshFactory = MeshFactory(materialFactory);
+	LightManager lightManager;
+	RenderPipeline& shaderManager = RenderPipeline(materialFactory);
 	
-	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
-	WorldPhysics physics = WorldPhysics();
+	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
+	WorldPhysics& physics = WorldPhysics();
 	scene.setPhysics(&physics);
 
-	BilateralFilter blur = BilateralFilter(1, 0.7f);
-	DefaultPostProcess def = DefaultPostProcess(9.f);
-	SSAO ssao = SSAO(blur, 10.f);
-	RenderContext context = RenderContext();
-	DeferredLighting lighting = DeferredLighting(scene);
+	BilateralFilter& blur = BilateralFilter(1, 0.7f);
+	DefaultPostProcess& def = DefaultPostProcess(9.f);
+	SSAO& ssao = SSAO(blur, 10.f);
+	RenderContext context;
+	DeferredLighting& lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer, materialFactory);
 	renderer.addSSAO(ssao, 0.5f);
 	renderer.init();
@@ -184,18 +181,18 @@ void BedroomScene::draw() {
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 		[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
 
-	CubeBuffer cubeBuffer = CubeBuffer();
-	BRDFIntegrationMap brdfInt = BRDFIntegrationMap();
-	CubeMapFactory cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
+	CubeBuffer cubeBuffer;
+	BRDFIntegrationMap brdfInt;
+	CubeMapFactory& cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
 
 	Transform& probeTransform = transFactory.CreateTransform(vec3(0.5f, 7.1f, 5.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024, 20, 20, 20);
 
 	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv3/Tropical_Beach_3k.hdr");
-	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 1024);
+	EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 1024);
 	IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
-	Skybox skybox = Skybox(envCubeMap);
+	Skybox& skybox = Skybox(envCubeMap);
 	scene.setSkybox(skybox);
 	lightManager.addReflectionProbe(probe);
 	
@@ -208,48 +205,48 @@ void BedroomScene::draw() {
 	renderer.addObject(&testScene);
 	renderer.initObjects();
 
-	GUIRenderer gui = GUIRenderer(window, context);
+	GUIRenderer& gui = GUIRenderer(window, context);
 	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
 	objectLister.add(camera);
 	gui.addElement(objectLister);
-	PostProcessingEffectLister postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
+	PostProcessingEffectLister& postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
 	gui.addElement(postLister);
-	SystemInformation sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
+	SystemInformation& sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
 	gui.addElement(sysInfo);
 	renderer.addGUIRenderer(&gui);
 
-	ImageBasedLighting ibl = ImageBasedLighting(scene);
+	ImageBasedLighting& ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);
 
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR();
 	//MultisampledSSRR& ssrr = MultisampledSSRR();
-	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.5f, 0.5f);
+	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.5f, 0.5f);
 	
-	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 4.f, 100.f, 0.3f);
+	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.3f);
+	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 4.f, 100.f, 0.3f);
 
-	GaussianBlur ayy = GaussianBlur();
-	VolumetricLight vol = VolumetricLight(*spotLight3, 0.7f, 14.f, 250);
-	BlurredPostEffect volSmooth = BlurredPostEffect(vol, ayy, 0.25f, 0.2f);
+	GaussianBlur& ayy = GaussianBlur();
+	VolumetricLight& vol = VolumetricLight(*spotLight3, 0.7f, 14.f, 250);
+	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, ayy, 0.25f, 0.2f);
 
 	postLister.add(def);
 	postLister.add(ssao);
 
-	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
+	VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 	renderer.addEffect(volSmooth, { &vol});
 	scene.addRequester(vol);
 	postLister.add(volSmooth, lightSnippet);
 
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
-	SSRRSnippet ssrrSnippet = SSRRSnippet(ssrr);
+	SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
 	postLister.add(ssrrSmooth, ssrrSnippet);
 
 	renderer.addEffect(dof, dof);
 	postLister.add(dof);
 
-	FXAA fxaa = FXAA(0.f, 0.f);
+	FXAA& fxaa = FXAA(0.f, 0.f);
 	renderer.addEffect(fxaa);
 	postLister.add(fxaa);
 

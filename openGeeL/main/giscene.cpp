@@ -154,38 +154,38 @@ namespace {
 
 
 void SponzaGIScene::draw() {
-	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
-	InputManager manager = InputManager();
+	RenderWindow& window = RenderWindow("Global Illumination Sponza", 1920, 1080, WindowMode::Windowed);
+	InputManager manager;
 
-	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	TransformFactory transFactory = TransformFactory(world);
+	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	TransformFactory& transFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(41.f, 40.2f, 115.0f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 15.f, 0.45f, 60.f, window.width, window.height, 0.1f, 500.f);
+	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 15.f, 0.45f, 60.f, window.width, window.height, 0.1f, 500.f);
 
 	GBuffer& gBuffer = GBuffer(GBufferContent::DefaultEmissive);
 	gBuffer.init(window.width, window.height);
-	MaterialFactory materialFactory = MaterialFactory(gBuffer);
-	MeshFactory meshFactory = MeshFactory(materialFactory);
-	LightManager lightManager = LightManager();
-	RenderPipeline shaderManager = RenderPipeline(materialFactory);
-	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
+	MaterialFactory& materialFactory = MaterialFactory(gBuffer);
+	MeshFactory& meshFactory = MeshFactory(materialFactory);
+	LightManager lightManager;
+	RenderPipeline& shaderManager = RenderPipeline(materialFactory);
+	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
 	Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 
-	BilateralFilter blur = BilateralFilter(1, 0.7f);
-	DefaultPostProcess def = DefaultPostProcess(15.f);
-	RenderContext context = RenderContext();
-	DeferredLighting lighting = DeferredLighting(scene);
+	BilateralFilter& blur = BilateralFilter(1, 0.7f);
+	DefaultPostProcess& def = DefaultPostProcess(15.f);
+	RenderContext context;
+	DeferredLighting& lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer, materialFactory);
 	renderer.init();
 
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 		[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
 
-	CubeBuffer cubeBuffer = CubeBuffer();
+	CubeBuffer cubeBuffer;
 	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv4/MonValley_G_DirtRoad_3k.hdr");
-	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 256);
-	Skybox skybox = Skybox(envCubeMap);
+	EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 256);
+	Skybox& skybox = Skybox(envCubeMap);
 	scene.setSkybox(skybox);
 
 	renderer.setScene(scene);
@@ -196,13 +196,13 @@ void SponzaGIScene::draw() {
 	renderer.addObject(&testScene);
 	renderer.initObjects();
 
-	GUIRenderer gui = GUIRenderer(window, context);
+	GUIRenderer& gui = GUIRenderer(window, context);
 	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
 	objectLister.add(camera);
 	gui.addElement(objectLister);
-	PostProcessingEffectLister postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
+	PostProcessingEffectLister& postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
 	gui.addElement(postLister);
-	SystemInformation sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
+	SystemInformation& sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
 	gui.addElement(sysInfo);
 	renderer.addGUIRenderer(&gui);
 
@@ -212,19 +212,19 @@ void SponzaGIScene::draw() {
 	//VoxelOctree octree = VoxelOctree(voxelizer);
 	//VoxelConeTracer tracer = VoxelConeTracer(scene, octree);
 
-	VoxelTexture tex = VoxelTexture(scene);
+	VoxelTexture& tex = VoxelTexture(scene);
 	VoxelConeTracer tracer = VoxelConeTracer(scene, tex);
 
 	renderer.addEffect(tracer, tracer);
 	postLister.add(tracer);
 	//lightManager.addVoxelStructure(tex);
 
-	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.5f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 35.f, camera.getFarPlane(), 0.8f);
+	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.5f);
+	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 35.f, camera.getFarPlane(), 0.8f);
 	//renderer.addEffect(dof, dof);
 	//postLister.add(dof);
 
-	FXAA fxaa = FXAA();
+	FXAA& fxaa = FXAA();
 	renderer.addEffect(fxaa);
 	postLister.add(fxaa);
 

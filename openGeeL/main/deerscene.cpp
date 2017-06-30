@@ -144,32 +144,29 @@ namespace {
 
 
 void DeerScene::draw() {
+	RenderWindow& window = RenderWindow("Deer", 1920, 1080, WindowMode::Windowed);
+	InputManager manager;
 
-	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
-	InputManager manager = InputManager();
-	manager.defineButton("Forward", GLFW_KEY_W);
-	manager.defineButton("Forward", GLFW_KEY_A);
-
-	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	TransformFactory transFactory = TransformFactory(world);
+	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	TransformFactory& transFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(-0.03f, 0.17f, 2.66f), vec3(-91.59f, 2.78f, -3.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 1.f, 0.45f, 25.f, window.width, window.height, 0.01f, 100.f);
+	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 1.f, 0.45f, 25.f, window.width, window.height, 0.01f, 100.f);
 
-	GBuffer gBuffer = GBuffer();
+	GBuffer gBuffer;
 	gBuffer.init(window.width, window.height);
-	MaterialFactory materialFactory = MaterialFactory(gBuffer);
-	MeshFactory meshFactory = MeshFactory(materialFactory);
-	LightManager lightManager = LightManager();
-	RenderPipeline shaderManager = RenderPipeline(materialFactory);
+	MaterialFactory& materialFactory = MaterialFactory(gBuffer);
+	MeshFactory& meshFactory = MeshFactory(materialFactory);
+	LightManager lightManager;
+	RenderPipeline& shaderManager = RenderPipeline(materialFactory);
 
-	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
+	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
 
-	BilateralFilter blur = BilateralFilter(1, 0.7f);
-	DefaultPostProcess def = DefaultPostProcess(1.f);
-	SSAO ssao = SSAO(blur, 0.5f);
-	RenderContext context = RenderContext();
-	DeferredLighting lighting = DeferredLighting(scene);
+	BilateralFilter& blur = BilateralFilter(1, 0.7f);
+	DefaultPostProcess& def = DefaultPostProcess(1.f);
+	SSAO& ssao = SSAO(blur, 0.5f);
+	RenderContext context;
+	DeferredLighting& lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer, materialFactory);
 	renderer.addSSAO(ssao, 0.5f);
 	renderer.init();
@@ -177,18 +174,18 @@ void DeerScene::draw() {
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 		[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
 
-	CubeBuffer cubeBuffer = CubeBuffer();
-	BRDFIntegrationMap brdfInt = BRDFIntegrationMap();
-	CubeMapFactory cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
+	CubeBuffer cubeBuffer;
+	BRDFIntegrationMap brdfInt;
+	CubeMapFactory& cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
 
 	Transform& probeTransform = transFactory.CreateTransform(vec3(-0.13f, 0.13f, 0.52f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024, 20, 20, 20);
 
 	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv4/WinterForest_Ref.hdr");
-	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 1024);
+	EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 1024);
 	IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
-	Skybox skybox = Skybox(envCubeMap);
+	Skybox& skybox = Skybox(envCubeMap);
 	scene.setSkybox(skybox);
 	lightManager.addReflectionProbe(probe);
 
@@ -201,21 +198,21 @@ void DeerScene::draw() {
 	renderer.addObject(&testScene);
 	renderer.initObjects();
 
-	ImageBasedLighting ibl = ImageBasedLighting(scene);
+	ImageBasedLighting& ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);
 
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR();
-	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.8f, 0.8f);
+	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.8f, 0.8f);
 
-	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 30.f, 100.f, 0.3f);
+	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.3f);
+	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 30.f, 100.f, 0.3f);
 	renderer.addEffect(dof, dof);
 
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 
-	FXAA fxaa = FXAA(0.f, 0.f);
+	FXAA& fxaa = FXAA(0.f, 0.f);
 	renderer.addEffect(fxaa);
 
 	renderer.linkInformation();

@@ -29,7 +29,6 @@ namespace geeL {
 		FrameBufferInformation info;
 
 		FrameBuffer() {}
-		FrameBuffer(const FrameBuffer& buffer);
 
 		virtual void fill(std::function<void()> drawCall) = 0;
 
@@ -50,6 +49,10 @@ namespace geeL {
 
 		virtual std::string toString() const = 0;
 
+	private:
+		FrameBuffer(const FrameBuffer& other) = delete;
+		FrameBuffer& operator= (const FrameBuffer& other) = delete;
+
 	};
 
 
@@ -58,7 +61,6 @@ namespace geeL {
 
 	public:
 		ColorBuffer() {}
-		ColorBuffer(const ColorBuffer& buffer);
 		~ColorBuffer();
 
 		void init(unsigned int width, unsigned int height, std::vector<RenderTexture*>&& colorBuffers, bool useDepth = true);
@@ -78,6 +80,9 @@ namespace geeL {
 	private:
 		unsigned int rbo;
 		std::vector<RenderTexture*> buffers;
+
+		ColorBuffer(const ColorBuffer& other) = delete;
+		ColorBuffer& operator= (const ColorBuffer& other) = delete;
 
 	};
 }

@@ -1,11 +1,15 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "rendertexture.h"
+#include <iostream>
 
 namespace geeL {
 
 	RenderTexture::RenderTexture(const RenderTexture& texture) 
-		: Texture2D(texture), id(texture.getID()), width(texture.width), height(texture.height) {}
+		: Texture2D(texture), id(texture.getID()), width(texture.width), height(texture.height) {
+	
+		std::cout << "ayy\n";
+	}
 
 	RenderTexture::RenderTexture(unsigned int width, unsigned int height, 
 		ColorType colorType, WrapMode wrapMode, FilterMode filterMode) 

@@ -73,6 +73,9 @@ namespace geeL {
 		std::function<void()> geometryPassFunc;
 		std::function<void()> lightingPassFunc;
 
+		DeferredRenderer(const DeferredRenderer& other) = delete;
+		DeferredRenderer& operator= (const DeferredRenderer& other) = delete;
+
 		//Initialize start of rendering process
 		void renderInit();
 

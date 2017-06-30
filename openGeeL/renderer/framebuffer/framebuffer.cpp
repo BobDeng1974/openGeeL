@@ -11,8 +11,6 @@ using namespace std;
 
 namespace geeL {
 
-	FrameBuffer::FrameBuffer(const FrameBuffer& buffer) : info(buffer.info) {}
-
 
 	void FrameBuffer::bind() const {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
@@ -65,9 +63,6 @@ namespace geeL {
 	}
 
 
-
-	ColorBuffer::ColorBuffer(const ColorBuffer& buffer) 
-		: FrameBuffer(buffer), rbo(buffer.rbo), buffers(buffer.buffers) {}
 
 	ColorBuffer::~ColorBuffer() {
 		remove();

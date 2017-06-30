@@ -159,32 +159,29 @@ namespace {
 
 
 void SponzaScene::draw() {
-	
-	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
-	InputManager manager = InputManager();
-	manager.defineButton("Forward", GLFW_KEY_W);
-	manager.defineButton("Forward", GLFW_KEY_A);
+	RenderWindow& window = RenderWindow("Sponza", 1920, 1080, WindowMode::Windowed);
+	InputManager& manager = InputManager();
 
-	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	TransformFactory transFactory = TransformFactory(world);
+	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	TransformFactory& transFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(-7.36f, 4.76f, -1.75f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
+	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
 
-	GBuffer gBuffer = GBuffer();
+	GBuffer gBuffer;
 	gBuffer.init(window.width, window.height);
-	MaterialFactory materialFactory = MaterialFactory(gBuffer);
-	MeshFactory meshFactory = MeshFactory(materialFactory);
-	LightManager lightManager = LightManager();
-	RenderPipeline shaderManager = RenderPipeline(materialFactory);
-	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
+	MaterialFactory& materialFactory = MaterialFactory(gBuffer);
+	MeshFactory& meshFactory = MeshFactory(materialFactory);
+	LightManager& lightManager = LightManager();
+	RenderPipeline& shaderManager = RenderPipeline(materialFactory);
+	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
 	Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 
-	BilateralFilter blur = BilateralFilter(1, 0.7f);
-	DefaultPostProcess def = DefaultPostProcess(3.5f);
-	SSAO ssao = SSAO(blur, 2.5f);
-	RenderContext context = RenderContext();
-	DeferredLighting lighting = DeferredLighting(scene);
+	BilateralFilter& blur = BilateralFilter(1, 0.7f);
+	DefaultPostProcess& def = DefaultPostProcess(3.5f);
+	SSAO& ssao = SSAO(blur, 2.5f);
+	RenderContext& context = RenderContext();
+	DeferredLighting& lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer, materialFactory);
 	renderer.addSSAO(ssao, 0.5f);
 	renderer.init();
@@ -192,18 +189,18 @@ void SponzaScene::draw() {
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 		[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
 	
-	CubeBuffer cubeBuffer = CubeBuffer();
-	BRDFIntegrationMap brdfInt = BRDFIntegrationMap();
-	CubeMapFactory cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
+	CubeBuffer cubeBuffer;
+	BRDFIntegrationMap brdfInt;
+	CubeMapFactory& cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
 
 	Transform& probeTransform = transFactory.CreateTransform(vec3(15.15f, 0.62f, -4.11f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024);
 
 	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv4/MonValley_G_DirtRoad_3k.hdr");
-	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 256);
+	EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 256);
 	//IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
-	Skybox skybox = Skybox(envCubeMap);
+	Skybox& skybox = Skybox(envCubeMap);
 	scene.setSkybox(skybox);
 	lightManager.addReflectionProbe(probe);
 	
@@ -216,39 +213,39 @@ void SponzaScene::draw() {
 	renderer.addObject(&testScene);
 	renderer.initObjects();
 
-	GUIRenderer gui = GUIRenderer(window, context);
+	GUIRenderer& gui = GUIRenderer(window, context);
 	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
 	objectLister.add(camera);
 	gui.addElement(objectLister);
-	PostProcessingEffectLister postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
+	PostProcessingEffectLister& postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
 	gui.addElement(postLister);
-	SystemInformation sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
+	SystemInformation& sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
 	gui.addElement(sysInfo);
 	renderer.addGUIRenderer(&gui);
 	
 	postLister.add(def);
 	postLister.add(ssao);
 
-	ImageBasedLighting ibl = ImageBasedLighting(scene);
+	ImageBasedLighting& ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);
 
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR();
-	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.8f, 0.8f);
+	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.8f, 0.8f);
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
-	SSRRSnippet ssrrSnippet = SSRRSnippet(ssrr);
+	SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
 	postLister.add(ssrrSmooth, ssrrSnippet);
 
 	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 	GodRay& ray = GodRay(vec3(-2.4f, 45.6f, -4.6f), 20);
-	BlurredPostEffect raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
-	GodRaySnippet godRaySnippet = GodRaySnippet(ray);
+	BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
+	GodRaySnippet& godRaySnippet = GodRaySnippet(ray);
 	renderer.addEffect(raySmooth);
 	scene.addRequester(ray);
 	postLister.add(raySmooth, godRaySnippet);
 
-	FXAA fxaa = FXAA();
+	FXAA& fxaa = FXAA();
 	renderer.addEffect(fxaa);
 	postLister.add(fxaa);
 

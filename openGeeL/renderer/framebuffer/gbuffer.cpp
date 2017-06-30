@@ -10,10 +10,6 @@ namespace geeL {
 
 	GBuffer::GBuffer(GBufferContent content) : content(content) {}
 
-	GBuffer::GBuffer(const GBuffer& buffer) : FrameBuffer(buffer), screenInfo(buffer.screenInfo), 
-		diffuse(buffer.diffuse), positionRough(buffer.positionRough), 
-		normalMet(buffer.normalMet), emissivity(buffer.emissivity), depthPos(buffer.depthPos) {}
-
 	GBuffer::~GBuffer() {
 		positionRough.remove();
 		normalMet.remove();

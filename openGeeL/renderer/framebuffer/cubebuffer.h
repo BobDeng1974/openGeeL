@@ -11,7 +11,6 @@ namespace geeL {
 
 	public:
 		CubeBuffer();
-		CubeBuffer(const CubeBuffer& buffer);
 		~CubeBuffer();
 
 		void init(unsigned int resolution, unsigned int textureID);
@@ -27,9 +26,10 @@ namespace geeL {
 	private:
 		unsigned int textureID, rbo;
 
+		CubeBuffer(const CubeBuffer& other) = delete;
+		CubeBuffer& operator= (const CubeBuffer& other) = delete;
+
 	};
-
-
 }
 
 #endif

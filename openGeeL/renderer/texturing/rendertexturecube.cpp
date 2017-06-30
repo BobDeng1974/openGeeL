@@ -19,6 +19,10 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
+	RenderTextureCube::~RenderTextureCube() {
+		remove();
+	}
+
 
 	void RenderTextureCube::remove() {
 		glDeleteTextures(1, &id);

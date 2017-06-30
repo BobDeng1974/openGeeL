@@ -38,6 +38,9 @@ namespace geeL {
 		TextureBuffer nodeDiffuse;  //Stores color of child nodes
 		Voxelizer& voxelizer;
 
+		VoxelOctree(const VoxelOctree& other) = delete;
+		VoxelOctree& operator= (const VoxelOctree& other) = delete;
+
 		//Sort voxels into tree nodes
 		void buildOctree(uint dataWidth, uint groupWidth, uint groupHeight);
 

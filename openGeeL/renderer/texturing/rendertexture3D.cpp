@@ -1,6 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "rendertexture3D.h"
+#include <iostream>
 
 namespace geeL {
 
@@ -20,6 +21,10 @@ namespace geeL {
 		
 		glGenerateMipmap(GL_TEXTURE_3D);
 		glBindTexture(GL_TEXTURE_3D, 0);
+	}
+
+	RenderTexture3D::~RenderTexture3D() {
+		remove();
 	}
 
 

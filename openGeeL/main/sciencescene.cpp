@@ -151,34 +151,31 @@ namespace {
 
 
 void ScieneScene::draw() {
-	
-	RenderWindow window = RenderWindow("geeL", 1920, 1080, WindowMode::Windowed);
-	InputManager manager = InputManager();
-	manager.defineButton("Forward", GLFW_KEY_W);
-	manager.defineButton("Forward", GLFW_KEY_A);
+	RenderWindow& window = RenderWindow("Science Scene", 1920, 1080, WindowMode::Windowed);
+	InputManager manager;
 
-	geeL::Transform world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	TransformFactory transFactory = TransformFactory(world);
+	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	TransformFactory& transFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(0.0f, 2.0f, 9.0f), vec3(-90.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
+	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
 
-	GBuffer gBuffer = GBuffer();
+	GBuffer gBuffer;
 	gBuffer.init(window.width, window.height);
-	MaterialFactory materialFactory = MaterialFactory(gBuffer);
-	MeshFactory meshFactory = MeshFactory(materialFactory);
-	LightManager lightManager = LightManager();
-	RenderPipeline shaderManager = RenderPipeline(materialFactory);
+	MaterialFactory& materialFactory = MaterialFactory(gBuffer);
+	MeshFactory& meshFactory = MeshFactory(materialFactory);
+	LightManager lightManager;
+	RenderPipeline& shaderManager = RenderPipeline(materialFactory);
 	
-	RenderScene scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
-	WorldPhysics physics = WorldPhysics();
+	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
+	WorldPhysics& physics = WorldPhysics();
 	scene.setPhysics(&physics);
 
-	BilateralFilter blur = BilateralFilter(1, 0.7f);
-	DefaultPostProcess def = DefaultPostProcess(2.f);
-	SSAO ssao = SSAO(blur, 3.f);
-	RenderContext context = RenderContext();
-	DeferredLighting lighting = DeferredLighting(scene);
+	BilateralFilter& blur = BilateralFilter(1, 0.7f);
+	DefaultPostProcess& def = DefaultPostProcess(2.f);
+	SSAO& ssao = SSAO(blur, 3.f);
+	RenderContext context;
+	DeferredLighting& lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer, materialFactory);
 	renderer.addSSAO(ssao, 0.5f);
 	renderer.init();
@@ -186,15 +183,15 @@ void ScieneScene::draw() {
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 		[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
 
-	CubeBuffer cubeBuffer = CubeBuffer();
-	BRDFIntegrationMap brdfInt = BRDFIntegrationMap();
-	CubeMapFactory cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
+	CubeBuffer cubeBuffer;
+	BRDFIntegrationMap brdfInt;
+	CubeMapFactory& cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
 
 	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv1/Playa_Sunrise.hdr");
-	EnvironmentCubeMap envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 1024);
+	EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 1024);
 	IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
-	Skybox skybox = Skybox(envCubeMap);
+	Skybox& skybox = Skybox(envCubeMap);
 	scene.setSkybox(skybox);
 	lightManager.addReflectionProbe(iblMap);
 	
@@ -207,35 +204,35 @@ void ScieneScene::draw() {
 	renderer.addObject(&testScene);
 	renderer.initObjects();
 
-	GUIRenderer gui = GUIRenderer(window, context);
+	GUIRenderer& gui = GUIRenderer(window, context);
 	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
 	objectLister.add(camera);
 	gui.addElement(objectLister);
-	PostProcessingEffectLister postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
+	PostProcessingEffectLister& postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
 	gui.addElement(postLister);
-	SystemInformation sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
+	SystemInformation& sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
 	gui.addElement(sysInfo);
 	//renderer.addGUIRenderer(&gui);
 
-	ImageBasedLighting ibl = ImageBasedLighting(scene);
+	ImageBasedLighting& ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);
 	
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR();
-	BlurredPostEffect ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.6f, 0.6f);
+	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.6f, 0.6f);
 	
-	DepthOfFieldBlur blur3 = DepthOfFieldBlur(2, 0.3f);
-	DepthOfFieldBlurred dof = DepthOfFieldBlurred(blur3, camera.depth, 5.f, 100.f, 0.3f);
+	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.3f);
+	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 5.f, 100.f, 0.3f);
 
-	SobelFilter sobel = SobelFilter(15);
-	SobelBlur sobelBlur = SobelBlur(sobel);
-	VolumetricLight vol = VolumetricLight(*spotLight2, 0.05f, 6.f, 100);
-	BlurredPostEffect volSmooth = BlurredPostEffect(vol, sobelBlur, 0.3f, 0.3f);
+	SobelFilter& sobel = SobelFilter(15);
+	SobelBlur& sobelBlur = SobelBlur(sobel);
+	VolumetricLight& vol = VolumetricLight(*spotLight2, 0.05f, 6.f, 100);
+	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.3f, 0.3f);
 
 	postLister.add(def);
 	postLister.add(ssao);
 
-	VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
+	VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
 	scene.addRequester(vol);
 	postLister.add(volSmooth, lightSnippet);
@@ -246,7 +243,7 @@ void ScieneScene::draw() {
 	renderer.addEffect(dof, dof);
 	postLister.add(dof);
 
-	FXAA fxaa = FXAA();
+	FXAA& fxaa = FXAA();
 	renderer.addEffect(fxaa);
 
 	renderer.linkInformation();

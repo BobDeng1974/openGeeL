@@ -23,6 +23,10 @@ namespace geeL {
 		setResolution(config.resolution);
 	}
 
+	SimpleShadowMap::~SimpleShadowMap() {
+		remove();
+	}
+
 
 	void SimpleShadowMap::init() {
 

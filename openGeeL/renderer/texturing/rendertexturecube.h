@@ -12,6 +12,7 @@ namespace geeL {
 		RenderTextureCube() : TextureCube(ColorType::Single), id(0) {}
 		RenderTextureCube(unsigned int resolution,
 			WrapMode wrapMode = WrapMode::ClampEdge, FilterMode filterMode = FilterMode::Linear);
+		~RenderTextureCube();
 
 		virtual unsigned int getID() const;
 		virtual void remove();
@@ -20,6 +21,9 @@ namespace geeL {
 
 	private:
 		unsigned int id, resolution;
+
+		RenderTextureCube(const RenderTextureCube& other) = delete;
+		RenderTextureCube& operator= (const RenderTextureCube& other) = delete;
 
 	};
 
