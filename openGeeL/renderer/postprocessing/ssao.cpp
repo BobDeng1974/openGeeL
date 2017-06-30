@@ -89,7 +89,7 @@ namespace geeL {
 	void SSAO::addWorldInformation(map<WorldMaps, const Texture*> maps) {
 		addBuffer(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
 		addBuffer(*maps[WorldMaps::NormalMetallic], "gNormalMet");
-		addBuffer(noiseTexture.getID(), "noiseTexture");
+		addBuffer(noiseTexture, "noiseTexture");
 	}
 
 	float SSAO::getRadius() const {

@@ -72,7 +72,7 @@ namespace geeL {
 	}
 
 	void CascadedDirectionalShadowMap::removeMap(RenderShader& shader) {
-		shader.removeMap(ID);
+		shader.removeMap(*this);
 	}
 
 

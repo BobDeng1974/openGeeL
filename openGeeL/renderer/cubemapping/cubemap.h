@@ -21,7 +21,7 @@ namespace geeL {
 			const std::string& name, ShaderTransformSpace space) const {}
 
 		virtual void add(RenderShader& shader, std::string name) const;
-		virtual void remove(RenderShader& shader, unsigned int id) const;
+		virtual void remove(RenderShader& shader) const;
 
 		virtual unsigned int getID() const;
 

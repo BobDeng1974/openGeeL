@@ -65,11 +65,29 @@ namespace geeL {
 		static void mipmap(TextureType type, unsigned int id);
 		static void setMaxAnisotropyAmount(AnisotropicFilter value);
 
+		bool operator== (const Texture& rhs) const;
+
 	protected:
 		Texture(ColorType colorType) : colorType(colorType) {}
 
 		ColorType colorType;
 		static AnisotropicFilter maxAnisotropy;
+
+	};
+	
+	class TextureDummy : public Texture {
+
+	public:
+		TextureDummy(unsigned int id, TextureType type = TextureType::Texture2D) 
+			: Texture(ColorType::None), id(id), type(type) {}
+
+		virtual unsigned int getID() const { return id; }
+		virtual TextureType getTextureType() const { return type; }
+		virtual void remove() {}
+
+	private:
+		TextureType type;
+		unsigned int id;
 
 	};
 
@@ -125,6 +143,10 @@ namespace geeL {
 
 	inline bool Texture::isEmpty() const {
 		return getID() == 0;
+	}
+
+	inline bool Texture::operator== (const Texture& rhs) const {
+		return getID() == rhs.getID();
 	}
 
 	inline TextureType Texture2D::getTextureType() const {

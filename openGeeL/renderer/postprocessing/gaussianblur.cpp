@@ -1,5 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include "../texturing/texture.h"
 #include "../shader/rendershader.h"
 #include "../primitives/screenquad.h"
 #include "sobel.h"
@@ -15,7 +16,7 @@ namespace geeL {
 		: GaussianBlur(strength, "renderer/postprocessing/gaussianblur.frag") {}
 
 	GaussianBlur::GaussianBlur(unsigned int strength, string shaderPath)
-		: PostProcessingEffect(shaderPath) {
+		: PostProcessingEffect(shaderPath), mainBuffer(nullptr) {
 
 		amount = 2 * strength - 1;
 		if (amount < 1)
@@ -24,9 +25,10 @@ namespace geeL {
 			amount = maxAmount;
 	}
 
-	void GaussianBlur::setBuffer(unsigned int buffer) {
-		PostProcessingEffect::setBuffer(buffer);
-		mainBuffer = buffer;
+	void GaussianBlur::setBuffer(const Texture& texture) {
+		PostProcessingEffect::setBuffer(texture);
+
+		mainBuffer = &texture;
 	}
 
 	void GaussianBlur::init(ScreenQuad& screen, const FrameBuffer& buffer) {
@@ -56,7 +58,10 @@ namespace geeL {
 			if (first) {
 				first = false;
 				//Use the original the first time
-				addBuffer(mainBuffer, "image");
+				if (mainBuffer != nullptr)
+					addBuffer(*mainBuffer, "image");
+				else
+					std::cout << "Buffer for gaussian blur was never set\n";
 			}
 			else {
 				//Then use the previously blurred image
@@ -115,10 +120,10 @@ namespace geeL {
 		: GaussianBlur(strength, "renderer/postprocessing/sobelblur.frag"), sobel(sobel) {}
 
 
-	void SobelBlur::setBuffer(unsigned int buffer) {
-		GaussianBlur::setBuffer(buffer);
+	void SobelBlur::setBuffer(const Texture& texture) {
+		GaussianBlur::setBuffer(texture);
 
-		sobel.setBuffer(buffer);
+		sobel.setBuffer(texture);
 	}
 
 	void SobelBlur::init(ScreenQuad & screen, const FrameBuffer& buffer) {

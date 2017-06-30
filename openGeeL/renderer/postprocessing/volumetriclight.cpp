@@ -23,13 +23,13 @@ namespace geeL {
 		const ShadowMap* map = light.getShadowMap();
 
 		if (map != nullptr)
-			addBuffer(map->getID(), "shadowMap");
+			addBuffer(*map, "shadowMap");
 		else
 			std::cout << "Volumetric light not functional since light has no shadow map attached\n";
 
-		unsigned int cookieID = light.getLightCookieID();
-		if (cookieID != 0)
-			addBuffer(cookieID, "lightCookie");
+		const Texture* lightCookie = light.getLightCookie();
+		if (lightCookie != nullptr)
+			addBuffer(*lightCookie, "lightCookie");
 
 		shader.setInteger("effectOnly", onlyEffect);
 		shader.setFloat("minCutoff", minDistance);

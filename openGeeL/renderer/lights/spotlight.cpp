@@ -44,11 +44,8 @@ namespace geeL {
 		lightCookie = &cookie;
 	}
 
-	unsigned int SpotLight::getLightCookieID() const {
-		if (lightCookie != nullptr)
-			return lightCookie->getID();
-
-		return 0;
+	const Texture * const SpotLight::getLightCookie() const {
+		return lightCookie;
 	}
 
 	void SpotLight::addLightCookie(RenderShader& shader, const string& name) {

@@ -14,6 +14,12 @@ namespace geeL {
 
 	static unsigned int activeShader = 0;
 	
+
+	bool TextureBinding::operator== (const TextureBinding &rhs) {
+		return *texture == *rhs.texture;
+	}
+
+
 	void Shader::use() const {
 		if (program != activeShader) {
 			glUseProgram(program);
@@ -25,12 +31,13 @@ namespace geeL {
 		glDeleteProgram(program);
 	}
 
-	void Shader::addMap(TextureID id, const std::string& name, TextureType type) {
+
+	void Shader::addMap(const Texture& texture, const std::string& name) {
 		auto it = maps.find(name);
 		//Update texture ID if a binding with same name already exists
 		if (it != maps.end()) {
 			TextureBinding& binding = it->second;
-			binding.id = id;
+			binding.texture = &texture;
 		}
 		//Add new texture binding otherwise
 		else {
@@ -38,21 +45,17 @@ namespace geeL {
 			unsigned int offset = maps.size();
 			glUniform1i(glGetUniformLocation(program, name.c_str()), mapOffset + offset);
 
-			maps[name] = TextureBinding(id, (int)type, offset, name);
+			maps[name] = TextureBinding(&texture, offset, name);
 			mapBindingPos = maps.size() + mapOffset;
 		}
 	}
 
-	void Shader::addMap(const Texture& texture, const std::string& name) {
-		addMap(texture.getID(), name, texture.getTextureType());
-	}
-
-	void Shader::removeMap(TextureID id) {
+	void Shader::removeMap(const Texture& texture) {
 		auto element = maps.end();
 		for (auto it = maps.begin(); it != maps.end(); it++) {
 			TextureBinding& tex = (*it).second;
 
-			if (tex.id == id) {
+			if (*tex.texture == texture) {
 				element = it;
 				break;
 			}
@@ -76,10 +79,10 @@ namespace geeL {
 		}
 	}
 
-	TextureID Shader::getMap(const std::string& name) const {
+	const Texture * const Shader::getMap(const std::string& name) const {
 		auto it = maps.find(name);
 		if (it != maps.end())
-			return (*it).second.id;
+			return (*it).second.texture;
 
 		return 0;
 	}
@@ -101,11 +104,11 @@ namespace geeL {
 		for (auto it = maps.begin(); it != maps.end(); it++) {
 			const TextureBinding& binding = (*it).second;
 			glActiveTexture(layer + mapOffset + binding.offset);
-			glBindTexture(binding.type, binding.id);
+			binding.texture->bind();
 		}
 	}
 
-	void Shader::loadMaps(std::list<TextureID>& maps, TextureType type) const {
+	void Shader::loadMaps(std::list<unsigned int>& maps, TextureType type) const {
 		int textureType = (int)type;
 
 		int layer = GL_TEXTURE0;

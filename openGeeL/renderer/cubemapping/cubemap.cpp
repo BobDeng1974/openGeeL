@@ -18,8 +18,8 @@ namespace geeL {
 		shader.addMap(*texture, name + "albedo");
 	}
 
-	void CubeMap::remove(RenderShader& shader, unsigned int id) const {
-		shader.removeMap(id);
+	void CubeMap::remove(RenderShader& shader) const {
+		shader.removeMap(*texture);
 	}
 
 	unsigned int CubeMap::getID() const {

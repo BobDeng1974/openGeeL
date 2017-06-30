@@ -8,6 +8,7 @@
 namespace geeL {
 
 	class SobelFilter;
+	class Texture;
 
 
 	//Two pass gaussian blur
@@ -17,7 +18,7 @@ namespace geeL {
 		GaussianBlur(unsigned int strength = 1);
 		
 		void setKernel(float newKernel[5]);
-		virtual void setBuffer(unsigned int buffer);
+		virtual void setBuffer(const Texture& texture);
 		
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
@@ -31,7 +32,7 @@ namespace geeL {
 	private:
 		unsigned int amount;
 		unsigned int maxAmount = 10;
-		unsigned int mainBuffer;
+		const Texture* mainBuffer;
 		float kernel[5] = { 0.227027f, 0.1945946f, 0.1216216f, 0.054054f, 0.016216f };
 		ColorBuffer frameBuffers[2];
 		ShaderLocation horLocation;
@@ -72,7 +73,7 @@ namespace geeL {
 	public:
 		SobelBlur(SobelFilter& sobel, unsigned int strength = 1);
 
-		virtual void setBuffer(unsigned int buffer);
+		virtual void setBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);

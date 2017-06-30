@@ -61,7 +61,7 @@ namespace geeL {
 
 
 	void SimpleShadowMap::removeMap(RenderShader& shader) {
-		shader.removeMap(id);
+		shader.removeMap(*this);
 	}
 
 	void SimpleShadowMap::remove() {

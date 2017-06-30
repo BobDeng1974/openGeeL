@@ -23,22 +23,17 @@ namespace geeL {
 		PostProcessingEffect(std::string fragmentPath);
 		PostProcessingEffect(std::string vertexPath, std::string fragmentPath);
 
+		void setScreen(ScreenQuad& screen);
+
 		//Returns first (and main) buffer of this effect
-		unsigned int getBuffer() const;
+		const Texture& getBuffer() const;
 
 		//Set main image buffer that will be used as base for post processing
 		void setBuffer(const ColorBuffer& buffer);
-		void setBuffer(const Texture& texture);
-		void setScreen(ScreenQuad& screen);
-
-		//Set (first) buffer that will be used as base for post processing
-		virtual void setBuffer(unsigned int buffer);
-
+		virtual void setBuffer(const Texture& texture);
 		void addBuffer(const Texture& texture, const std::string& name);
-		void addBuffer(unsigned int id, const std::string& name);
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
-
 		virtual void draw();
 
 		virtual std::string toString() const;

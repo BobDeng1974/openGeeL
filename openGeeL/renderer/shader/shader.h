@@ -10,26 +10,23 @@
 #include "../texturing/texturetype.h"
 
 typedef int ShaderLocation;
-typedef unsigned int TextureID;
 
 namespace geeL {
 
 	class Texture;
 
 	struct TextureBinding {
-		TextureID id;
-		unsigned int type;
+		const Texture* texture;
 		unsigned int offset;
 		std::string name;
 
 		TextureBinding() {}
 
-		TextureBinding(TextureID id, unsigned int type, unsigned offset, std::string name) :
-			id(id), type(type), offset(offset), name(name) {}
+		TextureBinding(const Texture* texture, unsigned offset, std::string name) :
+			texture(texture), offset(offset), name(name) {}
 
-		bool operator== (const TextureBinding &rhs) {
-			return id == rhs.id;
-		}
+		bool operator== (const TextureBinding &rhs);
+
 	};
 
 
@@ -47,12 +44,11 @@ namespace geeL {
 		unsigned int getProgram() const;
 
 		//Add a new map to the shader
-		void addMap(TextureID id, const std::string& name, TextureType type = TextureType::Texture2D);
 		void addMap(const Texture& texture, const std::string& name);
-		TextureID getMap(const std::string& name) const;
+		const Texture * const getMap(const std::string& name) const;
 
-		//Remove map with given ID from shader (if it exists)
-		void removeMap(TextureID id);
+		//Remove map from shader (if it is attached)
+		void removeMap(const Texture& texture);
 
 		//Remove map with given name from shader (if it exists)
 		void removeMap(const std::string& name);
@@ -63,7 +59,7 @@ namespace geeL {
 		//Loads committed maps into the shader
 		//IMPORTANT: no binding is taken care of, multiple calls will override previous one
 		//and loading maps from other sources will also override this call
-		void loadMaps(std::list<TextureID>& maps, TextureType type = TextureType::Texture2D) const;
+		void loadMaps(std::list<unsigned int>& maps, TextureType type = TextureType::Texture2D) const;
 
 		ShaderLocation getLocation(const std::string& name) const;
 

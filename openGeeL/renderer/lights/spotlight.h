@@ -6,6 +6,7 @@
 namespace geeL {
 
 	class ImageTexture;
+	class Texture;
 	class Transform;
 
 	class SpotLight : public Light {
@@ -19,7 +20,7 @@ namespace geeL {
 
 		//Set light cookie for this spotlight
 		void setLightCookie(ImageTexture& cookie);
-		unsigned int getLightCookieID() const;
+		const Texture * const getLightCookie() const;
 
 		//Add light cookie of this spotlight to given shader.
 		void addLightCookie(RenderShader& shader, const std::string& name);

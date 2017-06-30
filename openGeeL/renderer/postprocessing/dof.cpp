@@ -1,4 +1,5 @@
 #include "gaussianblur.h"
+#include "../texturing/texture.h"
 #include "../primitives/screenquad.h"
 #include "dof.h"
 
@@ -87,6 +88,7 @@ namespace geeL {
 	void DepthOfFieldBlurred::addWorldInformation(map<WorldMaps, const Texture*> maps) {
 		addBuffer(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
 		blur.addBuffer(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
+
 		blur.setBuffer(getBuffer());
 	}
 

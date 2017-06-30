@@ -143,7 +143,7 @@ namespace geeL {
 
 				//Save regular rendering settings
 				bool onlyEffect = isolatedEffect->getEffectOnly();
-				unsigned int buffer = isolatedEffect->getBuffer();
+				const Texture& buffer = isolatedEffect->getBuffer();
 
 				//Draw isolated effect
 				isolatedEffect->effectOnly(true);
