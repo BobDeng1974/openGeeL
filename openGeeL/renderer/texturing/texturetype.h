@@ -13,6 +13,42 @@ namespace geeL {
 		TextureCube = GL_TEXTURE_CUBE_MAP
 
 	};
+
+	enum class ColorType {
+		None,
+		GammaSpace,
+		Single,
+		RGB,
+		RGB16,
+		RGB32,
+		RGBA,
+		RGBA16,
+		RGBA32
+	};
+
+	enum class FilterMode {
+		None,
+		Nearest,
+		Linear,
+		Bilinear,
+		Trilinear
+	};
+
+	enum class WrapMode {
+		Repeat,
+		MirrorRepeat,
+		ClampEdge,
+		ClampBorder
+	};
+
+	enum class AnisotropicFilter {
+		None = 0,
+		Small = 2,
+		Medium = 4,
+		Large = 8,
+		VeryLarge = 16
+	};
+
 }
 
 #endif

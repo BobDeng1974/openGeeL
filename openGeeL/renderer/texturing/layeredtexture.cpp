@@ -33,6 +33,14 @@ namespace geeL {
 		textures.push_back(pair<string, TextureMap*>(name, &texture));
 	}
 
+	void LayeredTexture::bind() const {
+		auto it = textures.begin();
+		Texture* map = it->second;
+
+		if (map != nullptr)
+			return map->bind();
+	}
+
 	void LayeredTexture::bind(const RenderShader& shader, std::string name, int texLayer) const {
 
 		int counter = 0;

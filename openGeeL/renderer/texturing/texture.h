@@ -7,41 +7,6 @@ namespace geeL {
 
 	class RenderShader;
 
-	enum class ColorType {
-		None,
-		GammaSpace,
-		Single,
-		RGB,
-		RGB16,
-		RGB32,
-		RGBA,
-		RGBA16,
-		RGBA32
-	};
-
-	enum class FilterMode {
-		None,
-		Nearest,
-		Linear,
-		Bilinear,
-		Trilinear
-	};
-
-	enum class WrapMode {
-		Repeat,
-		MirrorRepeat,
-		ClampEdge,
-		ClampBorder
-	};
-
-	enum class AnisotropicFilter {
-		None = 0,
-		Small = 2, 
-		Medium = 4,
-		Large = 8,
-		VeryLarge = 16
-	};
-
 
 	class Texture {
 
@@ -51,7 +16,7 @@ namespace geeL {
 		virtual ColorType getColorType() const;
 		
 		//Remove texture from GPU memory
-		virtual void remove() = 0;
+		virtual void remove();
 		virtual void bind() const;
 		virtual void clear();
 		virtual bool isEmpty() const;
@@ -75,22 +40,6 @@ namespace geeL {
 
 	};
 	
-	class TextureDummy : public Texture {
-
-	public:
-		TextureDummy(unsigned int id, TextureType type = TextureType::Texture2D) 
-			: Texture(ColorType::None), id(id), type(type) {}
-
-		virtual unsigned int getID() const { return id; }
-		virtual TextureType getTextureType() const { return type; }
-		virtual void remove() {}
-
-	private:
-		TextureType type;
-		unsigned int id;
-
-	};
-
 
 	class Texture2D : public Texture {
 

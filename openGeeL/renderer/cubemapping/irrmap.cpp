@@ -24,8 +24,6 @@ namespace geeL {
 	}
 
 	IrradianceMap::~IrradianceMap() {
-		texture->remove();
-
 		delete texture;
 		delete conversionShader;
 	}

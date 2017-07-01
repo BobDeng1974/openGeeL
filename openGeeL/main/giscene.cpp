@@ -129,7 +129,7 @@ namespace {
 
 			buddha.iterateMaterials([&](MaterialContainer& container) {
 				container.setFloatValue("Transparency", 0.01f);
-				container.setFloatValue("Roughness", 0.15f);
+				container.setFloatValue("Roughness", 0.25f);
 				container.setFloatValue("Metallic", 0.4f);
 				container.setVectorValue("Color", vec3(0.1f));
 			});

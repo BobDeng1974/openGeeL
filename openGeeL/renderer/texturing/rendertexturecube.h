@@ -10,8 +10,8 @@ namespace geeL {
 
 	public:
 		RenderTextureCube() : TextureCube(ColorType::Single), id(0) {}
-		RenderTextureCube(unsigned int resolution,
-			WrapMode wrapMode = WrapMode::ClampEdge, FilterMode filterMode = FilterMode::Linear);
+		RenderTextureCube(unsigned int resolution, WrapMode wrapMode = WrapMode::ClampEdge, 
+			FilterMode filterMode = FilterMode::Linear);
 		~RenderTextureCube();
 
 		virtual unsigned int getID() const;

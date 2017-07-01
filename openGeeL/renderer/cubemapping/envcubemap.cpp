@@ -26,8 +26,6 @@ namespace geeL {
 	}
 
 	EnvironmentCubeMap::~EnvironmentCubeMap() {
-		texture->remove();
-
 		delete texture;
 		delete conversionShader;
 	}

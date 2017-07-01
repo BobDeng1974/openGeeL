@@ -25,8 +25,6 @@ namespace geeL {
 	}
 
 	PrefilteredEnvironmentMap::~PrefilteredEnvironmentMap() {
-		texture->remove();
-
 		delete texture;
 		delete conversionShader;
 	}

@@ -23,7 +23,6 @@ namespace geeL {
 
 
 	ReflectionProbe::~ReflectionProbe() {
-		texture->remove();
 		delete texture;
 	}
 

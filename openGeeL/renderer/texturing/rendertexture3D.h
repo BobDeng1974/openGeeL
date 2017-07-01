@@ -10,7 +10,7 @@ namespace geeL {
 	class RenderTexture3D : public Texture3D {
 
 	public:
-		RenderTexture3D() : Texture3D(ColorType::Single), id(0) {}
+		RenderTexture3D() : Texture3D(ColorType::None), id(0) {}
 		RenderTexture3D(unsigned int width, unsigned int height, unsigned int depth, unsigned int levels, 
 			WrapMode wrapMode = WrapMode::ClampBorder, FilterMode filterMode = FilterMode::Trilinear);
 		~RenderTexture3D();
