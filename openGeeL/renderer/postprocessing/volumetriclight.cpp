@@ -12,9 +12,9 @@ using namespace std;
 
 namespace geeL {
 
-	VolumetricLight::VolumetricLight(const SpotLight& light, float density, float minDistance, unsigned int samples)
+	VolumetricLight::VolumetricLight(const SpotLight& light, float density, float minDistance, unsigned int samples, bool useCookie)
 		: PostProcessingEffect("renderer/postprocessing/volumetriclight.frag"), 
-			light(light), density(density), minDistance(minDistance), samples(samples) {}
+			light(light), density(density), minDistance(minDistance), samples(samples), useCookie(useCookie) {}
 
 
 	void VolumetricLight::init(ScreenQuad& screen, const FrameBuffer& buffer) {
@@ -28,8 +28,11 @@ namespace geeL {
 			std::cout << "Volumetric light not functional since light has no shadow map attached\n";
 
 		const Texture* lightCookie = light.getLightCookie();
-		if (lightCookie != nullptr)
+		if (lightCookie != nullptr) {
 			addBuffer(*lightCookie, "lightCookie");
+			shader.setInteger("useCookie", (int)useCookie);
+		}
+			
 
 		shader.setInteger("effectOnly", onlyEffect);
 		shader.setFloat("minCutoff", minDistance);

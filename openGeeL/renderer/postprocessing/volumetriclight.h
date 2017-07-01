@@ -13,7 +13,7 @@ namespace geeL {
 
 	public:
 		VolumetricLight(const SpotLight& light, 
-			float density = 1.f, float minDistance = 1.f, unsigned int samples = 30);
+			float density = 1.f, float minDistance = 1.f, unsigned int samples = 30, bool useCookie = false);
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
@@ -33,6 +33,7 @@ namespace geeL {
 
 	private:
 		unsigned int samples;
+		bool useCookie;
 		float density;
 		float minDistance;
 		const SpotLight& light;

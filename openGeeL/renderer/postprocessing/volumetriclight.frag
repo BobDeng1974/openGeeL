@@ -22,6 +22,7 @@ out vec4 color;
 uniform sampler2D image;
 uniform sampler2D gPositionDepth;
 uniform sampler2D shadowMap;
+uniform sampler2D lightCookie;
 
 uniform SpotLight light;
 uniform float density;
@@ -31,6 +32,7 @@ uniform mat4 inverseView;
 uniform mat4 projection;
 
 uniform int effectOnly;
+uniform bool useCookie;
 
 float random(vec2 co);
 vec3 convertToLightSpace(vec3 fragPosition);
@@ -60,6 +62,7 @@ void main() {
 		vec3 fragView = fragPos * f * stepi;
 
 		float shadow = 1.f - calculateSpotLightShadows(frag);
+		shadow *= useCookie ? texture(lightCookie, frag.xy).r : 1.f;
 
 		vec3 lightDirection = light.position - fragView;
 		float lightDistance = length(lightDirection);
@@ -81,7 +84,7 @@ void main() {
 
 	volume *= (1.f / stepi);
 	//color = vec4(result + volume, 1.0f);
-	color = vec4(volume, 1.0f);
+	color = vec4(volume, 1.f);
 }
 
 
