@@ -27,8 +27,9 @@ uniform sampler2D gPositionRoughness;
 uniform sampler2D gNormalMet;
 uniform sampler2D gDiffuse;
 
-vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo);
-vec3 indirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness);
+vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo, vec3 kd);
+vec3 indirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness, vec3 ks);
+vec3 indirectReflection(vec3 position, vec3 view, vec3 normal, float roughness, vec3 kd);
 
 vec4 traceIndirectDiffuse(vec3 position, vec3 direction, float spread);
 vec4 traceIndirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness);
@@ -65,15 +66,12 @@ void main() {
 	vec3 ks = calculateFresnelTerm(doto(normal, view), albedo.rgb, metallic, roughness);
 	vec3 kd = 1.f - ks;
 
-	vec3 indirectDiff = indirectDiffuse(position, normal, albedo.rgb) * kd;
-	vec3 indirectSpec = indirectSpecular(position, refl, normal, roughness) * ks;// (1.f - roughness);
+	vec3 indirectDiff = indirectDiffuse(position, normal, albedo.rgb, kd);
+	vec3 indirectSpec = indirectSpecular(position, refl, normal, roughness, ks);
 	vec3 solidColor = baseColor + indirectDiff + indirectSpec;
 	
 	if(albedo.a < 1.f) {
-		float refIndex = dot(kd, luminance);
-		vec3 refrDir = refract(-view, normal, refIndex);
-		vec3 refractionColor = indirectSpecular(position, refrDir, normal, roughness);
-
+		vec3 refractionColor = indirectReflection(position, view, normal, roughness, kd);
 		color = vec4(mix(refractionColor, solidColor, albedo.a), 1.f);
 	}
 	else
@@ -81,7 +79,7 @@ void main() {
 }
 
 
-vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo) {
+vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo, vec3 kd) {
 	//Move position into direction of voxel border to avoid 
 	//sampling neighboring voxels when direction is steep
 	vec3 halfDir = getClosestAxisNormal(normal);
@@ -112,19 +110,25 @@ vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo) {
 	spreads[1] = 0.166f;
 
 	vec3 color = vec3(0.f);
-	color += weights[0] * traceIndirectDiffuse(startPos, sampleVectors[0], spreads[0]).rgb;
-	color += weights[1] * traceIndirectDiffuse(startPos, sampleVectors[1], spreads[1]).rgb;
-	color += weights[1] * traceIndirectDiffuse(startPos, sampleVectors[2], spreads[1]).rgb;
-	color += weights[1] * traceIndirectDiffuse(startPos, sampleVectors[3], spreads[1]).rgb;
-	color += weights[1] * traceIndirectDiffuse(startPos, sampleVectors[4], spreads[1]).rgb;
-	color += weights[1] * traceIndirectDiffuse(startPos, sampleVectors[5], spreads[1]).rgb;
+	color += weights[0] * traceIndirectDiffuse(startPos, sampleVectors[0], spreads[0]).rgb * dot(sampleVectors[0], normal);
 
-	return color * albedo;
+	for(int i = 1; i < 6; i++)
+		color += weights[1] * traceIndirectDiffuse(startPos, sampleVectors[i], spreads[1]).rgb * dot(sampleVectors[i], normal);
+
+	return color * albedo * kd;
 }
 
 
-vec3 indirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness) {
+vec3 indirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness, vec3 ks) {
 	vec4 radiance = traceIndirectSpecular(position, direction, normal, roughness);
+
+	return radiance.rgb * ks * dot(direction, normal);
+}
+
+vec3 indirectReflection(vec3 position, vec3 view, vec3 normal, float roughness, vec3 kd) {
+	float refIndex = dot(kd, luminance);
+	vec3 refrDir = refract(-view, normal, refIndex);
+	vec4 radiance = traceIndirectSpecular(position, refrDir, normal, roughness);
 
 	return radiance.rgb;
 }
