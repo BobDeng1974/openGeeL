@@ -130,7 +130,7 @@ namespace {
 			float outerAngle = glm::cos(glm::radians(27.5f));
 
 			ImageTexture& texture = materialFactory.CreateTexture("resources/textures/cookie.png", 
-				ColorType::GammaSpace, WrapMode::Repeat, FilterMode::Linear);
+				ColorType::GammaSpace, WrapMode::Repeat, FilterMode::LinearMip);
 
 			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(0.9f, 5, -22.f), vec3(96.f, -0.1f, -5), vec3(1.f));
 			spotLight = &lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle, defSLShadowMapConfig);

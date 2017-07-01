@@ -30,6 +30,7 @@ namespace geeL {
 		None,
 		Nearest,
 		Linear,
+		LinearMip,
 		Bilinear,
 		Trilinear
 	};

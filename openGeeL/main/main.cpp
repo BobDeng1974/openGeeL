@@ -11,9 +11,9 @@ int main() {
 	//BedroomScene::draw();
 	//DeerScene::draw();
 	//ScieneScene::draw();
-	//ArthouseScene::draw();
+	ArthouseScene::draw();
 	//SponzaScene::draw();
-	SponzaGIScene::draw();
+	//SponzaGIScene::draw();
 
 	//RenderTest::draw();
 	//RaymarchTest::draw();

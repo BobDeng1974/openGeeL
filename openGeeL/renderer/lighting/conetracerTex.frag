@@ -115,7 +115,7 @@ vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo, vec3 kd) {
 	for(int i = 1; i < 6; i++)
 		color += weights[1] * traceIndirectDiffuse(startPos, sampleVectors[i], spreads[1]).rgb * dot(sampleVectors[i], normal);
 
-	return color * albedo * kd;
+	return color * albedo * kd;// / PI;
 }
 
 
