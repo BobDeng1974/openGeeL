@@ -106,6 +106,19 @@ namespace geeL {
 		shader.setFloat("sigma", sigma);
 	}
 
+	float BilateralFilter::getSigma() const {
+		return sigma;
+	}
+
+	void BilateralFilter::setSigma(float value) {
+		if (sigma != value && value >= 0.f && value <= 1.f) {
+			sigma = value;
+
+			shader.use();
+			shader.setFloat("sigma", sigma);
+		}
+	}
+
 
 	BilateralDepthFilter::BilateralDepthFilter(unsigned int strength, float sigma)
 		: BilateralFilter("renderer/postprocessing/bilateraldepth.frag", strength, sigma) {}
@@ -145,4 +158,13 @@ namespace geeL {
 	void  SobelBlur::addWorldInformation(map<WorldMaps, const Texture*> maps) {
 		sobel.setBuffer(*maps[WorldMaps::PositionRoughness]);
 	}
+	
+	float SobelBlur::getScale() const {
+		return sobel.getScale();
+	}
+	
+	void SobelBlur::setScale(float value) {
+		sobel.setScale(value);
+	}
+
 }

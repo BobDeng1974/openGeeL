@@ -18,6 +18,9 @@ namespace geeL {
 
 		void bindDoFData(float focalLength, float aperture, float farDistance);
 
+		float getThreshold() const;
+		void  setThreshold(float value);
+
 		void setFocalLength(float value);
 		void setAperture(float value);
 
@@ -49,6 +52,9 @@ namespace geeL {
 
 		float getAperture() const;
 		void setAperture(float aperture);
+
+		float getBlurThreshold() const;
+		void  setBlurThreshold(float value);
 
 	protected:
 		virtual void bindValues();

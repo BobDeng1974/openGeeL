@@ -13,6 +13,9 @@ namespace geeL {
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
+		float getScale() const;
+		void  setScale(float value);
+
 	private:
 		float scale;
 	};

@@ -12,4 +12,17 @@ namespace geeL {
 		shader.setFloat("scale", scale);
 	}
 
+	float SobelFilter::getScale() const {
+		return scale;
+	}
+
+	void SobelFilter::setScale(float value) {
+		if (scale != value && value > 0.f) {
+			scale = value;
+
+			shader.use();
+			shader.setFloat("scale", scale);
+		}
+	}
+
 }

@@ -47,6 +47,9 @@ namespace geeL {
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
+		float getSigma() const;
+		void  setSigma(float value);
+
 	protected:
 		BilateralFilter(std::string shaderPath, unsigned int strength = 1, float sigma = 0.5f);
 
@@ -77,6 +80,9 @@ namespace geeL {
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
+
+		float getScale() const;
+		void  setScale(float value);
 
 	protected:
 		virtual void bindValues();

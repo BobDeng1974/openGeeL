@@ -24,6 +24,19 @@ namespace geeL {
 		shader.setFloat("farDistance", farDistance);
 	}
 
+	float DepthOfFieldBlur::getThreshold() const {
+		return threshold;
+	}
+
+	void DepthOfFieldBlur::setThreshold(float value) {
+		if (threshold != value && value >= 0.f && value <= 1.f) {
+			threshold = value;
+
+			shader.use();
+			shader.setFloat("threshold", threshold);
+		}
+	}
+
 	void  DepthOfFieldBlur::setFocalLength(float value) {
 		shader.use();
 		shader.setFloat("focalDistance", value);
@@ -118,4 +131,13 @@ namespace geeL {
 			blur.setAperture(aperture);
 		}
 	}
+
+	float DepthOfFieldBlurred::getBlurThreshold() const {
+		return blur.getThreshold();
+	}
+
+	void DepthOfFieldBlurred::setBlurThreshold(float value) {
+		blur.setThreshold(value);
+	}
+
 }
