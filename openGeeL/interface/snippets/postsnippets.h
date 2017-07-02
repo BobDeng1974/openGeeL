@@ -1,6 +1,7 @@
 #ifndef POSTEFFECTSNIPPETS_H
 #define POSTEFFECTSNIPPETS_H
 
+#include <list>
 #include "guisnippets.h"
 
 namespace geeL {
@@ -16,9 +17,32 @@ namespace geeL {
 	class SSRR;
 	class VolumetricLight;
 	class VoxelConeTracer;
+
+
+	class PostEffectSnippet : public GUISnippet {
+
+	public:
+		virtual void draw(GUIContext* context) = 0;
+		virtual std::string toString() const = 0;
+
+	};
+
+	//Group of post effect snippets where the first one acts as the 'main' effect
+	class PostGroupSnippet : public PostEffectSnippet {
+
+	public:
+		PostGroupSnippet(std::list<PostEffectSnippet*>& snippets);
+
+		virtual void draw(GUIContext* context);
+		virtual std::string toString() const;
+
+	private:
+		std::list<PostEffectSnippet*> snippets;
+
+	};
 	
 
-	class DefaultSnippet : public GUISnippet {
+	class DefaultSnippet : public PostEffectSnippet {
 
 	public:
 		DefaultSnippet(DefaultPostProcess& def);
@@ -32,7 +56,7 @@ namespace geeL {
 	};
 
 
-	class BlurredEffectSnippet : public GUISnippet {
+	class BlurredEffectSnippet : public PostEffectSnippet {
 
 	public:
 		BlurredEffectSnippet(BlurredPostEffect& effect, GUISnippet& effectSnippet);
@@ -40,15 +64,17 @@ namespace geeL {
 		virtual void draw(GUIContext* context);
 		virtual std::string toString() const;
 
+		void setBlurSnippet(GUISnippet& blurSnippet);
+
 	private:
 		BlurredPostEffect& effect;
 		GUISnippet& effectSnippet;
-		//GUISnippet& blurSnippet;
+		GUISnippet* blurSnippet;
 
 	};
 
 
-	class BloomSnippet : public GUISnippet {
+	class BloomSnippet : public PostEffectSnippet {
 
 	public:
 		BloomSnippet(Bloom& bloom);
@@ -62,7 +88,7 @@ namespace geeL {
 	};
 
 
-	class ColorCorrectionSnippet : public GUISnippet {
+	class ColorCorrectionSnippet : public PostEffectSnippet {
 
 	public:
 		ColorCorrectionSnippet(ColorCorrection& color);
@@ -76,7 +102,7 @@ namespace geeL {
 	};
 
 
-	class DepthOfFieldBlurredSnippet : public GUISnippet {
+	class DepthOfFieldBlurredSnippet : public PostEffectSnippet {
 
 	public:
 		DepthOfFieldBlurredSnippet(DepthOfFieldBlurred& dof);
@@ -89,7 +115,7 @@ namespace geeL {
 
 	};
 
-	class FXAASnippet : public GUISnippet {
+	class FXAASnippet : public PostEffectSnippet {
 
 	public:
 		FXAASnippet(FXAA& fxaa);
@@ -103,7 +129,7 @@ namespace geeL {
 	};
 
 
-	class GodRaySnippet : public GUISnippet {
+	class GodRaySnippet : public PostEffectSnippet {
 
 	public:
 		GodRaySnippet(GodRay& ray);
@@ -117,7 +143,7 @@ namespace geeL {
 	};
 
 
-	class VolumetricLightSnippet : public GUISnippet {
+	class VolumetricLightSnippet : public PostEffectSnippet {
 
 	public:
 		VolumetricLightSnippet(VolumetricLight& light);
@@ -131,7 +157,7 @@ namespace geeL {
 	};
 
 
-	class SSAOSnippet : public GUISnippet {
+	class SSAOSnippet : public PostEffectSnippet {
 
 	public:
 		SSAOSnippet(SSAO& ssao);
@@ -144,7 +170,7 @@ namespace geeL {
 
 	};
 
-	class SSRRSnippet : public GUISnippet {
+	class SSRRSnippet : public PostEffectSnippet {
 
 	public:
 		SSRRSnippet(SSRR& ssrr);
@@ -157,7 +183,7 @@ namespace geeL {
 
 	};
 
-	class ConeTracerSnippet : public GUISnippet {
+	class ConeTracerSnippet : public PostEffectSnippet {
 
 	public:
 		ConeTracerSnippet(VoxelConeTracer& tracer);

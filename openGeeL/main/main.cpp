@@ -13,7 +13,7 @@ int main() {
 	//ScieneScene::draw();
 	//ArthouseScene::draw();
 	//SponzaScene::draw();
-	SponzaGIScene::draw();
+	//SponzaGIScene::draw();
 
 	//RenderTest::draw();
 	//RaymarchTest::draw();

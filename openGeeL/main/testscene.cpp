@@ -295,55 +295,42 @@ void RenderTest::draw() {
 	ImageBasedLighting& ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);
 
-	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
-	GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 15);
-	BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
-
-	GaussianBlur& blur4 = GaussianBlur();
-	SSRR& ssrr = SSRR();
-	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.3f, 0.3f);
-	
-	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.3f);
-	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 8.f, 100.f, 0.3f);
-
-	FXAA& fxaa = FXAA();
-
-	BloomFilter& filter = BloomFilter();
-	GaussianBlur& blur5 = GaussianBlur();
-	Bloom& bloom = Bloom(filter, blur5, 0.4f, 0.2f);
-
-	SobelFilter& sobel = SobelFilter(15);
-	SobelBlur& sobelBlur = SobelBlur(sobel);
-	VolumetricLight& vol = VolumetricLight(*spotLight, 0.1f, 1.f, 160);
-	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.4f);
-
-	ColorCorrection& colorCorrect = ColorCorrection();
-
 	postLister.add(def);
 	postLister.add(ssao);
 
-	//VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
-	//renderer.addEffect(volSmooth, { &vol, &sobelBlur });
-	//scene.addRequester(vol);
-	//postLister.add(volSmooth, lightSnippet);
-
-	//renderer.addEffect(bloom);
-	//postLister.add(bloom);
-
+	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
+	GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 15);
+	BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
 	GodRaySnippet& godRaySnippet = GodRaySnippet(ray);
 	renderer.addEffect(raySmooth);
 	scene.addRequester(ray);
 	postLister.add(raySmooth, godRaySnippet);
 
+	SobelFilter& sobel = SobelFilter(15);
+	SobelBlur& sobelBlur = SobelBlur(sobel);
+	VolumetricLight& vol = VolumetricLight(*spotLight, 0.1f, 1.f, 160);
+	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.4f);
+	//VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
+	//renderer.addEffect(volSmooth, { &vol, &sobelBlur });
+	//scene.addRequester(vol);
+	//postLister.add(volSmooth, lightSnippet);
+
+	GaussianBlur& blur4 = GaussianBlur();
+	SSRR& ssrr = SSRR();
+	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.3f, 0.3f);
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 
+	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.3f);
+	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 8.f, 100.f, 0.3f);
 	//renderer.addEffect(dof, dof);
 	//postLister.add(dof);
 
+	ColorCorrection& colorCorrect = ColorCorrection();
 	renderer.addEffect(colorCorrect);
 	postLister.add(colorCorrect);
 
+	FXAA& fxaa = FXAA();
 	renderer.addEffect(fxaa);
 
 	renderer.linkInformation();

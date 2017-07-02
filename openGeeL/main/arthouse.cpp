@@ -78,6 +78,7 @@
 #include "../interface/guirenderer.h"
 #include "../interface/elements/objectlister.h"
 #include "../interface/snippets/postsnippets.h"
+#include "../interface/snippets/blursnippets.h"
 #include "../interface/elements/posteffectlister.h"
 #include "../interface/elements/systeminformation.h"
 
@@ -224,31 +225,24 @@ void ArthouseScene::draw() {
 	ImageBasedLighting& ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);
 	
-	GaussianBlur& blur4 = GaussianBlur();
-	SSRR& ssrr = SSRR();
-	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.6f, 0.6f);
-	
-	BloomFilter& filter = BloomFilter();
-	GaussianBlur& blur5 = GaussianBlur();
-	Bloom& bloom = Bloom(filter, blur5, 0.4f, 0.2f);
-
 	postLister.add(def);
 	postLister.add(ssao);
 
+	GaussianBlur& blur4 = GaussianBlur();
+	SSRR& ssrr = SSRR();
+	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.6f, 0.6f);
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 
-	SobelFilter& sobel = SobelFilter(15);
+	SobelFilter& sobel = SobelFilter(50);
 	SobelBlur& sobelBlur = SobelBlur(sobel);
-
-	GaussianBlur& ayy = GaussianBlur();
 	VolumetricLight& vol = VolumetricLight(*spotLight4, 0.02f, 1.f, 150);
-	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, ayy, 0.3f, 0.5f);
-
+	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.5f);
 	VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
+	SobelBlurSnippet& snip = SobelBlurSnippet(sobelBlur);
 	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
 	scene.addRequester(vol);
-	postLister.add(volSmooth, lightSnippet);
+	postLister.add(volSmooth, lightSnippet, snip);
 
 	FXAA& fxaa = FXAA();
 	renderer.addEffect(fxaa);

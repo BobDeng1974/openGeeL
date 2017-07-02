@@ -18,7 +18,7 @@ namespace geeL {
 	DefaultSnippet::DefaultSnippet(DefaultPostProcess& def) : def(def) {}
 
 	BlurredEffectSnippet::BlurredEffectSnippet(BlurredPostEffect& effect, GUISnippet& effectSnippet) 
-		: effect(effect), effectSnippet(effectSnippet) {}
+		: effect(effect), effectSnippet(effectSnippet), blurSnippet(nullptr) {}
 
 	ColorCorrectionSnippet::ColorCorrectionSnippet(ColorCorrection& color) : color(color) {}
 
@@ -38,6 +38,21 @@ namespace geeL {
 
 	ConeTracerSnippet::ConeTracerSnippet(VoxelConeTracer & tracer) : tracer(tracer) {}
 
+	PostGroupSnippet::PostGroupSnippet(std::list<PostEffectSnippet*>& snippets) : snippets(snippets) {
+		if (snippets.size() == 0)
+			throw "Post group needs at least one effect to work\n";
+	}
+
+	void PostGroupSnippet::draw(GUIContext * context) {
+		for (auto it = snippets.begin(); it != snippets.end(); it++) {
+			PostEffectSnippet& snippet = **it;
+			snippet.draw(context);
+		}
+	}
+
+	std::string PostGroupSnippet::toString() const {
+		return snippets.front()->toString();
+	}
 
 	void DefaultSnippet::draw(GUIContext* context) {
 		float exposure = GUISnippets::drawBarFloat(context, def.getExposure(), 0.f, 25.f, 0.1f, "Exposure");
@@ -58,11 +73,18 @@ namespace geeL {
 		if (effectResolution != oldResolution)
 			effect.resizeEffectResolution(effectResolution);
 
+		if (blurSnippet != nullptr)
+			blurSnippet->draw(context);
+
 		effectSnippet.draw(context);
 	}
 
 	std::string BlurredEffectSnippet::toString() const {
 		return "Blurred " + effectSnippet.toString();
+	}
+
+	void BlurredEffectSnippet::setBlurSnippet(GUISnippet& blurSnippet) {
+		this->blurSnippet = &blurSnippet;
 	}
 
 
@@ -115,6 +137,9 @@ namespace geeL {
 
 		if (blurResolution != oldResolution)
 			dof.resizeBlurResolution(blurResolution);
+
+		float threshold = GUISnippets::drawBarFloat(context, dof.getBlurThreshold(), 0.f, 1.f, 0.01f, "Blur Threshold");
+		dof.setBlurThreshold(threshold);
 
 		float aperture = GUISnippets::drawBarFloat(context, dof.getAperture(), 0.f, 100.f, 0.1f, "Aperture");
 		dof.setAperture(aperture);
@@ -223,5 +248,7 @@ namespace geeL {
 	std::string ConeTracerSnippet::toString() const {
 		return "Voxel Cone Tracer";
 	}
+
+	
 
 }

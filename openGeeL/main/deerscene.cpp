@@ -203,13 +203,12 @@ void DeerScene::draw() {
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR();
 	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.8f, 0.8f);
+	renderer.addEffect(ssrrSmooth, ssrr);
+	scene.addRequester(ssrr);
 
 	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.3f);
 	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 30.f, 100.f, 0.3f);
 	renderer.addEffect(dof, dof);
-
-	renderer.addEffect(ssrrSmooth, ssrr);
-	scene.addRequester(ssrr);
 
 	FXAA& fxaa = FXAA(0.f, 0.f);
 	renderer.addEffect(fxaa);

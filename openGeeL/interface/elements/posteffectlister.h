@@ -30,8 +30,10 @@ namespace geeL {
 
 		virtual void draw(GUIContext* context);
 
+		void add(PostEffectSnippet& snippet);
 		void add(DefaultPostProcess& def);
 		void add(BlurredPostEffect& effect, GUISnippet& effectSnippet);
+		void add(BlurredPostEffect& effect, GUISnippet& effectSnippet, GUISnippet& blurSnippet);
 		void add(Bloom& bloom);
 		void add(ColorCorrection& color);
 		void add(DepthOfFieldBlurred& dof);
@@ -43,8 +45,8 @@ namespace geeL {
 		void add(VoxelConeTracer& tracer);
 
 	private:
-		std::list<GUISnippet*> snippets;
-
+		std::list<std::pair<bool, PostEffectSnippet*>> snippets;
+		
 	};
 }
 

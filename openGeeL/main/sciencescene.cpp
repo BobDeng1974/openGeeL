@@ -216,29 +216,26 @@ void ScieneScene::draw() {
 	ImageBasedLighting& ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);
 	
-	GaussianBlur& blur4 = GaussianBlur();
-	SSRR& ssrr = SSRR();
-	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.6f, 0.6f);
-	
-	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.3f);
-	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 5.f, 100.f, 0.3f);
+	postLister.add(def);
+	postLister.add(ssao);
 
 	SobelFilter& sobel = SobelFilter(15);
 	SobelBlur& sobelBlur = SobelBlur(sobel);
 	VolumetricLight& vol = VolumetricLight(*spotLight2, 0.05f, 6.f, 100);
 	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.3f, 0.3f);
-
-	postLister.add(def);
-	postLister.add(ssao);
-
 	VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
 	scene.addRequester(vol);
 	postLister.add(volSmooth, lightSnippet);
 
+	GaussianBlur& blur4 = GaussianBlur();
+	SSRR& ssrr = SSRR();
+	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.6f, 0.6f);
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 
+	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.3f);
+	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 5.f, 100.f, 0.3f);
 	renderer.addEffect(dof, dof);
 	postLister.add(dof);
 

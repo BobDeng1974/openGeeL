@@ -42,6 +42,6 @@ void main() {
     }
 
     color = vec4(result * blurStrength + base * (1.f - blurStrength) , 1.f);
-	color = vec4(vec3(texture(sobel, TexCoords).r), 1.f);
+	//color = vec4(vec3(texture(sobel, TexCoords).r), 1.f);
 }
 

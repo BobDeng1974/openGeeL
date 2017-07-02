@@ -78,6 +78,7 @@
 #include "../interface/guirenderer.h"
 #include "../interface/elements/objectlister.h"
 #include "../interface/snippets/postsnippets.h"
+#include "../interface/snippets/blursnippets.h"
 #include "../interface/elements/posteffectlister.h"
 #include "../interface/elements/systeminformation.h"
 
@@ -217,33 +218,34 @@ void BedroomScene::draw() {
 	ImageBasedLighting& ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);
 
-	GaussianBlur& blur4 = GaussianBlur();
-	SSRR& ssrr = SSRR();
-	//MultisampledSSRR& ssrr = MultisampledSSRR();
-	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.5f, 0.5f);
-	
-	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.3f);
-	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 4.f, 100.f, 0.3f);
+	postLister.add(def);
+	SSAOSnippet& ssaoSnippet = SSAOSnippet(ssao);
+	BilateralFilterSnippet& ssaoBlurSnippet = BilateralFilterSnippet(blur);
+	std::list<PostEffectSnippet*> snips = { &ssaoSnippet, &ssaoBlurSnippet };
+	PostGroupSnippet& groupSnippet = PostGroupSnippet(snips);
+	postLister.add(groupSnippet);
 
 	GaussianBlur& ayy = GaussianBlur();
 	VolumetricLight& vol = VolumetricLight(*spotLight3, 0.7f, 14.f, 250);
 	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, ayy, 0.25f, 0.2f);
-
-	postLister.add(def);
-	postLister.add(ssao);
-
 	VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 	renderer.addEffect(volSmooth, { &vol});
 	scene.addRequester(vol);
 	postLister.add(volSmooth, lightSnippet);
 
+	GaussianBlur& blur4 = GaussianBlur();
+	SSRR& ssrr = SSRR();
+	//MultisampledSSRR& ssrr = MultisampledSSRR();
+	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.5f, 0.5f);
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 	SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
 	postLister.add(ssrrSmooth, ssrrSnippet);
 
-	renderer.addEffect(dof, dof);
-	postLister.add(dof);
+	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.3f);
+	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 4.f, 100.f, 0.3f);
+	//renderer.addEffect(dof, dof);
+	//postLister.add(dof);
 
 	FXAA& fxaa = FXAA(0.f, 0.f);
 	renderer.addEffect(fxaa);
