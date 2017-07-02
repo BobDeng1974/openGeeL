@@ -27,7 +27,7 @@ uniform sampler2D gPositionRoughness;
 uniform sampler2D gNormalMet;
 uniform sampler2D gDiffuse;
 
-vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo, vec3 kd);
+vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo, vec3 kd, out float occlusion);
 vec3 indirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness, vec3 ks);
 vec3 indirectReflection(vec3 position, vec3 view, vec3 normal, float roughness, vec3 kd);
 
@@ -66,10 +66,12 @@ void main() {
 	vec3 ks = calculateFresnelTerm(doto(normal, view), albedo.rgb, metallic, roughness);
 	vec3 kd = 1.f - ks;
 
-	vec3 indirectDiff = indirectDiffuse(position, normal, albedo.rgb, kd);
+	float occlusion = 0.f;
+	vec3 indirectDiff = indirectDiffuse(position, normal, albedo.rgb, kd, occlusion);
 	vec3 indirectSpec = indirectSpecular(position, refl, normal, roughness, ks);
 	vec3 solidColor = baseColor + indirectDiff + indirectSpec;
-	
+	//solidColor *= occlusion;
+
 	if(albedo.a < 1.f) {
 		vec3 refractionColor = indirectReflection(position, view, normal, roughness, kd);
 		color = vec4(mix(refractionColor, solidColor, albedo.a), 1.f);
@@ -79,7 +81,7 @@ void main() {
 }
 
 
-vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo, vec3 kd) {
+vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo, vec3 kd, out float occlusion) {
 	//Move position into direction of voxel border to avoid 
 	//sampling neighboring voxels when direction is steep
 	vec3 halfDir = getClosestAxisNormal(normal);
@@ -109,13 +111,16 @@ vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo, vec3 kd) {
 	spreads[0] = 0.33f;
 	spreads[1] = 0.166f;
 
-	vec3 color = vec3(0.f);
-	color += weights[0] * traceIndirectDiffuse(startPos, sampleVectors[0], spreads[0]).rgb * dot(sampleVectors[0], normal);
+	vec4 color = vec4(0.f);
+	color += weights[0] * traceIndirectDiffuse(startPos, sampleVectors[0], spreads[0]) * dot(sampleVectors[0], normal);
 
 	for(int i = 1; i < 6; i++)
-		color += weights[1] * traceIndirectDiffuse(startPos, sampleVectors[i], spreads[1]).rgb * dot(sampleVectors[i], normal);
+		color += weights[1] * traceIndirectDiffuse(startPos, sampleVectors[i], spreads[1]) * dot(sampleVectors[i], normal);
 
-	return color * albedo * kd;// / PI;
+	color.rgb /= color.a;
+	occlusion = 1.f - color.a / 2.f;
+
+	return color.rgb * albedo * kd;// / PI;
 }
 
 
@@ -182,7 +187,6 @@ vec4 traceIndirectDiffuse(vec3 position, vec3 direction, float spread) {
 		counter++;
 	}
 
-	color /= color.a;
 	color = clamp(color, 0.f, 1.f);
 
 	return color;

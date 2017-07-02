@@ -32,7 +32,6 @@ namespace geeL {
 			addBuffer(*lightCookie, "lightCookie");
 			shader.setInteger("useCookie", (int)useCookie);
 		}
-			
 
 		shader.setInteger("effectOnly", onlyEffect);
 		shader.setFloat("minCutoff", minDistance);
