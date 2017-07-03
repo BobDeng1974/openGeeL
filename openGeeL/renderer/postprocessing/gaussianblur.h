@@ -1,6 +1,7 @@
 #ifndef GAUSSIANBLUR_H
 #define GAUSSIANBLUR_H
 
+#include <vector>
 #include "../framebuffer/framebuffer.h"
 #include "../utility/worldinformation.h"
 #include "postprocessing.h"
@@ -15,27 +16,36 @@ namespace geeL {
 	class GaussianBlur : public PostProcessingEffect {
 
 	public:
-		GaussianBlur(unsigned int strength = 1);
+		GaussianBlur(float sigma = 1.3f);
 		
-		void setKernel(float newKernel[5]);
 		virtual void setBuffer(const Texture& texture);
-		
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
+
+		std::vector<float> computeKernel(float sigma) const;
+
+		float getSigma() const;
+		void  setSigma(float value);
+
+		unsigned int getStrength() const;
+		void setStrength(unsigned int value);
 
 	protected:
 		unsigned int currBuffer;
 
-		GaussianBlur(unsigned int strength, std::string shaderPath);
+		GaussianBlur(std::string shaderPath, float sigma = 1.3f);
 
 		virtual void bindValues();
 
 	private:
+		float sigma;
 		unsigned int amount;
-		unsigned int maxAmount = 10;
+		unsigned int kernelSize = 10;
+
 		const Texture* mainBuffer;
-		float kernel[5] = { 0.227027f, 0.1945946f, 0.1216216f, 0.054054f, 0.016216f };
+		std::vector<float> kernel;
 		ColorBuffer frameBuffers[2];
 		ShaderLocation horLocation;
+
 	};
 
 
@@ -43,7 +53,7 @@ namespace geeL {
 	class BilateralFilter : public GaussianBlur {
 
 	public:
-		BilateralFilter(unsigned int strength = 1, float sigma = 0.5f);
+		BilateralFilter(float sigma = 1.3f, float factor = 0.5f);
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
@@ -51,10 +61,10 @@ namespace geeL {
 		void  setSigma(float value);
 
 	protected:
-		BilateralFilter(std::string shaderPath, unsigned int strength = 1, float sigma = 0.5f);
+		BilateralFilter(std::string shaderPath, float sigma = 1.3f, float factor = 0.5f);
 
 	private:
-		float sigma;
+		float sigma2;
 
 	};
 
@@ -63,7 +73,7 @@ namespace geeL {
 	class BilateralDepthFilter : public BilateralFilter, public WorldMapRequester {
 
 	public:
-		BilateralDepthFilter(unsigned int strength = 1, float sigma = 0.5f);
+		BilateralDepthFilter(float sigma = 1.3f, float factor = 0.5f);
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
@@ -74,7 +84,7 @@ namespace geeL {
 	class SobelBlur : public GaussianBlur, public WorldMapRequester {
 
 	public:
-		SobelBlur(SobelFilter& sobel, unsigned int strength = 1);
+		SobelBlur(SobelFilter& sobel, float sigma = 1.5f);
 
 		virtual void setBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);

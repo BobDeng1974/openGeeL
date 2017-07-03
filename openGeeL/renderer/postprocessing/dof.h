@@ -14,7 +14,7 @@ namespace geeL {
 	class DepthOfFieldBlur : public GaussianBlur {
 
 	public:
-		DepthOfFieldBlur(unsigned int strength = 1, float threshold = 0.1f);
+		DepthOfFieldBlur(float threshold = 0.1f, float sigma = 2.f);
 
 		void bindDoFData(float focalLength, float aperture, float farDistance);
 
@@ -53,8 +53,7 @@ namespace geeL {
 		float getAperture() const;
 		void setAperture(float aperture);
 
-		float getBlurThreshold() const;
-		void  setBlurThreshold(float value);
+		DepthOfFieldBlur& getBlur();
 
 	protected:
 		virtual void bindValues();

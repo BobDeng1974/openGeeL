@@ -7,23 +7,22 @@
 #include "gaussianblur.h"
 #include <iostream>
 
+const double PI = 3.14159265359;
+
 using namespace glm;
 using namespace std;
 
 namespace geeL {
 
-	GaussianBlur::GaussianBlur(unsigned int strength)
-		: GaussianBlur(strength, "renderer/postprocessing/gaussianblur.frag") {}
+	GaussianBlur::GaussianBlur(float sigma)
+		: GaussianBlur("renderer/postprocessing/gaussianblur.frag", sigma) {}
 
-	GaussianBlur::GaussianBlur(unsigned int strength, string shaderPath)
-		: PostProcessingEffect(shaderPath), mainBuffer(nullptr) {
+	GaussianBlur::GaussianBlur(string shaderPath, float sigma)
+		: PostProcessingEffect(shaderPath), mainBuffer(nullptr), sigma(sigma), amount(1) {
 
-		amount = 2 * strength - 1;
-		if (amount < 1)
-			amount = 1;
-		else if (amount > maxAmount)
-			amount = maxAmount;
+		kernel = std::move(computeKernel(sigma));
 	}
+
 
 	void GaussianBlur::setBuffer(const Texture& texture) {
 		PostProcessingEffect::setBuffer(texture);
@@ -38,12 +37,57 @@ namespace geeL {
 		frameBuffers[1].init(buffer.getWidth(), buffer.getHeight());
 
 		//Set kernel
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < kernelSize; i++) {
 			string name = "kernel[" + std::to_string(i) + "]";
 			shader.setFloat(name, kernel[i]);
 		}
 
 		horLocation = shader.getLocation("horizontal");
+	}
+
+	std::vector<float> GaussianBlur::computeKernel(float sigma) const {
+		std::vector<float> kernel = std::vector<float>(kernelSize);
+
+		double s = 2.0 * sigma * sigma;
+		double sum = 0.0;
+		for (int x = 0; x < kernelSize; x++) {
+			kernel[x] = (exp(-(x * x) / s)) / (PI * s);
+			sum += (x == 0) ? kernel[x] : 2.0 * kernel[x];
+		}
+
+		for (int x = 0; x < kernelSize; x++)
+			kernel[x] /= sum;
+
+		return kernel;
+	}
+
+	float GaussianBlur::getSigma() const {
+		return sigma;
+	}
+
+	void GaussianBlur::setSigma(float value) {
+		if (sigma != value && value > 0.f) {
+			sigma = value;
+			kernel = std::move(computeKernel(sigma));
+			
+			shader.use();
+			for (int i = 0; i < kernelSize; i++) {
+				string name = "kernel[" + std::to_string(i) + "]";
+				shader.setFloat(name, kernel[i]);
+			}
+		}
+	}
+
+	unsigned int GaussianBlur::getStrength() const {
+		return amount;
+	}
+
+	void GaussianBlur::setStrength(unsigned int value) {
+		amount = 2 * value - 1;
+		if (amount < 1)
+			amount = 1;
+		else if (amount > 10)
+			amount = 10;
 	}
 
 	void GaussianBlur::bindValues() {
@@ -81,47 +125,37 @@ namespace geeL {
 		parentBuffer->bind();
 	}
 
-	void GaussianBlur::setKernel(float newKernel[5]) {
-		shader.use();
-		for (int i = 0; i < 5; i++) {
-			kernel[i] = newKernel[i];
-
-			string name = "kernel[" + std::to_string(i) + "]";
-			shader.setFloat(name, kernel[i]);
-		}
-	}
 
 
+	BilateralFilter::BilateralFilter(float sigma, float factor)
+		: GaussianBlur("renderer/postprocessing/bilateral.frag", sigma), sigma2(factor) {}
 
-	BilateralFilter::BilateralFilter(unsigned int strength, float sigma)
-		: GaussianBlur(strength, "renderer/postprocessing/bilateral.frag"), sigma(sigma) {}
-
-	BilateralFilter::BilateralFilter(string shaderPath, unsigned int strength, float sigma)
-		: GaussianBlur(strength, shaderPath), sigma(sigma) {}
+	BilateralFilter::BilateralFilter(string shaderPath, float sigma, float factor)
+		: GaussianBlur(shaderPath, sigma), sigma2(factor) {}
 
 
 	void BilateralFilter::init(ScreenQuad& screen, const FrameBuffer& buffer) {
 		GaussianBlur::init(screen, buffer);
 
-		shader.setFloat("sigma", sigma);
+		shader.setFloat("sigma", sigma2);
 	}
 
 	float BilateralFilter::getSigma() const {
-		return sigma;
+		return sigma2;
 	}
 
 	void BilateralFilter::setSigma(float value) {
-		if (sigma != value && value >= 0.f && value <= 1.f) {
-			sigma = value;
+		if (sigma2 != value && value >= 0.f && value <= 1.f) {
+			sigma2 = value;
 
 			shader.use();
-			shader.setFloat("sigma", sigma);
+			shader.setFloat("sigma", sigma2);
 		}
 	}
 
 
-	BilateralDepthFilter::BilateralDepthFilter(unsigned int strength, float sigma)
-		: BilateralFilter("renderer/postprocessing/bilateraldepth.frag", strength, sigma) {}
+	BilateralDepthFilter::BilateralDepthFilter(float sigma, float factor)
+		: BilateralFilter("renderer/postprocessing/bilateraldepth.frag", sigma, factor) {}
 
 	void BilateralDepthFilter::addWorldInformation(map<WorldMaps, const Texture*> maps) {
 		addBuffer(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
@@ -129,8 +163,8 @@ namespace geeL {
 
 
 
-	SobelBlur::SobelBlur(SobelFilter& sobel, unsigned int strength)
-		: GaussianBlur(strength, "renderer/postprocessing/sobelblur.frag"), sobel(sobel) {}
+	SobelBlur::SobelBlur(SobelFilter& sobel, float sigma)
+		: GaussianBlur("renderer/postprocessing/sobelblur.frag", sigma), sobel(sobel) {}
 
 
 	void SobelBlur::setBuffer(const Texture& texture) {
