@@ -33,7 +33,6 @@ namespace geeL {
 	};
 
 
-
 	//Depth of field post effect that uses image blurring to achieve effect.
 	//Cheap but not realistic since circe of confusion is neglected
 	class DepthOfFieldBlurred : public PostProcessingEffect, public WorldMapRequester {

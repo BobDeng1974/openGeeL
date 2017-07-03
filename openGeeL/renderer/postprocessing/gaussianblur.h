@@ -4,6 +4,7 @@
 #include <vector>
 #include "../framebuffer/framebuffer.h"
 #include "../utility/worldinformation.h"
+#include "../utility/linearkernel.h"
 #include "postprocessing.h"
 
 namespace geeL {
@@ -42,10 +43,13 @@ namespace geeL {
 		unsigned int kernelSize = 5;
 		unsigned int amount;
 
+		LinearKernel linearKernel;
 		const Texture* mainBuffer;
 		std::vector<float> kernel;
 		ColorBuffer frameBuffers[2];
 		ShaderLocation horLocation;
+
+		void updateKernel();
 
 	};
 
@@ -85,7 +89,7 @@ namespace geeL {
 	class SobelBlur : public GaussianBlur, public WorldMapRequester {
 
 	public:
-		SobelBlur(SobelFilter& sobel, float sigma = 1.5f);
+		SobelBlur(SobelFilter& sobel, float sigma = 1.5f, bool depth = true);
 
 		virtual void setBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
@@ -99,6 +103,7 @@ namespace geeL {
 		virtual void bindValues();
 
 	private:
+		bool depth;
 		SobelFilter& sobel;
 		ColorBuffer sobelBuffer;
 

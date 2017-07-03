@@ -20,7 +20,7 @@ namespace geeL {
 	GaussianBlur::GaussianBlur(string shaderPath, float sigma)
 		: PostProcessingEffect(shaderPath), mainBuffer(nullptr), sigma(sigma), amount(1) {
 
-		kernel = std::move(computeKernel(sigma));
+		updateKernel();
 	}
 
 
@@ -68,7 +68,7 @@ namespace geeL {
 	void GaussianBlur::setSigma(float value) {
 		if (sigma != value && value > 0.f) {
 			sigma = value;
-			kernel = std::move(computeKernel(sigma));
+			updateKernel();
 			
 			shader.use();
 			for (int i = 0; i < kernelSize; i++) {
@@ -126,7 +126,11 @@ namespace geeL {
 	}
 
 	void GaussianBlur::setKernelsize(unsigned int size) {
-		kernelSize = size;
+		kernelSize = (size % 2 == 0) ? size + 1 : size;
+		updateKernel();
+	}
+
+	void GaussianBlur::updateKernel() {
 		kernel = std::move(computeKernel(sigma));
 	}
 
@@ -168,14 +172,16 @@ namespace geeL {
 
 
 
-	SobelBlur::SobelBlur(SobelFilter& sobel, float sigma)
-		: GaussianBlur("renderer/postprocessing/sobelblur.frag", sigma), sobel(sobel) {}
+	SobelBlur::SobelBlur(SobelFilter& sobel, float sigma, bool depth)
+		: GaussianBlur("renderer/postprocessing/sobelblur.frag", sigma), sobel(sobel), depth(depth) {}
 
 
 	void SobelBlur::setBuffer(const Texture& texture) {
 		GaussianBlur::setBuffer(texture);
 
-		sobel.setBuffer(texture);
+		//Use default image if sobel shouldn't use depth buffer
+		if(!depth)
+			sobel.setBuffer(texture);
 	}
 
 	void SobelBlur::init(ScreenQuad & screen, const FrameBuffer& buffer) {
@@ -194,7 +200,7 @@ namespace geeL {
 		GaussianBlur::bindValues();
 	}
 
-	void  SobelBlur::addWorldInformation(map<WorldMaps, const Texture*> maps) {
+	void SobelBlur::addWorldInformation(map<WorldMaps, const Texture*> maps) {
 		sobel.setBuffer(*maps[WorldMaps::PositionRoughness]);
 	}
 	

@@ -4,7 +4,7 @@ in vec2 TexCoords;
 
 out vec4 color;
 
-const int kernelSize = 8;
+const int kernelSize = 9;
 
 uniform sampler2D image;
 uniform sampler2D gPositionDepth;
@@ -34,7 +34,7 @@ void main() {
     vec3 result = baseColor * kernel[0]; 
 
 	float hor = step(1.f, float(horizontal));
-	float ver = 1 - hor;
+	float ver = 1.f - hor;
 
 	vec2 offset = texOffset * vec2(hor, ver);
 	for(int i = 1; i < kernelSize; i++) {
