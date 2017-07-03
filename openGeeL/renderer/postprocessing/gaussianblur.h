@@ -31,15 +31,16 @@ namespace geeL {
 
 	protected:
 		unsigned int currBuffer;
-
+		
 		GaussianBlur(std::string shaderPath, float sigma = 1.3f);
 
 		virtual void bindValues();
+		void setKernelsize(unsigned int size);
 
 	private:
 		float sigma;
+		unsigned int kernelSize = 5;
 		unsigned int amount;
-		unsigned int kernelSize = 10;
 
 		const Texture* mainBuffer;
 		std::vector<float> kernel;

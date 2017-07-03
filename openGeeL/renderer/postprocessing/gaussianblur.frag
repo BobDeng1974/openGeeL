@@ -4,9 +4,11 @@ in vec2 TexCoords;
 
 out vec4 color;
 
+const int kernelSize = 5;
+
 uniform sampler2D image;
 uniform bool horizontal;
-uniform float kernel[10];
+uniform float kernel[kernelSize];
 
 
 void main() {             
@@ -19,7 +21,7 @@ void main() {
 	float ver = 1.f - hor;
 
 	vec2 offset = texOffset * vec2(hor, ver);
-	for(int i = 1; i < 10; i++) {
+	for(int i = 1; i < kernelSize; i++) {
 		vec2 off = offset * i;
 
 		//Check if image borders aren't crossed

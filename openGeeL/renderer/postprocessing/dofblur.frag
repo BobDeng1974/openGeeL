@@ -4,6 +4,8 @@ in vec2 TexCoords;
 
 out vec4 color;
 
+const int kernelSize = 8;
+
 uniform sampler2D image;
 uniform sampler2D gPositionDepth;
 
@@ -12,7 +14,7 @@ uniform	float aperture;
 uniform	float farDistance;
 uniform float threshold;
 uniform bool horizontal;
-uniform float kernel[5];
+uniform float kernel[kernelSize];
 
 
 float getSharpness(float depth) {
@@ -35,7 +37,7 @@ void main() {
 	float ver = 1 - hor;
 
 	vec2 offset = texOffset * vec2(hor, ver);
-	for(int i = 1; i < 5; i++) {
+	for(int i = 1; i < kernelSize; i++) {
 		vec2 off = offset * i;
 
 		//Check if image borders aren't crossed
@@ -59,5 +61,5 @@ void main() {
 			(texture(image, TexCoords - off).rgb * sharp + baseColor * (1.f - sharp))* kernel[i];
     }
 
-    color = vec4(result, 1.f);
+    color = vec4(clamp(result, 0.f, 1.f), 1.f);
 }

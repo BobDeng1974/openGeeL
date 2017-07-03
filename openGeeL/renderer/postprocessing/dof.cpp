@@ -8,7 +8,10 @@ using namespace std;
 namespace geeL {
 
 	DepthOfFieldBlur::DepthOfFieldBlur(float threshold, float sigma)
-		: GaussianBlur("renderer/postprocessing/dofblur.frag", sigma), threshold(threshold) {}
+		: GaussianBlur("renderer/postprocessing/dofblur.frag", sigma), threshold(threshold) {
+
+		setKernelsize(8);
+	}
 
 	void DepthOfFieldBlur::bindValues() {
 		shader.setFloat("threshold", threshold);

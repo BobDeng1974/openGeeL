@@ -125,6 +125,11 @@ namespace geeL {
 		parentBuffer->bind();
 	}
 
+	void GaussianBlur::setKernelsize(unsigned int size) {
+		kernelSize = size;
+		kernel = std::move(computeKernel(sigma));
+	}
+
 
 
 	BilateralFilter::BilateralFilter(float sigma, float factor)
