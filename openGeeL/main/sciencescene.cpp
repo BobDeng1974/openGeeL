@@ -234,7 +234,7 @@ void ScieneScene::draw() {
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 
-	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.3f);
+	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.3f);
 	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 5.f, 100.f, 0.3f);
 	renderer.addEffect(dof, dof);
 	postLister.add(dof);

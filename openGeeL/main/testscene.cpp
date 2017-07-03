@@ -78,6 +78,7 @@
 #include "../interface/guirenderer.h"
 #include "../interface/elements/objectlister.h"
 #include "../interface/snippets/postsnippets.h"
+#include "../interface/snippets/blursnippets.h"
 #include "../interface/elements/posteffectlister.h"
 #include "../interface/elements/systeminformation.h"
 
@@ -244,7 +245,7 @@ void RenderTest::draw() {
 	WorldPhysics& physics = WorldPhysics();
 	scene.setPhysics(&physics);
 
-	BilateralFilter& blur = BilateralFilter(1, 0.7f);
+	BilateralFilter& blur = BilateralFilter(1.5f, 0.7f);
 	DefaultPostProcess& def = DefaultPostProcess();
 	SSAO& ssao = SSAO(blur, 3.f);
 	RenderContext context;
@@ -321,7 +322,7 @@ void RenderTest::draw() {
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 
-	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.3f);
+	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.3f);
 	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 8.f, 100.f, 0.3f);
 	//renderer.addEffect(dof, dof);
 	//postLister.add(dof);
@@ -329,6 +330,11 @@ void RenderTest::draw() {
 	ColorCorrection& colorCorrect = ColorCorrection();
 	renderer.addEffect(colorCorrect);
 	postLister.add(colorCorrect);
+
+	GaussianBlur& wot = GaussianBlur(10.1f);
+	GaussianBlurSnippet& wotwot = GaussianBlurSnippet(wot);
+	renderer.addEffect(wot);
+	postLister.add(wotwot);
 
 	FXAA& fxaa = FXAA();
 	renderer.addEffect(fxaa);

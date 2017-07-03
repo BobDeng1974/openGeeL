@@ -161,7 +161,7 @@ void DeerScene::draw() {
 
 	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
 
-	BilateralFilter& blur = BilateralFilter(1, 0.7f);
+	BilateralFilter& blur = BilateralFilter(2.f, 0.7f);
 	DefaultPostProcess& def = DefaultPostProcess(1.f);
 	SSAO& ssao = SSAO(blur, 0.5f);
 	RenderContext context;
@@ -206,7 +206,7 @@ void DeerScene::draw() {
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 
-	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.3f);
+	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.3f);
 	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 30.f, 100.f, 0.3f);
 	renderer.addEffect(dof, dof);
 

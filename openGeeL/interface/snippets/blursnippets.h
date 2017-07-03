@@ -11,7 +11,21 @@ namespace geeL {
 	class SobelBlur;
 
 
-	class BilateralFilterSnippet : public PostEffectSnippet {
+	class GaussianBlurSnippet : public PostEffectSnippet {
+
+	public:
+		GaussianBlurSnippet(GaussianBlur& blur);
+
+		virtual void draw(GUIContext* context);
+		virtual std::string toString() const;
+
+	private:
+		GaussianBlur& blur;
+
+	};
+
+
+	class BilateralFilterSnippet : public GaussianBlurSnippet {
 
 	public:
 		BilateralFilterSnippet(BilateralFilter& blur);
@@ -25,7 +39,7 @@ namespace geeL {
 	};
 
 
-	class SobelBlurSnippet : public PostEffectSnippet {
+	class SobelBlurSnippet : public GaussianBlurSnippet {
 
 	public:
 		SobelBlurSnippet(SobelBlur& blur);

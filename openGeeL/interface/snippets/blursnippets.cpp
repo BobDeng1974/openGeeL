@@ -4,12 +4,27 @@
 
 namespace geeL {
 
-	BilateralFilterSnippet::BilateralFilterSnippet(BilateralFilter& blur) : blur(blur) {}
+	GaussianBlurSnippet::GaussianBlurSnippet(GaussianBlur & blur) : blur(blur) {}
 
-	void BilateralFilterSnippet::draw(GUIContext* context) {
-		float sigma = GUISnippets::drawBarFloat(context, blur.getSigma(), 0.0f, 1.f, 0.001f, "Sigma");
+	void GaussianBlurSnippet::draw(GUIContext * context) {
+		float sigma = GUISnippets::drawBarFloat(context, blur.getSigma(), 0.1f, 15.f, 0.001f, "Sigma");
 		blur.setSigma(sigma);
 
+	}
+
+	std::string GaussianBlurSnippet::toString() const {
+		return "Gaussian Blur";
+	}
+
+
+	BilateralFilterSnippet::BilateralFilterSnippet(BilateralFilter& blur) 
+		: GaussianBlurSnippet(blur), blur(blur) {}
+
+	void BilateralFilterSnippet::draw(GUIContext* context) {
+		GaussianBlurSnippet::draw(context);
+
+		float sigma = GUISnippets::drawBarFloat(context, blur.getSigma(), 0.0f, 1.f, 0.001f, "Factor");
+		blur.setSigma(sigma);
 	}
 
 	std::string BilateralFilterSnippet::toString() const {
@@ -17,17 +32,18 @@ namespace geeL {
 	}
 
 
-	SobelBlurSnippet::SobelBlurSnippet(SobelBlur& blur) : blur(blur) {}
+	SobelBlurSnippet::SobelBlurSnippet(SobelBlur& blur) 
+		: GaussianBlurSnippet(blur), blur(blur) {}
 
 	void SobelBlurSnippet::draw(GUIContext* context) {
-		float scale = GUISnippets::drawBarFloat(context, blur.getScale(), 0.0f, 50.f, 0.001f, "Sobel Scale");
-		blur.setScale(scale);
+		GaussianBlurSnippet::draw(context);
 
+		float scale = GUISnippets::drawBarFloat(context, blur.getScale(), 0.0f, 10.f, 0.001f, "Sobel Scale");
+		blur.setScale(scale);
 	}
 
 	std::string SobelBlurSnippet::toString() const {
 		return "Sobel Blur";
 	}
-
 
 }

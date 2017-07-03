@@ -78,6 +78,7 @@
 #include "../interface/guirenderer.h"
 #include "../interface/elements/objectlister.h"
 #include "../interface/snippets/postsnippets.h"
+#include "../interface/snippets/blursnippets.h"
 #include "../interface/elements/posteffectlister.h"
 #include "../interface/elements/systeminformation.h"
 
@@ -127,10 +128,10 @@ namespace {
 			lightIntensity = 0.5f;
 			Transform& lightTransform3 = transformFactory.CreateTransform(vec3(15.15f, 0.62f, -5.11f), vec3(0.f), vec3(1.f), true);
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Medium);
-			&lightManager.addPointLight(lightTransform3, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config2);
+			lightManager.addPointLight(lightTransform3, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config2);
 
 			Transform& lightTransform4 = transformFactory.CreateTransform(vec3(-8.15f, 0.62f, 4.48f), vec3(0.f), vec3(1.f), true);
-			&lightManager.addPointLight(lightTransform4, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config2);
+			lightManager.addPointLight(lightTransform4, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config2);
 
 			lightIntensity = 55.f;
 			Transform& lightTransform5 = transformFactory.CreateTransform(vec3(2.55f, 3.62f, 4.08f), vec3(0.f), vec3(1.f));
@@ -176,7 +177,7 @@ void SponzaScene::draw() {
 	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
 	Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 
-	BilateralFilter& blur = BilateralFilter(1, 0.7f);
+	BilateralFilter& blur = BilateralFilter(1.3f, 0.7f);
 	DefaultPostProcess& def = DefaultPostProcess(3.5f);
 	SSAO& ssao = SSAO(blur, 2.5f);
 	RenderContext& context = RenderContext();
@@ -234,7 +235,8 @@ void SponzaScene::draw() {
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 	SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
-	postLister.add(ssrrSmooth, ssrrSnippet);
+	GaussianBlurSnippet& gaussSnip = GaussianBlurSnippet(blur4);
+	postLister.add(ssrrSmooth, ssrrSnippet, gaussSnip);
 
 	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 	GodRay& ray = GodRay(vec3(-2.4f, 45.6f, -4.6f), 20);

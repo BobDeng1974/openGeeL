@@ -176,7 +176,7 @@ void ArthouseScene::draw() {
 	WorldPhysics& physics = WorldPhysics();
 	scene.setPhysics(&physics);
 
-	BilateralFilter& blur = BilateralFilter(1, 0.7f);
+	BilateralFilter& blur = BilateralFilter(1.5f, 0.7f);
 	DefaultPostProcess& def = DefaultPostProcess(2.f);
 	SSAO& ssao = SSAO(blur, 2.f);
 	RenderContext context;
@@ -234,8 +234,8 @@ void ArthouseScene::draw() {
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 
-	SobelFilter& sobel = SobelFilter(50);
-	SobelBlur& sobelBlur = SobelBlur(sobel);
+	SobelFilter& sobel = SobelFilter(5.f);
+	SobelBlur& sobelBlur = SobelBlur(sobel, 5.f);
 	VolumetricLight& vol = VolumetricLight(*spotLight4, 0.02f, 1.f, 150);
 	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.5f);
 	VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);

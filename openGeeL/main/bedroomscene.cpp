@@ -169,7 +169,7 @@ void BedroomScene::draw() {
 	WorldPhysics& physics = WorldPhysics();
 	scene.setPhysics(&physics);
 
-	BilateralFilter& blur = BilateralFilter(1, 0.7f);
+	BilateralFilter& blur = BilateralFilter(1.5f, 0.7f);
 	DefaultPostProcess& def = DefaultPostProcess(9.f);
 	SSAO& ssao = SSAO(blur, 10.f);
 	RenderContext context;
@@ -242,7 +242,7 @@ void BedroomScene::draw() {
 	SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
 	postLister.add(ssrrSmooth, ssrrSnippet);
 
-	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.3f);
+	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.3f);
 	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 4.f, 100.f, 0.3f);
 	//renderer.addEffect(dof, dof);
 	//postLister.add(dof);

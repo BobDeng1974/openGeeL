@@ -171,7 +171,6 @@ void SponzaGIScene::draw() {
 	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
 	Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 
-	BilateralFilter& blur = BilateralFilter(1, 0.7f);
 	DefaultPostProcess& def = DefaultPostProcess(15.f);
 	RenderContext context;
 	DeferredLighting& lighting = DeferredLighting(scene);
@@ -218,8 +217,8 @@ void SponzaGIScene::draw() {
 	postLister.add(tracer);
 	//lightManager.addVoxelStructure(tex);
 
-	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(2, 0.5f);
-	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 35.f, camera.getFarPlane(), 0.8f);
+	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.5f);
+	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 35.f, camera.getFarPlane(), 1.f);
 	//renderer.addEffect(dof, dof);
 	//postLister.add(dof);
 
