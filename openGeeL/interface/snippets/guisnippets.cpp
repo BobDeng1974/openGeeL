@@ -153,4 +153,13 @@ namespace geeL {
 		*/
 	}
 
+	void GUISnippets::drawTreeNode(GUIContext* context, const std::string& name, 
+		bool minimized, std::function<void(GUIContext*)> function) {
+		
+		if (nk_tree_push(context, NK_TREE_NODE, name.c_str(), minimized ? NK_MINIMIZED : NK_MAXIMIZED)) {
+			function(context);
+			nk_tree_pop(context);
+		}
+	}
+
 }

@@ -44,17 +44,12 @@ namespace geeL {
 	}
 
 	void PostGroupSnippet::draw(GUIContext * context) {
-		int counter = 0;
-		for (auto it = snippets.begin(); it != snippets.end(); it++) {
+		for (auto it = next(snippets.begin()); it != snippets.end(); it++) {
 			PostEffectSnippet& snippet = **it;
 
-			if (counter > 0) {
-				nk_layout_row_dynamic(context, 30, 1);
-				nk_label(context, ("  " + snippet.toString()).c_str(), NK_TEXT_LEFT);
-			}
-			
-			snippet.draw(context);
-			counter++;
+			GUISnippets::drawTreeNode(context, snippet.toString(), false, [this, &snippet](GUIContext* context) {
+				snippet.draw(context);
+			});
 		}
 	}
 
@@ -81,10 +76,15 @@ namespace geeL {
 		if (effectResolution != oldResolution)
 			effect.resizeEffectResolution(effectResolution);
 
-		if (blurSnippet != nullptr)
-			blurSnippet->draw(context);
-
 		effectSnippet.draw(context);
+
+		if (blurSnippet != nullptr) {
+			GUISnippets::drawTreeNode(context, "Blur (" + blurSnippet->toString() + ")", true, 
+				[this](GUIContext* context) {
+				
+				blurSnippet->draw(context);
+			});
+		}
 	}
 
 	std::string BlurredEffectSnippet::toString() const {
@@ -146,20 +146,18 @@ namespace geeL {
 		if (blurResolution != oldResolution)
 			dof.resizeBlurResolution(blurResolution);
 
-		
-
 		float aperture = GUISnippets::drawBarFloat(context, dof.getAperture(), 0.f, 100.f, 0.1f, "Aperture");
 		dof.setAperture(aperture);
 
-		nk_layout_row_dynamic(context, 30, 3);
-		nk_label(context, "  Blur", NK_TEXT_LEFT);
-		DepthOfFieldBlur& blur = dof.getBlur();
+		GUISnippets::drawTreeNode(context, "Blur", true, [this](GUIContext* context) {
+			DepthOfFieldBlur& blur = dof.getBlur();
 
-		float sigma = GUISnippets::drawBarFloat(context, blur.getSigma(), 0.1f, 10.f, 0.001f, "Sigma");
-		blur.setSigma(sigma);
+			float sigma = GUISnippets::drawBarFloat(context, blur.getSigma(), 0.1f, 10.f, 0.001f, "Sigma");
+			blur.setSigma(sigma);
 
-		float threshold = GUISnippets::drawBarFloat(context, blur.getThreshold(), 0.f, 1.f, 0.01f, "Threshold");
-		blur.setThreshold(threshold);
+			float threshold = GUISnippets::drawBarFloat(context, blur.getThreshold(), 0.f, 1.f, 0.01f, "Threshold");
+			blur.setThreshold(threshold);
+		});
 	}
 
 	std::string DepthOfFieldBlurredSnippet::toString() const {

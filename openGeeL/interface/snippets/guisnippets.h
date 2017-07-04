@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vec3.hpp>
+#include <functional>
 #include "../../renderer/materials/material.h"
 #include "../../renderer/materials/material.h"
 #include "../../renderer/materials/material.h"
@@ -43,6 +44,8 @@ namespace geeL {
 
 		static void drawMaterial(GUIContext* context, GenericMaterialContainer* material);
 		static void drawMaterial(GUIContext* context, DefaultMaterialContainer* material);
+
+		static void drawTreeNode(GUIContext* context, const std::string& name, bool minimized, std::function<void(GUIContext*)> function);
 
 	};
 }
