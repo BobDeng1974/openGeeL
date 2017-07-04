@@ -1,7 +1,6 @@
 #ifndef GAUSSIANBLUR_H
 #define GAUSSIANBLUR_H
 
-#include <vector>
 #include "../framebuffer/framebuffer.h"
 #include "../utility/worldinformation.h"
 #include "../utility/linearkernel.h"
@@ -45,10 +44,10 @@ namespace geeL {
 
 		LinearKernel linearKernel;
 		const Texture* mainBuffer;
-		std::vector<float> kernel;
 		ColorBuffer frameBuffers[2];
 		ShaderLocation horLocation;
 
+		void bindKernel() const;
 		void updateKernel();
 
 	};

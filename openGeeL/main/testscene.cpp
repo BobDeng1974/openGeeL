@@ -331,11 +331,6 @@ void RenderTest::draw() {
 	renderer.addEffect(colorCorrect);
 	postLister.add(colorCorrect);
 
-	GaussianBlur& wot = GaussianBlur(10.1f);
-	GaussianBlurSnippet& wotwot = GaussianBlurSnippet(wot);
-	renderer.addEffect(wot);
-	postLister.add(wotwot);
-
 	FXAA& fxaa = FXAA();
 	renderer.addEffect(fxaa);
 

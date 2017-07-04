@@ -36,12 +36,7 @@ namespace geeL {
 		frameBuffers[0].init(buffer.getWidth(), buffer.getHeight());
 		frameBuffers[1].init(buffer.getWidth(), buffer.getHeight());
 
-		//Set kernel
-		for (int i = 0; i < kernelSize; i++) {
-			string name = "kernel[" + std::to_string(i) + "]";
-			shader.setFloat(name, kernel[i]);
-		}
-
+		bindKernel();
 		horLocation = shader.getLocation("horizontal");
 	}
 
@@ -71,10 +66,7 @@ namespace geeL {
 			updateKernel();
 			
 			shader.use();
-			for (int i = 0; i < kernelSize; i++) {
-				string name = "kernel[" + std::to_string(i) + "]";
-				shader.setFloat(name, kernel[i]);
-			}
+			bindKernel();
 		}
 	}
 
@@ -130,8 +122,12 @@ namespace geeL {
 		updateKernel();
 	}
 
+	void GaussianBlur::bindKernel() const {
+		linearKernel.bind(shader);
+	}
+
 	void GaussianBlur::updateKernel() {
-		kernel = std::move(computeKernel(sigma));
+		linearKernel.convert(computeKernel(sigma));
 	}
 
 
