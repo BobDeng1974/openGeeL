@@ -3,7 +3,6 @@
 #include "../transformation/transform.h"
 #include "gaussianblur.h"
 #include "motionblur.h"
-#include <iostream>
 
 namespace geeL {
 

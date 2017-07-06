@@ -14,9 +14,5 @@ void main() {
 	vec3 previous = texture(prevFrame, TexCoords).rgb; 
 	vec3 result = (1.f - strength) * current + strength * previous;
 
-	if(TexCoords.x < 0.5f)
-		color = vec4(result, 1.f);
-	else
-		color = vec4(result, 1.f);
-	//color = vec4(vec3(current.r), 1.f);
+	color = vec4(result, 1.f);
 }
