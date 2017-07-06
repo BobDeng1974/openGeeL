@@ -1,5 +1,6 @@
 #include "../guiwrapper.h"
 #include "../../renderer/postprocessing/gaussianblur.h"
+#include "../../renderer/postprocessing/motionblur.h"
 #include "blursnippets.h"
 
 namespace geeL {
@@ -44,6 +45,18 @@ namespace geeL {
 
 	std::string SobelBlurSnippet::toString() const {
 		return "Sobel Blur";
+	}
+
+	MotionBlurSnippet::MotionBlurSnippet(MotionBlur& blur) : blur(blur) {}
+
+	void MotionBlurSnippet::draw(GUIContext * context) {
+		float strength = GUISnippets::drawBarFloat(context, blur.getStrength(), 0.f, 1.f, 0.001f, "Strength");
+		blur.setStrength(strength);
+
+	}
+
+	std::string MotionBlurSnippet::toString() const {
+		return "Motion Blur";
 	}
 
 }

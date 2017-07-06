@@ -175,9 +175,19 @@ namespace geeL {
 	void SobelBlur::setBuffer(const Texture& texture) {
 		GaussianBlur::setBuffer(texture);
 
-		//Use default image if sobel shouldn't use depth buffer
+		//Use default image if sobel shouldn't use depth buffer ...
 		if(!depth)
 			sobel.setBuffer(texture);
+		//... or if depth texture wasn't linked properly
+		else {
+			const Texture& buffer = getBuffer();
+			if (buffer.isEmpty()) {
+				sobel.setBuffer(texture);
+
+				std::cout << "Use fallback texture for sobel blur "  
+					<< "because depth texture hasn't been linked\n";
+			}
+		}
 	}
 
 	void SobelBlur::init(ScreenQuad & screen, const FrameBuffer& buffer) {

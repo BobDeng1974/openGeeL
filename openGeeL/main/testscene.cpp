@@ -59,6 +59,7 @@
 #include "../renderer/postprocessing/volumetriclight.h"
 #include "../renderer/postprocessing/sobel.h"
 #include "../renderer/postprocessing/drawdefault.h"
+#include "../renderer/postprocessing/motionblur.h"
 
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/texcubemap.h"
@@ -322,10 +323,12 @@ void RenderTest::draw() {
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 
-	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.3f);
-	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 8.f, 100.f, 0.3f);
-	//renderer.addEffect(dof, dof);
-	//postLister.add(dof);
+	GaussianBlur& mBlur = GaussianBlur(20.1f);
+	MotionBlur& motionBlur = MotionBlur(mBlur);
+	MotionBlurSnippet& mSnippet = MotionBlurSnippet(motionBlur);
+	renderer.addEffect(motionBlur);
+	scene.addRequester(motionBlur);
+	postLister.add(mSnippet);
 
 	ColorCorrection& colorCorrect = ColorCorrection();
 	renderer.addEffect(colorCorrect);

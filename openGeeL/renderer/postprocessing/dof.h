@@ -41,6 +41,7 @@ namespace geeL {
 		DepthOfFieldBlurred(DepthOfFieldBlur& blur,
 			const float& focalLength, float aperture = 10.f, float farDistance = 100.f, float blurResolution = 1.f);
 
+		virtual void setBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 		virtual void draw();
 

@@ -217,10 +217,10 @@ void SponzaGIScene::draw() {
 	postLister.add(tracer);
 	//lightManager.addVoxelStructure(tex);
 
-	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.15f);
+	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.4f);
 	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 35.f, camera.getFarPlane(), 1.f);
-	renderer.addEffect(dof, dof);
-	postLister.add(dof);
+	//renderer.addEffect(dof, dof);
+	//postLister.add(dof);
 
 	FXAA& fxaa = FXAA();
 	renderer.addEffect(fxaa);

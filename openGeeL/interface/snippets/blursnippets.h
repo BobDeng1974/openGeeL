@@ -8,6 +8,7 @@ namespace geeL {
 
 	class BilateralFilter;
 	class GaussianBlur;
+	class MotionBlur;
 	class SobelBlur;
 
 
@@ -52,6 +53,19 @@ namespace geeL {
 
 	};
 
+
+	class MotionBlurSnippet : public PostEffectSnippet {
+
+	public:
+		MotionBlurSnippet(MotionBlur& blur);
+
+		virtual void draw(GUIContext* context);
+		virtual std::string toString() const;
+
+	private:
+		MotionBlur& blur;
+
+	};
 
 }
 
