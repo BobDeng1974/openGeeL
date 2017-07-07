@@ -21,10 +21,11 @@ namespace geeL {
 	void MotionBlur::init(ScreenQuad& screen, const FrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
+		samplesLocation = shader.getLocation("maxSamples");
 		strengthLocation = shader.getLocation("strength");
 		offsetLocation = shader.getLocation("offset");
 
-		float resolution = 0.3f;
+		float resolution = 0.4f;
 		screenInfo = &buffer.info;
 		prevFrame.init(int(screenInfo->width * resolution), int(screenInfo->height * resolution),
 			ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
@@ -59,6 +60,7 @@ namespace geeL {
 		float value = strength * diff;
 		value = (value > 1.f) ? 1.f : value;
 		shader.setFloat(strengthLocation, value);
+		shader.setFloat(samplesLocation, ceil(9.f * value + 1.f));
 	}
 
 	void MotionBlur::draw() {

@@ -32,6 +32,7 @@ namespace geeL {
 		GaussianBlur& blur;
 		glm::vec3 prevPosition;
 
+		ShaderLocation samplesLocation;
 		ShaderLocation strengthLocation;
 		ShaderLocation offsetLocation;
 		const FrameBufferInformation* screenInfo;
