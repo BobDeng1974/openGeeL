@@ -33,8 +33,8 @@ namespace geeL {
 	void GaussianBlur::init(ScreenQuad& screen, const FrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
-		frameBuffers[0].init(buffer.getWidth(), buffer.getHeight());
-		frameBuffers[1].init(buffer.getWidth(), buffer.getHeight());
+		frameBuffers[0].init(buffer.getWidth(), buffer.getHeight(), ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
+		frameBuffers[1].init(buffer.getWidth(), buffer.getHeight(), ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
 
 		bindKernel();
 		horLocation = shader.getLocation("horizontal");

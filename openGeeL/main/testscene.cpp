@@ -246,7 +246,7 @@ void RenderTest::draw() {
 	WorldPhysics& physics = WorldPhysics();
 	scene.setPhysics(&physics);
 
-	BilateralFilter& blur = BilateralFilter(1.5f, 0.7f);
+	BilateralFilter& blur = BilateralFilter(1.8f, 0.7f);
 	DefaultPostProcess& def = DefaultPostProcess();
 	SSAO& ssao = SSAO(blur, 3.f);
 	RenderContext context;

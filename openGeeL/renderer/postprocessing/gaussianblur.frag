@@ -26,19 +26,11 @@ void main() {
 	for(int i = 1; i < kernelSize; i++) {
 		vec2 off = offset * offsets[i];
 
-		//Check if image borders aren't crossed
-		float inBorders = step(TexCoords.x + off.x, 1.f) * 
-			step(0.f, TexCoords.x - off.x) * 
-			step(TexCoords.y + off.y, 1.f) * 
-			step(0.f, TexCoords.y - off.y);
-
 		//Sample right / top pixel
-		result += inBorders * 
-			texture(image, TexCoords + off).rgb * weights[i];
+		result += texture(image, TexCoords + off).rgb * weights[i];
             
 		//Sample left / bottom pixel
-		result += inBorders *
-			texture(image, TexCoords - off).rgb * weights[i];
+		result += texture(image, TexCoords - off).rgb * weights[i];
     }
 
     color = vec4(result, 1.f);

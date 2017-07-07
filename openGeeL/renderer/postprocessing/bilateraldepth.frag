@@ -40,15 +40,9 @@ void main() {
 	for(int i = 1; i < kernelSize; i++) {
 		vec2 off = offset * offsets[i];
 
-		//Check if image borders aren't crossed
-		float inBorders = step(TexCoords.x + off.x, 1.f) * 
-			step(0.f, TexCoords.x - off.x) * 
-			step(TexCoords.y + off.y, 1.f) * 
-			step(0.f, TexCoords.y - off.y);
-
 		vec3 samp = texture(image, TexCoords + off).rgb;
 		float sampDepth = -texture(gPositionDepth, TexCoords + off).z;
-		float weight = bilateralCoeffient(baseDepth, sampDepth) * weights[i] * inBorders;
+		float weight = bilateralCoeffient(baseDepth, sampDepth) * weights[i];
 		weightSum += weight;
 
 		//Sample right / top pixel
@@ -56,7 +50,7 @@ void main() {
 
 		samp = texture(image, TexCoords - off).rgb;
 		sampDepth = -texture(gPositionDepth, TexCoords - off).z;
-		weight = bilateralCoeffient(baseDepth, sampDepth) * weights[i] * inBorders;
+		weight = bilateralCoeffient(baseDepth, sampDepth) * weights[i];
 		weightSum += weight;
 
 		//Sample left / bottom pixel

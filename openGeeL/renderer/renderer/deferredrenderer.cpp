@@ -61,12 +61,14 @@ namespace geeL {
 		if (ssao != nullptr) {
 			ssaoBuffer = new ColorBuffer();
 			ssaoBuffer->init(unsigned int(window->width * ssaoResolution), unsigned int(window->height * ssaoResolution),
-				ColorType::Single, FilterMode::None, WrapMode::Repeat, false);
+				ColorType::Single, FilterMode::None, WrapMode::ClampEdge, false);
 		}
 
-		frameBuffer1.init(unsigned int(window->width), unsigned int(window->height), ColorType::RGBA16);
-		frameBuffer2.init(unsigned int(window->width), unsigned int(window->height), ColorType::RGBA16);
-		screen.init();
+		frameBuffer1.init(unsigned int(window->width), unsigned int(window->height), 
+			ColorType::RGBA16, FilterMode::None, WrapMode::ClampEdge);
+		frameBuffer2.init(unsigned int(window->width), unsigned int(window->height), 
+			ColorType::RGBA16, FilterMode::None, WrapMode::ClampEdge);
+
 		screen.init();
 	}
 

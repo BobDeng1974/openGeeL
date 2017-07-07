@@ -42,25 +42,17 @@ void main() {
 	for(int i = 1; i < kernelSize; i++) {
 		vec2 off = offset * offsets[i];
 
-		//Check if image borders aren't crossed
-		float inBorders = step(TexCoords.x + off.x, 1.f) * 
-			step(0.f, TexCoords.x - off.x) * 
-			step(TexCoords.y + off.y, 1.f) * 
-			step(0.f, TexCoords.y - off.y);
-
 		//Sample right / top pixel
 		float depth = -texture(gPositionDepth, TexCoords + off).z;
 		float sharp = getSharpness(depth);
 
-		result += inBorders * 
-			(texture(image, TexCoords + off).rgb * sharp + baseColor * (1 - sharp)) * weights[i];
+		result += (texture(image, TexCoords + off).rgb * sharp + baseColor * (1 - sharp)) * weights[i];
             
 		//Sample left / bottom pixel
 		depth = -texture(gPositionDepth, TexCoords - off).z;
 		sharp = getSharpness(depth);
 
-		result += inBorders * 
-			(texture(image, TexCoords - off).rgb * sharp + baseColor * (1.f - sharp))* weights[i];
+		result += (texture(image, TexCoords - off).rgb * sharp + baseColor * (1.f - sharp))* weights[i];
     }
 
     color = vec4(clamp(result, 0.f, 1.f), 1.f);

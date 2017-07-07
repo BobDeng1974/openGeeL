@@ -17,7 +17,6 @@ void main() {
 	float maxi = 5.f;
 	for(float i = 0; i < maxi; i += 1.f) {
 		vec2 off = (i / maxi) * offset.xy;
-
 		previous += texture(prevFrame, TexCoords + off).rgb; 
 	}
 

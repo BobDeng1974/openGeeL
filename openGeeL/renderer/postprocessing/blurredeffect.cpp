@@ -29,9 +29,9 @@ namespace geeL {
 		shader.setInteger("effectOnly", onlyEffect);
 
 		effectBuffer.init(unsigned int(screenInfo->width * effectResolution), unsigned int(screenInfo->height * effectResolution),
-			ColorType::RGB16, FilterMode::Linear);
+			ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
 		blurBuffer.init(unsigned int(screenInfo->width * blurResolution), unsigned int(screenInfo->height * blurResolution),
-			ColorType::RGB16, FilterMode::Linear);
+			ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
 
 		effect.init(screen, effectBuffer);
 		blur.init(screen, blurBuffer);

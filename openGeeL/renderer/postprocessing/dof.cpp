@@ -78,7 +78,7 @@ namespace geeL {
 
 		screenInfo = &buffer.info;
 		blurBuffer.init(int(screenInfo->width * blurResolution), int(screenInfo->height * blurResolution),
-			ColorType::RGB16, FilterMode::Linear);
+			ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
 
 		blur.init(screen, blurBuffer);
 		addBuffer(blurBuffer.getTexture(), "blurredImage");
