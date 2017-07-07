@@ -53,6 +53,8 @@ namespace geeL {
 		float strength = GUISnippets::drawBarFloat(context, blur.getStrength(), 0.f, 1.f, 0.001f, "Strength");
 		blur.setStrength(strength);
 
+		int samples = GUISnippets::drawBarInteger(context, blur.getLevelOfDetail(), 1, 30, 1, "Details");
+		blur.setLevelOfDetail(samples);
 	}
 
 	std::string MotionBlurSnippet::toString() const {

@@ -64,7 +64,7 @@ namespace geeL {
 				ColorType::Single, FilterMode::None, WrapMode::ClampEdge, false);
 		}
 
-		frameBuffer1.init(unsigned int(window->width), unsigned int(window->height), 
+		frameBuffer1.init(unsigned int(window->width), unsigned int(window->height),
 			ColorType::RGBA16, FilterMode::None, WrapMode::ClampEdge);
 		frameBuffer2.init(unsigned int(window->width), unsigned int(window->height), 
 			ColorType::RGBA16, FilterMode::None, WrapMode::ClampEdge);

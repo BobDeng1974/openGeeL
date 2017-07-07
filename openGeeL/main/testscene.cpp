@@ -323,8 +323,7 @@ void RenderTest::draw() {
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 
-	GaussianBlur& mBlur = GaussianBlur(20.1f);
-	MotionBlur& motionBlur = MotionBlur(mBlur);
+	MotionBlur& motionBlur = MotionBlur(0.7f, 20);
 	MotionBlurSnippet& mSnippet = MotionBlurSnippet(motionBlur);
 	renderer.addEffect(motionBlur);
 	scene.addRequester(motionBlur);
