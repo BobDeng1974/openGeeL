@@ -33,6 +33,7 @@ namespace geeL {
 		glm::vec3 prevPosition;
 
 		ShaderLocation strengthLocation;
+		ShaderLocation offsetLocation;
 		const FrameBufferInformation* screenInfo;
 
 	};

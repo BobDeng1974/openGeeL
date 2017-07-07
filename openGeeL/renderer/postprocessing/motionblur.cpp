@@ -20,11 +20,12 @@ namespace geeL {
 		PostProcessingEffect::init(screen, buffer);
 
 		strengthLocation = shader.getLocation("strength");
+		offsetLocation = shader.getLocation("offset");
 
-		float resolution = 0.4f;
+		float resolution = 0.3f;
 		screenInfo = &buffer.info;
 		prevFrame.init(int(screenInfo->width * resolution), int(screenInfo->height * resolution),
-			ColorType::RGB16, FilterMode::Linear);
+			ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
 
 		blur.init(screen, prevFrame);
 		addBuffer(prevFrame.getTexture(), "prevFrame");
@@ -34,6 +35,11 @@ namespace geeL {
 		const Transform& transform = camera->transform;
 		glm::vec3 currPosition = transform.getPosition() + 20.f * transform.getForwardDirection();
 		float diff = glm::length(currPosition - prevPosition);
+		
+		glm::vec3 a = camera->TranslateToScreenSpace(currPosition);
+		glm::vec3 b = camera->TranslateToScreenSpace(prevPosition);
+		glm::vec3 offset = a - b;
+		shader.setVector3(offsetLocation, offset);
 		prevPosition = currPosition;
 
 		float value = strength * diff;
