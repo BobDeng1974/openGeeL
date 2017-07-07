@@ -1,3 +1,4 @@
+#include <iostream>
 #include "../primitives/screenquad.h"
 #include "../framebuffer/framebuffer.h"
 #include "../transformation/transform.h"
@@ -6,8 +7,9 @@
 
 namespace geeL {
 
-	MotionBlur::MotionBlur(GaussianBlur& blur, float strength) : PostProcessingEffect("renderer/postprocessing/motionblur.frag"),
-		strength(strength), blur(blur) {}
+	MotionBlur::MotionBlur(GaussianBlur& blur, float strength) 
+		: PostProcessingEffect("renderer/postprocessing/motionblur.frag"),
+			strength(strength), blur(blur) {}
 
 
 	void MotionBlur::setBuffer(const Texture& texture) {
@@ -32,15 +34,27 @@ namespace geeL {
 	}
 
 	void MotionBlur::bindValues() {
-		const Transform& transform = camera->transform;
-		glm::vec3 currPosition = transform.getPosition() + 20.f * transform.getForwardDirection();
-		float diff = glm::length(currPosition - prevPosition);
+		float diff;
+		glm::vec3 offset;
+
+		if (camera != nullptr) {
+			const Transform& transform = camera->transform;
+			glm::vec3 currPosition = transform.getPosition() + 20.f * transform.getForwardDirection();
+			diff = glm::length(currPosition - prevPosition);
+
+			glm::vec3 a = camera->TranslateToScreenSpace(currPosition);
+			glm::vec3 b = camera->TranslateToScreenSpace(prevPosition);
+			offset = a - b;
+
+			prevPosition = currPosition;
+		}
+		else {
+			diff = 1.f;
+			offset = glm::vec3(0.1f);
+			std::cout << "No camera attached to motion blur. Effect won't be completely functional.\n";
+		}
 		
-		glm::vec3 a = camera->TranslateToScreenSpace(currPosition);
-		glm::vec3 b = camera->TranslateToScreenSpace(prevPosition);
-		glm::vec3 offset = a - b;
 		shader.setVector3(offsetLocation, offset);
-		prevPosition = currPosition;
 
 		float value = strength * diff;
 		value = (value > 1.f) ? 1.f : value;
