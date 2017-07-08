@@ -248,7 +248,7 @@ void RenderTest::draw() {
 
 	BilateralFilter& blur = BilateralFilter(1.8f, 0.7f);
 	DefaultPostProcess& def = DefaultPostProcess();
-	SSAO& ssao = SSAO(blur, 3.f);
+	SSAO& ssao = SSAO(blur, 1.f);
 	RenderContext context;
 	DeferredLighting& lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer, materialFactory);
@@ -323,7 +323,7 @@ void RenderTest::draw() {
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 
-	MotionBlur& motionBlur = MotionBlur(0.7f, 20);
+	MotionBlur& motionBlur = MotionBlur(0.3f, 20);
 	MotionBlurSnippet& mSnippet = MotionBlurSnippet(motionBlur);
 	renderer.addEffect(motionBlur);
 	scene.addRequester(motionBlur);

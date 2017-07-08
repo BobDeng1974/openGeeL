@@ -25,8 +25,6 @@ namespace geeL {
 		screenInfo = &buffer.info;
 	}
 
-
-
 	void MotionBlur::bindValues() {
 		float diff;
 		glm::vec3 offset;
@@ -53,7 +51,7 @@ namespace geeL {
 		float value = strength * diff;
 		float detail = float(LOD) - 1.f;
 		value = (value > 1.f) ? 1.f : value;
-		shader.setFloat(strengthLocation, value);
+		shader.setFloat(strengthLocation, strength);
 		shader.setFloat(samplesLocation, ceil(detail * value + 1.f));
 	}
 
@@ -106,6 +104,83 @@ namespace geeL {
 		prevFrame.fill(blur);
 		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
 		parentBuffer->bind();
+	}
+
+
+
+	MotionBlurPerPixel::MotionBlurPerPixel(VelocityBuffer& velocity, float strength, unsigned int LOD)
+		: MotionBlur("renderer/postprocessing/motionblur3.frag", strength, LOD), 
+			velocity(velocity) {}
+
+
+	void MotionBlurPerPixel::init(ScreenQuad & screen, const FrameBuffer & buffer) {
+		MotionBlur::init(screen, buffer);
+
+		float resolution = 1.f;
+		velocityBuffer.init(int(screenInfo->width * resolution), int(screenInfo->height * resolution),
+			ColorType::RGBA16, FilterMode::Linear, WrapMode::ClampEdge);
+		velocity.init(screen, velocityBuffer);
+
+		addBuffer(velocityBuffer.getTexture(), "velocity");
+	}
+
+	void MotionBlurPerPixel::bindValues() {
+		velocityBuffer.fill(velocity);
+
+		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
+		parentBuffer->bind();
+
+		shader.use();
+		shader.setFloat(strengthLocation, getStrength());
+	}
+
+
+
+	VelocityBuffer::VelocityBuffer() 
+		: PostProcessingEffect("renderer/postprocessing/velocity.frag") {}
+
+
+	void VelocityBuffer::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+		PostProcessingEffect::init(screen, buffer);
+
+		screenInfo = &buffer.info;
+
+		float resolution = 1.f;
+		positionBuffer.init(int(screenInfo->width * resolution), int(screenInfo->height * resolution),
+			ColorType::RGBA16, FilterMode::Linear, WrapMode::ClampEdge);
+		prevPositionEffect.init(screen, positionBuffer);
+
+		addBuffer(positionBuffer.getTexture(), "previousPosition");
+	}
+
+	void VelocityBuffer::bindValues() {
+		if (camera == nullptr)
+			throw "No camera attached to velocity buffer\n";
+
+		const Transform& transform = camera->transform;
+		glm::vec3 currPosition = transform.getPosition() + 20.f * transform.getForwardDirection();
+		glm::vec3 a = camera->TranslateToScreenSpace(currPosition);
+		glm::vec3 b = camera->TranslateToScreenSpace(prevPosition);
+		glm::vec3 offset = a - b;
+
+		prevPosition = currPosition;
+
+		shader.setVector3("defaultOffset", offset);
+		shader.setMat4("projection", camera->getProjectionMatrix());
+		shader.setVector3("origin", camera->GetOriginInViewSpace());
+	}
+
+	void VelocityBuffer::draw() {
+		PostProcessingEffect::draw();
+
+		positionBuffer.fill(prevPositionEffect);
+		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
+		parentBuffer->bind();
+	}
+
+	void VelocityBuffer::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
+		prevPositionEffect.setBuffer(*maps[WorldMaps::PositionRoughness]);
+		addBuffer(*maps[WorldMaps::PositionRoughness], "currentPosition");
 	}
 
 }

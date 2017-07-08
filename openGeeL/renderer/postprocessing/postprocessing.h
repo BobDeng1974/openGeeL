@@ -53,6 +53,17 @@ namespace geeL {
 		virtual void bindValues() {}
 		virtual void bindToScreen();
 	};
+
+
+	//Post proccessing effect that simply outputs the input image
+	class PassthroughEffect : public PostProcessingEffect {
+
+	public:
+		PassthroughEffect() 
+			: PostProcessingEffect("renderer/postprocessing/passthrough.frag") {}
+
+	};
+
 }
 
 #endif

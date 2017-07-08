@@ -12,6 +12,7 @@ namespace geeL {
 	class Camera;
 	class GaussianBlur;
 
+
 	//Simple motion blur that blurs in (inverse) direction of camera movement
 	class MotionBlur : public PostProcessingEffect, public CameraRequester {
 
@@ -28,6 +29,9 @@ namespace geeL {
 
 	protected:
 		const FrameBufferInformation* screenInfo;
+		ShaderLocation samplesLocation;
+		ShaderLocation strengthLocation;
+		ShaderLocation offsetLocation;
 
 		MotionBlur(const std::string& shaderPath, float strength = 0.5f, unsigned int LOD = 15);
 		virtual void bindValues();
@@ -36,10 +40,6 @@ namespace geeL {
 		float strength;
 		unsigned int LOD;
 		glm::vec3 prevPosition;
-
-		ShaderLocation samplesLocation;
-		ShaderLocation strengthLocation;
-		ShaderLocation offsetLocation;
 
 	};
 
@@ -57,6 +57,45 @@ namespace geeL {
 	private:
 		GaussianBlur& blur;
 		ColorBuffer prevFrame;
+
+	};
+
+
+	class VelocityBuffer : public PostProcessingEffect, public WorldMapRequester, public CameraRequester {
+
+	public:
+		VelocityBuffer();
+
+		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
+		virtual void draw();
+
+		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
+
+	protected:
+		virtual void bindValues();
+
+	private:
+		glm::vec3 prevPosition;
+		const FrameBufferInformation* screenInfo;
+		PassthroughEffect prevPositionEffect;
+		ColorBuffer positionBuffer;
+
+	};
+
+
+	class MotionBlurPerPixel : public MotionBlur {
+
+	public:
+		MotionBlurPerPixel(VelocityBuffer& velocity, float strength = 0.5f, unsigned int LOD = 15);
+
+		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
+
+	protected:
+		virtual void bindValues();
+
+	private:
+		VelocityBuffer& velocity;
+		ColorBuffer velocityBuffer;
 
 	};
 
