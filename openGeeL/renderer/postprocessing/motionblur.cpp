@@ -77,39 +77,8 @@ namespace geeL {
 	}
 
 
-	MotionBlurGaussian::MotionBlurGaussian(GaussianBlur& blur, float strength, unsigned int LOD)
-		: MotionBlur("renderer/postprocessing/motionblur2.frag", strength, LOD), blur(blur) {}
-
-
-	void MotionBlurGaussian::setBuffer(const Texture& texture) {
-		PostProcessingEffect::setBuffer(texture);
-
-		blur.setBuffer(texture);
-	}
-
-	void MotionBlurGaussian::init(ScreenQuad& screen, const FrameBuffer& buffer) {
-		MotionBlur::init(screen, buffer);
-
-		float resolution = 0.5f;
-		prevFrame.init(int(screenInfo->width * resolution), int(screenInfo->height * resolution),
-			ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
-
-		blur.init(screen, prevFrame);
-		addBuffer(prevFrame.getTexture(), "prevFrame");
-	}
-
-	void MotionBlurGaussian::draw() {
-		PostProcessingEffect::draw();
-
-		prevFrame.fill(blur);
-		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
-		parentBuffer->bind();
-	}
-
-
-
 	MotionBlurPerPixel::MotionBlurPerPixel(VelocityBuffer& velocity, float strength, unsigned int LOD)
-		: MotionBlur("renderer/postprocessing/motionblur3.frag", strength, LOD), 
+		: MotionBlur("renderer/postprocessing/motionblur2.frag", strength, LOD), 
 			velocity(velocity) {}
 
 

@@ -44,23 +44,6 @@ namespace geeL {
 	};
 
 
-	//Motion blur that uses blurred image of previous frame to achieve the effect
-	class MotionBlurGaussian : public MotionBlur {
-
-	public:
-		MotionBlurGaussian(GaussianBlur& blur, float strength = 0.5f, unsigned int LOD = 15);
-
-		virtual void setBuffer(const Texture& texture);
-		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
-		virtual void draw();
-
-	private:
-		GaussianBlur& blur;
-		ColorBuffer prevFrame;
-
-	};
-
-
 	class VelocityBuffer : public PostProcessingEffect, public WorldMapRequester, public CameraRequester {
 
 	public:
