@@ -238,14 +238,21 @@ void ArthouseScene::draw() {
 	GaussianBlurSnippet& blurSnippet = GaussianBlurSnippet(blur4);
 	postLister.add(ssrrSmooth, ssrrSnippet, blurSnippet);
 
-	GaussianBlur& lensBlur = GaussianBlur(KernelSize::Large, 10.1f);
-	BrightnessFilter& bFilter = BrightnessFilter(0.7f);
-	LensFlareFilter& lensFlareFilter = LensFlareFilter(bFilter);
+	BrightnessFilterSmooth& bFilter2 = BrightnessFilterSmooth(0.f, 0.02f);
+	BrightnessFilterSnippet& brightSnippet = BrightnessFilterSnippet(bFilter2);
+	//renderer.addEffect(lmao);
+	postLister.add(brightSnippet);
+	
+	GaussianBlur& lensBlur = GaussianBlur(KernelSize::Huge, 10.1f);
+	BrightnessFilterCutoff& bFilter = BrightnessFilterCutoff(0.7f);
+	LensFlareFilter& lensFlareFilter = LensFlareFilter(bFilter2);
+	lensFlareFilter.setDistortion(glm::vec3(0.07f, 0.05f, 0.03f));
 	LensFlare& lensFlare = LensFlare(lensFlareFilter, lensBlur, 0.7f, 0.8f);
 	LensFlareSnippet& lensSnippet = LensFlareSnippet(lensFlare);
 	GaussianBlurSnippet& blurSnippet2 = GaussianBlurSnippet(lensBlur);
 	renderer.addEffect(lensFlare);
 	postLister.add(lensFlare, lensSnippet, blurSnippet2);
+
 
 	SobelFilter& sobel = SobelFilter(5.f);
 	SobelBlur& sobelBlur = SobelBlur(sobel, 5.f);
@@ -253,7 +260,7 @@ void ArthouseScene::draw() {
 	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.5f);
 	VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 	SobelBlurSnippet& snip = SobelBlurSnippet(sobelBlur);
-	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
+	//renderer.addEffect(volSmooth, { &vol, &sobelBlur });
 	scene.addRequester(vol);
 	postLister.add(volSmooth, lightSnippet, snip);
 

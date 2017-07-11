@@ -17,14 +17,14 @@ namespace geeL {
 	class Bloom : public BlurredPostEffect {
 
 	public:
-		Bloom(BrightnessFilter& filter, GaussianBlurBase& blur, 
+		Bloom(BrightnessFilterCutoff& filter, GaussianBlurBase& blur, 
 			float effectResolution = 1.f, float blurResolution = 1.f);
 
 		void setScatter(float scatter);
 		float getScatter() const;
 
 	private:
-		BrightnessFilter& filter;
+		BrightnessFilterCutoff& filter;
 
 	};
 }

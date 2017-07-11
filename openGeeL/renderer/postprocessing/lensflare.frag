@@ -8,6 +8,9 @@ uniform sampler2D image;
 
 uniform float scale;
 uniform float samples;
+uniform vec3 distortion;
+
+vec3 sampleChromatic(vec2 TexCoords);
 
 void main() {       
 	const float baseLength = length(vec2(0.5f));      
@@ -22,8 +25,17 @@ void main() {
 		float weight = length(0.5f - offset) / baseLength;
 		weight = pow(1.f - weight, 5.f);
 
-        result += texture(image, offset).rgb * weight;
+        result += sampleChromatic(offset) * weight;
     }
 
     color = vec4(result, 1.f);
+}
+
+vec3 sampleChromatic(vec2 TexCoords) {
+	vec2 direction = vec2(0.5f);
+
+	return vec3(texture(image, TexCoords + direction * distortion.r).r,
+		texture(image, TexCoords + direction * distortion.g).g,
+		texture(image, TexCoords + direction * distortion.b).b);
+
 }

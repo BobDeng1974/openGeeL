@@ -8,6 +8,7 @@ namespace geeL {
 
 	class Bloom;
 	class BlurredPostEffect;
+	class BrightnessFilterSmooth;
 	class ColorCorrection;
 	class DefaultPostProcess;
 	class DepthOfFieldBlurred;
@@ -85,6 +86,20 @@ namespace geeL {
 
 	private:
 		Bloom& bloom;
+
+	};
+
+
+	class BrightnessFilterSnippet : public PostEffectSnippet {
+
+	public:
+		BrightnessFilterSnippet(BrightnessFilterSmooth& filter);
+
+		virtual void draw(GUIContext* context);
+		virtual std::string toString() const;
+
+	private:
+		BrightnessFilterSmooth& filter;
 
 	};
 

@@ -35,6 +35,10 @@ namespace geeL {
 		return samples;
 	}
 
+	const glm::vec3& LensFlareFilter::getDistortion() const {
+		return distortion;
+	}
+
 	void LensFlareFilter::setScale(float value) {
 		if (scale != value && value > 0.f) {
 			scale = value;
@@ -50,6 +54,15 @@ namespace geeL {
 
 			shader.use();
 			shader.setFloat("samples", samples);
+		}
+	}
+
+	void LensFlareFilter::setDistortion(const glm::vec3& value) {
+		if (distortion != value) {
+			distortion = value;
+
+			shader.use();
+			shader.setVector3("distortion", distortion);
 		}
 	}
 

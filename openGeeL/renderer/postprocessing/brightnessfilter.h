@@ -9,9 +9,21 @@ namespace geeL {
 	class BrightnessFilter : public PostProcessingEffect {
 
 	public:
+		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer) = 0;
+
+	protected:
+		BrightnessFilter(const std::string& path);
+
+	};
+
+
+	
+	class BrightnessFilterCutoff : public BrightnessFilter {
+
+	public:
 		float scatter;
 
-		BrightnessFilter(float scatter = 0.6f);
+		BrightnessFilterCutoff(float scatter = 0.6f);
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
@@ -22,6 +34,27 @@ namespace geeL {
 		ShaderLocation scatterLocation;
 
 	};
+
+
+
+	class BrightnessFilterSmooth : public BrightnessFilter {
+
+	public:
+		BrightnessFilterSmooth(float bias = 1.f, float scale = 0.001f);
+
+		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
+
+		float getBias() const;
+		float getScale() const;
+
+		void setBias(float value);
+		void setScale(float value);
+
+	private:
+		float bias, scale;
+
+	};
+
 
 }
 

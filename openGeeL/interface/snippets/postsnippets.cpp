@@ -25,6 +25,8 @@ namespace geeL {
 
 	BloomSnippet::BloomSnippet(Bloom& bloom) : bloom(bloom) {}
 
+	BrightnessFilterSnippet::BrightnessFilterSnippet(BrightnessFilterSmooth & filter) : filter(filter) {}
+
 	DepthOfFieldBlurredSnippet::DepthOfFieldBlurredSnippet(DepthOfFieldBlurred& dof) : dof(dof) {}
 
 	FXAASnippet::FXAASnippet(FXAA& fxaa) : fxaa(fxaa) {}
@@ -160,6 +162,19 @@ namespace geeL {
 	}
 	
 
+	void BrightnessFilterSnippet::draw(GUIContext* context) {
+		float bias = GUISnippets::drawBarFloat(context, filter.getBias(), 0.f, 3.f, 0.0001f, "Bias");
+		filter.setBias(bias);
+
+		float scale = GUISnippets::drawBarFloat(context, filter.getScale(), 0.f, 0.5f, 0.0001f, "Scale");
+		filter.setScale(scale);
+
+	}
+
+	std::string BrightnessFilterSnippet::toString() const {
+		return "Brightness Filter";
+	}
+
 	void DepthOfFieldBlurredSnippet::draw(GUIContext* context) {
 		float oldResolution = dof.getBlurResolution();
 		float blurResolution = GUISnippets::drawBarFloat(context,
@@ -228,6 +243,16 @@ namespace geeL {
 
 		float samples = GUISnippets::drawBarFloat(context, filter.getMaxSamples(), 0.f, 20.f, 0.1f, "Samples");
 		filter.setMaxSamples(samples);
+
+		GUISnippets::drawTreeNode(context, "Chromatic Aberration", true, [this, &filter](GUIContext* context) {
+			const glm::vec3& distortion = filter.getDistortion();
+
+			float dr = GUISnippets::drawBarFloat(context, distortion.r, 0.f, 0.1f, 0.0001f, "Red");
+			float dg = GUISnippets::drawBarFloat(context, distortion.g, 0.f, 0.1f, 0.0001f, "Green");
+			float db = GUISnippets::drawBarFloat(context, distortion.b, 0.f, 0.1f, 0.0001f, "Blue");
+
+			filter.setDistortion(glm::vec3(dr, dg, db));
+		});
 
 	}
 
@@ -303,5 +328,9 @@ namespace geeL {
 		return "Voxel Cone Tracer";
 	}
 
+
+	
+
+	
 
 }

@@ -1,6 +1,7 @@
 #ifndef LENSFLARE_H
 #define LENSFLARE_H
 
+#include <vec3.hpp>
 #include "blurredeffect.h"
 #include "brightnessfilter.h"
 
@@ -19,15 +20,18 @@ namespace geeL {
 
 		float getScale() const;
 		float getMaxSamples() const;
+		const glm::vec3& getDistortion() const;
 
 		void setScale(float value);
 		void setMaxSamples(float value);
+		void setDistortion(const glm::vec3& value);
 		void setResolution(float value);
 
 	protected:
 		virtual void bindValues();
 
 	private:
+		glm::vec3 distortion;
 		float scale, samples, resolution;
 		BrightnessFilter& filter;
 		ColorBuffer filterBuffer;
