@@ -9,7 +9,7 @@
 namespace geeL {
 
 	class ColorBuffer;
-	class GaussianBlur;
+	class GaussianBlurBase;
 	class ScreenQuad;
 
 	
@@ -17,8 +17,8 @@ namespace geeL {
 	class Bloom : public BlurredPostEffect {
 
 	public:
-		Bloom(BrightnessFilter& filter, GaussianBlur& blur, 
-			float effectResolution = 1.0f, float blurResolution = 1.f);
+		Bloom(BrightnessFilter& filter, GaussianBlurBase& blur, 
+			float effectResolution = 1.f, float blurResolution = 1.f);
 
 		void setScatter(float scatter);
 		float getScatter() const;

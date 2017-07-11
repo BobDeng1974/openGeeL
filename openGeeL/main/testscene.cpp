@@ -60,6 +60,7 @@
 #include "../renderer/postprocessing/sobel.h"
 #include "../renderer/postprocessing/drawdefault.h"
 #include "../renderer/postprocessing/motionblur.h"
+#include "../renderer/postprocessing/lensflare.h"
 
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/texcubemap.h"

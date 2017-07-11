@@ -10,7 +10,7 @@
 namespace geeL {
 
 	class Camera;
-	class GaussianBlur;
+	class GaussianBlurBase;
 
 
 	//Simple motion blur that blurs in (inverse) direction of camera movement

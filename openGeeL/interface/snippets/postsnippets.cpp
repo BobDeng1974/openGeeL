@@ -6,6 +6,7 @@
 #include "../../renderer/postprocessing/bloom.h"
 #include "../../renderer/postprocessing/dof.h"
 #include "../../renderer/postprocessing/godray.h"
+#include "../../renderer/postprocessing/lensflare.h"
 #include "../../renderer/postprocessing/ssao.h"
 #include "../../renderer/postprocessing/ssrr.h"
 #include "../../renderer/postprocessing/fxaa.h"
@@ -29,6 +30,8 @@ namespace geeL {
 	FXAASnippet::FXAASnippet(FXAA& fxaa) : fxaa(fxaa) {}
 
 	GodRaySnippet::GodRaySnippet(GodRay& ray) : ray(ray) {}
+
+	LensFlareSnippet::LensFlareSnippet(LensFlare& flare) : flare(flare) {}
 
 	VolumetricLightSnippet::VolumetricLightSnippet(VolumetricLight& light) : light(light) {}
 
@@ -216,6 +219,23 @@ namespace geeL {
 	}
 	
 
+
+	void LensFlareSnippet::draw(GUIContext * context) {
+		LensFlareFilter& filter = flare.filter;
+
+		float scale = GUISnippets::drawBarFloat(context, filter.getScale(), 0.f, 0.5f, 0.001f, "Scale");
+		filter.setScale(scale);
+
+		float samples = GUISnippets::drawBarFloat(context, filter.getMaxSamples(), 0.f, 20.f, 0.1f, "Samples");
+		filter.setMaxSamples(samples);
+
+	}
+
+	std::string LensFlareSnippet::toString() const {
+		return "Lens Flare";
+	}
+
+
 	void VolumetricLightSnippet::draw(GUIContext* context) {
 		int samples = GUISnippets::drawBarInteger(context, light.getSampleCount(), 0, 500, 1, "Samples");
 		light.setSampleCount(samples);
@@ -283,6 +303,5 @@ namespace geeL {
 		return "Voxel Cone Tracer";
 	}
 
-	
 
 }

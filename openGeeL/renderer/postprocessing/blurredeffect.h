@@ -14,7 +14,6 @@ namespace geeL {
 			float effectResolution = 1.f, float blurResolution = 1.f);
 
 		virtual void setBuffer(const Texture& texture);
-
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 		virtual void draw();
 
@@ -25,6 +24,8 @@ namespace geeL {
 
 
 	protected:
+		const FrameBufferInformation* screenInfo;
+
 		virtual void bindValues();
 
 	private:
@@ -33,7 +34,6 @@ namespace geeL {
 		PostProcessingEffect& blur;
 		ColorBuffer effectBuffer;
 		ColorBuffer blurBuffer;
-		const FrameBufferInformation* screenInfo;
 
 	};
 }

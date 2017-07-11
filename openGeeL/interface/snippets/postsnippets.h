@@ -13,6 +13,7 @@ namespace geeL {
 	class DepthOfFieldBlurred;
 	class FXAA;
 	class GodRay;
+	class LensFlare;
 	class SSAO;
 	class SSRR;
 	class VolumetricLight;
@@ -139,6 +140,20 @@ namespace geeL {
 
 	private:
 		GodRay& ray;
+
+	};
+
+
+	class LensFlareSnippet : public PostEffectSnippet {
+
+	public:
+		LensFlareSnippet(LensFlare& flare);
+
+		virtual void draw(GUIContext* context);
+		virtual std::string toString() const;
+
+	private:
+		LensFlare& flare;
 
 	};
 

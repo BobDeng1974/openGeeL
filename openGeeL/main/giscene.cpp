@@ -219,7 +219,7 @@ void SponzaGIScene::draw() {
 	//lightManager.addVoxelStructure(tex);
 
 	/*
-	GaussianBlur& blur4 = GaussianBlur(0.5f);
+	GaussianBlurBase& blur4 = GaussianBlurBase(0.5f);
 	MultisampledSSRR& ssrr = MultisampledSSRR(25, 35, 1.f);
 	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.5f, 0.5f);
 	renderer.addEffect(ssrrSmooth, ssrr);

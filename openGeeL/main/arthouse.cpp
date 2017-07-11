@@ -59,6 +59,7 @@
 #include "../renderer/postprocessing/volumetriclight.h"
 #include "../renderer/postprocessing/sobel.h"
 #include "../renderer/postprocessing/drawdefault.h"
+#include "../renderer/postprocessing/lensflare.h"
 
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/texcubemap.h"
@@ -233,6 +234,18 @@ void ArthouseScene::draw() {
 	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.6f, 0.6f);
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
+	SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
+	GaussianBlurSnippet& blurSnippet = GaussianBlurSnippet(blur4);
+	postLister.add(ssrrSmooth, ssrrSnippet, blurSnippet);
+
+	GaussianBlur& lensBlur = GaussianBlur(KernelSize::Large, 10.1f);
+	BrightnessFilter& bFilter = BrightnessFilter(0.7f);
+	LensFlareFilter& lensFlareFilter = LensFlareFilter(bFilter);
+	LensFlare& lensFlare = LensFlare(lensFlareFilter, lensBlur, 0.7f, 0.8f);
+	LensFlareSnippet& lensSnippet = LensFlareSnippet(lensFlare);
+	GaussianBlurSnippet& blurSnippet2 = GaussianBlurSnippet(lensBlur);
+	renderer.addEffect(lensFlare);
+	postLister.add(lensFlare, lensSnippet, blurSnippet2);
 
 	SobelFilter& sobel = SobelFilter(5.f);
 	SobelBlur& sobelBlur = SobelBlur(sobel, 5.f);

@@ -11,7 +11,7 @@ namespace geeL {
 	class ScreenQuad;
 
 	//Special gaussian blur that takes distances between pixels into account
-	class DepthOfFieldBlur : public GaussianBlur {
+	class DepthOfFieldBlur : public GaussianBlurBase {
 
 	public:
 		DepthOfFieldBlur(float threshold = 0.1f, float sigma = 2.f);
