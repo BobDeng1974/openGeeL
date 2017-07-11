@@ -2,6 +2,7 @@
 #define GUISNIPPETS_H
 
 #include <string>
+#include <vec2.hpp>
 #include <vec3.hpp>
 #include <functional>
 #include "../../renderer/materials/material.h"
@@ -35,8 +36,8 @@ namespace geeL {
 		static int drawBarInteger(GUIContext* context, int value, int min, int max, int step, std::string name);
 		static float drawBarFloat(GUIContext* context, float value, float min, float max, float step, std::string name);
 
-		static void drawVector(GUIContext* context, glm::vec3& vector, std::string prefix, float border, float step);
-		static glm::vec3 drawVector2(GUIContext* context, const glm::vec3& vector, std::string prefix, float border, float step);
+		static glm::vec2 drawVector(GUIContext* context, const glm::vec2& vector, std::string prefix, float border, float step);
+		static glm::vec3 drawVector(GUIContext* context, const glm::vec3& vector, std::string prefix, float border, float step);
 
 		static void drawTransform(GUIContext* context, Transform& transform);
 		static void drawTransformTree(GUIContext* context, Transform& transform);

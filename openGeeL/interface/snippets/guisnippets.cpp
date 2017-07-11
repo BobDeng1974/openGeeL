@@ -37,21 +37,21 @@ namespace geeL {
 		return val;
 	}
 
-
-	void GUISnippets::drawVector(GUIContext* context, glm::vec3& vector, std::string prefix, float border, float step) {
+	glm::vec2 GUISnippets::drawVector(GUIContext* context, const glm::vec2& vector, std::string prefix, float border, float step) {
 
 		nk_layout_row_dynamic(context, 30, 3);
 
 		std::string x = prefix + " X: ";
 		std::string y = prefix + " Y: ";
-		std::string z = prefix + " Z: ";
 
-		nk_property_float(context, x.c_str(), -border, &vector.x, border, 1, step);
-		nk_property_float(context, y.c_str(), -border, &vector.y, border, 1, step);
-		nk_property_float(context, z.c_str(), -border, &vector.z, border, 1, step);
+		glm::vec2 vec = vector;
+		nk_property_float(context, x.c_str(), -border, &vec.x, border, 1, step);
+		nk_property_float(context, y.c_str(), -border, &vec.y, border, 1, step);
+
+		return vec;
 	}
 
-	glm::vec3 GUISnippets::drawVector2(GUIContext* context, const glm::vec3& vector, std::string prefix, float border, float step) {
+	glm::vec3 GUISnippets::drawVector(GUIContext* context, const glm::vec3& vector, std::string prefix, float border, float step) {
 
 		nk_layout_row_dynamic(context, 30, 3);
 
@@ -60,7 +60,6 @@ namespace geeL {
 		std::string z = prefix + " Z: ";
 
 		glm::vec3 vec = vector;
-
 		nk_property_float(context, x.c_str(), -border, &vec.x, border, 1, step);
 		nk_property_float(context, y.c_str(), -border, &vec.y, border, 1, step);
 		nk_property_float(context, z.c_str(), -border, &vec.z, border, 1, step);
@@ -74,14 +73,14 @@ namespace geeL {
 		std::string name = "Transform(" + std::to_string(transform.getID()) + "):";
 		if (nk_combo_begin_label(context, name.c_str(), nk_vec2(nk_widget_width(context), 400))) {
 
-			glm::vec3 pos = drawVector2(context, transform.getPosition(), "P", 1000.f, 0.1f);
+			glm::vec3 pos = drawVector(context, transform.getPosition(), "P", 1000.f, 0.1f);
 			transform.setPosition(pos);
 
-			glm::vec3 rot = drawVector2(context, transform.getEulerAngles(), "R", 3600.f, 0.1f);
+			glm::vec3 rot = drawVector(context, transform.getEulerAngles(), "R", 3600.f, 0.1f);
 			rot = glm::vec3(fmod(rot.x, 360.f), fmod(rot.y, 360.f), fmod(rot.z, 360.f));
 			transform.setEulerAngles(rot);
 
-			glm::vec3 scale = drawVector2(context, transform.getScaling(), "S", 100.f, 0.1f);
+			glm::vec3 scale = drawVector(context, transform.getScaling(), "S", 100.f, 0.1f);
 			transform.setScaling(scale);
 
 			nk_combo_end(context);
@@ -93,13 +92,13 @@ namespace geeL {
 		std::string name = "Transform(" + std::to_string(transform.getID()) + "):";
 		if (nk_tree_push(context, NK_TREE_NODE, name.c_str(), NK_MINIMIZED)) {
 
-			glm::vec3 position = drawVector2(context, transform.getPosition(), "P", 100.f, 0.1f);
+			glm::vec3 position = drawVector(context, transform.getPosition(), "P", 100.f, 0.1f);
 			transform.setPosition(position);
 
-			glm::vec3 rotation = drawVector2(context, transform.getEulerAngles(), "R", 100.f, 0.1f);
+			glm::vec3 rotation = drawVector(context, transform.getEulerAngles(), "R", 100.f, 0.1f);
 			transform.setEulerAngles(rotation);
 
-			glm::vec3 scaling = drawVector2(context, transform.getScaling(), "S", 100.f, 0.1f);
+			glm::vec3 scaling = drawVector(context, transform.getScaling(), "S", 100.f, 0.1f);
 			transform.setScaling(scaling);
 
 			nk_tree_pop(context);

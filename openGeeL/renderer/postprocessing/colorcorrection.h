@@ -1,6 +1,8 @@
 #ifndef COLORCORRECTION_H
 #define COLORCORRECTION_H
 
+#include <vec2.hpp>
+#include <vec3.hpp>
 #include "postprocessing.h"
 
 namespace geeL {
@@ -20,6 +22,9 @@ namespace geeL {
 		float getSaturation() const;
 		float getBrightness() const;
 
+		const glm::vec2& getDistortionDirection() const;
+		const glm::vec3& getChromaticDistortion() const;
+
 		void setRed(float value);
 		void setGreen(float value);
 		void setBlue(float value);
@@ -27,7 +32,12 @@ namespace geeL {
 		void setSaturation(float value);
 		void setBrightness(float value);
 
+		void setDistortionDirection(const glm::vec2& value);
+		void setChromaticDistortion(const glm::vec3& value);
+
 	protected:
+		glm::vec2 distortionDirection;
+		glm::vec3 distortion;
 		float r, g, b, h, s, v;
 
 	};

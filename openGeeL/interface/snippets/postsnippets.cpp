@@ -97,6 +97,7 @@ namespace geeL {
 
 
 	void ColorCorrectionSnippet::draw(GUIContext* context) {
+
 		float r = GUISnippets::drawBarFloat(context, color.getRed(), 0.f, 1.f, 0.001f, "Red");
 		color.setRed(r);
 
@@ -114,6 +115,24 @@ namespace geeL {
 
 		float v = GUISnippets::drawBarFloat(context, color.getBrightness(), 0.f, 1.f, 0.001f, "Brightness");
 		color.setBrightness(v);
+
+
+		GUISnippets::drawTreeNode(context, "Chromatic Aberration", true, [this](GUIContext* context) {
+			const glm::vec2& direction = color.getDistortionDirection();
+			const glm::vec3& distortion = color.getChromaticDistortion();
+
+			float dr = GUISnippets::drawBarFloat(context, distortion.r, 0.f, 0.01f, 0.0001f, "Red");
+			float dg = GUISnippets::drawBarFloat(context, distortion.g, 0.f, 0.01f, 0.0001f, "Green");
+			float db = GUISnippets::drawBarFloat(context, distortion.b, 0.f, 0.01f, 0.0001f, "Blue");
+
+			color.setChromaticDistortion(glm::vec3(dr, dg, db));
+
+			float dx = GUISnippets::drawBarFloat(context, direction.x, -1.f, 1.f, 0.001f, "X");
+			float dy = GUISnippets::drawBarFloat(context, direction.y, -1.f, 1.f, 0.001f, "Y");
+
+			color.setDistortionDirection(glm::vec2(dx, dy));
+		});
+		
 	}
 
 	std::string ColorCorrectionSnippet::toString() const {
@@ -185,7 +204,7 @@ namespace geeL {
 
 
 	void GodRaySnippet::draw(GUIContext* context) {
-		glm::vec3 position = GUISnippets::drawVector2(context, ray.getLightPosition(), "", 100, 0.1f);
+		glm::vec3 position = GUISnippets::drawVector(context, ray.getLightPosition(), "", 100, 0.1f);
 		ray.setLightPosition(position);
 
 		int samples = GUISnippets::drawBarInteger(context, ray.getSampleCount(), 0, 25, 1, "Samples");

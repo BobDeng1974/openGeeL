@@ -1,5 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <glm.hpp>
 #include "../shader/rendershader.h"
 #include "colorcorrection.h"
 
@@ -19,6 +20,9 @@ namespace geeL {
 		shader.setFloat("h", h);
 		shader.setFloat("s", s);
 		shader.setFloat("v", v);
+
+		shader.setVector2("direction", distortionDirection);
+		shader.setVector3("distortion", distortion);
 	}
 
 
@@ -44,6 +48,14 @@ namespace geeL {
 
 	float ColorCorrection::getBrightness() const {
 		return v;
+	}
+
+	const glm::vec2& ColorCorrection::getDistortionDirection() const {
+		return distortionDirection;
+	}
+
+	const glm::vec3& ColorCorrection::getChromaticDistortion() const {
+		return distortion;
 	}
 
 	void ColorCorrection::setRed(float value) {
@@ -97,6 +109,24 @@ namespace geeL {
 
 			shader.use();
 			shader.setFloat("v", v);
+		}
+	}
+
+	void ColorCorrection::setDistortionDirection(const glm::vec2& value) {
+		if (distortionDirection != value) {
+			distortionDirection = glm::normalize(value);
+
+			shader.use();
+			shader.setVector2("direction", distortionDirection);
+		}
+	}
+
+	void ColorCorrection::setChromaticDistortion(const glm::vec3 & value) {
+		if (distortion != value) {
+			distortion = value;
+
+			shader.use();
+			shader.setVector3("distortion", distortion);
 		}
 	}
 

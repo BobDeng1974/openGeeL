@@ -1,7 +1,8 @@
 #version 330 core
 
 uniform float r, g, b, h, s, v;
-
+uniform vec2 direction;
+uniform vec3 distortion;
 
 in vec2 TexCoords;
 out vec4 color;
@@ -29,9 +30,13 @@ vec3 hsv2rgb(vec3 c) {
 
 
 void main() { 
-	color = texture(image, TexCoords);
+	//color = texture(image, TexCoords);
+	//vec3 col = vec3(color);
 
-	vec3 col = vec3(color);
+	vec3 col = vec3(texture(image, TexCoords + direction * distortion.r).r,
+		texture(image, TexCoords + direction * distortion.g).g,
+		texture(image, TexCoords + direction * distortion.b).b);
+	
 	col.r *= r;
 	col.g *= g;
 	col.b *= b;
