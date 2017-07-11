@@ -4,7 +4,7 @@ in vec2 TexCoords;
 
 out vec4 color;
 
-const int kernelSize = 3;
+const int kernelSize = 4;
 
 uniform float weights[kernelSize];
 uniform float offsets[kernelSize];

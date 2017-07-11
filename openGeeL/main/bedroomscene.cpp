@@ -229,9 +229,10 @@ void BedroomScene::draw() {
 	VolumetricLight& vol = VolumetricLight(*spotLight3, 0.7f, 14.f, 250);
 	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, ayy, 0.25f, 0.2f);
 	VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
+	GaussianBlurSnippet& blurSnippet = GaussianBlurSnippet(ayy);
 	renderer.addEffect(volSmooth, { &vol });
 	scene.addRequester(vol);
-	postLister.add(volSmooth, lightSnippet);
+	postLister.add(volSmooth, lightSnippet, blurSnippet);
 
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR();

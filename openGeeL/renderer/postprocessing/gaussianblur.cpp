@@ -191,7 +191,10 @@ namespace geeL {
 
 
 	SobelBlur::SobelBlur(SobelFilter& sobel, float sigma, bool depth)
-		: GaussianBlurBase("renderer/postprocessing/sobelblur.frag", sigma), sobel(sobel), depth(depth) {}
+		: GaussianBlurBase("renderer/postprocessing/sobelblur.frag", sigma), sobel(sobel), depth(depth) {
+	
+		setKernelsize(7);
+	}
 
 
 	void SobelBlur::setBuffer(const Texture& texture) {
