@@ -71,6 +71,7 @@
 #include "../interface/guirenderer.h"
 #include "../interface/elements/objectlister.h"
 #include "../interface/snippets/postsnippets.h"
+#include "../interface/snippets/blursnippets.h"
 #include "../interface/elements/posteffectlister.h"
 #include "../interface/elements/systeminformation.h"
 
@@ -216,6 +217,17 @@ void SponzaGIScene::draw() {
 	renderer.addEffect(tracer, tracer);
 	postLister.add(tracer);
 	//lightManager.addVoxelStructure(tex);
+
+	/*
+	GaussianBlur& blur4 = GaussianBlur(0.5f);
+	MultisampledSSRR& ssrr = MultisampledSSRR(25, 35, 1.f);
+	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.5f, 0.5f);
+	renderer.addEffect(ssrrSmooth, ssrr);
+	scene.addRequester(ssrr);
+	SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
+	GaussianBlurSnippet& gaussSnippet = GaussianBlurSnippet(blur4);
+	postLister.add(ssrrSmooth, ssrrSnippet, gaussSnippet);
+	*/
 
 	DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.4f);
 	DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 35.f, camera.getFarPlane(), 1.f);

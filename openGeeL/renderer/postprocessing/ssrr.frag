@@ -105,7 +105,7 @@ vec3 getReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float rou
 
 				vec3 left  = currPosition - reflectionDir * _stepSize;
 				vec3 right = currPosition;
-				for(int i = 0; i < 5; i++) {
+				for(int j = 0; j < 5; j++) {
 				
 					currPosition = interpolate(left, right, 0.5f);
 					currDepth    = texture(gPositionRoughness, currPosProj.xy).z;

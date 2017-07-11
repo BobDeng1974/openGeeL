@@ -100,7 +100,7 @@ bool computeReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float
 	reflectionColor = vec3(0.f);
 	vec3 currPosition = fragPos;
 	int i = 0;
-	while(i < _stepCount) {
+	for(int i = 0; i < _stepCount; i++) {
 		currPosition = currPosition + reflectionDir * _stepSize;
 		float depth = currPosition.z;
 		
@@ -122,7 +122,7 @@ bool computeReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float
 
 				vec3 left  = currPosition - reflectionDir * _stepSize;
 				vec3 right = currPosition;
-				for(int i = 0; i < 5; i++) {
+				for(int j = 0; j < 5; j++) {
 				
 					currPosition = interpolate(left, right, 0.5f);
 					currDepth    = texture(gPositionRoughness, currPosProj.xy).z;
@@ -148,7 +148,6 @@ bool computeReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float
 		}
 
 		_stepSize *= stepGain;
-		i++;
 	}
 
 	return false;
