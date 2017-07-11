@@ -12,12 +12,18 @@ namespace geeL {
 	class Texture;
 
 
+	enum class KernelSize {
+		Small = 1,
+		Medium = 2,
+		Large = 3,
+		Huge = 4
+	};
+
+
 	//Two pass gaussian blur
-	class GaussianBlur : public PostProcessingEffect {
+	class GaussianBlurBase : public PostProcessingEffect {
 
 	public:
-		GaussianBlur(float sigma = 1.3f);
-		
 		virtual void setBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
@@ -32,7 +38,8 @@ namespace geeL {
 	protected:
 		unsigned int currBuffer;
 		
-		GaussianBlur(std::string shaderPath, float sigma = 1.3f);
+		GaussianBlurBase(float sigma = 1.3f);
+		GaussianBlurBase(std::string shaderPath, float sigma = 1.3f);
 
 		virtual void bindValues();
 		void setKernelsize(unsigned int size);
@@ -53,8 +60,16 @@ namespace geeL {
 	};
 
 
+	class GaussianBlur : public GaussianBlurBase {
+
+	public:
+		GaussianBlur(KernelSize kernelSize = KernelSize::Small, float sigma = 1.3f);
+
+	};
+
+
 	//Two pass gaussian blur that blurs depending on color differences and scaled with given factor
-	class BilateralFilter : public GaussianBlur {
+	class BilateralFilter : public GaussianBlurBase {
 
 	public:
 		BilateralFilter(float sigma = 1.3f, float factor = 0.5f);
@@ -85,7 +100,7 @@ namespace geeL {
 
 
 	//Two pass gaussian blur that blurs depending sobel edge detection
-	class SobelBlur : public GaussianBlur, public WorldMapRequester {
+	class SobelBlur : public GaussianBlurBase, public WorldMapRequester {
 
 	public:
 		SobelBlur(SobelFilter& sobel, float sigma = 1.5f, bool depth = true);

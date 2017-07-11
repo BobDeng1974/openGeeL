@@ -14,23 +14,23 @@ using namespace std;
 
 namespace geeL {
 
-	GaussianBlur::GaussianBlur(float sigma)
-		: GaussianBlur("renderer/postprocessing/gaussianblur.frag", sigma) {}
+	GaussianBlurBase::GaussianBlurBase(float sigma)
+		: GaussianBlurBase("renderer/postprocessing/gaussianblur1.frag", sigma) {}
 
-	GaussianBlur::GaussianBlur(string shaderPath, float sigma)
+	GaussianBlurBase::GaussianBlurBase(string shaderPath, float sigma)
 		: PostProcessingEffect(shaderPath), mainBuffer(nullptr), sigma(sigma), amount(1) {
 
 		updateKernel();
 	}
 
 
-	void GaussianBlur::setBuffer(const Texture& texture) {
+	void GaussianBlurBase::setBuffer(const Texture& texture) {
 		PostProcessingEffect::setBuffer(texture);
 
 		mainBuffer = &texture;
 	}
 
-	void GaussianBlur::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+	void GaussianBlurBase::init(ScreenQuad& screen, const FrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
 		frameBuffers[0].init(buffer.getWidth(), buffer.getHeight(), ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
@@ -40,7 +40,7 @@ namespace geeL {
 		horLocation = shader.getLocation("horizontal");
 	}
 
-	std::vector<float> GaussianBlur::computeKernel(float sigma) const {
+	std::vector<float> GaussianBlurBase::computeKernel(float sigma) const {
 		std::vector<float> kernel = std::vector<float>(kernelSize);
 
 		double s = 2.0 * sigma * sigma;
@@ -56,11 +56,11 @@ namespace geeL {
 		return kernel;
 	}
 
-	float GaussianBlur::getSigma() const {
+	float GaussianBlurBase::getSigma() const {
 		return sigma;
 	}
 
-	void GaussianBlur::setSigma(float value) {
+	void GaussianBlurBase::setSigma(float value) {
 		if (sigma != value && value > 0.f) {
 			sigma = value;
 			updateKernel();
@@ -70,11 +70,11 @@ namespace geeL {
 		}
 	}
 
-	unsigned int GaussianBlur::getStrength() const {
+	unsigned int GaussianBlurBase::getStrength() const {
 		return amount;
 	}
 
-	void GaussianBlur::setStrength(unsigned int value) {
+	void GaussianBlurBase::setStrength(unsigned int value) {
 		amount = 2 * value - 1;
 		if (amount < 1)
 			amount = 1;
@@ -82,7 +82,7 @@ namespace geeL {
 			amount = 10;
 	}
 
-	void GaussianBlur::bindValues() {
+	void GaussianBlurBase::bindValues() {
 		bool horizontal = true;
 		bool first = true;
 		
@@ -117,30 +117,52 @@ namespace geeL {
 		parentBuffer->bind();
 	}
 
-	void GaussianBlur::setKernelsize(unsigned int size) {
+	void GaussianBlurBase::setKernelsize(unsigned int size) {
 		kernelSize = (size % 2 == 0) ? size + 1 : size;
 		updateKernel();
 	}
 
-	void GaussianBlur::bindKernel() const {
+	void GaussianBlurBase::bindKernel() const {
 		linearKernel.bind(shader);
 	}
 
-	void GaussianBlur::updateKernel() {
+	void GaussianBlurBase::updateKernel() {
 		linearKernel.convert(computeKernel(sigma));
 	}
 
 
+	GaussianBlur::GaussianBlur(KernelSize kernelSize, float sigma)
+		: GaussianBlurBase("renderer/postprocessing/gaussianblur" + std::to_string((int)kernelSize) + ".frag", sigma) {
+		
+		int size;
+		switch (kernelSize) {
+			case KernelSize::Medium:
+				size = 9;
+				break;
+			case KernelSize::Large:
+				size = 17;
+				break;
+			case KernelSize::Huge:
+				size = 27;
+				break;
+			default:
+				size = 5;
+				break;
+		}
+
+		setKernelsize(size);
+	}
+
 
 	BilateralFilter::BilateralFilter(float sigma, float factor)
-		: GaussianBlur("renderer/postprocessing/bilateral.frag", sigma), sigma2(factor) {}
+		: GaussianBlurBase("renderer/postprocessing/bilateral.frag", sigma), sigma2(factor) {}
 
 	BilateralFilter::BilateralFilter(string shaderPath, float sigma, float factor)
-		: GaussianBlur(shaderPath, sigma), sigma2(factor) {}
+		: GaussianBlurBase(shaderPath, sigma), sigma2(factor) {}
 
 
 	void BilateralFilter::init(ScreenQuad& screen, const FrameBuffer& buffer) {
-		GaussianBlur::init(screen, buffer);
+		GaussianBlurBase::init(screen, buffer);
 
 		shader.setFloat("sigma", sigma2);
 	}
@@ -169,11 +191,11 @@ namespace geeL {
 
 
 	SobelBlur::SobelBlur(SobelFilter& sobel, float sigma, bool depth)
-		: GaussianBlur("renderer/postprocessing/sobelblur.frag", sigma), sobel(sobel), depth(depth) {}
+		: GaussianBlurBase("renderer/postprocessing/sobelblur.frag", sigma), sobel(sobel), depth(depth) {}
 
 
 	void SobelBlur::setBuffer(const Texture& texture) {
-		GaussianBlur::setBuffer(texture);
+		GaussianBlurBase::setBuffer(texture);
 
 		//Use default image if sobel shouldn't use depth buffer ...
 		if(!depth)
@@ -191,7 +213,7 @@ namespace geeL {
 	}
 
 	void SobelBlur::init(ScreenQuad & screen, const FrameBuffer& buffer) {
-		GaussianBlur::init(screen, buffer);
+		GaussianBlurBase::init(screen, buffer);
 
 		sobelBuffer.init(buffer.getWidth(), buffer.getHeight());
 		sobel.init(screen, sobelBuffer);
@@ -203,7 +225,7 @@ namespace geeL {
 		sobelBuffer.fill(sobel);
 
 		shader.use();
-		GaussianBlur::bindValues();
+		GaussianBlurBase::bindValues();
 	}
 
 	void SobelBlur::addWorldInformation(map<WorldMaps, const Texture*> maps) {
@@ -218,4 +240,5 @@ namespace geeL {
 		sobel.setScale(value);
 	}
 
+	
 }
