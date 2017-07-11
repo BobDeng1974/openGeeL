@@ -7,31 +7,7 @@
 
 namespace geeL {
 
-	BloomFilter::BloomFilter(float scatter)
-		: PostProcessingEffect("renderer/postprocessing/bloomfilter.frag"), scatter(scatter) {}
-
-
-	void BloomFilter::init(ScreenQuad& screen, const FrameBuffer& buffer) {
-		PostProcessingEffect::init(screen, buffer);
-
-		scatterLocation = shader.setFloat("scatter", scatter);
-	}
-
-	void BloomFilter::setScatter(float scatter) {
-		if (scatter > 0.f && scatter != this->scatter) {
-			this->scatter = scatter;
-
-			shader.use();
-			shader.setFloat(scatterLocation, scatter);
-		}
-	}
-
-	float BloomFilter::getScatter() const {
-		return scatter;
-	}
-
-
-	Bloom::Bloom(BloomFilter& filter, GaussianBlur& blur, float filterResolution, float blurResolution)
+	Bloom::Bloom(BrightnessFilter& filter, GaussianBlur& blur, float filterResolution, float blurResolution)
 		: BlurredPostEffect(filter, blur, filterResolution, blurResolution), filter(filter) {}
 
 	void Bloom::setScatter(float scatter) {
