@@ -2,54 +2,50 @@
 #define LENSFLARE_H
 
 #include <vec3.hpp>
+#include "../utility/worldinformation.h"
 #include "blurredeffect.h"
 #include "brightnessfilter.h"
 
 namespace geeL {
 
 	class GaussianBlurBase;
+	class ImageTexture;
 
 
-	class LensFlareFilter : public PostProcessingEffect {
+	class LensFlare : public PostProcessingEffect, public CameraRequester {
 
 	public:
-		LensFlareFilter(BrightnessFilter& filter, float resolution = 1.f, float scale = 0.5f, float samples = 4.f);
+		LensFlare(BlurredPostEffect& filter, float scale = 0.5f, float samples = 4.f, float resolution = 1.f);
 
 		virtual void setBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 
+		float getStrength() const;
 		float getScale() const;
 		float getMaxSamples() const;
 		const glm::vec3& getDistortion() const;
 
 		void setScale(float value);
+		void setStrength(float value);
 		void setMaxSamples(float value);
 		void setDistortion(const glm::vec3& value);
-		void setResolution(float value);
+
+		void setStarburstTexture(const ImageTexture& texture);
+		void setDirtTexture(const ImageTexture& texture);
 
 	protected:
 		virtual void bindValues();
 
 	private:
 		glm::vec3 distortion;
-		float scale, samples, resolution;
-		BrightnessFilter& filter;
+		float strength, scale, samples, resolution;
+		BlurredPostEffect& filter;
 		ColorBuffer filterBuffer;
 
 		const FrameBufferInformation* screenInfo;
 
 	};
 
-
-	class LensFlare : public BlurredPostEffect {
-
-	public:
-		LensFlareFilter& filter;
-		
-		LensFlare(LensFlareFilter& filter, GaussianBlurBase& blur, 
-			float effectResolution = 1.f, float blurResolution = 1.f);
-
-	};
 
 }
 

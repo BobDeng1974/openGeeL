@@ -236,22 +236,23 @@ namespace geeL {
 
 
 	void LensFlareSnippet::draw(GUIContext * context) {
-		LensFlareFilter& filter = flare.filter;
+		float strength = GUISnippets::drawBarFloat(context, flare.getStrength(), 0.1f, 50.f, 0.001f, "Strength");
+		flare.setStrength(strength);
 
-		float scale = GUISnippets::drawBarFloat(context, filter.getScale(), 0.f, 0.5f, 0.001f, "Scale");
-		filter.setScale(scale);
+		float scale = GUISnippets::drawBarFloat(context, flare.getScale(), 0.f, 0.5f, 0.001f, "Scale");
+		flare.setScale(scale);
 
-		float samples = GUISnippets::drawBarFloat(context, filter.getMaxSamples(), 0.f, 20.f, 0.1f, "Samples");
-		filter.setMaxSamples(samples);
+		float samples = GUISnippets::drawBarFloat(context, flare.getMaxSamples(), 0.f, 20.f, 0.1f, "Samples");
+		flare.setMaxSamples(samples);
 
-		GUISnippets::drawTreeNode(context, "Chromatic Aberration", true, [this, &filter](GUIContext* context) {
-			const glm::vec3& distortion = filter.getDistortion();
+		GUISnippets::drawTreeNode(context, "Chromatic Aberration", true, [this](GUIContext* context) {
+			const glm::vec3& distortion = flare.getDistortion();
 
 			float dr = GUISnippets::drawBarFloat(context, distortion.r, 0.f, 0.1f, 0.0001f, "Red");
 			float dg = GUISnippets::drawBarFloat(context, distortion.g, 0.f, 0.1f, 0.0001f, "Green");
 			float db = GUISnippets::drawBarFloat(context, distortion.b, 0.f, 0.1f, 0.0001f, "Blue");
 
-			filter.setDistortion(glm::vec3(dr, dg, db));
+			flare.setDistortion(glm::vec3(dr, dg, db));
 		});
 
 	}

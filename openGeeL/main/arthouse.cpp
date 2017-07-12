@@ -238,21 +238,21 @@ void ArthouseScene::draw() {
 	GaussianBlurSnippet& blurSnippet = GaussianBlurSnippet(blur4);
 	postLister.add(ssrrSmooth, ssrrSnippet, blurSnippet);
 
-	BrightnessFilterSmooth& bFilter2 = BrightnessFilterSmooth(0.f, 0.02f);
-	BrightnessFilterSnippet& brightSnippet = BrightnessFilterSnippet(bFilter2);
-	//renderer.addEffect(lmao);
-	postLister.add(brightSnippet);
-	
-	GaussianBlur& lensBlur = GaussianBlur(KernelSize::Huge, 10.1f);
 	BrightnessFilterCutoff& bFilter = BrightnessFilterCutoff(0.7f);
-	LensFlareFilter& lensFlareFilter = LensFlareFilter(bFilter2);
-	lensFlareFilter.setDistortion(glm::vec3(0.07f, 0.05f, 0.03f));
-	LensFlare& lensFlare = LensFlare(lensFlareFilter, lensBlur, 0.7f, 0.8f);
+	GaussianBlur& bBlur = GaussianBlur(KernelSize::Huge, 10.1f);
+	BlurredPostEffect& bBlurred = BlurredPostEffect(bFilter, bBlur, 0.5f, 0.8f);
+	bBlurred.effectOnly(true);
+	LensFlare& lensFlare = LensFlare(bBlurred, 0.35f, 6.f);
+	lensFlare.setDistortion(glm::vec3(0.04f, 0.03f, 0.02f));
+	lensFlare.setStrength(10.2f);
+	ImageTexture& dirtTexture = ImageTexture("resources/textures/lens_dirt.jpg", ColorType::GammaSpace);
+	lensFlare.setDirtTexture(dirtTexture);
+	ImageTexture& starTexture = ImageTexture("resources/textures/starburst.jpg", ColorType::GammaSpace, WrapMode::ClampEdge);
+	lensFlare.setStarburstTexture(starTexture);
 	LensFlareSnippet& lensSnippet = LensFlareSnippet(lensFlare);
-	GaussianBlurSnippet& blurSnippet2 = GaussianBlurSnippet(lensBlur);
 	renderer.addEffect(lensFlare);
-	postLister.add(lensFlare, lensSnippet, blurSnippet2);
-
+	scene.addRequester(lensFlare);
+	postLister.add(lensSnippet);
 
 	SobelFilter& sobel = SobelFilter(5.f);
 	SobelBlur& sobelBlur = SobelBlur(sobel, 5.f);
@@ -260,7 +260,7 @@ void ArthouseScene::draw() {
 	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.5f);
 	VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 	SobelBlurSnippet& snip = SobelBlurSnippet(sobelBlur);
-	//renderer.addEffect(volSmooth, { &vol, &sobelBlur });
+	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
 	scene.addRequester(vol);
 	postLister.add(volSmooth, lightSnippet, snip);
 

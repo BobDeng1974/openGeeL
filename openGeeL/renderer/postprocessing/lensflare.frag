@@ -5,10 +5,19 @@ in vec2 TexCoords;
 out vec4 color;
 
 uniform sampler2D image;
+uniform sampler2D brightnessFilter;
+uniform sampler2D dirt;
+uniform sampler2D starburst;
 
+uniform bool useDirt;
+uniform bool useStarburst;
+
+uniform float strength;
 uniform float scale;
 uniform float samples;
 uniform vec3 distortion;
+
+uniform mat3 starTransform;
 
 vec3 sampleChromatic(vec2 TexCoords);
 
@@ -28,14 +37,20 @@ void main() {
         result += sampleChromatic(offset) * weight;
     }
 
-    color = vec4(result, 1.f);
+	vec3 baseC = texture(image, TexCoords).rgb;
+
+	vec2 rotTexCoords = (starTransform * vec3(TexCoords, 1.f)).xy;
+	vec3 star  = useStarburst ? texture(starburst, rotTexCoords).rgb : vec3(1.f);
+	vec3 dirty = useDirt ? texture(dirt, TexCoords).rgb : vec3(1.f);
+
+    color = vec4(baseC + result * strength * dirty * star, 1.f);
 }
 
 vec3 sampleChromatic(vec2 TexCoords) {
 	vec2 direction = vec2(0.5f);
 
-	return vec3(texture(image, TexCoords + direction * distortion.r).r,
-		texture(image, TexCoords + direction * distortion.g).g,
-		texture(image, TexCoords + direction * distortion.b).b);
+	return vec3(texture(brightnessFilter, TexCoords + direction * distortion.r).r,
+		texture(brightnessFilter, TexCoords + direction * distortion.g).g,
+		texture(brightnessFilter, TexCoords + direction * distortion.b).b);
 
 }
