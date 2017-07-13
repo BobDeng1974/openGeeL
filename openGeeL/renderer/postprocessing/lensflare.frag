@@ -48,6 +48,7 @@ void main() {
 
 vec3 sampleChromatic(vec2 TexCoords) {
 	vec2 direction = vec2(0.5f);
+	//vec2 direction = -normalize(0.5f - TexCoords);
 
 	return vec3(texture(brightnessFilter, TexCoords + direction * distortion.r).r,
 		texture(brightnessFilter, TexCoords + direction * distortion.g).g,

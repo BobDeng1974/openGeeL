@@ -20,7 +20,7 @@
 using namespace geeL;
 
 void RaymarchTest::draw() {
-	RenderWindow& window = RenderWindow("Raymarch", 1920, 1080, WindowMode::Fullscreen);
+	RenderWindow& window = RenderWindow("Raymarch", 1920, 1080, WindowMode::Windowed);
 	InputManager manager;
 
 	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));

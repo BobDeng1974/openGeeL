@@ -79,8 +79,12 @@ uniform SpotLight spotLights[5];
 vec3 calculateReflectance(vec3 fragPosition, vec3 normal, vec3 viewDirection, 
 	vec3 lightPosition, vec3 lightDiffuse, vec3 albedo, float roughness, float metallic);
 
+//Back-lit subsurface scattering using Beer-Lambert law for transmittance
+vec3 subsurfaceScatteringBack(vec3 fragPosition, vec3 normal, vec3 viewDirection, vec4 albedo, vec3 lightPosition, 
+	vec3 lightDiffuse, float roughness, float metallic, float travelDistance);
+
 vec3 calculatePointLight(int index, PointLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float roughness, float metallic);
+	vec3 fragPosition, vec3 viewDirection, vec4 albedo, float roughness, float metallic);
 
 vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, 
 	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float roughness, float metallic);
@@ -90,7 +94,7 @@ vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal,
 
 vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness);
 
-float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition);
+float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition, inout float travelDistance);
 float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 coords);
 float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition);
 
@@ -112,7 +116,7 @@ void main() {
 	vec4 normMet  = texture(gNormalMet, textureCoordinates);
 
     vec3 normal		= normMet.rgb;
-    vec3 albedo		= texture(gDiffuse, textureCoordinates).rgb;
+    vec4 albedo		= texture(gDiffuse, textureCoordinates);
 	vec3 emissivity = useEmissivity ? texture(gEmissivity, textureCoordinates).rgb : vec3(0.f);
 
 	float roughness	= posRough.a;
@@ -121,19 +125,19 @@ void main() {
 	vec3  viewDirection = normalize(-fragPosition);
 
 
-	vec3 irradiance = albedo * emissivity;
+	vec3 irradiance = albedo.rgb * emissivity;
 	for(int i = 0; i < plCount; i++) {
 		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
 		//irradiance += calculateVolumetricLightColor(fragPosition, pointLights[i].position, pointLights[i].diffuse, 0.001f);
 	}
        
 	for(int i = 0; i < dlCount; i++) {
-        irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
+        irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo.rgb, roughness, metallic);
 		irradiance += calculateVolumetricLightColor(fragPosition, directionalLights[i].direction * -100.f, directionalLights[i].diffuse, 150.f);
 	}
 
 	for(int i = 0; i < slCount; i++)
-		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
+		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo.rgb, roughness, metallic);
 
 	color = vec4(irradiance, 1.f);
 }
@@ -241,14 +245,33 @@ vec3 calculateReflectanceDirectional(vec3 fragPosition, vec3 normal, vec3 viewDi
 	return ((kd * albedo / PI + brdf) * radiance) * NdotL; 
 }
 
+vec3 subsurfaceScatteringBack(vec3 fragPosition, vec3 normal, vec3 viewDirection, vec4 albedo, vec3 lightPosition, 
+	vec3 lightDiffuse, float roughness, float metallic, float travelDistance) {
+
+	vec3 backsideReflectance = calculateReflectance(fragPosition, -normal, 
+		viewDirection, lightPosition, lightDiffuse, albedo.rgb, roughness, metallic);
+
+	//Approximate transmittance coefficient via albedo alpha channel
+	float transCoef = 1.f / (pow(1.f - albedo.a, 5.f) + 0.000001f);
+
+	return backsideReflectance * exp(-travelDistance * transCoef);
+}
+
+
 vec3 calculatePointLight(int index, PointLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float roughness, float metallic) {
+	vec3 fragPosition, vec3 viewDirection, vec4 albedo, float roughness, float metallic) {
 
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
-		viewDirection, light.position, light.diffuse, albedo, roughness, metallic);
-	float shadow = 1.f - light.shadowIntensity * calculatePointLightShadows(index, normal, fragPosition);
+		viewDirection, light.position, light.diffuse, albedo.rgb, roughness, metallic);
+
+	float travel = 0.f;
+	float shadow = 1.f - light.shadowIntensity * calculatePointLightShadows(index, normal, fragPosition, travel);
 	
-    return shadow * reflectance;
+	//vec3 sss = subsurfaceScatteringBack(fragPosition, normal, viewDirection, albedo, 
+	//	light.position, light.diffuse, roughness, metallic, travel);
+
+	 //return shadow * reflectance + sss;
+	 return shadow * reflectance;
 }
 
 vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, 
@@ -313,7 +336,7 @@ vec2 sampleDirections2D[16] = vec2[](
    vec2( 0.14383161, -0.14100790 ) 
 );
 
-float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
+float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition, inout float travelDistance) {
 
 	//No shadow
 	if(pointLights[i].type == 0)
@@ -335,6 +358,8 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 		//Hard shadow
 		if(pointLights[i].type == 1) {
 			float depth = texture(pointLights[i].shadowMap, direction).r;
+
+			travelDistance = abs(curDepth - depth) + bias;
 			return curDepth - bias > depth ? 1.f : 0.f; 
 		}
 
@@ -349,9 +374,12 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 		float testShadow = 0;
 		for(int j = 0; j < testSamples; j++) {
 			float depth = texture(pointLights[i].shadowMap, direction + sampleDirections3D[j] * diskRadius).r;
+
+			travelDistance += abs(curDepth - depth);
 			testShadow += curDepth - bias > depth ? 1 : 0;        
 		}  
 
+		travelDistance = travelDistance / float(testSamples) + bias;
 		testShadow = testShadow / float(testSamples);
 
 		if(testShadow == 0.f || testShadow == 1.f)
@@ -363,6 +391,7 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 				int index = int(20.0f * random(floor(fragPosition.xyz * 1000.0f), j)) % 20;
 
 				float depth = texture(pointLights[i].shadowMap, direction + sampleDirections3D[index] * diskRadius).r;
+				
 				shadow += step(depth, curDepth - bias);
 			}    
 

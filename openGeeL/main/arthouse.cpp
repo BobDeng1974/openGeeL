@@ -244,10 +244,10 @@ void ArthouseScene::draw() {
 	bBlurred.effectOnly(true);
 	LensFlare& lensFlare = LensFlare(bBlurred, 0.35f, 6.f);
 	lensFlare.setDistortion(glm::vec3(0.04f, 0.03f, 0.02f));
-	lensFlare.setStrength(10.2f);
+	lensFlare.setStrength(1.2f);
 	ImageTexture& dirtTexture = ImageTexture("resources/textures/lens_dirt.jpg", ColorType::GammaSpace);
-	lensFlare.setDirtTexture(dirtTexture);
-	ImageTexture& starTexture = ImageTexture("resources/textures/starburst.jpg", ColorType::GammaSpace, WrapMode::ClampEdge);
+	//lensFlare.setDirtTexture(dirtTexture);
+	ImageTexture& starTexture = ImageTexture("resources/textures/starburst3.jpg", ColorType::GammaSpace, WrapMode::ClampEdge, FilterMode::Linear);
 	lensFlare.setStarburstTexture(starTexture);
 	LensFlareSnippet& lensSnippet = LensFlareSnippet(lensFlare);
 	renderer.addEffect(lensFlare);
@@ -255,7 +255,7 @@ void ArthouseScene::draw() {
 	postLister.add(lensSnippet);
 
 	SobelFilter& sobel = SobelFilter(5.f);
-	SobelBlur& sobelBlur = SobelBlur(sobel, 5.f);
+	SobelBlur& sobelBlur = SobelBlur(sobel, 15.f);
 	VolumetricLight& vol = VolumetricLight(*spotLight4, 0.02f, 1.f, 150);
 	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.5f);
 	VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);

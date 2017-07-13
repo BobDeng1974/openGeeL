@@ -27,7 +27,7 @@ namespace geeL {
 	RenderScene::RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& shaderManager, 
 		SceneCamera& camera, MaterialFactory& materialFactory)
 			: lightManager(lightManager), pipeline(shaderManager), camera(&camera),
-				physics(nullptr), worldTransform(world), materialFactory(materialFactory) {}
+				physics(nullptr), worldTransform(world), materialFactory(materialFactory), skybox(nullptr) {}
 
 	
 	void RenderScene::init() {

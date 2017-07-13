@@ -214,7 +214,7 @@ void SponzaGIScene::draw() {
 	VoxelTexture& tex = VoxelTexture(scene);
 	VoxelConeTracer tracer = VoxelConeTracer(scene, tex);
 
-	renderer.addEffect(tracer, tracer);
+	//renderer.addEffect(tracer, tracer);
 	postLister.add(tracer);
 	//lightManager.addVoxelStructure(tex);
 

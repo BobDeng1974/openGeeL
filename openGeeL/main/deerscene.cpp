@@ -197,6 +197,18 @@ void DeerScene::draw() {
 	renderer.addObject(&testScene);
 	renderer.initObjects();
 
+	/*
+	GUIRenderer& gui = GUIRenderer(window, context);
+	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
+	objectLister.add(camera);
+	gui.addElement(objectLister);
+	PostProcessingEffectLister& postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
+	gui.addElement(postLister);
+	SystemInformation& sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
+	gui.addElement(sysInfo);
+	renderer.addGUIRenderer(&gui);
+	*/
+
 	ImageBasedLighting& ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);
 
