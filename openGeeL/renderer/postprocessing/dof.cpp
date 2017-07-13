@@ -58,10 +58,10 @@ namespace geeL {
 				farDistance(farDistance), blurResolution(blurResolution) {}
 
 
-	void DepthOfFieldBlurred::setBuffer(const Texture& texture) {
-		PostProcessingEffect::setBuffer(texture);
+	void DepthOfFieldBlurred::setImageBuffer(const Texture& texture) {
+		PostProcessingEffect::setImageBuffer(texture);
 
-		blur.setBuffer(texture);
+		blur.setImageBuffer(texture);
 	}
 
 	void DepthOfFieldBlurred::init(ScreenQuad& screen, const FrameBuffer& buffer) {
@@ -81,7 +81,7 @@ namespace geeL {
 			ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
 
 		blur.init(screen, blurBuffer);
-		addBuffer(blurBuffer.getTexture(), "blurredImage");
+		addImageBuffer(blurBuffer.getTexture(), "blurredImage");
 	}
 
 	void DepthOfFieldBlurred::bindValues() {
@@ -108,8 +108,8 @@ namespace geeL {
 	}
 
 	void DepthOfFieldBlurred::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		addBuffer(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
-		blur.addBuffer(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
+		addImageBuffer(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
+		blur.addImageBuffer(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
 	}
 
 	void DepthOfFieldBlurred::resizeBlurResolution(float blurResolution) {

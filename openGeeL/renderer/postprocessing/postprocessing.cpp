@@ -16,15 +16,15 @@ namespace geeL {
 	PostProcessingEffect::PostProcessingEffect(string vertexPath, string fragmentPath)
 		: shader(RenderShader(vertexPath.c_str(), fragmentPath.c_str())), onlyEffect(false) {}
 
-	const Texture& PostProcessingEffect::getBuffer() const {
+	const Texture& PostProcessingEffect::getImageBuffer() const {
 		return *shader.getMap("image");
 	}
 
-	void PostProcessingEffect::setBuffer(const ColorBuffer& buffer) {
-		setBuffer(buffer.getTexture());
+	void PostProcessingEffect::setImageBuffer(const ColorBuffer& buffer) {
+		setImageBuffer(buffer.getTexture());
 	}
 
-	void PostProcessingEffect::setBuffer(const Texture& texture) {
+	void PostProcessingEffect::setImageBuffer(const Texture& texture) {
 		shader.addMap(texture, "image");
 	}
 
@@ -33,7 +33,7 @@ namespace geeL {
 		this->screen = &screen;
 	}
 
-	void PostProcessingEffect::addBuffer(const Texture& texture, const std::string& name) {
+	void PostProcessingEffect::addImageBuffer(const Texture& texture, const std::string& name) {
 		shader.addMap(texture, name);
 	}
 

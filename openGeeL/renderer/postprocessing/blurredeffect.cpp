@@ -16,10 +16,10 @@ namespace geeL {
 	}
 
 
-	void BlurredPostEffect::setBuffer(const Texture& texture) {
-		PostProcessingEffect::setBuffer(texture);
+	void BlurredPostEffect::setImageBuffer(const Texture& texture) {
+		PostProcessingEffect::setImageBuffer(texture);
 
-		effect.setBuffer(texture);
+		effect.setImageBuffer(texture);
 	}
 
 	void BlurredPostEffect::init(ScreenQuad& screen, const FrameBuffer& buffer) {
@@ -35,9 +35,9 @@ namespace geeL {
 
 		effect.init(screen, effectBuffer);
 		blur.init(screen, blurBuffer);
-		blur.setBuffer(effectBuffer);
+		blur.setImageBuffer(effectBuffer);
 
-		addBuffer(blurBuffer.getTexture(), "image2");
+		addImageBuffer(blurBuffer.getTexture(), "image2");
 	}
 
 

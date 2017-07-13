@@ -26,12 +26,12 @@ namespace geeL {
 		void setScreen(ScreenQuad& screen);
 
 		//Returns first (and main) buffer of this effect
-		const Texture& getBuffer() const;
+		const Texture& getImageBuffer() const;
 
 		//Set main image buffer that will be used as base for post processing
-		void setBuffer(const ColorBuffer& buffer);
-		virtual void setBuffer(const Texture& texture);
-		void addBuffer(const Texture& texture, const std::string& name);
+		void setImageBuffer(const ColorBuffer& buffer);
+		virtual void setImageBuffer(const Texture& texture);
+		void addImageBuffer(const Texture& texture, const std::string& name);
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 		virtual void draw();

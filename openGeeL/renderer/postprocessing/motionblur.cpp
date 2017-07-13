@@ -90,7 +90,7 @@ namespace geeL {
 			ColorType::RGBA16, FilterMode::Linear, WrapMode::ClampEdge);
 		velocity.init(screen, velocityBuffer);
 
-		addBuffer(velocityBuffer.getTexture(), "velocity");
+		addImageBuffer(velocityBuffer.getTexture(), "velocity");
 	}
 
 	void MotionBlurPerPixel::bindValues() {
@@ -119,7 +119,7 @@ namespace geeL {
 			ColorType::RGBA16, FilterMode::Linear, WrapMode::ClampEdge);
 		prevPositionEffect.init(screen, positionBuffer);
 
-		addBuffer(positionBuffer.getTexture(), "previousPosition");
+		addImageBuffer(positionBuffer.getTexture(), "previousPosition");
 	}
 
 	void VelocityBuffer::bindValues() {
@@ -148,8 +148,8 @@ namespace geeL {
 	}
 
 	void VelocityBuffer::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
-		prevPositionEffect.setBuffer(*maps[WorldMaps::PositionRoughness]);
-		addBuffer(*maps[WorldMaps::PositionRoughness], "currentPosition");
+		prevPositionEffect.setImageBuffer(*maps[WorldMaps::PositionRoughness]);
+		addImageBuffer(*maps[WorldMaps::PositionRoughness], "currentPosition");
 	}
 
 }

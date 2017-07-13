@@ -31,8 +31,8 @@ namespace geeL {
 	}
 
 	void SSRR::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		addBuffer(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
-		addBuffer(*maps[WorldMaps::NormalMetallic], "gNormalMet");
+		addImageBuffer(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
+		addImageBuffer(*maps[WorldMaps::NormalMetallic], "gNormalMet");
 	}
 
 

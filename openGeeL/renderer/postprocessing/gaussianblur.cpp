@@ -24,8 +24,8 @@ namespace geeL {
 	}
 
 
-	void GaussianBlurBase::setBuffer(const Texture& texture) {
-		PostProcessingEffect::setBuffer(texture);
+	void GaussianBlurBase::setImageBuffer(const Texture& texture) {
+		PostProcessingEffect::setImageBuffer(texture);
 
 		mainBuffer = &texture;
 	}
@@ -95,13 +95,13 @@ namespace geeL {
 				first = false;
 				//Use the original the first time
 				if (mainBuffer != nullptr)
-					addBuffer(*mainBuffer, "image");
+					addImageBuffer(*mainBuffer, "image");
 				else
 					std::cout << "Buffer for gaussian blur was never set\n";
 			}
 			else {
 				//Then use the previously blurred image
-				addBuffer(frameBuffers[!horizontal].getTexture(), "image");
+				addImageBuffer(frameBuffers[!horizontal].getTexture(), "image");
 			}
 
 			//Render Call
@@ -112,7 +112,7 @@ namespace geeL {
 		
 		//Set values for final blur call
 		shader.setInteger(horLocation, horizontal);
-		addBuffer(frameBuffers[!horizontal].getTexture(), "image");
+		addImageBuffer(frameBuffers[!horizontal].getTexture(), "image");
 
 		parentBuffer->bind();
 	}
@@ -185,7 +185,7 @@ namespace geeL {
 		: BilateralFilter("renderer/postprocessing/bilateraldepth.frag", sigma, factor) {}
 
 	void BilateralDepthFilter::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		addBuffer(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
+		addImageBuffer(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
 	}
 
 
@@ -197,17 +197,17 @@ namespace geeL {
 	}
 
 
-	void SobelBlur::setBuffer(const Texture& texture) {
-		GaussianBlurBase::setBuffer(texture);
+	void SobelBlur::setImageBuffer(const Texture& texture) {
+		GaussianBlurBase::setImageBuffer(texture);
 
 		//Use default image if sobel shouldn't use depth buffer ...
 		if(!depth)
-			sobel.setBuffer(texture);
+			sobel.setImageBuffer(texture);
 		//... or if depth texture wasn't linked properly
 		else {
-			const Texture& buffer = getBuffer();
+			const Texture& buffer = getImageBuffer();
 			if (buffer.isEmpty()) {
-				sobel.setBuffer(texture);
+				sobel.setImageBuffer(texture);
 
 				std::cout << "Use fallback texture for sobel blur "  
 					<< "because depth texture hasn't been linked\n";
@@ -221,7 +221,7 @@ namespace geeL {
 		sobelBuffer.init(buffer.getWidth(), buffer.getHeight());
 		sobel.init(screen, sobelBuffer);
 
-		addBuffer(sobelBuffer.getTexture(), "sobel");
+		addImageBuffer(sobelBuffer.getTexture(), "sobel");
 	}
 
 	void SobelBlur::bindValues() {
@@ -232,7 +232,7 @@ namespace geeL {
 	}
 
 	void SobelBlur::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		sobel.setBuffer(*maps[WorldMaps::PositionRoughness]);
+		sobel.setImageBuffer(*maps[WorldMaps::PositionRoughness]);
 	}
 	
 	float SobelBlur::getScale() const {
