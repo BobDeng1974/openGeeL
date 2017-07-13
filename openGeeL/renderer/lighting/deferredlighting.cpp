@@ -32,15 +32,15 @@ namespace geeL {
 
 
 	void DeferredLighting::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
-		addBuffer(*maps[WorldMaps::Diffuse], "gDiffuse");
-		addBuffer(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
-		addBuffer(*maps[WorldMaps::NormalMetallic], "gNormalMet");
+		addImageBuffer(*maps[WorldMaps::Diffuse], "gDiffuse");
+		addImageBuffer(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
+		addImageBuffer(*maps[WorldMaps::NormalMetallic], "gNormalMet");
 
 		auto emissivity = maps.find(WorldMaps::Emissivity);
 		if (emissivity != maps.end()) {
 			const Texture& texture = *emissivity->second;
 
-			addBuffer(texture, "gEmissivity");
+			addImageBuffer(texture, "gEmissivity");
 			shader.use();
 			shader.setInteger("useEmissivity", 1);
 		}
