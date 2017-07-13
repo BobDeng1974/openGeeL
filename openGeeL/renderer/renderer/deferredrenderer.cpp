@@ -96,7 +96,7 @@ namespace geeL {
 			? &frameBuffer2.getTexture()
 			: &frameBuffer1.getTexture();
 
-		effects.front()->setBuffer(*defaultBuffer);
+		effects.front()->setImageBuffer(*defaultBuffer);
 	}
 
 	void DeferredRenderer::render() {
@@ -145,18 +145,18 @@ namespace geeL {
 
 				//Save regular rendering settings
 				bool onlyEffect = isolatedEffect->getEffectOnly();
-				const Texture& buffer = isolatedEffect->getBuffer();
+				const Texture& buffer = isolatedEffect->getImageBuffer();
 
 				//Draw isolated effect
 				isolatedEffect->effectOnly(true);
-				isolatedEffect->setBuffer(frameBuffer1);
+				isolatedEffect->setImageBuffer(frameBuffer1);
 				frameBuffer2.fill(*isolatedEffect);
 
 				def->draw();
 
 				//Restore render settings
 				isolatedEffect->effectOnly(onlyEffect);
-				isolatedEffect->setBuffer(buffer);
+				isolatedEffect->setImageBuffer(buffer);
 			}
 			//Draw all included post effects
 			else {
@@ -323,7 +323,7 @@ namespace geeL {
 		//Init all post processing effects with two alternating framebuffers
 		//Current effect will then always read from one and write to the other
 		const ColorBuffer& buffer = (effects.size() % 2 == 0) ? frameBuffer1 : frameBuffer2;
-		effect.setBuffer(buffer);
+		effect.setImageBuffer(buffer);
 	}
 
 
@@ -369,7 +369,7 @@ namespace geeL {
 			isolatedEffect = effects[index];
 		}
 
-		effects.front()->setBuffer(*currBuffer);
+		effects.front()->setImageBuffer(*currBuffer);
 		
 	}
 
