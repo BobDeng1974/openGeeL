@@ -11,7 +11,7 @@ namespace geeL {
 	public:
 		FXAA(float minColorDiff = 0.01f, float fxaaMul = 0.125f, float fxaaMin = 0.00001f, float fxaaClamp = 8.f);
 
-		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
+		virtual void init(ScreenQuad& screen, const ColorBuffer& buffer);
 
 		float getBlurMin() const;
 		float getFXAAMul() const;

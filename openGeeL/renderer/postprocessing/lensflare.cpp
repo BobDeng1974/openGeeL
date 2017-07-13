@@ -20,7 +20,7 @@ namespace geeL {
 		filter.setBuffer(texture);
 	}
 
-	void LensFlare::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+	void LensFlare::init(ScreenQuad& screen, const ColorBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 		screenInfo = &buffer.info;
 

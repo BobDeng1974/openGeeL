@@ -13,7 +13,6 @@ namespace geeL {
 		CubeBuffer();
 		~CubeBuffer();
 
-		void init(unsigned int resolution, unsigned int textureID);
 		void init(const TextureCube& texture);
 
 		virtual void fill(std::function<void()> drawCall);
@@ -24,7 +23,8 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	private:
-		unsigned int textureID, rbo;
+		const TextureCube* texture;
+		unsigned int rbo;
 
 		CubeBuffer(const CubeBuffer& other) = delete;
 		CubeBuffer& operator= (const CubeBuffer& other) = delete;

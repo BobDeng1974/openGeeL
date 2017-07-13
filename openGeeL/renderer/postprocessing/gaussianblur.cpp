@@ -30,7 +30,7 @@ namespace geeL {
 		mainBuffer = &texture;
 	}
 
-	void GaussianBlurBase::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+	void GaussianBlurBase::init(ScreenQuad& screen, const ColorBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
 		frameBuffers[0].init(buffer.getWidth(), buffer.getHeight(), ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
@@ -161,7 +161,7 @@ namespace geeL {
 		: GaussianBlurBase(shaderPath, sigma), sigma2(factor) {}
 
 
-	void BilateralFilter::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+	void BilateralFilter::init(ScreenQuad& screen, const ColorBuffer& buffer) {
 		GaussianBlurBase::init(screen, buffer);
 
 		shader.setFloat("sigma", sigma2);
@@ -215,7 +215,7 @@ namespace geeL {
 		}
 	}
 
-	void SobelBlur::init(ScreenQuad & screen, const FrameBuffer& buffer) {
+	void SobelBlur::init(ScreenQuad & screen, const ColorBuffer& buffer) {
 		GaussianBlurBase::init(screen, buffer);
 
 		sobelBuffer.init(buffer.getWidth(), buffer.getHeight());

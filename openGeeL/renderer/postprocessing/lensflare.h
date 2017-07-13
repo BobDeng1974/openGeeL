@@ -18,7 +18,7 @@ namespace geeL {
 		LensFlare(BlurredPostEffect& filter, float scale = 0.5f, float samples = 4.f, float resolution = 1.f);
 
 		virtual void setBuffer(const Texture& texture);
-		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
+		virtual void init(ScreenQuad& screen, const ColorBuffer& buffer);
 
 		float getStrength() const;
 		float getScale() const;

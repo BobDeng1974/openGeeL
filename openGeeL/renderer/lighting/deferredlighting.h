@@ -13,7 +13,7 @@ namespace geeL {
 		DeferredLighting(RenderScene& scene);
 
 		virtual void setBuffer(unsigned int buffer) {}
-		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
+		virtual void init(ScreenQuad& screen, const ColorBuffer& buffer);
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 

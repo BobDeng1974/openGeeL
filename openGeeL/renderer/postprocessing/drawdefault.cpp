@@ -34,7 +34,7 @@ namespace geeL {
 	}
 
 
-	void DefaultPostProcess::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+	void DefaultPostProcess::init(ScreenQuad& screen, const ColorBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
 		shader.addMap(*noise, "noiseMap");

@@ -15,7 +15,7 @@ namespace geeL {
 		: PostProcessingEffect(shaderPath), strength(strength), LOD(LOD) {}
 
 
-	void MotionBlur::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+	void MotionBlur::init(ScreenQuad& screen, const ColorBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
 		samplesLocation = shader.getLocation("maxSamples");
@@ -82,7 +82,7 @@ namespace geeL {
 			velocity(velocity) {}
 
 
-	void MotionBlurPerPixel::init(ScreenQuad & screen, const FrameBuffer & buffer) {
+	void MotionBlurPerPixel::init(ScreenQuad & screen, const ColorBuffer & buffer) {
 		MotionBlur::init(screen, buffer);
 
 		float resolution = 1.f;
@@ -109,7 +109,7 @@ namespace geeL {
 		: PostProcessingEffect("renderer/postprocessing/velocity.frag") {}
 
 
-	void VelocityBuffer::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+	void VelocityBuffer::init(ScreenQuad& screen, const ColorBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
 		screenInfo = &buffer.info;

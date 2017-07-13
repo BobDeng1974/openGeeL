@@ -19,7 +19,7 @@ namespace geeL {
 	class MaterialFactory;
 	class SSAO;
 	class PostProcessingEffect;
-	class Texture2D;
+	class Texture;
 	class WorldPostProcessingEffect;
 
 	class DeferredRenderer : public Renderer, public WorldMapProvider {
