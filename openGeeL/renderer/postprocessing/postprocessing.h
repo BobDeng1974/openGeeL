@@ -34,6 +34,7 @@ namespace geeL {
 
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
 		virtual void draw();
+		void fill();
 
 		virtual std::string toString() const;
 

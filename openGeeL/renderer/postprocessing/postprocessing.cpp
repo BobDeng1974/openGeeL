@@ -48,6 +48,11 @@ namespace geeL {
 		bindToScreen();
 	}
 
+	void PostProcessingEffect::fill() {
+		if (parentBuffer != nullptr)
+			parentBuffer->fill(*this);
+	}
+
 	void PostProcessingEffect::bindToScreen() {
 		shader.loadMaps();
 		screen->draw();

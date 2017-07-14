@@ -22,6 +22,7 @@ namespace geeL {
 		GBuffer(unsigned int width, unsigned int height, GBufferContent content = GBufferContent::Default);
 		~GBuffer();
 
+		virtual void fill(std::function<void()> drawCall) const;
 		virtual void fill(std::function<void()> drawCall);
 
 		//Returns depth of current drawn image

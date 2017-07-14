@@ -146,28 +146,26 @@ namespace geeL {
 				//Save regular rendering settings
 				bool onlyEffect = isolatedEffect->getEffectOnly();
 				const Texture& buffer = isolatedEffect->getImageBuffer();
+				const FrameBuffer& parent = *isolatedEffect->getParentBuffer();
 
 				//Draw isolated effect
 				isolatedEffect->effectOnly(true);
 				isolatedEffect->setImageBuffer(frameBuffer1);
-				frameBuffer2.fill(*isolatedEffect);
-
+				isolatedEffect->setParent(frameBuffer2);
+				isolatedEffect->fill();
+				
 				def->draw();
 
 				//Restore render settings
 				isolatedEffect->effectOnly(onlyEffect);
 				isolatedEffect->setImageBuffer(buffer);
+				isolatedEffect->setParent(parent);
 			}
 			//Draw all included post effects
 			else {
-				bool chooseBuffer = true;
-				//Draw all the post processing effects on top of each other. Ping pong style!
-				for (auto effect = next(effects.begin()); effect != effects.end(); effect++) {
-					ColorBuffer& currBuffer = chooseBuffer ? frameBuffer2 : frameBuffer1;
-					currBuffer.fill(**effect);
-
-					chooseBuffer = !chooseBuffer;
-				}
+				//Draw all the post processing effects on top of each other.
+				for (auto effect = next(effects.begin()); effect != effects.end(); effect++)
+					(**effect).fill();
 
 				//Draw the last (default) effect to screen.
 				effects.front()->draw();

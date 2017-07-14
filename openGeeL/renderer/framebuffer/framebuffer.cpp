@@ -11,6 +11,18 @@ using namespace std;
 
 namespace geeL {
 
+	void FrameBuffer::fill(std::function<void()> drawCall) {
+		const FrameBuffer* self = this;
+		self->fill(drawCall);
+	}
+
+	void FrameBuffer::fill(Drawer& drawer) const {
+		fill([&drawer]() {
+			drawer.draw();
+		});
+	}
+
+	
 
 	void FrameBuffer::bind() const {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
@@ -173,7 +185,7 @@ namespace geeL {
 	}
 
 
-	void ColorBuffer::fill(std::function<void()> drawCall) {
+	void ColorBuffer::fill(std::function<void()> drawCall) const {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 		glViewport(0, 0, info.width, info.height);
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
@@ -183,15 +195,12 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void ColorBuffer::fill(Drawer& drawer, bool setFBO) const {
+	void ColorBuffer::fill(Drawer& drawer) const {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 		glViewport(0, 0, info.width, info.height);
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		if (setFBO)
-			drawer.setParent(*this);
-		
 		drawer.draw();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}

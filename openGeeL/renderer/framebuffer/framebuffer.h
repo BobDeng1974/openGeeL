@@ -30,7 +30,9 @@ namespace geeL {
 
 		FrameBuffer() {}
 
-		virtual void fill(std::function<void()> drawCall) = 0;
+		virtual void fill(std::function<void()> drawCall) const = 0;
+		virtual void fill(std::function<void()> drawCall);
+		virtual void fill(Drawer& drawer) const;
 
 		void bind() const;
 		static void bind(unsigned int fbo);
@@ -68,8 +70,8 @@ namespace geeL {
 		void init(unsigned int width, unsigned int height, ColorType colorType = ColorType::RGBA16,
 			FilterMode filterMode = FilterMode::None, WrapMode wrapMode = WrapMode::ClampEdge, bool useDepth = true);
 
-		virtual void fill(std::function<void()> drawCall);
-		void fill(Drawer& drawer, bool setFBO = true) const;
+		virtual void fill(std::function<void()> drawCall) const;
+		virtual void fill(Drawer& drawer) const;
 
 		const RenderTexture& getTexture(unsigned int position = 0) const;
 		

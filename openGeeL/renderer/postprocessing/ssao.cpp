@@ -101,7 +101,7 @@ namespace geeL {
 	void SSAO::bindValues() {
 		shader.setMat4(projectionLocation, camera->getProjectionMatrix());
 
-		tempBuffer.fill(*this, false);
+		tempBuffer.fill(*this);
 	}
 
 	void SSAO::addWorldInformation(map<WorldMaps, const Texture*> maps) {

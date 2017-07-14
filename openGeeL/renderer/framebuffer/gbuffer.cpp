@@ -46,6 +46,17 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	void GBuffer::fill(std::function<void()> drawCall) const {
+		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
+		glViewport(0, 0, info.width, info.height);
+		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		drawCall();
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
 	void GBuffer::fill(std::function<void()> drawCall) {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 		glViewport(0, 0, info.width, info.height);
