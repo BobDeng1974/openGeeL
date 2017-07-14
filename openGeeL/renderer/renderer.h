@@ -24,12 +24,12 @@ namespace geeL {
 	public:
 		virtual void draw() = 0;
 
-		void setParent(const ColorBuffer& buffer);
-		const ColorBuffer* const getParentBuffer() const;
+		void setParent(const FrameBuffer& buffer);
+		const FrameBuffer* const getParentBuffer() const;
 		unsigned int getParentFBO() const;
 
 	protected:
-		const ColorBuffer* parentBuffer = nullptr;
+		const FrameBuffer* parentBuffer = nullptr;
 
 	};
 
