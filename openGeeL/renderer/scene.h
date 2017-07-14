@@ -37,6 +37,7 @@ namespace geeL {
 			MaterialFactory& materialFactory);
 
 		void init();
+		void updateProbes();
 
 		//Update scene information. Should be called once at beginning of frame
 		void update();

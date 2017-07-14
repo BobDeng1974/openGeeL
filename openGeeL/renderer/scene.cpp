@@ -32,8 +32,10 @@ namespace geeL {
 	
 	void RenderScene::init() {
 		lightManager.drawShadowmapsForced(*this, camera);
+	}
+
+	void RenderScene::updateProbes() {
 		lightManager.drawReflectionProbes();
-		
 	}
 
 	void RenderScene::update() {

@@ -35,7 +35,8 @@ namespace geeL {
 				gBuffer(gBuffer), screen(ScreenQuad()), ssao(nullptr), lighting(lighting),
 				toggle(0), factory(factory) {
 
-		init(def);
+		effects.push_back(&def);
+		init();
 	}
 
 	DeferredRenderer::~DeferredRenderer() {
@@ -47,7 +48,7 @@ namespace geeL {
 	}
 
 
-	void DeferredRenderer::init(DefaultPostProcess& def) {
+	void DeferredRenderer::init() {
 		auto func = [this](GLFWwindow* window, int key, int scancode, int action, int mode) 
 			{ this->handleInput(window, key, scancode, action, mode); };
 
@@ -63,15 +64,22 @@ namespace geeL {
 			ColorType::RGBA16, FilterMode::None, WrapMode::ClampEdge);
 
 		screen.init();
-
-		addEffect(def);
 		addRequester(lighting);
+	}
+
+
+	void DeferredRenderer::initSceneObjects() {
+		Renderer::initSceneObjects();
+
+		//Init scene after all scene objects are ready
+		scene->init();
 	}
 
 
 	void DeferredRenderer::render() {
 		lighting.init(screen, frameBuffer1);
-		scene->init();
+		scene->updateProbes(); //Draw reflection probes once at beginning
+		initDefaultEffect();
 
 		//Render loop
 		while (!window->shouldClose()) {
@@ -202,6 +210,7 @@ namespace geeL {
 		scene->drawSkybox(camera);
 	}
 
+	
 	void DeferredRenderer::geometryPass() {
 		scene->update();
 		scene->drawDeferred();
@@ -272,8 +281,26 @@ namespace geeL {
 		this->requester.push_back(&requester);
 	}
 
-	void DeferredRenderer::linkInformation() const {
+	void DeferredRenderer::initDefaultEffect() {
+		//Link framebuffer of last added post processing effect to default effect
+		const ColorBuffer* readBuffer = nullptr;
+		const ColorBuffer* writeBuffer = nullptr;
 
+		if (effects.size() % 2 == 0) {
+			readBuffer = &frameBuffer2;
+			writeBuffer = &frameBuffer1;
+		}
+		else {
+			readBuffer = &frameBuffer1;
+			writeBuffer = &frameBuffer2;
+		}
+
+		effects.front()->setImageBuffer(readBuffer->getTexture());
+		effects.front()->init(screen, *writeBuffer);
+	}
+
+	void DeferredRenderer::linkInformation() const {
+		//Link world maps to requesting post effects
 		map<WorldMaps, const Texture*> worldMaps;
 		worldMaps[WorldMaps::Diffuse] = &gBuffer.getDiffuse();
 		worldMaps[WorldMaps::PositionRoughness] = &gBuffer.getPositionRoughness();

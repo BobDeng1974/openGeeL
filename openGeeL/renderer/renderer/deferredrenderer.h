@@ -30,11 +30,10 @@ namespace geeL {
 
 		~DeferredRenderer();
 
-		
-		
 		virtual void render();
 		virtual void draw();
 		virtual void draw(const Camera& camera, const FrameBuffer& buffer);
+		virtual void initSceneObjects();
 
 		virtual void handleInput();
 
@@ -74,7 +73,8 @@ namespace geeL {
 		DeferredRenderer(const DeferredRenderer& other) = delete;
 		DeferredRenderer& operator= (const DeferredRenderer& other) = delete;
 
-		void init(DefaultPostProcess& def);
+		void init();
+		void initDefaultEffect();
 
 		void geometryPass();
 		void lightingPass();

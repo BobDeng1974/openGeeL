@@ -194,7 +194,7 @@ void DeerScene::draw() {
 		lightManager, shaderManager, scene, transFactory, nullptr);
 
 	renderer.addObject(&testScene);
-	renderer.initObjects();
+	renderer.initSceneObjects();
 
 	/*
 	GUIRenderer& gui = GUIRenderer(window, context);

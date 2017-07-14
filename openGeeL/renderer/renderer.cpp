@@ -37,7 +37,7 @@ namespace geeL{
 		objects.push_back(obj);
 	}
 
-	void Renderer::initObjects() {
+	void Renderer::initSceneObjects() {
 		for (size_t i = 0; i < objects.size(); i++) {
 			objects[i]->init();
 		}

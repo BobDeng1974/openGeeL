@@ -192,7 +192,7 @@ void SponzaGIScene::draw() {
 		lightManager, shaderManager, scene, transFactory, nullptr);
 
 	renderer.addObject(&testScene);
-	renderer.initObjects();
+	renderer.initSceneObjects();
 
 	GUIRenderer& gui = GUIRenderer(window, context);
 	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);

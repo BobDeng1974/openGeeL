@@ -48,7 +48,7 @@ namespace geeL {
 
 		virtual void addGUIRenderer(GUIRenderer* renderer);
 		virtual void addObject(SceneControlObject* obj);
-		virtual void initObjects();
+		virtual void initSceneObjects();
 	
 		virtual void setScene(RenderScene& scene);
 
@@ -60,10 +60,9 @@ namespace geeL {
 		GUIRenderer*  gui;
 
 		RenderScene* scene;
+		std::vector<SceneControlObject*> objects;
 
 		void updateSceneControlObjects();
-	
-		std::vector<SceneControlObject*> objects;
 
 	};
 }
