@@ -40,7 +40,6 @@ void RaymarchTest::draw() {
 	RayMarcher& raymarch = RayMarcher(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, raymarch, context, def, gBuffer, materialFactory);
 	renderer.setScene(scene);
-	renderer.init();
 
 	renderer.render();
 }

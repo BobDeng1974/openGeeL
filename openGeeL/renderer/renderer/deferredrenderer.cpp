@@ -35,11 +35,7 @@ namespace geeL {
 				gBuffer(gBuffer), screen(ScreenQuad()), ssao(nullptr), lighting(lighting),
 				toggle(0), factory(factory) {
 
-		effects.push_back(&def);
-		addRequester(lighting);
-
-		geometryPassFunc = [this]() { this->geometryPass(); };
-		lightingPassFunc = [this]() { this->lightingPass(); this->forwardPass(); };
+		init(def);
 	}
 
 	DeferredRenderer::~DeferredRenderer() {
@@ -51,18 +47,15 @@ namespace geeL {
 	}
 
 
-	void DeferredRenderer::init() {
+	void DeferredRenderer::init(DefaultPostProcess& def) {
 		auto func = [this](GLFWwindow* window, int key, int scancode, int action, int mode) 
 			{ this->handleInput(window, key, scancode, action, mode); };
 
 		inputManager->addCallback(func);
 		inputManager->init(window);
 
-		if (ssao != nullptr) {
-			ssaoBuffer = new ColorBuffer();
-			ssaoBuffer->init(unsigned int(window->width * ssao->getResolution()), unsigned int(window->height * ssao->getResolution()),
-				ColorType::Single, FilterMode::None, WrapMode::ClampEdge, false);
-		}
+		geometryPassFunc = [this]() { this->geometryPass(); };
+		lightingPassFunc = [this]() { this->lightingPass(); this->forwardPass(); };
 
 		frameBuffer1.init(unsigned int(window->width), unsigned int(window->height),
 			ColorType::RGBA16, FilterMode::None, WrapMode::ClampEdge);
@@ -70,37 +63,15 @@ namespace geeL {
 			ColorType::RGBA16, FilterMode::None, WrapMode::ClampEdge);
 
 		screen.init();
+
+		addEffect(def);
+		addRequester(lighting);
 	}
 
-	void DeferredRenderer::renderInit() {
-
-		//Init SSAO (if added)
-		if (ssao != nullptr) {
-			ssaoScreen = new ScreenQuad();
-			ssaoScreen->init();
-			ssao->init(*ssaoScreen, *ssaoBuffer);
-		}
-		
-		lighting.init(screen, frameBuffer1);
-		scene->init();
-		
-		//Init all effects
-		bool chooseBuffer = true;
-		for (auto effect = effects.begin(); effect != effects.end(); effect++) {
-			(*effect)->init(screen, chooseBuffer ? frameBuffer1 : frameBuffer2);
-			chooseBuffer = !chooseBuffer;
-		}
-
-		//Set color buffer of default effect depending on the amount of added effects
-		defaultBuffer = (effects.size() % 2 == 0)
-			? &frameBuffer2.getTexture()
-			: &frameBuffer1.getTexture();
-
-		effects.front()->setImageBuffer(*defaultBuffer);
-	}
 
 	void DeferredRenderer::render() {
-		renderInit();
+		lighting.init(screen, frameBuffer1);
+		scene->init();
 
 		//Render loop
 		while (!window->shouldClose()) {
@@ -265,6 +236,14 @@ namespace geeL {
 	void DeferredRenderer::addSSAO(SSAO& ssao) {
 		this->ssao = &ssao;
 		addRequester(*this->ssao);
+
+		ssaoBuffer = new ColorBuffer();
+		ssaoBuffer->init(unsigned int(window->width * ssao.getResolution()), unsigned int(window->height * ssao.getResolution()),
+			ColorType::Single, FilterMode::None, WrapMode::ClampEdge, false);
+
+		ssaoScreen = new ScreenQuad();
+		ssaoScreen->init();
+		ssao.init(*ssaoScreen, *ssaoBuffer);
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {
@@ -314,12 +293,15 @@ namespace geeL {
 	}
 
 
-	void DeferredRenderer::linkImageBuffer(PostProcessingEffect& effect) const {
+	void DeferredRenderer::linkImageBuffer(PostProcessingEffect& effect) {
 
 		//Init all post processing effects with two alternating framebuffers
 		//Current effect will then always read from one and write to the other
 		const ColorBuffer& buffer = (effects.size() % 2 == 0) ? frameBuffer1 : frameBuffer2;
 		effect.setImageBuffer(buffer);
+
+		const ColorBuffer& parent = (effects.size() % 2 == 0) ? frameBuffer2 : frameBuffer1;
+		effect.init(screen, parent);
 	}
 
 
@@ -338,8 +320,8 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::toggleBuffer(bool next) {
-		
-		std::vector<const Texture2D*> buffers = { defaultBuffer, &gBuffer.getDiffuse(), &gBuffer.getNormalMetallic() };
+		std::vector<const Texture*> buffers = { &effects.front()->getImageBuffer(), 
+			&gBuffer.getDiffuse(), &gBuffer.getNormalMetallic() };
 
 		const RenderTexture& emisTex = gBuffer.getEmissivity();
 		if (!emisTex.isEmpty())
@@ -352,7 +334,7 @@ namespace geeL {
 		int i = next ? 1 : -1;
 		toggle = abs((toggle + i) % max);
 
-		const Texture2D* currBuffer = defaultBuffer;
+		const Texture* currBuffer = buffers[0];
 		if (toggle < buffers.size()) {
 			currBuffer = buffers[toggle];
 

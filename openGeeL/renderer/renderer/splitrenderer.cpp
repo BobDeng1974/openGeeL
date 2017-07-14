@@ -30,13 +30,6 @@ namespace geeL {
 
 
 	void SplitRenderer::init() {
-		for (size_t i = 0; i < renderers.size(); i++) {
-			pair<Renderer*, RenderViewport>pair = renderers[i];
-			Renderer* renderer = pair.first;
-
-			renderer->init();
-		}
-
 		inputManager->init(window);
 	}
 

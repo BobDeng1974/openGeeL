@@ -38,8 +38,6 @@ namespace geeL {
 	public:
 		Renderer(RenderWindow& window, InputManager& inputManager, RenderContext& context);
 
-		virtual void init() = 0;
-
 		//Render scene until termination
 		virtual void render() = 0;
 

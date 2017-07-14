@@ -30,7 +30,7 @@ namespace geeL {
 
 		~DeferredRenderer();
 
-		virtual void init();
+		
 		
 		virtual void render();
 		virtual void draw();
@@ -63,7 +63,6 @@ namespace geeL {
 		RenderTime renderTime;
 		SceneRender& lighting;
 
-		const Texture2D* defaultBuffer;
 		SSAO* ssao;
 		ScreenQuad* ssaoScreen = nullptr;
 		ColorBuffer* ssaoBuffer = nullptr;
@@ -75,15 +74,14 @@ namespace geeL {
 		DeferredRenderer(const DeferredRenderer& other) = delete;
 		DeferredRenderer& operator= (const DeferredRenderer& other) = delete;
 
-		//Initialize start of rendering process
-		void renderInit();
+		void init(DefaultPostProcess& def);
 
 		void geometryPass();
 		void lightingPass();
 		void lightingPass(const Camera& camera);
 		void forwardPass();
 
-		void linkImageBuffer(PostProcessingEffect& effect) const;
+		void linkImageBuffer(PostProcessingEffect& effect);
 		void handleInput(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 		//Toggle through all framebuffers for screen display 
