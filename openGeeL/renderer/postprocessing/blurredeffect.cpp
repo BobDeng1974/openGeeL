@@ -22,7 +22,7 @@ namespace geeL {
 		effect.setImageBuffer(texture);
 	}
 
-	void BlurredPostEffect::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+	void BlurredPostEffect::init(ScreenQuad& screen, const ColorBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 		screenInfo = &buffer.info;
 

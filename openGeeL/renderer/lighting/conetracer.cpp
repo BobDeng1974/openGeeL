@@ -19,7 +19,7 @@ namespace geeL {
 	}
 
 
-	void VoxelConeTracer::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+	void VoxelConeTracer::init(ScreenQuad& screen, const ColorBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
 		shader.setInteger("maxStepSpecular", maxStepSpecular);

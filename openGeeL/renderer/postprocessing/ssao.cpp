@@ -63,7 +63,7 @@ namespace geeL {
 		}
 	}
 
-	void SSAO::init(ScreenQuad& screen, const FrameBuffer& buffer) {
+	void SSAO::init(ScreenQuad& screen, const ColorBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
 		shader.setFloat("screenWidth", float(buffer.getWidth()));

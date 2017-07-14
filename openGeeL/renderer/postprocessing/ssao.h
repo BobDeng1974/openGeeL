@@ -23,8 +23,9 @@ namespace geeL {
 		SSAO& operator= (const SSAO& other);
 
 		//Empty setter since base image isn't needed for SSAO
-		virtual void setImageBuffer(unsigned int buffer) {}
-		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
+
+		virtual void setBuffer(unsigned int buffer) {}
+		virtual void init(ScreenQuad& screen, const ColorBuffer& buffer);
 		virtual void draw();
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);

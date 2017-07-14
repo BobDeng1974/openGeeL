@@ -239,7 +239,7 @@ void ArthouseScene::draw() {
 
 	BrightnessFilterCutoff& bFilter = BrightnessFilterCutoff(0.7f);
 	GaussianBlur& bBlur = GaussianBlur(KernelSize::Huge, 10.1f);
-	BlurredPostEffect& bBlurred = BlurredPostEffect(bFilter, bBlur, 0.5f, 0.8f);
+	BlurredPostEffect& bBlurred = BlurredPostEffect(bFilter, bBlur, 0.5f, 0.6f);
 	bBlurred.effectOnly(true);
 	LensFlare& lensFlare = LensFlare(bBlurred, 0.35f, 6.f);
 	lensFlare.setDistortion(glm::vec3(0.04f, 0.03f, 0.02f));

@@ -24,8 +24,9 @@ namespace geeL {
 	class GaussianBlurBase : public PostProcessingEffect {
 
 	public:
-		virtual void setImageBuffer(const Texture& texture);
-		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
+		virtual void setBuffer(const Texture& texture);
+		virtual void init(ScreenQuad& screen, const ColorBuffer& buffer);
+
 
 		std::vector<float> computeKernel(float sigma) const;
 
@@ -74,7 +75,7 @@ namespace geeL {
 	public:
 		BilateralFilter(float sigma = 1.3f, float factor = 0.5f);
 
-		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
+		virtual void init(ScreenQuad& screen, const ColorBuffer& buffer);
 
 		float getSigma() const;
 		void  setSigma(float value);
@@ -105,8 +106,8 @@ namespace geeL {
 	public:
 		SobelBlur(SobelFilter& sobel, float sigma = 1.5f, bool depth = true);
 
-		virtual void setImageBuffer(const Texture& texture);
-		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
+		virtual void setBuffer(const Texture& texture);
+		virtual void init(ScreenQuad& screen, const ColorBuffer& buffer);
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
