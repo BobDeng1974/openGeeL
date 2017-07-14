@@ -11,7 +11,7 @@ namespace geeL {
 
 	public:
 		BlurredPostEffect(PostProcessingEffect& effect, PostProcessingEffect& blur, 
-			float effectResolution = 1.f, float blurResolution = 1.f);
+			Resolution effectResolution = FULLSCREEN, Resolution blurResolution = FULLSCREEN);
 
 		virtual void setImageBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
@@ -19,9 +19,8 @@ namespace geeL {
 
 		void resizeEffectResolution(float effectResolution);
 
-		float getEffectResolution() const;
-		float getBlurResolution() const;
-
+		const Resolution& getEffectResolution() const;
+		const Resolution& getBlurResolution() const;
 
 	protected:
 		const FrameBufferInformation* screenInfo;
@@ -29,7 +28,7 @@ namespace geeL {
 		virtual void bindValues();
 
 	private:
-		float effectResolution, blurResolution;
+		Resolution effectResolution, blurResolution;
 		PostProcessingEffect& effect;
 		PostProcessingEffect& blur;
 		ColorBuffer effectBuffer;

@@ -38,8 +38,8 @@ namespace geeL {
 	class DepthOfFieldBlurred : public PostProcessingEffect, public WorldMapRequester {
 
 	public:
-		DepthOfFieldBlurred(DepthOfFieldBlur& blur,
-			const float& focalLength, float aperture = 10.f, float farDistance = 100.f, float blurResolution = 1.f);
+		DepthOfFieldBlurred(DepthOfFieldBlur& blur, const float& focalLength, float aperture = 10.f, 
+			float farDistance = 100.f, Resolution blurResolution = FULLSCREEN);
 
 		virtual void setImageBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, const FrameBuffer& buffer);
@@ -48,7 +48,7 @@ namespace geeL {
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 		void resizeBlurResolution(float blurResolution);
-		float getBlurResolution() const;
+		const Resolution& getBlurResolution() const;
 
 		float getAperture() const;
 		void setAperture(float aperture);
@@ -62,7 +62,7 @@ namespace geeL {
 		const float& focalLength;
 		float aperture;
 		float farDistance;
-		float blurResolution;
+		Resolution blurResolution;
 
 		ShaderLocation focalLocation;
 

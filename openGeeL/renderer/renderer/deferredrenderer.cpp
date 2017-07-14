@@ -60,7 +60,7 @@ namespace geeL {
 
 		if (ssao != nullptr) {
 			ssaoBuffer = new ColorBuffer();
-			ssaoBuffer->init(unsigned int(window->width * ssaoResolution), unsigned int(window->height * ssaoResolution),
+			ssaoBuffer->init(unsigned int(window->width * ssao->getResolution()), unsigned int(window->height * ssao->getResolution()),
 				ColorType::Single, FilterMode::None, WrapMode::ClampEdge, false);
 		}
 
@@ -264,10 +264,8 @@ namespace geeL {
 		scene->getCamera().handleInput(*inputManager);
 	}
 
-	void DeferredRenderer::addSSAO(SSAO& ssao, float ssaoResolution) {
+	void DeferredRenderer::addSSAO(SSAO& ssao) {
 		this->ssao = &ssao;
-		this->ssaoResolution = ssaoResolution;
-
 		addRequester(*this->ssao);
 	}
 

@@ -29,10 +29,6 @@ namespace geeL {
 	}
 
 
-	void PostProcessingEffect::setScreen(ScreenQuad& screen) {
-		this->screen = &screen;
-	}
-
 	void PostProcessingEffect::addImageBuffer(const Texture& texture, const std::string& name) {
 		shader.addMap(texture, name);
 	}

@@ -5,6 +5,7 @@
 #include <string>
 #include "../renderer.h"
 #include "../shader/rendershader.h"
+#include "../utility/resolution.h"
 
 typedef unsigned int GLuint;
 
@@ -22,8 +23,6 @@ namespace geeL {
 	public:
 		PostProcessingEffect(std::string fragmentPath);
 		PostProcessingEffect(std::string vertexPath, std::string fragmentPath);
-
-		void setScreen(ScreenQuad& screen);
 
 		//Returns first (and main) buffer of this effect
 		const Texture& getImageBuffer() const;

@@ -38,7 +38,7 @@ namespace geeL {
 
 		virtual void handleInput();
 
-		void addSSAO(SSAO& ssao, float ssaoResolution = 1.f);
+		void addSSAO(SSAO& ssao);
 
 		//Add new post processing effect to renderer. 
 		void addEffect(PostProcessingEffect& effect);
@@ -64,7 +64,6 @@ namespace geeL {
 		SceneRender& lighting;
 
 		const Texture2D* defaultBuffer;
-		float ssaoResolution;
 		SSAO* ssao;
 		ScreenQuad* ssaoScreen = nullptr;
 		ColorBuffer* ssaoBuffer = nullptr;

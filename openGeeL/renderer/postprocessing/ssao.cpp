@@ -13,8 +13,8 @@ using namespace std;
 
 namespace geeL {
 
-	SSAO::SSAO(PostProcessingEffect& blur, float radius)
-		: PostProcessingEffect("renderer/postprocessing/ssao.frag"), blur(blur), radius(radius) {
+	SSAO::SSAO(PostProcessingEffect& blur, float radius, Resolution resolution)
+		: PostProcessingEffect("renderer/postprocessing/ssao.frag"), blur(blur), radius(radius), resolution(resolution) {
 	
 		uniform_real_distribution<GLfloat> random(0.f, 1.f);
 		default_random_engine generator;
@@ -45,7 +45,9 @@ namespace geeL {
 		noiseTexture = new ImageTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::None);
 	}
 
-	SSAO::SSAO(const SSAO & other) : PostProcessingEffect(other), radius(other.radius), blur(other.blur), noise(other.noise) {
+	SSAO::SSAO(const SSAO & other) : PostProcessingEffect(other), radius(other.radius), blur(other.blur), 
+		noise(other.noise), resolution(other.resolution) {
+		
 		noiseTexture = new ImageTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::None);
 	}
 
@@ -119,6 +121,10 @@ namespace geeL {
 			shader.use();
 			shader.setFloat("radius", radius);
 		}
+	}
+	
+	const Resolution& SSAO::getResolution() const {
+		return resolution;
 	}
 }
 

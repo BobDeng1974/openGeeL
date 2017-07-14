@@ -183,7 +183,7 @@ void SponzaScene::draw() {
 	RenderContext& context = RenderContext();
 	DeferredLighting& lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer, materialFactory);
-	renderer.addSSAO(ssao, 0.5f);
+	renderer.addSSAO(ssao);
 	renderer.init();
 
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
