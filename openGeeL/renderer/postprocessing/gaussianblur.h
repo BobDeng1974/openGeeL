@@ -33,9 +33,6 @@ namespace geeL {
 		float getSigma() const;
 		void  setSigma(float value);
 
-		unsigned int getStrength() const;
-		void setStrength(unsigned int value);
-
 	protected:
 		unsigned int currBuffer;
 		
@@ -48,11 +45,10 @@ namespace geeL {
 	private:
 		float sigma;
 		unsigned int kernelSize = 5;
-		unsigned int amount;
 
 		LinearKernel linearKernel;
 		const Texture* mainBuffer;
-		ColorBuffer frameBuffers[2];
+		ColorBuffer tempBuffer;
 		ShaderLocation horLocation;
 
 		void bindKernel() const;

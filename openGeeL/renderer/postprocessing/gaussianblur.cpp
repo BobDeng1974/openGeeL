@@ -18,7 +18,7 @@ namespace geeL {
 		: GaussianBlurBase("renderer/postprocessing/gaussianblur1.frag", sigma) {}
 
 	GaussianBlurBase::GaussianBlurBase(string shaderPath, float sigma)
-		: PostProcessingEffect(shaderPath), mainBuffer(nullptr), sigma(sigma), amount(1) {
+		: PostProcessingEffect(shaderPath), mainBuffer(nullptr), sigma(sigma) {
 
 		updateKernel();
 	}
@@ -33,8 +33,7 @@ namespace geeL {
 	void GaussianBlurBase::init(ScreenQuad& screen, const ColorBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
-		frameBuffers[0].init(buffer.getWidth(), buffer.getHeight(), ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
-		frameBuffers[1].init(buffer.getWidth(), buffer.getHeight(), ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
+		tempBuffer.init(buffer.getWidth(), buffer.getHeight(), ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
 
 		bindKernel();
 		horLocation = shader.getLocation("horizontal");
@@ -70,49 +69,24 @@ namespace geeL {
 		}
 	}
 
-	unsigned int GaussianBlurBase::getStrength() const {
-		return amount;
-	}
-
-	void GaussianBlurBase::setStrength(unsigned int value) {
-		amount = 2 * value - 1;
-		if (amount < 1)
-			amount = 1;
-		else if (amount > 10)
-			amount = 10;
-	}
-
 	void GaussianBlurBase::bindValues() {
-		bool horizontal = true;
-		bool first = true;
 		
-		for (unsigned int i = 0; i < amount; i++) {
-			frameBuffers[horizontal].bind();
-			shader.setInteger(horLocation, horizontal);
+		//1. Fill the temporary buffer with the result of the horizontal blurring
+		shader.setInteger(horLocation, true);
 
-			//Pick committed color buffer the first time and then the previous blurred buffer
-			if (first) {
-				first = false;
-				//Use the original the first time
-				if (mainBuffer != nullptr)
-					addImageBuffer(*mainBuffer, "image");
-				else
-					std::cout << "Buffer for gaussian blur was never set\n";
-			}
-			else {
-				//Then use the previously blurred image
-				addImageBuffer(frameBuffers[!horizontal].getTexture(), "image");
-			}
+		if (mainBuffer != nullptr)
+			addImageBuffer(*mainBuffer, "image");
+		else
+			std::cout << "Buffer for gaussian blur was never set\n";
+			
+		tempBuffer.bind();
+		glClear(GL_DEPTH_BUFFER_BIT);
+		bindToScreen();
 
-			//Render Call
-			glClear(GL_DEPTH_BUFFER_BIT);
-			bindToScreen();
-			horizontal = !horizontal;
-		}
-		
-		//Set values for final blur call
-		shader.setInteger(horLocation, horizontal);
-		addImageBuffer(frameBuffers[!horizontal].getTexture(), "image");
+
+		//2. Draw final image via vertical blurring of the previous (horizontally) blurred image
+		shader.setInteger(horLocation, false);
+		addImageBuffer(tempBuffer.getTexture(), "image");
 
 		parentBuffer->bind();
 	}
