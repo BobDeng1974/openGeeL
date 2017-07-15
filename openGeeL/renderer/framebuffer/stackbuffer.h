@@ -14,6 +14,8 @@ namespace geeL {
 		void init(unsigned int width, unsigned int height, ColorType colorType = ColorType::RGBA16,
 			FilterMode filterMode = FilterMode::None, WrapMode wrapMode = WrapMode::ClampEdge);
 		
+		virtual void initDepth();
+
 		virtual void fill(std::function<void()> drawCall);
 		virtual void fill(Drawer& drawer);
 

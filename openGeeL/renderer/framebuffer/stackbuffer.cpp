@@ -23,6 +23,11 @@ namespace geeL {
 		second.init(width, height, colorType, filterMode, wrapMode);
 	}
 
+	void StackBuffer::initDepth() {
+		first.initDepth();
+		second.initDepth();
+	}
+
 	
 	void StackBuffer::resize(Resolution resolution) {
 		current->resize(resolution);
