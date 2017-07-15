@@ -75,7 +75,7 @@ namespace geeL {
 		}
 	}
 
-	void ColorBuffer::init(unsigned int width, unsigned int height, std::vector<RenderTexture*>&& colorBuffers, bool useDepth) {
+	void ColorBuffer::init(unsigned int width, unsigned int height, std::vector<RenderTexture*>&& colorBuffers) {
 		buffers = std::move(colorBuffers);
 
 		info.setDimension(width, height);
@@ -109,15 +109,6 @@ namespace geeL {
 				break;
 		}
 
-		if (useDepth) {
-			// Create a renderbuffer object for depth and stencil attachment
-			glGenRenderbuffers(1, &rbo);
-			glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-		}
-
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
 
@@ -125,7 +116,7 @@ namespace geeL {
 	}
 
 	void ColorBuffer::init(unsigned int width, unsigned int height,
-		ColorType colorType, FilterMode filterMode, WrapMode wrapMode, bool useDepth) {
+		ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
 		
 		info.setDimension(width, height);
 
@@ -139,19 +130,20 @@ namespace geeL {
 		glDrawBuffers(1, attachments);
 		buffers.push_back(texture);
 
-		if (useDepth) {
-			// Create a renderbuffer object for depth and stencil attachment
-			glGenRenderbuffers(1, &rbo);
-			glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-		}
-
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void ColorBuffer::initDepth() {
+		bind();
+
+		glGenRenderbuffers(1, &rbo);
+		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, info.currWidth, info.currHeight);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	}
 
 	void ColorBuffer::resize(Resolution resolution) {

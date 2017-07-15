@@ -74,7 +74,8 @@ namespace geeL {
 			shader.setVector3("samples[" + to_string(i) + "]", kernel[i]);
 		
 		tempBuffer.init(buffer.getWidth(), buffer.getHeight(), ColorType::Single,
-			FilterMode::None, WrapMode::Repeat, false);
+			FilterMode::None, WrapMode::Repeat);
+		tempBuffer.initDepth();
 
 		blur.init(screen, buffer);
 		blur.setImageBuffer(tempBuffer);

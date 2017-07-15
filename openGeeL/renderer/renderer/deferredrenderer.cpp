@@ -63,6 +63,10 @@ namespace geeL {
 		frameBuffer2.init(unsigned int(window->width), unsigned int(window->height), 
 			ColorType::RGBA16, FilterMode::None, WrapMode::ClampEdge);
 
+		//Give first framebuffer depth buffer since 
+		//lighting and skybox gets drawn into it
+		frameBuffer1.initDepth(); 
+
 		screen.init();
 		addRequester(lighting);
 	}
@@ -254,7 +258,7 @@ namespace geeL {
 
 		ssaoBuffer = new ColorBuffer();
 		ssaoBuffer->init(unsigned int(window->width * ssao.getResolution()), unsigned int(window->height * ssao.getResolution()),
-			ColorType::Single, FilterMode::None, WrapMode::ClampEdge, false);
+			ColorType::Single, FilterMode::None, WrapMode::ClampEdge);
 
 		ssaoScreen = new ScreenQuad();
 		ssaoScreen->init();
