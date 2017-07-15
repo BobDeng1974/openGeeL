@@ -99,7 +99,7 @@ namespace geeL {
 
 
 	inline bool FrameBuffer::initialized() const {
-		return info.fbo == 0;
+		return info.fbo != 0;
 	}
 
 
