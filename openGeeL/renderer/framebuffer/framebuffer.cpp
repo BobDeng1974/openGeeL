@@ -137,8 +137,12 @@ namespace geeL {
 	}
 
 	void ColorBuffer::initDepth() {
-		bind();
+		if (!initialized()) {
+			std::cout << "Color buffer needs to be initialized first before initializing depth\n";
+			return;
+		}
 
+		bind();
 		glGenRenderbuffers(1, &rbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, info.currWidth, info.currHeight);

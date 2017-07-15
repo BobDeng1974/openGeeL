@@ -52,6 +52,7 @@ namespace geeL {
 		unsigned int getWidth() const;
 		unsigned int getHeight() const;
 
+		virtual bool initialized() const;
 		virtual std::string toString() const = 0;
 
 	protected:
@@ -95,6 +96,13 @@ namespace geeL {
 		ColorBuffer& operator= (const ColorBuffer& other) = delete;
 
 	};
+
+
+	inline bool FrameBuffer::initialized() const {
+		return info.fbo == 0;
+	}
+
+
 }
 
 #endif
