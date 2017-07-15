@@ -24,8 +24,7 @@ namespace geeL {
 
 
 	void GBuffer::init(int width, int height) {
-		info.width = width;
-		info.height = height;
+		info.setDimension(width, height);
 
 		glGenFramebuffers(1, &info.fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
@@ -48,7 +47,7 @@ namespace geeL {
 
 	void GBuffer::fill(std::function<void()> drawCall) const {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
-		glViewport(0, 0, info.width, info.height);
+		glViewport(0, 0, info.currWidth, info.currHeight);
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -59,31 +58,31 @@ namespace geeL {
 
 	void GBuffer::fill(std::function<void()> drawCall) {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
-		glViewport(0, 0, info.width, info.height);
+		glViewport(0, 0, info.currWidth, info.currHeight);
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		drawCall();
 
 		float data[4];
-		glReadPixels(info.width / 2, info.height / 2, 1, 1, GL_RGBA, GL_FLOAT, data);
+		glReadPixels(info.currWidth / 2, info.currHeight / 2, 1, 1, GL_RGBA, GL_FLOAT, data);
 		screenInfo.CTdepth = -data[2];
 
-		int xOffset = info.width / 3;
-		int yOffset = info.height / 3;
+		int xOffset = info.currWidth / 3;
+		int yOffset = info.currHeight / 3;
 		float mini = 0.f;
 		int maxDistance = 100;
 
 		glReadPixels(xOffset, yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
 		screenInfo.TRdepth = (-data[2] < mini) ? maxDistance : -data[2];
 
-		glReadPixels(info.width - xOffset, yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
+		glReadPixels(info.currWidth - xOffset, yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
 		screenInfo.TLdepth = (-data[2] < mini) ? maxDistance : -data[2];
 
-		glReadPixels(xOffset, info.height - yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
+		glReadPixels(xOffset, info.currHeight - yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
 		screenInfo.BRdepth = (-data[2] < mini) ? maxDistance : -data[2];
 
-		glReadPixels(info.width - xOffset, info.height - yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
+		glReadPixels(info.currWidth - xOffset, info.currHeight - yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
 		screenInfo.BLdepth = (-data[2] < mini) ? maxDistance : -data[2];
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

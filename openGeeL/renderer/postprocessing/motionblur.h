@@ -28,7 +28,6 @@ namespace geeL {
 		void setLevelOfDetail(unsigned int value);
 
 	protected:
-		const FrameBufferInformation* screenInfo;
 		ShaderLocation samplesLocation;
 		ShaderLocation strengthLocation;
 		ShaderLocation offsetLocation;
@@ -59,7 +58,6 @@ namespace geeL {
 
 	private:
 		glm::vec3 prevPosition;
-		const FrameBufferInformation* screenInfo;
 		PassthroughEffect prevPositionEffect;
 		ColorBuffer positionBuffer;
 

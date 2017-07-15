@@ -24,13 +24,12 @@ namespace geeL {
 
 	void BlurredPostEffect::init(ScreenQuad& screen, const ColorBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
-		screenInfo = &buffer.info;
 
 		shader.setInteger("effectOnly", onlyEffect);
 
-		effectBuffer.init(unsigned int(screenInfo->width * effectResolution), unsigned int(screenInfo->height * effectResolution),
+		effectBuffer.init(unsigned int(parentBuffer->getWidth() * effectResolution), unsigned int(parentBuffer->getHeight() * effectResolution),
 			ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
-		blurBuffer.init(unsigned int(screenInfo->width * blurResolution), unsigned int(screenInfo->height * blurResolution),
+		blurBuffer.init(unsigned int(parentBuffer->getWidth() * blurResolution), unsigned int(parentBuffer->getHeight() * blurResolution),
 			ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
 
 		effect.init(screen, effectBuffer);
@@ -45,7 +44,7 @@ namespace geeL {
 		effectBuffer.fill(effect);
 		blurBuffer.fill(blur);
 
-		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
+		parentBuffer->resetSize();
 		parentBuffer->bind();
 	}
 
@@ -63,8 +62,7 @@ namespace geeL {
 		if (effectResolution > 0.f && effectResolution < 1.f) {
 			this->effectResolution = effectResolution;
 
-			effectBuffer.resize(unsigned int(screenInfo->width * effectResolution), 
-				unsigned int(screenInfo->height * effectResolution));
+			effectBuffer.resize(effectResolution);
 		}
 	}
 

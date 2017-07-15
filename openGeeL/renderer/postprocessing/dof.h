@@ -69,7 +69,6 @@ namespace geeL {
 
 		DepthOfFieldBlur& blur;
 		ColorBuffer blurBuffer;
-		const FrameBufferInformation* screenInfo;
 
 	};
 }

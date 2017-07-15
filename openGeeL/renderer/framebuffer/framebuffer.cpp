@@ -22,40 +22,28 @@ namespace geeL {
 		});
 	}
 
-	
 
 	void FrameBuffer::bind() const {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
-	}
-
-	void FrameBuffer::bind(unsigned int fbo) {
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	}
 
 	void FrameBuffer::unbind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void FrameBuffer::copyDepth(unsigned int targetFBO) const {
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, targetFBO);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, info.fbo);
-		glBlitFramebuffer(0, 0, info.width, info.height, 0, 0,
-			info.width, info.height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-	}
-
 	void FrameBuffer::copyDepth(const FrameBuffer& buffer) const {
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, buffer.getFBO());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, info.fbo);
-		glBlitFramebuffer(0, 0, info.width, info.height, 0, 0,
-			info.width, info.height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, info.currWidth, info.currHeight, 0, 0,
+			info.currWidth, info.currHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+	}
+
+	void FrameBuffer::resetSize() const {
+		glViewport(0, 0, info.currWidth, info.currHeight);
 	}
 
 	void FrameBuffer::resetSize(int width, int height) {
 		glViewport(0, 0, width, height);
-	}
-
-	void FrameBuffer::remove(unsigned int fbo) {
-		glDeleteFramebuffers(1, &fbo);
 	}
 
 	void FrameBuffer::remove() {
@@ -67,11 +55,11 @@ namespace geeL {
 	}
 
 	unsigned int FrameBuffer::getWidth() const {
-		return info.width;
+		return info.currWidth;
 	}
 
 	unsigned int FrameBuffer::getHeight() const {
-		return info.height;
+		return info.currHeight;
 	}
 
 
@@ -90,8 +78,7 @@ namespace geeL {
 	void ColorBuffer::init(unsigned int width, unsigned int height, std::vector<RenderTexture*>&& colorBuffers, bool useDepth) {
 		buffers = std::move(colorBuffers);
 
-		info.width = width;
-		info.height = height;
+		info.setDimension(width, height);
 
 		glGenFramebuffers(1, &info.fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
@@ -140,8 +127,7 @@ namespace geeL {
 	void ColorBuffer::init(unsigned int width, unsigned int height,
 		ColorType colorType, FilterMode filterMode, WrapMode wrapMode, bool useDepth) {
 		
-		info.width = width;
-		info.height = height;
+		info.setDimension(width, height);
 
 		glGenFramebuffers(1, &info.fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
@@ -168,26 +154,24 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void ColorBuffer::resize(int width, int height) {
-		if (width > 0 && height > 0) {
-			info.width = width;
-			info.height = height;
+	void ColorBuffer::resize(Resolution resolution) {
+		info.currWidth = unsigned int(info.baseWidth * resolution);
+		info.currHeight = unsigned int(info.baseHeight * resolution);
 
-			//TODO: make this more orderly
-			glBindTexture(GL_TEXTURE_2D, buffers[0]->getID());
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, info.width, info.height, 0, GL_RGBA, GL_FLOAT, 0);
-			glBindTexture(GL_TEXTURE_2D, 0);
+		//TODO: make this more orderly
+		glBindTexture(GL_TEXTURE_2D, buffers[0]->getID());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, info.currWidth, info.currHeight, 0, GL_RGBA, GL_FLOAT, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 
-			glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, info.width, info.height);
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
-		}
+		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, info.currWidth, info.currHeight);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 
 
 	void ColorBuffer::fill(std::function<void()> drawCall) const {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
-		glViewport(0, 0, info.width, info.height);
+		glViewport(0, 0, info.currWidth, info.currHeight);
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -197,7 +181,7 @@ namespace geeL {
 
 	void ColorBuffer::fill(Drawer& drawer) const {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
-		glViewport(0, 0, info.width, info.height);
+		glViewport(0, 0, info.currWidth, info.currHeight);
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

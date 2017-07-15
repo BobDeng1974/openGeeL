@@ -24,8 +24,6 @@ namespace geeL {
 		const Resolution& getBlurResolution() const;
 
 	protected:
-		const FrameBufferInformation* screenInfo;
-
 		virtual void bindValues();
 
 	private:

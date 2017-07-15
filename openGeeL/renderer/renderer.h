@@ -26,7 +26,6 @@ namespace geeL {
 
 		void setParent(const FrameBuffer& buffer);
 		const FrameBuffer* const getParentBuffer() const;
-		unsigned int getParentFBO() const;
 
 	protected:
 		const FrameBuffer* parentBuffer = nullptr;

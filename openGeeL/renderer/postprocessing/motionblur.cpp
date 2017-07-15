@@ -21,8 +21,6 @@ namespace geeL {
 		samplesLocation = shader.getLocation("maxSamples");
 		strengthLocation = shader.getLocation("strength");
 		offsetLocation = shader.getLocation("offset");
-
-		screenInfo = &buffer.info;
 	}
 
 	void MotionBlur::bindValues() {
@@ -86,7 +84,7 @@ namespace geeL {
 		MotionBlur::init(screen, buffer);
 
 		float resolution = 1.f;
-		velocityBuffer.init(int(screenInfo->width * resolution), int(screenInfo->height * resolution),
+		velocityBuffer.init(int(parentBuffer->getWidth() * resolution), int(parentBuffer->getHeight() * resolution),
 			ColorType::RGBA16, FilterMode::Linear, WrapMode::ClampEdge);
 		velocity.init(screen, velocityBuffer);
 
@@ -96,7 +94,7 @@ namespace geeL {
 	void MotionBlurPerPixel::bindValues() {
 		velocityBuffer.fill(velocity);
 
-		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
+		parentBuffer->resetSize();
 		parentBuffer->bind();
 
 		shader.use();
@@ -112,10 +110,8 @@ namespace geeL {
 	void VelocityBuffer::init(ScreenQuad& screen, const ColorBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
-		screenInfo = &buffer.info;
-
 		float resolution = 1.f;
-		positionBuffer.init(int(screenInfo->width * resolution), int(screenInfo->height * resolution),
+		positionBuffer.init(int(parentBuffer->getWidth() * resolution), int(parentBuffer->getHeight() * resolution),
 			ColorType::RGBA16, FilterMode::Linear, WrapMode::ClampEdge);
 		prevPositionEffect.init(screen, positionBuffer);
 
@@ -143,7 +139,7 @@ namespace geeL {
 		PostProcessingEffect::draw();
 
 		positionBuffer.fill(prevPositionEffect);
-		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
+		parentBuffer->resetSize();
 		parentBuffer->bind();
 	}
 

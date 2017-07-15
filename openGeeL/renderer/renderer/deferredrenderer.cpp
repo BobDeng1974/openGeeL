@@ -182,7 +182,13 @@ namespace geeL {
 			FrameBuffer::resetSize(window->width, window->height);
 		}
 
-		FrameBuffer::bind(getParentFBO());
+		const FrameBuffer* parent = getParentBuffer();
+		if (parent != nullptr)
+			parent->bind();
+		else
+			throw "No parent for deferred renderer set\n";
+
+		getParentBuffer()->bind();
 		lightingPass();
 		scene->drawSkybox();
 	}

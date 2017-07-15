@@ -15,8 +15,8 @@ namespace geeL {
 	void CubeBuffer::init(const TextureCube& texture) {
 		this->texture = &texture;
 
-		info.width = texture.getResolution();
-		info.height = texture.getResolution();
+		unsigned int resolution = texture.getResolution();
+		info.setDimension(resolution, resolution);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
@@ -29,9 +29,9 @@ namespace geeL {
 
 
 	void CubeBuffer::fill(std::function<void()> drawCall) const {
-		glViewport(0, 0, info.width, info.height);
+		glViewport(0, 0, info.currWidth, info.currHeight);
 
-		FrameBuffer::bind(info.fbo);
+		bind();
 		for (unsigned int side = 0; side < 6; side++) {
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, texture->getID(), 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -43,9 +43,9 @@ namespace geeL {
 	}
 
 	void CubeBuffer::fill(std::function<void(unsigned int)> drawCall, unsigned int mipLevel) {
-		glViewport(0, 0, info.width, info.height);
+		glViewport(0, 0, info.currWidth, info.currHeight);
 
-		FrameBuffer::bind(info.fbo);
+		bind();
 		for (unsigned int side = 0; side < 6; side++) {
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, texture->getID(), mipLevel);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -56,12 +56,12 @@ namespace geeL {
 		FrameBuffer::unbind();
 	}
 
-	void CubeBuffer::resize(unsigned int width, unsigned int height) {
-		info.width = width;
-		info.height = height;
+	void CubeBuffer::resize(Resolution resolution) {
+		info.currWidth = unsigned int(info.baseWidth * resolution);
+		info.currHeight = unsigned int(info.baseHeight * resolution);
 
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, info.currWidth, info.currHeight);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 

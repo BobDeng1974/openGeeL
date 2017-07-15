@@ -42,8 +42,6 @@ namespace geeL {
 		BlurredPostEffect& filter;
 		ColorBuffer filterBuffer;
 
-		const FrameBufferInformation* screenInfo;
-
 	};
 
 

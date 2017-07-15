@@ -5,6 +5,7 @@
 #include <glew.h>
 #include <vector>
 #include <string>
+#include "../utility/resolution.h"
 #include "../texturing/texture.h"
 #include "../texturing/rendertexture.h"
 
@@ -16,8 +17,15 @@ namespace geeL {
 
 	public:
 		unsigned int fbo;
-		unsigned int width;
-		unsigned int height;
+		unsigned int currWidth;
+		unsigned int currHeight;
+		unsigned int baseWidth;
+		unsigned int baseHeight;
+
+		void setDimension(unsigned int width, unsigned int height) {
+			currWidth = baseWidth = width;
+			currHeight = baseHeight = height;
+		}
 
 	};
 
@@ -26,8 +34,6 @@ namespace geeL {
 	class FrameBuffer {
 
 	public:
-		FrameBufferInformation info;
-
 		FrameBuffer() {}
 
 		virtual void fill(std::function<void()> drawCall) const = 0;
@@ -35,26 +41,28 @@ namespace geeL {
 		virtual void fill(Drawer& drawer) const;
 
 		void bind() const;
-		static void bind(unsigned int fbo);
 		static void unbind();
 
-		void copyDepth(unsigned int targetFBO) const;
-		void copyDepth(const FrameBuffer& buffer) const;
+		virtual void copyDepth(const FrameBuffer& buffer) const;
 		
+		void resetSize() const;
 		static void resetSize(int width, int height);
-		static void remove(unsigned int fbo);
 		void remove();
-
-		unsigned int getFBO() const;
+		
 		unsigned int getWidth() const;
 		unsigned int getHeight() const;
 
 		virtual std::string toString() const = 0;
 
+	protected:
+		FrameBufferInformation info;
+
+		unsigned int getFBO() const;
+
 	private:
 		FrameBuffer(const FrameBuffer& other) = delete;
 		FrameBuffer& operator= (const FrameBuffer& other) = delete;
-
+		
 	};
 
 
@@ -66,7 +74,6 @@ namespace geeL {
 		~ColorBuffer();
 
 		void init(unsigned int width, unsigned int height, std::vector<RenderTexture*>&& colorBuffers, bool useDepth = true);
-
 		void init(unsigned int width, unsigned int height, ColorType colorType = ColorType::RGBA16,
 			FilterMode filterMode = FilterMode::None, WrapMode wrapMode = WrapMode::ClampEdge, bool useDepth = true);
 
@@ -74,8 +81,7 @@ namespace geeL {
 		virtual void fill(Drawer& drawer) const;
 
 		const RenderTexture& getTexture(unsigned int position = 0) const;
-		
-		void resize(int width, int height);
+		virtual void resize(Resolution resolution);
 
 		virtual std::string toString() const;
 

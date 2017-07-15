@@ -57,9 +57,8 @@ namespace geeL {
 		for (unsigned int mip = 0; mip < mipLevels; mip++) {
 			float roughness = (float)mip / (float)(mipLevels - 1);
 			conversionShader->setFloat("roughness", roughness);
-			unsigned int mipResolution = texture->getResolution() * std::pow(0.5f, mip);
 			
-			frameBuffer.resize(mipResolution, mipResolution);
+			frameBuffer.resize(std::pow(0.5f, mip));
 			frameBuffer.fill([&](unsigned int side) {
 				conversionShader->setMat4("view", views[side]);
 				SCREENCUBE.drawComplete();

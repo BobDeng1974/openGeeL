@@ -22,13 +22,12 @@ namespace geeL {
 
 	void LensFlare::init(ScreenQuad& screen, const ColorBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
-		screenInfo = &buffer.info;
 
 		shader.setFloat("scale", scale);
 		shader.setFloat("samples", samples);
 		shader.setFloat("strength", strength);
 
-		filterBuffer.init(unsigned int(screenInfo->width * resolution), unsigned int(screenInfo->height * resolution),
+		filterBuffer.init(unsigned int(parentBuffer->getWidth() * resolution), unsigned int(parentBuffer->getHeight() * resolution),
 			ColorType::RGB16, FilterMode::Linear, WrapMode::Repeat);
 
 		filter.init(screen, filterBuffer);
@@ -116,7 +115,7 @@ namespace geeL {
 	void LensFlare::bindValues() {
 		filterBuffer.fill(filter);
 
-		FrameBuffer::resetSize(screenInfo->width, screenInfo->height);
+		parentBuffer->resetSize();
 		parentBuffer->bind();
 		
 		Transform& transform = camera->transform;
