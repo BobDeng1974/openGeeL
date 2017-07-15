@@ -15,9 +15,7 @@ namespace geeL {
 			FilterMode filterMode = FilterMode::None, WrapMode wrapMode = WrapMode::ClampEdge);
 		
 		virtual void fill(std::function<void()> drawCall);
-		virtual void fill(std::function<void()> drawCall) const;
 		virtual void fill(Drawer& drawer);
-		virtual void fill(Drawer& drawer) const;
 
 		virtual void resize(Resolution resolution);
 		virtual void copyDepth(const FrameBuffer& buffer) const;

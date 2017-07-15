@@ -34,7 +34,7 @@ namespace geeL {
 	}
 
 
-	void PostProcessingEffect::init(ScreenQuad& screen, const ColorBuffer& buffer) {
+	void PostProcessingEffect::init(ScreenQuad& screen, IFrameBuffer& buffer) {
 		this->screen = &screen;
 
 		setParent(buffer);

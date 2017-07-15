@@ -25,11 +25,12 @@ namespace geeL {
 	public:
 		virtual void draw() = 0;
 
-		void setParent(const IFrameBuffer& buffer);
+		void setParent(IFrameBuffer& buffer);
 		const IFrameBuffer* const getParentBuffer() const;
+		IFrameBuffer* const getParentBuffer();
 
 	protected:
-		const IFrameBuffer* parentBuffer = nullptr;
+		IFrameBuffer* parentBuffer = nullptr;
 
 	};
 

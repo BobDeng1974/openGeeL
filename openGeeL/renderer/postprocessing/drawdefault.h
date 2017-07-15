@@ -16,7 +16,7 @@ namespace geeL {
 
 		DefaultPostProcess& operator= (const DefaultPostProcess& other);
 
-		virtual void init(ScreenQuad& screen, const ColorBuffer& buffer);
+		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
 
 		float getExposure() const;
 		void setExposure(float exposure);

@@ -9,7 +9,7 @@ namespace geeL {
 		: PostProcessingEffect(shaderPath), amount(strength + 1) {}
 
 
-	void SimpleBlur::init(ScreenQuad& screen, const ColorBuffer& buffer) {
+	void SimpleBlur::init(ScreenQuad& screen, IFrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
 		shader.setInteger("amount", amount);

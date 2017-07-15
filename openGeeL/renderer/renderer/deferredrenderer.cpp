@@ -129,7 +129,7 @@ namespace geeL {
 				//Save regular rendering settings
 				bool onlyEffect = isolatedEffect->getEffectOnly();
 				const Texture& buffer = isolatedEffect->getImageBuffer();
-				const IFrameBuffer& parent = *isolatedEffect->getParentBuffer();
+				IFrameBuffer& parent = *isolatedEffect->getParentBuffer();
 
 				//Draw isolated effect
 				isolatedEffect->effectOnly(true);
@@ -293,8 +293,8 @@ namespace geeL {
 
 	void DeferredRenderer::initDefaultEffect() {
 		//Link framebuffer of last added post processing effect to default effect
-		const ColorBuffer* readBuffer = nullptr;
-		const ColorBuffer* writeBuffer = nullptr;
+		ColorBuffer* readBuffer = nullptr;
+		ColorBuffer* writeBuffer = nullptr;
 
 		if (effects.size() % 2 == 0) {
 			readBuffer = &frameBuffer2;
@@ -337,7 +337,7 @@ namespace geeL {
 		const ColorBuffer& buffer = (effects.size() % 2 == 0) ? frameBuffer1 : frameBuffer2;
 		effect.setImageBuffer(buffer);
 
-		const ColorBuffer& parent = (effects.size() % 2 == 0) ? frameBuffer2 : frameBuffer1;
+		ColorBuffer& parent = (effects.size() % 2 == 0) ? frameBuffer2 : frameBuffer1;
 		effect.init(screen, parent);
 	}
 

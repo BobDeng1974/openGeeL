@@ -9,11 +9,15 @@
 
 namespace geeL{
 
-	void Drawer::setParent(const IFrameBuffer& buffer) {
+	void Drawer::setParent(IFrameBuffer& buffer) {
 		parentBuffer = &buffer;
 	}
 
 	const IFrameBuffer* const Drawer::getParentBuffer() const {
+		return parentBuffer;
+	}
+
+	IFrameBuffer * const Drawer::getParentBuffer() {
 		return parentBuffer;
 	}
 

@@ -42,7 +42,7 @@ namespace geeL {
 			float farDistance = 100.f, Resolution blurResolution = FULLSCREEN);
 
 		virtual void setImageBuffer(const Texture& texture);
-		virtual void init(ScreenQuad& screen, const ColorBuffer& buffer);
+		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
 
 		virtual void draw();
 

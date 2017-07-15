@@ -11,7 +11,7 @@ namespace geeL {
 	public:
 		SimpleBlur(unsigned int strength = 1);
 
-		virtual void init(ScreenQuad& screen, const ColorBuffer& buffer);
+		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
 
 	protected:
 		SimpleBlur(unsigned int strength, std::string shaderPath);

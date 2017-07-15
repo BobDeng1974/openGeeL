@@ -32,7 +32,7 @@ namespace geeL {
 		virtual void setImageBuffer(const Texture& texture);
 		void addImageBuffer(const Texture& texture, const std::string& name);
 
-		virtual void init(ScreenQuad& screen, const ColorBuffer& buffer);
+		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
 		virtual void draw();
 		void fill();
 

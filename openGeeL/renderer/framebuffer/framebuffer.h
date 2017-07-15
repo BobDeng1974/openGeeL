@@ -36,7 +36,6 @@ namespace geeL {
 	public:
 		virtual void fill(std::function<void()> drawCall) = 0;
 		virtual void fill(Drawer& drawer) = 0;
-		virtual void fill(Drawer& drawer) const = 0;
 
 		virtual void bind() const = 0;
 
@@ -60,9 +59,7 @@ namespace geeL {
 	public:
 		FrameBuffer() {}
 
-		virtual void fill(std::function<void()> drawCall) const = 0;
-		virtual void fill(std::function<void()> drawCall);
-		virtual void fill(Drawer& drawer) const;
+		virtual void fill(std::function<void()> drawCall) = 0;
 		virtual void fill(Drawer& drawer);
 
 		virtual void bind() const;
@@ -105,7 +102,7 @@ namespace geeL {
 
 		void initDepth();
 
-		virtual void fill(std::function<void()> drawCall) const;
+		virtual void fill(std::function<void()> drawCall);
 		virtual void fill(Drawer& drawer) const;
 
 		const RenderTexture& getTexture(unsigned int position = 0) const;

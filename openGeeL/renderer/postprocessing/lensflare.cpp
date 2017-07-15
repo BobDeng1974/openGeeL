@@ -20,7 +20,7 @@ namespace geeL {
 		filter.setImageBuffer(texture);
 	}
 
-	void LensFlare::init(ScreenQuad& screen, const ColorBuffer& buffer) {
+	void LensFlare::init(ScreenQuad& screen, IFrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
 		shader.setFloat("scale", scale);

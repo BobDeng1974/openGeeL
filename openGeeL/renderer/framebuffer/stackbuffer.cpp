@@ -45,10 +45,6 @@ namespace geeL {
 		swap();
 	}
 
-	void StackBuffer::fill(std::function<void()> drawCall) const {}
-
-	void StackBuffer::fill(Drawer& drawer) const {}
-
 	
 	const RenderTexture& StackBuffer::getTexture(unsigned int position) const {
 		if (position == 0)

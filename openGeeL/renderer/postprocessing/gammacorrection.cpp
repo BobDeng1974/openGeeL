@@ -9,7 +9,7 @@ namespace geeL {
 		PostProcessingEffect("renderer/postprocessing/gammacorrection.frag"), gamma(gamma) {}
 
 
-	void GammaCorrection::init(ScreenQuad& screen, const ColorBuffer& buffer) {
+	void GammaCorrection::init(ScreenQuad& screen, IFrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
 		shader.setFloat("gamma", gamma);

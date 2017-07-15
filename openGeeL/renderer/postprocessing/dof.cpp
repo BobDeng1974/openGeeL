@@ -64,7 +64,7 @@ namespace geeL {
 		blur.setImageBuffer(texture);
 	}
 
-	void DepthOfFieldBlurred::init(ScreenQuad& screen, const ColorBuffer& buffer) {
+	void DepthOfFieldBlurred::init(ScreenQuad& screen, IFrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
 		shader.setFloat("farDistance", farDistance);

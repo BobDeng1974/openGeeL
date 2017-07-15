@@ -12,7 +12,7 @@ namespace geeL {
 			"renderer/lighting/cooktorrance.frag") {}
 
 
-	void DeferredLighting::init(ScreenQuad& screen, const ColorBuffer& buffer) {
+	void DeferredLighting::init(ScreenQuad& screen, IFrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
 		scene.lightManager.bindShadowMaps(shader);

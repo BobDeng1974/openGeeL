@@ -12,7 +12,7 @@ namespace geeL {
 			"renderer/lighting/ibl.frag") {}
 
 
-	void ImageBasedLighting::init(ScreenQuad& screen, const ColorBuffer& buffer) {
+	void ImageBasedLighting::init(ScreenQuad& screen, IFrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
 		scene.lightManager.addReflectionProbes(shader);

@@ -28,7 +28,7 @@ namespace geeL {
 	}
 
 
-	void CubeBuffer::fill(std::function<void()> drawCall) const {
+	void CubeBuffer::fill(std::function<void()> drawCall) {
 		glViewport(0, 0, info.currWidth, info.currHeight);
 
 		bind();

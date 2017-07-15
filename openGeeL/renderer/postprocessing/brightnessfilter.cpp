@@ -9,7 +9,7 @@ namespace geeL {
 		: BrightnessFilter("renderer/postprocessing/bloomfilter.frag"), scatter(scatter) {}
 
 
-	void BrightnessFilterCutoff::init(ScreenQuad& screen, const ColorBuffer& buffer) {
+	void BrightnessFilterCutoff::init(ScreenQuad& screen, IFrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
 		scatterLocation = shader.setFloat("scatter", scatter);
@@ -32,7 +32,7 @@ namespace geeL {
 		: BrightnessFilter("renderer/postprocessing/brightnessfilter.frag"), bias(bias), scale(scale) {}
 
 
-	void BrightnessFilterSmooth::init(ScreenQuad& screen, const ColorBuffer& buffer) {
+	void BrightnessFilterSmooth::init(ScreenQuad& screen, IFrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
 		shader.setFloat("bias", bias);
