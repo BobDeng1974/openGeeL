@@ -75,6 +75,7 @@ namespace geeL {
 
 		info.setDimension(width, height);
 
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glGenFramebuffers(1, &info.fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 
@@ -115,6 +116,7 @@ namespace geeL {
 		
 		info.setDimension(width, height);
 
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glGenFramebuffers(1, &info.fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 

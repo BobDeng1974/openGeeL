@@ -58,14 +58,9 @@ namespace geeL {
 		geometryPassFunc = [this]() { this->geometryPass(); };
 		lightingPassFunc = [this]() { this->lightingPass(); this->forwardPass(); };
 
-		frameBuffer1.init(unsigned int(window->width), unsigned int(window->height),
+		stackBuffer.init(unsigned int(window->width), unsigned int(window->height),
 			ColorType::RGBA16, FilterMode::None, WrapMode::ClampEdge);
-		frameBuffer2.init(unsigned int(window->width), unsigned int(window->height), 
-			ColorType::RGBA16, FilterMode::None, WrapMode::ClampEdge);
-
-		//Give first framebuffer depth buffer since 
-		//lighting and skybox gets drawn into it
-		frameBuffer1.initDepth(); 
+		stackBuffer.initDepth(); 
 
 		screen.init();
 		addRequester(lighting);
@@ -81,7 +76,7 @@ namespace geeL {
 
 
 	void DeferredRenderer::render() {
-		lighting.init(screen, frameBuffer1);
+		lighting.init(screen, stackBuffer);
 		scene->updateProbes(); //Draw reflection probes once at beginning
 		initDefaultEffect();
 
@@ -95,6 +90,7 @@ namespace geeL {
 			renderTime.reset();
 			glEnable(GL_DEPTH_TEST);
 
+			stackBuffer.reset();
 			updateSceneControlObjects();
 
 			//Geometry pass
@@ -115,7 +111,7 @@ namespace geeL {
 			}
 
 			//Lighting & forward pass
-			frameBuffer1.fill(lightingPassFunc);
+			stackBuffer.fill(lightingPassFunc);
 			renderTime.update(RenderPass::Lighting);
 
 			glClear(GL_COLOR_BUFFER_BIT);
@@ -129,12 +125,10 @@ namespace geeL {
 				//Save regular rendering settings
 				bool onlyEffect = isolatedEffect->getEffectOnly();
 				const Texture& buffer = isolatedEffect->getImageBuffer();
-				IFrameBuffer& parent = *isolatedEffect->getParentBuffer();
 
 				//Draw isolated effect
 				isolatedEffect->effectOnly(true);
-				isolatedEffect->setImageBuffer(frameBuffer1);
-				isolatedEffect->setParent(frameBuffer2);
+				isolatedEffect->setImageBuffer(stackBuffer.getTexture(0));
 				isolatedEffect->fill();
 				
 				def->draw();
@@ -142,7 +136,6 @@ namespace geeL {
 				//Restore render settings
 				isolatedEffect->effectOnly(onlyEffect);
 				isolatedEffect->setImageBuffer(buffer);
-				isolatedEffect->setParent(parent);
 			}
 			//Draw all included post effects
 			else {
@@ -241,7 +234,7 @@ namespace geeL {
 		glClear(GL_DEPTH_BUFFER_BIT);
 		//Copy depth buffer from gBuffer to draw forward 
 		//rendered objects 'into' the scene instead of 'on top'
-		frameBuffer1.copyDepth(gBuffer);
+		stackBuffer.copyDepth(gBuffer);
 
 		//Forward pass
 		scene->drawForward();
@@ -291,23 +284,7 @@ namespace geeL {
 		this->requester.push_back(&requester);
 	}
 
-	void DeferredRenderer::initDefaultEffect() {
-		//Link framebuffer of last added post processing effect to default effect
-		ColorBuffer* readBuffer = nullptr;
-		ColorBuffer* writeBuffer = nullptr;
-
-		if (effects.size() % 2 == 0) {
-			readBuffer = &frameBuffer2;
-			writeBuffer = &frameBuffer1;
-		}
-		else {
-			readBuffer = &frameBuffer1;
-			writeBuffer = &frameBuffer2;
-		}
-
-		effects.front()->setImageBuffer(readBuffer->getTexture());
-		effects.front()->init(screen, *writeBuffer);
-	}
+	
 
 	void DeferredRenderer::linkInformation() const {
 		//Link world maps to requesting post effects
@@ -331,14 +308,24 @@ namespace geeL {
 
 
 	void DeferredRenderer::linkImageBuffer(PostProcessingEffect& effect) {
-
-		//Init all post processing effects with two alternating framebuffers
+		//Init all post processing effects with two alternating textures
 		//Current effect will then always read from one and write to the other
-		const ColorBuffer& buffer = (effects.size() % 2 == 0) ? frameBuffer1 : frameBuffer2;
+		const Texture& buffer = (effects.size() % 2 == 0) ? 
+			stackBuffer.getTexture(0) : 
+			stackBuffer.getTexture(1);
+		
 		effect.setImageBuffer(buffer);
+		effect.init(screen, stackBuffer);
+	}
 
-		ColorBuffer& parent = (effects.size() % 2 == 0) ? frameBuffer2 : frameBuffer1;
-		effect.init(screen, parent);
+	void DeferredRenderer::initDefaultEffect() {
+		//Link framebuffer of last added post processing effect to default effect
+		const Texture& buffer = (effects.size() % 2 == 0) ?
+			stackBuffer.getTexture(1) :
+			stackBuffer.getTexture(0);
+
+		effects.front()->setImageBuffer(buffer);
+		effects.front()->init(screen, stackBuffer);
 	}
 
 
@@ -378,7 +365,7 @@ namespace geeL {
 			isolatedEffect = nullptr;
 		}
 		else {
-			currBuffer = &frameBuffer2.getTexture();
+			currBuffer = &stackBuffer.getTexture(1);
 
 			int index = toggle - buffers.size();
 			isolatedEffect = effects[index];

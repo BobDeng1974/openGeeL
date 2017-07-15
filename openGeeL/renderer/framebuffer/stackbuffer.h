@@ -14,6 +14,10 @@ namespace geeL {
 		void init(unsigned int width, unsigned int height, ColorType colorType = ColorType::RGBA16,
 			FilterMode filterMode = FilterMode::None, WrapMode wrapMode = WrapMode::ClampEdge);
 		
+		//Reset stack order
+		void reset();
+
+		virtual void bind() const;
 		virtual void initDepth();
 
 		virtual void fill(std::function<void()> drawCall);
@@ -23,6 +27,10 @@ namespace geeL {
 		virtual void copyDepth(const FrameBuffer& buffer) const;
 
 		const RenderTexture& getTexture(unsigned int position = 0) const;
+
+		virtual void resetSize() const;
+		virtual unsigned int getWidth() const;
+		virtual unsigned int getHeight() const;
 		
 		virtual std::string toString() const;
 
@@ -37,6 +45,7 @@ namespace geeL {
 		StackBuffer& operator= (const ColorBuffer& other) = delete;
 
 	};
+
 }
 
 #endif

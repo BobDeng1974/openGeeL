@@ -7,7 +7,7 @@ using namespace std;
 namespace geeL {
 
 	StackBuffer::StackBuffer() {
-		current = &first;
+		reset();
 	}
 
 	StackBuffer::~StackBuffer() {
@@ -23,9 +23,16 @@ namespace geeL {
 		second.init(width, height, colorType, filterMode, wrapMode);
 	}
 
+	void StackBuffer::bind() const {
+		current->bind();
+	}
+
+	void StackBuffer::reset() {
+		current = &first;
+	}
+
 	void StackBuffer::initDepth() {
 		first.initDepth();
-		second.initDepth();
 	}
 
 	
@@ -43,8 +50,6 @@ namespace geeL {
 		swap();
 	}
 
-	
-
 	void StackBuffer::fill(Drawer & drawer) {
 		current->fill(drawer);
 		swap();
@@ -56,6 +61,18 @@ namespace geeL {
 			return first.getTexture(0);
 		else
 			return second.getTexture(0);
+	}
+
+	void StackBuffer::resetSize() const {
+		current->resetSize();
+	}
+
+	unsigned int StackBuffer::getWidth() const {
+		return current->getWidth();
+	}
+
+	unsigned int StackBuffer::getHeight() const {
+		return current->getHeight();
 	}
 
 	std::string StackBuffer::toString() const {
