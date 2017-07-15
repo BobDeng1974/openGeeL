@@ -22,6 +22,11 @@ namespace geeL {
 		});
 	}
 
+	void FrameBuffer::fill(Drawer & drawer) {
+		const FrameBuffer* self = this;
+		self->fill(drawer);
+	}
+
 
 	void FrameBuffer::bind() const {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);

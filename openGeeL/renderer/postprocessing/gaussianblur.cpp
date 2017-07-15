@@ -42,11 +42,11 @@ namespace geeL {
 	std::vector<float> GaussianBlurBase::computeKernel(float sigma) const {
 		std::vector<float> kernel = std::vector<float>(kernelSize);
 
-		double s = 2.0 * sigma * sigma;
-		double sum = 0.0;
+		float s = 2.f * sigma * sigma;
+		float sum = 0.f;
 		for (int x = 0; x < kernelSize; x++) {
 			kernel[x] = (exp(-(x * x) / s)) / (PI * s);
-			sum += (x == 0) ? kernel[x] : 2.0 * kernel[x];
+			sum += (x == 0) ? kernel[x] : 2.f * kernel[x];
 		}
 
 		for (int x = 0; x < kernelSize; x++)

@@ -129,7 +129,7 @@ namespace geeL {
 				//Save regular rendering settings
 				bool onlyEffect = isolatedEffect->getEffectOnly();
 				const Texture& buffer = isolatedEffect->getImageBuffer();
-				const FrameBuffer& parent = *isolatedEffect->getParentBuffer();
+				const IFrameBuffer& parent = *isolatedEffect->getParentBuffer();
 
 				//Draw isolated effect
 				isolatedEffect->effectOnly(true);
@@ -186,7 +186,7 @@ namespace geeL {
 			FrameBuffer::resetSize(window->width, window->height);
 		}
 
-		const FrameBuffer* parent = getParentBuffer();
+		const IFrameBuffer* parent = getParentBuffer();
 		if (parent != nullptr)
 			parent->bind();
 		else

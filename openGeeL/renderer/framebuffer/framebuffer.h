@@ -30,8 +30,32 @@ namespace geeL {
 	};
 
 
+	//Interface for all framebuffer objects
+	class IFrameBuffer {
+
+	public:
+		virtual void fill(std::function<void()> drawCall) = 0;
+		virtual void fill(Drawer& drawer) = 0;
+		virtual void fill(Drawer& drawer) const = 0;
+
+		virtual void bind() const = 0;
+
+		virtual void resetSize() const = 0;
+		virtual unsigned int getWidth() const = 0;
+		virtual unsigned int getHeight() const = 0;
+
+	protected:
+		IFrameBuffer() {}
+
+	private:
+		IFrameBuffer(const IFrameBuffer& other) = delete;
+		IFrameBuffer& operator= (const IFrameBuffer& other) = delete;
+
+	};
+
+
 	//Abstract base class for all framebuffer objects
-	class FrameBuffer {
+	class FrameBuffer : public IFrameBuffer {
 
 	public:
 		FrameBuffer() {}
@@ -39,18 +63,19 @@ namespace geeL {
 		virtual void fill(std::function<void()> drawCall) const = 0;
 		virtual void fill(std::function<void()> drawCall);
 		virtual void fill(Drawer& drawer) const;
+		virtual void fill(Drawer& drawer);
 
-		void bind() const;
+		virtual void bind() const;
 		static void unbind();
 
 		virtual void copyDepth(const FrameBuffer& buffer) const;
 		
-		void resetSize() const;
+		virtual void resetSize() const;
 		static void resetSize(int width, int height);
 		void remove();
 		
-		unsigned int getWidth() const;
-		unsigned int getHeight() const;
+		virtual unsigned int getWidth() const;
+		virtual unsigned int getHeight() const;
 
 		virtual bool initialized() const;
 		virtual std::string toString() const = 0;
