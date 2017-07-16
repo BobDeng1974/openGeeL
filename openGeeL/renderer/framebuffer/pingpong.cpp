@@ -34,9 +34,8 @@ namespace geeL {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glDrawBuffer(GL_COLOR_ATTACHMENT0 + id);
-		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
-		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		current->setRenderResolution();
+		clear();
 
 		drawCall();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -49,14 +48,21 @@ namespace geeL {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glDrawBuffer(GL_COLOR_ATTACHMENT0 + id);
-		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
-		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		current->setRenderResolution();
+		clear();
 
 		drawer.draw();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		swap();
+	}
+
+	void PingPongBuffer::resetSize() const {
+		current->setRenderResolution();
+	}
+
+	void PingPongBuffer::resize(ResolutionScale resolution) {
+		std::cout << "Pingpong buffer is not resizable\n";
 	}
 
 	void PingPongBuffer::swap() {

@@ -77,6 +77,7 @@ namespace geeL {
 		FrameBufferInformation info;
 
 		unsigned int getFBO() const;
+		void clear() const;
 
 	private:
 		FrameBuffer(const FrameBuffer& other) = delete;

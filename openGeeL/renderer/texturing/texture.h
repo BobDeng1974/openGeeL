@@ -50,6 +50,8 @@ namespace geeL {
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
 
+		//Set render view to resolution of this texture
+		void setRenderResolution() const;
 		const Resolution& getResolution() const;
 
 	protected:

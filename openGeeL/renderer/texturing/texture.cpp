@@ -140,6 +140,10 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
+	void Texture2D::setRenderResolution() const {
+		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
+	}
+
 	void Texture2D::initWrapMode(WrapMode mode) {
 		switch (mode) {
 			case WrapMode::Repeat:

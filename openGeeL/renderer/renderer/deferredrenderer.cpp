@@ -142,6 +142,7 @@ namespace geeL {
 				for (auto effect = next(effects.begin()); effect != effects.end(); effect++)
 					(**effect).fill();
 
+				FrameBuffer::resetSize(window->resolution);
 				//Draw the last (default) effect to screen.
 				effects.front()->draw();
 			}

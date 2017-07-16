@@ -49,6 +49,11 @@ namespace geeL {
 		return fbo;
 	}
 
+	void FrameBuffer::clear() const {
+		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
 	const Resolution& FrameBuffer::getResolution() const {
 		return resolution;
 	}
@@ -164,8 +169,7 @@ namespace geeL {
 	void ColorBuffer::fill(std::function<void()> drawCall) {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
-		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		clear();
 
 		drawCall();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -174,8 +178,7 @@ namespace geeL {
 	void ColorBuffer::fill(Drawer& drawer) {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
-		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		clear();
 
 		drawer.draw();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
