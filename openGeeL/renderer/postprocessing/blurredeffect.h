@@ -18,7 +18,7 @@ namespace geeL {
 
 		virtual void draw();
 
-		void resizeEffectResolution(float effectResolution);
+		void resizeEffectResolution(ResolutionScale effectResolution);
 
 		const ResolutionScale& getEffectResolution() const;
 		const ResolutionScale& getBlurResolution() const;

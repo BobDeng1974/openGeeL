@@ -158,16 +158,16 @@ namespace {
 
 
 void ArthouseScene::draw() {
-	RenderWindow& window = RenderWindow("Art Studio", 1920, 1080, WindowMode::Windowed);
+	RenderWindow& window = RenderWindow("Art Studio", Resolution(1920, 1080), WindowMode::Windowed);
 	InputManager manager;
 
 	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	TransformFactory& transFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(2.93f, 0.71f, -0.59f), vec3(90.f, 76.86f, 179.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 45.f, window.width, window.height, 0.1f, 100.f);
+	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 45.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
 
-	GBuffer& gBuffer = GBuffer(window.width, window.height);
+	GBuffer& gBuffer = GBuffer(window.resolution);
 	MaterialFactory& materialFactory = MaterialFactory(gBuffer);
 	MeshFactory& meshFactory = MeshFactory(materialFactory);
 	LightManager lightManager;

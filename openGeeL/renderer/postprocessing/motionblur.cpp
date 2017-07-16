@@ -84,7 +84,7 @@ namespace geeL {
 		MotionBlur::init(screen, buffer);
 
 		float resolution = 1.f;
-		velocityBuffer.init(int(parentBuffer->getWidth() * resolution), int(parentBuffer->getHeight() * resolution),
+		velocityBuffer.init(Resolution(parentBuffer->getResolution(), resolution),
 			ColorType::RGBA16, FilterMode::Linear, WrapMode::ClampEdge);
 		velocity.init(screen, velocityBuffer);
 
@@ -111,7 +111,7 @@ namespace geeL {
 		PostProcessingEffect::init(screen, buffer);
 
 		float resolution = 1.f;
-		positionBuffer.init(int(parentBuffer->getWidth() * resolution), int(parentBuffer->getHeight() * resolution),
+		positionBuffer.init(Resolution(parentBuffer->getResolution(), resolution),
 			ColorType::RGBA16, FilterMode::Linear, WrapMode::ClampEdge);
 		prevPositionEffect.init(screen, positionBuffer);
 

@@ -33,7 +33,7 @@ namespace geeL {
 	void GaussianBlurBase::init(ScreenQuad& screen, IFrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
-		tempBuffer.init(buffer.getWidth(), buffer.getHeight(), ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
+		tempBuffer.init(buffer.getResolution(), ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
 
 		bindKernel();
 		horLocation = shader.getLocation("horizontal");
@@ -192,7 +192,7 @@ namespace geeL {
 	void SobelBlur::init(ScreenQuad & screen, IFrameBuffer& buffer) {
 		GaussianBlurBase::init(screen, buffer);
 
-		sobelBuffer.init(buffer.getWidth(), buffer.getHeight());
+		sobelBuffer.init(buffer.getResolution());
 		sobel.init(screen, sobelBuffer);
 
 		addImageBuffer(sobelBuffer.getTexture(), "sobel");

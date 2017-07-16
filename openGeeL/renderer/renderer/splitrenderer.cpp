@@ -24,7 +24,7 @@ namespace geeL {
 			std::cout << "Failed to initialize GLEW" << std::endl;
 		}
 
-		glViewport(0, 0, window.width, window.height);
+		glViewport(0, 0, window.getWidth(), window.getHeight());
 		glEnable(GL_DEPTH_TEST);
 	}
 
@@ -62,7 +62,8 @@ namespace geeL {
 			Renderer* renderer = pair.first;
 			RenderViewport view = pair.second;
 
-			glViewport(view.x * window->width, view.y * window->height, view.width * window->width, view.height * window->height);
+			glViewport(view.x * window->getWidth(), view.y * window->getHeight(), 
+				view.width * window->getWidth(), view.height * window->getHeight());
 			renderer->draw();
 		}
 	}

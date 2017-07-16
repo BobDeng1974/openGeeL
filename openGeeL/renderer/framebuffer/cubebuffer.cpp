@@ -1,10 +1,11 @@
 #include "../texturing/rendertexturecube.h"
 #include "cubebuffer.h"
+#include <iostream>
 
 namespace geeL {
 
 	CubeBuffer::CubeBuffer() : texture(nullptr) {
-		glGenFramebuffers(1, &info.fbo);
+		glGenFramebuffers(1, &fbo);
 		glGenRenderbuffers(1, &rbo);
 	}
 
@@ -16,9 +17,9 @@ namespace geeL {
 		this->texture = &texture;
 
 		unsigned int resolution = texture.getResolution();
-		info.setDimension(resolution, resolution);
+		this->resolution = Resolution(resolution, resolution);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, texture.getResolution(), texture.getResolution());
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
@@ -29,44 +30,43 @@ namespace geeL {
 
 
 	void CubeBuffer::fill(std::function<void()> drawCall) {
-		glViewport(0, 0, info.currWidth, info.currHeight);
 
 		bind();
 		for (unsigned int side = 0; side < 6; side++) {
+			glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, texture->getID(), 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			drawCall();
 		}
 
-		FrameBuffer::unbind();
+		unbind();
 	}
 
 	void CubeBuffer::fill(std::function<void(unsigned int)> drawCall, unsigned int mipLevel) {
-		glViewport(0, 0, info.currWidth, info.currHeight);
 
 		bind();
 		for (unsigned int side = 0; side < 6; side++) {
+			glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, texture->getID(), mipLevel);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			drawCall(side);
 		}
 
-		FrameBuffer::unbind();
+		unbind();
 	}
 
-	void CubeBuffer::resize(ResolutionScale resolution) {
-		info.currWidth = unsigned int(info.baseWidth * resolution);
-		info.currHeight = unsigned int(info.baseHeight * resolution);
+	void CubeBuffer::resize(ResolutionScale scale) {
+		resolution.resize(scale);
 
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, info.currWidth, info.currHeight);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolution.getWidth(), resolution.getHeight());
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 
 	std::string CubeBuffer::toString() const {
-		return "Cube buffer " + std::to_string(info.fbo) + 
+		return "Cube buffer " + std::to_string(fbo) +
 			"\n -- Texture " + std::to_string(texture->getID()) + "\n";
 	}
 

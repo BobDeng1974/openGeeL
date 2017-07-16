@@ -76,7 +76,7 @@ namespace geeL {
 		float dist = (focalLength < 0.f || focalLength > 30.f) ? 30.f : focalLength;
 		blur.bindDoFData(dist, aperture, farDistance);
 
-		blurBuffer.init(int(parentBuffer->getWidth() * blurResolution), int(parentBuffer->getHeight() * blurResolution),
+		blurBuffer.init(Resolution(parentBuffer->getResolution(), blurResolution),
 			ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
 
 		blur.init(screen, blurBuffer);
@@ -111,12 +111,9 @@ namespace geeL {
 		blur.addImageBuffer(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
 	}
 
-	void DepthOfFieldBlurred::resizeBlurResolution(float blurResolution) {
-		if (blurResolution > 0.f && blurResolution < 1.f) {
-			this->blurResolution = blurResolution;
-
-			blurBuffer.resize(blurResolution);
-		}
+	void DepthOfFieldBlurred::resizeBlurResolution(ResolutionScale blurResolution) {
+		this->blurResolution = blurResolution;
+		blurBuffer.resize(blurResolution);
 	}
 
 	const ResolutionScale& DepthOfFieldBlurred::getBlurResolution() const {

@@ -19,7 +19,7 @@ namespace geeL {
 
 
 	void FrameBuffer::bind() const {
-		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	}
 
 	void FrameBuffer::unbind() {
@@ -28,33 +28,37 @@ namespace geeL {
 
 	void FrameBuffer::copyDepth(const FrameBuffer& buffer) const {
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, buffer.getFBO());
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, info.fbo);
-		glBlitFramebuffer(0, 0, info.currWidth, info.currHeight, 0, 0,
-			info.currWidth, info.currHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+		glBlitFramebuffer(0, 0, resolution.getWidth(), resolution.getHeight(), 0, 0,
+			resolution.getWidth(), resolution.getHeight(), GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	}
 
 	void FrameBuffer::resetSize() const {
-		glViewport(0, 0, info.currWidth, info.currHeight);
+		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
 	}
 
-	void FrameBuffer::resetSize(int width, int height) {
-		glViewport(0, 0, width, height);
+	void FrameBuffer::resetSize(Resolution resolution) {
+		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
 	}
 
 	void FrameBuffer::remove() {
-		glDeleteFramebuffers(1, &info.fbo);
+		glDeleteFramebuffers(1, &fbo);
 	}
 
 	unsigned int FrameBuffer::getFBO() const {
-		return info.fbo;
+		return fbo;
+	}
+
+	const Resolution& FrameBuffer::getResolution() const {
+		return resolution;
 	}
 
 	unsigned int FrameBuffer::getWidth() const {
-		return info.currWidth;
+		return resolution.getWidth();
 	}
 
 	unsigned int FrameBuffer::getHeight() const {
-		return info.currHeight;
+		return resolution.getHeight();
 	}
 
 
@@ -70,14 +74,14 @@ namespace geeL {
 		}
 	}
 
-	void ColorBuffer::init(unsigned int width, unsigned int height, std::vector<RenderTexture*>&& colorBuffers) {
+	void ColorBuffer::init(Resolution resolution, std::vector<RenderTexture*>&& colorBuffers) {
 		buffers = std::move(colorBuffers);
 
-		info.setDimension(width, height);
+		this->resolution = resolution;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glGenFramebuffers(1, &info.fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
+		glGenFramebuffers(1, &fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 		int amount = min(3, (int)buffers.size());
 		if (colorBuffers.size() > 3)
@@ -111,17 +115,17 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void ColorBuffer::init(unsigned int width, unsigned int height,
+	void ColorBuffer::init(Resolution resolution,
 		ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
 		
-		info.setDimension(width, height);
+		this->resolution = resolution;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glGenFramebuffers(1, &info.fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
+		glGenFramebuffers(1, &fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 		// Create color attachment textures
-		RenderTexture* texture = new RenderTexture(width, height, colorType, wrapMode, filterMode);
+		RenderTexture* texture = new RenderTexture(resolution, colorType, wrapMode, filterMode);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getID(), 0);
 		unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
 		glDrawBuffers(1, attachments);
@@ -142,29 +146,26 @@ namespace geeL {
 		bind();
 		glGenRenderbuffers(1, &rbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, info.currWidth, info.currHeight);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, resolution.getWidth(), resolution.getHeight());
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	}
 
-	void ColorBuffer::resize(ResolutionScale resolution) {
-		info.currWidth = unsigned int(info.baseWidth * resolution);
-		info.currHeight = unsigned int(info.baseHeight * resolution);
+	void ColorBuffer::resize(ResolutionScale scale) {
+		resolution.resize(scale);
 
-		//TODO: make this more orderly
-		glBindTexture(GL_TEXTURE_2D, buffers[0]->getID());
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, info.currWidth, info.currHeight, 0, GL_RGBA, GL_FLOAT, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		for(auto buffer = buffers.begin(); buffer != buffers.end(); buffer++)
+			(*buffer)->resize(resolution);
 
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, info.currWidth, info.currHeight);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, resolution.getWidth(), resolution.getHeight());
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 
 
 	void ColorBuffer::fill(std::function<void()> drawCall) {
-		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
-		glViewport(0, 0, info.currWidth, info.currHeight);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -173,8 +174,8 @@ namespace geeL {
 	}
 
 	void ColorBuffer::fill(Drawer& drawer) {
-		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
-		glViewport(0, 0, info.currWidth, info.currHeight);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -190,7 +191,7 @@ namespace geeL {
 	}
 
 	std::string ColorBuffer::toString() const {
-		std::string s =  "Color buffer " + std::to_string(info.fbo) + "\n";
+		std::string s =  "Color buffer " + std::to_string(fbo) + "\n";
 
 		unsigned int counter = 0;
 		for (auto it = buffers.begin(); it != buffers.end(); it++) {

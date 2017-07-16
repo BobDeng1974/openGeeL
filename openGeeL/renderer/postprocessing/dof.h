@@ -48,7 +48,7 @@ namespace geeL {
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
-		void resizeBlurResolution(float blurResolution);
+		void resizeBlurResolution(ResolutionScale blurResolution);
 		const ResolutionScale& getBlurResolution() const;
 
 		float getAperture() const;

@@ -17,6 +17,8 @@ namespace geeL {
 		int width, height, nrComponents;
 		float* image = stbi_loadf(fileName.c_str(), &width, &height, &nrComponents, 0);
 		
+		setResolution(width, height);
+
 		if (image) {
 			glGenTextures(1, &id);
 			glBindTexture(GL_TEXTURE_2D, id);

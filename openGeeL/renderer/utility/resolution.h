@@ -1,26 +1,9 @@
 #ifndef RENDERRESOLUTION_H
 #define RENDERRESOLUTION_H
 
+#include <string>
+
 namespace geeL {
-
-	//Defines a rendering resolution in absolute pixel size
-	struct Resolution {
-
-	public:
-		Resolution(unsigned int width, unsigned int height);
-
-		unsigned int getWidth() const;
-		unsigned int getHeight() const;
-
-		template<class T>
-		float operator*(T o) const;
-
-	private:
-		unsigned int width, height;
-
-	};
-
-
 
 	//Defines a rendering resolution scale in normalized coordinates (Between 0 and 1)
 	struct ResolutionScale {
@@ -40,8 +23,35 @@ namespace geeL {
 	};
 
 
+	//Defines a rendering resolution in absolute pixel size
+	struct Resolution {
+
+	public:
+		Resolution();
+		Resolution(unsigned int width, unsigned int height);
+		Resolution(const Resolution& resolution, const ResolutionScale& scale);
+
+		unsigned int getWidth() const;
+		unsigned int getHeight() const;
+
+		void resize(ResolutionScale& scale);
+
+		template<class T>
+		float operator*(T o) const;
+
+		std::string toString() const;
+
+	private:
+		unsigned int width, height, baseWidth, baseHeight;
+
+	};
+
+
+	inline Resolution::Resolution() {}
+
 	inline Resolution::Resolution(unsigned int width, unsigned int height) 
-		: width(width), height(height) {}
+		: width(width), height(height), baseWidth(width), baseHeight(height) {}
+
 
 	inline unsigned int Resolution::getWidth() const {
 		return width;
@@ -49,6 +59,11 @@ namespace geeL {
 
 	inline unsigned int Resolution::getHeight() const {
 		return height;
+	}
+
+	inline std::string Resolution::toString() const {
+		return "(" + std::to_string(baseWidth) + ", " + std::to_string(baseHeight) + ") -> (" 
+			+ std::to_string(width) + ", " + std::to_string(height) + ")";
 	}
 
 	template<class T>
@@ -90,6 +105,14 @@ namespace geeL {
 		return scale * o;
 	}
 
+	inline Resolution::Resolution(const Resolution& resolution, const ResolutionScale& scale)
+		: width(unsigned int(resolution.getWidth() * scale)), height(unsigned int(resolution.getHeight() * scale)), 
+			baseWidth(resolution.getWidth()), baseHeight(resolution.getHeight()) {}
+
+	inline void Resolution::resize(ResolutionScale& scale) {
+		width = unsigned int(baseWidth * scale);
+		height = unsigned int(baseHeight * scale);
+	}
 
 }
 

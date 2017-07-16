@@ -73,7 +73,7 @@ namespace geeL {
 		for (unsigned int i = 0; i < sampleCount; i++)
 			shader.setVector3("samples[" + to_string(i) + "]", kernel[i]);
 		
-		tempBuffer.init(buffer.getWidth(), buffer.getHeight(), ColorType::Single,
+		tempBuffer.init(buffer.getResolution(), ColorType::Single,
 			FilterMode::None, WrapMode::Repeat);
 		tempBuffer.initDepth();
 

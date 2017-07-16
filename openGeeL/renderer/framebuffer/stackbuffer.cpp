@@ -18,11 +18,11 @@ namespace geeL {
 	}
 
 
-	void StackBufferPingPong::init(unsigned int width, unsigned int height, ColorType colorType, 
+	void StackBufferPingPong::init(Resolution resolution, ColorType colorType,
 		FilterMode filterMode, WrapMode wrapMode) {
 		
-		first.init(width, height, colorType, filterMode, wrapMode);
-		second.init(width, height, colorType, filterMode, wrapMode);
+		first.init(resolution, colorType, filterMode, wrapMode);
+		second.init(resolution, colorType, filterMode, wrapMode);
 	}
 
 	void StackBufferPingPong::bind() const {
@@ -95,16 +95,16 @@ namespace geeL {
 		current = buffers[0];
 	}
 
-	void StackBuffer::init(unsigned int width, unsigned int height, ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
-		info.setDimension(width, height);
+	void StackBuffer::init(Resolution resolution, ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
+		this->resolution = resolution;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glGenFramebuffers(1, &info.fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
+		glGenFramebuffers(1, &fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 		// Create color attachment textures
-		RenderTexture* texture1 = new RenderTexture(width, height, colorType, wrapMode, filterMode);
-		RenderTexture* texture2 = new RenderTexture(width, height, colorType, wrapMode, filterMode);
+		RenderTexture* texture1 = new RenderTexture(resolution, colorType, wrapMode, filterMode);
+		RenderTexture* texture2 = new RenderTexture(resolution, colorType, wrapMode, filterMode);
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture1->getID(), 0);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, texture2->getID(), 0);
@@ -121,12 +121,11 @@ namespace geeL {
 	void StackBuffer::fill(std::function<void()> drawCall) {
 
 		unsigned int id = (current == buffers[0]) ? 0 : 1;
-		
 
-		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, current->getID(), 0);
 		glDrawBuffer(GL_COLOR_ATTACHMENT0 + id);
-		glViewport(0, 0, info.currWidth, info.currHeight);
+		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -139,10 +138,10 @@ namespace geeL {
 	void StackBuffer::fill(Drawer & drawer) {
 		unsigned int id = (current == buffers[0]) ? 0 : 1;
 
-		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, current->getID(), 0);
 		glDrawBuffer(GL_COLOR_ATTACHMENT0 + id);
-		glViewport(0, 0, info.currWidth, info.currHeight);
+		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

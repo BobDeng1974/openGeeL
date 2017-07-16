@@ -12,7 +12,7 @@ namespace geeL {
 		StackBufferPingPong();
 		~StackBufferPingPong();
 
-		void init(unsigned int width, unsigned int height, ColorType colorType = ColorType::RGBA16,
+		void init(Resolution resolution, ColorType colorType = ColorType::RGBA16,
 			FilterMode filterMode = FilterMode::None, WrapMode wrapMode = WrapMode::ClampEdge);
 		
 		//Reset stack order
@@ -53,7 +53,7 @@ namespace geeL {
 	public:
 		void reset();
 
-		void init(unsigned int width, unsigned int height, ColorType colorType = ColorType::RGBA16,
+		void init(Resolution resolution, ColorType colorType = ColorType::RGBA16,
 			FilterMode filterMode = FilterMode::None, WrapMode wrapMode = WrapMode::ClampEdge);
 
 		virtual void fill(std::function<void()> drawCall);

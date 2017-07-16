@@ -27,9 +27,8 @@ namespace geeL {
 		shader.setFloat("samples", samples);
 		shader.setFloat("strength", strength);
 
-		filterBuffer.init(unsigned int(parentBuffer->getWidth() * resolution), unsigned int(parentBuffer->getHeight() * resolution),
+		filterBuffer.init(Resolution(parentBuffer->getResolution(), resolution),
 			ColorType::RGB16, FilterMode::Linear, WrapMode::Repeat);
-
 		filter.init(screen, filterBuffer);
 
 		addImageBuffer(filterBuffer.getTexture(), "brightnessFilter");

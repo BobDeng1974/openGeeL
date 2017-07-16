@@ -8,8 +8,8 @@
 
 namespace geeL {
 
-	RenderWindow::RenderWindow(const char* name, unsigned int width, unsigned int height, WindowMode mode)
-		: name(name), width(width), height(height), debugger(nullptr) {
+	RenderWindow::RenderWindow(const char* name, Resolution resolution, WindowMode mode)
+		: name(name), debugger(nullptr), resolution(resolution) {
 	    
 		glfwInit();
 	    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -26,11 +26,11 @@ namespace geeL {
 		switch (mode) {
 			case WindowMode::Windowed: 
 				glfwWindowHint(GLFW_RESIZABLE, false);
-				glWindow = glfwCreateWindow(width, height, name, nullptr, nullptr);
+				glWindow = glfwCreateWindow(resolution.getWidth(), resolution.getHeight(), name, nullptr, nullptr);
 				break;
 			case WindowMode::ResizableWindow:
 				glfwWindowHint(GLFW_RESIZABLE, true);
-				glWindow = glfwCreateWindow(width, height, name, nullptr, nullptr);
+				glWindow = glfwCreateWindow(resolution.getWidth(), resolution.getHeight(), name, nullptr, nullptr);
 				break;
 			case WindowMode::BorderlessWindow: {
 				auto monitor = glfwGetPrimaryMonitor();
@@ -45,7 +45,7 @@ namespace geeL {
 			}
 				break;
 			case WindowMode::Fullscreen:
-				glWindow = glfwCreateWindow(width, height, name, glfwGetPrimaryMonitor(), nullptr);
+				glWindow = glfwCreateWindow(resolution.getWidth(), resolution.getHeight(), name, glfwGetPrimaryMonitor(), nullptr);
 				break;
 		}
 

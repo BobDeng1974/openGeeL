@@ -11,8 +11,6 @@ typedef unsigned int GLuint;
 
 namespace geeL {
 
-	struct FrameBufferInformation;
-	class ColorBuffer;
 	class ColorBuffer;
 	class RenderShader;
 	class ScreenQuad;

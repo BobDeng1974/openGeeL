@@ -1,6 +1,8 @@
 #ifndef RENDERWINDOW_H
 #define RENDERWINDOW_H
 
+#include "utility\resolution.h"
+
 struct GLFWwindow;
 
 namespace geeL {
@@ -22,14 +24,17 @@ namespace geeL {
 	public:
 		GLFWwindow* glWindow;
 		const char* name;
-		unsigned int width, height;
+		const Resolution resolution;
 
-		RenderWindow(const char* name, unsigned int width, unsigned int height, WindowMode mode = WindowMode::Windowed);
+		RenderWindow(const char* name, Resolution resolution, WindowMode mode = WindowMode::Windowed);
 		~RenderWindow();
 
 		void RenderWindow::swapBuffer() const;
 		bool RenderWindow::shouldClose() const;
 		void RenderWindow::close() const;
+
+		unsigned int getWidth() const;
+		unsigned int getHeight() const;
 
 	private:
 		Debugger* debugger;
@@ -38,6 +43,17 @@ namespace geeL {
 		RenderWindow& operator= (const RenderWindow& other) = delete;
 
 	};
+
+
+	inline unsigned int RenderWindow::getWidth() const {
+		return resolution.getWidth();
+	}
+
+	inline unsigned int RenderWindow::getHeight() const {
+		return resolution.getHeight();
+	}
+
+
 }
 
 #endif

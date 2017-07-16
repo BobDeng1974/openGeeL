@@ -58,8 +58,7 @@ namespace geeL {
 		geometryPassFunc = [this]() { this->geometryPass(); };
 		lightingPassFunc = [this]() { this->lightingPass(); this->forwardPass(); };
 
-		stackBuffer.init(unsigned int(window->width), unsigned int(window->height),
-			ColorType::RGBA16, FilterMode::None, WrapMode::ClampEdge);
+		stackBuffer.init(window->resolution, ColorType::RGBA16, FilterMode::None, WrapMode::ClampEdge);
 		stackBuffer.initDepth(); 
 
 		screen.init();
@@ -106,7 +105,7 @@ namespace geeL {
 			//SSAO pass
 			if (ssao != nullptr) {
 				ssaoBuffer->fill(*ssao);
-				ColorBuffer::resetSize(window->width, window->height);
+				FrameBuffer::resetSize(window->resolution);
 				renderTime.update(RenderPass::SSAO);
 			}
 
@@ -176,7 +175,7 @@ namespace geeL {
 		//SSAO pass
 		if (ssao != nullptr) {
 			ssaoBuffer->fill(*ssao);
-			FrameBuffer::resetSize(window->width, window->height);
+			FrameBuffer::resetSize(window->resolution);
 		}
 
 		const IFrameBuffer* parent = getParentBuffer();
@@ -205,7 +204,7 @@ namespace geeL {
 			ssao->updateCamera(scene->getCamera());
 		}
 
-		FrameBuffer::resetSize(buffer.getWidth(), buffer.getHeight());
+		buffer.resetSize();
 		buffer.bind();
 
 		//Draw lighting pass and skybox directly into given framebuffer
@@ -250,7 +249,7 @@ namespace geeL {
 		addRequester(*this->ssao);
 
 		ssaoBuffer = new ColorBuffer();
-		ssaoBuffer->init(unsigned int(window->width * ssao.getResolution()), unsigned int(window->height * ssao.getResolution()),
+		ssaoBuffer->init(Resolution(window->resolution, ssao.getResolution()),
 			ColorType::Single, FilterMode::None, WrapMode::ClampEdge);
 
 		ssaoScreen = new ScreenQuad();

@@ -160,16 +160,16 @@ namespace {
 
 
 void SponzaScene::draw() {
-	RenderWindow& window = RenderWindow("Sponza", 1920, 1080, WindowMode::Windowed);
+	RenderWindow& window = RenderWindow("Sponza", Resolution(1920, 1080), WindowMode::Windowed);
 	InputManager& manager = InputManager();
 
 	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	TransformFactory& transFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(-7.36f, 4.76f, -1.75f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
+	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
 
-	GBuffer& gBuffer = GBuffer(window.width, window.height);
+	GBuffer& gBuffer = GBuffer(window.resolution);
 	MaterialFactory& materialFactory = MaterialFactory(gBuffer);
 	MeshFactory& meshFactory = MeshFactory(materialFactory);
 	LightManager& lightManager = LightManager();

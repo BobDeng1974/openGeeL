@@ -150,16 +150,16 @@ namespace {
 
 
 void BedroomScene::draw() {
-	RenderWindow& window = RenderWindow("Bedroom", 1920, 1080, WindowMode::Windowed);
+	RenderWindow& window = RenderWindow("Bedroom", Resolution(1920, 1080), WindowMode::Windowed);
 	InputManager manager;
 
 	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	TransformFactory& transFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(5.4f, 10.0f, -2.9f), vec3(70.f, 50.f, -175.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.width, window.height, 0.1f, 100.f);
+	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
 
-	GBuffer& gBuffer = GBuffer(window.width, window.height);
+	GBuffer& gBuffer = GBuffer(window.resolution);
 	MaterialFactory& materialFactory = MaterialFactory(gBuffer);
 	MeshFactory& meshFactory = MeshFactory(materialFactory);
 	LightManager lightManager;

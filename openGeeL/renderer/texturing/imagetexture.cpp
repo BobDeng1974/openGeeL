@@ -16,6 +16,8 @@ namespace geeL {
 		int imgWidth, imgHeight;
 		unsigned char* image = stbi_load(fileName, &imgWidth, &imgHeight, 0, STBI_rgb_alpha);
 
+		setResolution(imgWidth, imgHeight);
+
 		glGenTextures(1, &id);
 		glBindTexture(GL_TEXTURE_2D, id);
 

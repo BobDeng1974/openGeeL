@@ -19,7 +19,7 @@ namespace geeL {
 	public:
 		ScreenInfo screenInfo;
 
-		GBuffer(unsigned int width, unsigned int height, GBufferContent content = GBufferContent::Default);
+		GBuffer(Resolution resolution, GBufferContent content = GBufferContent::Default);
 		~GBuffer();
 
 		virtual void fill(std::function<void()> drawCall);
@@ -46,8 +46,8 @@ namespace geeL {
 		GBuffer(const GBuffer& other) = delete;
 		GBuffer& operator= (const GBuffer& other) = delete;
 
-		void init(int width, int height);
-		void initTextures(int width, int height);
+		void init(Resolution resolution);
+		void initTextures(Resolution resolution);
 
 	};
 }

@@ -2,6 +2,7 @@
 #define TEXTURE_H
 
 #include "texturetype.h"
+#include "../utility/resolution.h"
 
 namespace geeL {
 
@@ -49,8 +50,17 @@ namespace geeL {
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
 
+		const Resolution& getResolution() const;
+
 	protected:
+		Resolution resolution;
+
 		Texture2D(ColorType colorType) : Texture(colorType) {}
+		Texture2D(ColorType colorType, Resolution resolution) 
+			: Texture(colorType), resolution(resolution) {}
+
+		void setResolution(const Resolution& resolution);
+		void setResolution(unsigned int width, unsigned int height);
 
 	};
 
@@ -96,6 +106,18 @@ namespace geeL {
 
 	inline bool Texture::operator== (const Texture& rhs) const {
 		return getID() == rhs.getID();
+	}
+
+	inline const Resolution& Texture2D::getResolution() const {
+		return resolution;
+	}
+
+	inline void Texture2D::setResolution(const Resolution& resolution) {
+		this->resolution = resolution;
+	}
+
+	inline void Texture2D::setResolution(unsigned int width, unsigned int height) {
+		resolution = Resolution(width, height);
 	}
 
 	inline TextureType Texture2D::getTextureType() const {

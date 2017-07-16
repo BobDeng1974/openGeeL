@@ -27,9 +27,9 @@ namespace geeL {
 
 		shader.setInteger("effectOnly", onlyEffect);
 
-		effectBuffer.init(unsigned int(parentBuffer->getWidth() * effectResolution), unsigned int(parentBuffer->getHeight() * effectResolution),
+		effectBuffer.init(Resolution(parentBuffer->getResolution(), effectResolution),
 			ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
-		blurBuffer.init(unsigned int(parentBuffer->getWidth() * blurResolution), unsigned int(parentBuffer->getHeight() * blurResolution),
+		blurBuffer.init(Resolution(parentBuffer->getResolution(), blurResolution),
 			ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
 
 		effect.init(screen, effectBuffer);
@@ -58,12 +58,9 @@ namespace geeL {
 		bindToScreen();
 	}
 
-	void BlurredPostEffect::resizeEffectResolution(float effectResolution) {
-		if (effectResolution > 0.f && effectResolution < 1.f) {
-			this->effectResolution = effectResolution;
-
-			effectBuffer.resize(effectResolution);
-		}
+	void BlurredPostEffect::resizeEffectResolution(ResolutionScale effectResolution) {
+		this->effectResolution = effectResolution;
+		effectBuffer.resize(effectResolution);
 	}
 
 	const ResolutionScale& BlurredPostEffect::getEffectResolution() const {

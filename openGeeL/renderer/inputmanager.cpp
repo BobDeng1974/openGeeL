@@ -19,8 +19,8 @@ namespace geeL {
 
 	void InputManager::init(const RenderWindow* renderWindow) {
 		window = renderWindow;
-		mouseX = window->width * 0.5f;
-		mouseY = window->height * 0.5f;
+		mouseX = window->getWidth() * 0.5f;
+		mouseY = window->getHeight() * 0.5f;
 		lastX = mouseX;
 		lastY = mouseY;
 		scroll = 0.0;
@@ -149,11 +149,11 @@ namespace geeL {
 	}
 
 	double InputManager::getMouseXNorm() const {
-		return mouseX / (double)window->width;
+		return mouseX / (double)window->getWidth();
 	}
 
 	double InputManager::getMouseYNorm() const {
-		return mouseY / (double)window->height;
+		return mouseY / (double)window->getHeight();
 	}
 
 	double InputManager::getMouseXOffset() const {
