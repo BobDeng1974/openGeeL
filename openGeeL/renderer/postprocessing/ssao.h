@@ -16,7 +16,7 @@ namespace geeL {
 	class SSAO : public PostProcessingEffect, public WorldMapRequester, public CameraRequester {
 
 	public:
-		SSAO(PostProcessingEffect& blur, float radius = 5.f, Resolution resolution = HALFSCREEN);
+		SSAO(PostProcessingEffect& blur, float radius = 5.f, ResolutionScale resolution = HALFSCREEN);
 		SSAO(const SSAO& other);
 		~SSAO();
 
@@ -33,7 +33,7 @@ namespace geeL {
 		float getRadius() const;
 		void setRadius(float radius);
 
-		const Resolution& getResolution() const;
+		const ResolutionScale& getResolution() const;
 
 	protected:
 		virtual void bindValues();
@@ -42,7 +42,7 @@ namespace geeL {
 		bool ssaoPass = false;
 		float radius;
 		unsigned int sampleCount = 32;
-		Resolution resolution;
+		ResolutionScale resolution;
 
 		ImageTexture* noiseTexture;
 		std::vector<glm::vec3> kernel;

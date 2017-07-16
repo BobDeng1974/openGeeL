@@ -1619,7 +1619,7 @@ GLFWAPI void glfwWindowHint(int target, int hint);
  *  rendered at full resolution on Retina displays unless the
  *  `NSHighResolutionCapable` key is enabled in the application bundle's
  *  `Info.plist`.  For more information, see
- *  [High Resolution Guidelines for OS X](https://developer.apple.com/library/mac/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/Explained/Explained.html)
+ *  [High ResolutionScale Guidelines for OS X](https://developer.apple.com/library/mac/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/Explained/Explained.html)
  *  in the Mac Developer Library.  The GLFW test and example programs use
  *  a custom `Info.plist` template for this, which can be found as
  *  `CMake/MacOSXBundleInfo.plist.in` in the source tree.

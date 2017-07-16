@@ -52,7 +52,7 @@ namespace geeL {
 
 
 	DepthOfFieldBlurred::DepthOfFieldBlurred(DepthOfFieldBlur& blur,
-		const float& focalLength, float aperture, float farDistance, Resolution blurResolution)
+		const float& focalLength, float aperture, float farDistance, ResolutionScale blurResolution)
 			: PostProcessingEffect("renderer/postprocessing/dof.frag"), 
 				blur(blur), focalLength(focalLength), aperture(aperture), 
 				farDistance(farDistance), blurResolution(blurResolution) {}
@@ -119,7 +119,7 @@ namespace geeL {
 		}
 	}
 
-	const Resolution& DepthOfFieldBlurred::getBlurResolution() const {
+	const ResolutionScale& DepthOfFieldBlurred::getBlurResolution() const {
 		return blurResolution;
 	}
 

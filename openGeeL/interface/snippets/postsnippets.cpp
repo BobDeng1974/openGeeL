@@ -74,7 +74,7 @@ namespace geeL {
 
 	void BlurredEffectSnippet::draw(GUIContext* context) {
 		
-		const Resolution& oldResolution = effect.getEffectResolution();
+		const ResolutionScale& oldResolution = effect.getEffectResolution();
 		float effectResolution = GUISnippets::drawBarFloat(context, 
 			oldResolution.get(), 0.f, 1.f, 0.001f, "Resolution");
 
@@ -146,7 +146,7 @@ namespace geeL {
 
 
 	void BloomSnippet::draw(GUIContext* context) {
-		const Resolution& oldResolution = bloom.getEffectResolution();
+		const ResolutionScale& oldResolution = bloom.getEffectResolution();
 		float effectResolution = GUISnippets::drawBarFloat(context,
 			oldResolution.get(), 0.f, 1.f, 0.001f, "Resolution");
 
@@ -176,7 +176,7 @@ namespace geeL {
 	}
 
 	void DepthOfFieldBlurredSnippet::draw(GUIContext* context) {
-		const Resolution& oldResolution = dof.getBlurResolution();
+		const ResolutionScale& oldResolution = dof.getBlurResolution();
 		float blurResolution = GUISnippets::drawBarFloat(context,
 			oldResolution.get(), 0.f, 1.f, 0.001f, "Resolution");
 
