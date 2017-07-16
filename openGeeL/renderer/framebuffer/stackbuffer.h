@@ -5,11 +5,12 @@
 
 namespace geeL {
 
-	class StackBuffer : public ColorBuffer {
+	//Stack buffer that uses two frame buffers to draw images in alternating order
+	class StackBufferPingPong : public ColorBuffer {
 
 	public:
-		StackBuffer();
-		~StackBuffer();
+		StackBufferPingPong();
+		~StackBufferPingPong();
 
 		void init(unsigned int width, unsigned int height, ColorType colorType = ColorType::RGBA16,
 			FilterMode filterMode = FilterMode::None, WrapMode wrapMode = WrapMode::ClampEdge);
@@ -23,7 +24,7 @@ namespace geeL {
 		virtual void fill(std::function<void()> drawCall);
 		virtual void fill(Drawer& drawer);
 
-		virtual void resize(Resolution resolution);
+		virtual void resize(ResolutionScale resolution);
 		virtual void copyDepth(const FrameBuffer& buffer) const;
 
 		const RenderTexture& getTexture(unsigned int position = 0) const;
@@ -35,14 +36,34 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	private:
-		bool toggle;
 		ColorBuffer first, second;
 		ColorBuffer* current;
 
 		void swap();
 
-		StackBuffer(const ColorBuffer& other) = delete;
-		StackBuffer& operator= (const ColorBuffer& other) = delete;
+		StackBufferPingPong(const ColorBuffer& other) = delete;
+		StackBufferPingPong& operator= (const ColorBuffer& other) = delete;
+
+	};
+
+
+	//Stack buffer that uses different textures to draw images in alternating order
+	class StackBuffer : public ColorBuffer {
+
+	public:
+		void reset();
+
+		void init(unsigned int width, unsigned int height, ColorType colorType = ColorType::RGBA16,
+			FilterMode filterMode = FilterMode::None, WrapMode wrapMode = WrapMode::ClampEdge);
+
+		virtual void fill(std::function<void()> drawCall);
+		virtual void fill(Drawer& drawer);
+
+	private:
+		RenderTexture* current;
+
+		void swap();
+
 
 	};
 

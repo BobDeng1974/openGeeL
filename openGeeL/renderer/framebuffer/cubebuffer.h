@@ -18,7 +18,7 @@ namespace geeL {
 		virtual void fill(std::function<void()> drawCall);
 		void fill(std::function<void(unsigned int)> drawCall, unsigned int mipLevel = 0);
 
-		void resize(Resolution resolution);
+		void resize(ResolutionScale resolution);
 
 		virtual std::string toString() const;
 

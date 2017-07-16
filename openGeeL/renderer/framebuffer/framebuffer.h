@@ -103,16 +103,19 @@ namespace geeL {
 		virtual void initDepth();
 
 		virtual void fill(std::function<void()> drawCall);
-		virtual void fill(Drawer& drawer) const;
+		virtual void fill(Drawer& drawer);
 
 		const RenderTexture& getTexture(unsigned int position = 0) const;
-		virtual void resize(Resolution resolution);
+		virtual void resize(ResolutionScale resolution);
 
 		virtual std::string toString() const;
 
+	protected:
+		std::vector<RenderTexture*> buffers;
+
 	private:
 		unsigned int rbo;
-		std::vector<RenderTexture*> buffers;
+		
 
 		ColorBuffer(const ColorBuffer& other) = delete;
 		ColorBuffer& operator= (const ColorBuffer& other) = delete;

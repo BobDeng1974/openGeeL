@@ -56,7 +56,7 @@ namespace geeL {
 		FrameBuffer::unbind();
 	}
 
-	void CubeBuffer::resize(Resolution resolution) {
+	void CubeBuffer::resize(ResolutionScale resolution) {
 		info.currWidth = unsigned int(info.baseWidth * resolution);
 		info.currHeight = unsigned int(info.baseHeight * resolution);
 

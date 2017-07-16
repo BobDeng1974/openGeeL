@@ -147,7 +147,7 @@ namespace geeL {
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	}
 
-	void ColorBuffer::resize(Resolution resolution) {
+	void ColorBuffer::resize(ResolutionScale resolution) {
 		info.currWidth = unsigned int(info.baseWidth * resolution);
 		info.currHeight = unsigned int(info.baseHeight * resolution);
 
@@ -172,7 +172,7 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void ColorBuffer::fill(Drawer& drawer) const {
+	void ColorBuffer::fill(Drawer& drawer) {
 		glBindFramebuffer(GL_FRAMEBUFFER, info.fbo);
 		glViewport(0, 0, info.currWidth, info.currHeight);
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
