@@ -4,7 +4,7 @@
 #include <list>
 #include <vector>
 #include "../primitives/screenquad.h"
-#include "../framebuffer/stackbuffer.h"
+#include "../framebuffer/pingpong.h"
 #include "../utility/worldinformation.h"
 #include "../utility/rendertime.h"
 #include "../renderer.h"
@@ -57,7 +57,7 @@ namespace geeL {
 		std::list<WorldMapRequester*> requester;
 		ScreenQuad screen;
 		GBuffer& gBuffer;
-		StackBuffer stackBuffer;
+		PingPongBuffer stackBuffer;
 		RenderTime renderTime;
 		SceneRender& lighting;
 
