@@ -28,6 +28,7 @@ namespace geeL {
 
 	public:
 		Resolution();
+		Resolution(unsigned int resolution);
 		Resolution(unsigned int width, unsigned int height);
 		Resolution(const Resolution& resolution, const ResolutionScale& scale);
 
@@ -48,6 +49,9 @@ namespace geeL {
 
 
 	inline Resolution::Resolution() {}
+
+	inline Resolution::Resolution(unsigned int resolution)
+		: width(resolution), height(resolution), baseWidth(resolution), baseHeight(resolution) {}
 
 	inline Resolution::Resolution(unsigned int width, unsigned int height) 
 		: width(width), height(height), baseWidth(width), baseHeight(height) {}

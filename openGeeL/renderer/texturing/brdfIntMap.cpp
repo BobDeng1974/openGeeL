@@ -1,14 +1,13 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include "stb_image.h"
 #include "../primitives/screenquad.h"
 #include "../shader/rendershader.h"
-#include "stb_image.h"
 #include "brdfIntMap.h"
 
 namespace geeL {
 
-	BRDFIntegrationMap::BRDFIntegrationMap() : Texture2D(ColorType::None, Resolution(512, 512)) {
-
+	BRDFIntegrationMap::BRDFIntegrationMap() : Texture2D(ColorType::None, Resolution(512)) {
 		RenderShader* shader = new RenderShader("renderer/shaders/screen.vert", "renderer/texturing/brdfIntMap.frag");
 
 		unsigned int resolution = 512;
@@ -31,7 +30,7 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		// then re-configure capture framebuffer object and render screen-space quad with BRDF shader.
+		//Reconfigure capture framebuffer object and render quad with BRDF shader.
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolution, resolution);

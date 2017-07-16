@@ -119,11 +119,9 @@ namespace geeL {
 	}
 
 	void StackBuffer::fill(std::function<void()> drawCall) {
-
 		unsigned int id = (current == buffers[0]) ? 0 : 1;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, current->getID(), 0);
 		glDrawBuffer(GL_COLOR_ATTACHMENT0 + id);
 		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
@@ -139,7 +137,6 @@ namespace geeL {
 		unsigned int id = (current == buffers[0]) ? 0 : 1;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, current->getID(), 0);
 		glDrawBuffer(GL_COLOR_ATTACHMENT0 + id);
 		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
 		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);

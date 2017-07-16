@@ -115,9 +115,7 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void ColorBuffer::init(Resolution resolution,
-		ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
-		
+	void ColorBuffer::init(Resolution resolution, ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
 		this->resolution = resolution;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
