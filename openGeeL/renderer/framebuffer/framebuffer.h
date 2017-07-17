@@ -101,12 +101,9 @@ namespace geeL {
 
 		virtual std::string toString() const;
 
-	protected:
-		std::vector<RenderTexture*> buffers;
-
 	private:
 		unsigned int rbo;
-		
+		std::vector<RenderTexture*> buffers;
 
 		ColorBuffer(const ColorBuffer& other) = delete;
 		ColorBuffer& operator= (const ColorBuffer& other) = delete;

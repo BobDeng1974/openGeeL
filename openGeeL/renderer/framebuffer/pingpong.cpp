@@ -8,20 +8,26 @@ using namespace std;
 
 namespace geeL {
 
+	PingPongBuffer::~PingPongBuffer() {
+		remove();
+
+		if(first != nullptr) delete first;
+		if(second != nullptr) delete second;
+	}
+
+
 	void PingPongBuffer::init(Resolution resolution, ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
 		this->resolution = resolution;
 
 		glGenFramebuffers(1, &fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-		RenderTexture* texture1 = new RenderTexture(resolution, colorType, wrapMode, filterMode);
-		RenderTexture* texture2 = new RenderTexture(resolution, colorType, wrapMode, filterMode);
+		first = new RenderTexture(resolution, colorType, wrapMode, filterMode);
+		second = new RenderTexture(resolution, colorType, wrapMode, filterMode);
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture1->getID(), 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, texture2->getID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, first->getID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, second->getID(), 0);
 
-		buffers.push_back(texture1);
-		buffers.push_back(texture2);
 		reset();
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -31,7 +37,7 @@ namespace geeL {
 	}
 
 	void PingPongBuffer::fill(std::function<void()> drawCall) {
-		unsigned int id = (current == buffers[0]) ? 0 : 1;
+		unsigned int id = (current == first) ? 0 : 1;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glDrawBuffer(GL_COLOR_ATTACHMENT0 + id);
@@ -45,7 +51,7 @@ namespace geeL {
 	}
 
 	void PingPongBuffer::fill(Drawer & drawer) {
-		unsigned int id = (current == buffers[0]) ? 0 : 1;
+		unsigned int id = (current == first) ? 0 : 1;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glDrawBuffer(GL_COLOR_ATTACHMENT0 + id);
@@ -62,6 +68,13 @@ namespace geeL {
 		return current->getResolution();
 	}
 
+	const RenderTexture & PingPongBuffer::getTexture(unsigned int position) const {
+		if (position == 0)
+			return *first;
+		else
+			return *second;
+	}
+
 	void PingPongBuffer::resetSize() const {
 		current->setRenderResolution();
 	}
@@ -71,18 +84,32 @@ namespace geeL {
 	}
 
 	void PingPongBuffer::swap() {
-		if (current == buffers[0])
-			current = buffers[1];
+		if (current == first)
+			current = second;
 		else
-			current = buffers[0];
+			current = first;
 	}
 
-	PingPongBuffer::~PingPongBuffer() {
-		remove();
+	void PingPongBuffer::initDepth() {
+		if (!initialized()) {
+			std::cout << "Color buffer needs to be initialized first before initializing depth\n";
+			return;
+		}
+
+		bind();
+		glGenRenderbuffers(1, &rbo);
+		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, resolution.getWidth(), resolution.getHeight());
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	}
 
 	void PingPongBuffer::reset() {
-		current = buffers[0];
+		current = first;
+	}
+
+	std::string PingPongBuffer::toString() const {
+		return "Ping pong buffer";
 	}
 
 }
