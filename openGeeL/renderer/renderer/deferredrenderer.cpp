@@ -32,7 +32,7 @@ namespace geeL {
 
 	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, SceneRender& lighting,
 		RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer)
-			: Renderer(window, inputManager, context), gBuffer(gBuffer), screen(ScreenQuad()),
+			: Renderer(window, inputManager, context), gBuffer(gBuffer),
 				ssao(nullptr), lighting(lighting), toggle(0) {
 
 		effects.push_back(&def);
@@ -42,9 +42,6 @@ namespace geeL {
 	DeferredRenderer::~DeferredRenderer() {
 		if (ssaoBuffer != nullptr)
 			delete ssaoBuffer;
-
-		if (ssaoScreen != nullptr)
-			delete ssaoScreen;
 	}
 
 
@@ -61,8 +58,9 @@ namespace geeL {
 		stackBuffer.init(window->resolution, ColorType::RGBA16, FilterMode::None, WrapMode::ClampEdge);
 		stackBuffer.initDepth(); 
 
-		screen.init();
 		addRequester(lighting);
+
+		SCREENQUAD.init();
 	}
 
 
@@ -75,7 +73,7 @@ namespace geeL {
 
 
 	void DeferredRenderer::render() {
-		lighting.init(screen, stackBuffer);
+		lighting.init(SCREENQUAD, stackBuffer);
 		scene->updateProbes(); //Draw reflection probes once at beginning
 		initDefaultEffect();
 
@@ -253,9 +251,7 @@ namespace geeL {
 		ssaoBuffer->init(Resolution(window->resolution, ssao.getResolution()),
 			ColorType::Single, FilterMode::None, WrapMode::ClampEdge);
 
-		ssaoScreen = new ScreenQuad();
-		ssaoScreen->init();
-		ssao.init(*ssaoScreen, *ssaoBuffer);
+		ssao.init(SCREENQUAD, *ssaoBuffer);
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {
@@ -315,7 +311,7 @@ namespace geeL {
 			stackBuffer.getTexture(1);
 		
 		effect.setImageBuffer(buffer);
-		effect.init(screen, stackBuffer);
+		effect.init(SCREENQUAD, stackBuffer);
 	}
 
 	void DeferredRenderer::initDefaultEffect() {
@@ -325,7 +321,7 @@ namespace geeL {
 			stackBuffer.getTexture(0);
 
 		effects.front()->setImageBuffer(buffer);
-		effects.front()->init(screen, stackBuffer);
+		effects.front()->init(SCREENQUAD, stackBuffer);
 	}
 
 

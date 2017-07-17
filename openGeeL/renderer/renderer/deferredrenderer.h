@@ -54,14 +54,12 @@ namespace geeL {
 		
 		std::vector<PostProcessingEffect*> effects;
 		std::list<WorldMapRequester*> requester;
-		ScreenQuad screen;
 		GBuffer& gBuffer;
 		PingPongBuffer stackBuffer;
 		RenderTime renderTime;
 		SceneRender& lighting;
 
 		SSAO* ssao;
-		ScreenQuad* ssaoScreen = nullptr;
 		ColorBuffer* ssaoBuffer = nullptr;
 		PostProcessingEffect* isolatedEffect = nullptr;
 
