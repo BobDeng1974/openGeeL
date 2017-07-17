@@ -5,6 +5,7 @@
 #include "../transformation/transform.h"
 #include "../cameras/camera.h"
 #include "../shader/sceneshader.h"
+#include "../utility/viewport.h"
 #include "../scene.h"
 #include "voxeltexture.h"
 
@@ -29,7 +30,7 @@ namespace geeL {
 		texture->clear();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glViewport(0, 0, dimensions, dimensions);
+		Viewport::set(0, 0, dimensions, dimensions);
 
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		glDisable(GL_CULL_FACE);

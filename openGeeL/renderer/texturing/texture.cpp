@@ -2,6 +2,7 @@
 #include <glew.h>
 #include <iostream>
 #include <limits.h>
+#include "../utility/viewport.h"
 #include "texture.h"
 
 namespace geeL {
@@ -141,7 +142,7 @@ namespace geeL {
 	}
 
 	void Texture2D::setRenderResolution() const {
-		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
+		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 	}
 
 	void Texture2D::initWrapMode(WrapMode mode) {

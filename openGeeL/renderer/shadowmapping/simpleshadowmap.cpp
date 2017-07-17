@@ -4,6 +4,7 @@
 #include <gtc/matrix_transform.hpp>
 #include "../cameras/camera.h"
 #include "../utility/screeninfo.h"
+#include "../utility/viewport.h"
 #include "../shader/rendershader.h"
 #include "../transformation/transform.h"
 #include "../lights/spotlight.h"
@@ -180,7 +181,7 @@ namespace geeL {
 		if (resolution == ShadowmapResolution::Adaptive)
 			adaptShadowmap(camera);
 
-		glViewport(0, 0, width, height);
+		Viewport::set(0, 0, width, height);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -284,7 +285,7 @@ namespace geeL {
 		if (resolution == ShadowmapResolution::Adaptive)
 			adaptShadowmap(camera);
 
-		glViewport(0, 0, width, height);
+		Viewport::set(0, 0, width, height);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -366,7 +367,7 @@ namespace geeL {
 		shader.use();
 		shader.setMat4("lightTransform", lightTransform);
 
-		glViewport(0, 0, width, height);
+		Viewport::set(0, 0, width, height);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glClear(GL_DEPTH_BUFFER_BIT);
 

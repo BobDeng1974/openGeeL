@@ -1,6 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "../texturing/rendertexturecube.h"
+#include "../utility/viewport.h"
 #include "cubebuffer.h"
 #include <iostream>
 
@@ -35,7 +36,7 @@ namespace geeL {
 
 		bind();
 		for (unsigned int side = 0; side < 6; side++) {
-			glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
+			Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, texture->getID(), 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -49,7 +50,7 @@ namespace geeL {
 
 		bind();
 		for (unsigned int side = 0; side < 6; side++) {
-			glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
+			Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, texture->getID(), mipLevel);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

@@ -1,8 +1,8 @@
 ﻿#define GLEW_STATIC
 #include <glew.h>
-
 #include <list>
 #include <iostream>
+#include "../utility/viewport.h"
 #include "../renderer.h"
 #include "framebuffer.h"
 
@@ -36,11 +36,11 @@ namespace geeL {
 	}
 
 	void FrameBuffer::resetSize() const {
-		glViewport(0, 0, getResolution().getWidth(), getResolution().getHeight());
+		Viewport::set(0, 0, getResolution().getWidth(), getResolution().getHeight());
 	}
 
 	void FrameBuffer::resetSize(Resolution resolution) {
-		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
+		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 	}
 
 	void FrameBuffer::remove() {

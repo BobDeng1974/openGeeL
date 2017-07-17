@@ -3,6 +3,7 @@
 #include "stb_image.h"
 #include "../primitives/screenquad.h"
 #include "../shader/rendershader.h"
+#include "../utility/viewport.h"
 #include "brdfIntMap.h"
 
 namespace geeL {
@@ -37,7 +38,7 @@ namespace geeL {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, id, 0);
 
 		shader->use();
-		glViewport(0, 0, resolution, resolution);
+		Viewport::set(0, 0, resolution, resolution);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		SCREENQUAD.drawComplete();
 

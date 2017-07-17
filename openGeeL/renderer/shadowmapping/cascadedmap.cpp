@@ -9,6 +9,7 @@
 #include "../shader/rendershader.h"
 #include "../cameras/camera.h"
 #include "../lights/light.h"
+#include "../utility/viewport.h"
 #include "../transformation/transform.h"
 #include "cascadedmap.h"
 #include <iostream>
@@ -98,7 +99,7 @@ namespace geeL {
 			int x = i % 2;
 			int y = i / 2;
 
-			glViewport(x * hWidth, y * hHeight, hWidth, hHeight);
+			Viewport::set(x * hWidth, y * hHeight, hWidth, hHeight);
 			shader.setMat4("lightTransform", shadowMaps[i].lightTransform);
 			renderCall(shader);
 		}

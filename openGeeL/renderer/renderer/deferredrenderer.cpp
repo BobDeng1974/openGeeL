@@ -22,6 +22,7 @@
 #include "../lights/lightmanager.h"
 #include "../../interface/guirenderer.h"
 #include "../lighting/deferredlighting.h"
+#include "../utility/viewport.h"
 #include "deferredrenderer.h"
 
 #define fps 10
@@ -95,6 +96,8 @@ namespace geeL {
 
 			stackBuffer.reset();
 			updateSceneControlObjects();
+
+			Viewport::setForced(0, 0, window->resolution.getWidth(), window->resolution.getHeight());
 
 			//Geometry pass
 			gBuffer.fill(geometryPassFunc);

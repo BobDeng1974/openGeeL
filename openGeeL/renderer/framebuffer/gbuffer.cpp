@@ -3,6 +3,7 @@
 #include <climits>
 #include <iostream>
 #include "../shader/rendershader.h"
+#include "../utility/viewport.h"
 #include "../renderer.h"
 #include "gbuffer.h"
 
@@ -46,7 +47,7 @@ namespace geeL {
 
 	void GBuffer::fill(std::function<void()> drawCall) {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
+		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 		clear();
 
 		drawCall();

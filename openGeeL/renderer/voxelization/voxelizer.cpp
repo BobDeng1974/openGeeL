@@ -8,6 +8,7 @@
 #include "../transformation/transform.h"
 #include "../scene.h"
 #include "../lights/lightmanager.h"
+#include "../utility/viewport.h"
 #include "voxelizer.h"
 
 using namespace glm;
@@ -77,7 +78,7 @@ namespace geeL {
 
 	void Voxelizer::voxelizeScene(bool drawVoxel) const {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glViewport(0, 0, dimensions, dimensions);
+		Viewport::set(0, 0, dimensions, dimensions);
 
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		glDisable(GL_CULL_FACE);

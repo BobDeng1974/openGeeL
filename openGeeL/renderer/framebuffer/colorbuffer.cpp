@@ -3,6 +3,7 @@
 #include <array>
 #include <iostream>
 #include "../renderer.h"
+#include "../utility/viewport.h"
 #include "colorbuffer.h"
 
 using namespace std;
@@ -138,7 +139,7 @@ namespace geeL {
 
 	void ColorBuffer::fill(std::function<void()> drawCall) {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
+		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 		clear();
 
 		drawCall();
@@ -147,7 +148,7 @@ namespace geeL {
 
 	void ColorBuffer::fill(Drawer& drawer) {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
+		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 		clear();
 
 		drawer.draw();

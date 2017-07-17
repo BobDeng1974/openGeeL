@@ -9,6 +9,7 @@
 #include "../utility/rendertime.h"
 #include "splitrenderer.h"
 #include "../window.h"
+#include "../utility/viewport.h"
 #include "../scripting/scenecontrolobject.h"
 #include "../inputmanager.h"
 
@@ -24,7 +25,7 @@ namespace geeL {
 			std::cout << "Failed to initialize GLEW" << std::endl;
 		}
 
-		glViewport(0, 0, window.getWidth(), window.getHeight());
+		Viewport::set(0, 0, window.getWidth(), window.getHeight());
 		glEnable(GL_DEPTH_TEST);
 	}
 
@@ -62,7 +63,7 @@ namespace geeL {
 			Renderer* renderer = pair.first;
 			RenderViewport view = pair.second;
 
-			glViewport(view.x * window->getWidth(), view.y * window->getHeight(), 
+			Viewport::set(view.x * window->getWidth(), view.y * window->getHeight(),
 				view.width * window->getWidth(), view.height * window->getHeight());
 			renderer->draw();
 		}
