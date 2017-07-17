@@ -16,6 +16,7 @@ namespace geeL {
 	PostProcessingEffect::PostProcessingEffect(string vertexPath, string fragmentPath)
 		: shader(RenderShader(vertexPath.c_str(), fragmentPath.c_str())), onlyEffect(false) {}
 
+
 	const Texture& PostProcessingEffect::getImageBuffer() const {
 		return *shader.getMap("image");
 	}

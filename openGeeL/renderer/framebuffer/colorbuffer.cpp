@@ -14,15 +14,22 @@ namespace geeL {
 		remove();
 
 		for (auto it = buffers.begin(); it != buffers.end(); it++) {
-			RenderTexture* texture = *it;
-			texture->remove();
+			bool remove = it->first;
+			RenderTexture* texture = it->second;
 
-			delete texture;
+			//Only remove texture if it was created by this color buffer
+			if (remove) {
+				texture->remove();
+				delete texture;
+			}
 		}
 	}
 
-	void ColorBuffer::init(Resolution resolution, std::vector<RenderTexture*>&& colorBuffers) {
-		buffers = std::move(colorBuffers);
+	void ColorBuffer::init(Resolution resolution, std::vector<RenderTexture*> colorBuffers) {
+		for (auto it = colorBuffers.begin(); it != colorBuffers.end(); it++) {
+			RenderTexture* texture = *it;
+			buffers.push_back(pair<bool, RenderTexture*>(false, texture));
+		}
 
 		this->resolution = resolution;
 
@@ -35,24 +42,26 @@ namespace geeL {
 			std::cout << "Only first 3 textures are used in color buffer\n";
 
 		// Create color attachment textures
-		for (int i = 0; i < amount; i++)
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, buffers[i]->getID(), 0);
+		for (int i = 0; i < amount; i++) {
+			RenderTexture& tex = *buffers[i].second;
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, tex.getID(), 0);
+		}
 
 		switch (amount) {
-		case 1: {
-			GLuint attachments[1] = { GL_COLOR_ATTACHMENT0 };
-			glDrawBuffers(amount, attachments);
-		}
+			case 1: {
+				GLuint attachments[1] = { GL_COLOR_ATTACHMENT0 };
+				glDrawBuffers(amount, attachments);
+				}
 				break;
-		case 2: {
-			GLuint attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-			glDrawBuffers(amount, attachments);
-		}
+			case 2: {
+				GLuint attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+				glDrawBuffers(amount, attachments);
+				}
 				break;
-		case 3: {
-			GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
-			glDrawBuffers(amount, attachments);
-		}
+			case 3: {
+				GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+				glDrawBuffers(amount, attachments);
+				}
 				break;
 		}
 
@@ -63,7 +72,6 @@ namespace geeL {
 	}
 
 	void ColorBuffer::init(Resolution resolution, ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
-		//std::cout << resolution.toString() << "\n";
 		this->resolution = resolution;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -75,8 +83,7 @@ namespace geeL {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getID(), 0);
 		unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
 		glDrawBuffers(1, attachments);
-		buffers.push_back(texture);
-
+		buffers.push_back(pair<bool, RenderTexture*>(true, texture));
 
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -102,8 +109,10 @@ namespace geeL {
 	void ColorBuffer::resize(ResolutionScale scale) {
 		resolution.resize(scale);
 
-		for (auto buffer = buffers.begin(); buffer != buffers.end(); buffer++)
-			(*buffer)->resize(resolution);
+		for (auto buffer = buffers.begin(); buffer != buffers.end(); buffer++) {
+			RenderTexture& texture = *buffer->second;
+			texture.resize(resolution);
+		}
 
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, resolution.getWidth(), resolution.getHeight());
@@ -133,7 +142,7 @@ namespace geeL {
 		if (position >= buffers.size())
 			throw "Committed position out of bounds";
 
-		return *buffers[position];
+		return *buffers[position].second;
 	}
 
 	std::string ColorBuffer::toString() const {
@@ -141,7 +150,7 @@ namespace geeL {
 
 		unsigned int counter = 0;
 		for (auto it = buffers.begin(); it != buffers.end(); it++) {
-			RenderTexture* texture = *it;
+			RenderTexture* texture = it->second;
 
 			std::string line = "--Texture " + std::to_string(counter) + ": " + std::to_string(texture->getID()) + "\n";
 			s += line;
