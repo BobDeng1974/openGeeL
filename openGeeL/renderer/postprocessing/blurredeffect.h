@@ -1,7 +1,7 @@
 #ifndef BLURREDEFFECT_H
 #define BLURREDEFFECT_H
 
-#include "../framebuffer/framebuffer.h"
+#include "../framebuffer/colorbuffer.h"
 #include "postprocessing.h"
 
 namespace geeL {

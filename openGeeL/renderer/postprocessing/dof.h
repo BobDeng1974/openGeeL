@@ -1,7 +1,7 @@
 #ifndef  DOF_H
 #define  DOF_H
 
-#include "../framebuffer/framebuffer.h"
+#include "../framebuffer/colorbuffer.h"
 #include "postprocessing.h"
 #include "../utility/worldinformation.h"
 #include "gaussianblur.h"

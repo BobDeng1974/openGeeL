@@ -4,7 +4,7 @@
 #include <glm.hpp>
 #include <string>
 #include "../utility/worldinformation.h"
-#include "../framebuffer/framebuffer.h"
+#include "../framebuffer/colorbuffer.h"
 #include "postprocessing.h"
 
 namespace geeL {

@@ -1,7 +1,7 @@
 #ifndef GAUSSIANBLUR_H
 #define GAUSSIANBLUR_H
 
-#include "../framebuffer/framebuffer.h"
+#include "../framebuffer/colorbuffer.h"
 #include "../utility/worldinformation.h"
 #include "../utility/linearkernel.h"
 #include "postprocessing.h"
