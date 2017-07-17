@@ -11,6 +11,7 @@
 namespace geeL {
 
 	class BilateralFilter;
+	class RenderTexture;
 
 	//Screen Space Ambient Occlusion Post Effect
 	class SSAO : public PostProcessingEffect, public WorldMapRequester, public CameraRequester {
@@ -51,6 +52,7 @@ namespace geeL {
 
 		ShaderLocation projectionLocation;
 		ColorBuffer tempBuffer;
+		RenderTexture* tempTexture = nullptr;
 		
 	};
 }

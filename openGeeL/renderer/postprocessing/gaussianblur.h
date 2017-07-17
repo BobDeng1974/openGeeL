@@ -8,6 +8,7 @@
 
 namespace geeL {
 
+	class RenderTexture;
 	class SobelFilter;
 	class Texture;
 
@@ -24,9 +25,10 @@ namespace geeL {
 	class GaussianBlurBase : public PostProcessingEffect {
 
 	public:
+		~GaussianBlurBase();
+
 		virtual void setImageBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
-
 
 		std::vector<float> computeKernel(float sigma) const;
 
@@ -49,6 +51,7 @@ namespace geeL {
 		LinearKernel linearKernel;
 		const Texture* mainBuffer;
 		ColorBuffer tempBuffer;
+		RenderTexture* tempTexture = nullptr;
 		ShaderLocation horLocation;
 
 		void bindKernel() const;
@@ -101,6 +104,7 @@ namespace geeL {
 
 	public:
 		SobelBlur(SobelFilter& sobel, float sigma = 1.5f, bool depth = true);
+		~SobelBlur();
 
 		virtual void setImageBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
@@ -117,6 +121,7 @@ namespace geeL {
 		bool depth;
 		SobelFilter& sobel;
 		ColorBuffer sobelBuffer;
+		RenderTexture* sobelTexture = nullptr;
 
 	};
 }

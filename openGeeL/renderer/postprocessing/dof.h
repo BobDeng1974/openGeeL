@@ -8,6 +8,7 @@
 
 namespace geeL {
 
+	class RenderTexture;
 	class ScreenQuad;
 
 	//Special gaussian blur that takes distances between pixels into account
@@ -40,6 +41,7 @@ namespace geeL {
 	public:
 		DepthOfFieldBlurred(DepthOfFieldBlur& blur, const float& focalLength, float aperture = 10.f, 
 			float farDistance = 100.f, ResolutionScale blurResolution = FULLSCREEN);
+		~DepthOfFieldBlurred();
 
 		virtual void setImageBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
@@ -69,6 +71,7 @@ namespace geeL {
 
 		DepthOfFieldBlur& blur;
 		ColorBuffer blurBuffer;
+		RenderTexture* blurTexture = nullptr;
 
 	};
 }

@@ -14,18 +14,15 @@ namespace geeL {
 		remove();
 
 		for (auto it = buffers.begin(); it != buffers.end(); it++) {
-			bool remove = it->first;
-			RenderTexture* texture = it->second;
-
 			//Only remove texture if it was created by this color buffer
-			if (remove) {
-				texture->remove();
+			if (it->first) {
+				RenderTexture* texture = it->second;
 				delete texture;
 			}
 		}
 	}
 
-	void ColorBuffer::init(Resolution resolution, std::vector<RenderTexture*> colorBuffers) {
+	void ColorBuffer::init(Resolution resolution, std::vector<RenderTexture*>& colorBuffers) {
 		for (auto it = colorBuffers.begin(); it != colorBuffers.end(); it++) {
 			RenderTexture* texture = *it;
 			buffers.push_back(pair<bool, RenderTexture*>(false, texture));
@@ -64,6 +61,25 @@ namespace geeL {
 				}
 				break;
 		}
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void ColorBuffer::init(Resolution resolution, RenderTexture& texture) {
+		this->resolution = resolution;
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glGenFramebuffers(1, &fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getID(), 0);
+		unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
+		glDrawBuffers(1, attachments);
+
+		buffers.push_back(pair<bool, RenderTexture*>(false, &texture));
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;

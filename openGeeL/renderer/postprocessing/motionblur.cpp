@@ -79,16 +79,22 @@ namespace geeL {
 		: MotionBlur("renderer/postprocessing/motionblur2.frag", strength, LOD), 
 			velocity(velocity) {}
 
+	MotionBlurPerPixel::~MotionBlurPerPixel() {
+		if (velocityTexture != nullptr) delete velocityTexture;
+	}
+
 
 	void MotionBlurPerPixel::init(ScreenQuad & screen, IFrameBuffer& buffer) {
 		MotionBlur::init(screen, buffer);
 
 		float resolution = 1.f;
-		velocityBuffer.init(Resolution(parentBuffer->getResolution(), resolution),
-			ColorType::RGBA16, FilterMode::Linear, WrapMode::ClampEdge);
+		velocityTexture = new RenderTexture(Resolution(parentBuffer->getResolution(), resolution),
+			ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::Linear);
+
+		velocityBuffer.init(Resolution(parentBuffer->getResolution(), resolution), *velocityTexture);
 		velocity.init(screen, velocityBuffer);
 
-		addImageBuffer(velocityBuffer.getTexture(), "velocity");
+		addImageBuffer(*velocityTexture, "velocity");
 	}
 
 	void MotionBlurPerPixel::bindValues() {
@@ -106,16 +112,22 @@ namespace geeL {
 	VelocityBuffer::VelocityBuffer() 
 		: PostProcessingEffect("renderer/postprocessing/velocity.frag") {}
 
+	VelocityBuffer::~VelocityBuffer() {
+		if (positionTexture != nullptr) delete positionTexture;
+	}
+
 
 	void VelocityBuffer::init(ScreenQuad& screen, IFrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
 		float resolution = 1.f;
-		positionBuffer.init(Resolution(parentBuffer->getResolution(), resolution),
-			ColorType::RGBA16, FilterMode::Linear, WrapMode::ClampEdge);
+		positionTexture = new RenderTexture(Resolution(parentBuffer->getResolution(), resolution),
+			ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::Linear);
+
+		positionBuffer.init(Resolution(parentBuffer->getResolution(), resolution), *positionTexture);
 		prevPositionEffect.init(screen, positionBuffer);
 
-		addImageBuffer(positionBuffer.getTexture(), "previousPosition");
+		addImageBuffer(*positionTexture, "previousPosition");
 	}
 
 	void VelocityBuffer::bindValues() {

@@ -23,6 +23,9 @@ namespace geeL {
 		updateKernel();
 	}
 
+	GaussianBlurBase::~GaussianBlurBase() {
+		if (tempTexture != nullptr) delete tempTexture;
+	}
 
 	void GaussianBlurBase::setImageBuffer(const Texture& texture) {
 		PostProcessingEffect::setImageBuffer(texture);
@@ -33,7 +36,8 @@ namespace geeL {
 	void GaussianBlurBase::init(ScreenQuad& screen, IFrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
-		tempBuffer.init(buffer.getResolution(), ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
+		tempTexture = new RenderTexture(buffer.getResolution(), ColorType::RGB16, WrapMode::ClampEdge, FilterMode::Linear);
+		tempBuffer.init(buffer.getResolution(), *tempTexture);
 
 		bindKernel();
 		horLocation = shader.getLocation("horizontal");
@@ -86,7 +90,7 @@ namespace geeL {
 
 		//2. Draw final image via vertical blurring of the previous (horizontally) blurred image
 		shader.setInteger(horLocation, false);
-		addImageBuffer(tempBuffer.getTexture(), "image");
+		addImageBuffer(*tempTexture, "image");
 
 		parentBuffer->bind();
 	}
@@ -170,6 +174,10 @@ namespace geeL {
 		setKernelsize(7);
 	}
 
+	SobelBlur::~SobelBlur() {
+		if (sobelTexture != nullptr) delete sobelTexture;
+	}
+
 
 	void SobelBlur::setImageBuffer(const Texture& texture) {
 		GaussianBlurBase::setImageBuffer(texture);
@@ -192,10 +200,11 @@ namespace geeL {
 	void SobelBlur::init(ScreenQuad & screen, IFrameBuffer& buffer) {
 		GaussianBlurBase::init(screen, buffer);
 
-		sobelBuffer.init(buffer.getResolution());
+		sobelTexture = new RenderTexture(buffer.getResolution(), ColorType::RGB16, WrapMode::ClampEdge, FilterMode::None);
+		sobelBuffer.init(buffer.getResolution(), *sobelTexture);
 		sobel.init(screen, sobelBuffer);
 
-		addImageBuffer(sobelBuffer.getTexture(), "sobel");
+		addImageBuffer(*sobelTexture, "sobel");
 	}
 
 	void SobelBlur::bindValues() {

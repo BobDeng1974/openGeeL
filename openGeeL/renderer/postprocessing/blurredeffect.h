@@ -6,12 +6,15 @@
 
 namespace geeL {
 
+	class RenderTexture;
+
 	//Wrapper effect that can blur and scale another post processing effect
 	class BlurredPostEffect : public PostProcessingEffect {
 
 	public:
 		BlurredPostEffect(PostProcessingEffect& effect, PostProcessingEffect& blur, 
 			ResolutionScale effectResolution = FULLSCREEN, ResolutionScale blurResolution = FULLSCREEN);
+		~BlurredPostEffect();
 
 		virtual void setImageBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
@@ -30,8 +33,12 @@ namespace geeL {
 		ResolutionScale effectResolution, blurResolution;
 		PostProcessingEffect& effect;
 		PostProcessingEffect& blur;
+
 		ColorBuffer effectBuffer;
 		ColorBuffer blurBuffer;
+
+		RenderTexture* effectTexture = nullptr;
+		RenderTexture* blurTexture = nullptr;
 
 	};
 }

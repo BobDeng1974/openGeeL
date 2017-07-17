@@ -4,6 +4,7 @@
 #include <string>
 #include <glm.hpp>
 #include "../primitives/screenquad.h"
+#include "../texturing/rendertexture.h"
 #include "gaussianblur.h"
 #include "ssao.h"
 
@@ -53,6 +54,8 @@ namespace geeL {
 
 	SSAO::~SSAO() {
 		delete noiseTexture;
+
+		if (tempTexture != nullptr) delete tempTexture;
 	}
 
 	
@@ -74,12 +77,14 @@ namespace geeL {
 		for (unsigned int i = 0; i < sampleCount; i++)
 			shader.setVector3("samples[" + to_string(i) + "]", kernel[i]);
 		
-		tempBuffer.init(buffer.getResolution(), ColorType::Single,
-			FilterMode::None, WrapMode::Repeat);
+		tempTexture = new RenderTexture(buffer.getResolution(), ColorType::Single, 
+			WrapMode::Repeat, FilterMode::None);
+
+		tempBuffer.init(buffer.getResolution(), *tempTexture);
 		tempBuffer.initDepth();
 
 		blur.init(screen, buffer);
-		blur.setImageBuffer(tempBuffer);
+		blur.setImageBuffer(*tempTexture);
 
 		projectionLocation = shader.getLocation("projection");
 	}

@@ -2,6 +2,7 @@
 #include "../transformation/transform.h"
 #include "../cameras/camera.h"
 #include "../texturing/imagetexture.h"
+#include "../texturing/rendertexture.h"
 #include "gaussianblur.h"
 #include "lensflare.h"
 
@@ -12,6 +13,10 @@ namespace geeL {
 	LensFlare::LensFlare(BlurredPostEffect& filter, float scale, float samples, float resolution)
 		: PostProcessingEffect("renderer/postprocessing/lensflare.frag"),
 			filter(filter), resolution(resolution), strength(1.f), scale(scale), samples(samples) {}
+
+	LensFlare::~LensFlare() {
+		if (filterTexture != nullptr) delete filterTexture;
+	}
 
 
 	void LensFlare::setImageBuffer(const Texture& texture) {
@@ -27,11 +32,13 @@ namespace geeL {
 		shader.setFloat("samples", samples);
 		shader.setFloat("strength", strength);
 
-		filterBuffer.init(Resolution(parentBuffer->getResolution(), resolution),
-			ColorType::RGB16, FilterMode::Linear, WrapMode::Repeat);
+		filterTexture = new RenderTexture(Resolution(parentBuffer->getResolution(), resolution),
+			ColorType::RGB16, WrapMode::Repeat, FilterMode::Linear);
+
+		filterBuffer.init(Resolution(parentBuffer->getResolution(), resolution), *filterTexture);
 		filter.init(screen, filterBuffer);
 
-		addImageBuffer(filterBuffer.getTexture(), "brightnessFilter");
+		addImageBuffer(*filterTexture, "brightnessFilter");
 	}
 
 	float LensFlare::getStrength() const {

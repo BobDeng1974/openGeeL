@@ -11,6 +11,7 @@ namespace geeL {
 
 	class Camera;
 	class GaussianBlurBase;
+	class RenderTexture;
 
 
 	//Simple motion blur that blurs in (inverse) direction of camera movement
@@ -47,6 +48,7 @@ namespace geeL {
 
 	public:
 		VelocityBuffer();
+		~VelocityBuffer();
 
 		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
 		virtual void draw();
@@ -60,6 +62,7 @@ namespace geeL {
 		glm::vec3 prevPosition;
 		PassthroughEffect prevPositionEffect;
 		ColorBuffer positionBuffer;
+		RenderTexture* positionTexture = nullptr;
 
 	};
 
@@ -68,6 +71,7 @@ namespace geeL {
 
 	public:
 		MotionBlurPerPixel(VelocityBuffer& velocity, float strength = 0.5f, unsigned int LOD = 15);
+		~MotionBlurPerPixel();
 
 		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
 
@@ -77,6 +81,7 @@ namespace geeL {
 	private:
 		VelocityBuffer& velocity;
 		ColorBuffer velocityBuffer;
+		RenderTexture* velocityTexture = nullptr;
 
 	};
 

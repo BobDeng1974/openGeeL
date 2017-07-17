@@ -1,4 +1,5 @@
 #include "../primitives/screenquad.h"
+#include "../texturing/rendertexture.h"
 #include "../framebuffer/framebuffer.h"
 #include "gaussianblur.h"
 #include "blurredeffect.h"
@@ -15,6 +16,11 @@ namespace geeL {
 		effect.effectOnly(true);
 	}
 
+	BlurredPostEffect::~BlurredPostEffect() {
+		if (effectTexture != nullptr) delete effectTexture;
+		if (blurTexture != nullptr) delete blurTexture;
+	}
+
 
 	void BlurredPostEffect::setImageBuffer(const Texture& texture) {
 		PostProcessingEffect::setImageBuffer(texture);
@@ -27,16 +33,20 @@ namespace geeL {
 
 		shader.setInteger("effectOnly", onlyEffect);
 
-		effectBuffer.init(Resolution(parentBuffer->getResolution(), effectResolution),
-			ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
-		blurBuffer.init(Resolution(parentBuffer->getResolution(), blurResolution),
-			ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
+		effectTexture = new RenderTexture(Resolution(parentBuffer->getResolution(), effectResolution),
+			ColorType::RGB16, WrapMode::ClampEdge, FilterMode::Linear);
+
+		blurTexture = new RenderTexture(Resolution(parentBuffer->getResolution(), blurResolution),
+			ColorType::RGB16, WrapMode::ClampEdge, FilterMode::Linear);
+
+		effectBuffer.init(Resolution(parentBuffer->getResolution(), effectResolution), *effectTexture);
+		blurBuffer.init(Resolution(parentBuffer->getResolution(), blurResolution), *blurTexture);
 
 		effect.init(screen, effectBuffer);
 		blur.init(screen, blurBuffer);
-		blur.setImageBuffer(effectBuffer);
 
-		addImageBuffer(blurBuffer.getTexture(), "image2");
+		blur.setImageBuffer(*effectTexture);
+		addImageBuffer(*blurTexture, "image2");
 	}
 
 

@@ -15,7 +15,12 @@ namespace geeL {
 
 		//Init color buffer with external textures and subsequent drawcalls will fill them
 		//Note: Memory of render textures won't be managed by this color buffer
-		void init(Resolution resolution, std::vector<RenderTexture*> colorBuffers);
+		//Note: It is assumed that given textures will have same dimensions.
+		void init(Resolution resolution, std::vector<RenderTexture*>& colorBuffers);
+
+		//Init color buffer with external texture and subsequent drawcalls will fill it
+		//Note: Memory of render texture won't be managed by this color buffer
+		void init(Resolution resolution, RenderTexture& texture);
 
 		//Init color buffer and create own render textures with given parameters
 		//Note: Memory of these render texture will be managed by this color buffer

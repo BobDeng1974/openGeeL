@@ -1,5 +1,6 @@
 #include "gaussianblur.h"
 #include "../texturing/texture.h"
+#include "../texturing/rendertexture.h"
 #include "../primitives/screenquad.h"
 #include "dof.h"
 
@@ -57,6 +58,10 @@ namespace geeL {
 				blur(blur), focalLength(focalLength), aperture(aperture), 
 				farDistance(farDistance), blurResolution(blurResolution) {}
 
+	DepthOfFieldBlurred::~DepthOfFieldBlurred() {
+		if (blurTexture != nullptr) delete blurTexture;
+	}
+
 
 	void DepthOfFieldBlurred::setImageBuffer(const Texture& texture) {
 		PostProcessingEffect::setImageBuffer(texture);
@@ -76,20 +81,21 @@ namespace geeL {
 		float dist = (focalLength < 0.f || focalLength > 30.f) ? 30.f : focalLength;
 		blur.bindDoFData(dist, aperture, farDistance);
 
-		blurBuffer.init(Resolution(parentBuffer->getResolution(), blurResolution),
-			ColorType::RGB16, FilterMode::Linear, WrapMode::ClampEdge);
+		blurTexture = new RenderTexture(Resolution(parentBuffer->getResolution(), blurResolution),
+			ColorType::RGB16, WrapMode::ClampEdge, FilterMode::Linear);
+
+		blurBuffer.init(Resolution(parentBuffer->getResolution(), blurResolution), *blurTexture);
 
 		blur.init(screen, blurBuffer);
-		addImageBuffer(blurBuffer.getTexture(), "blurredImage");
+		addImageBuffer(*blurTexture, "blurredImage");
 	}
 
 	void DepthOfFieldBlurred::bindValues() {
 		//Clamp focal length with reasonable values
 		float dist = (focalLength < 0.f || focalLength > 30.f) ? 30.f : focalLength;
-
 		shader.setFloat(focalLocation, dist);
+
 		blur.setFocalLength(dist);
-		
 		blurBuffer.fill(blur);
 
 		parentBuffer->resetSize();

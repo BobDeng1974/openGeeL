@@ -10,12 +10,14 @@ namespace geeL {
 
 	class GaussianBlurBase;
 	class ImageTexture;
+	class RenderTexture;
 
 
 	class LensFlare : public PostProcessingEffect, public CameraRequester {
 
 	public:
 		LensFlare(BlurredPostEffect& filter, float scale = 0.5f, float samples = 4.f, float resolution = 1.f);
+		~LensFlare();
 
 		virtual void setImageBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
@@ -39,8 +41,10 @@ namespace geeL {
 	private:
 		glm::vec3 distortion;
 		float strength, scale, samples, resolution;
+
 		BlurredPostEffect& filter;
 		ColorBuffer filterBuffer;
+		RenderTexture* filterTexture = nullptr;
 
 	};
 
