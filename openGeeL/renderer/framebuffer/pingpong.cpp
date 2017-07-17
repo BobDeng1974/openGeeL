@@ -11,13 +11,36 @@ namespace geeL {
 	PingPongBuffer::~PingPongBuffer() {
 		remove();
 
-		if(first != nullptr) delete first;
-		if(second != nullptr) delete second;
+		if (!external) {
+			if (first != nullptr) delete first;
+			if (second != nullptr) delete second;
+		}
+	}
+
+	void PingPongBuffer::init(RenderTexture& texture1, RenderTexture& texture2) {
+		external = true;
+	
+		glGenFramebuffers(1, &fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+		first = &texture1;
+		second = &texture2;
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, first->getID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, second->getID(), 0);
+
+		reset();
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			cout << "ERROR::FRAMEBUFFER:: Pingpong buffer is not complete!" << endl;
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 
 	void PingPongBuffer::init(Resolution resolution, ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
-		this->resolution = resolution;
+		//this->resolution = resolution;
+		external = false;
 
 		glGenFramebuffers(1, &fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -99,7 +122,7 @@ namespace geeL {
 		bind();
 		glGenRenderbuffers(1, &rbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, resolution.getWidth(), resolution.getHeight());
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, getResolution().getWidth(), getResolution().getHeight());
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	}
