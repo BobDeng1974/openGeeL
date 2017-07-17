@@ -182,7 +182,7 @@ void ArthouseScene::draw() {
 	SSAO& ssao = SSAO(blur, 2.f);
 	RenderContext context;
 	DeferredLighting& lighting = DeferredLighting(scene);
-	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer, materialFactory);
+	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer);
 	renderer.addSSAO(ssao);
 
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =

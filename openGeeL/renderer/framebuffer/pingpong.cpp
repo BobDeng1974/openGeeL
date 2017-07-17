@@ -39,7 +39,6 @@ namespace geeL {
 
 
 	void PingPongBuffer::init(Resolution resolution, ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
-		//this->resolution = resolution;
 		external = false;
 
 		glGenFramebuffers(1, &fbo);

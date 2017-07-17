@@ -38,7 +38,7 @@ void RaymarchTest::draw() {
 	DefaultPostProcess& def = DefaultPostProcess(2.f);
 	RenderContext& context = RenderContext();
 	RayMarcher& raymarch = RayMarcher(scene);
-	DeferredRenderer& renderer = DeferredRenderer(window, manager, raymarch, context, def, gBuffer, materialFactory);
+	DeferredRenderer& renderer = DeferredRenderer(window, manager, raymarch, context, def, gBuffer);
 	renderer.setScene(scene);
 
 	renderer.render();

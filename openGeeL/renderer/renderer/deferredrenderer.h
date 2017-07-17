@@ -26,7 +26,7 @@ namespace geeL {
 
 	public:
 		DeferredRenderer(RenderWindow& window, InputManager& inputManager, SceneRender& lighting,
-			RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer, const MaterialFactory& factory);
+			RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer);
 
 		~DeferredRenderer();
 
@@ -52,7 +52,6 @@ namespace geeL {
 	private:
 		int toggle;
 		
-		const MaterialFactory& factory;
 		std::vector<PostProcessingEffect*> effects;
 		std::list<WorldMapRequester*> requester;
 		ScreenQuad screen;

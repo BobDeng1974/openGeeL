@@ -31,10 +31,9 @@ using namespace std;
 namespace geeL {
 
 	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, SceneRender& lighting,
-		RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer, const MaterialFactory& factory)
-			: Renderer(window, inputManager, context),
-				gBuffer(gBuffer), screen(ScreenQuad()), ssao(nullptr), lighting(lighting),
-				toggle(0), factory(factory) {
+		RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer)
+			: Renderer(window, inputManager, context), gBuffer(gBuffer), screen(ScreenQuad()),
+				ssao(nullptr), lighting(lighting), toggle(0) {
 
 		effects.push_back(&def);
 		init();
