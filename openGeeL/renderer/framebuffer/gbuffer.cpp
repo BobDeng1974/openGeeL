@@ -39,7 +39,7 @@ namespace geeL {
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << "\n";
+			std::cout << "ERROR::FRAMEBUFFER:: Gbuffer is not complete!" << "\n";
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}

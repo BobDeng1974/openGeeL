@@ -17,7 +17,7 @@ namespace geeL {
 		this->texture = &texture;
 
 		unsigned int resolution = texture.getResolution();
-		this->resolution = Resolution(resolution, resolution);
+		this->resolution = Resolution(resolution);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
@@ -56,6 +56,7 @@ namespace geeL {
 
 		unbind();
 	}
+
 
 	void CubeBuffer::resize(ResolutionScale scale) {
 		resolution.resize(scale);

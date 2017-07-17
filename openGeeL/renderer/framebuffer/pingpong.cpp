@@ -22,9 +22,10 @@ namespace geeL {
 
 		buffers.push_back(texture1);
 		buffers.push_back(texture2);
+		reset();
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
+			cout << "ERROR::FRAMEBUFFER:: Pingpong buffer is not complete!" << endl;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
@@ -57,6 +58,10 @@ namespace geeL {
 		swap();
 	}
 
+	const Resolution& PingPongBuffer::getResolution() const {
+		return current->getResolution();
+	}
+
 	void PingPongBuffer::resetSize() const {
 		current->setRenderResolution();
 	}
@@ -70,6 +75,10 @@ namespace geeL {
 			current = buffers[1];
 		else
 			current = buffers[0];
+	}
+
+	PingPongBuffer::~PingPongBuffer() {
+		remove();
 	}
 
 	void PingPongBuffer::reset() {

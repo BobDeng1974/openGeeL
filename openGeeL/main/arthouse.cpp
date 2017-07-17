@@ -231,7 +231,7 @@ void ArthouseScene::draw() {
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR();
 	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.6f, 0.6f);
-	renderer.addEffect(ssrrSmooth, ssrr);
+	//renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 	SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
 	GaussianBlurSnippet& blurSnippet = GaussianBlurSnippet(blur4);
@@ -249,7 +249,7 @@ void ArthouseScene::draw() {
 	ImageTexture& starTexture = ImageTexture("resources/textures/starburst3.jpg", ColorType::GammaSpace, WrapMode::ClampEdge, FilterMode::Linear);
 	lensFlare.setStarburstTexture(starTexture);
 	LensFlareSnippet& lensSnippet = LensFlareSnippet(lensFlare);
-	renderer.addEffect(lensFlare);
+	//renderer.addEffect(lensFlare);
 	scene.addRequester(lensFlare);
 	postLister.add(lensSnippet);
 

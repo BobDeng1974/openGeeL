@@ -27,14 +27,16 @@ namespace geeL {
 	}
 
 	void FrameBuffer::copyDepth(const FrameBuffer& buffer) const {
+		const Resolution& res = getResolution();
+
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, buffer.getFBO());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-		glBlitFramebuffer(0, 0, resolution.getWidth(), resolution.getHeight(), 0, 0,
-			resolution.getWidth(), resolution.getHeight(), GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, res.getWidth(), res.getHeight(), 0, 0,
+			res.getWidth(), res.getHeight(), GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	}
 
 	void FrameBuffer::resetSize() const {
-		glViewport(0, 0, resolution.getWidth(), resolution.getHeight());
+		glViewport(0, 0, getResolution().getWidth(), getResolution().getHeight());
 	}
 
 	void FrameBuffer::resetSize(Resolution resolution) {
@@ -57,15 +59,6 @@ namespace geeL {
 	const Resolution& FrameBuffer::getResolution() const {
 		return resolution;
 	}
-
-	unsigned int FrameBuffer::getWidth() const {
-		return resolution.getWidth();
-	}
-
-	unsigned int FrameBuffer::getHeight() const {
-		return resolution.getHeight();
-	}
-
 
 
 	ColorBuffer::~ColorBuffer() {
@@ -121,6 +114,7 @@ namespace geeL {
 	}
 
 	void ColorBuffer::init(Resolution resolution, ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
+		//std::cout << resolution.toString() << "\n";
 		this->resolution = resolution;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -133,6 +127,8 @@ namespace geeL {
 		unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
 		glDrawBuffers(1, attachments);
 		buffers.push_back(texture);
+
+		
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;

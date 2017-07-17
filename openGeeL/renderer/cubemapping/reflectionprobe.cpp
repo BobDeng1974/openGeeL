@@ -50,7 +50,7 @@ namespace geeL {
 	void ReflectionProbe::update() {
 		frameBuffer.init(*texture);
 
-		SimpleCamera cam = SimpleCamera(transform);
+		SimpleCamera& cam = SimpleCamera(transform);
 
 		glm::mat4 projections[] = {
 			perspective(90.0f, 1.0f, 0.1f, width),

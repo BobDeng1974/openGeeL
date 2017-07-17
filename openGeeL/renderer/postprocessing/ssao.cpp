@@ -66,8 +66,9 @@ namespace geeL {
 	void SSAO::init(ScreenQuad& screen, IFrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
-		shader.setFloat("screenWidth", float(buffer.getWidth()));
-		shader.setFloat("screenHeight", float(buffer.getHeight()));
+		const Resolution& res = buffer.getResolution();
+		shader.setFloat("screenWidth", float(res.getWidth()));
+		shader.setFloat("screenHeight", float(res.getHeight()));
 		shader.setFloat("radius", radius);
 
 		for (unsigned int i = 0; i < sampleCount; i++)

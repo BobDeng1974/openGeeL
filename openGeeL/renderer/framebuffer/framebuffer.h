@@ -31,10 +31,7 @@ namespace geeL {
 		virtual void bind() const = 0;
 
 		virtual void resetSize() const = 0;
-
 		virtual const Resolution& getResolution() const = 0;
-		virtual unsigned int getWidth() const = 0;
-		virtual unsigned int getHeight() const = 0;
 
 	protected:
 		IFrameBuffer() {}
@@ -60,14 +57,11 @@ namespace geeL {
 
 		virtual void copyDepth(const FrameBuffer& buffer) const;
 		
+		virtual const Resolution& getResolution() const;
 		virtual void resetSize() const;
 		static void resetSize(Resolution resolution);
 		void remove();
 		
-		virtual const Resolution& getResolution() const;
-		virtual unsigned int getWidth() const;
-		virtual unsigned int getHeight() const;
-
 		virtual bool initialized() const;
 		virtual std::string toString() const = 0;
 
@@ -112,6 +106,7 @@ namespace geeL {
 
 	private:
 		unsigned int rbo;
+		
 
 		ColorBuffer(const ColorBuffer& other) = delete;
 		ColorBuffer& operator= (const ColorBuffer& other) = delete;

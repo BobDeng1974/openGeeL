@@ -37,9 +37,10 @@ namespace geeL {
 	void DefaultPostProcess::init(ScreenQuad& screen, IFrameBuffer& buffer) {
 		PostProcessingEffect::init(screen, buffer);
 
+		const Resolution& res = buffer.getResolution();
 		shader.addMap(*noise, "noiseMap");
 		shader.setVector3("noiseScale",
-			vec3(float(buffer.getWidth()) / 255.f, float(buffer.getHeight()) / 255.f, 0.f));
+			vec3(float(res.getWidth()) / 255.f, float(res.getHeight()) / 255.f, 0.f));
 
 		exposureLocation = shader.setFloat("exposure", exposure);
 	}
