@@ -31,6 +31,7 @@ namespace geeL {
 		std::stack<RenderTexture*> stackBuffer;
 
 		void init();
+		void pop();
 
 		StackBuffer(const StackBuffer& other) = delete;
 		StackBuffer& operator= (const StackBuffer& other) = delete;

@@ -20,6 +20,17 @@ namespace geeL {
 		stackBuffer.push(texture);
 	}
 
+	void StackBuffer::pop() {
+		stackBuffer.pop();
+
+		//Restore render resolution of previous element of stack (If it exists)
+		//This is necessary since drawcall of current element may has set its own resolution
+		if (!stackBuffer.empty()) {
+			RenderTexture* previous = stackBuffer.top();
+			previous->setRenderResolution();
+		}
+	}
+
 	void StackBuffer::init() {
 
 		glGenFramebuffers(1, &fbo);
@@ -33,7 +44,7 @@ namespace geeL {
 	
 	void StackBuffer::fill(std::function<void()> drawCall) {
 		RenderTexture* current = stackBuffer.top();
-
+		
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, current->getID(), 0);
 		current->setRenderResolution();
@@ -42,7 +53,7 @@ namespace geeL {
 		drawCall();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		stackBuffer.pop();
+		pop();
 	}
 
 	void StackBuffer::fill(Drawer& drawer) {
@@ -56,7 +67,7 @@ namespace geeL {
 		drawer.draw();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		stackBuffer.pop();
+		pop();
 	}
 
 

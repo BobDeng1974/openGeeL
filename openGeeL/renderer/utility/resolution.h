@@ -40,6 +40,9 @@ namespace geeL {
 		template<class T>
 		float operator*(T o) const;
 
+		bool operator== (const Resolution& o) const;
+		bool operator!= (const Resolution& o) const;
+
 		std::string toString() const;
 
 	private:
@@ -79,6 +82,14 @@ namespace geeL {
 	template<class T>
 	float operator*(T o, const Resolution& resolution) {
 		return resolution * o;
+	}
+
+	inline bool Resolution::operator== (const Resolution& o) const {
+		return (width == o.width) && (height == o.height);
+	}
+
+	inline bool Resolution::operator!= (const Resolution& o) const {
+		return (width != o.width) || (height != o.height);
 	}
 
 
