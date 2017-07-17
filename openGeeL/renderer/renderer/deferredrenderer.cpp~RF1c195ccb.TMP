@@ -42,9 +42,6 @@ namespace geeL {
 	DeferredRenderer::~DeferredRenderer() {
 		if (ssaoBuffer != nullptr) delete ssaoBuffer;
 		if(ssaoTexture != nullptr) delete ssaoTexture;
-
-		delete texture1;
-		delete texture2;
 	}
 
 
@@ -314,7 +311,9 @@ namespace geeL {
 	void DeferredRenderer::linkImageBuffer(PostProcessingEffect& effect) {
 		//Init all post processing effects with two alternating textures
 		//Current effect will then always read from one and write to the other
-		const Texture& buffer = (effects.size() % 2 == 0) ? *texture1 : *texture2;
+		const Texture& buffer = (effects.size() % 2 == 0) ? 
+			*texture1 : 
+			stackBuffer.getTexture(1);
 		
 		effect.setImageBuffer(buffer);
 		effect.init(SCREENQUAD, stackBuffer);
@@ -322,7 +321,9 @@ namespace geeL {
 
 	void DeferredRenderer::initDefaultEffect() {
 		//Link framebuffer of last added post processing effect to default effect
-		const Texture& buffer = (effects.size() % 2 == 0) ? *texture2 : *texture1;
+		const Texture& buffer = (effects.size() % 2 == 0) ?
+			stackBuffer.getTexture(1) :
+			stackBuffer.getTexture(0);
 
 		effects.front()->setImageBuffer(buffer);
 		effects.front()->init(SCREENQUAD, stackBuffer);
@@ -365,7 +366,7 @@ namespace geeL {
 			isolatedEffect = nullptr;
 		}
 		else {
-			currBuffer = texture2;
+			currBuffer = &stackBuffer.getTexture(1);
 
 			int index = toggle - buffers.size();
 			isolatedEffect = effects[index];

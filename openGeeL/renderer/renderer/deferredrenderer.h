@@ -12,11 +12,12 @@
 namespace geeL {
 
 	class Camera;
+	class DefaultPostProcess;
 	class GBuffer;
+	class MaterialFactory;
+	class RenderTexture;
 	class SceneRender;
 	class SceneCamera;
-	class DefaultPostProcess;
-	class MaterialFactory;
 	class SSAO;
 	class PostProcessingEffect;
 	class Texture;
@@ -54,14 +55,19 @@ namespace geeL {
 		
 		std::vector<PostProcessingEffect*> effects;
 		std::list<WorldMapRequester*> requester;
+
+		RenderTexture* texture1;
+		RenderTexture* texture2;
 		GBuffer& gBuffer;
 		PingPongBuffer stackBuffer;
-		RenderTime renderTime;
-		SceneRender& lighting;
 
+		SceneRender& lighting;
 		SSAO* ssao;
 		ColorBuffer* ssaoBuffer = nullptr;
+		RenderTexture* ssaoTexture = nullptr;
 		PostProcessingEffect* isolatedEffect = nullptr;
+
+		RenderTime renderTime;
 
 		std::function<void()> geometryPassFunc;
 		std::function<void()> lightingPassFunc;
