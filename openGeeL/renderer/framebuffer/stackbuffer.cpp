@@ -16,6 +16,7 @@ namespace geeL {
 		remove();
 	}
 
+
 	void StackBuffer::push(RenderTexture* texture) {
 		stackBuffer.push(texture);
 	}
@@ -31,6 +32,7 @@ namespace geeL {
 		}
 	}
 
+
 	void StackBuffer::init() {
 
 		glGenFramebuffers(1, &fbo);
@@ -41,7 +43,17 @@ namespace geeL {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
+
+	void StackBuffer::initDepth(const Resolution & resolution) {
+		bind();
+		glGenRenderbuffers(1, &rbo);
+		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, resolution.getWidth(), resolution.getHeight());
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	}
 	
+
 	void StackBuffer::fill(std::function<void()> drawCall) {
 		RenderTexture* current = stackBuffer.top();
 		
