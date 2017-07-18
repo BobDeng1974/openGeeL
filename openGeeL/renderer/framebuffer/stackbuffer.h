@@ -18,7 +18,7 @@ namespace geeL {
 		//Note: Memory of render texture will not be managed by this buffer
 		void push(RenderTexture* texture);
 
-		void initDepth(const Resolution& resolution);
+		void initResolution(const Resolution& resolution);
 
 		virtual void fill(std::function<void()> drawCall);
 		virtual void fill(Drawer& drawer);

@@ -34,17 +34,16 @@ namespace geeL {
 
 
 	void StackBuffer::init() {
-
 		glGenFramebuffers(1, &fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void StackBuffer::initDepth(const Resolution & resolution) {
+	void StackBuffer::initResolution(const Resolution& resolution) {
+		this->resolution = resolution;
+
 		bind();
 		glGenRenderbuffers(1, &rbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
@@ -85,9 +84,9 @@ namespace geeL {
 
 	const Resolution& StackBuffer::getResolution() const {
 		if (stackBuffer.empty())
-			throw "Can't provide resolution since stack buffer is empty\n";
+			return resolution;
 
-		stackBuffer.top()->getResolution();
+		return stackBuffer.top()->getResolution();
 	}
 
 	void StackBuffer::resetSize() const {

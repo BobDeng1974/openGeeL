@@ -41,7 +41,6 @@ namespace geeL {
 	}
 
 	DeferredRenderer::~DeferredRenderer() {
-		if (ssaoBuffer != nullptr) delete ssaoBuffer;
 		if(ssaoTexture != nullptr) delete ssaoTexture;
 
 		delete texture1;
@@ -62,11 +61,9 @@ namespace geeL {
 		texture1 = new RenderTexture(window->resolution, ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::None);
 		texture2 = new RenderTexture(window->resolution, ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::None);
 
-		stackBuffer.init(*texture1, *texture2);
-		stackBuffer.initDepth(); 
+		stackBuffer.initResolution(window->resolution);
 
 		addRequester(lighting);
-
 		SCREENQUAD.init();
 	}
 
@@ -80,7 +77,7 @@ namespace geeL {
 
 
 	void DeferredRenderer::render() {
-		lighting.init(SCREENQUAD, stackBuffer);
+		lighting.init(SCREENQUAD, stackBuffer, window->resolution);
 		scene->updateProbes(); //Draw reflection probes once at beginning
 		initDefaultEffect();
 
@@ -94,9 +91,9 @@ namespace geeL {
 			renderTime.reset();
 			glEnable(GL_DEPTH_TEST);
 
-			stackBuffer.reset();
 			updateSceneControlObjects();
 
+			RenderTexture* current = texture1; //Current of alternating textures is stored here
 			Viewport::setForced(0, 0, window->resolution.getWidth(), window->resolution.getHeight());
 
 			//Geometry pass
@@ -111,13 +108,16 @@ namespace geeL {
 
 			//SSAO pass
 			if (ssao != nullptr) {
-				ssaoBuffer->fill(*ssao);
+				stackBuffer.push(ssaoTexture);
+				stackBuffer.fill(*ssao);
 				FrameBuffer::resetSize(window->resolution);
 				renderTime.update(RenderPass::SSAO);
 			}
 
 			//Lighting & forward pass
+			stackBuffer.push(current);
 			stackBuffer.fill(lightingPassFunc);
+
 			renderTime.update(RenderPass::Lighting);
 
 			glClear(GL_COLOR_BUFFER_BIT);
@@ -135,6 +135,8 @@ namespace geeL {
 				//Draw isolated effect
 				isolatedEffect->effectOnly(true);
 				isolatedEffect->setImageBuffer(*texture1);
+
+				stackBuffer.push(texture2);
 				isolatedEffect->fill();
 				
 				def->draw();
@@ -145,9 +147,14 @@ namespace geeL {
 			}
 			//Draw all included post effects
 			else {
+				
 				//Draw all the post processing effects on top of each other.
-				for (auto effect = next(effects.begin()); effect != effects.end(); effect++)
+				for (auto effect = next(effects.begin()); effect != effects.end(); effect++) {
+					current = (current == texture1) ? texture2 : texture1;
+					stackBuffer.push(current);
+
 					(**effect).fill();
+				}
 
 				//FrameBuffer::resetSize(window->resolution);
 				//Draw the last (default) effect to screen.
@@ -182,7 +189,8 @@ namespace geeL {
 
 		//SSAO pass
 		if (ssao != nullptr) {
-			ssaoBuffer->fill(*ssao);
+			stackBuffer.push(ssaoTexture);
+			stackBuffer.fill(*ssao);
 			FrameBuffer::resetSize(window->resolution);
 		}
 
@@ -208,7 +216,8 @@ namespace geeL {
 		//SSAO pass
 		if (ssao != nullptr) {
 			ssao->setCamera(camera);
-			ssaoBuffer->fill(*ssao);
+			stackBuffer.push(ssaoTexture);
+			stackBuffer.fill(*ssao);
 			ssao->updateCamera(scene->getCamera());
 		}
 
@@ -256,13 +265,10 @@ namespace geeL {
 		this->ssao = &ssao;
 		addRequester(*this->ssao);
 
-		ssaoTexture = new RenderTexture(Resolution(window->resolution, ssao.getResolution()),
-			ColorType::Single, WrapMode::ClampEdge, FilterMode::None);
+		Resolution ssaoRes = Resolution(window->resolution, ssao.getResolution());
+		ssaoTexture = new RenderTexture(ssaoRes, ColorType::Single, WrapMode::ClampEdge, FilterMode::None);
 
-		ssaoBuffer = new ColorBuffer();
-		ssaoBuffer->init(Resolution(window->resolution, ssao.getResolution()), *ssaoTexture);
-
-		ssao.init(SCREENQUAD, *ssaoBuffer);
+		ssao.init(SCREENQUAD, stackBuffer, ssaoRes);
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {
@@ -294,6 +300,7 @@ namespace geeL {
 	
 
 	void DeferredRenderer::linkInformation() const {
+
 		//Link world maps to requesting post effects
 		map<WorldMaps, const Texture*> worldMaps;
 		worldMaps[WorldMaps::Diffuse] = &gBuffer.getDiffuse();
@@ -305,7 +312,7 @@ namespace geeL {
 			worldMaps[WorldMaps::Emissivity] = emissivity;
 
 		if(ssao != nullptr)
-			worldMaps[WorldMaps::SSAO] = &ssaoBuffer->getTexture();
+			worldMaps[WorldMaps::SSAO] = ssaoTexture;
 
 		for (auto it = requester.begin(); it != requester.end(); it++) {
 			WorldMapRequester* req = *it;
@@ -320,7 +327,7 @@ namespace geeL {
 		const Texture& buffer = (effects.size() % 2 == 0) ? *texture1 : *texture2;
 		
 		effect.setImageBuffer(buffer);
-		effect.init(SCREENQUAD, stackBuffer);
+		effect.init(SCREENQUAD, stackBuffer, window->resolution);
 	}
 
 	void DeferredRenderer::initDefaultEffect() {
@@ -328,7 +335,7 @@ namespace geeL {
 		const Texture& buffer = (effects.size() % 2 == 0) ? *texture2 : *texture1;
 
 		effects.front()->setImageBuffer(buffer);
-		effects.front()->init(SCREENQUAD, stackBuffer);
+		effects.front()->init(SCREENQUAD, stackBuffer, window->resolution);
 	}
 
 
@@ -354,7 +361,7 @@ namespace geeL {
 		if (!emisTex.isEmpty())
 			buffers.push_back(&emisTex);
 		if (ssao != nullptr)
-			buffers.push_back(&ssaoBuffer->getTexture());
+			buffers.push_back(ssaoTexture);
 
 		//int bufferSize = 4;
 		int max = int(buffers.size() + effects.size());

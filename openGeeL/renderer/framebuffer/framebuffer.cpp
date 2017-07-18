@@ -60,8 +60,4 @@ namespace geeL {
 		return resolution;
 	}
 
-
-	
-
-	
 }

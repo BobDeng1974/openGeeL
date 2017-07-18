@@ -4,7 +4,7 @@
 #include <list>
 #include <vector>
 #include "../primitives/screenquad.h"
-#include "../framebuffer/pingpong.h"
+#include "../framebuffer/stackbuffer.h"
 #include "../utility/worldinformation.h"
 #include "../utility/rendertime.h"
 #include "../renderer.h"
@@ -59,11 +59,10 @@ namespace geeL {
 		RenderTexture* texture1;
 		RenderTexture* texture2;
 		GBuffer& gBuffer;
-		PingPongBuffer stackBuffer;
+		StackBuffer stackBuffer;
 
 		SceneRender& lighting;
 		SSAO* ssao;
-		ColorBuffer* ssaoBuffer = nullptr;
 		RenderTexture* ssaoTexture = nullptr;
 		PostProcessingEffect* isolatedEffect = nullptr;
 
