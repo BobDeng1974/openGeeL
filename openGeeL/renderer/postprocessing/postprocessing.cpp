@@ -72,4 +72,12 @@ namespace geeL {
 	bool PostProcessingEffect::getEffectOnly() const {
 		return onlyEffect;
 	}
+
+	const Resolution& PostProcessingEffect::getResolution() const {
+		return resolution;
+	}
+
+	void PostProcessingEffect::setResolution(const Resolution& value) {
+		resolution = value;
+	}
 }

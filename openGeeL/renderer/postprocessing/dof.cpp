@@ -120,6 +120,10 @@ namespace geeL {
 
 	void DepthOfFieldBlurred::resizeBlurResolution(ResolutionScale blurResolution) {
 		this->blurResolution = blurResolution;
+
+		Resolution newRes = Resolution(resolution, blurResolution);
+		blur.setResolution(newRes);
+		blurTexture->resize(newRes);
 		blurBuffer.resize(blurResolution);
 	}
 

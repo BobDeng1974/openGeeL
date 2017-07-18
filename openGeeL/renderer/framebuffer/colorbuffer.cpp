@@ -127,10 +127,13 @@ namespace geeL {
 		resolution.resize(scale);
 
 		for (auto buffer = buffers.begin(); buffer != buffers.end(); buffer++) {
-			RenderTexture& texture = *buffer->second;
-			texture.resize(resolution);
+			//Only update texture resolution if it is managed by this color buffer			
+			if (buffer->first) {
+				RenderTexture& texture = *buffer->second;
+				texture.resize(resolution);
+			}
 		}
-
+		
 		if (rbo != 0) {
 			bind();
 			glBindRenderbuffer(GL_RENDERBUFFER, rbo);

@@ -94,9 +94,7 @@ namespace geeL {
 			stackBuffer.top()->setRenderResolution();
 	}
 
-	void StackBuffer::resize(ResolutionScale resolution) {
-		//TODO: implement this
-	}
+	void StackBuffer::resize(ResolutionScale resolution) {}
 
 	std::string StackBuffer::toString() const {
 		return "Stack Buffer";

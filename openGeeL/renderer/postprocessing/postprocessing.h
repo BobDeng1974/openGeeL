@@ -43,6 +43,9 @@ namespace geeL {
 		//Check if effect is currently set for drawing effect only or not
 		virtual bool getEffectOnly() const;
 
+		const Resolution& getResolution() const;
+		void setResolution(const Resolution& value);
+
 	protected:
 		RenderShader shader;
 		ScreenQuad* screen;

@@ -3,6 +3,7 @@
 #include "../framebuffer/framebuffer.h"
 #include "gaussianblur.h"
 #include "blurredeffect.h"
+#include <iostream>
 
 using namespace std;
 
@@ -72,6 +73,10 @@ namespace geeL {
 
 	void BlurredPostEffect::resizeEffectResolution(ResolutionScale effectResolution) {
 		this->effectResolution = effectResolution;
+
+		Resolution newRes = Resolution(resolution, effectResolution);
+		effect.setResolution(newRes);
+		effectTexture->resize(newRes);
 		effectBuffer.resize(effectResolution);
 	}
 
