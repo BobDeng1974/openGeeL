@@ -2,6 +2,7 @@
 #define RENDERRESOLUTION_H
 
 #include <string>
+#include "viewport.h"
 
 namespace geeL {
 
@@ -36,6 +37,7 @@ namespace geeL {
 		unsigned int getHeight() const;
 
 		void resize(ResolutionScale& scale);
+		void setRenderResolution() const;
 
 		template<class T>
 		float operator*(T o) const;
@@ -66,6 +68,10 @@ namespace geeL {
 
 	inline unsigned int Resolution::getHeight() const {
 		return height;
+	}
+
+	inline void Resolution::setRenderResolution() const {
+		Viewport::set(0, 0, width, height);
 	}
 
 	inline std::string Resolution::toString() const {

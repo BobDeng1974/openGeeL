@@ -44,7 +44,7 @@ namespace geeL {
 		~DepthOfFieldBlurred();
 
 		virtual void setImageBuffer(const Texture& texture);
-		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
+		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution);
 
 		virtual void draw();
 

@@ -16,8 +16,8 @@ namespace geeL {
 			lightPosition(lightPosition), samples(samples) {}
 
 
-	void GodRay::init(ScreenQuad& screen, IFrameBuffer& buffer) {
-		PostProcessingEffect::init(screen, buffer);
+	void GodRay::init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution) {
+		PostProcessingEffect::init(screen, buffer, resolution);
 
 		shader.setInteger("samples", samples);
 		shader.setInteger("raysOnly", onlyEffect);

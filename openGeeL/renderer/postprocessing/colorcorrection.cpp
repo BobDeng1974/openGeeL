@@ -11,8 +11,8 @@ namespace geeL {
 		r(red), g(green), b(blue), h(hue), s(saturation), v(brightness) {}
 
 
-	void ColorCorrection::init(ScreenQuad& screen, IFrameBuffer& buffer) {
-		PostProcessingEffect::init(screen, buffer);
+	void ColorCorrection::init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution) {
+		PostProcessingEffect::init(screen, buffer, resolution);
 
 		shader.setFloat("r", r);
 		shader.setFloat("g", g);

@@ -12,7 +12,7 @@ namespace geeL {
 	public:
 		ImageBasedLighting(RenderScene& scene);
 
-		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
+		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution);
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 	protected:

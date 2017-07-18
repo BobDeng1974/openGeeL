@@ -20,7 +20,7 @@ namespace geeL {
 		~LensFlare();
 
 		virtual void setImageBuffer(const Texture& texture);
-		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
+		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution);
 
 		float getStrength() const;
 		float getScale() const;
@@ -40,7 +40,7 @@ namespace geeL {
 
 	private:
 		glm::vec3 distortion;
-		float strength, scale, samples, resolution;
+		float strength, scale, samples, filterResolution;
 
 		BlurredPostEffect& filter;
 		ColorBuffer filterBuffer;

@@ -33,11 +33,11 @@ namespace geeL {
 		mainBuffer = &texture;
 	}
 
-	void GaussianBlurBase::init(ScreenQuad& screen, IFrameBuffer& buffer) {
-		PostProcessingEffect::init(screen, buffer);
+	void GaussianBlurBase::init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution) {
+		PostProcessingEffect::init(screen, buffer, resolution);
 
-		tempTexture = new RenderTexture(buffer.getResolution(), ColorType::RGB16, WrapMode::ClampEdge, FilterMode::Linear);
-		tempBuffer.init(buffer.getResolution(), *tempTexture);
+		tempTexture = new RenderTexture(resolution, ColorType::RGB16, WrapMode::ClampEdge, FilterMode::Linear);
+		tempBuffer.init(resolution, *tempTexture);
 
 		bindKernel();
 		horLocation = shader.getLocation("horizontal");
@@ -139,8 +139,8 @@ namespace geeL {
 		: GaussianBlurBase(shaderPath, sigma), sigma2(factor) {}
 
 
-	void BilateralFilter::init(ScreenQuad& screen, IFrameBuffer& buffer) {
-		GaussianBlurBase::init(screen, buffer);
+	void BilateralFilter::init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution) {
+		GaussianBlurBase::init(screen, buffer, resolution);
 
 		shader.setFloat("sigma", sigma2);
 	}
@@ -197,12 +197,12 @@ namespace geeL {
 		}
 	}
 
-	void SobelBlur::init(ScreenQuad & screen, IFrameBuffer& buffer) {
-		GaussianBlurBase::init(screen, buffer);
+	void SobelBlur::init(ScreenQuad & screen, IFrameBuffer& buffer, const Resolution& resolution) {
+		GaussianBlurBase::init(screen, buffer, resolution);
 
-		sobelTexture = new RenderTexture(buffer.getResolution(), ColorType::RGB16, WrapMode::ClampEdge, FilterMode::None);
-		sobelBuffer.init(buffer.getResolution(), *sobelTexture);
-		sobel.init(screen, sobelBuffer);
+		sobelTexture = new RenderTexture(resolution, ColorType::RGB16, WrapMode::ClampEdge, FilterMode::None);
+		sobelBuffer.init(resolution, *sobelTexture);
+		sobel.init(screen, sobelBuffer, resolution);
 
 		addImageBuffer(*sobelTexture, "sobel");
 	}

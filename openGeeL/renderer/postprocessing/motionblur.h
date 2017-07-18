@@ -20,7 +20,7 @@ namespace geeL {
 	public:
 		MotionBlur(float strength = 0.5f, unsigned int LOD = 15);
 		
-		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
+		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution);
 		
 		float getStrength() const;
 		void  setStrength(float value);
@@ -50,7 +50,7 @@ namespace geeL {
 		VelocityBuffer();
 		~VelocityBuffer();
 
-		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
+		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution);
 		virtual void draw();
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
@@ -73,7 +73,7 @@ namespace geeL {
 		MotionBlurPerPixel(VelocityBuffer& velocity, float strength = 0.5f, unsigned int LOD = 15);
 		~MotionBlurPerPixel();
 
-		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
+		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution);
 
 	protected:
 		virtual void bindValues();

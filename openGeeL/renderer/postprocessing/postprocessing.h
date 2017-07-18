@@ -30,7 +30,7 @@ namespace geeL {
 		virtual void setImageBuffer(const Texture& texture);
 		void addImageBuffer(const Texture& texture, const std::string& name);
 
-		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
+		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution);
 		virtual void draw();
 		void fill();
 
@@ -46,6 +46,7 @@ namespace geeL {
 	protected:
 		RenderShader shader;
 		ScreenQuad* screen;
+		Resolution resolution;
 		bool onlyEffect;
 
 		virtual void bindValues() {}

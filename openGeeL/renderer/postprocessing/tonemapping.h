@@ -11,7 +11,7 @@ namespace geeL {
 	public:
 		ToneMapping(float exposure);
 
-		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer);
+		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution);
 
 	protected:
 		float exposure;

@@ -15,8 +15,8 @@ namespace geeL {
 			stepSize(stepSize), stepGain(stepSizeGain) {}
 
 
-	void SSRR::init(ScreenQuad& screen, IFrameBuffer& buffer) {
-		PostProcessingEffect::init(screen, buffer);
+	void SSRR::init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution) {
+		PostProcessingEffect::init(screen, buffer, resolution);
 
 		shader.setInteger("stepCount", steps);
 		shader.setFloat("stepSize", stepSize);
@@ -80,8 +80,8 @@ namespace geeL {
 		: SSRR("renderer/postprocessing/ssrr2.frag", stepCount, stepSize, stepSizeGain), samples(sampleCount) {}
 
 
-	void MultisampledSSRR::init(ScreenQuad & screen, IFrameBuffer& buffer) {
-		SSRR::init(screen, buffer);
+	void MultisampledSSRR::init(ScreenQuad & screen, IFrameBuffer& buffer, const Resolution& resolution) {
+		SSRR::init(screen, buffer, resolution);
 
 		shader.setInteger("sampleCount", samples);
 	}

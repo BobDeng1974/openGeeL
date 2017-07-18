@@ -28,22 +28,24 @@ namespace geeL {
 		effect.setImageBuffer(texture);
 	}
 
-	void BlurredPostEffect::init(ScreenQuad& screen, IFrameBuffer& buffer) {
-		PostProcessingEffect::init(screen, buffer);
+	void BlurredPostEffect::init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution) {
+		PostProcessingEffect::init(screen, buffer, resolution);
 
 		shader.setInteger("effectOnly", onlyEffect);
 
-		effectTexture = new RenderTexture(Resolution(parentBuffer->getResolution(), effectResolution),
+		Resolution effectRes = Resolution(resolution, effectResolution);
+		effectTexture = new RenderTexture(effectRes,
 			ColorType::RGB16, WrapMode::ClampEdge, FilterMode::Linear);
 
-		blurTexture = new RenderTexture(Resolution(parentBuffer->getResolution(), blurResolution),
+		Resolution blurRes = Resolution(resolution, blurResolution);
+		blurTexture = new RenderTexture(blurRes,
 			ColorType::RGB16, WrapMode::ClampEdge, FilterMode::Linear);
 
-		effectBuffer.init(Resolution(parentBuffer->getResolution(), effectResolution), *effectTexture);
-		blurBuffer.init(Resolution(parentBuffer->getResolution(), blurResolution), *blurTexture);
+		effectBuffer.init(effectRes, *effectTexture);
+		blurBuffer.init(blurRes, *blurTexture);
 
-		effect.init(screen, effectBuffer);
-		blur.init(screen, blurBuffer);
+		effect.init(screen, effectBuffer, effectRes);
+		blur.init(screen, blurBuffer, blurRes);
 
 		blur.setImageBuffer(*effectTexture);
 		addImageBuffer(*blurTexture, "image2");
@@ -54,7 +56,7 @@ namespace geeL {
 		effectBuffer.fill(effect);
 		blurBuffer.fill(blur);
 
-		parentBuffer->resetSize();
+		resolution.setRenderResolution();
 		parentBuffer->bind();
 	}
 

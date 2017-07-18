@@ -12,7 +12,7 @@ namespace geeL {
 
 	LensFlare::LensFlare(BlurredPostEffect& filter, float scale, float samples, float resolution)
 		: PostProcessingEffect("renderer/postprocessing/lensflare.frag"),
-			filter(filter), resolution(resolution), strength(1.f), scale(scale), samples(samples) {}
+			filter(filter), filterResolution(resolution), strength(1.f), scale(scale), samples(samples) {}
 
 	LensFlare::~LensFlare() {
 		if (filterTexture != nullptr) delete filterTexture;
@@ -25,18 +25,19 @@ namespace geeL {
 		filter.setImageBuffer(texture);
 	}
 
-	void LensFlare::init(ScreenQuad& screen, IFrameBuffer& buffer) {
-		PostProcessingEffect::init(screen, buffer);
+	void LensFlare::init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution) {
+		PostProcessingEffect::init(screen, buffer, resolution);
 
 		shader.setFloat("scale", scale);
 		shader.setFloat("samples", samples);
 		shader.setFloat("strength", strength);
 
-		filterTexture = new RenderTexture(Resolution(parentBuffer->getResolution(), resolution),
-			ColorType::RGB16, WrapMode::Repeat, FilterMode::Linear);
+		Resolution filterRes = Resolution(parentBuffer->getResolution(), filterResolution);
+		filterTexture = new RenderTexture(filterRes, ColorType::RGB16, 
+			WrapMode::Repeat, FilterMode::Linear);
 
-		filterBuffer.init(Resolution(parentBuffer->getResolution(), resolution), *filterTexture);
-		filter.init(screen, filterBuffer);
+		filterBuffer.init(filterRes, *filterTexture);
+		filter.init(screen, filterBuffer, filterRes);
 
 		addImageBuffer(*filterTexture, "brightnessFilter");
 	}
@@ -121,7 +122,7 @@ namespace geeL {
 	void LensFlare::bindValues() {
 		filterBuffer.fill(filter);
 
-		parentBuffer->resetSize();
+		resolution.setRenderResolution();
 		parentBuffer->bind();
 		
 		Transform& transform = camera->transform;

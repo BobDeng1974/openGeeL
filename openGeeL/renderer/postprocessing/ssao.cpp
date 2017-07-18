@@ -66,24 +66,21 @@ namespace geeL {
 		}
 	}
 
-	void SSAO::init(ScreenQuad& screen, IFrameBuffer& buffer) {
-		PostProcessingEffect::init(screen, buffer);
+	void SSAO::init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution) {
+		PostProcessingEffect::init(screen, buffer, resolution);
 
-		const Resolution& res = buffer.getResolution();
-		shader.setFloat("screenWidth", float(res.getWidth()));
-		shader.setFloat("screenHeight", float(res.getHeight()));
+		shader.setFloat("screenWidth", float(resolution.getWidth()));
+		shader.setFloat("screenHeight", float(resolution.getHeight()));
 		shader.setFloat("radius", radius);
 
 		for (unsigned int i = 0; i < sampleCount; i++)
 			shader.setVector3("samples[" + to_string(i) + "]", kernel[i]);
 		
-		tempTexture = new RenderTexture(buffer.getResolution(), ColorType::Single, 
-			WrapMode::Repeat, FilterMode::None);
-
-		tempBuffer.init(buffer.getResolution(), *tempTexture);
+		tempTexture = new RenderTexture(resolution, ColorType::Single, WrapMode::Repeat, FilterMode::None);
+		tempBuffer.init(resolution, *tempTexture);
 		tempBuffer.initDepth();
 
-		blur.init(screen, buffer);
+		blur.init(screen, buffer, resolution);
 		blur.setImageBuffer(*tempTexture);
 
 		projectionLocation = shader.getLocation("projection");

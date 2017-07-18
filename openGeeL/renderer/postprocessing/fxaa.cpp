@@ -7,8 +7,8 @@ namespace geeL {
 			blurMin(minColorDiff), fxaaMul(fxaaMul), fxaaMin(fxaaMin), fxaaClamp(fxaaClamp) {}
 
 
-	void FXAA::init(ScreenQuad& screen, IFrameBuffer& buffer) {
-		PostProcessingEffect::init(screen, buffer);
+	void FXAA::init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution) {
+		PostProcessingEffect::init(screen, buffer, resolution);
 
 		shader.setFloat("DIFF_THRESHOLD", blurMin);
 		shader.setFloat("FXAA_REDUCE_MUL", fxaaMul);

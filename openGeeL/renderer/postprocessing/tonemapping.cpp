@@ -9,8 +9,8 @@ namespace geeL {
 		: PostProcessingEffect("renderer/postprocessing/tonemapping.frag"), exposure(exposure) {}
 
 
-	void ToneMapping::init(ScreenQuad& screen, IFrameBuffer& buffer) {
-		PostProcessingEffect::init(screen, buffer);
+	void ToneMapping::init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution) {
+		PostProcessingEffect::init(screen, buffer, resolution);
 
 		shader.setFloat("exposure", exposure);
 	}

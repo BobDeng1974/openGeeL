@@ -15,8 +15,8 @@ namespace geeL {
 		: PostProcessingEffect(shaderPath), strength(strength), LOD(LOD) {}
 
 
-	void MotionBlur::init(ScreenQuad& screen, IFrameBuffer& buffer) {
-		PostProcessingEffect::init(screen, buffer);
+	void MotionBlur::init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution) {
+		PostProcessingEffect::init(screen, buffer, resolution);
 
 		samplesLocation = shader.getLocation("maxSamples");
 		strengthLocation = shader.getLocation("strength");
@@ -84,15 +84,16 @@ namespace geeL {
 	}
 
 
-	void MotionBlurPerPixel::init(ScreenQuad & screen, IFrameBuffer& buffer) {
-		MotionBlur::init(screen, buffer);
+	void MotionBlurPerPixel::init(ScreenQuad & screen, IFrameBuffer& buffer, const Resolution& resolution) {
+		MotionBlur::init(screen, buffer, resolution);
 
-		float resolution = 1.f;
-		velocityTexture = new RenderTexture(Resolution(parentBuffer->getResolution(), resolution),
+		float res = 1.f;
+		Resolution velocityRes = Resolution(parentBuffer->getResolution(), 1.f);
+		velocityTexture = new RenderTexture(velocityRes,
 			ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::Linear);
 
-		velocityBuffer.init(Resolution(parentBuffer->getResolution(), resolution), *velocityTexture);
-		velocity.init(screen, velocityBuffer);
+		velocityBuffer.init(velocityRes, *velocityTexture);
+		velocity.init(screen, velocityBuffer, velocityRes);
 
 		addImageBuffer(*velocityTexture, "velocity");
 	}
@@ -100,7 +101,7 @@ namespace geeL {
 	void MotionBlurPerPixel::bindValues() {
 		velocityBuffer.fill(velocity);
 
-		parentBuffer->resetSize();
+		resolution.setRenderResolution();
 		parentBuffer->bind();
 
 		shader.use();
@@ -117,15 +118,15 @@ namespace geeL {
 	}
 
 
-	void VelocityBuffer::init(ScreenQuad& screen, IFrameBuffer& buffer) {
-		PostProcessingEffect::init(screen, buffer);
+	void VelocityBuffer::init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution) {
+		PostProcessingEffect::init(screen, buffer, resolution);
 
-		float resolution = 1.f;
-		positionTexture = new RenderTexture(Resolution(parentBuffer->getResolution(), resolution),
-			ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::Linear);
+		Resolution positionRes = Resolution(parentBuffer->getResolution(), 1.f);
+		positionTexture = new RenderTexture(positionRes, ColorType::RGBA16, 
+			WrapMode::ClampEdge, FilterMode::Linear);
 
-		positionBuffer.init(Resolution(parentBuffer->getResolution(), resolution), *positionTexture);
-		prevPositionEffect.init(screen, positionBuffer);
+		positionBuffer.init(positionRes, *positionTexture);
+		prevPositionEffect.init(screen, positionBuffer, positionRes);
 
 		addImageBuffer(*positionTexture, "previousPosition");
 	}
@@ -151,7 +152,7 @@ namespace geeL {
 		PostProcessingEffect::draw();
 
 		positionBuffer.fill(prevPositionEffect);
-		parentBuffer->resetSize();
+		resolution.setRenderResolution();
 		parentBuffer->bind();
 	}
 
