@@ -131,9 +131,12 @@ namespace geeL {
 			texture.resize(resolution);
 		}
 
-		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, resolution.getWidth(), resolution.getHeight());
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		if (rbo != 0) {
+			bind();
+			glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, resolution.getWidth(), resolution.getHeight());
+			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		}
 	}
 
 

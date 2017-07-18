@@ -24,7 +24,6 @@ namespace geeL {
 
 		virtual void initDepth();
 		void reset();
-		void swap();
 
 		virtual void fill(std::function<void()> drawCall);
 		virtual void fill(Drawer& drawer);
@@ -44,7 +43,7 @@ namespace geeL {
 		unsigned int rbo;
 		bool external;
 
-		
+		void swap();
 
 		PingPongBuffer(const PingPongBuffer& other) = delete;
 		PingPongBuffer& operator= (const PingPongBuffer& other) = delete;

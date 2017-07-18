@@ -38,7 +38,7 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	private:
-		unsigned int rbo;
+		unsigned int rbo = 0;
 		std::vector<std::pair<bool, RenderTexture*>> buffers;
 
 		ColorBuffer(const ColorBuffer& other) = delete;

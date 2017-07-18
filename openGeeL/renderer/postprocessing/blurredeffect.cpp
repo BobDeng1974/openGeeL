@@ -34,12 +34,12 @@ namespace geeL {
 		shader.setInteger("effectOnly", onlyEffect);
 
 		Resolution effectRes = Resolution(resolution, effectResolution);
-		effectTexture = new RenderTexture(effectRes,
-			ColorType::RGB16, WrapMode::ClampEdge, FilterMode::Linear);
+		effectTexture = new RenderTexture(effectRes, ColorType::RGB16, 
+			WrapMode::ClampEdge, FilterMode::Linear);
 
 		Resolution blurRes = Resolution(resolution, blurResolution);
-		blurTexture = new RenderTexture(blurRes,
-			ColorType::RGB16, WrapMode::ClampEdge, FilterMode::Linear);
+		blurTexture = new RenderTexture(blurRes, ColorType::RGB16, 
+			WrapMode::ClampEdge, FilterMode::Linear);
 
 		effectBuffer.init(effectRes, *effectTexture);
 		blurBuffer.init(blurRes, *blurTexture);
