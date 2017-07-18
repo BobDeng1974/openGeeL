@@ -183,7 +183,7 @@ void ArthouseScene::draw() {
 	RenderContext context;
 	DeferredLighting& lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer);
-	renderer.addSSAO(ssao);
+	//renderer.addSSAO(ssao);
 
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 		[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
@@ -228,10 +228,11 @@ void ArthouseScene::draw() {
 	postLister.add(def);
 	postLister.add(ssao);
 
+	
 	GaussianBlur& blur4 = GaussianBlur();
 	SSRR& ssrr = SSRR();
 	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.6f, 0.6f);
-	//renderer.addEffect(ssrrSmooth, ssrr);
+	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);
 	SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
 	GaussianBlurSnippet& blurSnippet = GaussianBlurSnippet(blur4);
@@ -249,7 +250,7 @@ void ArthouseScene::draw() {
 	ImageTexture& starTexture = ImageTexture("resources/textures/starburst3.jpg", ColorType::GammaSpace, WrapMode::ClampEdge, FilterMode::Linear);
 	lensFlare.setStarburstTexture(starTexture);
 	LensFlareSnippet& lensSnippet = LensFlareSnippet(lensFlare);
-	//renderer.addEffect(lensFlare);
+	renderer.addEffect(lensFlare);
 	scene.addRequester(lensFlare);
 	postLister.add(lensSnippet);
 
@@ -259,13 +260,10 @@ void ArthouseScene::draw() {
 	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.5f);
 	VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 	SobelBlurSnippet& snip = SobelBlurSnippet(sobelBlur);
-	//renderer.addEffect(volSmooth, { &vol, &sobelBlur });
+	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
 	scene.addRequester(vol);
 	postLister.add(volSmooth, lightSnippet, snip);
-
-	GaussianBlur& testBlur = GaussianBlur(KernelSize::Huge, 10.f);
-	renderer.addEffect(testBlur);
-
+	
 	FXAA& fxaa = FXAA();
 	renderer.addEffect(fxaa);
 	postLister.add(fxaa);

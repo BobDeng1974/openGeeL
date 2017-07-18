@@ -42,11 +42,8 @@ namespace geeL {
 		blurTexture = new RenderTexture(blurRes, ColorType::RGB16, 
 			WrapMode::ClampEdge, FilterMode::Linear);
 
-		effectBuffer.init(effectRes, *effectTexture);
-		blurBuffer.init(blurRes, *blurTexture);
-
-		effect.init(screen, effectBuffer, effectRes);
-		blur.init(screen, blurBuffer, blurRes);
+		effect.init(screen, buffer, effectRes);
+		blur.init(screen, buffer, blurRes);
 
 		blur.setImageBuffer(*effectTexture);
 		addImageBuffer(*blurTexture, "image2");
@@ -54,11 +51,12 @@ namespace geeL {
 
 
 	void BlurredPostEffect::bindValues() {
-		effectBuffer.fill(effect);
-		blurBuffer.fill(blur);
+		parentBuffer->add(*effectTexture);
+		parentBuffer->fill(effect);
 
-		resolution.setRenderResolution();
-		parentBuffer->bind();
+		parentBuffer->add(*blurTexture);
+		parentBuffer->fill(blur);
+
 	}
 
 	void BlurredPostEffect::draw() {
@@ -77,7 +75,6 @@ namespace geeL {
 		Resolution newRes = Resolution(resolution, effectResolution);
 		effect.setResolution(newRes);
 		effectTexture->resize(newRes);
-		effectBuffer.resize(effectResolution);
 	}
 
 	const ResolutionScale& BlurredPostEffect::getEffectResolution() const {

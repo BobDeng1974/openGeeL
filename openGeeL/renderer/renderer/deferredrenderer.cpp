@@ -12,7 +12,6 @@
 #include "../texturing/texture.h"
 #include "../texturing/rendertexture.h"
 #include "../texturing/imagetexture.h"
-#include "../framebuffer/colorbuffer.h"
 #include "../framebuffer/gbuffer.h"
 #include "../scripting/scenecontrolobject.h"
 #include "../postprocessing/drawdefault.h"

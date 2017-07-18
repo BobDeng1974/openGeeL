@@ -1,7 +1,6 @@
 #ifndef GAUSSIANBLUR_H
 #define GAUSSIANBLUR_H
 
-#include "../framebuffer/colorbuffer.h"
 #include "../utility/worldinformation.h"
 #include "../utility/linearkernel.h"
 #include "postprocessing.h"
@@ -50,7 +49,6 @@ namespace geeL {
 
 		LinearKernel linearKernel;
 		const Texture* mainBuffer;
-		ColorBuffer tempBuffer;
 		RenderTexture* tempTexture = nullptr;
 		ShaderLocation horLocation;
 
@@ -120,7 +118,6 @@ namespace geeL {
 	private:
 		bool depth;
 		SobelFilter& sobel;
-		ColorBuffer sobelBuffer;
 		RenderTexture* sobelTexture = nullptr;
 
 	};

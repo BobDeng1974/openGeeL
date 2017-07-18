@@ -1,7 +1,6 @@
 #ifndef BLURREDEFFECT_H
 #define BLURREDEFFECT_H
 
-#include "../framebuffer/colorbuffer.h"
 #include "postprocessing.h"
 
 namespace geeL {
@@ -33,9 +32,6 @@ namespace geeL {
 		ResolutionScale effectResolution, blurResolution;
 		PostProcessingEffect& effect;
 		PostProcessingEffect& blur;
-
-		ColorBuffer effectBuffer;
-		ColorBuffer blurBuffer;
 
 		RenderTexture* effectTexture = nullptr;
 		RenderTexture* blurTexture = nullptr;

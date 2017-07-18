@@ -12,14 +12,11 @@ using namespace std;
 
 namespace geeL {
 
-	static unsigned int activeShader = 0;
-	
-
 	bool TextureBinding::operator== (const TextureBinding &rhs) {
 		return *texture == *rhs.texture;
 	}
 
-
+	static unsigned int activeShader = 0;
 	void Shader::use() const {
 		if (program != activeShader) {
 			glUseProgram(program);

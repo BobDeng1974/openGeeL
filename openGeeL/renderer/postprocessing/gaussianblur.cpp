@@ -3,6 +3,7 @@
 #include "../texturing/texture.h"
 #include "../shader/rendershader.h"
 #include "../primitives/screenquad.h"
+#include "../framebuffer/framebuffer.h"
 #include "sobel.h"
 #include "gaussianblur.h"
 #include <iostream>
@@ -36,8 +37,8 @@ namespace geeL {
 	void GaussianBlurBase::init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffect::init(screen, buffer, resolution);
 
-		tempTexture = new RenderTexture(resolution, ColorType::RGB16, WrapMode::ClampEdge, FilterMode::Linear);
-		tempBuffer.init(resolution, *tempTexture);
+		tempTexture = new RenderTexture(resolution, ColorType::RGB16, 
+			WrapMode::ClampEdge, FilterMode::Linear);
 
 		bindKernel();
 		horLocation = shader.getLocation("horizontal");
@@ -83,7 +84,8 @@ namespace geeL {
 		else
 			std::cout << "Buffer for gaussian blur was never set\n";
 		
-		tempBuffer.fill([this]() {
+		parentBuffer->add(*tempTexture);
+		parentBuffer->fill([this]() {
 			bindToScreen();
 		});
 
@@ -200,14 +202,14 @@ namespace geeL {
 		GaussianBlurBase::init(screen, buffer, resolution);
 
 		sobelTexture = new RenderTexture(resolution, ColorType::RGB16, WrapMode::ClampEdge, FilterMode::None);
-		sobelBuffer.init(resolution, *sobelTexture);
-		sobel.init(screen, sobelBuffer, resolution);
+		sobel.init(screen, buffer, resolution);
 
 		addImageBuffer(*sobelTexture, "sobel");
 	}
 
 	void SobelBlur::bindValues() {
-		sobelBuffer.fill(sobel);
+		parentBuffer->add(*sobelTexture);
+		parentBuffer->fill(sobel);
 
 		shader.use();
 		GaussianBlurBase::bindValues();

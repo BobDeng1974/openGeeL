@@ -4,7 +4,6 @@
 #include <glm.hpp>
 #include <string>
 #include "../utility/worldinformation.h"
-#include "../framebuffer/colorbuffer.h"
 #include "postprocessing.h"
 
 namespace geeL {
@@ -61,7 +60,6 @@ namespace geeL {
 	private:
 		glm::vec3 prevPosition;
 		PassthroughEffect prevPositionEffect;
-		ColorBuffer positionBuffer;
 		RenderTexture* positionTexture = nullptr;
 
 	};
@@ -80,7 +78,6 @@ namespace geeL {
 
 	private:
 		VelocityBuffer& velocity;
-		ColorBuffer velocityBuffer;
 		RenderTexture* velocityTexture = nullptr;
 
 	};

@@ -3,6 +3,7 @@
 #include "../cameras/camera.h"
 #include "../texturing/imagetexture.h"
 #include "../texturing/rendertexture.h"
+#include "../framebuffer/framebuffer.h"
 #include "gaussianblur.h"
 #include "lensflare.h"
 
@@ -36,8 +37,7 @@ namespace geeL {
 		filterTexture = new RenderTexture(filterRes, ColorType::RGB16, 
 			WrapMode::Repeat, FilterMode::Linear);
 
-		filterBuffer.init(filterRes, *filterTexture);
-		filter.init(screen, filterBuffer, filterRes);
+		filter.init(screen, buffer, filterRes);
 
 		addImageBuffer(*filterTexture, "brightnessFilter");
 	}
@@ -120,11 +120,9 @@ namespace geeL {
 	);
 
 	void LensFlare::bindValues() {
-		filterBuffer.fill(filter);
+		parentBuffer->add(*filterTexture);
+		parentBuffer->fill(filter);
 
-		resolution.setRenderResolution();
-		parentBuffer->bind();
-		
 		Transform& transform = camera->transform;
 		vec3 camX = transform.getRightDirection(); 
 		vec3 camZ = transform.getForwardDirection();

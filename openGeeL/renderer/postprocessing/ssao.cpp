@@ -59,7 +59,7 @@ namespace geeL {
 	}
 
 	
-	SSAO & SSAO::operator=(const SSAO& other) {
+	SSAO& SSAO::operator=(const SSAO& other) {
 		if (&other != this) {
 			SSAO s(other);
 			*this = std::move(s);

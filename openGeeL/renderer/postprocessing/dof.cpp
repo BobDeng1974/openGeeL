@@ -1,6 +1,7 @@
 #include "gaussianblur.h"
 #include "../texturing/texture.h"
 #include "../texturing/rendertexture.h"
+#include "../framebuffer/framebuffer.h"
 #include "../primitives/screenquad.h"
 #include "dof.h"
 
@@ -85,9 +86,7 @@ namespace geeL {
 		blurTexture = new RenderTexture(blurRes, ColorType::RGB16, 
 			WrapMode::ClampEdge, FilterMode::Linear);
 
-		blurBuffer.init(blurRes, *blurTexture);
-
-		blur.init(screen, blurBuffer, blurRes);
+		blur.init(screen, buffer, blurRes);
 		addImageBuffer(*blurTexture, "blurredImage");
 	}
 
@@ -97,10 +96,9 @@ namespace geeL {
 		shader.setFloat(focalLocation, dist);
 
 		blur.setFocalLength(dist);
-		blurBuffer.fill(blur);
+		parentBuffer->add(*blurTexture);
+		parentBuffer->fill(blur);
 
-		resolution.setRenderResolution();
-		parentBuffer->bind();
 	}
 
 	void DepthOfFieldBlurred::draw() {
@@ -124,7 +122,6 @@ namespace geeL {
 		Resolution newRes = Resolution(resolution, blurResolution);
 		blur.setResolution(newRes);
 		blurTexture->resize(newRes);
-		blurBuffer.resize(blurResolution);
 	}
 
 	const ResolutionScale& DepthOfFieldBlurred::getBlurResolution() const {

@@ -92,17 +92,14 @@ namespace geeL {
 		velocityTexture = new RenderTexture(velocityRes,
 			ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::Linear);
 
-		velocityBuffer.init(velocityRes, *velocityTexture);
-		velocity.init(screen, velocityBuffer, velocityRes);
+		velocity.init(screen, buffer, velocityRes);
 
 		addImageBuffer(*velocityTexture, "velocity");
 	}
 
 	void MotionBlurPerPixel::bindValues() {
-		velocityBuffer.fill(velocity);
-
-		resolution.setRenderResolution();
-		parentBuffer->bind();
+		parentBuffer->add(*velocityTexture);
+		parentBuffer->fill(velocity);
 
 		shader.use();
 		shader.setFloat(strengthLocation, getStrength());
@@ -125,8 +122,7 @@ namespace geeL {
 		positionTexture = new RenderTexture(positionRes, ColorType::RGBA16, 
 			WrapMode::ClampEdge, FilterMode::Linear);
 
-		positionBuffer.init(positionRes, *positionTexture);
-		prevPositionEffect.init(screen, positionBuffer, positionRes);
+		prevPositionEffect.init(screen, buffer, positionRes);
 
 		addImageBuffer(*positionTexture, "previousPosition");
 	}
@@ -151,9 +147,9 @@ namespace geeL {
 	void VelocityBuffer::draw() {
 		PostProcessingEffect::draw();
 
-		positionBuffer.fill(prevPositionEffect);
-		resolution.setRenderResolution();
-		parentBuffer->bind();
+		parentBuffer->add(*positionTexture);
+		parentBuffer->fill(prevPositionEffect);
+
 	}
 
 	void VelocityBuffer::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {

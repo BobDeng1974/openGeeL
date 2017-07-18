@@ -4,7 +4,7 @@
 #include <vector>
 #include <vec3.hpp>
 #include "../texturing/imagetexture.h"
-#include "../framebuffer/framebuffer.h"
+#include "../framebuffer/colorbuffer.h"
 #include "../utility/worldinformation.h"
 #include "postprocessing.h"
 

@@ -43,7 +43,6 @@ namespace geeL {
 		float strength, scale, samples, filterResolution;
 
 		BlurredPostEffect& filter;
-		ColorBuffer filterBuffer;
 		RenderTexture* filterTexture = nullptr;
 
 	};

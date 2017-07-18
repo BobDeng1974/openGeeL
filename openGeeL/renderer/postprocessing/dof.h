@@ -1,7 +1,6 @@
 #ifndef  DOF_H
 #define  DOF_H
 
-#include "../framebuffer/colorbuffer.h"
 #include "postprocessing.h"
 #include "../utility/worldinformation.h"
 #include "gaussianblur.h"
@@ -70,7 +69,6 @@ namespace geeL {
 		ShaderLocation focalLocation;
 
 		DepthOfFieldBlur& blur;
-		ColorBuffer blurBuffer;
 		RenderTexture* blurTexture = nullptr;
 
 	};
