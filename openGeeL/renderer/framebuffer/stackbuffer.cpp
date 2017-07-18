@@ -28,10 +28,12 @@ namespace geeL {
 	void StackBuffer::pop() {
 		stackBuffer.pop();
 
-		//Restore render resolution of previous element of stack (If it exists)
-		//This is necessary since drawcall of current element may has set its own resolution
+		//Restore render settings of previous element of stack (If it exists)
+		//This is necessary since drawcall of current element may has its own settings
 		if (!stackBuffer.empty()) {
 			RenderTexture* previous = stackBuffer.top();
+			bind();
+			bindTexture(*previous);
 			previous->setRenderResolution();
 		}
 	}
@@ -39,10 +41,10 @@ namespace geeL {
 
 	void StackBuffer::init() {
 		glGenFramebuffers(1, &fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		bind();
 		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		unbind();
 	}
 
 	void StackBuffer::initResolution(const Resolution& resolution) {
@@ -60,13 +62,13 @@ namespace geeL {
 	void StackBuffer::fill(std::function<void()> drawCall) {
 		RenderTexture* current = stackBuffer.top();
 		
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, current->getID(), 0);
+		bind();
+		bindTexture(*current);
 		current->setRenderResolution();
 		clear();
 
 		drawCall();
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		if(stackBuffer.size() <= 1) unbind();
 
 		pop();
 	}
@@ -74,17 +76,21 @@ namespace geeL {
 	void StackBuffer::fill(Drawer& drawer) {
 		RenderTexture* current = stackBuffer.top();
 
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, current->getID(), 0);
+		bind();
+		bindTexture(*current);
 		current->setRenderResolution();
 		clear();
 
 		drawer.draw();
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		if (stackBuffer.size() <= 1) unbind();
 
 		pop();
 	}
 
+
+	void StackBuffer::bindTexture(const Texture& texture, unsigned int position) {
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, GL_TEXTURE_2D, texture.getID(), 0);
+	}
 
 	const Resolution& StackBuffer::getResolution() const {
 		if (stackBuffer.empty())

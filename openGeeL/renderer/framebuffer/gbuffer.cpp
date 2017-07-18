@@ -27,7 +27,7 @@ namespace geeL {
 		this->resolution = resolution;
 
 		glGenFramebuffers(1, &fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		bind();
 
 		//Create attachements for all color buffers
 		initTextures(resolution);
@@ -42,11 +42,11 @@ namespace geeL {
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			std::cout << "ERROR::FRAMEBUFFER:: Gbuffer is not complete!" << "\n";
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		unbind();
 	}
 
 	void GBuffer::fill(std::function<void()> drawCall) {
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		bind();
 		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 		clear();
 
@@ -73,8 +73,7 @@ namespace geeL {
 		glReadPixels(resolution.getWidth() - xOffset, resolution.getHeight() - yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
 		screenInfo.BLdepth = (-data[2] < mini) ? maxDistance : -data[2];
 		
-
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		unbind();
 	}
 
 	float GBuffer::getDepth() const {

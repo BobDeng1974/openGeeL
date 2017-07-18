@@ -11,6 +11,7 @@
 #include "../lights/light.h"
 #include "../utility/viewport.h"
 #include "../transformation/transform.h"
+#include "../framebuffer/framebuffer.h"
 #include "cascadedmap.h"
 #include <iostream>
 
@@ -38,13 +39,13 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 		
 		glGenFramebuffers(1, &fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		FrameBuffer::bind(fbo);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ID, 0);
 
 		//Disable writing to color buffer
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		FrameBuffer::unbind();
 
 		setCascades(camera);
 	}
@@ -88,7 +89,7 @@ namespace geeL {
 		if(camera != nullptr)
 			computeLightTransforms(*camera);
 
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+		FrameBuffer::bind(fbo);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ID, 0);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -104,7 +105,7 @@ namespace geeL {
 			renderCall(shader);
 		}
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		FrameBuffer::unbind();
 	}
 
 

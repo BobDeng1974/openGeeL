@@ -37,6 +37,8 @@ namespace geeL {
 		void init();
 		void pop();
 
+		void bindTexture(const Texture& texture, unsigned int position = 0);
+
 		StackBuffer(const StackBuffer& other) = delete;
 		StackBuffer& operator= (const StackBuffer& other) = delete;
 

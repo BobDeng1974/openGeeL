@@ -31,9 +31,8 @@ namespace geeL {
 
 		this->resolution = resolution;
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glGenFramebuffers(1, &fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		bind();
 
 		int amount = min(3, (int)buffers.size());
 		if (colorBuffers.size() > 3)
@@ -66,15 +65,14 @@ namespace geeL {
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		unbind();
 	}
 
 	void ColorBuffer::init(Resolution resolution, RenderTexture& texture) {
 		this->resolution = resolution;
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glGenFramebuffers(1, &fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		bind();
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getID(), 0);
 		unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
@@ -85,15 +83,14 @@ namespace geeL {
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		unbind();
 	}
 
 	void ColorBuffer::init(Resolution resolution, ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
 		this->resolution = resolution;
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glGenFramebuffers(1, &fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		bind();
 
 		// Create color attachment textures
 		RenderTexture* texture = new RenderTexture(resolution, colorType, wrapMode, filterMode);
@@ -106,7 +103,7 @@ namespace geeL {
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		unbind();
 	}
 
 	void ColorBuffer::initDepth() {
@@ -144,21 +141,21 @@ namespace geeL {
 
 
 	void ColorBuffer::fill(std::function<void()> drawCall) {
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		bind();
 		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 		clear();
 
 		drawCall();
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		unbind();
 	}
 
 	void ColorBuffer::fill(Drawer& drawer) {
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		bind();
 		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 		clear();
 
 		drawer.draw();
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		unbind();
 	}
 
 	const RenderTexture& ColorBuffer::getTexture(unsigned int position) const {

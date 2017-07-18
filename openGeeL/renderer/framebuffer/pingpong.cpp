@@ -21,7 +21,7 @@ namespace geeL {
 		external = true;
 	
 		glGenFramebuffers(1, &fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		bind();
 
 		first = &texture1;
 		second = &texture2;
@@ -34,7 +34,7 @@ namespace geeL {
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			cout << "ERROR::FRAMEBUFFER:: Pingpong buffer is not complete!" << endl;
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		unbind();
 	}
 
 
@@ -42,7 +42,7 @@ namespace geeL {
 		external = false;
 
 		glGenFramebuffers(1, &fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		bind();
 
 		first = new RenderTexture(resolution, colorType, wrapMode, filterMode);
 		second = new RenderTexture(resolution, colorType, wrapMode, filterMode);
@@ -55,19 +55,19 @@ namespace geeL {
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			cout << "ERROR::FRAMEBUFFER:: Pingpong buffer is not complete!" << endl;
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		unbind();
 	}
 
 	void PingPongBuffer::fill(std::function<void()> drawCall) {
 		unsigned int id = (current == first) ? 0 : 1;
 
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		bind();
 		glDrawBuffer(GL_COLOR_ATTACHMENT0 + id);
 		current->setRenderResolution();
 		clear();
 
 		drawCall();
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		unbind();
 
 		swap();
 	}
@@ -75,13 +75,13 @@ namespace geeL {
 	void PingPongBuffer::fill(Drawer & drawer) {
 		unsigned int id = (current == first) ? 0 : 1;
 
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		bind();
 		glDrawBuffer(GL_COLOR_ATTACHMENT0 + id);
 		current->setRenderResolution();
 		clear();
 
 		drawer.draw();
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		unbind();
 
 		swap();
 	}

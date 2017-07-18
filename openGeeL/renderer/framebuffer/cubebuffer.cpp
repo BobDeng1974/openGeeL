@@ -16,18 +16,17 @@ namespace geeL {
 		remove();
 	}
 
+
 	void CubeBuffer::init(const TextureCube& texture) {
 		this->texture = &texture;
+		this->resolution = Resolution(texture.getResolution());
 
-		unsigned int resolution = texture.getResolution();
-		this->resolution = Resolution(resolution);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		bind();
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, texture.getResolution(), texture.getResolution());
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		unbind();
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 

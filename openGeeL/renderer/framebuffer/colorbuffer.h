@@ -32,7 +32,7 @@ namespace geeL {
 		virtual void fill(std::function<void()> drawCall);
 		virtual void fill(Drawer& drawer);
 
-		const RenderTexture& getTexture(unsigned int position = 0) const;
+		const RenderTexture& getTexture(unsigned int position) const;
 		virtual void resize(ResolutionScale resolution);
 
 		virtual std::string toString() const;

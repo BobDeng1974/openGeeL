@@ -10,6 +10,7 @@
 #include "../lights/spotlight.h"
 #include "../lights/pointlight.h"
 #include "../lights/directionallight.h"
+#include "../framebuffer/framebuffer.h"
 #include "simpleshadowmap.h"
 #include <iostream>
 
@@ -46,13 +47,13 @@ namespace geeL {
 
 		//Bind depth map to frame buffer (the shadow map)
 		glGenFramebuffers(1, &fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		FrameBuffer::bind(fbo);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id, 0);
 
 		//Disable writes to color buffer
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		FrameBuffer::unbind();
 	}
 
 
@@ -182,12 +183,12 @@ namespace geeL {
 			adaptShadowmap(camera);
 
 		Viewport::set(0, 0, width, height);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		FrameBuffer::bind(fbo);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		renderCall(shader);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		FrameBuffer::unbind();
 	}
 
 	TextureType SimpleSpotLightMap::getTextureType() const {
@@ -260,11 +261,11 @@ namespace geeL {
 
 		//Bind depth map to frame buffer (the shadow map)
 		glGenFramebuffers(1, &fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		FrameBuffer::bind(fbo);
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, id, 0);
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		FrameBuffer::unbind();
 	}
 
 	void SimplePointLightMap::draw(const SceneCamera* const camera,
@@ -286,11 +287,11 @@ namespace geeL {
 			adaptShadowmap(camera);
 
 		Viewport::set(0, 0, width, height);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		FrameBuffer::bind(fbo);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		renderCall(shader);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		FrameBuffer::unbind();
 	}
 
 	void SimplePointLightMap::computeLightTransform() {
@@ -368,11 +369,11 @@ namespace geeL {
 		shader.setMat4("lightTransform", lightTransform);
 
 		Viewport::set(0, 0, width, height);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		FrameBuffer::bind(fbo);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		renderCall(shader);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		FrameBuffer::unbind();
 	}
 
 	TextureType SimpleDirectionalLightMap::getTextureType() const {

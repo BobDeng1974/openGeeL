@@ -24,6 +24,7 @@ namespace geeL {
 
 	public:
 		virtual void add(RenderTexture& texture) {}
+
 		virtual void fill(std::function<void()> drawCall) = 0;
 		virtual void fill(Drawer& drawer) = 0;
 
@@ -52,6 +53,7 @@ namespace geeL {
 		virtual void fill(Drawer& drawer);
 
 		virtual void bind() const;
+		static void bind(unsigned int fbo);
 		static void unbind();
 
 		virtual void copyDepth(const FrameBuffer& buffer) const;
