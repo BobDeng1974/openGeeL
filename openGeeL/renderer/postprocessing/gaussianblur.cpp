@@ -82,11 +82,10 @@ namespace geeL {
 			addImageBuffer(*mainBuffer, "image");
 		else
 			std::cout << "Buffer for gaussian blur was never set\n";
-			
-		tempBuffer.bind();
-		glClear(GL_DEPTH_BUFFER_BIT);
-		bindToScreen();
-
+		
+		tempBuffer.fill([this]() {
+			bindToScreen();
+		});
 
 		//2. Draw final image via vertical blurring of the previous (horizontally) blurred image
 		shader.setInteger(horLocation, false);
