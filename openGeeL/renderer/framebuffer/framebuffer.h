@@ -23,6 +23,7 @@ namespace geeL {
 	class IFrameBuffer {
 
 	public:
+		virtual void add(RenderTexture& texture) {}
 		virtual void fill(std::function<void()> drawCall) = 0;
 		virtual void fill(Drawer& drawer) = 0;
 

@@ -108,14 +108,14 @@ namespace geeL {
 
 			//SSAO pass
 			if (ssao != nullptr) {
-				stackBuffer.push(ssaoTexture);
+				stackBuffer.push(*ssaoTexture);
 				stackBuffer.fill(*ssao);
 				FrameBuffer::resetSize(window->resolution);
 				renderTime.update(RenderPass::SSAO);
 			}
 
 			//Lighting & forward pass
-			stackBuffer.push(current);
+			stackBuffer.push(*current);
 			stackBuffer.fill(lightingPassFunc);
 
 			renderTime.update(RenderPass::Lighting);
@@ -136,7 +136,7 @@ namespace geeL {
 				isolatedEffect->effectOnly(true);
 				isolatedEffect->setImageBuffer(*texture1);
 
-				stackBuffer.push(texture2);
+				stackBuffer.push(*texture2);
 				isolatedEffect->fill();
 				
 				def->draw();
@@ -151,7 +151,7 @@ namespace geeL {
 				//Draw all the post processing effects on top of each other.
 				for (auto effect = next(effects.begin()); effect != effects.end(); effect++) {
 					current = (current == texture1) ? texture2 : texture1;
-					stackBuffer.push(current);
+					stackBuffer.push(*current);
 
 					(**effect).fill();
 				}
@@ -189,7 +189,7 @@ namespace geeL {
 
 		//SSAO pass
 		if (ssao != nullptr) {
-			stackBuffer.push(ssaoTexture);
+			stackBuffer.push(*ssaoTexture);
 			stackBuffer.fill(*ssao);
 			FrameBuffer::resetSize(window->resolution);
 		}
@@ -216,7 +216,7 @@ namespace geeL {
 		//SSAO pass
 		if (ssao != nullptr) {
 			ssao->setCamera(camera);
-			stackBuffer.push(ssaoTexture);
+			stackBuffer.push(*ssaoTexture);
 			stackBuffer.fill(*ssao);
 			ssao->updateCamera(scene->getCamera());
 		}
