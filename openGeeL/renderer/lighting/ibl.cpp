@@ -13,7 +13,7 @@ namespace geeL {
 
 
 	void ImageBasedLighting::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		scene.lightManager.addReflectionProbes(shader);
 		invViewLocation = shader.getLocation("inverseView");

@@ -10,32 +10,32 @@ using namespace std;
 
 namespace geeL {
 
-	PostProcessingEffect::PostProcessingEffect(string fragmentPath)
-		: PostProcessingEffect("renderer/shaders/screen.vert", fragmentPath) {}
+	PostProcessingEffectFS::PostProcessingEffectFS(string fragmentPath)
+		: PostProcessingEffectFS("renderer/shaders/screen.vert", fragmentPath) {}
 
-	PostProcessingEffect::PostProcessingEffect(string vertexPath, string fragmentPath)
+	PostProcessingEffectFS::PostProcessingEffectFS(string vertexPath, string fragmentPath)
 		: shader(RenderShader(vertexPath.c_str(), fragmentPath.c_str())), onlyEffect(false) {}
 
 
-	const Texture& PostProcessingEffect::getImageBuffer() const {
+	const Texture& PostProcessingEffectFS::getImageBuffer() const {
 		return *shader.getMap("image");
 	}
 
-	void PostProcessingEffect::setImageBuffer(const ColorBuffer& buffer) {
+	void PostProcessingEffectFS::setImageBuffer(const ColorBuffer& buffer) {
 		setImageBuffer(buffer.getTexture(0));
 	}
 
-	void PostProcessingEffect::setImageBuffer(const Texture& texture) {
+	void PostProcessingEffectFS::setImageBuffer(const Texture& texture) {
 		shader.addMap(texture, "image");
 	}
 
 
-	void PostProcessingEffect::addImageBuffer(const Texture& texture, const std::string& name) {
+	void PostProcessingEffectFS::addImageBuffer(const Texture& texture, const std::string& name) {
 		shader.addMap(texture, name);
 	}
 
 
-	void PostProcessingEffect::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
+	void PostProcessingEffectFS::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		this->screen = &screen;
 		this->resolution = resolution;
 
@@ -43,41 +43,41 @@ namespace geeL {
 		shader.use();
 	}
 
-	void PostProcessingEffect::draw() {
+	void PostProcessingEffectFS::draw() {
 		shader.use();
 
 		bindValues();
 		bindToScreen();
 	}
 
-	void PostProcessingEffect::fill() {
+	void PostProcessingEffectFS::fill() {
 		if (parentBuffer != nullptr)
 			parentBuffer->fill(*this);
 	}
 
-	void PostProcessingEffect::bindToScreen() {
+	void PostProcessingEffectFS::bindToScreen() {
 		shader.loadMaps();
 		screen->draw();
 	}
 
 
-	string PostProcessingEffect::toString() const {
+	string PostProcessingEffectFS::toString() const {
 		return "Post effect with shader: " + shader.name;
 	}
 
-	void PostProcessingEffect::effectOnly(bool only) {
+	void PostProcessingEffectFS::effectOnly(bool only) {
 		onlyEffect = only;
 	}
 
-	bool PostProcessingEffect::getEffectOnly() const {
+	bool PostProcessingEffectFS::getEffectOnly() const {
 		return onlyEffect;
 	}
 
-	const Resolution& PostProcessingEffect::getResolution() const {
+	const Resolution& PostProcessingEffectFS::getResolution() const {
 		return resolution;
 	}
 
-	void PostProcessingEffect::setResolution(const Resolution& value) {
+	void PostProcessingEffectFS::setResolution(const Resolution& value) {
 		resolution = value;
 	}
 }

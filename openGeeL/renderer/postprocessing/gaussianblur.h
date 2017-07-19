@@ -21,7 +21,7 @@ namespace geeL {
 
 
 	//Two pass gaussian blur
-	class GaussianBlurBase : public PostProcessingEffect {
+	class GaussianBlurBase : public PostProcessingEffectFS {
 
 	public:
 		~GaussianBlurBase();

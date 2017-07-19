@@ -7,12 +7,12 @@
 namespace geeL {
 
 	ColorCorrection::ColorCorrection(float red, float green, float blue, float hue, float saturation, float brightness)
-		: PostProcessingEffect("renderer/postprocessing/colorcorrection.frag"), 
+		: PostProcessingEffectFS("renderer/postprocessing/colorcorrection.frag"), 
 		r(red), g(green), b(blue), h(hue), s(saturation), v(brightness) {}
 
 
 	void ColorCorrection::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		shader.setFloat("r", r);
 		shader.setFloat("g", g);

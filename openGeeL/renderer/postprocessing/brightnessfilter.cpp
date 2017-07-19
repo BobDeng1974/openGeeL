@@ -2,7 +2,7 @@
 
 namespace geeL {
 
-	BrightnessFilter::BrightnessFilter(const std::string& path) : PostProcessingEffect(path) {}
+	BrightnessFilter::BrightnessFilter(const std::string& path) : PostProcessingEffectFS(path) {}
 
 
 	BrightnessFilterCutoff::BrightnessFilterCutoff(float scatter)
@@ -10,7 +10,7 @@ namespace geeL {
 
 
 	void BrightnessFilterCutoff::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		scatterLocation = shader.setFloat("scatter", scatter);
 	}
@@ -33,7 +33,7 @@ namespace geeL {
 
 
 	void BrightnessFilterSmooth::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		shader.setFloat("bias", bias);
 		shader.setFloat("scale", scale);

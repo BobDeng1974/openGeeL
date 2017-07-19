@@ -13,7 +13,7 @@ namespace geeL {
 	class RenderScene;
 
 	//God ray post effect that draws outgoing light shafts into the scene
-	class GodRay : public PostProcessingEffect, public CameraRequester {
+	class GodRay : public PostProcessingEffectFS, public CameraRequester {
 
 	public:
 		GodRay(glm::vec3 lightPosition, unsigned int samples = 20.f);

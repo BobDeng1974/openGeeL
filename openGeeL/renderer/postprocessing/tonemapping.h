@@ -6,7 +6,7 @@
 namespace geeL {
 
 	//Simple Reinhardt tone mapping
-	class ToneMapping : public PostProcessingEffect {
+	class ToneMapping : public PostProcessingEffectFS {
 
 	public:
 		ToneMapping(float exposure);

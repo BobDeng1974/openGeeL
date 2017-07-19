@@ -14,10 +14,10 @@ namespace geeL {
 	class RenderTexture;
 
 	//Screen Space Ambient Occlusion Post Effect
-	class SSAO : public PostProcessingEffect, public WorldMapRequester, public CameraRequester {
+	class SSAO : public PostProcessingEffectFS, public WorldMapRequester, public CameraRequester {
 
 	public:
-		SSAO(PostProcessingEffect& blur, float radius = 5.f, ResolutionScale resolution = HALFSCREEN);
+		SSAO(PostProcessingEffectFS& blur, float radius = 5.f, ResolutionScale resolution = HALFSCREEN);
 		SSAO(const SSAO& other);
 		~SSAO();
 
@@ -47,7 +47,7 @@ namespace geeL {
 		ImageTexture* noiseTexture;
 		std::vector<glm::vec3> kernel;
 		std::vector<glm::vec3> noise;
-		PostProcessingEffect& blur;
+		PostProcessingEffectFS& blur;
 
 		ShaderLocation projectionLocation;
 		RenderTexture* tempTexture = nullptr;

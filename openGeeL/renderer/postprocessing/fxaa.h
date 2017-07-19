@@ -6,7 +6,7 @@
 namespace geeL {
 
 	//Fast Approximate Anti-Aliasing post effect
-	class FXAA : public PostProcessingEffect {
+	class FXAA : public PostProcessingEffectFS {
 
 	public:
 		FXAA(float minColorDiff = 0.01f, float fxaaMul = 0.125f, float fxaaMin = 0.00001f, float fxaaClamp = 8.f);

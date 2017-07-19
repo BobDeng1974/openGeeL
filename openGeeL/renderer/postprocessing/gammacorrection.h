@@ -5,7 +5,7 @@
 
 namespace geeL {
 
-	class GammaCorrection : public PostProcessingEffect {
+	class GammaCorrection : public PostProcessingEffectFS {
 
 	public:
 		GammaCorrection(float gamma = 2.2f);

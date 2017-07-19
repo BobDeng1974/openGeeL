@@ -6,7 +6,7 @@
 namespace geeL {
 
 	//Simple (evenly distributed) blur that only uses one color channel (red)
-	class SimpleBlur : public PostProcessingEffect {
+	class SimpleBlur : public PostProcessingEffectFS {
 
 	public:
 		SimpleBlur(unsigned int strength = 1);

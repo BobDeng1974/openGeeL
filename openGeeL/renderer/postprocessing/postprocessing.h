@@ -17,31 +17,55 @@ namespace geeL {
 	class ScreenQuad;
 	class Texture;
 
+
+	//Interface for all post processing effects (or rendering passes) that can enhance an existing image
 	class PostProcessingEffect : public Drawer {
 
 	public:
-		PostProcessingEffect(std::string fragmentPath);
-		PostProcessingEffect(std::string vertexPath, std::string fragmentPath);
-
 		//Returns first (and main) buffer of this effect
-		const Texture& getImageBuffer() const;
+		virtual const Texture& getImageBuffer() const = 0;
+
+		//Set main image buffer that will be used as base for post processing
+		virtual void setImageBuffer(const Texture& texture) = 0;
+		virtual void addImageBuffer(const Texture& texture, const std::string& name) = 0;
+
+		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) = 0;
+		virtual void draw() = 0;
+		virtual void fill() = 0;
+
+		//Determine whether to draw only the effect or effect embed into scene.
+		//May not result in different rendering depending on effect;
+		virtual void effectOnly(bool only) = 0;
+
+		//Check if effect is currently set for drawing effect only or not
+		virtual bool getEffectOnly() const = 0;
+
+		virtual std::string toString() const = 0;
+
+	};
+
+
+	//Post processing effect that gets drawn via fragment shader during a classical rendering pipeline call
+	class PostProcessingEffectFS : public PostProcessingEffect {
+
+	public:
+		PostProcessingEffectFS(std::string fragmentPath);
+		PostProcessingEffectFS(std::string vertexPath, std::string fragmentPath);
+
+		virtual const Texture& getImageBuffer() const;
 
 		//Set main image buffer that will be used as base for post processing
 		void setImageBuffer(const ColorBuffer& buffer);
 		virtual void setImageBuffer(const Texture& texture);
-		void addImageBuffer(const Texture& texture, const std::string& name);
+		virtual void addImageBuffer(const Texture& texture, const std::string& name);
 
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 		virtual void draw();
-		void fill();
+		virtual void fill();
 
 		virtual std::string toString() const;
 
-		//Determine whether to draw only the effect or effect embed into scene.
-		//May not result in different rendering depending on effect;
 		virtual void effectOnly(bool only);
-
-		//Check if effect is currently set for drawing effect only or not
 		virtual bool getEffectOnly() const;
 
 		const Resolution& getResolution() const;
@@ -59,11 +83,11 @@ namespace geeL {
 
 
 	//Post proccessing effect that simply outputs the input image
-	class PassthroughEffect : public PostProcessingEffect {
+	class PassthroughEffect : public PostProcessingEffectFS {
 
 	public:
 		PassthroughEffect() 
-			: PostProcessingEffect("renderer/postprocessing/passthrough.frag") {}
+			: PostProcessingEffectFS("renderer/postprocessing/passthrough.frag") {}
 
 	};
 

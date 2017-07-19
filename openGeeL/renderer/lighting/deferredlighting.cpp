@@ -13,7 +13,7 @@ namespace geeL {
 
 
 	void DeferredLighting::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		scene.lightManager.bindShadowMaps(shader);
 

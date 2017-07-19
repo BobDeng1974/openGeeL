@@ -6,7 +6,7 @@
 namespace geeL {
 
 	//Filter effect that filters bright colors / lights in image depending on given scatter
-	class BrightnessFilter : public PostProcessingEffect {
+	class BrightnessFilter : public PostProcessingEffectFS {
 
 	public:
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) = 0;

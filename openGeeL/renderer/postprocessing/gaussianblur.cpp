@@ -19,7 +19,7 @@ namespace geeL {
 		: GaussianBlurBase("renderer/postprocessing/gaussianblur1.frag", sigma) {}
 
 	GaussianBlurBase::GaussianBlurBase(string shaderPath, float sigma)
-		: PostProcessingEffect(shaderPath), mainBuffer(nullptr), sigma(sigma) {
+		: PostProcessingEffectFS(shaderPath), mainBuffer(nullptr), sigma(sigma) {
 
 		updateKernel();
 	}
@@ -29,13 +29,13 @@ namespace geeL {
 	}
 
 	void GaussianBlurBase::setImageBuffer(const Texture& texture) {
-		PostProcessingEffect::setImageBuffer(texture);
+		PostProcessingEffectFS::setImageBuffer(texture);
 
 		mainBuffer = &texture;
 	}
 
 	void GaussianBlurBase::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		tempTexture = new RenderTexture(resolution, ColorType::RGB16, 
 			WrapMode::ClampEdge, FilterMode::Linear);

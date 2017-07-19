@@ -10,13 +10,13 @@ using namespace glm;
 namespace geeL {
 
 	DefaultPostProcess::DefaultPostProcess(float exposure)
-		: PostProcessingEffect("renderer/postprocessing/drawdefault.frag"), exposure(exposure) {
+		: PostProcessingEffectFS("renderer/postprocessing/drawdefault.frag"), exposure(exposure) {
 	
 		noise = new ImageTexture("resources/textures/noise.png", ColorType::Single);
 	}
 
 	DefaultPostProcess::DefaultPostProcess(const DefaultPostProcess & other) 
-		: PostProcessingEffect(other), exposure(other.exposure) {
+		: PostProcessingEffectFS(other), exposure(other.exposure) {
 
 		noise = new ImageTexture("resources/textures/noise.png", ColorType::Single);
 	}
@@ -35,7 +35,7 @@ namespace geeL {
 
 
 	void DefaultPostProcess::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		shader.addMap(*noise, "noiseMap");
 		shader.setVector3("noiseScale",

@@ -9,7 +9,7 @@ namespace geeL {
 	class RenderScene;
 	class SpotLight;
 
-	class VolumetricLight : public PostProcessingEffect, public WorldMapRequester, public CameraRequester {
+	class VolumetricLight : public PostProcessingEffectFS, public WorldMapRequester, public CameraRequester {
 
 	public:
 		VolumetricLight(const SpotLight& light, 

@@ -12,7 +12,7 @@ using namespace glm;
 namespace geeL {
 
 	LensFlare::LensFlare(BlurredPostEffect& filter, float scale, float samples, float resolution)
-		: PostProcessingEffect("renderer/postprocessing/lensflare.frag"),
+		: PostProcessingEffectFS("renderer/postprocessing/lensflare.frag"),
 			filter(filter), filterResolution(resolution), strength(1.f), scale(scale), samples(samples) {}
 
 	LensFlare::~LensFlare() {
@@ -21,13 +21,13 @@ namespace geeL {
 
 
 	void LensFlare::setImageBuffer(const Texture& texture) {
-		PostProcessingEffect::setImageBuffer(texture);
+		PostProcessingEffectFS::setImageBuffer(texture);
 
 		filter.setImageBuffer(texture);
 	}
 
 	void LensFlare::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		shader.setFloat("scale", scale);
 		shader.setFloat("samples", samples);

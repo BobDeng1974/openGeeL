@@ -9,7 +9,7 @@ namespace geeL {
 	class RenderScene;
 
 	//Post effect for drawing entire scene content. E.g. for deferred lighting
-	class SceneRender : public PostProcessingEffect, public WorldMapRequester, public CameraRequester {
+	class SceneRender : public PostProcessingEffectFS, public WorldMapRequester, public CameraRequester {
 
 	public:
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps) {}

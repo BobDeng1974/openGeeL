@@ -55,7 +55,7 @@ namespace geeL {
 
 	DepthOfFieldBlurred::DepthOfFieldBlurred(DepthOfFieldBlur& blur,
 		const float& focalLength, float aperture, float farDistance, ResolutionScale blurResolution)
-			: PostProcessingEffect("renderer/postprocessing/dof.frag"), 
+			: PostProcessingEffectFS("renderer/postprocessing/dof.frag"), 
 				blur(blur), focalLength(focalLength), aperture(aperture), 
 				farDistance(farDistance), blurResolution(blurResolution) {}
 
@@ -65,13 +65,13 @@ namespace geeL {
 
 
 	void DepthOfFieldBlurred::setImageBuffer(const Texture& texture) {
-		PostProcessingEffect::setImageBuffer(texture);
+		PostProcessingEffectFS::setImageBuffer(texture);
 
 		blur.setImageBuffer(texture);
 	}
 
 	void DepthOfFieldBlurred::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		shader.setFloat("farDistance", farDistance);
 		shader.setFloat("aperture", aperture);

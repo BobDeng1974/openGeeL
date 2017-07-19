@@ -3,12 +3,12 @@
 namespace geeL {
 
 	FXAA::FXAA(float minColorDiff, float fxaaMul, float fxaaMin, float fxaaClamp)
-		: PostProcessingEffect("renderer/postprocessing/fxaa.frag"), 
+		: PostProcessingEffectFS("renderer/postprocessing/fxaa.frag"), 
 			blurMin(minColorDiff), fxaaMul(fxaaMul), fxaaMin(fxaaMin), fxaaClamp(fxaaClamp) {}
 
 
 	void FXAA::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		shader.setFloat("DIFF_THRESHOLD", blurMin);
 		shader.setFloat("FXAA_REDUCE_MUL", fxaaMul);

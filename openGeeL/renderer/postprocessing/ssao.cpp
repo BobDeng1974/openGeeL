@@ -14,8 +14,8 @@ using namespace std;
 
 namespace geeL {
 
-	SSAO::SSAO(PostProcessingEffect& blur, float radius, ResolutionScale resolution)
-		: PostProcessingEffect("renderer/postprocessing/ssao.frag"), blur(blur), radius(radius), resolution(resolution) {
+	SSAO::SSAO(PostProcessingEffectFS& blur, float radius, ResolutionScale resolution)
+		: PostProcessingEffectFS("renderer/postprocessing/ssao.frag"), blur(blur), radius(radius), resolution(resolution) {
 	
 		uniform_real_distribution<GLfloat> random(0.f, 1.f);
 		default_random_engine generator;
@@ -46,7 +46,7 @@ namespace geeL {
 		noiseTexture = new ImageTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::None);
 	}
 
-	SSAO::SSAO(const SSAO & other) : PostProcessingEffect(other), radius(other.radius), blur(other.blur), 
+	SSAO::SSAO(const SSAO & other) : PostProcessingEffectFS(other), radius(other.radius), blur(other.blur), 
 		noise(other.noise), resolution(other.resolution) {
 		
 		noiseTexture = new ImageTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::None);
@@ -67,7 +67,7 @@ namespace geeL {
 	}
 
 	void SSAO::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		shader.setFloat("screenWidth", float(resolution.getWidth()));
 		shader.setFloat("screenHeight", float(resolution.getHeight()));

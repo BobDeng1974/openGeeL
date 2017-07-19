@@ -7,16 +7,16 @@ using namespace std;
 namespace geeL {
 
 	SSRR::SSRR(unsigned int stepCount, float stepSize, float stepSizeGain) 
-		: PostProcessingEffect("renderer/postprocessing/ssrr.frag"), 
+		: PostProcessingEffectFS("renderer/postprocessing/ssrr.frag"), 
 			steps(stepCount), stepSize(stepSize), stepGain(stepSizeGain) {}
 
 	SSRR::SSRR(string fragmentPath, int stepCount, float stepSize, float stepSizeGain)
-		: PostProcessingEffect(fragmentPath), steps(stepCount),
+		: PostProcessingEffectFS(fragmentPath), steps(stepCount),
 			stepSize(stepSize), stepGain(stepSizeGain) {}
 
 
 	void SSRR::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		shader.setInteger("stepCount", steps);
 		shader.setFloat("stepSize", stepSize);

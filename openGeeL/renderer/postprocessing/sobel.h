@@ -6,7 +6,7 @@
 namespace geeL {
 
 	//Sobel filter for edge detection in images (Grayscaled)
-	class SobelFilter : public PostProcessingEffect {
+	class SobelFilter : public PostProcessingEffectFS {
 
 	public:
 		SobelFilter(float scale = 1.f);

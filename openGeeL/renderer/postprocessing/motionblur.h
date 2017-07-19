@@ -14,7 +14,7 @@ namespace geeL {
 
 
 	//Simple motion blur that blurs in (inverse) direction of camera movement
-	class MotionBlur : public PostProcessingEffect, public CameraRequester {
+	class MotionBlur : public PostProcessingEffectFS, public CameraRequester {
 
 	public:
 		MotionBlur(float strength = 0.5f, unsigned int LOD = 15);
@@ -43,7 +43,7 @@ namespace geeL {
 	};
 
 
-	class VelocityBuffer : public PostProcessingEffect, public WorldMapRequester, public CameraRequester {
+	class VelocityBuffer : public PostProcessingEffectFS, public WorldMapRequester, public CameraRequester {
 
 	public:
 		VelocityBuffer();

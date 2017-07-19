@@ -4,13 +4,13 @@
 namespace geeL {
 
 	SceneRender::SceneRender(RenderScene& scene, std::string fragment)
-		: scene(scene), PostProcessingEffect(fragment) {
+		: scene(scene), PostProcessingEffectFS(fragment) {
 
 		scene.addRequester(*this);
 	}
 
 	SceneRender::SceneRender(RenderScene& scene, std::string vertex, std::string fragment)
-		: scene(scene), PostProcessingEffect(vertex, fragment) {
+		: scene(scene), PostProcessingEffectFS(vertex, fragment) {
 	
 		scene.addRequester(*this);
 	}

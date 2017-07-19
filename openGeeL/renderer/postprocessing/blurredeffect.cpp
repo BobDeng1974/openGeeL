@@ -9,9 +9,9 @@ using namespace std;
 
 namespace geeL {
 
-	BlurredPostEffect::BlurredPostEffect(PostProcessingEffect& effect, 
-		PostProcessingEffect& blur, ResolutionScale effectResolution, ResolutionScale blurResolution)
-			: PostProcessingEffect("renderer/postprocessing/combine.frag"),
+	BlurredPostEffect::BlurredPostEffect(PostProcessingEffectFS& effect, 
+		PostProcessingEffectFS& blur, ResolutionScale effectResolution, ResolutionScale blurResolution)
+			: PostProcessingEffectFS("renderer/postprocessing/combine.frag"),
 				effect(effect), blur(blur), effectResolution(effectResolution), blurResolution(blurResolution){
 
 		effect.effectOnly(true);
@@ -24,13 +24,13 @@ namespace geeL {
 
 
 	void BlurredPostEffect::setImageBuffer(const Texture& texture) {
-		PostProcessingEffect::setImageBuffer(texture);
+		PostProcessingEffectFS::setImageBuffer(texture);
 
 		effect.setImageBuffer(texture);
 	}
 
 	void BlurredPostEffect::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		shader.setInteger("effectOnly", onlyEffect);
 

@@ -3,11 +3,11 @@
 namespace geeL {
 
 	SobelFilter::SobelFilter(float scale) 
-		: PostProcessingEffect("renderer/postprocessing/sobel.frag"), scale(scale) {}
+		: PostProcessingEffectFS("renderer/postprocessing/sobel.frag"), scale(scale) {}
 
 
 	void SobelFilter::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		shader.setFloat("scale", scale);
 	}

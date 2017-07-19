@@ -7,7 +7,7 @@
 namespace geeL {
 
 	//Screen Space Raycasted Reflections post effect
-	class SSRR : public PostProcessingEffect, public WorldMapRequester, public CameraRequester {
+	class SSRR : public PostProcessingEffectFS, public WorldMapRequester, public CameraRequester {
 
 	public:
 		SSRR(unsigned int stepCount = 60, float stepSize = 0.2f, float stepSizeGain = 1.02f);

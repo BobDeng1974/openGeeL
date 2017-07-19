@@ -8,15 +8,15 @@
 namespace geeL {
 
 	MotionBlur::MotionBlur(float strength, unsigned int LOD)
-		: PostProcessingEffect("renderer/postprocessing/motionblur.frag"),
+		: PostProcessingEffectFS("renderer/postprocessing/motionblur.frag"),
 			strength(strength), LOD(LOD) {}
 
 	MotionBlur::MotionBlur(const std::string& shaderPath, float strength, unsigned int LOD)
-		: PostProcessingEffect(shaderPath), strength(strength), LOD(LOD) {}
+		: PostProcessingEffectFS(shaderPath), strength(strength), LOD(LOD) {}
 
 
 	void MotionBlur::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		samplesLocation = shader.getLocation("maxSamples");
 		strengthLocation = shader.getLocation("strength");
@@ -108,7 +108,7 @@ namespace geeL {
 
 
 	VelocityBuffer::VelocityBuffer() 
-		: PostProcessingEffect("renderer/postprocessing/velocity.frag") {}
+		: PostProcessingEffectFS("renderer/postprocessing/velocity.frag") {}
 
 	VelocityBuffer::~VelocityBuffer() {
 		if (positionTexture != nullptr) delete positionTexture;
@@ -116,7 +116,7 @@ namespace geeL {
 
 
 	void VelocityBuffer::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		Resolution positionRes = Resolution(parentBuffer->getResolution(), 1.f);
 		positionTexture = new RenderTexture(positionRes, ColorType::RGBA16, 
@@ -145,7 +145,7 @@ namespace geeL {
 	}
 
 	void VelocityBuffer::draw() {
-		PostProcessingEffect::draw();
+		PostProcessingEffectFS::draw();
 
 		parentBuffer->add(*positionTexture);
 		parentBuffer->fill(prevPositionEffect);

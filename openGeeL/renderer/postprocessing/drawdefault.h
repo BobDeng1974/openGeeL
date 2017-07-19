@@ -7,7 +7,7 @@ namespace geeL {
 
 	class ImageTexture;
 
-	class DefaultPostProcess : public PostProcessingEffect {
+	class DefaultPostProcess : public PostProcessingEffectFS {
 
 	public:
 		DefaultPostProcess(float exposure = 1.f);

@@ -3,14 +3,14 @@
 namespace geeL {
 
 	SimpleBlur::SimpleBlur(unsigned int strength)
-		: PostProcessingEffect("renderer/postprocessing/simpleblur.frag"), amount(strength + 1) {}
+		: PostProcessingEffectFS("renderer/postprocessing/simpleblur.frag"), amount(strength + 1) {}
 
 	SimpleBlur::SimpleBlur(unsigned int strength, std::string shaderPath)
-		: PostProcessingEffect(shaderPath), amount(strength + 1) {}
+		: PostProcessingEffectFS(shaderPath), amount(strength + 1) {}
 
 
 	void SimpleBlur::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffect::init(screen, buffer, resolution);
+		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		shader.setInteger("amount", amount);
 	}

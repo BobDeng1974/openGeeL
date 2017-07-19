@@ -13,7 +13,7 @@ namespace geeL {
 	class RenderTexture;
 
 
-	class LensFlare : public PostProcessingEffect, public CameraRequester {
+	class LensFlare : public PostProcessingEffectFS, public CameraRequester {
 
 	public:
 		LensFlare(BlurredPostEffect& filter, float scale = 0.5f, float samples = 4.f, float resolution = 1.f);
