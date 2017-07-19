@@ -15,10 +15,15 @@ namespace geeL {
 		virtual unsigned int getID() const = 0;
 		virtual TextureType getTextureType() const = 0;
 		virtual ColorType getColorType() const;
-		
+
+		//Bind texture as texture sampler
+		virtual void bind() const;
+
+		//Bind texture as image texture
+		void bindImage(AccessType access = AccessType::All) const;
+
 		//Remove texture from GPU memory
 		virtual void remove();
-		virtual void bind() const;
 		virtual void clear();
 		virtual bool isEmpty() const;
 

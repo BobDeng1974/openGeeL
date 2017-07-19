@@ -19,6 +19,10 @@ namespace geeL {
 		glBindTexture((int)getTextureType(), getID());
 	}
 
+	void Texture::bindImage(AccessType access) const {
+		glBindImageTexture(0, getID(), 0, GL_TRUE, 0, (int)access, (int)getTextureType());
+	}
+
 	void Texture::clear() {
 		clear(colorType, getID());
 	}

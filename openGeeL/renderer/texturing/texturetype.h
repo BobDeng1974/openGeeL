@@ -5,6 +5,10 @@
 #define GL_TEXTURE_3D 0x806F
 #define GL_TEXTURE_CUBE_MAP 0x8513
 
+#define GL_READ_ONLY 0x88B8
+#define GL_WRITE_ONLY 0x88B9
+#define GL_READ_WRITE 0x88BA
+
 namespace geeL {
 
 	enum class TextureType {
@@ -48,6 +52,12 @@ namespace geeL {
 		Medium = 4,
 		Large = 8,
 		VeryLarge = 16
+	};
+
+	enum class AccessType {
+		Read = GL_READ_ONLY,
+		Write = GL_WRITE_ONLY,
+		All = GL_READ_WRITE
 	};
 
 }
