@@ -92,8 +92,6 @@ namespace geeL {
 		//2. Draw final image via vertical blurring of the previous (horizontally) blurred image
 		shader.setInteger(horLocation, false);
 		addImageBuffer(*tempTexture, "image");
-
-		parentBuffer->bind();
 	}
 
 	void GaussianBlurBase::setKernelsize(unsigned int size) {
