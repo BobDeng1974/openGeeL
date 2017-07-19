@@ -35,12 +35,19 @@ namespace geeL {
 
 		//Determine whether to draw only the effect or effect embed into scene.
 		//May not result in different rendering depending on effect;
-		virtual void effectOnly(bool only) = 0;
+		void effectOnly(bool only);
 
 		//Check if effect is currently set for drawing effect only or not
-		virtual bool getEffectOnly() const = 0;
+		bool getEffectOnly() const;
 
 		virtual std::string toString() const = 0;
+
+		const Resolution& getResolution() const;
+		void setResolution(const Resolution& value);
+
+	protected:
+		Resolution resolution;
+		bool onlyEffect = false;
 
 	};
 
@@ -55,7 +62,6 @@ namespace geeL {
 		virtual const Texture& getImageBuffer() const;
 
 		//Set main image buffer that will be used as base for post processing
-		void setImageBuffer(const ColorBuffer& buffer);
 		virtual void setImageBuffer(const Texture& texture);
 		virtual void addImageBuffer(const Texture& texture, const std::string& name);
 
@@ -65,17 +71,9 @@ namespace geeL {
 
 		virtual std::string toString() const;
 
-		virtual void effectOnly(bool only);
-		virtual bool getEffectOnly() const;
-
-		const Resolution& getResolution() const;
-		void setResolution(const Resolution& value);
-
 	protected:
 		RenderShader shader;
 		ScreenQuad* screen;
-		Resolution resolution;
-		bool onlyEffect;
 
 		virtual void bindValues() {}
 		virtual void bindToScreen();

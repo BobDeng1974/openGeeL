@@ -14,15 +14,11 @@ namespace geeL {
 		: PostProcessingEffectFS("renderer/shaders/screen.vert", fragmentPath) {}
 
 	PostProcessingEffectFS::PostProcessingEffectFS(string vertexPath, string fragmentPath)
-		: shader(RenderShader(vertexPath.c_str(), fragmentPath.c_str())), onlyEffect(false) {}
+		: shader(RenderShader(vertexPath.c_str(), fragmentPath.c_str())) {}
 
 
 	const Texture& PostProcessingEffectFS::getImageBuffer() const {
 		return *shader.getMap("image");
-	}
-
-	void PostProcessingEffectFS::setImageBuffer(const ColorBuffer& buffer) {
-		setImageBuffer(buffer.getTexture(0));
 	}
 
 	void PostProcessingEffectFS::setImageBuffer(const Texture& texture) {
@@ -65,19 +61,19 @@ namespace geeL {
 		return "Post effect with shader: " + shader.name;
 	}
 
-	void PostProcessingEffectFS::effectOnly(bool only) {
+	void PostProcessingEffect::effectOnly(bool only) {
 		onlyEffect = only;
 	}
 
-	bool PostProcessingEffectFS::getEffectOnly() const {
+	bool PostProcessingEffect::getEffectOnly() const {
 		return onlyEffect;
 	}
 
-	const Resolution& PostProcessingEffectFS::getResolution() const {
+	const Resolution& PostProcessingEffect::getResolution() const {
 		return resolution;
 	}
 
-	void PostProcessingEffectFS::setResolution(const Resolution& value) {
+	void PostProcessingEffect::setResolution(const Resolution& value) {
 		resolution = value;
 	}
 }
