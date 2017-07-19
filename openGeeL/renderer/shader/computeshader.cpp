@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include "../texturing/texture.h"
 #include "computeshader.h"
 
 using namespace std;
@@ -59,6 +60,16 @@ namespace geeL {
 		}
 
 		glDeleteShader(shader);
+	}
+
+	void ComputeShader::loadMaps() const {
+		unsigned int counter = 0;
+		for (auto it = maps.begin(); it != maps.end(); it++) {
+			const TextureBinding& binding = (*it).second;
+			binding.texture->bindImage(counter, AccessType::Read);
+
+			counter++;
+		}
 	}
 
 	void ComputeShader::invoke(unsigned int x, unsigned int y, unsigned int z) {

@@ -54,7 +54,7 @@ namespace geeL {
 		void removeMap(const std::string& name);
 
 		//Load maps into their binding points in the shader
-		void loadMaps() const;
+		virtual void loadMaps() const;
 
 		//Loads committed maps into the shader
 		//IMPORTANT: no binding is taken care of, multiple calls will override previous one
@@ -80,13 +80,12 @@ namespace geeL {
 		void setMat4(ShaderLocation location, const glm::mat4& value) const;
 
 	protected:
-		Shader() : mapBindingPos(0) {}
-
 		unsigned int program;
-
-	private:
 		std::map<std::string, TextureBinding> maps;
 
+		Shader() : mapBindingPos(0) {}
+
+	private:
 		//Bind all added maps to the shader
 		void bindMaps();
 

@@ -20,7 +20,7 @@ namespace geeL {
 		virtual void bind() const;
 
 		//Bind texture as image texture
-		void bindImage(AccessType access = AccessType::All) const;
+		void bindImage(unsigned int position = 0, AccessType access = AccessType::All) const;
 
 		//Remove texture from GPU memory
 		virtual void remove();

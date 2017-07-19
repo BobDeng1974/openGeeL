@@ -21,7 +21,7 @@ namespace geeL {
 	class SSAO;
 	class PostProcessingEffect;
 	class Texture;
-	class WorldPostProcessingEffect;
+
 
 	class DeferredRenderer : public Renderer, public WorldMapProvider {
 

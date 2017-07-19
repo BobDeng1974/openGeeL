@@ -10,6 +10,7 @@ namespace geeL {
 	public:
 		ComputeShader(const char* shaderPath);
 
+		virtual void loadMaps() const;
 
 		static void invoke(unsigned int x, unsigned int y, unsigned int z);
 
