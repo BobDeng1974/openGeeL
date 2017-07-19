@@ -77,8 +77,6 @@ namespace geeL {
 			shader.setVector3("samples[" + to_string(i) + "]", kernel[i]);
 		
 		tempTexture = new RenderTexture(resolution, ColorType::Single, WrapMode::Repeat, FilterMode::None);
-		tempBuffer.init(resolution, *tempTexture);
-		tempBuffer.initDepth();
 
 		blur.init(screen, buffer, resolution);
 		blur.setImageBuffer(*tempTexture);
@@ -87,25 +85,18 @@ namespace geeL {
 	}
 
 	void SSAO::draw() {
-		if (ssaoPass) {
-			ssaoPass = !ssaoPass;
-			bindToScreen();
-		}
-		else {
-			ssaoPass = !ssaoPass;
-
+		parentBuffer->add(*tempTexture);
+		parentBuffer->fill([this]() {
 			shader.use();
 			bindValues();
+			bindToScreen();
+		});
 
-			parentBuffer->bind();
-			blur.draw();
-		}
+		blur.draw();
 	}
 
 	void SSAO::bindValues() {
 		shader.setMat4(projectionLocation, camera->getProjectionMatrix());
-
-		tempBuffer.fill(*this);
 	}
 
 	void SSAO::addWorldInformation(map<WorldMaps, const Texture*> maps) {

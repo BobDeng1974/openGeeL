@@ -40,7 +40,6 @@ namespace geeL {
 		virtual void bindValues();
 
 	private:
-		bool ssaoPass = false;
 		float radius;
 		unsigned int sampleCount = 32;
 		ResolutionScale resolution;
@@ -51,7 +50,6 @@ namespace geeL {
 		PostProcessingEffect& blur;
 
 		ShaderLocation projectionLocation;
-		ColorBuffer tempBuffer;
 		RenderTexture* tempTexture = nullptr;
 		
 	};

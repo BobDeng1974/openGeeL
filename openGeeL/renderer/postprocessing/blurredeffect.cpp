@@ -60,11 +60,8 @@ namespace geeL {
 	}
 
 	void BlurredPostEffect::draw() {
-		shader.use();
 		bindValues();
 
-		//Switch shader again since shader of encapsuled 
-		//effect was set active during 'bindValues'
 		shader.use();
 		bindToScreen();
 	}
