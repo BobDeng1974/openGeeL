@@ -11,7 +11,7 @@ namespace geeL {
 	public:
 		SobelFilter(float scale = 1.f);
 
-		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution);
+		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 
 		float getScale() const;
 		void  setScale(float value);

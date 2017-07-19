@@ -26,7 +26,7 @@ namespace geeL {
 		filter.setImageBuffer(texture);
 	}
 
-	void LensFlare::init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution) {
+	void LensFlare::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffect::init(screen, buffer, resolution);
 
 		shader.setFloat("scale", scale);

@@ -7,7 +7,7 @@
 namespace geeL {
 
 	//Buffer that operates as a stack and whose drawcalls will be executed in stack order
-	class StackBuffer : public FrameBuffer {
+	class StackBuffer : public DynamicBuffer {
 
 	public:
 		StackBuffer();

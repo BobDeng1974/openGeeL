@@ -35,7 +35,7 @@ namespace geeL {
 	}
 
 
-	void PostProcessingEffect::init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution) {
+	void PostProcessingEffect::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		this->screen = &screen;
 		this->resolution = resolution;
 

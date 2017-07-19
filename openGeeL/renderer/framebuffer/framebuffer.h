@@ -23,7 +23,7 @@ namespace geeL {
 	class IFrameBuffer {
 
 	public:
-		virtual void add(RenderTexture& texture) {}
+		virtual void add(RenderTexture& texture) {} //TODO: remove this later on
 
 		virtual void fill(std::function<void()> drawCall) = 0;
 		virtual void fill(Drawer& drawer) = 0;
@@ -78,6 +78,15 @@ namespace geeL {
 		FrameBuffer(const FrameBuffer& other) = delete;
 		FrameBuffer& operator= (const FrameBuffer& other) = delete;
 		
+	};
+
+
+	//Framebuffer that allows adding and filling of render textures during runtime
+	class DynamicBuffer : public FrameBuffer {
+
+	public:
+		virtual void add(RenderTexture& texture) = 0;
+
 	};
 
 

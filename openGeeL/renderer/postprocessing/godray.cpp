@@ -16,7 +16,7 @@ namespace geeL {
 			lightPosition(lightPosition), samples(samples) {}
 
 
-	void GodRay::init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution) {
+	void GodRay::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffect::init(screen, buffer, resolution);
 
 		shader.setInteger("samples", samples);

@@ -10,7 +10,7 @@ namespace geeL {
 	public:
 		GammaCorrection(float gamma = 2.2f);
 
-		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution);
+		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 
 	private:
 		float gamma;

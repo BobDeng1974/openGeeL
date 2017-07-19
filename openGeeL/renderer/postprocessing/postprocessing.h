@@ -12,6 +12,7 @@ typedef unsigned int GLuint;
 namespace geeL {
 
 	class ColorBuffer;
+	class DynamicBuffer;
 	class RenderShader;
 	class ScreenQuad;
 	class Texture;
@@ -30,7 +31,7 @@ namespace geeL {
 		virtual void setImageBuffer(const Texture& texture);
 		void addImageBuffer(const Texture& texture, const std::string& name);
 
-		virtual void init(ScreenQuad& screen, IFrameBuffer& buffer, const Resolution& resolution);
+		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 		virtual void draw();
 		void fill();
 
