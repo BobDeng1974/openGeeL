@@ -9,7 +9,7 @@ namespace geeL {
 
 	DeferredLighting::DeferredLighting(RenderScene& scene) 
 		: SceneRender(scene, "renderer/lighting/deferredlighting.vert", 
-			"renderer/lighting/cooktorrance.frag") {}
+			"renderer/lighting/deferredlighting.frag") {}
 
 
 	void DeferredLighting::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
