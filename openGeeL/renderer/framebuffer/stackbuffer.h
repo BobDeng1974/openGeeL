@@ -24,6 +24,7 @@ namespace geeL {
 		virtual void fill(std::function<void()> drawCall);
 		virtual void fill(Drawer& drawer);
 
+		virtual const RenderTexture* const getTexture() const;
 		virtual const Resolution& getResolution() const;
 		virtual void resetSize() const;
 		virtual void resize(ResolutionScale resolution);

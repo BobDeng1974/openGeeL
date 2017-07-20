@@ -10,6 +10,24 @@ using namespace std;
 
 namespace geeL {
 
+
+	void PostProcessingEffect::effectOnly(bool only) {
+		onlyEffect = only;
+	}
+
+	bool PostProcessingEffect::getEffectOnly() const {
+		return onlyEffect;
+	}
+
+	const Resolution& PostProcessingEffect::getResolution() const {
+		return resolution;
+	}
+
+	void PostProcessingEffect::setResolution(const Resolution& value) {
+		resolution = value;
+	}
+
+
 	PostProcessingEffectFS::PostProcessingEffectFS(string fragmentPath)
 		: PostProcessingEffectFS("renderer/shaders/screen.vert", fragmentPath) {}
 
@@ -61,19 +79,57 @@ namespace geeL {
 		return "Post effect with shader: " + shader.name;
 	}
 
-	void PostProcessingEffect::effectOnly(bool only) {
-		onlyEffect = only;
+
+
+	PostProcessingEffectCS::PostProcessingEffectCS(const std::string& path) : shader(path.c_str()) {}
+
+
+	const Texture& PostProcessingEffectCS::getImageBuffer() const {
+		return *shader.getMap("image");
 	}
 
-	bool PostProcessingEffect::getEffectOnly() const {
-		return onlyEffect;
+
+	void PostProcessingEffectCS::setImageBuffer(const Texture& texture) {
+		shader.addMap(texture, "image");
 	}
 
-	const Resolution& PostProcessingEffect::getResolution() const {
-		return resolution;
+	void PostProcessingEffectCS::addImageBuffer(const Texture& texture, const std::string& name) {
+		shader.addMap(texture, name);
 	}
 
-	void PostProcessingEffect::setResolution(const Resolution& value) {
-		resolution = value;
+	void PostProcessingEffectCS::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
+		this->resolution = resolution;
+
+		this->buffer = &buffer;
+		shader.use();
 	}
+
+	void PostProcessingEffectCS::draw() {
+		shader.use();
+		bindValues();
+
+		//Read target texture from parent buffer and bind it
+		const RenderTexture* target = buffer->getTexture();
+		target->bindImage(0, AccessType::Write);
+
+		//Bind source textures from shader
+		shader.loadMaps(1);
+
+		unsigned int width = resolution.getWidth() / 8;
+		unsigned int height = (resolution.getHeight() + 7) / 8;
+		
+		shader.invoke(width, height, 1);
+		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+	}
+
+	void PostProcessingEffectCS::fill() {
+		fill();
+	}
+
+
+	std::string PostProcessingEffectCS::toString() const {
+		return "Post effect with shader: " + shader.name;
+	}
+
+
 }

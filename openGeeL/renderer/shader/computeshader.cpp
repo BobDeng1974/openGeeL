@@ -63,7 +63,11 @@ namespace geeL {
 	}
 
 	void ComputeShader::loadMaps() const {
-		unsigned int counter = 0;
+		loadMaps(0);
+	}
+
+	void ComputeShader::loadMaps(unsigned int offset) const {
+		unsigned int counter = offset;
 		for (auto it = maps.begin(); it != maps.end(); it++) {
 			const TextureBinding& binding = (*it).second;
 			binding.texture->bindImage(counter, AccessType::Read);

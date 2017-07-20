@@ -87,6 +87,10 @@ namespace geeL {
 	public:
 		virtual void add(RenderTexture& texture) = 0;
 
+		//Returns current render texture of this buffer or null pointer
+		//if no texture is attached
+		virtual const RenderTexture* const getTexture() const = 0;
+
 	};
 
 

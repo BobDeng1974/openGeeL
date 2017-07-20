@@ -5,6 +5,7 @@
 #include <string>
 #include "../renderer.h"
 #include "../shader/rendershader.h"
+#include "../shader/computeshader.h"
 #include "../utility/resolution.h"
 
 typedef unsigned int GLuint;
@@ -77,6 +78,33 @@ namespace geeL {
 
 		virtual void bindValues() {}
 		virtual void bindToScreen();
+	};
+
+
+	//Post processing effect that gets drawn via a compute shader
+	class PostProcessingEffectCS : public PostProcessingEffect {
+
+	public:
+		PostProcessingEffectCS(const std::string& path);
+
+		virtual const Texture& getImageBuffer() const;
+
+		//Set main image buffer that will be used as base for post processing
+		virtual void setImageBuffer(const Texture& texture);
+		virtual void addImageBuffer(const Texture& texture, const std::string& name);
+
+		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void draw();
+		virtual void fill();
+
+		virtual std::string toString() const;
+
+	protected:
+		DynamicBuffer* buffer = nullptr;
+		ComputeShader shader;
+
+		virtual void bindValues() {}
+
 	};
 
 

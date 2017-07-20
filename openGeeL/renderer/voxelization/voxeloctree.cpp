@@ -46,7 +46,7 @@ namespace geeL {
 		unsigned int dataWidth  = 1024;	//Note: hardcoded in shaders
 		unsigned int dataHeight = (numVoxels + (dataWidth - 1)) / dataWidth; //Size will be increased for every row the voxels fill
 
-		//Division by 8 because work groups consist of 8 threads
+		//Division by 8 because work groups consist of 8x8 threads
 		unsigned int groupWidth  = dataWidth / 8; 
 		unsigned int groupHeight = (dataHeight + 7) / 8;
 
