@@ -15,6 +15,8 @@ namespace geeL {
 		name = shaderPath;
 
 		string computeCode = ShaderFileReader::readShaderFile(shaderPath);
+		ShaderFileReader::preprocessShaderString(computeCode, shaderPath);
+
 		const GLchar* shaderCode = computeCode.c_str();
 
 		unsigned int shader = glCreateShader(GL_COMPUTE_SHADER);

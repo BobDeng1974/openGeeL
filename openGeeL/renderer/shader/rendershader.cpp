@@ -30,6 +30,9 @@ namespace geeL {
 		string vertexCode = ShaderFileReader::readShaderFile(vertexPath);
 		string fragmentCode = ShaderFileReader::readShaderFile(fragmentPath);
 
+		ShaderFileReader::preprocessShaderString(vertexCode, vertexPath);
+		ShaderFileReader::preprocessShaderString(fragmentCode, fragmentPath);
+
 		const GLchar* vShaderCode = vertexCode.c_str();
 		const GLchar* fShaderCode = fragmentCode.c_str();
 
