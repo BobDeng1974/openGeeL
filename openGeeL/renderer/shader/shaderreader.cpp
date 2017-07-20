@@ -1,4 +1,6 @@
 #include <fstream>
+#include <regex>
+#include <set>
 #include <sstream>
 #include <iostream>
 #include "shaderreader.h"
@@ -31,6 +33,50 @@ namespace geeL {
 		}
 
 		return shaderCode;
+	}
+
+
+
+	void preprocessShader(std::string& file, set<string>& includedFiles) {
+		regex include("^\\s*#\\s*include\\s+(?:<[^>]*>|\"[^\"]*\")\\s*");
+
+		for (sregex_iterator it(file.begin(), file.end(), include); it != sregex_iterator(); it++) {
+			string current = (*it).str();
+			regex repl(current);
+
+			size_t startIndex = current.find("<");
+			size_t offset = current.find(">") - startIndex;
+			string filePath = current.substr(startIndex + 1, offset - 1);
+
+			//File has already been included so the include is simply removed
+			if (includedFiles.count(filePath))
+				file = regex_replace(file, repl, "");
+			//Recursivly add included file (if it exists)
+			else {
+				includedFiles.insert(filePath);
+
+				string includeCode = ShaderFileReader::readShaderFile(filePath.c_str());
+				preprocessShader(includeCode, includedFiles);
+				file.replace(file.find(current), current.length(), includeCode + "\n\n");
+			}
+		}
+	}
+
+	string ShaderFileReader::preprocessShaderString(const string& shaderCode, const std::string& shaderPath) {
+		set<string> includedFiles;
+		includedFiles.insert(shaderPath);
+
+		std::string result = shaderCode;
+		preprocessShader(result, includedFiles);
+
+		return result;
+	}
+
+	void ShaderFileReader::preprocessShaderString(std::string& shaderCode, const std::string& shaderPath) {
+		set<string> includedFiles;
+		includedFiles.insert(shaderPath);
+
+		preprocessShader(shaderCode, includedFiles);
 	}
 
 }

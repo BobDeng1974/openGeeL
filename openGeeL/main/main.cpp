@@ -8,10 +8,10 @@
 #include "giscene.h"
 
 int main() {
-	//BedroomScene::draw();
+	BedroomScene::draw();
 	//DeerScene::draw();
 	//ScieneScene::draw();
-	ArthouseScene::draw();
+	//ArthouseScene::draw();
 	//SponzaScene::draw();
 	//SponzaGIScene::draw();
 
