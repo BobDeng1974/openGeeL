@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include "shaderreader.h"
 #include "rendershader.h"
 
 using namespace std;
@@ -26,33 +27,8 @@ namespace geeL {
 
 
 	void RenderShader::init(const char* vertexPath, const char* fragmentPath) {
-		//Read code from file path
-		string vertexCode;
-		string fragmentCode;
-		ifstream vShaderFile;
-		ifstream fShaderFile;
-
-		vShaderFile.exceptions(ifstream::badbit);
-		fShaderFile.exceptions(ifstream::badbit);
-
-		try {
-			// Open files
-			vShaderFile.open(vertexPath);
-			fShaderFile.open(fragmentPath);
-			stringstream vShaderStream, fShaderStream;
-			// Read file's buffer contents into streams
-			vShaderStream << vShaderFile.rdbuf();
-			fShaderStream << fShaderFile.rdbuf();
-			// close file handlers
-			vShaderFile.close();
-			fShaderFile.close();
-			// Convert stream into GLchar array
-			vertexCode = vShaderStream.str();
-			fragmentCode = fShaderStream.str();
-		}
-		catch (ifstream::failure e) {
-			cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << endl;
-		}
+		string vertexCode = ShaderFileReader::readShaderFile(vertexPath);
+		string fragmentCode = ShaderFileReader::readShaderFile(fragmentPath);
 
 		const GLchar* vShaderCode = vertexCode.c_str();
 		const GLchar* fShaderCode = fragmentCode.c_str();

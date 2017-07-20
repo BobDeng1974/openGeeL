@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include "../texturing/texture.h"
+#include "shaderreader.h"
 #include "computeshader.h"
 
 using namespace std;
@@ -13,27 +14,7 @@ namespace geeL {
 	ComputeShader::ComputeShader(const char * shaderPath) {
 		name = shaderPath;
 
-		string computeCode;
-		string fragmentCode;
-		ifstream shaderFile;
-		ifstream fShaderFile;
-
-		shaderFile.exceptions(ifstream::badbit);
-		fShaderFile.exceptions(ifstream::badbit);
-
-		try {
-			// Open files
-			shaderFile.open(shaderPath);
-			stringstream shaderStream;
-
-			shaderStream << shaderFile.rdbuf();
-			shaderFile.close();
-			computeCode = shaderStream.str();
-		}
-		catch (ifstream::failure e) {
-			cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << endl;
-		}
-
+		string computeCode = ShaderFileReader::readShaderFile(shaderPath);
 		const GLchar* shaderCode = computeCode.c_str();
 
 		unsigned int shader = glCreateShader(GL_COMPUTE_SHADER);
