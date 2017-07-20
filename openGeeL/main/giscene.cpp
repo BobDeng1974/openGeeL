@@ -206,12 +206,12 @@ void SponzaGIScene::draw() {
 
 	postLister.add(def);
 
-	//Voxelizer voxelizer = Voxelizer(scene);
-	//VoxelOctree octree = VoxelOctree(voxelizer);
-	//VoxelConeTracer tracer = VoxelConeTracer(scene, octree);
+	//Voxelizer& voxelizer = Voxelizer(scene);
+	//VoxelOctree& octree = VoxelOctree(voxelizer);
+	//VoxelConeTracer& tracer = VoxelConeTracer(scene, octree);
 
 	VoxelTexture& tex = VoxelTexture(scene);
-	VoxelConeTracer tracer = VoxelConeTracer(scene, tex);
+	VoxelConeTracer& tracer = VoxelConeTracer(scene, tex);
 
 	renderer.addEffect(tracer, tracer);
 	postLister.add(tracer);

@@ -82,44 +82,17 @@ namespace geeL {
 	}
 
 	void RenderShader::init(const char* vertexPath, const char* geometryPath, const char* fragmentPath) {
-		//Read code from file path
-		string vertexCode;
-		string fragmentCode;
-		string geometryCode;
-		ifstream vShaderFile;
-		ifstream fShaderFile;
-		ifstream gShaderFile;
+		string vertexCode = ShaderFileReader::readShaderFile(vertexPath);
+		string geometryCode = ShaderFileReader::readShaderFile(geometryPath);
+		string fragmentCode = ShaderFileReader::readShaderFile(fragmentPath);
 
-		vShaderFile.exceptions(ifstream::badbit);
-		fShaderFile.exceptions(ifstream::badbit);
-		gShaderFile.exceptions(ifstream::badbit);
-
-		try {
-			// Open files
-			vShaderFile.open(vertexPath);
-			fShaderFile.open(fragmentPath);
-			gShaderFile.open(geometryPath);
-			stringstream vShaderStream, fShaderStream, gShaderStream;
-			// Read file's buffer contents into streams
-			vShaderStream << vShaderFile.rdbuf();
-			fShaderStream << fShaderFile.rdbuf();
-			gShaderStream << gShaderFile.rdbuf();
-			// close file handlers
-			vShaderFile.close();
-			fShaderFile.close();
-			gShaderFile.close();
-			// Convert stream into GLchar array
-			vertexCode = vShaderStream.str();
-			fragmentCode = fShaderStream.str();
-			geometryCode = gShaderStream.str();
-		}
-		catch (ifstream::failure e) {
-			cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << endl;
-		}
+		ShaderFileReader::preprocessShaderString(vertexCode, vertexPath);
+		ShaderFileReader::preprocessShaderString(geometryCode, geometryPath);
+		ShaderFileReader::preprocessShaderString(fragmentCode, fragmentPath);
 
 		const GLchar* vShaderCode = vertexCode.c_str();
-		const GLchar* fShaderCode = fragmentCode.c_str();
 		const GLchar* gShaderCode = geometryCode.c_str();
+		const GLchar* fShaderCode = fragmentCode.c_str();
 
 		//Compile shaders
 		//Vertex shader

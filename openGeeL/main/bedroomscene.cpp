@@ -234,8 +234,8 @@ void BedroomScene::draw() {
 	postLister.add(volSmooth, lightSnippet, blurSnippet);
 
 	GaussianBlur& blur4 = GaussianBlur();
-	SSRR& ssrr = SSRR();
-	//MultisampledSSRR& ssrr = MultisampledSSRR();
+	//SSRR& ssrr = SSRR();
+	MultisampledSSRR& ssrr = MultisampledSSRR();
 	BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.5f, 0.5f);
 	renderer.addEffect(ssrrSmooth, ssrr);
 	scene.addRequester(ssrr);

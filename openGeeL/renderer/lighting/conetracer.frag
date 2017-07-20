@@ -1,6 +1,7 @@
 #version 430
 
-const float PI = 3.14159265359;
+#include <renderer/shaders/helperfunctions.glsl>
+
 const float epsilon = 0.000001f;
 const float FLOAT_MAX = 100000.f;
 const vec3  luminance = vec3(0.299f, 0.587f, 0.114f);
@@ -52,10 +53,7 @@ int   getLevelDimension(int lvl);
 float getNodeBorderDistance(vec3 position, vec3 direction, int depth);
 float planeIntersection(vec3 rayO, vec3 rayD, vec3 planeO, vec3 planeN);
 
-float doto(vec3 a, vec3 b);
 vec3 getClosestAxisNormal(vec3 v);
-vec3 orthogonal(vec3 v);
-
 vec4 convRGBA8toVec4(uint val);
 vec4 mix2D(vec4 p00, vec4 p10, vec4 p01, vec4 p11, float x, float y);
 vec4 mix3D(vec4 p000, vec4 p100, vec4 p010, vec4 p110, vec4 p001, vec4 p101, vec4 p011, vec4 p111, vec3 weight);
@@ -439,10 +437,6 @@ float getLevelDimensionFloat(float lvl) {
 	return float(dimensions) / pow(2.f, lvl - 1.f);
 }
 
-float doto(vec3 a, vec3 b) {
-	return max(dot(a, b), 0.0f);
-}
-
 vec3 getClosestAxisNormal(vec3 v) {
 	vec3 a = abs(v);
 	
@@ -461,14 +455,6 @@ vec3 getClosestAxisNormal(vec3 v) {
 
 	return normal;
 }
-
-vec3 orthogonal(vec3 v) {
-	v = normalize(v);
-	vec3 o = vec3(1.f, 0.f, 0.f);
-
-	return abs(dot(v, o)) > 0.999f ? cross(v, vec3(0.f, 1.f, 0.f)) : cross(v, o);
-}
-
 
 vec4 convRGBA8toVec4(uint val) {
 	return vec4(float((val&0x000000FF)), float((val&0x0000FF00)>>8U),

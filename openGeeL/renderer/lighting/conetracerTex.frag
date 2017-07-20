@@ -1,6 +1,7 @@
 #version 430
 
-const float PI = 3.14159265359;
+#include <renderer/shaders/helperfunctions.glsl>
+
 const float epsilon = 0.000001f;
 const float VOXELSIZE = 1.f;
 const float FLOAT_MAX = 100000.f;
@@ -39,10 +40,8 @@ vec4 getFragmentColor(vec3 position, float lvl);
 
 vec3 getClosestAxisNormal(vec3 v);
 float getNodeBorderDistance(vec3 position, vec3 direction, int stepSize);
-vec3 orthogonal(vec3 v);
-
 vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness);
-float doto(vec3 a, vec3 b);
+
 
 void main() {
 	vec4 normMet  = texture(gNormalMet, TexCoords);
@@ -255,13 +254,6 @@ float getNodeBorderDistance(vec3 position, vec3 direction, int stepSize) {
 }
 
 
-vec3 orthogonal(vec3 v) {
-	v = normalize(v);
-	vec3 o = vec3(1.f, 0.f, 0.f);
-
-	return abs(dot(v, o)) > 0.999f ? cross(v, vec3(0.f, 1.f, 0.f)) : cross(v, o);
-}
-
 //Compute fresnel term with Fresnel-Schlick approximation
 vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness) {
 	vec3 F0 = vec3(0.04f);
@@ -271,10 +263,6 @@ vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughn
     //return F0 + (1.0f - F0) * pow(1.0f - theta, 5.0f);
 	vec3 fres = F0 + (max(vec3(1.0f - roughness), F0) - F0) * pow(1.0f - theta, 5.0f);
 	return clamp(fres, 0.f, 1.f);
-}
-
-float doto(vec3 a, vec3 b) {
-	return max(dot(a, b), 0.0f);
 }
 
 

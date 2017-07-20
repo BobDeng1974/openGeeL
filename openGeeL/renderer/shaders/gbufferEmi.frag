@@ -1,5 +1,7 @@
 #version 430 core
 
+#include <renderer/shaders/material.glsl>
+
 layout (location = 0) out vec4 gPositionRough;
 layout (location = 1) out vec4 gNormalMet;
 layout (location = 2) out vec4 gDiffuse;
@@ -10,22 +12,7 @@ in vec3 fragPosition;
 in vec2 textureCoordinates;
 in mat3 TBN;
 
-
-struct Material {
-	sampler2D diffuse;
-	sampler2D specular;
-	sampler2D normal;
-	sampler2D metal;
-
-	int mapFlags;
-	float roughness;
-	float metallic;
-
-	vec4  color;
-	vec3 emissivity;
-};
-
-uniform Material material;
+uniform EmissiveMaterial material;
 
 
 void main() {    

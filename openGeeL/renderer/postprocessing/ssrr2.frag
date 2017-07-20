@@ -1,6 +1,7 @@
 #version 430 core
 
-const float PI = 3.14159265359;
+#include <renderer/shaders/helperfunctions.glsl>
+#include <renderer/lighting/cooktorrance.glsl>
 
 in vec2 TexCoords;
 
@@ -23,15 +24,6 @@ float border = 1.f;
 bool computeReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float roughness, out vec3 color);
 vec3 getReflectionFussy(vec3 fragPos, vec3 normal, vec3 reflectionDirection, float roughness);
 
-
-vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness);
-float calculateNormalDistrubution(vec3 normal, vec3 halfway, float roughness);
-float calculateGeometryFunctionSmith(vec3 normal, vec3 viewDirection, vec3 lightDirection, float roughness);
-
-//Return dot(a,b) >= 0
-float doto(vec3 a, vec3 b);
-vec3 interpolate(vec3 a, vec3 b, float i);
-float interpolatei(vec3 a, vec3 b, vec3 v);
 vec4 transformToClip(vec3 vector);
 vec2 hammersleySeq(int i, int count);
 vec3 generateSampledVector(float roughness, vec2 samp);
@@ -124,7 +116,7 @@ bool computeReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float
 				vec3 right = currPosition;
 				for(int j = 0; j < 5; j++) {
 				
-					currPosition = interpolate(left, right, 0.5f);
+					currPosition = mix(left, right, 0.5f);
 					currDepth    = texture(gPositionRoughness, currPosProj.xy).z;
 					currPosProj  = transformToClip(currPosition);
 
@@ -153,55 +145,6 @@ bool computeReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float
 	return false;
 }
 
-//Compute fresnel term with Fresnel-Schlick approximation
-vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness) {
-	vec3 F0 = vec3(0.04f);
-    F0 = mix(F0, albedo, metallic);
-
-	vec3 fres = F0 + (max(vec3(1.f - roughness), F0) - F0) * pow(1.f - theta, 5.f);
-	return clamp(fres, 0.f, 1.f);
-}
-
-//Trowbridge-Reitz GGX normal distribution function
-float calculateNormalDistrubution(vec3 normal, vec3 halfway, float roughness) {
-	
-	//TODO: Fix problems in ndf and remove this cop out
-	float offset = 3.f;
-	float copOut = step(roughness, 0.2f);
-
-    float a = roughness * roughness;
-    float NdotH  = doto(normal, halfway);
-    float NdotH2 = NdotH * NdotH;
-	
-    float denom  = (NdotH2 * (a - 1.0f) + 1.0f);
-    denom = PI * denom * denom + 0.0001f;
-
-    float ndf = (a / denom) * (1.f - copOut) + (copOut * offset);
-	ndf = clamp(ndf, 0.f, offset);
-	ndf /= offset;
-
-	return ndf;
-}
-
-float calculateGeometryFunctionSchlick(float NdotV, float roughness) {
-    float r = (roughness + 1.f);
-    float k = (r * r) / 8.f;
-
-    float nom   = NdotV;
-    float denom = NdotV * (1.f - k) + k;
-	
-    return nom / denom;
-}
-
-float calculateGeometryFunctionSmith(vec3 normal, vec3 viewDirection, vec3 lightDirection, float roughness) {
-    float NdotV = doto(normal, viewDirection);
-    float NdotL = doto(normal, lightDirection);
-    float ggx2  = calculateGeometryFunctionSchlick(NdotV, roughness);
-    float ggx1  = calculateGeometryFunctionSchlick(NdotL, roughness);
-	
-    return ggx1 * ggx2;
-}
-
 //Transform to clip space
 vec4 transformToClip(vec3 vector) {
 	vec4 vecProj = vec4(vector, 1.f);
@@ -210,18 +153,6 @@ vec4 transformToClip(vec3 vector) {
 	vecProj.xyz = vecProj.xyz * 0.5 + 0.5;
 
 	return vecProj;
-}
-
-vec3 interpolate(vec3 a, vec3 b, float i) {
-	return a * (1.f - i) + b * i;
-}
-
-float interpolatei(vec3 a, vec3 b, vec3 v) {
-	return length((v - a) / (b - a));
-}
-
-float doto(vec3 a, vec3 b) {
-	return max(dot(a, b), 0.0f);
 }
 
 

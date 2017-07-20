@@ -1,6 +1,8 @@
 #version 430
 
-const float PI = 3.14159265359;
+#include <renderer/shaders/helperfunctions.glsl>
+#include <renderer/lighting/cooktorrance.glsl>
+
 
 struct ReflectionProbe {
 	vec3 minPosition;
@@ -31,14 +33,9 @@ uniform vec3 origin;
 uniform vec3 ambient;
 
 
-vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness);
-
 vec3 calculateIndirectDiffuse(vec3 normal, vec3 kd, vec3 albedo, float occlusion);
 vec3 calculateIndirectSpecular(vec3 normal, vec3 view, vec3 albedo, float roughness, float metallic);
 vec3 calculateIndirectSpecularSplitSum(vec3 normal, vec3 view, vec3 albedo, float roughness, float metallic);
-
-//Return dot(a,b) >= 0
-float doto(vec3 a, vec3 b);
 
 
 void main() {
@@ -76,47 +73,6 @@ void main() {
 }
 
 //Lighting.....................................................................................................................................
-
-//Compute fresnel term with Fresnel-Schlick approximation
-vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness) {
-	vec3 F0 = vec3(0.04);
-    F0 = mix(F0, albedo, metallic);
-
-	//Simplified term withouth roughness included
-    //return F0 + (1.0f - F0) * pow(1.0f - theta, 5.0f);
-	vec3 fres = F0 + (max(vec3(1.0f - roughness), F0) - F0) * pow(1.0f - theta, 5.0f);
-	return clamp(fres, 0.f, 1.f);
-}
-
-//Trowbridge-Reitz GGX normal distribution function
-float calculateNormalDistrubution(vec3 normal, vec3 halfway, float roughness) {
-    float a = roughness * roughness;
-    float NdotH  = doto(normal, halfway);
-    float NdotH2 = NdotH * NdotH;
-	
-    float denom  = (NdotH2 * (a - 1.0f) + 1.0f);
-    denom = PI * denom * denom;
-    return a / denom;
-}
-
-float calculateGeometryFunctionSchlick(float NdotV, float roughness) {
-    float r = (roughness + 1.0f);
-    float k = (r * r) / 8.0f;
-
-    float nom   = NdotV;
-    float denom = NdotV * (1.0f - k) + k;
-	
-    return nom / denom;
-}
-
-float calculateGeometryFunctionSmith(vec3 normal, vec3 viewDirection, vec3 lightDirection, float roughness) {
-    float NdotV = doto(normal, viewDirection);
-    float NdotL = doto(normal, lightDirection);
-    float ggx2  = calculateGeometryFunctionSchlick(NdotV, roughness);
-    float ggx1  = calculateGeometryFunctionSchlick(NdotL, roughness);
-	
-    return ggx1 * ggx2;
-}
 
 vec3 calculateIndirectDiffuse(vec3 normal, vec3 kd, vec3 albedo, float occlusion) {
 
@@ -219,12 +175,5 @@ vec3 calculateIndirectSpecularSplitSum(vec3 normal, vec3 view, vec3 albedo, floa
 
 	//Main splitsum integral
 	return prefilteredColor * (F0 * brdfInt.x + brdfInt.y);
-}
-
-
-//Helper functions......................................................................................................................
-
-float doto(vec3 a, vec3 b) {
-	return max(dot(a, b), 0.0f);
 }
 
