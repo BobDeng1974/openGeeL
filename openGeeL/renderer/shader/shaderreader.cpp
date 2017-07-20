@@ -37,7 +37,7 @@ namespace geeL {
 
 
 
-	void preprocessShader(std::string& file, set<string>& includedFiles) {
+	void preprocessIncludes(std::string& file, set<string>& includedFiles) {
 		regex include("^\\s*#\\s*include\\s+(?:<[^>]*>|\"[^\"]*\")\\s*");
 
 		for (sregex_iterator it(file.begin(), file.end(), include); it != sregex_iterator(); it++) {
@@ -56,18 +56,15 @@ namespace geeL {
 				includedFiles.insert(filePath);
 
 				string includeCode = ShaderFileReader::readShaderFile(filePath.c_str());
-				preprocessShader(includeCode, includedFiles);
+				preprocessIncludes(includeCode, includedFiles);
 				file.replace(file.find(current), current.length(), includeCode + "\n\n");
 			}
 		}
 	}
 
 	string ShaderFileReader::preprocessShaderString(const string& shaderCode, const std::string& shaderPath) {
-		set<string> includedFiles;
-		includedFiles.insert(shaderPath);
-
 		std::string result = shaderCode;
-		preprocessShader(result, includedFiles);
+		preprocessShaderString(result, shaderPath);
 
 		return result;
 	}
@@ -76,7 +73,7 @@ namespace geeL {
 		set<string> includedFiles;
 		includedFiles.insert(shaderPath);
 
-		preprocessShader(shaderCode, includedFiles);
+		preprocessIncludes(shaderCode, includedFiles);
 	}
 
 }
