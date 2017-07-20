@@ -11,13 +11,6 @@ namespace geeL {
 
 	class Drawer;
 
-	struct FrameBufferInformation {
-
-	public:
-		Resolution currResolution;
-
-	};
-
 
 	//Interface for all framebuffer objects
 	class IFrameBuffer {
@@ -69,7 +62,6 @@ namespace geeL {
 	protected:
 		unsigned int fbo;
 		Resolution resolution;
-		FrameBufferInformation info;
 
 		unsigned int getFBO() const;
 		void clear() const;
