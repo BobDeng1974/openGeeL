@@ -31,6 +31,8 @@ namespace geeL {
 			DefaultPostProcess s(other);
 			*this = std::move(s);
 		}
+
+		return *this;
 	}
 
 

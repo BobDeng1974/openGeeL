@@ -289,8 +289,9 @@ namespace geeL {
 
 
 	void SSRRSnippet::draw(GUIContext* context) {
+		
 		//Lazy quick fix to allow fussy SSRR in GUI
-		MultisampledSSRR* fussy = static_cast<MultisampledSSRR*>(&ssrr);
+		MultisampledSSRR* fussy = dynamic_cast<MultisampledSSRR*>(&ssrr);
 		if (fussy != nullptr) {
 			unsigned int samples = GUISnippets::drawBarInteger(context, fussy->getSampleCount(), 1, 100, 1, "Sample Count");
 			fussy->setSampleCount(samples);

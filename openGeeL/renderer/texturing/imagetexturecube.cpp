@@ -17,8 +17,6 @@ namespace geeL {
 		int width, height;
 		unsigned char* image;
 
-		resolution = (width + height) / 2;
-
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
 		image = stbi_load(rightPath.c_str(), &width, &height, 0, STBI_rgb);
@@ -44,6 +42,8 @@ namespace geeL {
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		stbi_image_free(image);
+
+		resolution = (width + height) / 2;
 	}
 
 	ImageTextureCube::~ImageTextureCube() {

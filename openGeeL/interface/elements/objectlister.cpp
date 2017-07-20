@@ -31,7 +31,7 @@ namespace geeL {
 			//Hacky: Read specific shadow map type via casting
 			ShadowMap* map = light.getShadowMap();
 			if (map != nullptr) {
-				SimpleShadowMap* simpleMap = static_cast<SimpleShadowMap*>(map);
+				SimpleShadowMap* simpleMap = dynamic_cast<SimpleShadowMap*>(map);
 
 				if (simpleMap != nullptr)
 					snippet = &createSnippet(*simpleMap);

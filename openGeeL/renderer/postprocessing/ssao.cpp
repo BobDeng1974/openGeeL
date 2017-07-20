@@ -64,6 +64,8 @@ namespace geeL {
 			SSAO s(other);
 			*this = std::move(s);
 		}
+
+		return *this;
 	}
 
 	void SSAO::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {

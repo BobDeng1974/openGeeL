@@ -53,11 +53,11 @@ namespace geeL {
 					nk_label(context, name.c_str(), NK_TEXT_LEFT);
 
 					//TODO: Make this less horrible and remove casts
-					DefaultMaterialContainer* def = static_cast<DefaultMaterialContainer*>(&container);
+					DefaultMaterialContainer* def = dynamic_cast<DefaultMaterialContainer*>(&container);
 					if (def != nullptr)
 						GUISnippets::drawMaterial(context, def);
 					else {
-						GenericMaterialContainer* gen = static_cast<GenericMaterialContainer*>(&container);
+						GenericMaterialContainer* gen = dynamic_cast<GenericMaterialContainer*>(&container);
 						if (gen != nullptr)
 							GUISnippets::drawMaterial(context, gen);
 					}
