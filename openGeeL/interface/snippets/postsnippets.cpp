@@ -63,8 +63,10 @@ namespace geeL {
 	}
 
 	void DefaultSnippet::draw(GUIContext* context) {
-		float exposure = GUISnippets::drawBarFloat(context, def.getExposure(), 0.f, 25.f, 0.1f, "Exposure");
-		def.setExposure(exposure);
+		float defExposure = def.getExposure();
+		float exposure = GUISnippets::drawBarFloat(context, defExposure, 0.f, 25.f, 0.1f, "Exposure");
+		if (exposure != defExposure)
+			def.setExposure(exposure);
 	}
 
 	std::string DefaultSnippet::toString() const {

@@ -12,10 +12,6 @@ using namespace std;
 
 namespace geeL {
 
-	bool TextureBinding::operator== (const TextureBinding &rhs) {
-		return *texture == *rhs.texture;
-	}
-
 	static unsigned int activeShader = 0;
 	void Shader::use() const {
 		if (program != activeShader) {
@@ -26,6 +22,9 @@ namespace geeL {
 
 	Shader::~Shader() {
 		glDeleteProgram(program);
+
+		for (auto it = shaderBindings.begin(); it != shaderBindings.end(); it++)
+			delete it->second;
 	}
 
 
@@ -170,6 +169,35 @@ namespace geeL {
 		return location;
 	}
 
+	void Shader::set(ShaderLocation location, const int& value) const {
+		glUniform1i(location, value);
+	}
+
+	void Shader::set(ShaderLocation location, const float& value) const {
+		glUniform1f(location, value);
+	}
+
+	void Shader::set(ShaderLocation location, const glm::vec2& value) const {
+		glUniform2f(location, value.x, value.y);
+	}
+
+	void Shader::set(ShaderLocation location, const glm::vec3& value) const {
+		glUniform3f(location, value.x, value.y, value.z);
+	}
+
+	void Shader::set(ShaderLocation location, const glm::vec4& value) const {
+		glUniform4f(location, value.x, value.y, value.z, value.w);
+	}
+
+	void Shader::set(ShaderLocation location, const glm::mat3 & value) const {
+		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(value));
+	}
+
+	void Shader::set(ShaderLocation location, const glm::mat4& value) const {
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+	}
+
+
 	void Shader::setInteger(ShaderLocation location, int value) const {
 		glUniform1i(location, value);
 	}
@@ -197,5 +225,77 @@ namespace geeL {
 	void Shader::setMat4(ShaderLocation location, const glm::mat4& value) const {
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 	}
+
+
+	void Shader::setValue(const std::string& name, float value, Range<float> range) {
+		FloatBinding* binding;
+
+		auto& it = shaderBindings.find(name);
+		if (it != shaderBindings.end()) {
+			binding = static_cast<FloatBinding*>(it->second);
+			
+			bool set = binding->setValue(value);
+			if(set) bindingQueue.push(binding);
+		}
+		else {
+			binding = new FloatBinding(*this, name, value, range);
+			shaderBindings[name] = binding;
+
+			bindingQueue.push(binding);
+		}
+	}
+
+	void Shader::setValue(const std::string& name, int value, Range<int> range) {
+		IntegerBinding* binding;
+
+		auto it = shaderBindings.find(name);
+		if (it != shaderBindings.end()) {
+			binding = static_cast<IntegerBinding*>(it->second);
+
+			bool set = binding->setValue(value);
+			if (set) bindingQueue.push(binding);
+		}
+		else {
+			binding = new IntegerBinding(*this, name, value, range);
+			shaderBindings[name] = binding;
+
+			bindingQueue.push(binding);
+		}
+	}
+
+	float Shader::getFloatValue(const std::string& name) const {
+		auto it = shaderBindings.find(name);
+		if (it != shaderBindings.end()) {
+			FloatBinding* binding = static_cast<FloatBinding*>(it->second);
+
+			return binding->getValue();
+		}
+
+		return 0.f;
+	}
+
+	int Shader::getIntValue(const std::string& name) const {
+		auto it = shaderBindings.find(name);
+		if (it != shaderBindings.end()) {
+			IntegerBinding* binding = static_cast<IntegerBinding*>(it->second);
+
+			return binding->getValue();
+		}
+
+		return 0;
+	}
+
+	void Shader::bindParameters() {
+		use();
+
+		while (!bindingQueue.empty()) {
+			ShaderBinding* binding = bindingQueue.front();
+			binding->bind();
+
+			bindingQueue.pop();
+		}
+	}
+
+
 }
 

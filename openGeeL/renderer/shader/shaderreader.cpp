@@ -62,6 +62,29 @@ namespace geeL {
 		}
 	}
 
+	void preprocessRequirements(std::string& file, set<string>& requirements) {
+		regex require("^#require\\s+[A-Z, \_]+\\s?");
+
+		for (sregex_iterator it(file.begin(), file.end(), require); it != sregex_iterator(); it++) {
+			string current = (*it).str();
+			regex repl(current);
+
+			string element = current.substr(9, current.length() - 9);
+			element.erase(remove(element.begin(), element.end(), ' '), element.end());
+
+			//File already contains this requirement and it is therefore simply removed
+			if (requirements.count(element))
+				file = regex_replace(file, repl, "");
+			else {
+				requirements.insert(element);
+
+				//TODO: implement this
+				string replacement;
+				file.replace(file.find(current), current.length(), replacement + "\n\n");
+			}
+		}
+	}
+
 	string ShaderFileReader::preprocessShaderString(const string& shaderCode, const std::string& shaderPath) {
 		std::string result = shaderCode;
 		preprocessShaderString(result, shaderPath);
@@ -70,9 +93,11 @@ namespace geeL {
 	}
 
 	void ShaderFileReader::preprocessShaderString(std::string& shaderCode, const std::string& shaderPath) {
+		set<string> requirements;
+		preprocessRequirements(shaderCode, requirements);
+		
 		set<string> includedFiles;
 		includedFiles.insert(shaderPath);
-
 		preprocessIncludes(shaderCode, includedFiles);
 	}
 

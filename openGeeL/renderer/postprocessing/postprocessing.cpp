@@ -70,6 +70,7 @@ namespace geeL {
 	}
 
 	void PostProcessingEffectFS::bindToScreen() {
+		shader.bindParameters();
 		shader.loadMaps();
 		screen->draw();
 	}

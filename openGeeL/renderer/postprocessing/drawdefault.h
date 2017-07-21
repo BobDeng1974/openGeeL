@@ -21,13 +21,11 @@ namespace geeL {
 		float getExposure() const;
 		void setExposure(float exposure);
 
-
 	protected:
-		float exposure;
 		ImageTexture* noise;
-		ShaderLocation exposureLocation;
 
 	};
+
 }
 
 #endif

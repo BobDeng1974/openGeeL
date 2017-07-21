@@ -10,15 +10,17 @@ using namespace glm;
 namespace geeL {
 
 	DefaultPostProcess::DefaultPostProcess(float exposure)
-		: PostProcessingEffectFS("renderer/postprocessing/drawdefault.frag"), exposure(exposure) {
+		: PostProcessingEffectFS("renderer/postprocessing/drawdefault.frag") {
 	
 		noise = new ImageTexture("resources/textures/noise.png", ColorType::Single);
+		shader.setValue("exposure", exposure, POSITIVE_FLOAT_RANGE);
 	}
 
-	DefaultPostProcess::DefaultPostProcess(const DefaultPostProcess & other) 
-		: PostProcessingEffectFS(other), exposure(other.exposure) {
+	DefaultPostProcess::DefaultPostProcess(const DefaultPostProcess& other) 
+		: PostProcessingEffectFS(other) {
 
 		noise = new ImageTexture("resources/textures/noise.png", ColorType::Single);
+		shader.setValue("exposure", other.getExposure(), POSITIVE_FLOAT_RANGE);
 	}
 
 	DefaultPostProcess::~DefaultPostProcess() {
@@ -42,23 +44,15 @@ namespace geeL {
 		shader.addMap(*noise, "noiseMap");
 		shader.setVector3("noiseScale",
 			vec3(float(resolution.getWidth()) / 255.f, float(resolution.getHeight()) / 255.f, 0.f));
-
-		exposureLocation = shader.setFloat("exposure", exposure);
 	}
 
 
 	float DefaultPostProcess::getExposure() const {
-		return exposure;
+		return shader.getFloatValue("exposure");
 	}
 
 	void DefaultPostProcess::setExposure(float exposure) {
-		if (exposure > 0.f && exposure != this->exposure) {
-			this->exposure = exposure;
-
-			shader.use();
-			shader.setFloat(exposureLocation, exposure);
-		}
-			
+		shader.setValue("exposure", exposure, POSITIVE_FLOAT_RANGE);
 	}
 
 }
