@@ -34,9 +34,11 @@ namespace geeL {
 
 	const Range<float> UNLIMITED_FLOAT_RANGE(std::numeric_limits<float>::min(), std::numeric_limits<float>::max());
 	const Range<float> POSITIVE_FLOAT_RANGE(0.f, std::numeric_limits<float>::max());
+	const Range<float> NORMALIZED_FLOAT_RANGE(0.f, 1.f);
 
 	const Range<int> UNLIMITED_INT_RANGE(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
 	const Range<int> POSITIVE_INT_RANGE(0, std::numeric_limits<int>::max());
+	const Range<int> NORMALIZED_INT_RANGE(0, 1);
 
 }
 

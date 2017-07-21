@@ -13,14 +13,14 @@ namespace geeL {
 		: PostProcessingEffectFS("renderer/postprocessing/drawdefault.frag") {
 	
 		noise = new ImageTexture("resources/textures/noise.png", ColorType::Single);
-		shader.setValue("exposure", exposure, POSITIVE_FLOAT_RANGE);
+		shader.setValue("exposure", exposure, Range<float>(0.f, 100.f));
 	}
 
 	DefaultPostProcess::DefaultPostProcess(const DefaultPostProcess& other) 
 		: PostProcessingEffectFS(other) {
 
 		noise = new ImageTexture("resources/textures/noise.png", ColorType::Single);
-		shader.setValue("exposure", other.getExposure(), POSITIVE_FLOAT_RANGE);
+		shader.setValue("exposure", other.getExposure(), Range<float>(0.f, 100.f));
 	}
 
 	DefaultPostProcess::~DefaultPostProcess() {
@@ -52,7 +52,7 @@ namespace geeL {
 	}
 
 	void DefaultPostProcess::setExposure(float exposure) {
-		shader.setValue("exposure", exposure, POSITIVE_FLOAT_RANGE);
+		shader.setValue("exposure", exposure, Range<float>(0.f, 100.f));
 	}
 
 }

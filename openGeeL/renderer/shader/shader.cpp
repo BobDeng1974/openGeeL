@@ -104,17 +104,6 @@ namespace geeL {
 		}
 	}
 
-	void Shader::loadMaps(std::list<unsigned int>& maps, TextureType type) const {
-		int textureType = (int)type;
-
-		int layer = GL_TEXTURE0;
-		int counter = mapOffset;
-		for (auto it = maps.begin(); it != maps.end(); it++) {
-			glActiveTexture(layer + counter);
-			glBindTexture(textureType, *it);
-			counter++;
-		}
-	}
 
 	ShaderLocation Shader::getLocation(const string& name) const {
 		return glGetUniformLocation(program, name.c_str());

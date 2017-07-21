@@ -13,15 +13,16 @@ namespace geeL {
 
 	GodRay::GodRay(glm::vec3 lightPosition, unsigned int samples) 
 		: PostProcessingEffectFS("renderer/postprocessing/godray.frag"), 
-			lightPosition(lightPosition), samples(samples) {}
+			lightPosition(lightPosition) {
+	
+		shader.setValue("samples", samples, Range<int>(0, 200));
+	}
 
 
 	void GodRay::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.bind<int>("samples", samples);
 		shader.bind<int>("raysOnly", onlyEffect);
-
 		lightLocation = shader.getLocation("lightPosition");
 		lightViewLocation = shader.getLocation("lightPositionView");
 	}
@@ -46,15 +47,11 @@ namespace geeL {
 	}
 
 	unsigned int GodRay::getSampleCount() const {
-		return samples;
+		return shader.getIntValue("samples");
 	}
 
 	void GodRay::setSampleCount(unsigned int samples) {
-		if (samples < 200 && samples != this->samples) {
-			this->samples = samples;
-
-			shader.bind<int>("samples", samples);
-		}
+		shader.setValue("samples", samples, Range<int>(0, 200));
 	}
 
 }

@@ -32,7 +32,6 @@ namespace geeL {
 		virtual void bindValues();
 
 	private:
-		unsigned int samples;
 		glm::vec3 lightPosition;
 
 		ShaderLocation lightLocation;

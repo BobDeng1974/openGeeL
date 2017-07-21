@@ -24,8 +24,6 @@ namespace geeL {
 	class VoxelConeTracer;
 
 
-	
-
 	class PostEffectSnippet : public GUISnippet {
 
 	public:
@@ -42,6 +40,8 @@ namespace geeL {
 	};
 
 
+	//Generic post snippet that tries to read and write values of any
+	//post effect that use the shader binding system
 	class GenericPostSnippet : public PostEffectSnippet {
 
 	public:
