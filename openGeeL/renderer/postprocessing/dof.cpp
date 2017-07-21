@@ -96,11 +96,6 @@ namespace geeL {
 
 	}
 
-	void DepthOfFieldBlurred::draw() {
-		bindValues();
-		bindToScreen();
-	}
-
 	void DepthOfFieldBlurred::addWorldInformation(map<WorldMaps, const Texture*> maps) {
 		addImageBuffer(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
 		blur.addImageBuffer(*maps[WorldMaps::PositionRoughness], "gPositionDepth");

@@ -46,6 +46,8 @@ namespace geeL {
 		const Resolution& getResolution() const;
 		void setResolution(const Resolution& value);
 
+		virtual Shader& getShader() = 0;
+
 	protected:
 		Resolution resolution;
 		bool onlyEffect = false;
@@ -69,6 +71,8 @@ namespace geeL {
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 		virtual void draw();
 		virtual void fill();
+
+		virtual Shader& getShader();
 
 		virtual std::string toString() const;
 
@@ -96,6 +100,8 @@ namespace geeL {
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 		virtual void draw();
 		virtual void fill();
+
+		virtual Shader& getShader();
 
 		virtual std::string toString() const;
 

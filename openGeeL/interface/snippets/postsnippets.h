@@ -2,6 +2,8 @@
 #define POSTEFFECTSNIPPETS_H
 
 #include <list>
+#include <string>
+#include "../../renderer/shader/shader.h"
 #include "guisnippets.h"
 
 namespace geeL {
@@ -22,6 +24,8 @@ namespace geeL {
 	class VoxelConeTracer;
 
 
+	
+
 	class PostEffectSnippet : public GUISnippet {
 
 	public:
@@ -36,6 +40,22 @@ namespace geeL {
 		PostProcessingEffect& baseEffect;
 
 	};
+
+
+	class GenericPostSnippet : public PostEffectSnippet {
+
+	public:
+		GenericPostSnippet(PostProcessingEffect& effect);
+
+		virtual void draw(GUIContext* context);
+
+	private:
+		Shader& shader;
+		std::list<const FloatBinding*> floatBindings;
+		std::list<const IntegerBinding*> integerBindings;
+
+	};
+
 
 	//Group of post effect snippets where the first one acts as the 'main' effect
 	class PostGroupSnippet : public PostEffectSnippet {

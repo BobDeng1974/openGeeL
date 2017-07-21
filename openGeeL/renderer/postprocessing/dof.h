@@ -45,8 +45,6 @@ namespace geeL {
 		virtual void setImageBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 
-		virtual void draw();
-
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 		void resizeBlurResolution(ResolutionScale blurResolution);

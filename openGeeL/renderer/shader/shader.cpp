@@ -268,6 +268,11 @@ namespace geeL {
 		}
 	}
 
+	void Shader::iterateBindings(std::function<void(const ShaderBinding&)> function) {
+		for (auto it(shaderBindings.begin()); it != shaderBindings.end(); it++)
+			function(*it->second);
+	}
+
 
 }
 

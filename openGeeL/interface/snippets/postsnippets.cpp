@@ -1,5 +1,6 @@
 #include "../guiwrapper.h"
 #include "../../renderer/lighting/conetracer.h"
+#include "../../renderer/shader/shader.h"
 #include "../../renderer/postprocessing/drawdefault.h"
 #include "../../renderer/postprocessing/blurredeffect.h"
 #include "../../renderer/postprocessing/colorcorrection.h"
@@ -27,6 +28,60 @@ namespace geeL {
 	}
 
 	
+
+	GenericPostSnippet::GenericPostSnippet(PostProcessingEffect& effect) 
+		: PostEffectSnippet(effect), shader(effect.getShader()){
+
+		//Read float and integer values from effects shader
+		shader.iterateBindings([this](const ShaderBinding& binding) {
+			const FloatBinding* floatBinding = dynamic_cast<const FloatBinding*>(&binding);
+			if (floatBinding != nullptr)
+				floatBindings.push_back(floatBinding);
+			else {
+				const IntegerBinding* intBinding = dynamic_cast<const IntegerBinding*>(&binding);
+				if (intBinding != nullptr)
+					integerBindings.push_back(intBinding);
+			}
+		});
+	}
+
+	void GenericPostSnippet::draw(GUIContext * context) {
+
+		float border = 200.f;
+		for (auto it(floatBindings.begin()); it != floatBindings.end(); it++) {
+			const FloatBinding& binding = **it;
+			std::string name = binding.toString();
+
+			const Range<float> range = binding.getRange();
+			float min = (range.getMin() < -border) ? -border : range.getMin();
+			float max = (range.getMax() > border) ? border : range.getMax();
+			float step = (max - min) / 1000.f;
+
+			float oldVal = shader.getFloatValue(name);
+			float newVal = GUISnippets::drawBarFloat(context, oldVal, min, max, step, name);
+
+			if (newVal != oldVal)
+				shader.setValue(name, newVal);
+		}
+
+		for (auto it(integerBindings.begin()); it != integerBindings.end(); it++) {
+			const IntegerBinding& binding = **it;
+			std::string name = binding.toString();
+
+			const Range<int> range = binding.getRange();
+			int min = (range.getMin() < -border) ? -border : range.getMin();
+			int max = (range.getMax() > border) ? border : range.getMax();
+			int step = (max - min) / 1000.f;
+
+			int oldVal = shader.getFloatValue(name);
+			int newVal = GUISnippets::drawBarInteger(context, oldVal, min, max, 1, name);
+
+			if (newVal != oldVal)
+				shader.setValue(name, newVal);
+		}
+	}
+
+
 
 	PostGroupSnippet::PostGroupSnippet(std::list<PostEffectSnippet*>& snippets) 
 		: PostEffectSnippet(snippets.front()->getEffect()), snippets(snippets) {}
@@ -299,6 +354,7 @@ namespace geeL {
 		unsigned int diffSteps = GUISnippets::drawBarInteger(context, tracer.getDiffuseSampleSize(), 1, 50, 1, "Diffuse Size");
 		tracer.setDiffuseSampleSize(diffSteps);
 	}
+
 
 
 }

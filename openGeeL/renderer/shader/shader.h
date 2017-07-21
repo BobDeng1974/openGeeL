@@ -3,6 +3,7 @@
 
 #include <map>
 #include <list>
+#include <functional>
 #include <queue>
 #include <string>
 #include <vec2.hpp>
@@ -90,6 +91,8 @@ namespace geeL {
 
 		void bindParameters();
 
+		void iterateBindings(std::function<void(const ShaderBinding&)> function);
+
 	protected:
 		unsigned int program;
 		std::map<std::string, TextureBinding> maps;
@@ -118,7 +121,7 @@ namespace geeL {
 		void bind(ShaderLocation location, const glm::mat4& value) const;
 
 	private:
-		//Bind all added maps to the shader
+		//Bind all added maps into the shader
 		void bindMaps();
 
 	};

@@ -27,6 +27,7 @@ namespace geeL {
 		resolution = value;
 	}
 
+	
 
 	PostProcessingEffectFS::PostProcessingEffectFS(string fragmentPath)
 		: PostProcessingEffectFS("renderer/shaders/screen.vert", fragmentPath) {}
@@ -71,6 +72,12 @@ namespace geeL {
 		shader.loadMaps();
 		screen->draw();
 	}
+
+	Shader& PostProcessingEffectFS::getShader() {
+		return shader;
+	}
+
+
 
 
 	string PostProcessingEffectFS::toString() const {
@@ -120,6 +127,10 @@ namespace geeL {
 
 	void PostProcessingEffectCS::fill() {
 		fill();
+	}
+
+	Shader& PostProcessingEffectCS::getShader() {
+		return shader;
 	}
 
 

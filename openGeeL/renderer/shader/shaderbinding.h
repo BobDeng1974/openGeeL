@@ -18,8 +18,10 @@ namespace geeL {
 		ShaderBinding(const Shader& shader, const std::string&name);
 
 		virtual void bind() const = 0;
+		virtual std::string toString() const;
 
 	protected:
+		std::string name;
 		const Shader& shader;
 		ShaderLocation location;
 
@@ -50,6 +52,8 @@ namespace geeL {
 		ComparableBinding(const Shader& shader, const std::string&name, const T& value, Range<T> range);
 
 		virtual bool setValue(const T& value);
+
+		const Range<T>& getRange() const;
 
 	private:
 		Range<T> range;
@@ -107,6 +111,11 @@ namespace geeL {
 		}
 
 		return false;
+	}
+
+	template<class T>
+	inline const Range<T>& ComparableBinding<T>::getRange() const {
+		return range;
 	}
 
 }

@@ -5,7 +5,11 @@
 namespace geeL {
 
 	ShaderBinding::ShaderBinding(const Shader& shader, const std::string&name)
-		: shader(shader), location(shader.getLocation(name)) {}
+		: shader(shader), location(shader.getLocation(name)), name(name) {}
+
+	std::string ShaderBinding::toString() const {
+		return name;
+	}
 
 
 	bool TextureBinding::operator== (const TextureBinding &rhs) {

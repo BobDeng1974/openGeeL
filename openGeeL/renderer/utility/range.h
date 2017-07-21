@@ -19,6 +19,14 @@ namespace geeL {
 			return (value < min) ? min : (value > max) ? max : value;
 		}
 
+		const T& getMin() const {
+			return min;
+		}
+
+		const T& getMax() const {
+			return max;
+		}
+
 	private:
 		T min, max;
 
