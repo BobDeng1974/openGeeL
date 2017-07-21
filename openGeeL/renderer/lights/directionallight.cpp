@@ -26,11 +26,11 @@ namespace geeL {
 
 		switch (space) {
 			case ShaderTransformSpace::View:
-				shader.setVector3(name + "direction", camera.GetOriginInViewSpace() -
+				shader.set<glm::vec3>(name + "direction", camera.GetOriginInViewSpace() -
 					camera.TranslateToViewSpace(transform.getForwardDirection()));
 				break;
 			case ShaderTransformSpace::World:
-				shader.setVector3(name + "direction", transform.getForwardDirection());
+				shader.set<glm::vec3>(name + "direction", transform.getForwardDirection());
 				break;
 		}
 	}

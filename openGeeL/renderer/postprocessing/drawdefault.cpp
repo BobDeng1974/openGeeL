@@ -42,7 +42,7 @@ namespace geeL {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		shader.addMap(*noise, "noiseMap");
-		shader.setVector3("noiseScale",
+		shader.set<glm::vec3>("noiseScale",
 			vec3(float(resolution.getWidth()) / 255.f, float(resolution.getHeight()) / 255.f, 0.f));
 	}
 

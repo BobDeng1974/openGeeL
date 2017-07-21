@@ -22,10 +22,10 @@ namespace geeL {
 	void VoxelConeTracer::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.setInteger("maxStepSpecular", maxStepSpecular);
-		shader.setInteger("maxStepDiffuse", maxStepDiffuse);
-		shader.setFloat("specularLOD", specularLOD);
-		shader.setFloat("diffuseLOD", diffuseLOD);
+		shader.set<int>("maxStepSpecular", maxStepSpecular);
+		shader.set<int>("maxStepDiffuse", maxStepDiffuse);
+		shader.set<float>("specularLOD", specularLOD);
+		shader.set<float>("diffuseLOD", diffuseLOD);
 
 		voxelStructure.build();
 
@@ -37,9 +37,9 @@ namespace geeL {
 	void VoxelConeTracer::bindValues() {
 		voxelStructure.bind(shader);
 
-		shader.setFloat(farPlaneLocation, scene.getCamera().getFarPlane());
-		shader.setMat4(invViewLocation, camera->getInverseViewMatrix());
-		shader.setVector3(originLocation, camera->GetOriginInViewSpace());
+		shader.set<float>(farPlaneLocation, scene.getCamera().getFarPlane());
+		shader.set<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());
+		shader.set<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
 	}
 
 	void VoxelConeTracer::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
@@ -69,7 +69,7 @@ namespace geeL {
 			maxStepSpecular = size;
 
 			shader.use();
-			shader.setInteger("maxStepSpecular", maxStepSpecular);
+			shader.set<int>("maxStepSpecular", maxStepSpecular);
 		}
 	}
 
@@ -78,7 +78,7 @@ namespace geeL {
 			maxStepDiffuse = size;
 
 			shader.use();
-			shader.setInteger("maxStepDiffuse", maxStepDiffuse);
+			shader.set<int>("maxStepDiffuse", maxStepDiffuse);
 		}
 	}
 
@@ -87,7 +87,7 @@ namespace geeL {
 			specularLOD = 0.25f * float(level);
 
 			shader.use();
-			shader.setFloat("specularLOD", specularLOD);
+			shader.set<float>("specularLOD", specularLOD);
 		}
 	}
 
@@ -96,7 +96,7 @@ namespace geeL {
 			diffuseLOD = 0.25f * float(level);
 
 			shader.use();
-			shader.setFloat("diffuseLOD", diffuseLOD);
+			shader.set<float>("diffuseLOD", diffuseLOD);
 		}
 	}
 

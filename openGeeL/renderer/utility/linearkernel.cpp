@@ -30,8 +30,8 @@ namespace geeL {
 		for (size_t i = 0; i < weights.size(); i++) {
 			string index = std::to_string(i) + "]";
 
-			shader.setFloat("weights[" + index, weights[i]);
-			shader.setFloat("offsets[" + index, offsets[i]);
+			shader.set<float>("weights[" + index, weights[i]);
+			shader.set<float>("offsets[" + index, offsets[i]);
 		}
 	}
 

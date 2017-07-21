@@ -50,7 +50,7 @@ namespace geeL {
 				const MeshBoneData& data = et->second;
 				const glm::mat4& transform = data.transform;
 
-				shader.setMat4("bones[" + std::to_string(data.id) + "]", transform);
+				shader.set<glm::mat4>("bones[" + std::to_string(data.id) + "]", transform);
 			}
 
 			//Draw individual mesh
@@ -71,7 +71,7 @@ namespace geeL {
 	void SkinnedMeshRenderer::draw(const RenderShader& shader) const {
 		//TODO: Load relevant bone transforms into materials
 		shader.use();
-		shader.setMat4("model", transform.getMatrix());
+		shader.set<glm::mat4>("model", transform.getMatrix());
 
 		skinnedModel->draw();
 	}
@@ -90,7 +90,7 @@ namespace geeL {
 				const MeshBoneData& data = et->second;
 				const glm::mat4& transform = data.transform;
 
-				shader.setMat4("bones[" + std::to_string(data.id) + "]", transform);
+				shader.set<glm::mat4>("bones[" + std::to_string(data.id) + "]", transform);
 			}
 		});
 	}

@@ -14,15 +14,15 @@ namespace geeL {
 	void ColorCorrection::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.setFloat("r", r);
-		shader.setFloat("g", g);
-		shader.setFloat("b", b);
-		shader.setFloat("h", h);
-		shader.setFloat("s", s);
-		shader.setFloat("v", v);
+		shader.set<float>("r", r);
+		shader.set<float>("g", g);
+		shader.set<float>("b", b);
+		shader.set<float>("h", h);
+		shader.set<float>("s", s);
+		shader.set<float>("v", v);
 
-		shader.setVector2("direction", distortionDirection);
-		shader.setVector3("distortion", distortion);
+		shader.set<glm::vec2>("direction", distortionDirection);
+		shader.set<glm::vec3>("distortion", distortion);
 	}
 
 
@@ -63,7 +63,7 @@ namespace geeL {
 			r = value;
 
 			shader.use();
-			shader.setFloat("r", r);
+			shader.set<float>("r", r);
 		}
 	}
 
@@ -72,7 +72,7 @@ namespace geeL {
 			g = value;
 
 			shader.use();
-			shader.setFloat("g", g);
+			shader.set<float>("g", g);
 		}
 	}
 
@@ -81,7 +81,7 @@ namespace geeL {
 			b = value;
 
 			shader.use();
-			shader.setFloat("b", b);
+			shader.set<float>("b", b);
 		}
 	}
 
@@ -90,7 +90,7 @@ namespace geeL {
 			h = value;
 
 			shader.use();
-			shader.setFloat("h", h);
+			shader.set<float>("h", h);
 		}
 	}
 
@@ -99,7 +99,7 @@ namespace geeL {
 			s = value;
 
 			shader.use();
-			shader.setFloat("s", s);
+			shader.set<float>("s", s);
 		}
 	}
 
@@ -108,7 +108,7 @@ namespace geeL {
 			v = value;
 
 			shader.use();
-			shader.setFloat("v", v);
+			shader.set<float>("v", v);
 		}
 	}
 
@@ -117,7 +117,7 @@ namespace geeL {
 			distortionDirection = glm::normalize(value);
 
 			shader.use();
-			shader.setVector2("direction", distortionDirection);
+			shader.set<glm::vec2>("direction", distortionDirection);
 		}
 	}
 
@@ -126,7 +126,7 @@ namespace geeL {
 			distortion = value;
 
 			shader.use();
-			shader.setVector3("distortion", distortion);
+			shader.set<glm::vec3>("distortion", distortion);
 		}
 	}
 

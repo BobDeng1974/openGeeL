@@ -12,6 +12,6 @@ namespace geeL {
 	void ToneMapping::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.setFloat("exposure", exposure);
+		shader.set<float>("exposure", exposure);
 	}
 }

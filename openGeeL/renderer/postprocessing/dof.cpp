@@ -16,7 +16,7 @@ namespace geeL {
 	}
 
 	void DepthOfFieldBlur::bindValues() {
-		shader.setFloat("threshold", threshold);
+		shader.set<float>("threshold", threshold);
 
 		GaussianBlurBase::bindValues();
 	}
@@ -24,9 +24,9 @@ namespace geeL {
 	void DepthOfFieldBlur::bindDoFData(float focalLength, float aperture, float farDistance) {
 		shader.use();
 
-		shader.setFloat("focalDistance", focalLength);
-		shader.setFloat("aperture", aperture);
-		shader.setFloat("farDistance", farDistance);
+		shader.set<float>("focalDistance", focalLength);
+		shader.set<float>("aperture", aperture);
+		shader.set<float>("farDistance", farDistance);
 	}
 
 	float DepthOfFieldBlur::getThreshold() const {
@@ -38,18 +38,18 @@ namespace geeL {
 			threshold = value;
 
 			shader.use();
-			shader.setFloat("threshold", threshold);
+			shader.set<float>("threshold", threshold);
 		}
 	}
 
 	void  DepthOfFieldBlur::setFocalLength(float value) {
 		shader.use();
-		shader.setFloat("focalDistance", value);
+		shader.set<float>("focalDistance", value);
 	}
 
 	void DepthOfFieldBlur::setAperture(float value) {
 		shader.use();
-		shader.setFloat("aperture", value);
+		shader.set<float>("aperture", value);
 	}
 
 
@@ -73,8 +73,8 @@ namespace geeL {
 	void DepthOfFieldBlurred::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.setFloat("farDistance", farDistance);
-		shader.setFloat("aperture", aperture);
+		shader.set<float>("farDistance", farDistance);
+		shader.set<float>("aperture", aperture);
 
 		focalLocation = shader.getLocation("focalDistance");
 
@@ -93,7 +93,7 @@ namespace geeL {
 	void DepthOfFieldBlurred::bindValues() {
 		//Clamp focal length with reasonable values
 		float dist = (focalLength < 0.f || focalLength > 30.f) ? 30.f : focalLength;
-		shader.setFloat(focalLocation, dist);
+		shader.set<float>(focalLocation, dist);
 
 		blur.setFocalLength(dist);
 		parentBuffer->add(*blurTexture);
@@ -137,7 +137,7 @@ namespace geeL {
 			this->aperture = aperture;
 
 			shader.use();
-			shader.setFloat("aperture", aperture);
+			shader.set<float>("aperture", aperture);
 			blur.setAperture(aperture);
 		}
 	}

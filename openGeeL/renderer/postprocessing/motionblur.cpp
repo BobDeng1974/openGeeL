@@ -44,13 +44,13 @@ namespace geeL {
 			std::cout << "No camera attached to motion blur. Effect won't be completely functional.\n";
 		}
 		
-		shader.setVector3(offsetLocation, offset * 2.f);
+		shader.set<glm::vec3>(offsetLocation, offset * 2.f);
 
 		float value = strength * diff;
 		float detail = float(LOD) - 1.f;
 		value = (value > 1.f) ? 1.f : value;
-		shader.setFloat(strengthLocation, strength);
-		shader.setFloat(samplesLocation, ceil(detail * value + 1.f));
+		shader.set<float>(strengthLocation, strength);
+		shader.set<float>(samplesLocation, ceil(detail * value + 1.f));
 	}
 
 	
@@ -102,7 +102,7 @@ namespace geeL {
 		parentBuffer->fill(velocity);
 
 		shader.use();
-		shader.setFloat(strengthLocation, getStrength());
+		shader.set<float>(strengthLocation, getStrength());
 	}
 
 
@@ -139,9 +139,9 @@ namespace geeL {
 
 		prevPosition = currPosition;
 
-		shader.setVector3("defaultOffset", offset);
-		shader.setMat4("projection", camera->getProjectionMatrix());
-		shader.setVector3("origin", camera->GetOriginInViewSpace());
+		shader.set<glm::vec3>("defaultOffset", offset);
+		shader.set<glm::mat4>("projection", camera->getProjectionMatrix());
+		shader.set<glm::vec3>("origin", camera->GetOriginInViewSpace());
 	}
 
 	void VelocityBuffer::draw() {

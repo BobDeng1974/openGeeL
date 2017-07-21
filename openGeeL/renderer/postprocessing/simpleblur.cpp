@@ -12,7 +12,7 @@ namespace geeL {
 	void SimpleBlur::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.setInteger("amount", amount);
+		shader.set<int>("amount", amount);
 	}
 
 

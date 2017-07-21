@@ -68,12 +68,12 @@ namespace geeL {
 	}
 
 	void CascadedDirectionalShadowMap::bindData(const RenderShader& shader, const std::string& name) {
-		shader.setFloat(name + "bias", shadowBias);
-		shader.setInteger(name + "type", (int)type);
+		shader.set<float>(name + "bias", shadowBias);
+		shader.set<int>(name + "type", (int)type);
 
 		for (unsigned int i = 0; i < MAPCOUNT; i++) {
-			shader.setMat4(name + "lightTransforms[" + std::to_string(i) + "]", shadowMaps[i].lightTransform);
-			shader.setFloat(name + "cascadeEndClip[" + std::to_string(i) + "]", shadowMaps[i].cascadeEndClip);
+			shader.set<glm::mat4>(name + "lightTransforms[" + std::to_string(i) + "]", shadowMaps[i].lightTransform);
+			shader.set<float>(name + "cascadeEndClip[" + std::to_string(i) + "]", shadowMaps[i].cascadeEndClip);
 		}
 	}
 
@@ -101,7 +101,7 @@ namespace geeL {
 			int y = i / 2;
 
 			Viewport::set(x * hWidth, y * hHeight, hWidth, hHeight);
-			shader.setMat4("lightTransform", shadowMaps[i].lightTransform);
+			shader.set<glm::mat4>("lightTransform", shadowMaps[i].lightTransform);
 			renderCall(shader);
 		}
 

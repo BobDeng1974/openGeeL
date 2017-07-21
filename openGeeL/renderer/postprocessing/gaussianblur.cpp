@@ -77,7 +77,7 @@ namespace geeL {
 	void GaussianBlurBase::bindValues() {
 		
 		//1. Fill the temporary buffer with the result of the horizontal blurring
-		shader.setInteger(horLocation, true);
+		shader.set<int>(horLocation, true);
 
 		if (mainBuffer != nullptr)
 			addImageBuffer(*mainBuffer, "image");
@@ -90,7 +90,7 @@ namespace geeL {
 		});
 
 		//2. Draw final image via vertical blurring of the previous (horizontally) blurred image
-		shader.setInteger(horLocation, false);
+		shader.set<int>(horLocation, false);
 		addImageBuffer(*tempTexture, "image");
 	}
 
@@ -141,7 +141,7 @@ namespace geeL {
 	void BilateralFilter::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		GaussianBlurBase::init(screen, buffer, resolution);
 
-		shader.setFloat("sigma", sigma2);
+		shader.set<float>("sigma", sigma2);
 	}
 
 	float BilateralFilter::getSigma() const {
@@ -153,7 +153,7 @@ namespace geeL {
 			sigma2 = value;
 
 			shader.use();
-			shader.setFloat("sigma", sigma2);
+			shader.set<float>("sigma", sigma2);
 		}
 	}
 

@@ -71,12 +71,12 @@ namespace geeL {
 	void SSAO::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.setFloat("screenWidth", float(resolution.getWidth()));
-		shader.setFloat("screenHeight", float(resolution.getHeight()));
-		shader.setFloat("radius", radius);
+		shader.set<float>("screenWidth", float(resolution.getWidth()));
+		shader.set<float>("screenHeight", float(resolution.getHeight()));
+		shader.set<float>("radius", radius);
 
 		for (unsigned int i = 0; i < sampleCount; i++)
-			shader.setVector3("samples[" + to_string(i) + "]", kernel[i]);
+			shader.set<glm::vec3>("samples[" + to_string(i) + "]", kernel[i]);
 		
 		tempTexture = new RenderTexture(resolution, ColorType::Single, WrapMode::Repeat, FilterMode::None);
 
@@ -98,7 +98,7 @@ namespace geeL {
 	}
 
 	void SSAO::bindValues() {
-		shader.setMat4(projectionLocation, camera->getProjectionMatrix());
+		shader.set<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
 	}
 
 	void SSAO::addWorldInformation(map<WorldMaps, const Texture*> maps) {
@@ -116,7 +116,7 @@ namespace geeL {
 			this->radius = radius;
 
 			shader.use();
-			shader.setFloat("radius", radius);
+			shader.set<float>("radius", radius);
 		}
 	}
 	

@@ -52,11 +52,11 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 		conversionShader->use();
-		conversionShader->setMat4("projection", projection);
+		conversionShader->set<glm::mat4>("projection", projection);
 		conversionShader->loadMaps();
 
 		frameBuffer.fill([&](unsigned int side) {
-			conversionShader->setMat4("view", views[side]);
+			conversionShader->set<glm::mat4>("view", views[side]);
 			SCREENCUBE.drawComplete();
 		});
 

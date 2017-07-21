@@ -10,10 +10,10 @@ namespace geeL {
 	void FXAA::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.setFloat("DIFF_THRESHOLD", blurMin);
-		shader.setFloat("FXAA_REDUCE_MUL", fxaaMul);
-		shader.setFloat("FXAA_MIN", fxaaMin);
-		shader.setFloat("FXAA_CLAMP", fxaaClamp);
+		shader.set<float>("DIFF_THRESHOLD", blurMin);
+		shader.set<float>("FXAA_REDUCE_MUL", fxaaMul);
+		shader.set<float>("FXAA_MIN", fxaaMin);
+		shader.set<float>("FXAA_CLAMP", fxaaClamp);
 	}
 
 	float FXAA::getBlurMin() const {
@@ -37,7 +37,7 @@ namespace geeL {
 			blurMin = value;
 
 			shader.use();
-			shader.setFloat("DIFF_THRESHOLD", blurMin);
+			shader.set<float>("DIFF_THRESHOLD", blurMin);
 		}
 	}
 
@@ -46,7 +46,7 @@ namespace geeL {
 			fxaaMul = value;
 
 			shader.use();
-			shader.setFloat("FXAA_REDUCE_MUL", fxaaMul);
+			shader.set<float>("FXAA_REDUCE_MUL", fxaaMul);
 		}
 	}
 
@@ -55,7 +55,7 @@ namespace geeL {
 			fxaaMin = value;
 
 			shader.use();
-			shader.setFloat("FXAA_MIN", fxaaMin);
+			shader.set<float>("FXAA_MIN", fxaaMin);
 		}
 	}
 
@@ -64,7 +64,7 @@ namespace geeL {
 			fxaaClamp = value;
 
 			shader.use();
-			shader.setFloat("FXAA_CLAMP", fxaaClamp);
+			shader.set<float>("FXAA_CLAMP", fxaaClamp);
 		}
 	}
 

@@ -132,10 +132,10 @@ namespace geeL {
 		shader.use();
 		textureStack.draw(shader);
 
-		shader.setInteger("material.mapFlags", textureStack.mapFlags);
-		shader.setFloat("material.roughness", roughness);
-		shader.setFloat("material.metallic", metallic);
-		shader.setVector4("material.color", glm::vec4(color, transparency));
-		shader.setVector3("material.emissivity", emissivity);
+		shader.set<int>("material.mapFlags", textureStack.mapFlags);
+		shader.set<float>("material.roughness", roughness);
+		shader.set<float>("material.metallic", metallic);
+		shader.set<glm::vec4>("material.color", glm::vec4(color, transparency));
+		shader.set<glm::vec3>("material.emissivity", emissivity);
 	}
 }

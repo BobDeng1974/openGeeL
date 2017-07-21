@@ -25,19 +25,19 @@ namespace geeL {
 
 		switch (space) {
 			case ShaderTransformSpace::View:
-				shader.setVector3(name + "position", camera.TranslateToViewSpace(transform.getPosition()));
-				shader.setVector3(name + "direction",
+				shader.set<glm::vec3>(name + "position", camera.TranslateToViewSpace(transform.getPosition()));
+				shader.set<glm::vec3>(name + "direction",
 					camera.TranslateToViewSpace(transform.getForwardDirection()) - camera.GetOriginInViewSpace());
 				break;
 			case ShaderTransformSpace::World:
-				shader.setVector3(name + "position", transform.getPosition());
-				shader.setVector3(name + "direction", transform.getForwardDirection());
+				shader.set<glm::vec3>(name + "position", transform.getPosition());
+				shader.set<glm::vec3>(name + "direction", transform.getForwardDirection());
 				break;
 		}
 
-		shader.setFloat(name + "angle", angle);
-		shader.setFloat(name + "outerAngle", outerAngle);
-		shader.setInteger(name + "useCookie", (lightCookie != nullptr));
+		shader.set<float>(name + "angle", angle);
+		shader.set<float>(name + "outerAngle", outerAngle);
+		shader.set<int>(name + "useCookie", (lightCookie != nullptr));
 	}
 
 	void SpotLight::setLightCookie(ImageTexture& cookie) {
