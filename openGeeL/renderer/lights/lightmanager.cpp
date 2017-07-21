@@ -234,9 +234,9 @@ namespace geeL {
 			}
 		}
 		
-		shader.set<int>(plCountName, plCount);
-		shader.set<int>(dlCountName, dlCount);
-		shader.set<int>(slCountName, slCount);
+		shader.bind<int>(plCountName, plCount);
+		shader.bind<int>(dlCountName, dlCount);
+		shader.bind<int>(slCountName, slCount);
 	}
 
 	void LightManager::bind(const Camera& camera, const SceneShader& shader) const {

@@ -29,9 +29,9 @@ namespace geeL {
 	void LensFlare::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.set<float>("scale", scale);
-		shader.set<float>("samples", samples);
-		shader.set<float>("strength", strength);
+		shader.bind<float>("scale", scale);
+		shader.bind<float>("samples", samples);
+		shader.bind<float>("strength", strength);
 
 		Resolution filterRes = Resolution(parentBuffer->getResolution(), filterResolution);
 		filterTexture = new RenderTexture(filterRes, ColorType::RGB16, 
@@ -63,7 +63,7 @@ namespace geeL {
 			strength = value;
 
 			shader.use();
-			shader.set<float>("strength", strength);
+			shader.bind<float>("strength", strength);
 		}
 	}
 
@@ -72,7 +72,7 @@ namespace geeL {
 			scale = value;
 
 			shader.use();
-			shader.set<float>("scale", scale);
+			shader.bind<float>("scale", scale);
 		}
 	}
 
@@ -81,7 +81,7 @@ namespace geeL {
 			samples = value;
 
 			shader.use();
-			shader.set<float>("samples", samples);
+			shader.bind<float>("samples", samples);
 		}
 	}
 
@@ -90,19 +90,19 @@ namespace geeL {
 			distortion = value;
 
 			shader.use();
-			shader.set<glm::vec3>("distortion", distortion);
+			shader.bind<glm::vec3>("distortion", distortion);
 		}
 	}
 
 	void LensFlare::setStarburstTexture(const ImageTexture & texture) {
 		shader.use();
-		shader.set<int>("useStarburst", true);
+		shader.bind<int>("useStarburst", true);
 		shader.addMap(texture, "starburst");
 	}
 
 	void LensFlare::setDirtTexture(const ImageTexture& texture) {
 		shader.use();
-		shader.set<int>("useDirt", true);
+		shader.bind<int>("useDirt", true);
 		shader.addMap(texture, "dirt");
 	}
 
@@ -135,7 +135,7 @@ namespace geeL {
 		);
 
 		shader.use();
-		shader.set<glm::mat3>("starTransform", transform2 * rotation * transform1);
+		shader.bind<glm::mat3>("starTransform", transform2 * rotation * transform1);
 	}
 
 

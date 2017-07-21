@@ -37,10 +37,10 @@ namespace geeL {
 		glDisable(GL_DEPTH_TEST);	
 
 		voxelShader->use();
-		voxelShader->set<glm::vec2>("resolution", glm::vec2(dimensions));
+		voxelShader->bind<glm::vec2>("resolution", glm::vec2(dimensions));
 
 		const Camera& camera = scene.getCamera();
-		voxelShader->set<glm::vec3>("cameraPosition", camera.transform.getPosition());
+		voxelShader->bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
 
 		scene.lightManager.bindShadowMaps(*voxelShader);
 
@@ -59,7 +59,7 @@ namespace geeL {
 
 	void VoxelTexture::bind(const Shader& shader) const {
 		shader.use();
-		shader.set<int>("dimensions", dimensions);
+		shader.bind<int>("dimensions", dimensions);
 	}
 
 	void VoxelTexture::bindTexture(Shader & shader, const std::string& name) {

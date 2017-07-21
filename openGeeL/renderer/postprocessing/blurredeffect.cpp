@@ -32,7 +32,7 @@ namespace geeL {
 	void BlurredPostEffect::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.set<int>("effectOnly", onlyEffect);
+		shader.bind<int>("effectOnly", onlyEffect);
 
 		Resolution effectRes = Resolution(resolution, effectResolution);
 		effectTexture = new RenderTexture(effectRes, ColorType::RGB16, 

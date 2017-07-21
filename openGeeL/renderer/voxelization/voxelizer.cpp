@@ -65,13 +65,13 @@ namespace geeL {
 		mat4 transZ = proj * glm::lookAt(vec3(0.f, 0.f, 2.f), vec3(0.f), vec3(0.f, 1.f, 0.f));
 
 		voxelShader->use();
-		voxelShader->set<glm::mat4>("transformX", transX);
-		voxelShader->set<glm::mat4>("transformY", transY);
-		voxelShader->set<glm::mat4>("transformZ", transZ);
-		voxelShader->set<glm::vec2>("resolution", glm::vec2(dimensions));
+		voxelShader->bind<glm::mat4>("transformX", transX);
+		voxelShader->bind<glm::mat4>("transformY", transY);
+		voxelShader->bind<glm::mat4>("transformZ", transZ);
+		voxelShader->bind<glm::vec2>("resolution", glm::vec2(dimensions));
 
 		const Camera& camera = scene.getCamera();
-		voxelShader->set<glm::vec3>("cameraPosition", camera.transform.getPosition());
+		voxelShader->bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
 
 		scene.lightManager.bindShadowMaps(*voxelShader);
 	}
@@ -85,7 +85,7 @@ namespace geeL {
 		glDisable(GL_DEPTH_TEST);
 
 		voxelShader->use();
-		voxelShader->set<int>("drawVoxel", (int)drawVoxel);
+		voxelShader->bind<int>("drawVoxel", (int)drawVoxel);
 
 		glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicBuffer);
 

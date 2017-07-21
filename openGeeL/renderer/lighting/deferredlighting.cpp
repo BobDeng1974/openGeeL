@@ -25,9 +25,9 @@ namespace geeL {
 	void DeferredLighting::bindValues() {
 		scene.lightManager.bind(*camera, shader, ShaderTransformSpace::View);
 
-		shader.set<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
-		shader.set<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());
-		shader.set<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
+		shader.bind<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
+		shader.bind<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());
+		shader.bind<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
 	}
 
 
@@ -42,7 +42,7 @@ namespace geeL {
 
 			addImageBuffer(texture, "gEmissivity");
 			shader.use();
-			shader.set<int>("useEmissivity", 1);
+			shader.bind<int>("useEmissivity", 1);
 		}
 	}
 }

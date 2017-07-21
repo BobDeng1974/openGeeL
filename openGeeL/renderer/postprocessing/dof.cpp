@@ -16,7 +16,7 @@ namespace geeL {
 	}
 
 	void DepthOfFieldBlur::bindValues() {
-		shader.set<float>("threshold", threshold);
+		shader.bind<float>("threshold", threshold);
 
 		GaussianBlurBase::bindValues();
 	}
@@ -24,9 +24,9 @@ namespace geeL {
 	void DepthOfFieldBlur::bindDoFData(float focalLength, float aperture, float farDistance) {
 		shader.use();
 
-		shader.set<float>("focalDistance", focalLength);
-		shader.set<float>("aperture", aperture);
-		shader.set<float>("farDistance", farDistance);
+		shader.bind<float>("focalDistance", focalLength);
+		shader.bind<float>("aperture", aperture);
+		shader.bind<float>("farDistance", farDistance);
 	}
 
 	float DepthOfFieldBlur::getThreshold() const {
@@ -38,18 +38,18 @@ namespace geeL {
 			threshold = value;
 
 			shader.use();
-			shader.set<float>("threshold", threshold);
+			shader.bind<float>("threshold", threshold);
 		}
 	}
 
 	void  DepthOfFieldBlur::setFocalLength(float value) {
 		shader.use();
-		shader.set<float>("focalDistance", value);
+		shader.bind<float>("focalDistance", value);
 	}
 
 	void DepthOfFieldBlur::setAperture(float value) {
 		shader.use();
-		shader.set<float>("aperture", value);
+		shader.bind<float>("aperture", value);
 	}
 
 
@@ -73,8 +73,8 @@ namespace geeL {
 	void DepthOfFieldBlurred::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.set<float>("farDistance", farDistance);
-		shader.set<float>("aperture", aperture);
+		shader.bind<float>("farDistance", farDistance);
+		shader.bind<float>("aperture", aperture);
 
 		focalLocation = shader.getLocation("focalDistance");
 
@@ -93,7 +93,7 @@ namespace geeL {
 	void DepthOfFieldBlurred::bindValues() {
 		//Clamp focal length with reasonable values
 		float dist = (focalLength < 0.f || focalLength > 30.f) ? 30.f : focalLength;
-		shader.set<float>(focalLocation, dist);
+		shader.bind<float>(focalLocation, dist);
 
 		blur.setFocalLength(dist);
 		parentBuffer->add(*blurTexture);
@@ -137,7 +137,7 @@ namespace geeL {
 			this->aperture = aperture;
 
 			shader.use();
-			shader.set<float>("aperture", aperture);
+			shader.bind<float>("aperture", aperture);
 			blur.setAperture(aperture);
 		}
 	}

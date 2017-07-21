@@ -54,28 +54,28 @@ namespace geeL {
 		shader.use();
 		textureStack.draw(shader);
 
-		shader.set<int>("material.mapFlags", textureStack.mapFlags);
+		shader.bind<int>("material.mapFlags", textureStack.mapFlags);
 
 		//GLint location;
 		for (auto it = floatParameters.begin(); it != floatParameters.end(); it++) {
 			pair<string, float> pair = *it;
 
-			shader.set<float>(pair.first, pair.second);
+			shader.bind<float>(pair.first, pair.second);
 		}
 
 		for (auto it = intParameters.begin(); it != intParameters.end(); it++) {
 			pair<string, int> pair = *it;
-			shader.set<int>(pair.first, pair.second);
+			shader.bind<int>(pair.first, pair.second);
 		}
 
 		for (auto it = vec3Parameters.begin(); it != vec3Parameters.end(); it++) {
 			pair<string, vec3> pair = *it;
-			shader.set<glm::vec3>(pair.first, pair.second);
+			shader.bind<glm::vec3>(pair.first, pair.second);
 		}
 
 		for (auto it = mat4Parameters.begin(); it != mat4Parameters.end(); it++) {
 			pair<string, mat4> pair = *it;
-			shader.set<glm::mat4>(pair.first, pair.second);
+			shader.bind<glm::mat4>(pair.first, pair.second);
 		}
 
 	}

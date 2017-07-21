@@ -14,15 +14,15 @@ namespace geeL {
 	void ColorCorrection::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.set<float>("r", r);
-		shader.set<float>("g", g);
-		shader.set<float>("b", b);
-		shader.set<float>("h", h);
-		shader.set<float>("s", s);
-		shader.set<float>("v", v);
+		shader.bind<float>("r", r);
+		shader.bind<float>("g", g);
+		shader.bind<float>("b", b);
+		shader.bind<float>("h", h);
+		shader.bind<float>("s", s);
+		shader.bind<float>("v", v);
 
-		shader.set<glm::vec2>("direction", distortionDirection);
-		shader.set<glm::vec3>("distortion", distortion);
+		shader.bind<glm::vec2>("direction", distortionDirection);
+		shader.bind<glm::vec3>("distortion", distortion);
 	}
 
 
@@ -63,7 +63,7 @@ namespace geeL {
 			r = value;
 
 			shader.use();
-			shader.set<float>("r", r);
+			shader.bind<float>("r", r);
 		}
 	}
 
@@ -72,7 +72,7 @@ namespace geeL {
 			g = value;
 
 			shader.use();
-			shader.set<float>("g", g);
+			shader.bind<float>("g", g);
 		}
 	}
 
@@ -81,7 +81,7 @@ namespace geeL {
 			b = value;
 
 			shader.use();
-			shader.set<float>("b", b);
+			shader.bind<float>("b", b);
 		}
 	}
 
@@ -90,7 +90,7 @@ namespace geeL {
 			h = value;
 
 			shader.use();
-			shader.set<float>("h", h);
+			shader.bind<float>("h", h);
 		}
 	}
 
@@ -99,7 +99,7 @@ namespace geeL {
 			s = value;
 
 			shader.use();
-			shader.set<float>("s", s);
+			shader.bind<float>("s", s);
 		}
 	}
 
@@ -108,7 +108,7 @@ namespace geeL {
 			v = value;
 
 			shader.use();
-			shader.set<float>("v", v);
+			shader.bind<float>("v", v);
 		}
 	}
 
@@ -117,7 +117,7 @@ namespace geeL {
 			distortionDirection = glm::normalize(value);
 
 			shader.use();
-			shader.set<glm::vec2>("direction", distortionDirection);
+			shader.bind<glm::vec2>("direction", distortionDirection);
 		}
 	}
 
@@ -126,7 +126,7 @@ namespace geeL {
 			distortion = value;
 
 			shader.use();
-			shader.set<glm::vec3>("distortion", distortion);
+			shader.bind<glm::vec3>("distortion", distortion);
 		}
 	}
 

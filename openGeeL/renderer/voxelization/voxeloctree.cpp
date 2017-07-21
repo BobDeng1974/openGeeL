@@ -60,8 +60,8 @@ namespace geeL {
 
 	void VoxelOctree::bind(const Shader& shader) const {
 		shader.use();
-		shader.set<int>("level", maxLevel);
-		shader.set<int>("dimensions", voxelizer.getDimensions());
+		shader.bind<int>("level", maxLevel);
+		shader.bind<int>("dimensions", voxelizer.getDimensions());
 
 		glBindImageTexture(0, nodeIndicies.texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
 		glBindImageTexture(1, nodeDiffuse.texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
@@ -76,9 +76,9 @@ namespace geeL {
 		for (int i = 0; i < maxLevel; i++) {
 			//Determine whether nodes should have children or not
 			flagShader->use();
-			flagShader->set<int>("numVoxels", voxelizer.getVoxelAmount());
-			flagShader->set<int>("level", i);
-			flagShader->set<int>("dimensions", voxelizer.getDimensions());
+			flagShader->bind<int>("numVoxels", voxelizer.getVoxelAmount());
+			flagShader->bind<int>("level", i);
+			flagShader->bind<int>("dimensions", voxelizer.getDimensions());
 			glBindImageTexture(0, voxelizer.getVoxelPositions(), 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGB10_A2UI);
 			glBindImageTexture(1, nodeIndicies.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
 
@@ -89,9 +89,9 @@ namespace geeL {
 			//Allocate tiles for new children (1 tile = 8 children nodes)
 			unsigned int currNodes = nodeLevels[i]; //Node amount in current level
 			allocShader->use();
-			allocShader->set<int>("numNodes", currNodes);
-			allocShader->set<int>("nodeOffset", nodeOffset);
-			allocShader->set<int>("allocOffset", allocOffset);
+			allocShader->bind<int>("numNodes", currNodes);
+			allocShader->bind<int>("nodeOffset", nodeOffset);
+			allocShader->bind<int>("allocOffset", allocOffset);
 			glBindImageTexture(0, nodeIndicies.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
 			glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, nodeCounter);
 
@@ -114,8 +114,8 @@ namespace geeL {
 			//Initialize new node tiles
 			unsigned int allocatedNodes = 8 * allocatedTiles;
 			initShader->use();
-			initShader->set<int>("numNodes", allocatedNodes);
-			initShader->set<int>("allocOffset", allocOffset);
+			initShader->bind<int>("numNodes", allocatedNodes);
+			initShader->bind<int>("allocOffset", allocOffset);
 
 			glBindImageTexture(0, nodeIndicies.texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
 			glBindImageTexture(1, nodeDiffuse.texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
@@ -136,9 +136,9 @@ namespace geeL {
 		
 		//Write voxel information into leaves
 		fillLeavesShader->use();
-		fillLeavesShader->set<int>("numVoxels", voxelizer.getVoxelAmount());
-		fillLeavesShader->set<int>("level", maxLevel);
-		fillLeavesShader->set<int>("dimensions", voxelizer.getDimensions());
+		fillLeavesShader->bind<int>("numVoxels", voxelizer.getVoxelAmount());
+		fillLeavesShader->bind<int>("level", maxLevel);
+		fillLeavesShader->bind<int>("dimensions", voxelizer.getDimensions());
 
 		glBindImageTexture(0, nodeIndicies.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
 		glBindImageTexture(1, nodeDiffuse.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
@@ -160,8 +160,8 @@ namespace geeL {
 
 			unsigned int currNodes = nodeLevels[i];
 			mipmapShader->use();
-			mipmapShader->set<int>("numNodes", currNodes);
-			mipmapShader->set<int>("nodeOffset", nodeOffset);
+			mipmapShader->bind<int>("numNodes", currNodes);
+			mipmapShader->bind<int>("nodeOffset", nodeOffset);
 
 			glBindImageTexture(0, nodeIndicies.texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
 			glBindImageTexture(1, nodeDiffuse.texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);

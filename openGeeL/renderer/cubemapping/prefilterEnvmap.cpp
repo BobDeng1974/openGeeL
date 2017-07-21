@@ -49,18 +49,18 @@ namespace geeL {
 		};
 
 		conversionShader->use();
-		conversionShader->set<glm::mat4>("projection", projection);
+		conversionShader->bind<glm::mat4>("projection", projection);
 		conversionShader->loadMaps();
 
 		unsigned int mipLevels = 5;
 		//Generate mipmaps according to roughness strength
 		for (unsigned int mip = 0; mip < mipLevels; mip++) {
 			float roughness = (float)mip / (float)(mipLevels - 1);
-			conversionShader->set<float>("roughness", roughness);
+			conversionShader->bind<float>("roughness", roughness);
 			
 			frameBuffer.resize(std::pow(0.5f, mip));
 			frameBuffer.fill([&](unsigned int side) {
-				conversionShader->set<glm::mat4>("view", views[side]);
+				conversionShader->bind<glm::mat4>("view", views[side]);
 				SCREENCUBE.drawComplete();
 			}, mip);
 		}

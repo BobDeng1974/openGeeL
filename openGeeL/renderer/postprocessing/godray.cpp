@@ -19,8 +19,8 @@ namespace geeL {
 	void GodRay::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.set<int>("samples", samples);
-		shader.set<int>("raysOnly", onlyEffect);
+		shader.bind<int>("samples", samples);
+		shader.bind<int>("raysOnly", onlyEffect);
 
 		lightLocation = shader.getLocation("lightPosition");
 		lightViewLocation = shader.getLocation("lightPositionView");
@@ -30,11 +30,11 @@ namespace geeL {
 		PostProcessingEffectFS::bindValues();
 
 		glm::vec3 screenPos = camera->TranslateToScreenSpace(lightPosition);
-		shader.set<glm::vec3>(lightLocation, screenPos);
+		shader.bind<glm::vec3>(lightLocation, screenPos);
 
 		glm::vec3 viewPos = camera->TranslateToViewSpace(lightPosition);
 		viewPos = -glm::normalize(viewPos);
-		shader.set<glm::vec3>(lightViewLocation, viewPos);
+		shader.bind<glm::vec3>(lightViewLocation, viewPos);
 	}
 
 	glm::vec3 GodRay::getLightPosition() const {
@@ -54,7 +54,7 @@ namespace geeL {
 			this->samples = samples;
 
 			shader.use();
-			shader.set<int>("samples", samples);
+			shader.bind<int>("samples", samples);
 		}
 	}
 

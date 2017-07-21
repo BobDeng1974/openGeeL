@@ -121,80 +121,80 @@ namespace geeL {
 	}
 
 
-	ShaderLocation Shader::set(const string& name, int value) const {
+	ShaderLocation Shader::bind(const string& name, int value) const {
 		ShaderLocation location = glGetUniformLocation(program, name.c_str());
 		glUniform1i(location, value);
 
 		return location;
 	}
 
-	ShaderLocation Shader::set(const string& name, float value) const {
+	ShaderLocation Shader::bind(const string& name, float value) const {
 		ShaderLocation location = glGetUniformLocation(program, name.c_str());
 		glUniform1f(location, value);
 
 		return location;
 	}
 
-	ShaderLocation Shader::set(const string& name, const glm::vec2& value) const {
+	ShaderLocation Shader::bind(const string& name, const glm::vec2& value) const {
 		ShaderLocation location = glGetUniformLocation(program, name.c_str());
 		glUniform2f(location, value.x, value.y);
 
 		return location;
 	}
 
-	ShaderLocation Shader::set(const string& name, const glm::vec3& value) const {
+	ShaderLocation Shader::bind(const string& name, const glm::vec3& value) const {
 		ShaderLocation location = glGetUniformLocation(program, name.c_str());
 		glUniform3f(location, value.x, value.y, value.z);
 
 		return location;
 	}
 
-	ShaderLocation Shader::set(const std::string & name, const glm::vec4& value) const {
+	ShaderLocation Shader::bind(const std::string & name, const glm::vec4& value) const {
 		ShaderLocation location = glGetUniformLocation(program, name.c_str());
 		glUniform4f(location, value.x, value.y, value.z, value.w);
 
 		return location;
 	}
 
-	ShaderLocation Shader::set(const string& name, const glm::mat3& value) const {
+	ShaderLocation Shader::bind(const string& name, const glm::mat3& value) const {
 		ShaderLocation location = glGetUniformLocation(program, name.c_str());
 		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(value));
 
 		return location;
 	}
 
-	ShaderLocation Shader::set(const string& name, const glm::mat4& value) const {
+	ShaderLocation Shader::bind(const string& name, const glm::mat4& value) const {
 		ShaderLocation location = glGetUniformLocation(program, name.c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 
 		return location;
 	}
 
-	void Shader::set(ShaderLocation location, const int& value) const {
+	void Shader::bind(ShaderLocation location, const int& value) const {
 		glUniform1i(location, value);
 	}
 
-	void Shader::set(ShaderLocation location, const float& value) const {
+	void Shader::bind(ShaderLocation location, const float& value) const {
 		glUniform1f(location, value);
 	}
 
-	void Shader::set(ShaderLocation location, const glm::vec2& value) const {
+	void Shader::bind(ShaderLocation location, const glm::vec2& value) const {
 		glUniform2f(location, value.x, value.y);
 	}
 
-	void Shader::set(ShaderLocation location, const glm::vec3& value) const {
+	void Shader::bind(ShaderLocation location, const glm::vec3& value) const {
 		glUniform3f(location, value.x, value.y, value.z);
 	}
 
-	void Shader::set(ShaderLocation location, const glm::vec4& value) const {
+	void Shader::bind(ShaderLocation location, const glm::vec4& value) const {
 		glUniform4f(location, value.x, value.y, value.z, value.w);
 	}
 
-	void Shader::set(ShaderLocation location, const glm::mat3 & value) const {
+	void Shader::bind(ShaderLocation location, const glm::mat3 & value) const {
 		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(value));
 	}
 
-	void Shader::set(ShaderLocation location, const glm::mat4& value) const {
+	void Shader::bind(ShaderLocation location, const glm::mat4& value) const {
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 	}
 

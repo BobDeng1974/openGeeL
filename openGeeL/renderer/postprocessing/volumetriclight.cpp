@@ -30,21 +30,21 @@ namespace geeL {
 		const Texture* lightCookie = light.getLightCookie();
 		if (lightCookie != nullptr) {
 			addImageBuffer(*lightCookie, "lightCookie");
-			shader.set<int>("useCookie", (int)useCookie);
+			shader.bind<int>("useCookie", (int)useCookie);
 		}
 
-		shader.set<int>("effectOnly", onlyEffect);
-		shader.set<float>("minCutoff", minDistance);
-		shader.set<float>("density", density);
-		shader.set<int>("samples", samples);
+		shader.bind<int>("effectOnly", onlyEffect);
+		shader.bind<float>("minCutoff", minDistance);
+		shader.bind<float>("density", density);
+		shader.bind<int>("samples", samples);
 
 		projectionLocation = shader.getLocation("projection");
 		invViewLocation = shader.getLocation("inverseView");
 	}
 
 	void VolumetricLight::bindValues() {
-		shader.set<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());
-		shader.set<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
+		shader.bind<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());
+		shader.bind<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
 
 		light.bind(*camera, shader, "light.", ShaderTransformSpace::View);
 	}
@@ -63,7 +63,7 @@ namespace geeL {
 			this->samples = samples;
 
 			shader.use();
-			shader.set<int>("samples", samples);
+			shader.bind<int>("samples", samples);
 		}
 	}
 
@@ -76,7 +76,7 @@ namespace geeL {
 			this->density = density;
 
 			shader.use();
-			shader.set<float>("density", density);
+			shader.bind<float>("density", density);
 		}
 	}
 
@@ -90,7 +90,7 @@ namespace geeL {
 			minDistance = distance;
 
 			shader.use();
-			shader.set<float>("minCutoff", minDistance);
+			shader.bind<float>("minCutoff", minDistance);
 		}
 	}
 

@@ -34,14 +34,14 @@ namespace geeL {
 	void Camera::bind(const SceneShader& shader) const {
 		shader.use();
 
-		shader.set<glm::vec3>(shader.cameraName + ".position", transform.getPosition());
-		shader.set<glm::mat4>("view", viewMatrix);
-		shader.set<glm::mat4>("projection", projectionMatrix);
+		shader.bind<glm::vec3>(shader.cameraName + ".position", transform.getPosition());
+		shader.bind<glm::mat4>("view", viewMatrix);
+		shader.bind<glm::mat4>("projection", projectionMatrix);
 	}
 
 	void Camera::bindPosition(const RenderShader& shader, std::string name) const {
 		shader.use();
-		shader.set<glm::vec3>(name, transform.getPosition());
+		shader.bind<glm::vec3>(name, transform.getPosition());
 	}
 
 	void Camera::uniformBind(int uniformID) const {

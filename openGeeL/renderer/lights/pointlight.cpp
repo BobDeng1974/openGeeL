@@ -25,10 +25,10 @@ namespace geeL {
 
 		switch (space) {
 			case ShaderTransformSpace::View:
-				shader.set<glm::vec3>(name + "position", camera.TranslateToViewSpace(transform.getPosition()));
+				shader.bind<glm::vec3>(name + "position", camera.TranslateToViewSpace(transform.getPosition()));
 				break;
 			case ShaderTransformSpace::World:
-				shader.set<glm::vec3>(name + "position", transform.getPosition());
+				shader.bind<glm::vec3>(name + "position", transform.getPosition());
 				break;
 		}
 		

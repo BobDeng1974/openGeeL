@@ -45,11 +45,11 @@ namespace geeL {
 		};
 
 		conversionShader->use();
-		conversionShader->set<glm::mat4>("projection", projection);
+		conversionShader->bind<glm::mat4>("projection", projection);
 		conversionShader->loadMaps();
 
 		frameBuffer.fill([&](unsigned int side) {
-			conversionShader->set<glm::mat4>("view", views[side]);
+			conversionShader->bind<glm::mat4>("view", views[side]);
 			SCREENCUBE.drawComplete();
 		});
 

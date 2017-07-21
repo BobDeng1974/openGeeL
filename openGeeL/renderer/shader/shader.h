@@ -55,27 +55,27 @@ namespace geeL {
 		ShaderLocation getLocation(const std::string& name) const;
 
 		template<class T>
-		ShaderLocation set(const std::string& name, const T& value) const;
-		ShaderLocation set(const std::string& name, int value) const;
-		ShaderLocation set(const std::string& name, float value) const;
-		ShaderLocation set(const std::string& name, const glm::vec2& value) const;
-		ShaderLocation set(const std::string& name, const glm::vec3& value) const;
-		ShaderLocation set(const std::string& name, const glm::vec4& value) const;
-		ShaderLocation set(const std::string& name, const glm::mat3& value) const;
-		ShaderLocation set(const std::string& name, const glm::mat4& value) const;
+		ShaderLocation bind(const std::string& name, const T& value) const;
+		ShaderLocation bind(const std::string& name, int value) const;
+		ShaderLocation bind(const std::string& name, float value) const;
+		ShaderLocation bind(const std::string& name, const glm::vec2& value) const;
+		ShaderLocation bind(const std::string& name, const glm::vec3& value) const;
+		ShaderLocation bind(const std::string& name, const glm::vec4& value) const;
+		ShaderLocation bind(const std::string& name, const glm::mat3& value) const;
+		ShaderLocation bind(const std::string& name, const glm::mat4& value) const;
 
 		//Bind value into shader. Value won't be saved in this 
 		//shader class and can't be accessed later on.
 		//Valid types: int, float vec2, vec3, vec4, mat3, mat4
 		template<class T>
-		void set(ShaderLocation location, const T& value) const;
-		void set(ShaderLocation location, const int& value) const;
-		void set(ShaderLocation location, const float& value) const;
-		void set(ShaderLocation location, const glm::vec2& value) const;
-		void set(ShaderLocation location, const glm::vec3& value) const;
-		void set(ShaderLocation location, const glm::vec4& value) const;
-		void set(ShaderLocation location, const glm::mat3& value) const;
-		void set(ShaderLocation location, const glm::mat4& value) const;
+		void bind(ShaderLocation location, const T& value) const;
+		void bind(ShaderLocation location, const int& value) const;
+		void bind(ShaderLocation location, const float& value) const;
+		void bind(ShaderLocation location, const glm::vec2& value) const;
+		void bind(ShaderLocation location, const glm::vec3& value) const;
+		void bind(ShaderLocation location, const glm::vec4& value) const;
+		void bind(ShaderLocation location, const glm::mat3& value) const;
+		void bind(ShaderLocation location, const glm::mat4& value) const;
 
 		//Set and save value into this shader. Values can be accessed and will be bound
 		//by 'bindParameters' call
@@ -124,13 +124,13 @@ namespace geeL {
 
 
 	template<class T>
-	inline ShaderLocation Shader::set(const std::string& name, const T& value) const {
-		return set(name, value);
+	inline ShaderLocation Shader::bind(const std::string& name, const T& value) const {
+		return bind(name, value);
 	}
 
 	template<class T>
-	inline void Shader::set(ShaderLocation location, const T& value) const {
-		set(location, value);
+	inline void Shader::bind(ShaderLocation location, const T& value) const {
+		bind(location, value);
 	}
 
 	template<class T>

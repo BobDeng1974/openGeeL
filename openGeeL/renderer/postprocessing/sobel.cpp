@@ -9,7 +9,7 @@ namespace geeL {
 	void SobelFilter::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.set<float>("scale", scale);
+		shader.bind<float>("scale", scale);
 	}
 
 	float SobelFilter::getScale() const {
@@ -21,7 +21,7 @@ namespace geeL {
 			scale = value;
 
 			shader.use();
-			shader.set<float>("scale", scale);
+			shader.bind<float>("scale", scale);
 		}
 	}
 

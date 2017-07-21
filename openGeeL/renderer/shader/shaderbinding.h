@@ -78,7 +78,7 @@ namespace geeL {
 
 	template<class T>
 	inline void GenericBinding<T>::bind() const {
-		shader.set<T>(location, value);
+		shader.bind<T>(location, value);
 	}
 
 	template<class T>

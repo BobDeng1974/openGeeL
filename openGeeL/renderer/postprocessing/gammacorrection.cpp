@@ -12,7 +12,7 @@ namespace geeL {
 	void GammaCorrection::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.set<float>("gamma", gamma);
+		shader.bind<float>("gamma", gamma);
 	}
 
 }

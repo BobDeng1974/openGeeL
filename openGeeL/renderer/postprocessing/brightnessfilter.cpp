@@ -12,7 +12,7 @@ namespace geeL {
 	void BrightnessFilterCutoff::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		scatterLocation = shader.set<float>("scatter", scatter);
+		scatterLocation = shader.bind<float>("scatter", scatter);
 	}
 
 	void BrightnessFilterCutoff::setScatter(float scatter) {
@@ -20,7 +20,7 @@ namespace geeL {
 			this->scatter = scatter;
 
 			shader.use();
-			shader.set<float>(scatterLocation, scatter);
+			shader.bind<float>(scatterLocation, scatter);
 		}
 	}
 
@@ -35,8 +35,8 @@ namespace geeL {
 	void BrightnessFilterSmooth::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.set<float>("bias", bias);
-		shader.set<float>("scale", scale);
+		shader.bind<float>("bias", bias);
+		shader.bind<float>("scale", scale);
 	}
 
 	float BrightnessFilterSmooth::getBias() const {
@@ -52,7 +52,7 @@ namespace geeL {
 			bias = value;
 
 			shader.use();
-			shader.set<float>("bias", bias);
+			shader.bind<float>("bias", bias);
 		}
 	}
 
@@ -61,7 +61,7 @@ namespace geeL {
 			scale = value;
 
 			shader.use();
-			shader.set<float>("scale", scale);
+			shader.bind<float>("scale", scale);
 		}
 	}
 

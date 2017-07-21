@@ -22,8 +22,8 @@ namespace geeL {
 
 	void ImageBasedLighting::bindValues() {
 		scene.lightManager.bindReflectionProbes(*camera, shader, ShaderTransformSpace::View);
-		shader.set<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());
-		shader.set<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
+		shader.bind<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());
+		shader.bind<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
 	}
 
 	void ImageBasedLighting::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
@@ -37,7 +37,7 @@ namespace geeL {
 
 			addImageBuffer(texture, "ssao");
 			shader.use();
-			shader.set<int>("useSSAO", 1);
+			shader.bind<int>("useSSAO", 1);
 		}
 	}
 }

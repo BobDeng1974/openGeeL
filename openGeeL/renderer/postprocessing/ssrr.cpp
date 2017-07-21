@@ -18,16 +18,16 @@ namespace geeL {
 	void SSRR::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		shader.set<int>("stepCount", steps);
-		shader.set<float>("stepSize", stepSize);
-		shader.set<float>("stepGain", stepGain);
+		shader.bind<int>("stepCount", steps);
+		shader.bind<float>("stepSize", stepSize);
+		shader.bind<float>("stepGain", stepGain);
 
-		shader.set<int>("effectOnly", onlyEffect);
+		shader.bind<int>("effectOnly", onlyEffect);
 		projectionLocation = shader.getLocation("projection");
 	}
 
 	void SSRR::bindValues() {
-		shader.set<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
+		shader.bind<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
 	}
 
 	void SSRR::addWorldInformation(map<WorldMaps, const Texture*> maps) {
@@ -45,7 +45,7 @@ namespace geeL {
 			this->steps = steps;
 
 			shader.use();
-			shader.set<int>("stepCount", steps);
+			shader.bind<int>("stepCount", steps);
 		}
 	}
 
@@ -58,7 +58,7 @@ namespace geeL {
 			stepSize = size;
 
 			shader.use();
-			shader.set<float>("stepSize", stepSize);
+			shader.bind<float>("stepSize", stepSize);
 		}
 	}
 
@@ -71,7 +71,7 @@ namespace geeL {
 			stepGain = gain;
 
 			shader.use();
-			shader.set<float>("stepGain", stepGain);
+			shader.bind<float>("stepGain", stepGain);
 		}
 	}
 
@@ -83,7 +83,7 @@ namespace geeL {
 	void MultisampledSSRR::init(ScreenQuad & screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		SSRR::init(screen, buffer, resolution);
 
-		shader.set<int>("sampleCount", samples);
+		shader.bind<int>("sampleCount", samples);
 	}
 
 	unsigned int MultisampledSSRR::getSampleCount() const {
@@ -95,7 +95,7 @@ namespace geeL {
 			this->samples = samples;
 
 			shader.use();
-			shader.set<int>("sampleCount", samples);
+			shader.bind<int>("sampleCount", samples);
 		}
 	}
 

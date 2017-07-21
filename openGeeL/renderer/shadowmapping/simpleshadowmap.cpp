@@ -58,11 +58,11 @@ namespace geeL {
 
 
 	void SimpleShadowMap::bindData(const RenderShader& shader, const std::string& name) {
-		shader.set<float>(name + "bias", dynamicBias);
-		shader.set<float>(name + "shadowIntensity", intensity);
-		shader.set<int>(name + "resolution", softShadowResolution);
-		shader.set<float>(name + "scale", softShadowScale);
-		shader.set<int>(name + "type", (int)type);
+		shader.bind<float>(name + "bias", dynamicBias);
+		shader.bind<float>(name + "shadowIntensity", intensity);
+		shader.bind<int>(name + "resolution", softShadowResolution);
+		shader.bind<float>(name + "scale", softShadowScale);
+		shader.bind<int>(name + "type", (int)type);
 	}
 
 
@@ -167,7 +167,7 @@ namespace geeL {
 	void SimpleSpotLightMap::bindData(const RenderShader& shader, const std::string& name) {
 		SimpleShadowMap::bindData(shader, name);
 
-		shader.set<glm::mat4>(name + "lightTransform", lightTransform);
+		shader.bind<glm::mat4>(name + "lightTransform", lightTransform);
 	}
 
 	void SimpleSpotLightMap::draw(const SceneCamera* const camera,
@@ -177,7 +177,7 @@ namespace geeL {
 		computeLightTransform();
 
 		shader.use();
-		shader.set<glm::mat4>("lightTransform", lightTransform);
+		shader.bind<glm::mat4>("lightTransform", lightTransform);
 
 		if (resolution == ShadowmapResolution::Adaptive)
 			adaptShadowmap(camera);
@@ -235,7 +235,7 @@ namespace geeL {
 	void SimplePointLightMap::bindData(const RenderShader& shader, const std::string& name) {
 		SimpleShadowMap::bindData(shader, name);
 
-		shader.set<float>(name + "farPlane", farPlane);
+		shader.bind<float>(name + "farPlane", farPlane);
 	}
 
 	TextureType SimplePointLightMap::getTextureType() const {
@@ -277,11 +277,11 @@ namespace geeL {
 		shader.use();
 		for (int i = 0; i < 6; i++) {
 			std::string name = "lightTransforms[" + std::to_string(i) + "]";
-			shader.set<glm::mat4>(name, lightTransforms[i]);
+			shader.bind<glm::mat4>(name, lightTransforms[i]);
 		}
 
-		shader.set<float>("farPlane", farPlane);
-		shader.set<glm::vec3>("lightPosition", light.transform.getPosition());
+		shader.bind<float>("farPlane", farPlane);
+		shader.bind<glm::vec3>("lightPosition", light.transform.getPosition());
 
 		if (resolution == ShadowmapResolution::Adaptive)
 			adaptShadowmap(camera);
@@ -356,7 +356,7 @@ namespace geeL {
 	void SimpleDirectionalLightMap::bindData(const RenderShader& shader, const std::string& name) {
 		SimpleShadowMap::bindData(shader, name);
 
-		shader.set<glm::mat4>(name + "lightTransform", lightTransform);
+		shader.bind<glm::mat4>(name + "lightTransform", lightTransform);
 	}
 
 	void SimpleDirectionalLightMap::draw(const SceneCamera* const camera,
@@ -366,7 +366,7 @@ namespace geeL {
 		computeLightTransform();
 
 		shader.use();
-		shader.set<glm::mat4>("lightTransform", lightTransform);
+		shader.bind<glm::mat4>("lightTransform", lightTransform);
 
 		Viewport::set(0, 0, width, height);
 		FrameBuffer::bind(fbo);
