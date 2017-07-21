@@ -62,7 +62,6 @@ namespace geeL {
 		if (r != value && value >= 0.f && value <= 1.f) {
 			r = value;
 
-			shader.use();
 			shader.bind<float>("r", r);
 		}
 	}
@@ -71,7 +70,6 @@ namespace geeL {
 		if (g != value && value >= 0.f && value <= 1.f) {
 			g = value;
 
-			shader.use();
 			shader.bind<float>("g", g);
 		}
 	}
@@ -80,7 +78,6 @@ namespace geeL {
 		if (b != value && value >= 0.f && value <= 1.f) {
 			b = value;
 
-			shader.use();
 			shader.bind<float>("b", b);
 		}
 	}
@@ -89,7 +86,6 @@ namespace geeL {
 		if (h != value && value >= 0.f && value <= 1.f) {
 			h = value;
 
-			shader.use();
 			shader.bind<float>("h", h);
 		}
 	}
@@ -98,7 +94,6 @@ namespace geeL {
 		if (s != value && value >= 0.f && value <= 1.f) {
 			s = value;
 
-			shader.use();
 			shader.bind<float>("s", s);
 		}
 	}
@@ -107,7 +102,6 @@ namespace geeL {
 		if (v != value && value >= 0.f && value <= 1.f) {
 			v = value;
 
-			shader.use();
 			shader.bind<float>("v", v);
 		}
 	}
@@ -116,7 +110,6 @@ namespace geeL {
 		if (distortionDirection != value) {
 			distortionDirection = glm::normalize(value);
 
-			shader.use();
 			shader.bind<glm::vec2>("direction", distortionDirection);
 		}
 	}
@@ -125,7 +118,6 @@ namespace geeL {
 		if (distortion != value) {
 			distortion = value;
 
-			shader.use();
 			shader.bind<glm::vec3>("distortion", distortion);
 		}
 	}

@@ -62,7 +62,6 @@ namespace geeL {
 		if (strength != value && value > 0.f) {
 			strength = value;
 
-			shader.use();
 			shader.bind<float>("strength", strength);
 		}
 	}
@@ -71,7 +70,6 @@ namespace geeL {
 		if (scale != value && value > 0.f) {
 			scale = value;
 
-			shader.use();
 			shader.bind<float>("scale", scale);
 		}
 	}
@@ -80,7 +78,6 @@ namespace geeL {
 		if (samples != value && value > 0.f) {
 			samples = value;
 
-			shader.use();
 			shader.bind<float>("samples", samples);
 		}
 	}
@@ -89,19 +86,16 @@ namespace geeL {
 		if (distortion != value) {
 			distortion = value;
 
-			shader.use();
 			shader.bind<glm::vec3>("distortion", distortion);
 		}
 	}
 
 	void LensFlare::setStarburstTexture(const ImageTexture & texture) {
-		shader.use();
 		shader.bind<int>("useStarburst", true);
 		shader.addMap(texture, "starburst");
 	}
 
 	void LensFlare::setDirtTexture(const ImageTexture& texture) {
-		shader.use();
 		shader.bind<int>("useDirt", true);
 		shader.addMap(texture, "dirt");
 	}
@@ -134,7 +128,6 @@ namespace geeL {
 			0.f, 0.f, 1.0f
 		);
 
-		shader.use();
 		shader.bind<glm::mat3>("starTransform", transform2 * rotation * transform1);
 	}
 

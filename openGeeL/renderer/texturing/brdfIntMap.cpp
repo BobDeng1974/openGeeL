@@ -38,7 +38,6 @@ namespace geeL {
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolution, resolution);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, id, 0);
 
-		shader->use();
 		Viewport::set(0, 0, resolution, resolution);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		SCREENQUAD.drawComplete();

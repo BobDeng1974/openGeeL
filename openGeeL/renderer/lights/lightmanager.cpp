@@ -170,8 +170,6 @@ namespace geeL {
 	}
 
 	void LightManager::addReflectionProbes(RenderShader& shader) const {
-		shader.use();
-
 		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
 			DynamicCubeMap& probe = **it;
 			probe.add(shader, "skybox.");
@@ -179,7 +177,6 @@ namespace geeL {
 	}
 
 	void LightManager::bindReflectionProbes(const Camera& camera, const RenderShader& shader, ShaderTransformSpace space) const {
-		shader.use();
 
 		unsigned int rpCount = 0;
 		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
@@ -201,8 +198,6 @@ namespace geeL {
 	}
 
 	void LightManager::bind(const Camera& camera, const RenderShader& shader, ShaderTransformSpace space) const {
-		shader.use();
-
 		unsigned int plCount = 0;
 		unsigned int dlCount = 0;
 		unsigned int slCount = 0;
@@ -276,7 +271,6 @@ namespace geeL {
 	}
 
 	void LightManager::bindShadowMaps(RenderShader& shader) const {
-		shader.use();
 
 		for (auto it = pointLights.begin(); it != pointLights.end(); it++) {
 			const PLightBinding& binding = *it;

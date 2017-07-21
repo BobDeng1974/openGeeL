@@ -36,7 +36,6 @@ namespace geeL {
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);	
 
-		voxelShader->use();
 		voxelShader->bind<glm::vec2>("resolution", glm::vec2(dimensions));
 
 		const Camera& camera = scene.getCamera();
@@ -58,7 +57,6 @@ namespace geeL {
 
 
 	void VoxelTexture::bind(const Shader& shader) const {
-		shader.use();
 		shader.bind<int>("dimensions", dimensions);
 	}
 

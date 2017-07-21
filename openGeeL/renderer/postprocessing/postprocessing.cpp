@@ -54,12 +54,9 @@ namespace geeL {
 		this->resolution = resolution;
 
 		setParent(buffer);
-		shader.use();
 	}
 
 	void PostProcessingEffectFS::draw() {
-		shader.use();
-
 		bindValues();
 		bindToScreen();
 	}
@@ -102,11 +99,9 @@ namespace geeL {
 		this->resolution = resolution;
 
 		this->buffer = &buffer;
-		shader.use();
 	}
 
 	void PostProcessingEffectCS::draw() {
-		shader.use();
 		bindValues();
 
 		//Read target texture from parent buffer and bind it

@@ -17,8 +17,6 @@ namespace geeL {
 	}
 
 	void RenderPipeline::staticBind(const Camera& camera, const LightManager& lightManager, SceneShader& shader) const {
-		shader.use();
-		
 		if (shader.getUseLight()) {
 			lightManager.bind(camera, shader);
 			lightManager.bindShadowMaps(shader);
@@ -33,7 +31,6 @@ namespace geeL {
 	}
 
 	void RenderPipeline::dynamicBind(const Camera& camera, const LightManager& lightManager, SceneShader& shader) const {
-		shader.use();
 		shader.loadMaps();
 		if (shader.getUseLight()) lightManager.bind(camera, shader);
 		if (shader.getUseCamera()) shader.setViewMatrix(camera.getViewMatrix());

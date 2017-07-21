@@ -66,7 +66,7 @@ namespace geeL {
 
 
 	void TextureMap::bind(const RenderShader& shader, std::string name, int texLayer) const {
-		glUniform1i(glGetUniformLocation(shader.getProgram(), name.c_str()), texLayer);
+		shader.bind<int>(name, texLayer);
 	}
 
 	void TextureMap::draw(const RenderShader& shader, int texLayer) const {

@@ -19,7 +19,6 @@ namespace geeL {
 		if (scatter > 0.f && scatter != this->scatter) {
 			this->scatter = scatter;
 
-			shader.use();
 			shader.bind<float>(scatterLocation, scatter);
 		}
 	}
@@ -51,7 +50,6 @@ namespace geeL {
 		if (bias != value && value > 0.f) {
 			bias = value;
 
-			shader.use();
 			shader.bind<float>("bias", bias);
 		}
 	}
@@ -60,7 +58,6 @@ namespace geeL {
 		if (scale != value && value > 0.f) {
 			scale = value;
 
-			shader.use();
 			shader.bind<float>("scale", scale);
 		}
 	}

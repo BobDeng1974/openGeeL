@@ -68,7 +68,6 @@ namespace geeL {
 		if (size != maxStepSpecular && size < 50) {
 			maxStepSpecular = size;
 
-			shader.use();
 			shader.bind<int>("maxStepSpecular", maxStepSpecular);
 		}
 	}
@@ -77,7 +76,6 @@ namespace geeL {
 		if (size != maxStepDiffuse && size < 50) {
 			maxStepDiffuse = size;
 
-			shader.use();
 			shader.bind<int>("maxStepDiffuse", maxStepDiffuse);
 		}
 	}
@@ -86,7 +84,6 @@ namespace geeL {
 		if (level > 0) {
 			specularLOD = 0.25f * float(level);
 
-			shader.use();
 			shader.bind<float>("specularLOD", specularLOD);
 		}
 	}
@@ -95,7 +92,6 @@ namespace geeL {
 		if (level > 0) {
 			diffuseLOD = 0.25f * float(level);
 
-			shader.use();
 			shader.bind<float>("diffuseLOD", diffuseLOD);
 		}
 	}

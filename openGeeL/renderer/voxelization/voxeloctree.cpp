@@ -59,7 +59,6 @@ namespace geeL {
 	}
 
 	void VoxelOctree::bind(const Shader& shader) const {
-		shader.use();
 		shader.bind<int>("level", maxLevel);
 		shader.bind<int>("dimensions", voxelizer.getDimensions());
 
@@ -75,7 +74,6 @@ namespace geeL {
 
 		for (int i = 0; i < maxLevel; i++) {
 			//Determine whether nodes should have children or not
-			flagShader->use();
 			flagShader->bind<int>("numVoxels", voxelizer.getVoxelAmount());
 			flagShader->bind<int>("level", i);
 			flagShader->bind<int>("dimensions", voxelizer.getDimensions());
@@ -88,7 +86,6 @@ namespace geeL {
 			
 			//Allocate tiles for new children (1 tile = 8 children nodes)
 			unsigned int currNodes = nodeLevels[i]; //Node amount in current level
-			allocShader->use();
 			allocShader->bind<int>("numNodes", currNodes);
 			allocShader->bind<int>("nodeOffset", nodeOffset);
 			allocShader->bind<int>("allocOffset", allocOffset);
@@ -113,7 +110,6 @@ namespace geeL {
 
 			//Initialize new node tiles
 			unsigned int allocatedNodes = 8 * allocatedTiles;
-			initShader->use();
 			initShader->bind<int>("numNodes", allocatedNodes);
 			initShader->bind<int>("allocOffset", allocOffset);
 
@@ -135,7 +131,6 @@ namespace geeL {
 	void VoxelOctree::buildLeafNodes(uint width, uint height) {
 		
 		//Write voxel information into leaves
-		fillLeavesShader->use();
 		fillLeavesShader->bind<int>("numVoxels", voxelizer.getVoxelAmount());
 		fillLeavesShader->bind<int>("level", maxLevel);
 		fillLeavesShader->bind<int>("dimensions", voxelizer.getDimensions());
@@ -159,7 +154,6 @@ namespace geeL {
 			nodeOffset -= nodeLevels[i];
 
 			unsigned int currNodes = nodeLevels[i];
-			mipmapShader->use();
 			mipmapShader->bind<int>("numNodes", currNodes);
 			mipmapShader->bind<int>("nodeOffset", nodeOffset);
 

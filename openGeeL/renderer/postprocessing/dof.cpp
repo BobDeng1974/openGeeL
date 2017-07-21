@@ -22,8 +22,6 @@ namespace geeL {
 	}
 
 	void DepthOfFieldBlur::bindDoFData(float focalLength, float aperture, float farDistance) {
-		shader.use();
-
 		shader.bind<float>("focalDistance", focalLength);
 		shader.bind<float>("aperture", aperture);
 		shader.bind<float>("farDistance", farDistance);
@@ -37,18 +35,15 @@ namespace geeL {
 		if (threshold != value && value >= 0.f && value <= 1.f) {
 			threshold = value;
 
-			shader.use();
 			shader.bind<float>("threshold", threshold);
 		}
 	}
 
 	void  DepthOfFieldBlur::setFocalLength(float value) {
-		shader.use();
 		shader.bind<float>("focalDistance", value);
 	}
 
 	void DepthOfFieldBlur::setAperture(float value) {
-		shader.use();
 		shader.bind<float>("aperture", value);
 	}
 
@@ -102,12 +97,7 @@ namespace geeL {
 	}
 
 	void DepthOfFieldBlurred::draw() {
-		shader.use();
 		bindValues();
-
-		//Switch shader again since shader of encapsuled 
-		//dof blur was set active during 'bindValues'
-		shader.use();
 		bindToScreen();
 	}
 
@@ -136,7 +126,6 @@ namespace geeL {
 		if (aperture > 0.f && aperture != this->aperture) {
 			this->aperture = aperture;
 
-			shader.use();
 			shader.bind<float>("aperture", aperture);
 			blur.setAperture(aperture);
 		}

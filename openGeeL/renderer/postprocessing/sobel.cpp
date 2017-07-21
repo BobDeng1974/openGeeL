@@ -20,7 +20,6 @@ namespace geeL {
 		if (scale != value && value > 0.f) {
 			scale = value;
 
-			shader.use();
 			shader.bind<float>("scale", scale);
 		}
 	}

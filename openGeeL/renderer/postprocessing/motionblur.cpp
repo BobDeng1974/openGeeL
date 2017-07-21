@@ -101,7 +101,6 @@ namespace geeL {
 		parentBuffer->add(*velocityTexture);
 		parentBuffer->fill(velocity);
 
-		shader.use();
 		shader.bind<float>(strengthLocation, getStrength());
 	}
 

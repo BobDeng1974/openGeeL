@@ -10,7 +10,7 @@ namespace geeL {
 
 	void CubeMap::draw(const RenderShader& shader, std::string name) const {
 		glActiveTexture(GL_TEXTURE1);
-		glUniform1i(glGetUniformLocation(shader.getProgram(), name.c_str()), 1);
+		shader.bind<int>(name, 1);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, getID());
 	}
 

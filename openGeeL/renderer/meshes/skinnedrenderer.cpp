@@ -36,7 +36,6 @@ namespace geeL {
 		for (auto it = materials->begin(); it != materials->end(); it++) {
 			Material& material = *it->second;
 			const RenderShader& shader = material.getShader();
-			shader.use();
 
 			//Load materials into shader
 			material.bindTextures();
@@ -70,7 +69,6 @@ namespace geeL {
 
 	void SkinnedMeshRenderer::draw(const RenderShader& shader) const {
 		//TODO: Load relevant bone transforms into materials
-		shader.use();
 		shader.bind<glm::mat4>("model", transform.getMatrix());
 
 		skinnedModel->draw();

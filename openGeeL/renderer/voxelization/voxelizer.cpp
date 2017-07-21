@@ -64,7 +64,6 @@ namespace geeL {
 		mat4 transY = proj * glm::lookAt(vec3(0.f, 2.f, 0.f), vec3(0.f), vec3(0.f, 0.f, -1.f));
 		mat4 transZ = proj * glm::lookAt(vec3(0.f, 0.f, 2.f), vec3(0.f), vec3(0.f, 1.f, 0.f));
 
-		voxelShader->use();
 		voxelShader->bind<glm::mat4>("transformX", transX);
 		voxelShader->bind<glm::mat4>("transformY", transY);
 		voxelShader->bind<glm::mat4>("transformZ", transZ);
@@ -84,7 +83,6 @@ namespace geeL {
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
 
-		voxelShader->use();
 		voxelShader->bind<int>("drawVoxel", (int)drawVoxel);
 
 		glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicBuffer);

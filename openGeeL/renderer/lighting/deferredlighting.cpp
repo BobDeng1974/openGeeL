@@ -41,7 +41,6 @@ namespace geeL {
 			const Texture& texture = *emissivity->second;
 
 			addImageBuffer(texture, "gEmissivity");
-			shader.use();
 			shader.bind<int>("useEmissivity", 1);
 		}
 	}

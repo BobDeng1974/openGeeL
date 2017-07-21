@@ -167,8 +167,6 @@ namespace geeL {
 	}
 
 	void RenderScene::drawStaticObjects(const RenderShader& shader) const {
-		shader.use();
-
 		iterRenderObjects([&](const MeshRenderer& object) {
 			if (object.isActive())
 				object.drawGeometry(shader);
@@ -176,8 +174,6 @@ namespace geeL {
 	}
 
 	void RenderScene::drawSkinnedObjects(const RenderShader& shader) const {
-		shader.use();
-
 		iterSkinnedObjects([&](const MeshRenderer& object) {
 			if (object.isActive())
 				object.drawGeometry(shader);

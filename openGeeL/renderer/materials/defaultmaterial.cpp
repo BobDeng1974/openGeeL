@@ -124,12 +124,10 @@ namespace geeL {
 
 
 	void DefaultMaterialContainer::bindTextures(SceneShader& shader) const {
-		shader.use();
 		textureStack.bind(shader, "");
 	}
 
 	void DefaultMaterialContainer::bind(SceneShader& shader) const {
-		shader.use();
 		textureStack.draw(shader);
 
 		shader.bind<int>("material.mapFlags", textureStack.mapFlags);

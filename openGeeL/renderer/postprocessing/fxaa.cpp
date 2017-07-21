@@ -36,7 +36,6 @@ namespace geeL {
 		if (blurMin != value && value >= 0.f && value <= 1.f) {
 			blurMin = value;
 
-			shader.use();
 			shader.bind<float>("DIFF_THRESHOLD", blurMin);
 		}
 	}
@@ -45,7 +44,6 @@ namespace geeL {
 		if (fxaaMul != value && value >= 0.f && value <= 1.f) {
 			fxaaMul = value;
 
-			shader.use();
 			shader.bind<float>("FXAA_REDUCE_MUL", fxaaMul);
 		}
 	}
@@ -54,7 +52,6 @@ namespace geeL {
 		if (fxaaMin != value && value >= 0.f) {
 			fxaaMin = value;
 
-			shader.use();
 			shader.bind<float>("FXAA_MIN", fxaaMin);
 		}
 	}
@@ -63,7 +60,6 @@ namespace geeL {
 		if (fxaaClamp != value && value >= 0.f) {
 			fxaaClamp = value;
 
-			shader.use();
 			shader.bind<float>("FXAA_CLAMP", fxaaClamp);
 		}
 	}

@@ -44,7 +44,6 @@ namespace geeL {
 			lookAt(vec3(0.0f, 0.0f, 0.0f), vec3(0.0f,  0.0f, -1.0f),  vec3(0.0f, -1.0f,  0.0f))
 		};
 
-		conversionShader->use();
 		conversionShader->bind<glm::mat4>("projection", projection);
 		conversionShader->loadMaps();
 

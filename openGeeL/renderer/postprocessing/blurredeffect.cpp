@@ -62,7 +62,6 @@ namespace geeL {
 	void BlurredPostEffect::draw() {
 		bindValues();
 
-		shader.use();
 		bindToScreen();
 	}
 

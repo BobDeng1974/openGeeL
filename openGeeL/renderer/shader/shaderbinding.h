@@ -67,7 +67,7 @@ namespace geeL {
 		TextureBinding(const Texture* texture, unsigned offset, std::string name) :
 			texture(texture), offset(offset), name(name) {}
 
-		bool operator== (const TextureBinding &rhs);
+		bool operator== (const TextureBinding& rhs);
 
 	};
 

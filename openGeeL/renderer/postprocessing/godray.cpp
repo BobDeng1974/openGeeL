@@ -53,7 +53,6 @@ namespace geeL {
 		if (samples < 200 && samples != this->samples) {
 			this->samples = samples;
 
-			shader.use();
 			shader.bind<int>("samples", samples);
 		}
 	}

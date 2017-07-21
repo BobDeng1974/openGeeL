@@ -69,7 +69,6 @@ namespace geeL {
 			sigma = value;
 			updateKernel();
 			
-			shader.use();
 			bindKernel();
 		}
 	}
@@ -152,7 +151,6 @@ namespace geeL {
 		if (sigma2 != value && value >= 0.f && value <= 1.f) {
 			sigma2 = value;
 
-			shader.use();
 			shader.bind<float>("sigma", sigma2);
 		}
 	}
@@ -209,7 +207,6 @@ namespace geeL {
 		parentBuffer->add(*sobelTexture);
 		parentBuffer->fill(sobel);
 
-		shader.use();
 		GaussianBlurBase::bindValues();
 	}
 

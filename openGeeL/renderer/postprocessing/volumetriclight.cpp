@@ -62,7 +62,6 @@ namespace geeL {
 		if (samples < 500 && samples != this->samples) {
 			this->samples = samples;
 
-			shader.use();
 			shader.bind<int>("samples", samples);
 		}
 	}
@@ -75,7 +74,6 @@ namespace geeL {
 		if (density > 0.f && density != this->density) {
 			this->density = density;
 
-			shader.use();
 			shader.bind<float>("density", density);
 		}
 	}
@@ -89,7 +87,6 @@ namespace geeL {
 		if (distance > 0.f && distance != minDistance) {
 			minDistance = distance;
 
-			shader.use();
 			shader.bind<float>("minCutoff", minDistance);
 		}
 	}

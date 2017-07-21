@@ -89,7 +89,6 @@ namespace geeL {
 	void SSAO::draw() {
 		parentBuffer->add(*tempTexture);
 		parentBuffer->fill([this]() {
-			shader.use();
 			bindValues();
 			bindToScreen();
 		});
@@ -115,7 +114,6 @@ namespace geeL {
 		if (radius > 0.f && radius != this->radius) {
 			this->radius = radius;
 
-			shader.use();
 			shader.bind<float>("radius", radius);
 		}
 	}

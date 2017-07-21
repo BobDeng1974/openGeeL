@@ -36,7 +36,6 @@ namespace geeL {
 			const Texture& texture = *ssao->second;
 
 			addImageBuffer(texture, "ssao");
-			shader.use();
 			shader.bind<int>("useSSAO", 1);
 		}
 	}

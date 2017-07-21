@@ -44,7 +44,6 @@ namespace geeL {
 		if (this->steps != steps && steps < 200) {
 			this->steps = steps;
 
-			shader.use();
 			shader.bind<int>("stepCount", steps);
 		}
 	}
@@ -57,7 +56,6 @@ namespace geeL {
 		if (stepSize != size && size > 0.f) {
 			stepSize = size;
 
-			shader.use();
 			shader.bind<float>("stepSize", stepSize);
 		}
 	}
@@ -70,7 +68,6 @@ namespace geeL {
 		if (stepGain != gain && gain > 1.f) {
 			stepGain = gain;
 
-			shader.use();
 			shader.bind<float>("stepGain", stepGain);
 		}
 	}
@@ -94,7 +91,6 @@ namespace geeL {
 		if (this->samples != samples && samples < 100) {
 			this->samples = samples;
 
-			shader.use();
 			shader.bind<int>("sampleCount", samples);
 		}
 	}

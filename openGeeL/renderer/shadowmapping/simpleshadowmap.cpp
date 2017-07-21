@@ -176,7 +176,6 @@ namespace geeL {
 		//Write light transform into shader
 		computeLightTransform();
 
-		shader.use();
 		shader.bind<glm::mat4>("lightTransform", lightTransform);
 
 		if (resolution == ShadowmapResolution::Adaptive)
@@ -274,7 +273,6 @@ namespace geeL {
 		//Write light transforms of cubemap faces into shader
 		computeLightTransform();
 
-		shader.use();
 		for (int i = 0; i < 6; i++) {
 			std::string name = "lightTransforms[" + std::to_string(i) + "]";
 			shader.bind<glm::mat4>(name, lightTransforms[i]);
@@ -365,7 +363,6 @@ namespace geeL {
 		//Write light transform into shader
 		computeLightTransform();
 
-		shader.use();
 		shader.bind<glm::mat4>("lightTransform", lightTransform);
 
 		Viewport::set(0, 0, width, height);

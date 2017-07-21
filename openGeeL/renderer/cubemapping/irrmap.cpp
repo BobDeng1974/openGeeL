@@ -51,7 +51,6 @@ namespace geeL {
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-		conversionShader->use();
 		conversionShader->bind<glm::mat4>("projection", projection);
 		conversionShader->loadMaps();
 

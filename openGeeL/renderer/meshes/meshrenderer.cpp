@@ -26,7 +26,6 @@ namespace geeL{
 		for (auto it = materials.begin(); it != materials.end(); it++) {
 			//Activate and forward information to shader
 			SceneShader& shader = *it->first;
-			shader.use();
 			shader.setModelMatrix(transform.getMatrix());
 			shader.bindMatrices();
 
@@ -54,7 +53,6 @@ namespace geeL{
 		auto it = materials.find(&shader);
 		if (it != materials.end()) {
 			SceneShader& shader = *it->first;
-			shader.use();
 			shader.setModelMatrix(transform.getMatrix());
 			shader.bindMatrices();
 
@@ -77,7 +75,6 @@ namespace geeL{
 	}
 
 	void MeshRenderer::drawExclusive(SceneShader& shader) const {
-		shader.use();
 		shader.bind<glm::mat4>("model", transform.getMatrix());
 
 		for (auto it = materials.begin(); it != materials.end(); it++) {
@@ -100,7 +97,6 @@ namespace geeL{
 	}
 
 	void MeshRenderer::drawGeometry(const RenderShader& shader) const {
-		shader.use();
 		shader.bind<glm::mat4>("model", transform.getMatrix());
 
 		model->draw();

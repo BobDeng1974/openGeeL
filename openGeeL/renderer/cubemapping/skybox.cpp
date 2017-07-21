@@ -17,7 +17,6 @@ namespace geeL {
 
 	void Skybox::draw(const Camera& camera) const {
 		glDepthFunc(GL_LEQUAL);
-		shader.use();
 
 		mat4 view = mat4(mat3(camera.getViewMatrix()));
 		shader.bind<glm::mat4>("view", view);

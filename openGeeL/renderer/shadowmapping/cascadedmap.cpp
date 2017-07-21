@@ -93,7 +93,6 @@ namespace geeL {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ID, 0);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
-		shader.use();
 		unsigned int hWidth = width / 2;
 		unsigned int hHeight = height / 2;
 		for (unsigned int i = 0; i < MAPCOUNT; i++) {
