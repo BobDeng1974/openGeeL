@@ -16,9 +16,17 @@ namespace geeL {
 		float getScale() const;
 		void  setScale(float value);
 
+		virtual std::string toString() const;
+
 	private:
 		float scale;
 	};
+
+
+	inline std::string SobelFilter::toString() const {
+		return "Sobel Filter";
+	}
+
 }
 
 #endif

@@ -23,10 +23,18 @@ namespace geeL {
 		void setFXAAMin(float value);
 		void setFXAAClamp(float value);
 
+		virtual std::string toString() const;
+
 	private:
 		float blurMin, fxaaMul, fxaaMin, fxaaClamp;
 
 	};
+
+
+	inline std::string FXAA::toString() const {
+		return "FXAA";
+	}
+
 }
 
 #endif

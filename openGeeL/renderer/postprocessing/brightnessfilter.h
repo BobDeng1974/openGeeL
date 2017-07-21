@@ -11,6 +11,8 @@ namespace geeL {
 	public:
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) = 0;
 
+		virtual std::string toString() const;
+
 	protected:
 		BrightnessFilter(const std::string& path);
 
@@ -55,6 +57,10 @@ namespace geeL {
 
 	};
 
+
+	inline std::string BrightnessFilter::toString() const {
+		return "Brightness Filter";
+	}
 
 }
 

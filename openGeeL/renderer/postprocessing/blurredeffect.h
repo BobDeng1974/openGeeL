@@ -25,6 +25,8 @@ namespace geeL {
 		const ResolutionScale& getEffectResolution() const;
 		const ResolutionScale& getBlurResolution() const;
 
+		virtual std::string toString() const;
+
 	protected:
 		virtual void bindValues();
 
@@ -37,6 +39,12 @@ namespace geeL {
 		RenderTexture* blurTexture = nullptr;
 
 	};
+
+
+	inline std::string BlurredPostEffect::toString() const {
+		return "Blurred " + effect.toString();
+	}
+
 }
 
 #endif

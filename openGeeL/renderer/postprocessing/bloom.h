@@ -23,10 +23,18 @@ namespace geeL {
 		void setScatter(float scatter);
 		float getScatter() const;
 
+		virtual std::string toString() const;
+
 	private:
 		BrightnessFilterCutoff& filter;
 
 	};
+
+
+	inline std::string Bloom::toString() const {
+		return "Bloom";
+	}
+
 }
 
 #endif

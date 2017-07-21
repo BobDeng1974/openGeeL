@@ -28,6 +28,8 @@ namespace geeL {
 		float getMinDistance() const;
 		void setMinDistance(float distance);
 
+		virtual std::string toString() const;
+
 	protected:
 		virtual void bindValues();
 
@@ -42,6 +44,12 @@ namespace geeL {
 		ShaderLocation invViewLocation;
 
 	};
+
+
+	inline std::string VolumetricLight::toString() const {
+		return "Volumetric light";
+	}
+
 }
 
 #endif

@@ -12,6 +12,7 @@ namespace geeL {
 		SimpleBlur(unsigned int strength = 1);
 
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual std::string toString() const;
 
 	protected:
 		SimpleBlur(unsigned int strength, std::string shaderPath);
@@ -29,6 +30,12 @@ namespace geeL {
 		SimpleBlur3D(unsigned int strength = 1);
 
 	};
+
+
+	inline std::string SimpleBlur::toString() const {
+		return "Simple Blur";
+	}
+
 }
 
 #endif

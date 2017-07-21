@@ -34,6 +34,8 @@ namespace geeL {
 		float getSigma() const;
 		void  setSigma(float value);
 
+		virtual std::string toString() const;
+
 	protected:
 		unsigned int currBuffer;
 		
@@ -77,6 +79,8 @@ namespace geeL {
 		float getSigma() const;
 		void  setSigma(float value);
 
+		virtual std::string toString() const;
+
 	protected:
 		BilateralFilter(std::string shaderPath, float sigma = 1.3f, float factor = 0.5f);
 
@@ -112,6 +116,8 @@ namespace geeL {
 		float getScale() const;
 		void  setScale(float value);
 
+		virtual std::string toString() const;
+
 	protected:
 		virtual void bindValues();
 
@@ -121,6 +127,20 @@ namespace geeL {
 		RenderTexture* sobelTexture = nullptr;
 
 	};
+
+
+	inline std::string GaussianBlurBase::toString() const {
+		return "Gaussian Blur";
+	}
+
+	inline std::string BilateralFilter::toString() const {
+		return "Bilateral Filter";
+	}
+
+	inline std::string SobelBlur::toString() const {
+		return "Sobel Blur";
+	}
+
 }
 
 #endif

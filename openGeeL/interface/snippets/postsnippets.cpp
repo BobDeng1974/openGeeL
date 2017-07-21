@@ -16,37 +16,21 @@
 
 namespace geeL {
 
-	DefaultSnippet::DefaultSnippet(DefaultPostProcess& def) : def(def) {}
+	PostEffectSnippet::PostEffectSnippet(PostProcessingEffect& baseEffect) : baseEffect(baseEffect) {}
 
-	BlurredEffectSnippet::BlurredEffectSnippet(BlurredPostEffect& effect, GUISnippet& effectSnippet) 
-		: effect(effect), effectSnippet(effectSnippet), blurSnippet(nullptr) {}
-
-	ColorCorrectionSnippet::ColorCorrectionSnippet(ColorCorrection& color) : color(color) {}
-
-	BloomSnippet::BloomSnippet(Bloom& bloom) : bloom(bloom) {}
-
-	BrightnessFilterSnippet::BrightnessFilterSnippet(BrightnessFilterSmooth & filter) : filter(filter) {}
-
-	DepthOfFieldBlurredSnippet::DepthOfFieldBlurredSnippet(DepthOfFieldBlurred& dof) : dof(dof) {}
-
-	FXAASnippet::FXAASnippet(FXAA& fxaa) : fxaa(fxaa) {}
-
-	GodRaySnippet::GodRaySnippet(GodRay& ray) : ray(ray) {}
-
-	LensFlareSnippet::LensFlareSnippet(LensFlare& flare) : flare(flare) {}
-
-	VolumetricLightSnippet::VolumetricLightSnippet(VolumetricLight& light) : light(light) {}
-
-	SSAOSnippet::SSAOSnippet(SSAO& ssao) : ssao(ssao) {}
-
-	SSRRSnippet::SSRRSnippet(SSRR& ssrr) : ssrr(ssrr) {}
-
-	ConeTracerSnippet::ConeTracerSnippet(VoxelConeTracer & tracer) : tracer(tracer) {}
-
-	PostGroupSnippet::PostGroupSnippet(std::list<PostEffectSnippet*>& snippets) : snippets(snippets) {
-		if (snippets.size() == 0)
-			throw "Post group needs at least one effect to work\n";
+	PostProcessingEffect& PostEffectSnippet::getEffect() {
+		return baseEffect;
 	}
+
+	std::string PostEffectSnippet::toString() const {
+		return baseEffect.toString();
+	}
+
+	
+
+	PostGroupSnippet::PostGroupSnippet(std::list<PostEffectSnippet*>& snippets) 
+		: PostEffectSnippet(snippets.front()->getEffect()), snippets(snippets) {}
+
 
 	void PostGroupSnippet::draw(GUIContext * context) {
 		for (auto it = next(snippets.begin()); it != snippets.end(); it++) {
@@ -58,9 +42,9 @@ namespace geeL {
 		}
 	}
 
-	std::string PostGroupSnippet::toString() const {
-		return snippets.front()->toString();
-	}
+
+
+	DefaultSnippet::DefaultSnippet(DefaultPostProcess& def) : PostEffectSnippet(def), def(def) {}
 
 	void DefaultSnippet::draw(GUIContext* context) {
 		float defExposure = def.getExposure();
@@ -69,10 +53,10 @@ namespace geeL {
 			def.setExposure(exposure);
 	}
 
-	std::string DefaultSnippet::toString() const {
-		return "Default";
-	}
 
+
+	BlurredEffectSnippet::BlurredEffectSnippet(BlurredPostEffect& effect, GUISnippet& effectSnippet)
+		: PostEffectSnippet(effect), effect(effect), effectSnippet(effectSnippet), blurSnippet(nullptr) {}
 
 	void BlurredEffectSnippet::draw(GUIContext* context) {
 		
@@ -94,14 +78,13 @@ namespace geeL {
 		}
 	}
 
-	std::string BlurredEffectSnippet::toString() const {
-		return "Blurred " + effectSnippet.toString();
-	}
-
 	void BlurredEffectSnippet::setBlurSnippet(GUISnippet& blurSnippet) {
 		this->blurSnippet = &blurSnippet;
 	}
 
+
+
+	ColorCorrectionSnippet::ColorCorrectionSnippet(ColorCorrection& color) : PostEffectSnippet(color), color(color) {}
 
 	void ColorCorrectionSnippet::draw(GUIContext* context) {
 
@@ -142,10 +125,9 @@ namespace geeL {
 		
 	}
 
-	std::string ColorCorrectionSnippet::toString() const {
-		return "Color Correction";
-	}
 
+
+	BloomSnippet::BloomSnippet(Bloom& bloom) : PostEffectSnippet(bloom), bloom(bloom) {}
 
 	void BloomSnippet::draw(GUIContext* context) {
 		const ResolutionScale& oldResolution = bloom.getEffectResolution();
@@ -159,10 +141,9 @@ namespace geeL {
 		bloom.setScatter(scatter);
 	}
 
-	std::string BloomSnippet::toString() const {
-		return "Bloom";
-	}
-	
+
+
+	BrightnessFilterSnippet::BrightnessFilterSnippet(BrightnessFilterSmooth & filter) : PostEffectSnippet(filter), filter(filter) {}
 
 	void BrightnessFilterSnippet::draw(GUIContext* context) {
 		float bias = GUISnippets::drawBarFloat(context, filter.getBias(), 0.f, 3.f, 0.0001f, "Bias");
@@ -173,9 +154,8 @@ namespace geeL {
 
 	}
 
-	std::string BrightnessFilterSnippet::toString() const {
-		return "Brightness Filter";
-	}
+
+	DepthOfFieldBlurredSnippet::DepthOfFieldBlurredSnippet(DepthOfFieldBlurred& dof) : PostEffectSnippet(dof), dof(dof) {}
 
 	void DepthOfFieldBlurredSnippet::draw(GUIContext* context) {
 		const ResolutionScale& oldResolution = dof.getBlurResolution();
@@ -199,10 +179,9 @@ namespace geeL {
 		});
 	}
 
-	std::string DepthOfFieldBlurredSnippet::toString() const {
-		return "Depth of Field";
-	}
 
+
+	FXAASnippet::FXAASnippet(FXAA& fxaa) : PostEffectSnippet(fxaa), fxaa(fxaa) {}
 
 	void FXAASnippet::draw(GUIContext* context) {
 		float blurMin = GUISnippets::drawBarFloat(context, fxaa.getBlurMin(), 0.f, 0.1f, 0.0001f, "Blur Min");
@@ -218,10 +197,9 @@ namespace geeL {
 		fxaa.setFXAAClamp(fxaaClamp);
 	}
 
-	std::string FXAASnippet::toString() const {
-		return "FXAA";
-	}
 
+
+	GodRaySnippet::GodRaySnippet(GodRay& ray) : PostEffectSnippet(ray), ray(ray) {}
 
 	void GodRaySnippet::draw(GUIContext* context) {
 		glm::vec3 position = GUISnippets::drawVector(context, ray.getLightPosition(), "", 100, 0.1f);
@@ -231,11 +209,9 @@ namespace geeL {
 		ray.setSampleCount(samples);
 	}
 
-	std::string GodRaySnippet::toString() const {
-		return "God Ray";
-	}
 	
 
+	LensFlareSnippet::LensFlareSnippet(LensFlare& flare) : PostEffectSnippet(flare), flare(flare) {}
 
 	void LensFlareSnippet::draw(GUIContext * context) {
 		float strength = GUISnippets::drawBarFloat(context, flare.getStrength(), 0.1f, 50.f, 0.001f, "Strength");
@@ -259,10 +235,9 @@ namespace geeL {
 
 	}
 
-	std::string LensFlareSnippet::toString() const {
-		return "Lens Flare";
-	}
 
+
+	VolumetricLightSnippet::VolumetricLightSnippet(VolumetricLight& light) : PostEffectSnippet(light), light(light) {}
 
 	void VolumetricLightSnippet::draw(GUIContext* context) {
 		int samples = GUISnippets::drawBarInteger(context, light.getSampleCount(), 0, 500, 1, "Samples");
@@ -275,20 +250,18 @@ namespace geeL {
 		light.setMinDistance(distance);
 	}
 	
-	std::string VolumetricLightSnippet::toString() const {
-		return "Volumetric Light";
-	}
 
+
+	SSAOSnippet::SSAOSnippet(SSAO& ssao) : PostEffectSnippet(ssao), ssao(ssao) {}
 
 	void SSAOSnippet::draw(GUIContext* context) {
 		float radius = GUISnippets::drawBarFloat(context, ssao.getRadius(), 0.5f, 100.f, 0.1f, "Radius");
 		ssao.setRadius(radius);
 	}
 
-	std::string SSAOSnippet::toString() const {
-		return "SSAO";
-	}
 
+
+	SSRRSnippet::SSRRSnippet(SSRR& ssrr) : PostEffectSnippet(ssrr), ssrr(ssrr) {}
 
 	void SSRRSnippet::draw(GUIContext* context) {
 		
@@ -309,10 +282,9 @@ namespace geeL {
 		ssrr.setStepSizeGain(gain);
 	}
 
-	std::string SSRRSnippet::toString() const {
-		return "SSRR";
-	}
 	
+
+	ConeTracerSnippet::ConeTracerSnippet(VoxelConeTracer& tracer) : PostEffectSnippet(tracer), tracer(tracer) {}
 
 	void ConeTracerSnippet::draw(GUIContext* context) {
 		unsigned int specLOD = GUISnippets::drawBarInteger(context, tracer.getSpecularLOD(), 1, 10, 1, "Specular LOD");
@@ -328,13 +300,5 @@ namespace geeL {
 		tracer.setDiffuseSampleSize(diffSteps);
 	}
 
-	std::string ConeTracerSnippet::toString() const {
-		return "Voxel Cone Tracer";
-	}
-
-
-	
-
-	
 
 }

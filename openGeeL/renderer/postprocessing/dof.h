@@ -57,6 +57,8 @@ namespace geeL {
 
 		DepthOfFieldBlur& getBlur();
 
+		virtual std::string toString() const;
+
 	protected:
 		virtual void bindValues();
 
@@ -72,6 +74,12 @@ namespace geeL {
 		RenderTexture* blurTexture = nullptr;
 
 	};
+
+
+	inline std::string DepthOfFieldBlurred::toString() const {
+		return "Depth of Field";
+	}
+
 }
 
 #endif

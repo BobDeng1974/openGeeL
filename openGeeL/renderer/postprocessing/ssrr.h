@@ -24,6 +24,8 @@ namespace geeL {
 		float getStepSizeGain() const;
 		void setStepSizeGain(float gain);
 
+		virtual std::string toString() const;
+
 	protected:
 		SSRR(std::string fragmentPath, int sampleCount = 60, float sampleSize = 0.2f, float sampleSizeGain = 1.02f);
 
@@ -54,6 +56,13 @@ namespace geeL {
 		unsigned int samples;
 
 	};
+
+
+	inline std::string SSRR::toString() const {
+		return "SSRR";
+	}
+
+
 }
 
 #endif

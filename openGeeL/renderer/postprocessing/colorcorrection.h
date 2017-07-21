@@ -35,12 +35,20 @@ namespace geeL {
 		void setDistortionDirection(const glm::vec2& value);
 		void setChromaticDistortion(const glm::vec3& value);
 
+		virtual std::string toString() const;
+
 	protected:
 		glm::vec2 distortionDirection;
 		glm::vec3 distortion;
 		float r, g, b, h, s, v;
 
 	};
+
+
+	inline std::string ColorCorrection::toString() const {
+		return "Color Correction";
+	}
+
 }
 
 #endif

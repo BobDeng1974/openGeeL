@@ -30,6 +30,8 @@ namespace geeL {
 		void setSpecularLOD(unsigned int level);
 		void setDiffuseLOD(unsigned int level);
 
+		virtual std::string toString() const;
+
 	protected:
 		virtual void bindValues();
 
@@ -44,6 +46,12 @@ namespace geeL {
 		ShaderLocation originLocation;
 
 	};
+
+
+	inline std::string VoxelConeTracer::toString() const {
+		return "Voxel Cone Tracder";
+	}
+
 }
 
 #endif

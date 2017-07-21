@@ -26,6 +26,7 @@ namespace geeL {
 		unsigned int getSampleCount() const;
 		void setSampleCount(unsigned int samples);
 
+		virtual std::string toString() const;
 
 	protected:
 		virtual void bindValues();
@@ -37,6 +38,11 @@ namespace geeL {
 		ShaderLocation lightLocation;
 		ShaderLocation lightViewLocation;
 	};
+
+	inline std::string GodRay::toString() const {
+		return "GodRay";
+	}
+
 }
 
 #endif

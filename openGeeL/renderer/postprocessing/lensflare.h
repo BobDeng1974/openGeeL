@@ -35,6 +35,8 @@ namespace geeL {
 		void setStarburstTexture(const ImageTexture& texture);
 		void setDirtTexture(const ImageTexture& texture);
 
+		virtual std::string toString() const;
+
 	protected:
 		virtual void bindValues();
 
@@ -46,6 +48,12 @@ namespace geeL {
 		RenderTexture* filterTexture = nullptr;
 
 	};
+
+
+
+	inline std::string LensFlare::toString() const {
+		return "Lens Flare";
+	}
 
 
 }

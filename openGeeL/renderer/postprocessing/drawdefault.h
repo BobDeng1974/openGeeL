@@ -21,10 +21,17 @@ namespace geeL {
 		float getExposure() const;
 		void setExposure(float exposure);
 
+		virtual std::string toString() const;
+
 	protected:
 		ImageTexture* noise;
 
 	};
+
+
+	inline std::string DefaultPostProcess::toString() const {
+		return "Default";
+	}
 
 }
 

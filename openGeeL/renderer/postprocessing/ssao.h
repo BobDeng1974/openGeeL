@@ -36,6 +36,8 @@ namespace geeL {
 
 		const ResolutionScale& getResolution() const;
 
+		virtual std::string toString() const;
+
 	protected:
 		virtual void bindValues();
 
@@ -53,6 +55,11 @@ namespace geeL {
 		RenderTexture* tempTexture = nullptr;
 		
 	};
+
+
+	inline std::string SSAO::toString() const {
+		return "SSAO";
+	}
 }
 
 #endif

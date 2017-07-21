@@ -27,6 +27,8 @@ namespace geeL {
 		unsigned int getLevelOfDetail() const;
 		void setLevelOfDetail(unsigned int value);
 
+		virtual std::string toString() const;
+
 	protected:
 		ShaderLocation samplesLocation;
 		ShaderLocation strengthLocation;
@@ -81,6 +83,12 @@ namespace geeL {
 		RenderTexture* velocityTexture = nullptr;
 
 	};
+
+
+
+	inline std::string MotionBlur::toString() const {
+		return "Motion Blur";
+	}
 
 }
 

@@ -18,7 +18,6 @@ namespace geeL {
 		GaussianBlurSnippet(GaussianBlurBase& blur);
 
 		virtual void draw(GUIContext* context);
-		virtual std::string toString() const;
 
 	private:
 		GaussianBlurBase& blur;
@@ -32,7 +31,6 @@ namespace geeL {
 		BilateralFilterSnippet(BilateralFilter& blur);
 
 		virtual void draw(GUIContext* context);
-		virtual std::string toString() const;
 
 	private:
 		BilateralFilter& blur;
@@ -46,7 +44,6 @@ namespace geeL {
 		SobelBlurSnippet(SobelBlur& blur);
 
 		virtual void draw(GUIContext* context);
-		virtual std::string toString() const;
 
 	private:
 		SobelBlur& blur;
@@ -60,7 +57,6 @@ namespace geeL {
 		MotionBlurSnippet(MotionBlur& blur);
 
 		virtual void draw(GUIContext* context);
-		virtual std::string toString() const;
 
 	private:
 		MotionBlur& blur;
