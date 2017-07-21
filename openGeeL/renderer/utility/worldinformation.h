@@ -35,6 +35,7 @@ namespace geeL {
 	public:
 		virtual void addRequester(WorldMapRequester& requester) = 0;
 		virtual void linkInformation() const = 0;
+		virtual std::map<WorldMaps, const Texture*> getMaps() const = 0;
 
 	};
 

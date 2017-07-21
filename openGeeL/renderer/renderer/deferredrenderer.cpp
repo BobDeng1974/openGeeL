@@ -299,8 +299,16 @@ namespace geeL {
 	
 
 	void DeferredRenderer::linkInformation() const {
-
 		//Link world maps to requesting post effects
+		map<WorldMaps, const Texture*> worldMaps = std::move(getMaps());
+
+		for (auto it = requester.begin(); it != requester.end(); it++) {
+			WorldMapRequester* req = *it;
+			req->addWorldInformation(worldMaps);
+		}
+	}
+
+	map<WorldMaps, const Texture*> DeferredRenderer::getMaps() const {
 		map<WorldMaps, const Texture*> worldMaps;
 		worldMaps[WorldMaps::Diffuse] = &gBuffer.getDiffuse();
 		worldMaps[WorldMaps::PositionRoughness] = &gBuffer.getPositionRoughness();
@@ -310,13 +318,10 @@ namespace geeL {
 		if (!emissivity->isEmpty())
 			worldMaps[WorldMaps::Emissivity] = emissivity;
 
-		if(ssao != nullptr)
+		if (ssao != nullptr)
 			worldMaps[WorldMaps::SSAO] = ssaoTexture;
 
-		for (auto it = requester.begin(); it != requester.end(); it++) {
-			WorldMapRequester* req = *it;
-			req->addWorldInformation(worldMaps);
-		}
+		return worldMaps;
 	}
 
 

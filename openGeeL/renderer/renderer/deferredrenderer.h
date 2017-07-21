@@ -35,7 +35,6 @@ namespace geeL {
 		virtual void draw();
 		virtual void draw(const Camera& camera, const FrameBuffer& buffer);
 		virtual void initSceneObjects();
-
 		virtual void handleInput();
 
 		void addSSAO(SSAO& ssao);
@@ -47,6 +46,7 @@ namespace geeL {
 
 		virtual void addRequester(WorldMapRequester& requester);
 		virtual void linkInformation() const;
+		virtual std::map<WorldMaps, const Texture*> getMaps() const;
 
 		const RenderTime& getRenderTime() const;
 
