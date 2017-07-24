@@ -72,7 +72,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *  these timings to the DefaultLogger. See the @link perf Performance
  *  Page@endlink for more information on this topic.
  * 
- * Property type: bool. Default value: false.
+ * PropertyBase type: bool. Default value: false.
  */
 #define AI_CONFIG_GLOB_MEASURE_TIME  \
 	"GLOB_MEASURE_TIME"
@@ -83,7 +83,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Skeleton dummy meshes are generated as a visualization aid in cases which
  * the input data contains no geometry, but only animation data.
- * Property data type: bool. Default value: false
+ * PropertyBase data type: bool. Default value: false
  */
 // ---------------------------------------------------------------------------
 #define AI_CONFIG_IMPORT_NO_SKELETON_MESHES \
@@ -105,7 +105,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * to limit each Importer instance to a specific number of cores.
  *
  * For more information, see the @link threading Threading page@endlink.
- * Property type: int, default value: -1.
+ * PropertyBase type: int, default value: -1.
  */
 #define AI_CONFIG_GLOB_MULTITHREADING  \
 	"GLOB_MULTITHREADING"
@@ -123,7 +123,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * Meshes are split until the maximum number of bones is reached. The default
  * value is AI_SBBC_DEFAULT_MAX_BONES, which may be altered at
  * compile-time.
- * Property data type: integer.
+ * PropertyBase data type: integer.
  */
 // ---------------------------------------------------------------------------
 #define AI_CONFIG_PP_SBBC_MAX_BONES \
@@ -142,7 +142,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This applies to the CalcTangentSpace-Step. The angle is specified
  * in degrees. The maximum value is 175.
- * Property type: float. Default value: 45 degrees
+ * PropertyBase type: float. Default value: 45 degrees
  */
 #define AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE \
 	"PP_CT_MAX_SMOOTHING_ANGLE"
@@ -151,7 +151,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /** @brief Source UV channel for tangent space computation.
  *
  * The specified channel must exist or an error will be raised. 
- * Property type: integer. Default value: 0
+ * PropertyBase type: integer. Default value: 0
  */
 // ---------------------------------------------------------------------------
 #define AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX \
@@ -164,7 +164,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * Sometimes referred to as 'crease angle'.
  * This applies to the GenSmoothNormals-Step. The angle is specified
  * in degrees, so 180 is PI. The default value is 175 degrees (all vertex 
- * normals are smoothed). The maximum value is 175, too. Property type: float. 
+ * normals are smoothed). The maximum value is 175, too. PropertyBase type: float. 
  * Warning: setting this option may cause a severe loss of performance. The
  * performance is unaffected if the #AI_CONFIG_FAVOUR_SPEED flag is set but
  * the output quality may be reduced.
@@ -181,7 +181,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * large and contains RGB triplets for each of the 256 palette entries.
  * The default value is colormap.lmp. If the file is not found,
  * a default palette (from Quake 1) is used. 
- * Property type: string.
+ * PropertyBase type: string.
  */
 #define AI_CONFIG_IMPORT_MDL_COLORMAP		\
 	"IMPORT_MDL_COLORMAP"
@@ -201,7 +201,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * to pass additional semantics through the content pipeline. This ensures
  * they won't be optimized away, but a general optimization is still 
  * performed for materials not contained in the list.
- * Property type: String. Default value: n/a
+ * PropertyBase type: String. Default value: n/a
  * @note Linefeeds, tabs or carriage returns are treated as whitespace.
  *   Material names are case sensitive.
  */
@@ -218,7 +218,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * important additional information which you intend to parse. 
  * For rendering, you can still render all meshes in the scene without
  * any transformations.
- * Property type: bool. Default value: false.
+ * PropertyBase type: bool. Default value: false.
  */
 #define AI_CONFIG_PP_PTV_KEEP_HIERARCHY		\
 	"PP_PTV_KEEP_HIERARCHY"
@@ -237,7 +237,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /** @brief Configures the #aiProcess_PretransformVertices step to use
  *  a users defined matrix as the scene root node transformation before
  *  transforming vertices. 
- *  Property type: bool. Default value: false.
+ *  PropertyBase type: bool. Default value: false.
  */
 #define AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION	\
 	"PP_PTV_ADD_ROOT_TRANSFORMATION"
@@ -247,7 +247,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *  a users defined matrix as the scene root node transformation before
  *  transforming vertices. This property correspond to the 'a1' component
  *  of the transformation matrix.
- *  Property type: aiMatrix4x4.
+ *  PropertyBase type: aiMatrix4x4.
  */
 #define AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION	\
 	"PP_PTV_ROOT_TRANSFORMATION"
@@ -260,7 +260,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * degenerated lines to points. See the documentation to the
  * #aiProcess_FindDegenerates step for a detailed example of the various ways
  * to get rid of these lines and points if you don't want them.
- * Property type: bool. Default value: false.
+ * PropertyBase type: bool. Default value: false.
  */
 #define AI_CONFIG_PP_FD_REMOVE \
 	"PP_FD_REMOVE"
@@ -279,7 +279,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * to pass additional semantics through the content pipeline. This ensures
  * they won't be optimized away, but a general optimization is still 
  * performed for nodes not contained in the list.
- * Property type: String. Default value: n/a
+ * PropertyBase type: String. Default value: n/a
  * @note Linefeeds, tabs or carriage returns are treated as whitespace.
  *   Node names are case sensitive.
  */
@@ -292,7 +292,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * This is used by the "SplitLargeMeshes" PostProcess-Step to determine
  * whether a mesh must be split or not.
  * @note The default value is AI_SLM_DEFAULT_MAX_TRIANGLES
- * Property type: integer.
+ * PropertyBase type: integer.
  */
 #define AI_CONFIG_PP_SLM_TRIANGLE_LIMIT	\
 	"PP_SLM_TRIANGLE_LIMIT"
@@ -308,7 +308,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * This is used by the "SplitLargeMeshes" PostProcess-Step to determine
  * whether a mesh must be split or not.
  * @note The default value is AI_SLM_DEFAULT_MAX_VERTICES
- * Property type: integer. 
+ * PropertyBase type: integer. 
  */
 #define AI_CONFIG_PP_SLM_VERTEX_LIMIT \
 	"PP_SLM_VERTEX_LIMIT"
@@ -323,7 +323,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This is used by the #aiProcess_LimitBoneWeights PostProcess-Step.
  * @note The default value is AI_LBW_MAX_WEIGHTS
- * Property type: integer.*/
+ * PropertyBase type: integer.*/
 #define AI_CONFIG_PP_LBW_MAX_WEIGHTS	\
 	"PP_LBW_MAX_WEIGHTS"
 
@@ -337,7 +337,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This is used by the #aiProcess_Debone PostProcess-Step.
  * @note The default value is AI_DEBONE_THRESHOLD
- * Property type: float.*/
+ * PropertyBase type: float.*/
 #define AI_CONFIG_PP_DB_THRESHOLD \
 	"PP_DB_THRESHOLD"
 
@@ -351,7 +351,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This is used by the #aiProcess_Debone PostProcess-Step.
  * @note The default value is 0
- * Property type: bool.*/
+ * PropertyBase type: bool.*/
 #define AI_CONFIG_PP_DB_ALL_OR_NONE \
 	"PP_DB_ALL_OR_NONE"
 
@@ -370,7 +370,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * guess what your meshes will probably have.
  * @note The default value is #PP_ICL_PTCACHE_SIZE. That results in slight
  * performance improvements for most nVidia/AMD cards since 2002.
- * Property type: integer.
+ * PropertyBase type: integer.
  */
 #define AI_CONFIG_PP_ICL_PTCACHE_SIZE	"PP_ICL_PTCACHE_SIZE"
 
@@ -535,7 +535,7 @@ enum aiComponent
  *    in the source file or take only the first.
  *
  * The default value is true (1)
- * Property type: bool
+ * PropertyBase type: bool
  */
 #define AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS \
 	"IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS"
@@ -547,7 +547,7 @@ enum aiComponent
  * This is void unless IMPORT_FBX_READ_MATERIALS=1.
  *
  * The default value is false (0)
- * Property type: bool
+ * PropertyBase type: bool
  */
 #define AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS \
 	"IMPORT_FBX_READ_ALL_MATERIALS"
@@ -556,7 +556,7 @@ enum aiComponent
 /** @brief Set whether the fbx importer will read materials.
  *
  * The default value is true (1)
- * Property type: bool
+ * PropertyBase type: bool
  */
 #define AI_CONFIG_IMPORT_FBX_READ_MATERIALS \
 	"IMPORT_FBX_READ_MATERIALS"
@@ -565,7 +565,7 @@ enum aiComponent
 /** @brief Set whether the fbx importer will read cameras.
  *
  * The default value is true (1)
- * Property type: bool
+ * PropertyBase type: bool
  */
 #define AI_CONFIG_IMPORT_FBX_READ_CAMERAS \
 	"IMPORT_FBX_READ_CAMERAS"
@@ -574,7 +574,7 @@ enum aiComponent
 /** @brief Set whether the fbx importer will read light sources.
  *
  * The default value is true (1)
- * Property type: bool
+ * PropertyBase type: bool
  */
 #define AI_CONFIG_IMPORT_FBX_READ_LIGHTS \
 	"IMPORT_FBX_READ_LIGHTS"
@@ -583,7 +583,7 @@ enum aiComponent
 /** @brief Set whether the fbx importer will read animations.
  *
  * The default value is true (1)
- * Property type: bool
+ * PropertyBase type: bool
  */
 #define AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS \
 	"IMPORT_FBX_READ_ANIMATIONS"
@@ -595,7 +595,7 @@ enum aiComponent
  *    supported and well-tested.
  *
  * The default value is false (0)
- * Property type: bool
+ * PropertyBase type: bool
  */
 #define AI_CONFIG_IMPORT_FBX_STRICT_MODE \
 	"IMPORT_FBX_STRICT_MODE"
@@ -606,7 +606,7 @@ enum aiComponent
  *    will be evaluated whenever possible.
  *
  * The default value is true (1)
- * Property type: bool
+ * PropertyBase type: bool
  */
 #define AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS \
 	"IMPORT_FBX_PRESERVE_PIVOTS"
@@ -617,7 +617,7 @@ enum aiComponent
  *    entire defined range.
  *
  * The default value is true (1)
- * Property type: bool
+ * PropertyBase type: bool
  */
 #define AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES \
 	"IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES"
@@ -635,7 +635,7 @@ enum aiComponent
  *   for a specific loader. You can use the AI_CONFIG_IMPORT_XXX_KEYFRAME
  *   options (where XXX is a placeholder for the file format for which you
  *   want to override the global setting).
- * Property type: integer.
+ * PropertyBase type: integer.
  */
 #define AI_CONFIG_IMPORT_GLOBAL_KEYFRAME	"IMPORT_GLOBAL_KEYFRAME"
 
@@ -651,7 +651,7 @@ enum aiComponent
 /** @brief  Configures the AC loader to collect all surfaces which have the
  *    "Backface cull" flag set in separate meshes. 
  *
- *  Property type: bool. Default value: true.
+ *  PropertyBase type: bool. Default value: true.
  */
 #define AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL	\
 	"IMPORT_AC_SEPARATE_BFCULL"
@@ -662,7 +662,7 @@ enum aiComponent
  *  default, Assimp performs the subdivision using the standard 
  *  Catmull-Clark algorithm
  *
- * * Property type: bool. Default value: true.
+ * * PropertyBase type: bool. Default value: true.
  */
 #define AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION	\
 	"IMPORT_AC_EVAL_SUBDIVISION"
@@ -671,7 +671,7 @@ enum aiComponent
 /** @brief  Configures the UNREAL 3D loader to separate faces with different
  *    surface flags (e.g. two-sided vs. single-sided).
  *
- * * Property type: bool. Default value: true.
+ * * PropertyBase type: bool. Default value: true.
  */
 #define AI_CONFIG_IMPORT_UNREAL_HANDLE_FLAGS \
 	"UNREAL_HANDLE_FLAGS"
@@ -684,7 +684,7 @@ enum aiComponent
  * want to compute them on your own, if you need them. This option is intended
  * for model viewers which want to offer an easy way to apply textures to
  * terrains.
- * * Property type: bool. Default value: false.
+ * * PropertyBase type: bool. Default value: false.
  */
 #define AI_CONFIG_IMPORT_TER_MAKE_UVS \
 	"IMPORT_TER_MAKE_UVS"
@@ -694,7 +694,7 @@ enum aiComponent
  *	basing on the smoothing groups loaded from the file.
  * 
  * Some ASE files have carry invalid normals, other don't.
- * * Property type: bool. Default value: true.
+ * * PropertyBase type: bool. Default value: true.
  */
 #define AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS	\
 	"IMPORT_ASE_RECONSTRUCT_NORMALS"
@@ -706,7 +706,7 @@ enum aiComponent
  * These models usually consist of 3 files, lower.md3, upper.md3 and
  * head.md3. If this property is set to true, Assimp will try to load and
  * combine all three files if one of them is loaded. 
- * Property type: bool. Default value: true.
+ * PropertyBase type: bool. Default value: true.
  */
 #define AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART \
 	"IMPORT_MD3_HANDLE_MULTIPART"
@@ -718,7 +718,7 @@ enum aiComponent
  * <md3_file_name>_<skin_name>.skin is existing. These files are used by
  * Quake III to be able to assign different skins (e.g. red and blue team) 
  * to models. 'default', 'red', 'blue' are typical skin names.
- * Property type: String. Default value: "default".
+ * PropertyBase type: String. Default value: "default".
  */
 #define AI_CONFIG_IMPORT_MD3_SKIN_NAME \
 	"IMPORT_MD3_SKIN_NAME"
@@ -736,7 +736,7 @@ enum aiComponent
  * the shaders for all MD3s to be loaded reside. Assimp attempts to open 
  * <tt><dir>/<model_name>.shader</tt> first, <tt><dir>/<file_name>.shader</tt> 
  * is the fallback file. Note that <dir> should have a terminal (back)slash.
- * Property type: String. Default value: n/a.
+ * PropertyBase type: String. Default value: n/a.
  */
 #define AI_CONFIG_IMPORT_MD3_SHADER_SRC \
 	"IMPORT_MD3_SHADER_SRC"
@@ -750,7 +750,7 @@ enum aiComponent
  * property is not set the whole LWO model is loaded. Loading fails if the
  * requested layer is not available. The layer index is zero-based and the
  * layer name may not be empty.<br>
- * Property type: Integer. Default value: all layers are loaded.
+ * PropertyBase type: Integer. Default value: all layers are loaded.
  */
 #define AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY			\
 	"IMPORT_LWO_ONE_LAYER_ONLY"
@@ -764,7 +764,7 @@ enum aiComponent
  * and combined with the MD5MESH file. This configuration option can be
  * used to disable this behaviour.
  * 
- * * Property type: bool. Default value: false.
+ * * PropertyBase type: bool. Default value: false.
  */
 #define AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD			\
 	"IMPORT_MD5_NO_ANIM_AUTOLOAD"
@@ -781,7 +781,7 @@ enum aiComponent
  * is given in frames, '0' is the first frame. By default, if this property
  * is not set, the importer takes the animation start from the input LWS
  * file ('FirstFrame' line)<br>
- * Property type: Integer. Default value: taken from file.
+ * PropertyBase type: Integer. Default value: taken from file.
  *
  * @see AI_CONFIG_IMPORT_LWS_ANIM_END - end of the imported time range
  */
@@ -796,7 +796,7 @@ enum aiComponent
  * IRR animations are difficult to convert for Assimp and there will
  * always be a loss of quality. This setting defines how many keys per second
  * are returned by the converter.<br>
- * Property type: integer. Default value: 100
+ * PropertyBase type: integer. Default value: 100
  */
 #define AI_CONFIG_IMPORT_IRR_ANIM_FPS				\
 	"IMPORT_IRR_ANIM_FPS"
@@ -809,7 +809,7 @@ enum aiComponent
  * order: <material-name>.material, <mesh-filename-base>.material and
  * lastly the material name defined by this config property.
  * <br>
- * Property type: String. Default value: Scene.material.
+ * PropertyBase type: String. Default value: Scene.material.
  */
 #define AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE	\
 	"IMPORT_OGRE_MATERIAL_FILE"
@@ -828,7 +828,7 @@ enum aiComponent
  * matching against: normalmap, specularmap, lightmap and displacementmap.
  * For both cases if no match is found aiTextureType_DIFFUSE is used.
  * <br>
- * Property type: Bool. Default value: false.
+ * PropertyBase type: Bool. Default value: false.
  */
 #define AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME \
 	"IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME"
@@ -837,7 +837,7 @@ enum aiComponent
  *
  * IfcSpace elements (and their geometric representations) are used to
  * represent, well, free space in a building storey.<br>
- * Property type: Bool. Default value: true.
+ * PropertyBase type: Bool. Default value: true.
  */
 #define AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS "IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS"
 
@@ -849,7 +849,7 @@ enum aiComponent
  * A lot of files contain both a faceted mesh representation and a outline
  * with a presentation type of 'Curve2D'. Currently Assimp doesn't convert those,
  * so turning this option off just clutters the log with errors.<br>
- * Property type: Bool. Default value: true.
+ * PropertyBase type: Bool. Default value: true.
  */
 #define AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS "IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS"
 
@@ -864,7 +864,7 @@ enum aiComponent
  * if you want triangulated data because #aiProcess_Triangulate is known to
  * have problems with the kind of polygons that the IFC loader spits out for
  * complicated meshes.
- * Property type: Bool. Default value: true.
+ * PropertyBase type: Bool. Default value: true.
  */
 #define AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION "IMPORT_IFC_CUSTOM_TRIANGULATION"
 

@@ -890,7 +890,7 @@ NK_API nk_size                  nk_prog(struct nk_context*, nk_size cur, nk_size
 NK_API struct nk_color          nk_color_picker(struct nk_context*, struct nk_color, enum nk_color_format);
 NK_API int                      nk_color_pick(struct nk_context*, struct nk_color*, enum nk_color_format);
 
-/* Widgets: Property */
+/* Widgets: PropertyBase */
 NK_API void                     nk_property_int(struct nk_context*, const char *name, int min, int *val, int max, int step, float inc_per_pixel);
 NK_API void                     nk_property_float(struct nk_context*, const char *name, float min, float *val, float max, float step, float inc_per_pixel);
 NK_API void                     nk_property_double(struct nk_context*, const char *name, double min, double *val, double max, double step, float inc_per_pixel);

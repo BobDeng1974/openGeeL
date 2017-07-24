@@ -5,6 +5,7 @@
 #include "../utility/vectorextension.h"
 #include "transform.h"
 #include <iostream>
+#include <glm.hpp>
 
 using namespace std;
 using glm::normalize;
@@ -89,6 +90,7 @@ namespace geeL {
 		return matrix;
 	}
 
+	
 	vec3 Transform::getEulerAngles() const {
 		return glm::eulerAngles(rotation);
 	}

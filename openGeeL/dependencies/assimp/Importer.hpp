@@ -197,7 +197,7 @@ public:
 	 * @param bWasExisting Optional pointer to receive true if the
 	 *   property was set before. The new value replaces the previous value
 	 *   in this case.
-	 * @note Property of different types (float, int, string ..) are kept
+	 * @note PropertyBase of different types (float, int, string ..) are kept
 	 *   on different stacks, so calling SetPropertyInteger() for a 
 	 *   floating-point property has no effect - the loader will call
 	 *   GetPropertyFloat() to read the property, but it won't be there.
@@ -245,7 +245,7 @@ public:
 	 * @param iErrorReturn Value that is returned if the property 
 	 *   is not found. 
 	 * @return Current value of the property
-	 * @note Property of different types (float, int, string ..) are kept
+	 * @note PropertyBase of different types (float, int, string ..) are kept
 	 *   on different lists, so calling SetPropertyInteger() for a 
 	 *   floating-point property has no effect - the loader will call
 	 *   GetPropertyFloat() to read the property, but it won't be there.
