@@ -18,9 +18,12 @@ namespace geeL {
 
 		void remove();
 
-		void addListener(std::function<void(const T&)> listener);
+		//Add listener function to this property. It can be specified if
+		//function should immediately be invoked with current state or not
+		void addListener(std::function<void(const T&)> listener, bool invoke = false);
 
 		operator T() const;
+		operator T*() const;
 
 		PropertyBase<T>& operator= (const PropertyBase<T>& other);
 		PropertyBase<T>& operator= (const T& other);
@@ -122,13 +125,19 @@ namespace geeL {
 	}
 
 	template<class T>
-	inline void PropertyBase<T>::addListener(std::function<void(const T&)> listener) {
+	inline void PropertyBase<T>::addListener(std::function<void(const T&)> listener, bool invoke) {
 		listeners->push_back(listener);
+		if(invoke) listener(value);
 	}
 
 	template<class T>
 	inline PropertyBase<T>::operator T() const {
 		return value;
+	}
+
+	template<class T>
+	inline PropertyBase<T>::operator T*() const {
+		return &value;
 	}
 
 	template<class T>

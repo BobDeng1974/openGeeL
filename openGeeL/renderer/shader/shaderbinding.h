@@ -29,6 +29,20 @@ namespace geeL {
 
 
 	template<class T>
+	class ReferenceBinding : public ShaderBinding {
+
+	public:
+		ReferenceBinding(const Shader& shader, const std::string&name, const T& value);
+
+		virtual void bind() const;
+
+	protected:
+		const T& value;
+
+	};
+
+
+	template<class T>
 	class GenericBinding : public ShaderBinding {
 
 	public:
@@ -76,6 +90,18 @@ namespace geeL {
 	};
 
 
+
+	template<class T>
+	inline ReferenceBinding<T>::ReferenceBinding(const Shader& shader, const std::string& name, const T& value)
+		: ShaderBinding(shader, name), value(value) {}
+
+	template<class T>
+	inline void ReferenceBinding<T>::bind() const {
+		shader.bind<T>(location, value);
+	}
+
+
+
 	template<class T>
 	inline GenericBinding<T>::GenericBinding(const Shader& shader, const std::string& name, const T& value)
 		: ShaderBinding(shader, name), value(value) {}
@@ -95,6 +121,7 @@ namespace geeL {
 		this->value = value;
 		return true;
 	}
+
 
 
 	template<class T>
@@ -118,7 +145,7 @@ namespace geeL {
 		return range;
 	}
 
-}
 
+}
 
 #endif

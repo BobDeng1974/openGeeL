@@ -134,7 +134,7 @@ namespace geeL{
 	void MeshRenderer::initMaterials(SceneShader& shader) {
 		model->iterateMeshes([&](const Mesh& mesh) {
 			MaterialContainer& container = mesh.getMaterialContainer();
-			Material material = Material(shader, container);
+			Material& material = Material(shader, container);
 
 			materials[&shader].push_back(MaterialMapping(mesh, material));
 		});

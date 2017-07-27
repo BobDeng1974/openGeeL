@@ -7,6 +7,7 @@
 #include "sponzascene.h"
 #include "giscene.h"
 
+
 int main() {
 	//BedroomScene::draw();
 	//DeerScene::draw();

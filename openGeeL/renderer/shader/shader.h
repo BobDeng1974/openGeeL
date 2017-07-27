@@ -11,6 +11,8 @@
 #include <mat4x4.hpp>
 #include "shaderbinding.h"
 #include "../texturing/texturetype.h"
+#include "../utility/properties.h"
+#include "../utility/defaults.h"
 
 typedef int ShaderLocation;
 
@@ -54,12 +56,23 @@ namespace geeL {
 		//Valid types: int, float, vec2, vec3, vec4, mat3, mat4
 		template<class T>
 		ShaderLocation bind(const std::string& name, const T& value) const;
+
+		template<class T>
+		ShaderLocation bind(const std::string& name, const Property<T>& value) const;
 		
 		//Bind value into shader. Value won't be saved in this 
 		//shader class and can't be accessed later on.
 		//Valid types: int, float vec2, vec3, vec4, mat3, mat4
 		template<class T>
 		void bind(ShaderLocation location, const T& value) const;
+
+		template<class T>
+		void bind(ShaderLocation location, const Property<T>& value) const;
+
+		//Assign given property to be monitored by this shader and automatically
+		//updated/bound into shader program. Needs to be called only once
+		template<class T>
+		void monitorValue(const std::string& name, const Property<T>& value);
 		
 		//Set and save value into this shader. Values can be accessed and will be bound
 		//by 'bindParameters' call
@@ -75,7 +88,7 @@ namespace geeL {
 
 		//Access value by name (if it exists)
 		template<class T>
-		T getValue(const std::string& name) const;
+		const T& getValue(const std::string& name) const;
 
 
 		void setValue(const std::string& name, float value, Range<float> range = UNLIMITED_FLOAT_RANGE);
@@ -94,6 +107,7 @@ namespace geeL {
 		std::map<std::string, ShaderBinding*> shaderBindings;
 
 		std::queue<ShaderBinding*> bindingQueue;
+		std::queue<ShaderBinding*> tempQueue;
 
 		Shader() : mapBindingPos(0) {}
 
@@ -107,6 +121,12 @@ namespace geeL {
 		ShaderLocation bind(const std::string& name, const glm::mat3& value) const;
 		ShaderLocation bind(const std::string& name, const glm::mat4& value) const;
 
+		ShaderLocation bind(const std::string& name, const gvec2& value) const;
+		ShaderLocation bind(const std::string& name, const gvec3& value) const;
+		ShaderLocation bind(const std::string& name, const gvec4& value) const;
+		ShaderLocation bind(const std::string& name, const gmat3& value) const;
+		ShaderLocation bind(const std::string& name, const gmat4& value) const;
+
 		void bind(ShaderLocation location, const int& value) const;
 		void bind(ShaderLocation location, const float& value) const;
 		void bind(ShaderLocation location, const glm::vec2& value) const;
@@ -114,6 +134,12 @@ namespace geeL {
 		void bind(ShaderLocation location, const glm::vec4& value) const;
 		void bind(ShaderLocation location, const glm::mat3& value) const;
 		void bind(ShaderLocation location, const glm::mat4& value) const;
+
+		void bind(ShaderLocation location, const gvec2& value) const;
+		void bind(ShaderLocation location, const gvec3& value) const;
+		void bind(ShaderLocation location, const gvec4& value) const;
+		void bind(ShaderLocation location, const gmat3& value) const;
+		void bind(ShaderLocation location, const gmat4& value) const;
 
 	private:
 		//Bind all added maps into the shader
@@ -134,9 +160,32 @@ namespace geeL {
 	}
 
 	template<class T>
+	inline ShaderLocation Shader::bind(const std::string& name, const Property<T>& value) const {
+		const T& val = value;
+
+		return bind<T>(name, val);
+	}
+
+	template<class T>
 	inline void Shader::bind(ShaderLocation location, const T& value) const {
 		use();
 		bind(location, value);
+	}
+
+	template<class T>
+	inline void Shader::bind(ShaderLocation location, const Property<T>& value) const {
+		const T& val = value;
+		bind<T>(location, val);
+	}
+
+	template<class T>
+	inline void Shader::monitorValue(const std::string& name, const Property<T>& value) {
+		auto callback = [this, &name](const T& t) {
+			ReferenceBinding<T>* binding = new ReferenceBinding<T>(*this, name, t);
+			tempQueue.push(binding);
+		};
+
+		value.addListener(callback, true);
 	}
 
 	template<class T>
@@ -178,7 +227,7 @@ namespace geeL {
 	}
 
 	template<class T>
-	inline T Shader::getValue(const std::string& name) const {
+	inline const T& Shader::getValue(const std::string& name) const {
 		auto it = shaderBindings.find(name);
 		if (it != shaderBindings.end()) {
 			GenericBinding<T>* binding = static_cast<GenericBinding<T>*>(it->second);
@@ -186,7 +235,7 @@ namespace geeL {
 			return binding->getValue();
 		}
 
-		return T();
+		return DefaultValues::get<T>();
 	}
 
 }

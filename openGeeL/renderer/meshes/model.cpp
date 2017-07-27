@@ -45,7 +45,7 @@ namespace geeL {
 			SkinnedMesh& mesh = *it;
 
 			for (auto et = mesh.bonesBegin(); et != mesh.bonesEnd(); et++) {
-				string name = et->first;
+				const string& name = et->first;
 				MeshBoneData& data = et->second;
 
 				data.id = this->skeleton->getBoneID(name);

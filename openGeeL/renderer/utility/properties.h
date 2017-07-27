@@ -28,6 +28,43 @@ namespace geeL {
 	using gMat3 = geeL::NestedProperty2x<gmat3, gvec3, float>;
 	using gMat4 = geeL::NestedProperty2x<gmat4, gvec4, float>;
 
+
+	class Properties {
+
+	public:
+		//Converts a g-vector to a glm vector
+		template<class T, class V>
+		static T convertVec(const V& gval);
+
+		//Converts a g-matrix to a glm matrix
+		template<class T, class V>
+		static T convertMat(const V& gval);
+
+	};
+
+
+	template<class T, class V>
+	inline T Properties::convertVec(const V & gval) {
+		T vec;
+
+		for (int i = 0; i < gval.length(); i++)
+			vec[i] = gval[i];
+
+		return vec;
+	}
+
+	template<class T, class V>
+	inline T Properties::convertMat(const V& gval) {
+		T mat;
+
+		for (int i = 0; i < gval.length(); i++) {
+			for (int j = 0; j < gval.length(); j++)
+				mat[i][j] = gval[i][j];
+		}
+
+		return mat;
+	}
+
 }
 
 #endif

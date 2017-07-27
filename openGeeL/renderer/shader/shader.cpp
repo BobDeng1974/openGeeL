@@ -159,6 +159,43 @@ namespace geeL {
 		return location;
 	}
 
+	ShaderLocation Shader::bind(const std::string & name, const gvec2& value) const {
+		ShaderLocation location = glGetUniformLocation(program, name.c_str());
+		glUniform2f(location, value.x, value.y);
+
+		return location;
+	}
+
+	ShaderLocation Shader::bind(const std::string & name, const gvec3& value) const {
+		ShaderLocation location = glGetUniformLocation(program, name.c_str());
+		glUniform3f(location, value.x, value.y, value.z);
+
+		return location;
+	}
+
+	ShaderLocation Shader::bind(const std::string & name, const gvec4& value) const {
+		ShaderLocation location = glGetUniformLocation(program, name.c_str());
+		glUniform4f(location, value.x, value.y, value.z, value.w);
+
+		return location;
+	}
+
+	ShaderLocation Shader::bind(const std::string & name, const gmat3& value) const {
+		ShaderLocation location = glGetUniformLocation(program, name.c_str());
+		glm::mat3& mat = Properties::convertMat<glm::mat3, gmat3>(value);
+		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(mat));
+
+		return location;
+	}
+
+	ShaderLocation Shader::bind(const std::string & name, const gmat4& value) const {
+		ShaderLocation location = glGetUniformLocation(program, name.c_str());
+		glm::mat4& mat = Properties::convertMat<glm::mat4, gmat4>(value);
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
+
+		return location;
+	}
+
 	void Shader::bind(ShaderLocation location, const int& value) const {
 		glUniform1i(location, value);
 	}
@@ -179,12 +216,34 @@ namespace geeL {
 		glUniform4f(location, value.x, value.y, value.z, value.w);
 	}
 
-	void Shader::bind(ShaderLocation location, const glm::mat3 & value) const {
+	void Shader::bind(ShaderLocation location, const glm::mat3& value) const {
 		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(value));
 	}
 
 	void Shader::bind(ShaderLocation location, const glm::mat4& value) const {
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+	}
+
+	void Shader::bind(ShaderLocation location, const gvec2& value) const {
+		glUniform2f(location, value.x, value.y);
+	}
+
+	void Shader::bind(ShaderLocation location, const gvec3& value) const {
+		glUniform3f(location, value.x, value.y, value.z);
+	}
+
+	void Shader::bind(ShaderLocation location, const gvec4& value) const {
+		glUniform4f(location, value.x, value.y, value.z, value.w);
+	}
+
+	void Shader::bind(ShaderLocation location, const gmat3& value) const {
+		glm::mat3& mat = Properties::convertMat<glm::mat3, gmat3>(value);
+		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(mat));
+	}
+
+	void Shader::bind(ShaderLocation location, const gmat4& value) const {
+		glm::mat4& mat = Properties::convertMat<glm::mat4, gmat4>(value);
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
 	}
 
 
@@ -249,11 +308,22 @@ namespace geeL {
 	void Shader::bindParameters() {
 		use();
 
+		//Update values of internal bindings
 		while (!bindingQueue.empty()) {
 			ShaderBinding* binding = bindingQueue.front();
 			binding->bind();
 
 			bindingQueue.pop();
+		}
+
+		//Update values of external bindings (e.g. of properties)
+		//and delete binding afterwards
+		while (!tempQueue.empty()) {
+			ShaderBinding* binding = tempQueue.front();
+			binding->bind();
+
+			bindingQueue.pop();
+			delete binding;
 		}
 	}
 

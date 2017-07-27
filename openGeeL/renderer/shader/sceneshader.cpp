@@ -55,8 +55,8 @@ namespace geeL {
 
 	void SceneShader::bindMatrices() const {
 		if (view != nullptr && model != nullptr) {
-			glm::mat4 modelView = (*view) * (*model);
-			glm::mat3 transInvModelView = glm::transpose(glm::inverse(glm::mat3(modelView)));
+			glm::mat4& modelView = (*view) * (*model);
+			glm::mat3& transInvModelView = glm::transpose(glm::inverse(glm::mat3(modelView)));
 
 			bind<glm::mat4>(modelViewLocation, modelView);
 			bind<glm::mat3>(transInvModelViewLocation, transInvModelView);
