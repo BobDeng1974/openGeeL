@@ -11,13 +11,13 @@ using namespace std;
 
 namespace geeL {
 
-	MaterialFactory::MaterialFactory(const GBuffer& buffer) :
+	MaterialFactory::MaterialFactory(const GBuffer& buffer, ShaderProvider* const provider) :
 		forwardShader(new SceneShader("renderer/shaders/lighting.vert", FragmentShader("renderer/shaders/lighting.frag"), 
 			ShaderTransformSpace::World)),
 		deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", FragmentShader(buffer.getFragmentPath(), false), 
 			ShaderTransformSpace::View)),
 		deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", FragmentShader(buffer.getFragmentPath()),
-			ShaderTransformSpace::View)) {
+			ShaderTransformSpace::View)), provider(provider) {
 	
 		shaders.push_back(forwardShader);
 	}
@@ -111,7 +111,7 @@ namespace geeL {
 		ShaderTransformSpace space = (shading == DefaultShading::DeferredSkinned) || (shading == DefaultShading::DeferredStatic) ?
 			ShaderTransformSpace::View : ShaderTransformSpace::World;
 
-		shaders.push_back(new SceneShader(vertexPath, frag, space));
+		shaders.push_back(new SceneShader(vertexPath, frag, space, "camera", "skybox", provider));
 		return *shaders.back();
 	}
 
@@ -121,42 +121,12 @@ namespace geeL {
 
 		FragmentShader frag = FragmentShader(fragmentPath);
 
-		shaders.push_back(new SceneShader(vertexPath, frag, ShaderTransformSpace::World));
+		shaders.push_back(new SceneShader(vertexPath, frag, ShaderTransformSpace::World, 
+			"camera", "skybox", provider));
+
 		return *shaders.back();
 	}
 	
-	list<MaterialContainer*>::iterator MaterialFactory::materialsBegin() {
-		return container.begin();
-	}
-
-	list<MaterialContainer*>::iterator MaterialFactory::materialsEnd() {
-		return container.end();
-	}
-
-	list<MaterialContainer*>::const_iterator MaterialFactory::materialsBegin() const {
-		return container.begin();
-	}
-
-	list<MaterialContainer*>::const_iterator MaterialFactory::materialsEnd() const {
-		return container.end();
-	}
-	
-	list<SceneShader*>::iterator MaterialFactory::shadersBegin() {
-		return shaders.begin();
-	}
-
-	list<SceneShader*>::iterator MaterialFactory::shadersEnd()  {
-		return shaders.end();
-	}
-
-	map<string, TextureMap*>::const_iterator MaterialFactory::texturesBegin() const {
-		return textureMaps.begin();
-	}
-
-	map<string, TextureMap*>::const_iterator MaterialFactory::texturesEnd() const {
-		return textureMaps.end();
-	}
-
 	SceneShader& MaterialFactory::getDefaultShader(DefaultShading shading) const {
 		switch (shading) {
 			case DefaultShading::DeferredStatic:

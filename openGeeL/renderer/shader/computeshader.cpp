@@ -11,11 +11,11 @@ using namespace std;
 
 namespace geeL {
 
-	ComputeShader::ComputeShader(const char * shaderPath) {
+	ComputeShader::ComputeShader(const char * shaderPath, ShaderProvider* const provider) {
 		name = shaderPath;
 
 		string computeCode = ShaderFileReader::readShaderFile(shaderPath);
-		ShaderFileReader::preprocessShaderString(computeCode, shaderPath);
+		ShaderFileReader::preprocessShaderString(*this, computeCode, shaderPath, provider);
 
 		const GLchar* shaderCode = computeCode.c_str();
 

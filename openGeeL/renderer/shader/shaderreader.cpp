@@ -3,6 +3,7 @@
 #include <set>
 #include <sstream>
 #include <iostream>
+#include "shaderprovider.h"
 #include "shaderreader.h"
 
 using namespace std;
@@ -62,7 +63,7 @@ namespace geeL {
 		}
 	}
 
-	void preprocessRequirements(std::string& file, set<string>& requirements) {
+	void preprocessRequirements(Shader& shader, std::string& file, set<string>& requirements, ShaderProvider * const provider) {
 		regex require("^#require\\s+[A-Z, \_]+\\s?");
 
 		for (sregex_iterator it(file.begin(), file.end(), require); it != sregex_iterator(); it++) {
@@ -73,28 +74,39 @@ namespace geeL {
 			element.erase(remove(element.begin(), element.end(), ' '), element.end());
 
 			//File already contains this requirement and it is therefore simply removed
-			if (requirements.count(element))
+			//OR requirement can't be met since no provider is attached
+			if (requirements.count(element) || provider == nullptr)
 				file = regex_replace(file, repl, "");
 			else {
 				requirements.insert(element);
 
-				//TODO: implement this
-				string replacement;
-				file.replace(file.find(current), current.length(), replacement + "\n\n");
+				ResourceInfo& info = provider->linkResource(element, shader);
+				//Check if requested resource actually exists and then add uniform binding point
+				//Linking will be automatically done by shader class
+				if (info.exists) {
+					string replacement = "uniform " + info.type + " " + element + ";";
+					file.replace(file.find(current), current.length(), replacement + "\n\n");
+				}
+				else
+					file = regex_replace(file, repl, "");
 			}
 		}
 	}
 
-	string ShaderFileReader::preprocessShaderString(const string& shaderCode, const std::string& shaderPath) {
+	string ShaderFileReader::preprocessShaderString(Shader& shader, const string& shaderCode,
+		const std::string& shaderPath, ShaderProvider * const provider) {
+		
 		std::string result = shaderCode;
-		preprocessShaderString(result, shaderPath);
+		preprocessShaderString(shader, result, shaderPath, provider);
 
 		return result;
 	}
 
-	void ShaderFileReader::preprocessShaderString(std::string& shaderCode, const std::string& shaderPath) {
+	void ShaderFileReader::preprocessShaderString(Shader& shader, std::string& shaderCode,
+		const std::string& shaderPath, ShaderProvider * const provider) {
+		
 		set<string> requirements;
-		preprocessRequirements(shaderCode, requirements);
+		preprocessRequirements(shader, shaderCode, requirements, provider);
 		
 		set<string> includedFiles;
 		includedFiles.insert(shaderPath);

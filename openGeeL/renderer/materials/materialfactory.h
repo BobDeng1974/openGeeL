@@ -16,11 +16,12 @@ namespace geeL {
 	class DefaultMaterialContainer;
 	class GenericMaterialContainer;
 	class SceneShader;
+	class ShaderProvider;
 
 	class MaterialFactory {
 
 	public:
-		MaterialFactory(const GBuffer& buffer);
+		MaterialFactory(const GBuffer& buffer, ShaderProvider* const provider = nullptr);
 		~MaterialFactory();
 
 		//Creates and returns a new texture from given file path or 
@@ -50,18 +51,6 @@ namespace geeL {
 		SceneShader& CreateShader(DefaultShading shading, std::string fragmentPath);
 		SceneShader& CreateShader(std::string fragmentPath, bool animated = false);
 
-		std::list<MaterialContainer*>::iterator materialsBegin();
-		std::list<MaterialContainer*>::iterator materialsEnd();
-
-		std::list<MaterialContainer*>::const_iterator materialsBegin() const;
-		std::list<MaterialContainer*>::const_iterator materialsEnd() const;
-		
-		std::list<SceneShader*>::iterator shadersBegin();
-		std::list<SceneShader*>::iterator shadersEnd();
-
-		std::map<std::string, TextureMap*>::const_iterator texturesBegin() const;
-		std::map<std::string, TextureMap*>::const_iterator texturesEnd() const;
-
 		SceneShader& getDefaultShader(DefaultShading shading) const;
 
 		//Returns default shader for static forward rendering
@@ -71,6 +60,8 @@ namespace geeL {
 		SceneShader& getDeferredShader() const;
 
 	private:
+		ShaderProvider* const provider;
+
 		SceneShader* forwardShader;
 		SceneShader* deferredShader;
 		SceneShader* deferredAnimatedShader;

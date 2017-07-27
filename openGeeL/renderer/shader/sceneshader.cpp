@@ -9,8 +9,8 @@ namespace geeL {
 		skyboxName("skybox"), view(nullptr), model(nullptr) {}
 
 	SceneShader::SceneShader(const std::string& vertexPath, const FragmentShader& fragmentPath, 
-		ShaderTransformSpace space, string cameraName, string skyboxName)
-			: RenderShader(vertexPath.c_str(), fragmentPath.path.c_str()), shader(fragmentPath), space(space), 
+		ShaderTransformSpace space, string cameraName, string skyboxName, ShaderProvider* const provider)
+			: RenderShader(vertexPath.c_str(), fragmentPath.path.c_str(), provider), shader(fragmentPath), space(space), 
 				cameraName(cameraName), skyboxName(skyboxName), view(nullptr), model(nullptr) {
 
 		viewLocation = getLocation("viewMatrix");
@@ -20,9 +20,9 @@ namespace geeL {
 	}
 
 	SceneShader::SceneShader(const std::string& vertexPath, const std::string& geometryPath, const FragmentShader& fragmentPath, 
-		ShaderTransformSpace space, string cameraName, string skyboxName)
-			: RenderShader(vertexPath.c_str(), geometryPath.c_str(), fragmentPath.path.c_str()), shader(fragmentPath), space(space), cameraName(cameraName), 
-				skyboxName(skyboxName), view(nullptr), model(nullptr) {
+		ShaderTransformSpace space, string cameraName, string skyboxName, ShaderProvider* const provider)
+			: RenderShader(vertexPath.c_str(), geometryPath.c_str(), fragmentPath.path.c_str(), provider), shader(fragmentPath), 
+				space(space), cameraName(cameraName), skyboxName(skyboxName), view(nullptr), model(nullptr) {
 
 		viewLocation = getLocation("viewMatrix");
 		modelLocation = getLocation("model");
@@ -30,10 +30,6 @@ namespace geeL {
 		transInvModelViewLocation = getLocation("transInvModelView");
 	}
 
-
-	void SceneShader::changeShader(const FragmentShader& shader) {
-		init(vertexPath.c_str(), shader.path.c_str());
-	}
 
 	void SceneShader::setViewMatrix(const glm::mat4& view) {
 		this->view = &view;

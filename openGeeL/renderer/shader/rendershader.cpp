@@ -10,28 +10,28 @@ using namespace std;
 
 namespace geeL {
 
-	RenderShader::RenderShader(const char* vertexPath, const char* fragmentPath)
-		: Shader() {
+	RenderShader::RenderShader(const char* vertexPath, const char* fragmentPath, 
+		ShaderProvider* const provider) : Shader() {
 
 		name = fragmentPath;
-		init(vertexPath, fragmentPath);
+		init(vertexPath, fragmentPath, provider);
 	}
 
 
-	RenderShader::RenderShader(const char* vertexPath, const char* geometryPath, const char* fragmentPath)
-		: Shader() {
+	RenderShader::RenderShader(const char* vertexPath, const char* geometryPath, 
+		const char* fragmentPath, ShaderProvider* const provider) : Shader() {
 
 		name = fragmentPath;
-		init(vertexPath, geometryPath, fragmentPath);
+		init(vertexPath, geometryPath, fragmentPath, provider);
 	}
 
 
-	void RenderShader::init(const char* vertexPath, const char* fragmentPath) {
+	void RenderShader::init(const char* vertexPath, const char* fragmentPath, ShaderProvider* const provider) {
 		string vertexCode = ShaderFileReader::readShaderFile(vertexPath);
 		string fragmentCode = ShaderFileReader::readShaderFile(fragmentPath);
 
-		ShaderFileReader::preprocessShaderString(vertexCode, vertexPath);
-		ShaderFileReader::preprocessShaderString(fragmentCode, fragmentPath);
+		ShaderFileReader::preprocessShaderString(*this, vertexCode, vertexPath, provider);
+		ShaderFileReader::preprocessShaderString(*this, fragmentCode, fragmentPath, provider);
 
 		const GLchar* vShaderCode = vertexCode.c_str();
 		const GLchar* fShaderCode = fragmentCode.c_str();
@@ -81,14 +81,14 @@ namespace geeL {
 		glDeleteShader(fragmentShader);
 	}
 
-	void RenderShader::init(const char* vertexPath, const char* geometryPath, const char* fragmentPath) {
+	void RenderShader::init(const char* vertexPath, const char* geometryPath, const char* fragmentPath, ShaderProvider* const provider) {
 		string vertexCode = ShaderFileReader::readShaderFile(vertexPath);
 		string geometryCode = ShaderFileReader::readShaderFile(geometryPath);
 		string fragmentCode = ShaderFileReader::readShaderFile(fragmentPath);
 
-		ShaderFileReader::preprocessShaderString(vertexCode, vertexPath);
-		ShaderFileReader::preprocessShaderString(geometryCode, geometryPath);
-		ShaderFileReader::preprocessShaderString(fragmentCode, fragmentPath);
+		ShaderFileReader::preprocessShaderString(*this, vertexCode, vertexPath, provider);
+		ShaderFileReader::preprocessShaderString(*this, geometryCode, geometryPath, provider);
+		ShaderFileReader::preprocessShaderString(*this, fragmentCode, fragmentPath, provider);
 
 		const GLchar* vShaderCode = vertexCode.c_str();
 		const GLchar* gShaderCode = geometryCode.c_str();
