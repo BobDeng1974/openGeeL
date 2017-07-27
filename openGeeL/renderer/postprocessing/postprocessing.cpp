@@ -29,10 +29,10 @@ namespace geeL {
 
 	
 
-	PostProcessingEffectFS::PostProcessingEffectFS(string fragmentPath)
+	PostProcessingEffectFS::PostProcessingEffectFS(const string& fragmentPath)
 		: PostProcessingEffectFS("renderer/shaders/screen.vert", fragmentPath) {}
 
-	PostProcessingEffectFS::PostProcessingEffectFS(string vertexPath, string fragmentPath)
+	PostProcessingEffectFS::PostProcessingEffectFS(const string& vertexPath, const string& fragmentPath)
 		: shader(RenderShader(vertexPath.c_str(), fragmentPath.c_str())) {}
 
 

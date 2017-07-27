@@ -60,6 +60,7 @@
 #include "../renderer/postprocessing/sobel.h"
 #include "../renderer/postprocessing/drawdefault.h"
 #include "../renderer/postprocessing/lensflare.h"
+#include "../renderer/postprocessing/postfactory.h"
 
 #include "../renderer/cubemapping/cubemap.h"
 #include "../renderer/cubemapping/texcubemap.h"
@@ -254,8 +255,11 @@ void ArthouseScene::draw() {
 	scene.addRequester(lensFlare);
 	postLister.add(lensSnippet);
 
+	PostProcessingFactory& fac = PostProcessingFactory();
+
 	SobelFilter& sobel = SobelFilter(5.f);
-	SobelBlur& sobelBlur = SobelBlur(sobel, 15.f);
+	//SobelBlur& sobelBlur = SobelBlur(sobel, 15.f);
+	SobelBlur& sobelBlur = fac.createEffect<SobelBlur>(sobel, 15.f);
 	VolumetricLight& vol = VolumetricLight(*spotLight4, 0.02f, 1.f, 150);
 	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.5f);
 	VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
@@ -264,7 +268,8 @@ void ArthouseScene::draw() {
 	scene.addRequester(vol);
 	postLister.add(volSmooth, lightSnippet, snip);
 	
-	FXAA& fxaa = FXAA();
+	FXAA& fxaa = fac.createEffect<FXAA>();
+	//FXAA& fxaa = FXAA();
 	renderer.addEffect(fxaa);
 	postLister.add(fxaa);
 

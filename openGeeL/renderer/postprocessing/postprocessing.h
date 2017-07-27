@@ -59,8 +59,8 @@ namespace geeL {
 	class PostProcessingEffectFS : public PostProcessingEffect {
 
 	public:
-		PostProcessingEffectFS(std::string fragmentPath);
-		PostProcessingEffectFS(std::string vertexPath, std::string fragmentPath);
+		PostProcessingEffectFS(const std::string& fragmentPath);
+		PostProcessingEffectFS(const std::string& vertexPath, const std::string& fragmentPath);
 
 		virtual const Texture& getImageBuffer() const;
 
