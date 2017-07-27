@@ -58,7 +58,7 @@ namespace geeL {
 		ShaderLocation bind(const std::string& name, const T& value) const;
 
 		template<class T>
-		ShaderLocation bind(const std::string& name, const Property<T>& value) const;
+		ShaderLocation bind(const std::string& name, const PropertyBase<T>& value) const;
 		
 		//Bind value into shader. Value won't be saved in this 
 		//shader class and can't be accessed later on.
@@ -67,13 +67,25 @@ namespace geeL {
 		void bind(ShaderLocation location, const T& value) const;
 
 		template<class T>
-		void bind(ShaderLocation location, const Property<T>& value) const;
+		void bind(ShaderLocation location, const PropertyBase<T>& value) const;
 
 		//Assign given property to be monitored by this shader and automatically
 		//updated/bound into shader program. Needs to be called only once
 		template<class T>
-		void monitorValue(const std::string& name, const Property<T>& value);
-		
+		void monitorValue(const std::string& name, PropertyBase<T>& value);
+
+		/*
+		//Assign given nested property to be monitored by this shader and automatically
+		//updated/bound into shader program. Needs to be called only once
+		template<class T, class V>
+		void monitorValue(const std::string& name, NestedProperty1x<T, V>& value);
+
+		//Assign given nested property to be monitored by this shader and automatically
+		//updated/bound into shader program. Needs to be called only once
+		template<class T, class U, class V>
+		void monitorValue(const std::string& name, NestedProperty2x<T, U, V>& value);
+		*/
+
 		//Set and save value into this shader. Values can be accessed and will be bound
 		//by 'bindParameters' call
 		//Valid types: int, float, vec2, vec3, vec4, mat3, mat4
@@ -141,6 +153,9 @@ namespace geeL {
 		void bind(ShaderLocation location, const gmat3& value) const;
 		void bind(ShaderLocation location, const gmat4& value) const;
 
+		template<class T>
+		std::function<void(const T&)> createCallback(const std::string& name);
+
 	private:
 		//Bind all added maps into the shader
 		void bindMaps();
@@ -160,7 +175,7 @@ namespace geeL {
 	}
 
 	template<class T>
-	inline ShaderLocation Shader::bind(const std::string& name, const Property<T>& value) const {
+	inline ShaderLocation Shader::bind(const std::string& name, const PropertyBase<T>& value) const {
 		const T& val = value;
 
 		return bind<T>(name, val);
@@ -173,19 +188,14 @@ namespace geeL {
 	}
 
 	template<class T>
-	inline void Shader::bind(ShaderLocation location, const Property<T>& value) const {
+	inline void Shader::bind(ShaderLocation location, const PropertyBase<T>& value) const {
 		const T& val = value;
 		bind<T>(location, val);
 	}
 
 	template<class T>
-	inline void Shader::monitorValue(const std::string& name, const Property<T>& value) {
-		auto callback = [this, &name](const T& t) {
-			ReferenceBinding<T>* binding = new ReferenceBinding<T>(*this, name, t);
-			tempQueue.push(binding);
-		};
-
-		value.addListener(callback, true);
+	inline void Shader::monitorValue(const std::string& name, PropertyBase<T>& value) {
+		value.addListener(createCallback<T>(name), true);
 	}
 
 	template<class T>
@@ -236,6 +246,14 @@ namespace geeL {
 		}
 
 		return DefaultValues::get<T>();
+	}
+
+	template<class T>
+	inline std::function<void(const T&)> Shader::createCallback(const std::string& name) {
+		return [this, &name](const T& t) {
+			ReferenceBinding<T>* binding = new ReferenceBinding<T>(*this, name, t);
+			tempQueue.push(binding);
+		};
 	}
 
 }
