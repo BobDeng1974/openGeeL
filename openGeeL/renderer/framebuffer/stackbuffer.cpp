@@ -35,6 +35,7 @@ namespace geeL {
 			bind();
 			bindTexture(*previous);
 			previous->setRenderResolution();
+			glClear(GL_DEPTH_BUFFER_BIT);
 		}
 	}
 
