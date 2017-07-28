@@ -3,6 +3,7 @@
 #include <glfw3.h>
 #include <thread>
 #include <chrono>
+#include <algorithm>
 #include <iostream>
 #include <map>
 #include "../scene.h"
@@ -22,6 +23,7 @@
 #include "../../interface/guirenderer.h"
 #include "../lighting/deferredlighting.h"
 #include "../utility/viewport.h"
+#include "../application.h"
 #include "deferredrenderer.h"
 
 #define fps 10
@@ -76,18 +78,22 @@ namespace geeL {
 
 
 	void DeferredRenderer::render() {
+		window->makeCurrent();
+
 		lighting.init(SCREENQUAD, stackBuffer, window->resolution);
 		scene->updateProbes(); //Draw reflection probes once at beginning
 		initDefaultEffect();
 
+		Time& time = Time();
+
 		//Render loop
-		while (!window->shouldClose()) {
-			int currFPS = (int)ceil(Time::deltaTime * 1000.f);
-			this_thread::sleep_for(chrono::milliseconds(fps - currFPS));
-			glfwPollEvents();
-			inputManager->update();
+		while (!Application::closing()) {
+			long currFPS = fps - time.deltaTime();
+			if(currFPS > 0L) this_thread::sleep_for(chrono::milliseconds(currFPS));
+			time.reset();
+
+			window->makeCurrent();
 			handleInput();
-			renderTime.reset();
 			glEnable(GL_DEPTH_TEST);
 
 			updateSceneControlObjects();
@@ -97,27 +103,22 @@ namespace geeL {
 
 			//Geometry pass
 			gBuffer.fill(geometryPassFunc);
-			renderTime.update(RenderPass::Geometry);
 
 			//Hacky: Read camera depth from geometry pass and write it into the scene
 			scene->forwardScreenInfo(gBuffer.screenInfo);
 
 			scene->lightManager.draw(*scene, &scene->getCamera());
-			renderTime.update(RenderPass::Shadow);
 
 			//SSAO pass
 			if (ssao != nullptr) {
 				stackBuffer.push(*ssaoTexture);
 				stackBuffer.fill(*ssao);
 				FrameBuffer::resetSize(window->resolution);
-				renderTime.update(RenderPass::SSAO);
 			}
 
 			//Lighting & forward pass
 			stackBuffer.push(*current);
 			stackBuffer.fill(lightingPassFunc);
-
-			renderTime.update(RenderPass::Lighting);
 
 			glClear(GL_COLOR_BUFFER_BIT);
 			glDisable(GL_DEPTH_TEST);
@@ -146,7 +147,6 @@ namespace geeL {
 			}
 			//Draw all included post effects
 			else {
-				
 				//Draw all the post processing effects on top of each other.
 				for (auto effect = next(effects.begin()); effect != effects.end(); effect++) {
 					current = (current == texture1) ? texture2 : texture1;
@@ -155,27 +155,21 @@ namespace geeL {
 					(**effect).fill();
 				}
 
-				//FrameBuffer::resetSize(window->resolution);
 				//Draw the last (default) effect to screen.
 				effects.front()->draw();
 			}
 
-			renderTime.update(RenderPass::PostProcessing);
-
 			//Render GUI overlay on top of final image
-			if (gui != nullptr) {
-				gui->draw();
-				renderTime.update(RenderPass::GUI);
-			}
+			if (gui != nullptr) gui->draw();
 			
 			window->swapBuffer();
-			Time::update();
+			
+			time.update();
+			RenderTime::update();
 		}
 
 		for (size_t i = 0; i < objects.size(); i++)
 			objects[i]->quit();
-
-		window->close();
 	}
 
 	void DeferredRenderer::draw() {
@@ -389,7 +383,4 @@ namespace geeL {
 		
 	}
 
-	const RenderTime& DeferredRenderer::getRenderTime() const {
-		return renderTime;
-	}
 }

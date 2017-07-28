@@ -1,42 +1,35 @@
 #include <glfw3.h>
+
 #include "rendertime.h"
+
 
 namespace geeL{
 
-	float Time::deltaTime;
-	float Time::lastFrame;
+	float RenderTime::deltaTime;
+	float RenderTime::lastFrame;
 
-	void Time::update() {
+	void RenderTime::update() {
 
 		float currentFrame = (float)glfwGetTime();
-		Time::deltaTime = currentFrame - Time::lastFrame;
-		Time::lastFrame = currentFrame;
+		RenderTime::deltaTime = currentFrame - RenderTime::lastFrame;
+		RenderTime::lastFrame = currentFrame;
 	}
 
 
-	RenderTime::RenderTime() : lastTime(0.f) {
-		passes[RenderPass::Geometry] = 0.f;
-		passes[RenderPass::Shadow] = 0.f;
-		passes[RenderPass::SSAO] = 0.f;
-		passes[RenderPass::Lighting] = 0.f;
-		passes[RenderPass::PostProcessing] = 0.f;
-		passes[RenderPass::GUI] = 0.f;
+	long Time::deltaTime() const {
+		return delta.count();
 	}
 
+	void Time::update() {
+		TimePoint currFrame = Clock::now();
+		TimeFrame dur = currFrame - lastFrame;
+		delta = std::chrono::duration_cast<MS>(dur);
 
-	void RenderTime::reset() {
-		lastTime = (float)glfwGetTime();
+		lastFrame = currFrame;
 	}
 
-	void RenderTime::update(RenderPass pass) {
-		float currTime = (float)glfwGetTime();
-		float delta = currTime - lastTime;
-		lastTime = currTime;
-
-		passes[pass] = delta;
+	void Time::reset() {
+		lastFrame = Clock::now();
 	}
 
-	float RenderTime::getTime(RenderPass pass) const {
-		return passes.at(pass);
-	}
 }

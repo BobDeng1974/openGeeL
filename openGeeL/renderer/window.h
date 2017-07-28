@@ -32,6 +32,7 @@ namespace geeL {
 		void RenderWindow::swapBuffer() const;
 		bool RenderWindow::shouldClose() const;
 		void RenderWindow::close() const;
+		void makeCurrent() const;
 
 		unsigned int getWidth() const;
 		unsigned int getHeight() const;

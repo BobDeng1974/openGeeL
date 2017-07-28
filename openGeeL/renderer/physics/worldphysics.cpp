@@ -1,7 +1,12 @@
+#include <thread>
+#include <chrono>
 #include <btBulletDynamicsCommon.h>
+#include "../application.h"
 #include "collider.h"
 #include "rigidbody.h"
 #include "worldphysics.h"
+
+using namespace std;
 
 namespace geeL {
 
@@ -38,6 +43,13 @@ namespace geeL {
 
 	void WorldPhysics::update() {
 		world->stepSimulation(1.f / 30.f, 10);
+	}
+
+	void WorldPhysics::run() {
+		while (!Application::closing()) {
+			update();
+			this_thread::sleep_for(chrono::milliseconds(33));
+		}
 	}
 
 	void WorldPhysics::intersect(glm::vec3 start, glm::vec3 end, RayCastHit& hit) const {

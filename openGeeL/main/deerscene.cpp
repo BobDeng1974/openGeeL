@@ -10,6 +10,7 @@
 #include "../renderer/shader/rendershader.h"
 #include "../renderer/renderer/splitrenderer.h"
 #include "../renderer/renderer/rendercontext.h"
+#include "../renderer/application.h"
 
 #include "../renderer/scripting/scenecontrolobject.h"
 #include "../renderer/inputmanager.h"
@@ -225,5 +226,7 @@ void DeerScene::draw() {
 	renderer.addEffect(fxaa);
 
 	renderer.linkInformation();
-	renderer.render();
+	
+	Application& app = Application(window, manager, renderer);
+	app.run();
 }

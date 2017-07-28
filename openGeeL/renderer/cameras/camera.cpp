@@ -113,7 +113,7 @@ namespace geeL {
 
 	void SceneCamera::computeKeyboardInput(const InputManager& input) {
 
-		GLfloat cameraSpeed = speed * Time::deltaTime;
+		GLfloat cameraSpeed = speed * RenderTime::deltaTime;
 
 		if (input.getKeyHold(GLFW_KEY_LEFT_SHIFT) || input.getKey(GLFW_KEY_LEFT_SHIFT))
 			cameraSpeed *= 2.5f;

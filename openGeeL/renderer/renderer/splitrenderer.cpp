@@ -36,7 +36,7 @@ namespace geeL {
 
 	void SplitRenderer::render() {
 		while (!window->shouldClose()) {
-			int currFPS = (int)ceil(Time::deltaTime * 1000.f);
+			int currFPS = (int)ceil(RenderTime::deltaTime * 1000.f);
 			std::this_thread::sleep_for(std::chrono::milliseconds(fps - currFPS));
 
 			glClearColor(0.02f, 0.02f, 0.02f, 1.0f);
@@ -48,7 +48,7 @@ namespace geeL {
 			inputManager->update();
 			handleInput();
 
-			Time::update();
+			RenderTime::update();
 		}
 
 		for (size_t i = 0; i < objects.size(); i++)

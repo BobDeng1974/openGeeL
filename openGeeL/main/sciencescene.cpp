@@ -10,6 +10,7 @@
 #include "../renderer/shader/rendershader.h"
 #include "../renderer/renderer/splitrenderer.h"
 #include "../renderer/renderer/rendercontext.h"
+#include "../renderer/application.h"
 
 #include "../renderer/scripting/scenecontrolobject.h"
 #include "../renderer/inputmanager.h"
@@ -208,7 +209,7 @@ void ScieneScene::draw() {
 	gui.addElement(objectLister);
 	PostProcessingEffectLister& postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
 	gui.addElement(postLister);
-	SystemInformation& sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
+	SystemInformation& sysInfo = SystemInformation(window, 0.01f, 0.74f, 0.17f, 0.075f);
 	gui.addElement(sysInfo);
 	//renderer.addGUIRenderer(&gui);
 
@@ -242,5 +243,7 @@ void ScieneScene::draw() {
 	renderer.addEffect(fxaa);
 
 	renderer.linkInformation();
-	renderer.render();
+
+	Application& app = Application(window, manager, renderer);
+	app.run();
 }

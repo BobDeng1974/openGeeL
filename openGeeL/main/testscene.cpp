@@ -10,6 +10,7 @@
 #include "../renderer/shader/rendershader.h"
 #include "../renderer/renderer/splitrenderer.h"
 #include "../renderer/renderer/rendercontext.h"
+#include "../renderer/application.h"
 
 #include "../renderer/scripting/scenecontrolobject.h"
 #include "../renderer/inputmanager.h"
@@ -218,7 +219,7 @@ namespace {
 		}
 
 		virtual void draw(const SceneCamera& camera) {
-			nanoRenderer->transform.rotate(vec3(0.f, 1.f, 0.f), 1.5f * Time::deltaTime);
+			nanoRenderer->transform.rotate(vec3(0.f, 1.f, 0.f), 1.5f * RenderTime::deltaTime);
 		}
 
 		virtual void quit() {}
@@ -290,7 +291,7 @@ void RenderTest::draw() {
 	gui.addElement(objectLister);
 	PostProcessingEffectLister& postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
 	gui.addElement(postLister);
-	SystemInformation& sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
+	SystemInformation& sysInfo = SystemInformation(window, 0.01f, 0.74f, 0.17f, 0.075f);
 	gui.addElement(sysInfo);
 	renderer.addGUIRenderer(&gui);
 	
@@ -337,5 +338,7 @@ void RenderTest::draw() {
 	renderer.addEffect(fxaa);
 
 	renderer.linkInformation();
-	renderer.render();
+
+	Application& app = Application(window, manager, renderer);
+	app.run();
 }

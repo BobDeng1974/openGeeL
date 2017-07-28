@@ -39,7 +39,7 @@ typedef void (*btNearCallback)(btBroadphasePair& collisionPair, btCollisionDispa
 
 
 ///btCollisionDispatcher supports algorithms that handle ConvexConvex and ConvexConcave collision pairs.
-///Time of Impact, Closest Points and Penetration Depth.
+///RenderTime of Impact, Closest Points and Penetration Depth.
 class btCollisionDispatcher : public btDispatcher
 {
 

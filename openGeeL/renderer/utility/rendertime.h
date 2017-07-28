@@ -1,12 +1,18 @@
 #ifndef RENDERTIME_H
 #define RENDERTIME_H
 
+#include <chrono>
 #include <map>
+
+typedef std::chrono::high_resolution_clock Clock;
+typedef std::chrono::steady_clock::time_point TimePoint;
+typedef std::chrono::milliseconds MS;
+typedef std::chrono::duration<float> TimeFrame;
 
 namespace geeL {
 
 	//Class that holds information about elapsed time inside the application
-	class Time {
+	class RenderTime {
 
 	public:
 		static float deltaTime;
@@ -19,31 +25,23 @@ namespace geeL {
 	};
 
 
-	enum class RenderPass {
-		Geometry,
-		Shadow,
-		SSAO,
-		Lighting,
-		PostProcessing,
-		GUI
-	};
-
-	//Class that holds information about times of different rendering passes
-	class RenderTime {
+	class Time {
 
 	public:
-		RenderTime();
 
+		long deltaTime() const;
+
+		void update();
 		void reset();
-		void update(RenderPass pass);
-
-		float getTime(RenderPass pass) const;
 
 	private:
-		std::map<RenderPass, float> passes;
-		float lastTime;
+		TimePoint lastFrame;
+		MS delta;
+
 
 	};
+
+
 }
 
 #endif

@@ -1,14 +1,10 @@
 #include "fxaa.h"
-#include <iostream>
 
 namespace geeL {
 
 	FXAA::FXAA(float minColorDiff, float fxaaMul, float fxaaMin, float fxaaClamp)
 		: PostProcessingEffectFS("renderer/postprocessing/fxaa.frag"), 
-			blurMin(minColorDiff), fxaaMul(fxaaMul), fxaaMin(fxaaMin), fxaaClamp(fxaaClamp) {
-	
-		std::cout << "ayy\n";
-	}
+			blurMin(minColorDiff), fxaaMul(fxaaMul), fxaaMin(fxaaMin), fxaaClamp(fxaaClamp) {}
 
 
 	void FXAA::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {

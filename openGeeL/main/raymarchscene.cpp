@@ -15,6 +15,7 @@
 #include "../renderer/postprocessing/drawdefault.h"
 #include "../renderer/renderer/rendercontext.h"
 #include "../renderer/pipeline.h"
+#include "../renderer/application.h"
 #include "raymarchscene.h"
 
 using namespace geeL;
@@ -41,5 +42,6 @@ void RaymarchTest::draw() {
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, raymarch, context, def, gBuffer);
 	renderer.setScene(scene);
 
-	renderer.render();
+	Application& app = Application(window, manager, renderer);
+	app.run();
 }

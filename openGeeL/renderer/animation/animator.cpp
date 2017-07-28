@@ -27,7 +27,7 @@ namespace geeL {
 
 	void SimpleAnimator::update() {
 		if (currentAnimation != nullptr && currentTime < currentAnimation->getDuration()) {
-			currentTime += currentAnimation->getFPS() * Time::deltaTime;
+			currentTime += currentAnimation->getFPS() * RenderTime::deltaTime;
 
 			for (auto it = currentAnimation->bonesStart(); it != currentAnimation->bonesEnd(); it++) {
 				const std::string& name = (*it).first;

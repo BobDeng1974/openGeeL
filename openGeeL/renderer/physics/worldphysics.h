@@ -25,6 +25,10 @@ namespace geeL {
 
 		virtual void update();
 
+		//Run complete physics simulation.  
+		//Should be called in separate thread
+		void run();
+
 		virtual void intersect(glm::vec3 start, glm::vec3 end, RayCastHit& hit) const;
 
 		virtual void addSphere(float radius, Transform& transform, RigidbodyProperties properties);

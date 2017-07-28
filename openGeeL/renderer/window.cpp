@@ -81,4 +81,9 @@ namespace geeL {
 	void RenderWindow::close() const {
 	    glfwTerminate();
 	}
+
+	void RenderWindow::makeCurrent() const {
+		glfwMakeContextCurrent(glWindow);
+	}
+
 }

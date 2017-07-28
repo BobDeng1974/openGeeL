@@ -1,7 +1,7 @@
 
 /***************************************************************************************************
 **
-** Real-Time Hierarchical Profiling for Game Programming Gems 3
+** Real-RenderTime Hierarchical Profiling for Game Programming Gems 3
 **
 ** by Greg Hjelstrom & Byon Garrabrant
 **

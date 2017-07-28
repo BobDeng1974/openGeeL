@@ -48,8 +48,6 @@ namespace geeL {
 		virtual void linkInformation() const;
 		virtual std::map<WorldMaps, const Texture*> getMaps() const;
 
-		const RenderTime& getRenderTime() const;
-
 	private:
 		int toggle;
 		
@@ -65,8 +63,6 @@ namespace geeL {
 		SSAO* ssao;
 		RenderTexture* ssaoTexture = nullptr;
 		PostProcessingEffect* isolatedEffect = nullptr;
-
-		RenderTime renderTime;
 
 		std::function<void()> geometryPassFunc;
 		std::function<void()> lightingPassFunc;
