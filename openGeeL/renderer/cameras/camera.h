@@ -12,7 +12,7 @@
 
 namespace geeL {
 
-	class InputManager;
+	class Input;
 	class Transform;
 	class RenderShader;
 	class SceneShader;
@@ -79,7 +79,7 @@ namespace geeL {
 		//Update view and projection matrices
 		virtual void lateUpdate();
 
-		virtual void handleInput(const InputManager& input);
+		virtual void handleInput(const Input& input);
 
 		//Update position and depth of center pixel of camera view
 		void updateDepth(const ScreenInfo& info);
@@ -112,8 +112,8 @@ namespace geeL {
 		float nearClip, farClip;
 		std::list<std::function<void(float, float)>> callbacks;
 
-		virtual void computeKeyboardInput(const InputManager& input);
-		virtual void computeMouseInput(const InputManager& input);
+		virtual void computeKeyboardInput(const Input& input);
+		virtual void computeMouseInput(const Input& input);
 
 		glm::mat4 computeViewMatrix() const;
 		virtual glm::mat4 computeProjectionMatrix() const = 0;

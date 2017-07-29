@@ -10,7 +10,7 @@
 #include "../renderer/shader/rendershader.h"
 #include "../renderer/renderer/splitrenderer.h"
 #include "../renderer/renderer/rendercontext.h"
-#include "../renderer/application.h"
+#include "../application/application.h"
 
 #include "../renderer/scripting/scenecontrolobject.h"
 #include "../renderer/inputmanager.h"
@@ -160,7 +160,7 @@ void DeerScene::draw() {
 	LightManager lightManager;
 	RenderPipeline& shaderManager = RenderPipeline(materialFactory);
 
-	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
+	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory, manager);
 
 	BilateralFilter& blur = BilateralFilter(2.f, 0.7f);
 	DefaultPostProcess& def = DefaultPostProcess(1.f);

@@ -138,7 +138,6 @@ namespace geeL {
 
 	template<typename T>
 	inline AtomicWrapper<T>& AtomicWrapper<T>::operator=(const T& o) {
-		std::cout << "ayy\n";
 		atom.store(o);
 
 		return *this;
@@ -146,7 +145,6 @@ namespace geeL {
 
 	template<typename T>
 	inline AtomicWrapper<T>& AtomicWrapper<T>::operator=(const AtomicWrapper<T>& o) {
-		std::cout << "lmao\n";
 		atom.store(o());
 
 		return *this;

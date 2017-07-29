@@ -106,12 +106,12 @@ namespace geeL {
 
 	
 
-	void SceneCamera::handleInput(const InputManager& input) {
+	void SceneCamera::handleInput(const Input& input) {
 		computeKeyboardInput(input);
 		computeMouseInput(input);
 	}
 
-	void SceneCamera::computeKeyboardInput(const InputManager& input) {
+	void SceneCamera::computeKeyboardInput(const Input& input) {
 
 		GLfloat cameraSpeed = speed * RenderTime::deltaTime;
 
@@ -131,7 +131,7 @@ namespace geeL {
 	}
 
 
-	void SceneCamera::computeMouseInput(const InputManager& input) {
+	void SceneCamera::computeMouseInput(const Input& input) {
 
 		if (input.getMouseKey(1)) {
 			float yOffset = float(input.getMouseYOffset()) * sensitivity * 0.01f;

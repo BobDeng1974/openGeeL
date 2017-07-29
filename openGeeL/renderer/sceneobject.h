@@ -9,6 +9,7 @@
 namespace geeL {
 
 	class Component;
+	class InputManager;
 	class Transform;
 
 	class SceneObject {

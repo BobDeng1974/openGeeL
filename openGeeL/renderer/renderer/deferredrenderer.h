@@ -26,7 +26,7 @@ namespace geeL {
 	class DeferredRenderer : public Renderer, public WorldMapProvider {
 
 	public:
-		DeferredRenderer(RenderWindow& window, InputManager& inputManager, SceneRender& lighting,
+		DeferredRenderer(RenderWindow& window, Input& inputManager, SceneRender& lighting,
 			RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer);
 
 		~DeferredRenderer();
@@ -35,7 +35,6 @@ namespace geeL {
 		virtual void draw();
 		virtual void draw(const Camera& camera, const FrameBuffer& buffer);
 		virtual void initSceneObjects();
-		virtual void handleInput();
 
 		void addSSAO(SSAO& ssao);
 

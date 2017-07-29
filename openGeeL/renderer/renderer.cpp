@@ -22,8 +22,8 @@ namespace geeL{
 	}
 
 
-	Renderer::Renderer(RenderWindow& window, InputManager& inputManager, RenderContext& context)
-		: window(&window), inputManager(&inputManager), context(&context), gui(nullptr) {}
+	Renderer::Renderer(RenderWindow& window, Input& inputManager, RenderContext& context)
+		: window(&window), input(inputManager), context(&context), gui(nullptr) {}
 
 
 	void Renderer::addGUIRenderer(GUIRenderer* renderer) {

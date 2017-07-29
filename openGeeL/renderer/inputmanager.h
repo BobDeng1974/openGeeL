@@ -1,6 +1,7 @@
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
+#include "../application/objectwrapper.h"
 #include <vector>
 #include <map>
 #include <functional>
@@ -37,10 +38,39 @@ namespace geeL {
 	};
 	*/
 
-	class InputManager {
+	//Interface for all input managers
+	class Input {
 
 	public:
+		//Add a callback to to the input manager that will be called during runtime
+		virtual void addCallback(std::function<void(GLFWwindow*, int, int, int, int)> function) = 0;
 
+		virtual bool getKey(int key) const = 0;
+		virtual bool getKeyDown(int key) const = 0;
+		virtual bool getKeyUp(int key) const = 0;
+		virtual bool getKeyHold(int key) const = 0;
+
+		virtual bool getButton(std::string button) const = 0;
+		virtual bool getButtonDown(std::string button) const = 0;
+		virtual bool getButtonUp(std::string button) const = 0;
+		virtual bool getButtonHold(std::string button) const = 0;
+
+		virtual bool getMouseKey(int key) const = 0;
+		virtual double getMouseX() const = 0;
+		virtual double getMouseY() const = 0;
+		virtual double getMouseXNorm() const = 0;
+		virtual double getMouseYNorm() const = 0;
+		virtual double getMouseXOffset() const = 0;
+		virtual double getMouseYOffset() const = 0;
+		virtual double getMouseScroll() const = 0;
+		virtual double getMouseScrollOffset() const = 0;
+
+	};
+
+
+	class InputManager : public Input {
+
+	public:
 		typedef bool (InputManager::*KeyAction)(int) const;
 
 		InputManager() {}
@@ -50,50 +80,51 @@ namespace geeL {
 		void update();
 
 		//Add a callback to to the input manager that will be called during runtime
-		void addCallback(std::function<void(GLFWwindow*, int, int, int, int)> function);
+		virtual void addCallback(std::function<void(GLFWwindow*, int, int, int, int)> function);
 
 		//Callback function that will call every registered callback and updates information about each key
 		void callKey(GLFWwindow* window, int key, int scancode, int action, int mode);
 		void callScroll(GLFWwindow* window, double x, double y);
 
-		bool getKey(int key) const;
-		bool getKeyDown(int key) const;
-		bool getKeyUp(int key) const;
-		bool getKeyHold(int key) const;
+		virtual bool getKey(int key) const;
+		virtual bool getKeyDown(int key) const;
+		virtual bool getKeyUp(int key) const;
+		virtual bool getKeyHold(int key) const;
 
 		void defineButton(std::string name, int key);
-		bool getButton(std::string button) const;
-		bool getButtonDown(std::string button) const;
-		bool getButtonUp(std::string button) const;
-		bool getButtonHold(std::string button) const;
 
-		bool getMouseKey(int key) const;
-		double getMouseX() const;
-		double getMouseY() const;
-		double getMouseXNorm() const;
-		double getMouseYNorm() const;
-		double getMouseXOffset() const;
-		double getMouseYOffset() const;
-		double getMouseScroll() const;
-		double getMouseScrollOffset() const;
+		virtual bool getButton(std::string button) const;
+		virtual bool getButtonDown(std::string button) const;
+		virtual bool getButtonUp(std::string button) const;
+		virtual bool getButtonHold(std::string button) const;
+
+		virtual bool getMouseKey(int key) const;
+		virtual double getMouseX() const;
+		virtual double getMouseY() const;
+		virtual double getMouseXNorm() const;
+		virtual double getMouseYNorm() const;
+		virtual double getMouseXOffset() const;
+		virtual double getMouseYOffset() const;
+		virtual double getMouseScroll() const;
+		virtual double getMouseScrollOffset() const;
 
 	private:
 		const RenderWindow* window;
 		std::vector<std::function<void(GLFWwindow*, int, int, int, int)>> callbacks;
 		std::map<std::string, std::vector<int>> buttonMapping;
 
-		int keyboardBuffer1[maxKeys];
-		int keyboardBuffer2[maxKeys];
+		AtomicWrapper<int> keyboardBuffer1[maxKeys];
+		AtomicWrapper<int> keyboardBuffer2[maxKeys];
 
-		int* currentKeys = keyboardBuffer1;
-		int* previousKeys = keyboardBuffer2;
+		AtomicWrapper<int>* currentKeys = keyboardBuffer1;
+		AtomicWrapper<int>* previousKeys = keyboardBuffer2;
 
-		double mouseX;
-		double mouseY;
-		double lastX;
-		double lastY;
-		double scroll;
-		double lastScroll;
+		AtomicWrapper<double> mouseX;
+		AtomicWrapper<double> mouseY;
+		AtomicWrapper<double> lastX;
+		AtomicWrapper<double> lastY;
+		AtomicWrapper<double> scroll;
+		AtomicWrapper<double> lastScroll;
 
 		bool getButtonHelper(std::string button, KeyAction keyFunction) const;
 	};

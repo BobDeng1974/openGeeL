@@ -9,6 +9,7 @@
 namespace geeL {
 
 	class Camera;
+	class Input;
 	class SceneCamera;
 	class SceneRequester;
 	class LightManager;
@@ -33,8 +34,8 @@ namespace geeL {
 	public:
 		LightManager& lightManager;
 
-		RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& shaderManager, SceneCamera& camera, 
-			MaterialFactory& materialFactory);
+		RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline, SceneCamera& camera, 
+			const MaterialFactory& materialFactory, Input& input);
 
 		void init();
 		void updateProbes();
@@ -108,7 +109,8 @@ namespace geeL {
 		Skybox* skybox;
 		Physics* physics;
 		RenderPipeline& pipeline;
-		MaterialFactory& materialFactory;
+		Input& input;
+		const MaterialFactory& materialFactory;
 
 		std::list<SceneRequester*> sceneRequester;
 

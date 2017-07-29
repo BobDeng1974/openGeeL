@@ -1,7 +1,7 @@
 #include <thread>
 #include <chrono>
 #include <btBulletDynamicsCommon.h>
-#include "../application.h"
+#include "../../application/application.h"
 #include "collider.h"
 #include "rigidbody.h"
 #include "worldphysics.h"

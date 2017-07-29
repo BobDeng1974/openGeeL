@@ -10,7 +10,7 @@
 #include "../renderer/shader/rendershader.h"
 #include "../renderer/renderer/splitrenderer.h"
 #include "../renderer/renderer/rendercontext.h"
-#include "../renderer/application.h"
+#include "../application/application.h"
 
 #include "../renderer/scripting/scenecontrolobject.h"
 #include "../renderer/inputmanager.h"
@@ -166,7 +166,7 @@ void BedroomScene::draw() {
 	LightManager lightManager;
 	RenderPipeline& shaderManager = RenderPipeline(materialFactory);
 	
-	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
+	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory, manager);
 	WorldPhysics& physics = WorldPhysics();
 	scene.setPhysics(&physics);
 

@@ -17,7 +17,7 @@
 
 namespace geeL {
 
-	SplitRenderer::SplitRenderer(RenderWindow& window, InputManager& inputManager, RenderContext& context)
+	SplitRenderer::SplitRenderer(RenderWindow& window, Input& inputManager, RenderContext& context)
 		: Renderer(window, inputManager, context) {
 	
 		glewExperimental = GL_TRUE;
@@ -30,9 +30,7 @@ namespace geeL {
 	}
 
 
-	void SplitRenderer::init() {
-		inputManager->init(window);
-	}
+	void SplitRenderer::init() {}
 
 	void SplitRenderer::render() {
 		while (!window->shouldClose()) {
@@ -44,8 +42,6 @@ namespace geeL {
 			draw();
 			window->swapBuffer();
 
-			glfwPollEvents();
-			inputManager->update();
 			handleInput();
 
 			RenderTime::update();
@@ -70,8 +66,8 @@ namespace geeL {
 	}
 
 	void SplitRenderer::handleInput() {
-		float mouseX = inputManager->getMouseXNorm();
-		float mouseY = inputManager->getMouseYNorm();
+		float mouseX = input.getMouseXNorm();
+		float mouseY = input.getMouseYNorm();
 		
 		for (size_t i = renderers.size(); i > 0 ; i--) {
 			pair<Renderer*, RenderViewport>pair = renderers[i - 1];

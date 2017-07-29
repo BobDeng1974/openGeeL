@@ -10,7 +10,7 @@
 #include "../renderer/shader/rendershader.h"
 #include "../renderer/renderer/splitrenderer.h"
 #include "../renderer/renderer/rendercontext.h"
-#include "../renderer/application.h"
+#include "../application/application.h"
 
 #include "../renderer/scripting/scenecontrolobject.h"
 #include "../renderer/inputmanager.h"
@@ -170,7 +170,7 @@ void SponzaGIScene::draw() {
 	MeshFactory& meshFactory = MeshFactory(materialFactory);
 	LightManager lightManager;
 	RenderPipeline& shaderManager = RenderPipeline(materialFactory);
-	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
+	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory, manager);
 	Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 
 	DefaultPostProcess& def = DefaultPostProcess(15.f);

@@ -15,7 +15,7 @@
 #include "../renderer/postprocessing/drawdefault.h"
 #include "../renderer/renderer/rendercontext.h"
 #include "../renderer/pipeline.h"
-#include "../renderer/application.h"
+#include "../application/application.h"
 #include "raymarchscene.h"
 
 using namespace geeL;
@@ -34,7 +34,7 @@ void RaymarchTest::draw() {
 	MaterialFactory &materialFactory = MaterialFactory(gBuffer);
 	LightManager& lightManager = LightManager();
 	RenderPipeline& pipeline = RenderPipeline(materialFactory);
-	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, camera, materialFactory);
+	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, camera, materialFactory, manager);
 
 	DefaultPostProcess& def = DefaultPostProcess(2.f);
 	RenderContext& context = RenderContext();

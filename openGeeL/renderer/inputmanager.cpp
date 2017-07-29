@@ -33,7 +33,7 @@ namespace geeL {
 	void InputManager::update() {
 
 		//Switch key buffers
-		int* temp = currentKeys;
+		AtomicWrapper<int>* temp = currentKeys;
 		for (size_t i = 0; i < maxKeys; i++)
 			currentKeys[i] = temp[i];
 
@@ -42,7 +42,13 @@ namespace geeL {
 		//Update mouse cursor information
 		lastX = mouseX;
 		lastY = mouseY;
-		glfwGetCursorPos(window->glWindow, &mouseX, &mouseY);
+
+		double tempX = mouseX;
+		double tempY = mouseY;
+		glfwGetCursorPos(window->glWindow, &tempX, &tempY);
+
+		mouseX = tempX;
+		mouseY = tempY;
 	}
 	
 
@@ -65,7 +71,7 @@ namespace geeL {
 
 	void InputManager::callScroll(GLFWwindow* window, double x, double y) {
 		lastScroll = scroll;
-		scroll -= y;
+		scroll = scroll() - y;
 	}
 
 	bool InputManager::getKey(int key) const {

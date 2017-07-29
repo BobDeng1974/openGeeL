@@ -16,6 +16,7 @@
 #include "physics\physics.h"
 #include "lights\lightmanager.h"
 #include "pipeline.h"
+#include "inputmanager.h"
 #include "transformation\transform.h"
 #include "utility\worldinformation.h"
 #include "scene.h"
@@ -24,10 +25,11 @@ using namespace std;
 
 namespace geeL {
 
-	RenderScene::RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& shaderManager, 
-		SceneCamera& camera, MaterialFactory& materialFactory)
-			: lightManager(lightManager), pipeline(shaderManager), camera(&camera),
-				physics(nullptr), worldTransform(world), materialFactory(materialFactory), skybox(nullptr) {}
+	RenderScene::RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline,
+		SceneCamera& camera, const MaterialFactory& materialFactory, Input& input)
+			: lightManager(lightManager), pipeline(pipeline), camera(&camera),
+				physics(nullptr), worldTransform(world), materialFactory(materialFactory), 
+				input(input), skybox(nullptr) {}
 
 	
 	void RenderScene::init() {
@@ -40,6 +42,7 @@ namespace geeL {
 	}
 
 	void RenderScene::update() {
+		camera->handleInput(input);
 		camera->update();
 		iterAllObjects([&](MeshRenderer& object) {
 			object.update();

@@ -6,11 +6,13 @@
 #include <gtc/type_ptr.hpp>
 #include <iostream>
 #include <vector>
+#include <atomic>
 #include "../renderer/framebuffer/gbuffer.h"
 #include "../renderer/shader/rendershader.h"
 #include "../renderer/renderer/splitrenderer.h"
 #include "../renderer/renderer/rendercontext.h"
-#include "../renderer/application.h"
+#include "../application/application.h"
+#include "../application/objectwrapper.h"
 
 #include "../renderer/scripting/scenecontrolobject.h"
 #include "../renderer/inputmanager.h"
@@ -244,7 +246,7 @@ void RenderTest::draw() {
 	LightManager lightManager;
 	RenderPipeline& shaderManager = RenderPipeline(materialFactory);
 	
-	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory);
+	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory, manager);
 	WorldPhysics& physics = WorldPhysics();
 	scene.setPhysics(&physics);
 
@@ -341,4 +343,5 @@ void RenderTest::draw() {
 
 	Application& app = Application(window, manager, renderer);
 	app.run();
+
 }

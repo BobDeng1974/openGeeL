@@ -23,7 +23,7 @@
 #include "../../interface/guirenderer.h"
 #include "../lighting/deferredlighting.h"
 #include "../utility/viewport.h"
-#include "../application.h"
+#include "../../application/application.h"
 #include "deferredrenderer.h"
 
 #define fps 10
@@ -32,7 +32,7 @@ using namespace std;
 
 namespace geeL {
 
-	DeferredRenderer::DeferredRenderer(RenderWindow& window, InputManager& inputManager, SceneRender& lighting,
+	DeferredRenderer::DeferredRenderer(RenderWindow& window, Input& inputManager, SceneRender& lighting,
 		RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer)
 			: Renderer(window, inputManager, context), gBuffer(gBuffer),
 				ssao(nullptr), lighting(lighting), toggle(0) {
@@ -53,8 +53,7 @@ namespace geeL {
 		auto func = [this](GLFWwindow* window, int key, int scancode, int action, int mode) 
 			{ this->handleInput(window, key, scancode, action, mode); };
 
-		inputManager->addCallback(func);
-		inputManager->init(window);
+		input.addCallback(func);
 
 		geometryPassFunc = [this]() { this->geometryPass(); };
 		lightingPassFunc = [this]() { this->lightingPass(); this->forwardPass(); };
@@ -93,7 +92,6 @@ namespace geeL {
 			time.reset();
 
 			window->makeCurrent();
-			handleInput();
 			glEnable(GL_DEPTH_TEST);
 
 			updateSceneControlObjects();
@@ -250,10 +248,6 @@ namespace geeL {
 		scene->drawSkybox();
 	}
 
-	void DeferredRenderer::handleInput() {
-		scene->getCamera().handleInput(*inputManager);
-	}
-
 	void DeferredRenderer::addSSAO(SSAO& ssao) {
 		this->ssao = &ssao;
 		addRequester(*this->ssao);
@@ -290,7 +284,6 @@ namespace geeL {
 		this->requester.push_back(&requester);
 	}
 
-	
 
 	void DeferredRenderer::linkInformation() const {
 		//Link world maps to requesting post effects
@@ -338,16 +331,11 @@ namespace geeL {
 
 
 	void DeferredRenderer::handleInput(GLFWwindow* window, int key, int scancode, int action, int mode) {
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-			glfwSetWindowShouldClose(window, GL_TRUE);
-		}
-
-		if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
+		if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
 			toggleBuffer(false);
-		}
-		else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
+		
+		else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
 			toggleBuffer(true);
-		}
 
 	}
 
