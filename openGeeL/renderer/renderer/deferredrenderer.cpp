@@ -50,8 +50,8 @@ namespace geeL {
 
 
 	void DeferredRenderer::init() {
-		auto func = [this](GLFWwindow* window, int key, int scancode, int action, int mode) 
-			{ this->handleInput(window, key, scancode, action, mode); };
+		auto func = [this](int key, int scancode, int action, int mode) 
+			{ this->handleInput(key, scancode, action, mode); };
 
 		input.addCallback(func);
 
@@ -105,7 +105,7 @@ namespace geeL {
 			//Hacky: Read camera depth from geometry pass and write it into the scene
 			scene->forwardScreenInfo(gBuffer.screenInfo);
 
-			scene->lightManager.draw(*scene, &scene->getCamera());
+			scene->getLightmanager().draw(*scene, &scene->getCamera());
 
 			//SSAO pass
 			if (ssao != nullptr) {
@@ -176,7 +176,7 @@ namespace geeL {
 		//Geometry pass
 		gBuffer.fill(geometryPassFunc);
 
-		scene->lightManager.drawShadowmaps(*scene, &scene->getCamera());
+		scene->getLightmanager().drawShadowmaps(*scene, &scene->getCamera());
 
 		//SSAO pass
 		if (ssao != nullptr) {
@@ -202,7 +202,7 @@ namespace geeL {
 		//Geometry pass
 		gBuffer.fill([this, camera] () { scene->drawDeferred(camera); });
 
-		scene->lightManager.drawShadowmaps(*scene, nullptr);
+		scene->getLightmanager().drawShadowmaps(*scene, nullptr);
 
 		//SSAO pass
 		if (ssao != nullptr) {
@@ -330,7 +330,7 @@ namespace geeL {
 	}
 
 
-	void DeferredRenderer::handleInput(GLFWwindow* window, int key, int scancode, int action, int mode) {
+	void DeferredRenderer::handleInput(int key, int scancode, int action, int mode) {
 		if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
 			toggleBuffer(false);
 		

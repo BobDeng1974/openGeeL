@@ -24,7 +24,7 @@ namespace geeL {
 			add(renderer);
 		});
 
-		LightManager& manager = scene.lightManager;
+		LightManager& manager = scene.getLightmanager();
 		manager.iterLights([this](Light& light) {
 			ShadowMapSnippet* snippet = nullptr;
 

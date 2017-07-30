@@ -78,7 +78,7 @@ namespace geeL {
 		void forwardPass();
 
 		void linkImageBuffer(PostProcessingEffect& effect);
-		void handleInput(GLFWwindow* window, int key, int scancode, int action, int mode);
+		void handleInput(int key, int scancode, int action, int mode);
 
 		//Toggle through all framebuffers for screen display 
 		void toggleBuffer(bool next);

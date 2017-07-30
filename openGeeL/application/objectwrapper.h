@@ -70,10 +70,7 @@ namespace geeL {
 	private:
 		std::atomic<T> atom;
 
-
 	};
-
-
 
 	
 

@@ -29,13 +29,57 @@ namespace geeL {
 	struct ScreenInfo;
 	enum class CullingMode;
 
-	class RenderScene {
+
+	//Class that holds scene information (Objects, cameras, lights, ...)
+	class Scene {
 
 	public:
-		LightManager& lightManager;
+		Scene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline, SceneCamera& camera);
 
+		void addRequester(SceneRequester& requester);
+		void setCamera(SceneCamera& camera);
+
+		const SceneCamera& getCamera() const;
+		SceneCamera& getCamera();
+
+		const LightManager& getLightmanager() const;
+		LightManager& getLightmanager();
+
+		void addShader(SceneShader& shader);
+
+		void addMeshRenderer(MeshRenderer& renderer);
+		void addMeshRenderer(SkinnedMeshRenderer& renderer);
+
+		void removeMeshRenderer(MeshRenderer& renderer);
+		void removeMeshRenderer(SkinnedMeshRenderer& renderer);
+
+	protected:
+		LightManager& lightManager;
+		SceneCamera* camera;
+		Transform& worldTransform;
+		Skybox* skybox;
+		RenderPipeline& pipeline;
+
+		std::list<SceneRequester*> sceneRequester;
+
+		//Objects are indexed by their used shaders (and their transforms id) to allow grouped drawing and 
+		//therefore no unnecessary shader programm switching. Objects with multiple materials are linked to
+		//all their shaders respectively
+		std::map<SceneShader*, std::map<unsigned int, MeshRenderer*>> renderObjects;
+		std::map<SceneShader*, std::map<unsigned int, SkinnedMeshRenderer*>> skinnedObjects;
+
+
+	};
+
+
+
+	//Scene class that allows consecute drawing and updating of comprised structures
+	class RenderScene : public Scene {
+
+	public:
 		RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline, SceneCamera& camera, 
 			const MaterialFactory& materialFactory, Input& input);
+
 
 		void init();
 		void updateProbes();
@@ -79,21 +123,6 @@ namespace geeL {
 
 		void forwardScreenInfo(const ScreenInfo& info);
 
-		void setPhysics(Physics* physics);
-
-		void addRequester(SceneRequester& requester);
-		void setCamera(SceneCamera& camera);
-
-		const SceneCamera& getCamera() const;
-		SceneCamera& getCamera();
-
-		void addShader(SceneShader& shader);
-
-		void addMeshRenderer(MeshRenderer& renderer);
-		void addMeshRenderer(SkinnedMeshRenderer& renderer);
-
-		void removeMeshRenderer(MeshRenderer& renderer);
-		void removeMeshRenderer(SkinnedMeshRenderer& renderer);
 
 		void iterAllObjects(std::function<void(MeshRenderer&)> function);
 
@@ -104,21 +133,9 @@ namespace geeL {
 		bool iterSkinnedObjects(SceneShader& shader, std::function<void(const SkinnedMeshRenderer&)> function) const;
 
 	private:
-		SceneCamera* camera;
-		Transform& worldTransform;
-		Skybox* skybox;
-		Physics* physics;
-		RenderPipeline& pipeline;
 		Input& input;
 		const MaterialFactory& materialFactory;
-
-		std::list<SceneRequester*> sceneRequester;
-
-		//Objects are indexed by their used shaders (and their transforms id) to allow grouped drawing and 
-		//therefore no unnecessary shader programm switching. Objects with multiple materials are linked to
-		//all their shaders respectively
-		std::map<SceneShader*, std::map<unsigned int, MeshRenderer*>> renderObjects;
-		std::map<SceneShader*, std::map<unsigned int, SkinnedMeshRenderer*>> skinnedObjects;
+		
 
 	};
 }

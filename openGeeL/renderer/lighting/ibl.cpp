@@ -15,13 +15,13 @@ namespace geeL {
 	void ImageBasedLighting::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		scene.lightManager.addReflectionProbes(shader);
+		scene.getLightmanager().addReflectionProbes(shader);
 		invViewLocation = shader.getLocation("inverseView");
 		originLocation = shader.getLocation("origin");
 	}
 
 	void ImageBasedLighting::bindValues() {
-		scene.lightManager.bindReflectionProbes(*camera, shader, ShaderTransformSpace::View);
+		scene.getLightmanager().bindReflectionProbes(*camera, shader, ShaderTransformSpace::View);
 		shader.bind<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());
 		shader.bind<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
 	}

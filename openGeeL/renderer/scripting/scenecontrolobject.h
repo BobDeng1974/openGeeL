@@ -22,6 +22,7 @@ namespace geeL {
 
 	protected:
 		RenderScene& scene;
+
 	};
 }
 

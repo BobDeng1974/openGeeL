@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <functional>
+#include <mutex>
 
 #define maxKeys 400
 #define mouseKeys 7
@@ -43,7 +44,9 @@ namespace geeL {
 
 	public:
 		//Add a callback to to the input manager that will be called during runtime
-		virtual void addCallback(std::function<void(GLFWwindow*, int, int, int, int)> function) = 0;
+		//Warning: No thread-safety guaranteed. Necessary steps should be conducted 
+		//by comitted function
+		virtual void addCallback(std::function<void(int, int, int, int)> function) = 0;
 
 		virtual bool getKey(int key) const = 0;
 		virtual bool getKeyDown(int key) const = 0;
@@ -80,7 +83,7 @@ namespace geeL {
 		void update();
 
 		//Add a callback to to the input manager that will be called during runtime
-		virtual void addCallback(std::function<void(GLFWwindow*, int, int, int, int)> function);
+		virtual void addCallback(std::function<void(int, int, int, int)> function);
 
 		//Callback function that will call every registered callback and updates information about each key
 		void callKey(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -110,7 +113,9 @@ namespace geeL {
 
 	private:
 		const RenderWindow* window;
-		std::vector<std::function<void(GLFWwindow*, int, int, int, int)>> callbacks;
+		std::vector<std::function<void(int, int, int, int)>> callbacks;
+		std::mutex callbackMutex;
+
 		std::map<std::string, std::vector<int>> buttonMapping;
 
 		AtomicWrapper<int> keyboardBuffer1[maxKeys];
@@ -127,6 +132,7 @@ namespace geeL {
 		AtomicWrapper<double> lastScroll;
 
 		bool getButtonHelper(std::string button, KeyAction keyFunction) const;
+
 	};
 }
 

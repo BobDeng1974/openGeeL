@@ -18,9 +18,9 @@ namespace geeL {
 	Application::Application(RenderWindow& window, InputManager& inputManager, Renderer& renderer)
 		: window(window), inputManager(inputManager), renderer(renderer) {
 
-		auto exit = [this](GLFWwindow* window, int key, int scancode, int action, int mode) { 
+		auto exit = [this, &window](int key, int scancode, int action, int mode) { 
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-				glfwSetWindowShouldClose(window, GL_TRUE);
+				glfwSetWindowShouldClose(window.glWindow, GL_TRUE);
 		};
 
 		inputManager.addCallback(exit);

@@ -25,11 +25,104 @@ using namespace std;
 
 namespace geeL {
 
+	Scene::Scene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline, SceneCamera& camera)
+		: lightManager(lightManager), pipeline(pipeline), camera(&camera), worldTransform(world), skybox(nullptr) {}
+
+
+	void Scene::addRequester(SceneRequester& requester) {
+		sceneRequester.push_back(&requester);
+
+		requester.updateSkybox(*skybox);
+		requester.updateCamera(*camera);
+	}
+
+	void Scene::setCamera(SceneCamera& camera) {
+		this->camera = &camera;
+
+		for (auto it = sceneRequester.begin(); it != sceneRequester.end(); it++) {
+			SceneRequester& requester = **it;
+			requester.updateCamera(*this->camera);
+		}
+	}
+
+	const SceneCamera& Scene::getCamera() const {
+		return *camera;
+	}
+
+	SceneCamera& Scene::getCamera() {
+		return *camera;
+	}
+
+	const LightManager & Scene::getLightmanager() const {
+		return lightManager;
+	}
+
+	LightManager& Scene::getLightmanager() {
+		return lightManager;
+	}
+
+	void Scene::addShader(SceneShader& shader) {
+		auto it = renderObjects.find(&shader);
+		if (it == renderObjects.end()) {
+			pipeline.staticBind(*camera, lightManager, shader);
+			lightManager.addShaderListener(shader);
+		}
+	}
+
+	void Scene::addMeshRenderer(MeshRenderer& renderer) {
+		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
+			//Init shader if it hasn't been added to the scene yet
+			addShader(shader);
+
+			renderObjects[&shader][renderer.transform.getID()] = &renderer;
+		});
+	}
+
+	void Scene::addMeshRenderer(SkinnedMeshRenderer& renderer) {
+		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
+			//Init shader if it hasn't been added to the scene before
+			addShader(shader);
+
+			skinnedObjects[&shader][renderer.transform.getID()] = &renderer;
+		});
+	}
+
+	void Scene::removeMeshRenderer(MeshRenderer& renderer) {
+		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
+			auto shaders = renderObjects.find(&shader);
+			if (shaders != renderObjects.end()) {
+				auto& objects = (*shaders).second;
+
+				auto obj = objects.find(renderer.transform.getID());
+				if (obj != objects.end())
+					objects.erase(obj);
+			}
+
+			//TODO: maybe also remove shader when this renderer was the last associated object
+		});
+
+	}
+
+	void Scene::removeMeshRenderer(SkinnedMeshRenderer& renderer) {
+		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
+			auto shaders = skinnedObjects.find(&shader);
+			if (shaders != skinnedObjects.end()) {
+				auto& objects = (*shaders).second;
+
+				auto obj = objects.find(renderer.transform.getID());
+				if (obj != objects.end())
+					objects.erase(obj);
+			}
+		});
+	}
+
+
+
+
 	RenderScene::RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline,
 		SceneCamera& camera, const MaterialFactory& materialFactory, Input& input)
-			: lightManager(lightManager), pipeline(pipeline), camera(&camera),
-				physics(nullptr), worldTransform(world), materialFactory(materialFactory), 
-				input(input), skybox(nullptr) {}
+			: Scene(world, lightManager, pipeline, camera), 
+				materialFactory(materialFactory), input(input) {}
 
 	
 	void RenderScene::init() {
@@ -56,10 +149,6 @@ namespace geeL {
 		});
 
 		pipeline.bindCamera(*camera);
-
-		//TODO: Move this to a seperate thread to allow simulation at fixed frame rate
-		if (physics != nullptr)
-			physics->update();
 	}
 
 	void RenderScene::draw(SceneShader& shader) {
@@ -211,94 +300,9 @@ namespace geeL {
 			skybox->bind(shader);
 	}
 
-	void RenderScene::addRequester(SceneRequester& requester) {
-		sceneRequester.push_back(&requester);
-
-		requester.updateSkybox(*skybox);
-		requester.updateCamera(*camera);
-	}
-
-	void RenderScene::setCamera(SceneCamera& camera) {
-		this->camera = &camera;
-
-		for (auto it = sceneRequester.begin(); it != sceneRequester.end(); it++) {
-			SceneRequester& requester = **it;
-			requester.updateCamera(*this->camera);
-		}
-	}
-
-	const SceneCamera& RenderScene::getCamera() const {
-		return *camera;
-	}
-
-	SceneCamera& RenderScene::getCamera() {
-		return *camera;
-	}
-
-	void RenderScene::addShader(SceneShader& shader) {
-		auto it = renderObjects.find(&shader);
-		if (it == renderObjects.end()) {
-			pipeline.staticBind(*camera, lightManager, shader);
-			lightManager.addShaderListener(shader);
-		}
-	}
-
-	void RenderScene::addMeshRenderer(MeshRenderer& renderer) {
-		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
-			//Init shader if it hasn't been added to the scene yet
-			addShader(shader);
-
-			renderObjects[&shader][renderer.transform.getID()] = &renderer;
-		});
-	}
-
-	void RenderScene::addMeshRenderer(SkinnedMeshRenderer& renderer) {
-		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
-			//Init shader if it hasn't been added to the scene before
-			addShader(shader);
-
-			skinnedObjects[&shader][renderer.transform.getID()] = &renderer;
-		});
-	}
-
-	void RenderScene::removeMeshRenderer(MeshRenderer& renderer) {
-		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
-			auto shaders = renderObjects.find(&shader);
-			if (shaders != renderObjects.end()) {
-				auto& objects = (*shaders).second;
-
-				auto obj = objects.find(renderer.transform.getID());
-				if (obj != objects.end())
-					objects.erase(obj);
-			}
-
-			//TODO: maybe also remove shader when this renderer was the last associated object
-		});
-
-	}
-
-	void RenderScene::removeMeshRenderer(SkinnedMeshRenderer& renderer) {
-		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
-			auto shaders = skinnedObjects.find(&shader);
-			if (shaders != skinnedObjects.end()) {
-				auto& objects = (*shaders).second;
-
-				auto obj = objects.find(renderer.transform.getID());
-				if (obj != objects.end())
-					objects.erase(obj);
-			}
-		});
-	}
-
-
 	void RenderScene::forwardScreenInfo(const ScreenInfo& info) {
 		camera->updateDepth(info);
 	}
-
-	void RenderScene::setPhysics(Physics* physics) {
-		this->physics = physics;
-	}
-
 
 	void RenderScene::iterAllObjects(function<void(MeshRenderer&)> function) {
 		for (auto it = renderObjects.begin(); it != renderObjects.end(); it++) {
@@ -367,6 +371,6 @@ namespace geeL {
 
 		return false;
 	}
-
+	
 
 }

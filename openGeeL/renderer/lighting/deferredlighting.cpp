@@ -15,7 +15,7 @@ namespace geeL {
 	void DeferredLighting::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
-		scene.lightManager.bindShadowMaps(shader);
+		scene.getLightmanager().bindShadowMaps(shader);
 
 		projectionLocation = shader.getLocation("projection");
 		invViewLocation = shader.getLocation("inverseView");
@@ -23,7 +23,7 @@ namespace geeL {
 	}
 
 	void DeferredLighting::bindValues() {
-		scene.lightManager.bind(*camera, shader, ShaderTransformSpace::View);
+		scene.getLightmanager().bind(*camera, shader, ShaderTransformSpace::View);
 
 		shader.bind<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
 		shader.bind<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());

@@ -52,17 +52,20 @@ namespace geeL {
 	}
 	
 
-	void InputManager::addCallback(std::function<void(GLFWwindow*, int, int, int, int)> function) {
+	void InputManager::addCallback(std::function<void(int, int, int, int)> function) {
+		callbackMutex.lock();
 		callbacks.push_back(function);
+		callbackMutex.unlock();
 	}
 
 	
 	void InputManager::callKey(GLFWwindow* window, int key, int scancode, int action, int mode) {
-
+		callbackMutex.lock();
 		for (size_t i = 0; i < callbacks.size(); i++) {
 			auto func = callbacks[i];
-			func(window, key, scancode, action, mode);
+			func(key, scancode, action, mode);
 		}
+		callbackMutex.unlock();
 
 		if (key > 0 && key < maxKeys) {
 			currentKeys[key] = action;
@@ -99,7 +102,7 @@ namespace geeL {
 	void InputManager::defineButton(string name, int key) {
 
 		if (buttonMapping.count(name)) {
-			vector<int> keyList = buttonMapping[name];
+			vector<int>& keyList = buttonMapping[name];
 			keyList.push_back(key);
 		}
 		else {

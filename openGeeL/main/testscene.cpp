@@ -225,6 +225,7 @@ namespace {
 		}
 
 		virtual void quit() {}
+
 	};
 }
 
@@ -248,7 +249,6 @@ void RenderTest::draw() {
 	
 	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory, manager);
 	WorldPhysics& physics = WorldPhysics();
-	scene.setPhysics(&physics);
 
 	BilateralFilter& blur = BilateralFilter(1.8f, 0.7f);
 	DefaultPostProcess& def = DefaultPostProcess();
@@ -304,7 +304,7 @@ void RenderTest::draw() {
 	postLister.add(ssao);
 
 	BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
-	GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 15);
+	GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 25);
 	BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
 	GodRaySnippet& godRaySnippet = GodRaySnippet(ray);
 	renderer.addEffect(raySmooth);

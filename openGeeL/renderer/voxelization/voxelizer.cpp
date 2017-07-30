@@ -72,7 +72,7 @@ namespace geeL {
 		const Camera& camera = scene.getCamera();
 		voxelShader->bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
 
-		scene.lightManager.bindShadowMaps(*voxelShader);
+		scene.getLightmanager().bindShadowMaps(*voxelShader);
 	}
 
 	void Voxelizer::voxelizeScene(bool drawVoxel) const {

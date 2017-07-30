@@ -177,7 +177,6 @@ void ArthouseScene::draw() {
 	
 	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory, manager);
 	WorldPhysics& physics = WorldPhysics();
-	scene.setPhysics(&physics);
 
 	BilateralFilter& blur = BilateralFilter(1.5f, 0.7f);
 	DefaultPostProcess& def = DefaultPostProcess(2.f);
