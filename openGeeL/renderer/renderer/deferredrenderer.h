@@ -34,7 +34,6 @@ namespace geeL {
 		virtual void render();
 		virtual void draw();
 		virtual void draw(const Camera& camera, const FrameBuffer& buffer);
-		virtual void initSceneObjects();
 
 		void addSSAO(SSAO& ssao);
 

@@ -15,13 +15,12 @@ namespace geeL {
 	public:
 		SceneControlObject(RenderScene& scene) : scene(scene) {}
 
-		virtual void init() = 0;
-		virtual void draw(const SceneCamera& camera) = 0;
-		virtual void handleInput(const InputManager& input) {}
-		virtual void quit() = 0;
+		
 
 	protected:
 		RenderScene& scene;
+
+		virtual void init() = 0;
 
 	};
 }

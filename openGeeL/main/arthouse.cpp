@@ -119,7 +119,10 @@ namespace {
 			RenderPipeline& shaderManager, RenderScene& scene, TransformFactory& transformFactory, Physics* physics)
 			: SceneControlObject(scene),
 			materialFactory(materialFactory), meshFactory(meshFactory), lightManager(lightManager),
-			shaderManager(shaderManager), transformFactory(transformFactory), physics(physics) {}
+			shaderManager(shaderManager), transformFactory(transformFactory), physics(physics) {
+		
+			init();
+		}
 
 
 		virtual void init() {
@@ -149,9 +152,6 @@ namespace {
 			scene.addMeshRenderer(studio);
 		}
 
-		virtual void draw(const SceneCamera& camera) {}
-
-		virtual void quit() {}
 	};
 
 
@@ -210,8 +210,7 @@ void ArthouseScene::draw() {
 	SceneControlObject& testScene = TestScene4(materialFactory, meshFactory, 
 		lightManager, shaderManager, scene, transFactory, &physics);
 
-	renderer.addObject(&testScene);
-	renderer.initSceneObjects();
+	scene.init();
 
 	GUIRenderer& gui = GUIRenderer(window, context);
 	ObjectLister& objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);

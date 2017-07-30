@@ -30,23 +30,8 @@ namespace geeL{
 		gui = renderer;
 	}
 
-	void Renderer::addObject(SceneControlObject* obj) {
-		objects.push_back(obj);
-	}
-
-	void Renderer::initSceneObjects() {
-		for (size_t i = 0; i < objects.size(); i++) {
-			objects[i]->init();
-		}
-	}
-
 	void Renderer::setScene(RenderScene& scene) {
 		this->scene = &scene;
-	}
-
-	void Renderer::updateSceneControlObjects() {
-		for (size_t i = 0; i < objects.size(); i++)
-			objects[i]->draw(scene->getCamera());
 	}
 
 }

@@ -14,6 +14,7 @@
 #include "cubemapping\skybox.h"
 #include "utility\screeninfo.h"
 #include "physics\physics.h"
+#include "lights/light.h"
 #include "lights\lightmanager.h"
 #include "pipeline.h"
 #include "inputmanager.h"
@@ -141,11 +142,19 @@ namespace geeL {
 			object.update();
 		});
 
+		lightManager.iterLights([](Light& light) {
+			light.update();
+		});
+
 		worldTransform.update();
 
 		camera->lateUpdate();
 		iterAllObjects([&](MeshRenderer& object) {
 			object.lateUpdate();
+		});
+
+		lightManager.iterLights([](Light& light) {
+			light.lateUpdate();
 		});
 
 		pipeline.bindCamera(*camera);

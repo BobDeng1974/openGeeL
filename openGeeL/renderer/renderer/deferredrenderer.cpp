@@ -68,14 +68,6 @@ namespace geeL {
 	}
 
 
-	void DeferredRenderer::initSceneObjects() {
-		Renderer::initSceneObjects();
-
-		//Init scene after all scene objects are ready
-		scene->init();
-	}
-
-
 	void DeferredRenderer::render() {
 		window->makeCurrent();
 
@@ -93,8 +85,6 @@ namespace geeL {
 
 			window->makeCurrent();
 			glEnable(GL_DEPTH_TEST);
-
-			updateSceneControlObjects();
 
 			RenderTexture* current = texture1; //Current of alternating textures is stored here
 			Viewport::setForced(0, 0, window->resolution.getWidth(), window->resolution.getHeight());
@@ -165,9 +155,6 @@ namespace geeL {
 			time.update();
 			RenderTime::update();
 		}
-
-		for (size_t i = 0; i < objects.size(); i++)
-			objects[i]->quit();
 	}
 
 	void DeferredRenderer::draw() {

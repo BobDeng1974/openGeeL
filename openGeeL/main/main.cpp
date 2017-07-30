@@ -13,10 +13,10 @@ int main() {
 	//DeerScene::draw();
 	//ScieneScene::draw();
 	//ArthouseScene::draw();
-	//SponzaScene::draw();
+	SponzaScene::draw();
 	//SponzaGIScene::draw();
 
-	RenderTest::draw();
+	//RenderTest::draw();
 	//RaymarchTest::draw();
 
 	return 0;

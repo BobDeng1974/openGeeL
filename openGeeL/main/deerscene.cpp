@@ -114,11 +114,13 @@ namespace {
 			RenderPipeline& shaderManager, RenderScene& scene, TransformFactory& transformFactory, Physics* physics)
 			: SceneControlObject(scene),
 			materialFactory(materialFactory), meshFactory(meshFactory), lightManager(lightManager),
-			shaderManager(shaderManager), transformFactory(transformFactory), physics(physics) {}
-
+			shaderManager(shaderManager), transformFactory(transformFactory), physics(physics) {
+		
+			init();
+		}
+			
 
 		virtual void init() {
-
 			float lightIntensity = 7.f;
 
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-0.29f, 0.39f, 1.80f), vec3(-180.0f, 0, -50), vec3(1.f));
@@ -137,9 +139,6 @@ namespace {
 
 		}
 
-		virtual void draw(const SceneCamera& camera) {}
-
-		virtual void quit() {}
 	};
 }
 
@@ -194,8 +193,7 @@ void DeerScene::draw() {
 	SceneControlObject& testScene = TestScene5(materialFactory, meshFactory,
 		lightManager, shaderManager, scene, transFactory, nullptr);
 
-	renderer.addObject(&testScene);
-	renderer.initSceneObjects();
+	scene.init();
 
 	/*
 	GUIRenderer& gui = GUIRenderer(window, context);

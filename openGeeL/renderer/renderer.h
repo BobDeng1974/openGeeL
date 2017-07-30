@@ -49,11 +49,7 @@ namespace geeL {
 		virtual void handleInput() {};
 
 		virtual void addGUIRenderer(GUIRenderer* renderer);
-		virtual void addObject(SceneControlObject* obj);
-		virtual void initSceneObjects();
-	
 		virtual void setScene(RenderScene& scene);
-
 
 	protected:
 		RenderContext* context;
@@ -62,9 +58,6 @@ namespace geeL {
 		GUIRenderer*  gui;
 
 		RenderScene* scene;
-		std::vector<SceneControlObject*> objects;
-
-		void updateSceneControlObjects();
 
 	};
 }

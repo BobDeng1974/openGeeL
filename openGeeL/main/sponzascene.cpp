@@ -100,6 +100,22 @@ SpotLight* spotLight6 = nullptr;
 
 namespace {
 
+	float step = 0.01f;
+	class MovingLightComponent : public Component {
+
+	public:
+		virtual void update() {
+			vec3 position = sceneObject->transform.getPosition();
+
+			if (position.x > 12.5f || position.x < -7.f)
+				step = -step;
+
+			sceneObject->transform.translate(vec3(step, 0.f, 0.f));
+		}
+
+	};
+
+
 	class TestScene6 : public SceneControlObject {
 
 	public:
@@ -110,14 +126,14 @@ namespace {
 		MeshFactory& meshFactory;
 		Physics* physics;
 
-		PointLight* point;
-
-
 		TestScene6(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
 			RenderPipeline& shaderManager, RenderScene& scene, TransformFactory& transformFactory, Physics* physics)
 				: SceneControlObject(scene),
 					materialFactory(materialFactory), meshFactory(meshFactory), lightManager(lightManager),
-					shaderManager(shaderManager), transformFactory(transformFactory), physics(physics) {}
+					shaderManager(shaderManager), transformFactory(transformFactory), physics(physics) {
+		
+			init();
+		}
 
 
 		virtual void init() {
@@ -137,7 +153,8 @@ namespace {
 			lightIntensity = 55.f;
 			Transform& lightTransform5 = transformFactory.CreateTransform(vec3(2.55f, 3.62f, 4.08f), vec3(0.f), vec3(1.f));
 			ShadowMapConfiguration config3 = ShadowMapConfiguration(0.001f, ShadowMapType::Soft, ShadowmapResolution::High, 5.f, 10);
-			point = &lightManager.addPointLight(lightTransform5, glm::vec3(lightIntensity *0.148f, lightIntensity *0.0625f, lightIntensity*0.125f), config3);
+			PointLight& point = lightManager.addPointLight(lightTransform5, glm::vec3(lightIntensity *0.148f, lightIntensity *0.0625f, lightIntensity*0.125f), config3);
+			point.addComponent<MovingLightComponent>();
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.01f));
 			MeshRenderer& sponz = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
@@ -145,6 +162,7 @@ namespace {
 			scene.addMeshRenderer(sponz);
 		}
 
+		/*
 		float step = 0.01f;
 		virtual void draw(const SceneCamera& camera) {
 			vec3 position = point->transform.getPosition();
@@ -154,8 +172,7 @@ namespace {
 
 			point->transform.translate(vec3(step, 0.f, 0.f));
 		}
-
-		virtual void quit() {}
+		*/
 	};
 }
 
@@ -210,8 +227,7 @@ void SponzaScene::draw() {
 	SceneControlObject& testScene = TestScene6(materialFactory, meshFactory, 
 		lightManager, shaderManager, scene, transFactory, nullptr);
 
-	renderer.addObject(&testScene);
-	renderer.initSceneObjects();
+	scene.init();
 
 	GUIRenderer& gui = GUIRenderer(window, context);
 	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);

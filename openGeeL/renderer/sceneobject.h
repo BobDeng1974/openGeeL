@@ -53,6 +53,7 @@ namespace geeL {
 		static_assert(std::is_base_of<Component, T>::value, "Given class is not a component");
 
 		T* comp = new T(std::move(component));
+		comp->setSceneObject(*this);
 		comp->init();
 		components.push_back(comp);
 
@@ -64,6 +65,7 @@ namespace geeL {
 		static_assert(std::is_base_of<Component, T>::value, "Given class is not a component");
 
 		T* comp = new T();
+		comp->setSceneObject(*this);
 		comp->init();
 		components.push_back(comp);
 

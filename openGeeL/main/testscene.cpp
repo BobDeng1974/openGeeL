@@ -104,6 +104,15 @@ SpotLight* spotLight = nullptr;
 
 namespace {
 
+	class RotationComponent : public Component {
+
+	public:
+		virtual void update() {
+			sceneObject->transform.rotate(vec3(0.f, 1.f, 0.f), 1.5f * RenderTime::deltaTime);
+		}
+	};
+
+
 	class TestScene1 : public SceneControlObject {
 
 	public:
@@ -114,14 +123,14 @@ namespace {
 		MeshFactory& meshFactory;
 		Physics* physics;
 
-		MeshRenderer* nanoRenderer;
-
-
 		TestScene1(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
 			RenderPipeline& shaderManager, RenderScene& scene, TransformFactory& transformFactory, Physics* physics)
 				: SceneControlObject(scene),
 					materialFactory(materialFactory), meshFactory(meshFactory), lightManager(lightManager),
-					shaderManager(shaderManager), transformFactory(transformFactory), physics(physics) {}
+					shaderManager(shaderManager), transformFactory(transformFactory), physics(physics) {
+		
+			init();
+		}
 
 
 		virtual void init() {
@@ -204,9 +213,10 @@ namespace {
 			scene.addMeshRenderer(cyborg);
 
 			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.2f));
-			nanoRenderer = &meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/nanosuit/nanosuit.obj"),
+			MeshRenderer& nano = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/nanosuit/nanosuit.obj"),
 				meshTransform1, CullingMode::cullFront, "Nano");
-			scene.addMeshRenderer(*nanoRenderer);
+			nano.addComponent<RotationComponent>();
+			scene.addMeshRenderer(nano);
 
 			/*
 			float scale = 0.05f;
@@ -219,12 +229,6 @@ namespace {
 			anim.playAnimation(0);
 			*/
 		}
-
-		virtual void draw(const SceneCamera& camera) {
-			nanoRenderer->transform.rotate(vec3(0.f, 1.f, 0.f), 1.5f * RenderTime::deltaTime);
-		}
-
-		virtual void quit() {}
 
 	};
 }
@@ -284,8 +288,8 @@ void RenderTest::draw() {
 	SceneControlObject& testScene = TestScene1(materialFactory, meshFactory, 
 		lightManager, shaderManager, scene, transFactory, &physics);
 
-	renderer.addObject(&testScene);
-	renderer.initSceneObjects();
+	//testScene.init();
+	scene.init();
 
 	GUIRenderer& gui = GUIRenderer(window, context);
 	ObjectLister& objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
