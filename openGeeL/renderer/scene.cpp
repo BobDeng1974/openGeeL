@@ -13,7 +13,6 @@
 #include "cameras\camera.h"
 #include "cubemapping\skybox.h"
 #include "utility\screeninfo.h"
-#include "physics\physics.h"
 #include "lights/light.h"
 #include "lights\lightmanager.h"
 #include "pipeline.h"

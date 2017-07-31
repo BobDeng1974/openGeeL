@@ -86,9 +86,9 @@
 #include "../interface/elements/posteffectlister.h"
 #include "../interface/elements/systeminformation.h"
 
-#include "../renderer/physics/physics.h"
-#include "../renderer/physics/worldphysics.h"
-#include "../renderer/physics/rigidbody.h"
+#include "../physics/physics.h"
+#include "../physics/worldphysics.h"
+#include "../physics/rigidbody.h"
 #include "../renderer/animation/animator.h"
 #include "../renderer/animation/skeleton.h"
 

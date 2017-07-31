@@ -1,7 +1,7 @@
 #ifndef ANIMATOR_H
 #define ANIMATOR_H
 
-#include "../scripting/component.h"
+#include "../../application/scripting/component.h"
 
 namespace geeL {
 

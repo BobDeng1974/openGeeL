@@ -23,7 +23,6 @@ namespace geeL {
 	class Material;
 	class MaterialFactory;
 	class MeshFactory;
-	class Physics;
 	class Transform;
 
 	struct ScreenInfo;

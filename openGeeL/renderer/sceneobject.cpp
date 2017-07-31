@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <iostream>
-#include "scripting/component.h"
-#include "transformation\transform.h"
+#include "transformation/transform.h"
 #include "sceneobject.h"
 
 using namespace std;
