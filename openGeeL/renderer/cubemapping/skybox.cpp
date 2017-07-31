@@ -2,9 +2,9 @@
 #include <glew.h>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
-#include "../cameras/camera.h"
-#include "../shader/rendershader.h"
-#include "../primitives/screencube.h"
+#include "cameras/camera.h"
+#include "shader/rendershader.h"
+#include "primitives/screencube.h"
 #include "irrmap.h"
 #include "cubemap.h"
 #include "skybox.h"

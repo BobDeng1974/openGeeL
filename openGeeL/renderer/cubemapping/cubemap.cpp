@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include "../texturing/texture.h"
-#include "../shader/rendershader.h"
+#include "texturing/texture.h"
+#include "shader/rendershader.h"
 #include "cubemap.h"
 
 #define GL_TEXTURE_CUBE_MAP 0x8513

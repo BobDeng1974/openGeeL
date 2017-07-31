@@ -4,7 +4,7 @@
 #include <list>
 #include <vector>
 #include <string>
-#include "../texturing/layeredtexture.h"
+#include "texturing/layeredtexture.h"
 #include "material.h"
 
 namespace geeL {

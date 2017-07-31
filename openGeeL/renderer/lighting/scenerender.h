@@ -1,8 +1,8 @@
 #ifndef SCENERENDER_H
 #define SCENERENDER_H
 
-#include "../utility/worldinformation.h"
-#include "../postprocessing/postprocessing.h"
+#include "utility/worldinformation.h"
+#include "postprocessing/postprocessing.h"
 
 namespace geeL {
 

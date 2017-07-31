@@ -2,7 +2,7 @@
 #include <glew.h>
 #include <glfw3.h>
 #include <algorithm>
-#include "../shader/rendershader.h"
+#include "shader/rendershader.h"
 #include "imagetexture.h"
 #include "layeredtexture.h"
 

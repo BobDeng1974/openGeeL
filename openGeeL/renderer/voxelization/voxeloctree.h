@@ -2,7 +2,7 @@
 #define VOXELOCTREE_H
 
 #include <vector>
-#include "../framebuffer/bufferutil.h"
+#include "framebuffer/bufferutil.h"
 #include "voxelstructure.h"
 
 typedef unsigned int uint;

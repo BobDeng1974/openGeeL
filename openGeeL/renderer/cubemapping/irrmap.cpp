@@ -2,11 +2,11 @@
 #include <glew.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
-#include "../texturing/rendertexturecube.h"
-#include "../shader/rendershader.h"
-#include "../framebuffer/framebuffer.h"
-#include "../framebuffer/cubebuffer.h"
-#include "../primitives/screencube.h"
+#include "texturing/rendertexturecube.h"
+#include "shader/rendershader.h"
+#include "framebuffer/framebuffer.h"
+#include "framebuffer/cubebuffer.h"
+#include "primitives/screencube.h"
 #include "irrmap.h"
 
 using namespace glm;

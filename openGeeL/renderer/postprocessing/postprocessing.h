@@ -3,10 +3,10 @@
 
 #include <list>
 #include <string>
-#include "../renderer.h"
-#include "../shader/rendershader.h"
-#include "../shader/computeshader.h"
-#include "../utility/resolution.h"
+#include "renderer.h"
+#include "shader/rendershader.h"
+#include "shader/computeshader.h"
+#include "utility/resolution.h"
 
 typedef unsigned int GLuint;
 

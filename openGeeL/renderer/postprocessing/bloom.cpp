@@ -1,8 +1,8 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "gaussianblur.h"
-#include "../primitives/screenquad.h"
-#include "../framebuffer/framebuffer.h"
+#include "primitives/screenquad.h"
+#include "framebuffer/framebuffer.h"
 #include "bloom.h"
 
 namespace geeL {

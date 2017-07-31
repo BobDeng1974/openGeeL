@@ -5,7 +5,7 @@
 #include "../renderer/inputmanager.h"
 #include "../renderer/window.h"
 #include "../renderer/renderer/deferredrenderer.h"
-#include "../renderer/scene.h"
+#include "renderscene.h"
 #include "../renderer/transformation/transform.h"
 #include "../renderer/transformation/transformfactory.h"
 #include "../renderer/cameras/perspectivecamera.h"

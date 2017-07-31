@@ -2,7 +2,7 @@
 #define  DOF_H
 
 #include "postprocessing.h"
-#include "../utility/worldinformation.h"
+#include "utility/worldinformation.h"
 #include "gaussianblur.h"
 
 namespace geeL {

@@ -1,7 +1,7 @@
 #include <iostream>
-#include "../primitives/screenquad.h"
-#include "../framebuffer/framebuffer.h"
-#include "../transformation/transform.h"
+#include "primitives/screenquad.h"
+#include "framebuffer/framebuffer.h"
+#include "transformation/transform.h"
 #include "gaussianblur.h"
 #include "motionblur.h"
 

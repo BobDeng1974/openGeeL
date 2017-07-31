@@ -72,7 +72,7 @@
 #include "../renderer/cubemapping/skybox.h"
 #include "../renderer/cubemapping/reflectionprobe.h"
 #include "../renderer/texturing/brdfIntMap.h"
-#include "../renderer/scene.h"
+#include "renderscene.h"
 #include "../renderer/utility/rendertime.h"
 #include "../renderer/framebuffer/cubebuffer.h"
 #include "../renderer/cubemapping/cubemapfactory.h"

@@ -4,7 +4,7 @@
 #include <string>
 #include <list>
 #include <memory>
-#include "../application/scripting/component.h"
+#include "scripting/component.h"
 
 namespace geeL {
 

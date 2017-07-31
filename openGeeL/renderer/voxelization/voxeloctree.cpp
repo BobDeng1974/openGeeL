@@ -2,7 +2,7 @@
 #include <glew.h>
 #include <cmath>
 #include <iostream>
-#include "../shader/computeshader.h"
+#include "shader/computeshader.h"
 #include "voxelizer.h"
 #include "voxeloctree.h"
 

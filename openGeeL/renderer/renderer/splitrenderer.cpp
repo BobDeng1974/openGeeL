@@ -6,11 +6,11 @@
 #include <iostream>
 #include <cmath>
 
-#include "../utility/rendertime.h"
+#include "utility/rendertime.h"
 #include "splitrenderer.h"
-#include "../window.h"
-#include "../utility/viewport.h"
-#include "../inputmanager.h"
+#include "window.h"
+#include "utility/viewport.h"
+#include "inputmanager.h"
 
 #define fps 10
 

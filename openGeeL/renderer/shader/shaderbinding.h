@@ -2,7 +2,7 @@
 #define SHADERBINDING_H
 
 #include <string>
-#include "../utility/range.h"
+#include "utility/range.h"
 
 typedef int ShaderLocation;
 

@@ -1,4 +1,4 @@
-#include "../transformation/transform.h"
+#include "transformation/transform.h"
 #include "skeleton.h"
 
 namespace geeL {

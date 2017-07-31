@@ -6,12 +6,12 @@
 #include <vector>
 #include <vec3.hpp>
 #include <vec4.hpp>
-#include "../shader/rendershader.h"
-#include "../cameras/camera.h"
-#include "../lights/light.h"
-#include "../utility/viewport.h"
-#include "../transformation/transform.h"
-#include "../framebuffer/framebuffer.h"
+#include "shader/rendershader.h"
+#include "cameras/camera.h"
+#include "lights/light.h"
+#include "utility/viewport.h"
+#include "transformation/transform.h"
+#include "framebuffer/framebuffer.h"
 #include "cascadedmap.h"
 #include <iostream>
 

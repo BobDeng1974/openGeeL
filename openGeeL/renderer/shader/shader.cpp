@@ -5,7 +5,7 @@
 #include <iostream>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
-#include "../texturing/texture.h"
+#include "texturing/texture.h"
 #include "shader.h"
 
 using namespace std;

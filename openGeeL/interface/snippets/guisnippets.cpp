@@ -1,11 +1,11 @@
-#include "../../renderer/materials/defaultmaterial.h"
-#include "../../renderer/materials/genericmaterial.h"
-#include "../../renderer/lights/light.h"
-#include "../../renderer/transformation/transform.h"
-#include "../guiwrapper.h"
-#include "guisnippets.h"
 #include <cmath>
 #include <iostream>
+#include "materials/defaultmaterial.h"
+#include "materials/genericmaterial.h"
+#include "lights/light.h"
+#include "transformation/transform.h"
+#include "guiwrapper.h"
+#include "guisnippets.h"
 
 namespace geeL {
 

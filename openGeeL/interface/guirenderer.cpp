@@ -29,8 +29,8 @@
 #define MAX_VERTEX_BUFFER 512 * 1024
 #define MAX_ELEMENT_BUFFER 128 * 1024
 
-#include "../renderer/renderer/rendercontext.h"
-#include "../renderer/window.h"
+#include "renderer/rendercontext.h"
+#include "window.h"
 #include "guielement.h"
 #include "guirenderer.h"
 

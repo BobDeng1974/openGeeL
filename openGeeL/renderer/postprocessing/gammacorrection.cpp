@@ -1,6 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include "../shader/rendershader.h"
+#include "shader/rendershader.h"
 #include "gammacorrection.h"
 
 namespace geeL {

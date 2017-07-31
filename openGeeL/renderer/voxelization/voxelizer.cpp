@@ -3,12 +3,12 @@
 #include <glm.hpp>
 #include <iostream>
 #include <gtc/matrix_transform.hpp>
-#include "../shader/sceneshader.h"
-#include "../cameras/camera.h"
-#include "../transformation/transform.h"
-#include "../scene.h"
-#include "../lights/lightmanager.h"
-#include "../utility/viewport.h"
+#include "shader/sceneshader.h"
+#include "cameras/camera.h"
+#include "transformation/transform.h"
+#include "renderscene.h"
+#include "lights/lightmanager.h"
+#include "utility/viewport.h"
 #include "voxelizer.h"
 
 using namespace glm;

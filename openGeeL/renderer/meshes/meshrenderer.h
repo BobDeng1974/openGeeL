@@ -4,8 +4,8 @@
 #include <functional>
 #include <list>
 #include <map>
-#include "../sceneobject.h"
-#include "../materials/material.h"
+#include "sceneobject.h"
+#include "materials/material.h"
 
 namespace geeL {
 

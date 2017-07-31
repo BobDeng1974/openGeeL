@@ -1,5 +1,5 @@
-#include "../cameras/camera.h"
-#include "../framebuffer/framebuffer.h"
+#include "cameras/camera.h"
+#include "framebuffer/framebuffer.h"
 #include "ssrr.h"
 
 using namespace std;

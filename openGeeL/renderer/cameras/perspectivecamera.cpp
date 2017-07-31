@@ -1,11 +1,12 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
-#include "perspectivecamera.h"
-#include "../inputmanager.h"
-#include "../transformation/transform.h"
 #include <iostream>
+#include "perspectivecamera.h"
+#include "inputmanager.h"
+#include "transformation/transform.h"
 
 using namespace glm;
+
 
 namespace geeL {
 

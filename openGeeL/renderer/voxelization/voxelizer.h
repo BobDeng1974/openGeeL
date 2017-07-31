@@ -1,7 +1,7 @@
 #ifndef VOXELIZER_H
 #define VOXELIZER_H
 
-#include "../framebuffer/bufferutil.h"
+#include "framebuffer/bufferutil.h"
 
 namespace geeL {
 

@@ -1,7 +1,7 @@
 #ifndef RENDERWINDOW_H
 #define RENDERWINDOW_H
 
-#include "utility\resolution.h"
+#include "utility/resolution.h"
 
 struct GLFWwindow;
 

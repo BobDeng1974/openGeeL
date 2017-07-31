@@ -1,11 +1,11 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <gtc/matrix_transform.hpp>
-#include "../transformation/transform.h"
-#include "../lights/directionallight.h"
-#include "../cameras/camera.h"
-#include "../primitives/screenquad.h"
-#include "../scene.h"
+#include "transformation/transform.h"
+#include "lights/directionallight.h"
+#include "cameras/camera.h"
+#include "primitives/screenquad.h"
+#include "renderscene.h"
 #include "gaussianblur.h"
 #include "godray.h"
 

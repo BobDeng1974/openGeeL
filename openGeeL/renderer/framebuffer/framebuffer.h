@@ -3,9 +3,9 @@
 
 #include <functional>
 #include <string>
-#include "../utility/resolution.h"
-#include "../texturing/texture.h"
-#include "../texturing/rendertexture.h"
+#include "utility/resolution.h"
+#include "texturing/texture.h"
+#include "texturing/rendertexture.h"
 
 namespace geeL {
 

@@ -2,8 +2,8 @@
 #include <glew.h>
 #include <list>
 #include <iostream>
-#include "../utility/viewport.h"
-#include "../renderer.h"
+#include "utility/viewport.h"
+#include "renderer.h"
 #include "framebuffer.h"
 
 

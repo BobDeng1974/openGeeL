@@ -2,7 +2,7 @@
 #define SYSTEMINFORMATION_H
 
 #include <string>
-#include "../guielement.h"
+#include "guielement.h"
 
 namespace geeL {
 

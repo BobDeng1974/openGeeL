@@ -1,13 +1,13 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <string>
-#include "../shader/rendershader.h"
-#include "../shader/sceneshader.h"
-#include "../cameras/camera.h"
-#include "../transformation/transform.h"
-#include "../scene.h"
-#include "../shadowmapping/shadowmap.h"
-#include "../utility/vectorextension.h"
+#include "shader/rendershader.h"
+#include "shader/sceneshader.h"
+#include "cameras/camera.h"
+#include "transformation/transform.h"
+#include "renderscene.h"
+#include "shadowmapping/shadowmap.h"
+#include "utility/vectorextension.h"
 #include "light.h"
 
 using namespace std;

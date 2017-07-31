@@ -1,8 +1,8 @@
 #include "gaussianblur.h"
-#include "../texturing/texture.h"
-#include "../texturing/rendertexture.h"
-#include "../framebuffer/framebuffer.h"
-#include "../primitives/screenquad.h"
+#include "texturing/texture.h"
+#include "texturing/rendertexture.h"
+#include "framebuffer/framebuffer.h"
+#include "primitives/screenquad.h"
 #include "dof.h"
 
 using namespace std;

@@ -1,11 +1,11 @@
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
-#include "../application/objectwrapper.h"
 #include <vector>
 #include <map>
 #include <functional>
 #include <mutex>
+#include "objectwrapper.h"
 
 #define maxKeys 400
 #define mouseKeys 7

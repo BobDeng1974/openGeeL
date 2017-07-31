@@ -1,5 +1,5 @@
 #include <string>
-#include "../shader/shader.h"
+#include "shader/shader.h"
 #include "linearkernel.h"
 
 using namespace std;

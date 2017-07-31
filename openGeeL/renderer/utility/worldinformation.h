@@ -4,9 +4,9 @@
 #include <vec3.hpp>
 #include <mat4x4.hpp>
 #include <map>
-#include "../cameras/camera.h"
-#include "../cubemapping/skybox.h"
-#include "../texturing/texture.h"
+#include "cameras/camera.h"
+#include "cubemapping/skybox.h"
+#include "texturing/texture.h"
 
 namespace geeL {
 

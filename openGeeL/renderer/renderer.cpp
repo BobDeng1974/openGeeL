@@ -3,8 +3,8 @@
 #include "window.h"
 #include "inputmanager.h"
 #include "cameras/camera.h"
-#include "renderer\rendercontext.h"
-#include "framebuffer\framebuffer.h"
+#include "renderer/rendercontext.h"
+#include "framebuffer/framebuffer.h"
 
 namespace geeL{
 

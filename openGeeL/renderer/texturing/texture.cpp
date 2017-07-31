@@ -2,7 +2,7 @@
 #include <glew.h>
 #include <iostream>
 #include <limits.h>
-#include "../utility/viewport.h"
+#include "utility/viewport.h"
 #include "texture.h"
 
 namespace geeL {

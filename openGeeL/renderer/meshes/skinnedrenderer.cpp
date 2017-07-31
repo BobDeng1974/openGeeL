@@ -1,8 +1,8 @@
 #include <iostream>
-#include "../shader/sceneshader.h"
-#include "../materials/material.h"
-#include "../transformation/transform.h"
-#include "../animation/skeleton.h"
+#include "shader/sceneshader.h"
+#include "materials/material.h"
+#include "transformation/transform.h"
+#include "animation/skeleton.h"
 #include "model.h"
 #include "skinnedrenderer.h"
 

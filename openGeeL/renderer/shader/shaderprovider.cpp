@@ -1,5 +1,5 @@
-#include "../utility/worldinformation.h"
-#include "../scene.h"
+#include "utility/worldinformation.h"
+#include "renderscene.h"
 #include "shader.h"
 #include "shaderprovider.h"
 

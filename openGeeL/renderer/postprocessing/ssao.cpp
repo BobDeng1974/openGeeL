@@ -3,8 +3,8 @@
 #include <random>
 #include <string>
 #include <glm.hpp>
-#include "../primitives/screenquad.h"
-#include "../texturing/rendertexture.h"
+#include "primitives/screenquad.h"
+#include "texturing/rendertexture.h"
 #include "gaussianblur.h"
 #include "ssao.h"
 

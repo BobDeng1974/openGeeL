@@ -1,9 +1,9 @@
 #include <glm.hpp>
-#include "../transformation/transform.h"
-#include "../cameras/camera.h"
-#include "../texturing/imagetexture.h"
-#include "../texturing/rendertexture.h"
-#include "../framebuffer/framebuffer.h"
+#include "transformation/transform.h"
+#include "cameras/camera.h"
+#include "texturing/imagetexture.h"
+#include "texturing/rendertexture.h"
+#include "framebuffer/framebuffer.h"
 #include "gaussianblur.h"
 #include "lensflare.h"
 

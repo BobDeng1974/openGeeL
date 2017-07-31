@@ -1,7 +1,7 @@
 #ifndef TEXTUREDCUBEMAP_H
 #define TEXTUREDCUBEMAP_H
 
-#include "../texturing/imagetexturecube.h"
+#include "texturing/imagetexturecube.h"
 #include "cubemap.h"
 
 namespace geeL {

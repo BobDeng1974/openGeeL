@@ -1,9 +1,9 @@
 #ifndef SHADOWMAP_H
 #define SHADOWMAP_H
 
-#include "../texturing/texture.h"
+#include "texturing/texture.h"
 #include "shadowmapconfig.h"
-#include "../lights/light.h"
+#include "lights/light.h"
 
 namespace geeL {
 

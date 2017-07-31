@@ -1,4 +1,4 @@
-#include "../../renderer/window.h"
+#include "window.h"
 #include "guielement.h"
 
 namespace geeL {

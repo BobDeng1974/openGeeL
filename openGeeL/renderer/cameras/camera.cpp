@@ -3,11 +3,11 @@
 #include <glfw3.h>
 #include <gtc/type_ptr.hpp>
 #include <glm.hpp>
-#include "../shader/sceneshader.h"
+#include "shader/sceneshader.h"
 #include "camera.h"
-#include "../inputmanager.h"
-#include "../transformation/transform.h"
-#include "../utility/rendertime.h"
+#include "inputmanager.h"
+#include "transformation/transform.h"
+#include "utility/rendertime.h"
 
 #define pi 3.141592f
 

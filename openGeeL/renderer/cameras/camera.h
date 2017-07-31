@@ -6,8 +6,8 @@
 #include <vector>
 #include <vec3.hpp>
 #include <mat4x4.hpp>
-#include "../utility/screeninfo.h"
-#include "../sceneobject.h"
+#include "utility/screeninfo.h"
+#include "sceneobject.h"
 
 
 namespace geeL {

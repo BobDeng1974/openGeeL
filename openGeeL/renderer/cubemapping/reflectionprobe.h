@@ -3,7 +3,7 @@
 
 #include <functional>
 #include <string>
-#include "../sceneobject.h"
+#include "sceneobject.h"
 #include "cubemap.h"
 
 namespace geeL {

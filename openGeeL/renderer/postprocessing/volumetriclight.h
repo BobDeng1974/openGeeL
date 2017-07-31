@@ -2,7 +2,7 @@
 #define VOLUMETRIC_H
 
 #include "postprocessing.h"
-#include "../utility/worldinformation.h"
+#include "utility/worldinformation.h"
 
 namespace geeL {
 

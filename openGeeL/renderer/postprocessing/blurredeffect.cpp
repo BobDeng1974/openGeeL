@@ -1,9 +1,8 @@
-#include "../primitives/screenquad.h"
-#include "../texturing/rendertexture.h"
-#include "../framebuffer/framebuffer.h"
+#include "primitives/screenquad.h"
+#include "texturing/rendertexture.h"
+#include "framebuffer/framebuffer.h"
 #include "gaussianblur.h"
 #include "blurredeffect.h"
-#include <iostream>
 
 using namespace std;
 

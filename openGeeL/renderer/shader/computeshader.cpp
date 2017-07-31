@@ -3,7 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include "../texturing/texture.h"
+#include "texturing/texture.h"
 #include "shaderreader.h"
 #include "computeshader.h"
 

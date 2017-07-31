@@ -2,9 +2,9 @@
 #include <glew.h>
 #include <climits>
 #include <iostream>
-#include "../shader/rendershader.h"
-#include "../utility/viewport.h"
-#include "../renderer.h"
+#include "shader/rendershader.h"
+#include "utility/viewport.h"
+#include "renderer.h"
 #include "gbuffer.h"
 
 namespace geeL {

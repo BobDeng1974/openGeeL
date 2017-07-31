@@ -1,11 +1,11 @@
-#include "../transformation/transform.h"
-#include "../lights/spotlight.h"
-#include "volumetriclight.h"
-#include "../scene.h"
-#include "../shader/sceneshader.h"
-#include "../cameras/camera.h"
-#include "../shadowmapping/shadowmap.h"
 #include <iostream>
+#include "transformation/transform.h"
+#include "lights/spotlight.h"
+#include "volumetriclight.h"
+#include "renderscene.h"
+#include "shader/sceneshader.h"
+#include "cameras/camera.h"
+#include "shadowmapping/shadowmap.h"
 
 using namespace glm;
 using namespace std;

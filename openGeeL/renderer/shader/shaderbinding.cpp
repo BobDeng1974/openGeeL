@@ -1,4 +1,4 @@
-#include "../texturing/texture.h"
+#include "texturing/texture.h"
 #include "shader.h"
 #include "shaderbinding.h"
 

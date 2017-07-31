@@ -1,8 +1,8 @@
 #include <vec3.hpp>
-#include "../shader/rendershader.h"
-#include "../primitives/screenquad.h"
-#include "../framebuffer/framebuffer.h"
-#include "../texturing/imagetexture.h"
+#include "shader/rendershader.h"
+#include "primitives/screenquad.h"
+#include "framebuffer/framebuffer.h"
+#include "texturing/imagetexture.h"
 #include "drawdefault.h"
 
 using namespace glm;

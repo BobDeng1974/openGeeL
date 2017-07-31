@@ -1,10 +1,10 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <glfw3.h>
-#include "../materials/defaultmaterial.h"
-#include "../materials/material.h"
-#include "../transformation/transform.h"
-#include "../shader/sceneshader.h"
+#include "materials/defaultmaterial.h"
+#include "materials/material.h"
+#include "transformation/transform.h"
+#include "shader/sceneshader.h"
 #include "mesh.h"
 #include "model.h"
 #include "meshrenderer.h"

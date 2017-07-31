@@ -3,12 +3,12 @@
 #include <list>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
-#include "../texturing/rendertexturecube.h"
-#include "../shader/rendershader.h"
-#include "../texturing/envmap.h"
-#include "../framebuffer/framebuffer.h"
-#include "../framebuffer/cubebuffer.h"
-#include "../primitives/screencube.h"
+#include "texturing/rendertexturecube.h"
+#include "shader/rendershader.h"
+#include "texturing/envmap.h"
+#include "framebuffer/framebuffer.h"
+#include "framebuffer/cubebuffer.h"
+#include "primitives/screencube.h"
 #include "envcubemap.h"
 
 using namespace glm;

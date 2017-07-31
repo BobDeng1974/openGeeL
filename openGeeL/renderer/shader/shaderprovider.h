@@ -3,7 +3,7 @@
 
 #include <map>
 #include <string>
-#include "../utility/properties.h"
+#include "utility/properties.h"
 
 namespace geeL {
 

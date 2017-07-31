@@ -4,7 +4,7 @@
 #include <string>
 #include <mat3x3.hpp>
 #include <mat4x4.hpp>
-#include "../shader/rendershader.h"
+#include "shader/rendershader.h"
 
 using glm::mat3;
 using glm::mat4;

@@ -2,14 +2,13 @@
 #include <glew.h>
 #include <string>
 #include <gtc/matrix_transform.hpp>
-#include "../shader/rendershader.h"
-#include "../shader/sceneshader.h"
-#include "../transformation/transform.h"
-#include "../cameras/camera.h"
-#include "../scene.h"
-#include "../framebuffer/gbuffer.h"
+#include "shader/rendershader.h"
+#include "shader/sceneshader.h"
+#include "transformation/transform.h"
+#include "cameras/camera.h"
+#include "renderscene.h"
+#include "framebuffer/gbuffer.h"
 #include "directionallight.h"
-#include <iostream>
 
 using namespace std;
 using namespace glm;

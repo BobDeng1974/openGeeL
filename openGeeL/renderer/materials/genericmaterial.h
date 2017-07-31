@@ -6,7 +6,7 @@
 #include <string>
 #include <vec3.hpp>
 #include <mat4x4.hpp>
-#include "../texturing/layeredtexture.h"
+#include "texturing/layeredtexture.h"
 #include "material.h"
 
 using glm::vec3;

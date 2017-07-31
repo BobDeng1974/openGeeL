@@ -1,6 +1,6 @@
 #include <btBulletDynamicsCommon.h>
-#include "../renderer/meshes/model.h"
-#include "../renderer/meshes/mesh.h"
+#include "meshes/model.h"
+#include "meshes/mesh.h"
 #include "collider.h"
 
 namespace geeL {

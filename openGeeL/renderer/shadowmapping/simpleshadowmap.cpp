@@ -2,15 +2,15 @@
 #include <glew.h>
 #include <gtc/type_ptr.hpp>
 #include <gtc/matrix_transform.hpp>
-#include "../cameras/camera.h"
-#include "../utility/screeninfo.h"
-#include "../utility/viewport.h"
-#include "../shader/rendershader.h"
-#include "../transformation/transform.h"
-#include "../lights/spotlight.h"
-#include "../lights/pointlight.h"
-#include "../lights/directionallight.h"
-#include "../framebuffer/framebuffer.h"
+#include "cameras/camera.h"
+#include "utility/screeninfo.h"
+#include "utility/viewport.h"
+#include "shader/rendershader.h"
+#include "transformation/transform.h"
+#include "lights/spotlight.h"
+#include "lights/pointlight.h"
+#include "lights/directionallight.h"
+#include "framebuffer/framebuffer.h"
 #include "simpleshadowmap.h"
 #include <iostream>
 

@@ -2,7 +2,7 @@
 #define TEXTURE_H
 
 #include "texturetype.h"
-#include "../utility/resolution.h"
+#include "utility/resolution.h"
 
 namespace geeL {
 

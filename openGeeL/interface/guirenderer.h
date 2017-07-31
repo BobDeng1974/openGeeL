@@ -2,7 +2,7 @@
 #define GUIRENDERER_H
 
 #include <list>
-#include "../renderer/renderer.h"
+#include "renderer.h"
 
 struct nk_context;
 typedef nk_context GUIContext;

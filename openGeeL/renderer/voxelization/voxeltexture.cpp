@@ -1,12 +1,12 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include "../texturing/rendertexture3D.h"
-#include "../lights/lightmanager.h"
-#include "../transformation/transform.h"
-#include "../cameras/camera.h"
-#include "../shader/sceneshader.h"
-#include "../utility/viewport.h"
-#include "../scene.h"
+#include "texturing/rendertexture3D.h"
+#include "lights/lightmanager.h"
+#include "transformation/transform.h"
+#include "cameras/camera.h"
+#include "shader/sceneshader.h"
+#include "utility/viewport.h"
+#include "renderscene.h"
 #include "voxeltexture.h"
 
 namespace geeL {

@@ -1,9 +1,8 @@
 #include <btBulletDynamicsCommon.h>
-#include "../renderer/transformation/transform.h"
+#include "transformation/transform.h"
 #include "motionstate.h"
 #include "collider.h"
 #include "rigidbody.h"
-#include <iostream>
 
 namespace geeL {
 

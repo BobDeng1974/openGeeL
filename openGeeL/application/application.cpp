@@ -5,10 +5,10 @@
 #include <mutex>
 #include <functional>
 #include <iostream>
-#include "../renderer/utility/rendertime.h"
-#include "../renderer/renderer.h"
-#include "../renderer/window.h"
-#include "../renderer/inputmanager.h"
+#include "utility/rendertime.h"
+#include "renderer.h"
+#include "window.h"
+#include "inputmanager.h"
 #include "application.h"
  
 using namespace std;

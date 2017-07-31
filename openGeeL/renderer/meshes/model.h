@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "../animation/animatedobject.h"
+#include "animation/animatedobject.h"
 #include "mesh.h"
 
 namespace geeL {

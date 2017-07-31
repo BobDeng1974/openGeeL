@@ -3,8 +3,8 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 #include <iostream>
-#include "../shader/sceneshader.h"
-#include "../texturing/imagetexture.h"
+#include "shader/sceneshader.h"
+#include "texturing/imagetexture.h"
 #include "defaultmaterial.h"
 
 using namespace std;

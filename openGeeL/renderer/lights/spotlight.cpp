@@ -2,12 +2,12 @@
 #include <glew.h>
 #include <string>
 #include <gtc/matrix_transform.hpp>
-#include "../shader/rendershader.h"
-#include "../shader/sceneshader.h"
-#include "../texturing/imagetexture.h"
-#include "../transformation/transform.h"
-#include "../cameras/camera.h"
-#include "../scene.h"
+#include "shader/rendershader.h"
+#include "shader/sceneshader.h"
+#include "texturing/imagetexture.h"
+#include "transformation/transform.h"
+#include "cameras/camera.h"
+#include "renderscene.h"
 #include "spotlight.h"
 
 using namespace std;

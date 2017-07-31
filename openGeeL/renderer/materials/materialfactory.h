@@ -4,9 +4,9 @@
 #include <list>
 #include <map>
 #include <string>
-#include "../texturing/imagetexture.h"
-#include "../texturing/envmap.h"
-#include "../shader/defshading.h"
+#include "texturing/imagetexture.h"
+#include "texturing/envmap.h"
+#include "shader/defshading.h"
 
 namespace geeL {
 

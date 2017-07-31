@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <glm.hpp>
-#include "../shader/rendershader.h"
+#include "shader/rendershader.h"
 #include "colorcorrection.h"
 
 namespace geeL {

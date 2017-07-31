@@ -1,8 +1,8 @@
 #ifndef GBUFFER_H
 #define GBUFFER_H
 
-#include "../utility/screeninfo.h"
-#include "../texturing/rendertexture.h"
+#include "utility/screeninfo.h"
+#include "texturing/rendertexture.h"
 #include "framebuffer.h"
 
 namespace geeL {

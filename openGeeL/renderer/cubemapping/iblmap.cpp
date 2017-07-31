@@ -1,6 +1,6 @@
-#include "../texturing/brdfIntMap.h"
+#include "texturing/brdfIntMap.h"
 #include "irrmap.h"
-#include "../shader/rendershader.h"
+#include "shader/rendershader.h"
 #include "prefilterEnvmap.h"
 #include "iblmap.h"
 

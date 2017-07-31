@@ -3,7 +3,7 @@
 
 #include <glm.hpp>
 #include <string>
-#include "../utility/worldinformation.h"
+#include "utility/worldinformation.h"
 #include "postprocessing.h"
 
 namespace geeL {

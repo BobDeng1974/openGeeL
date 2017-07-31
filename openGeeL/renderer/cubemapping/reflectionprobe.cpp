@@ -2,17 +2,17 @@
 #include <glew.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
-#include "../texturing/rendertexturecube.h"
-#include "../framebuffer/framebuffer.h"
-#include "../framebuffer/cubebuffer.h"
-#include "../transformation/transform.h"
-#include "../shader/rendershader.h"
-#include "../shader/sceneshader.h"
-#include "../cameras/camera.h"
+#include "texturing/rendertexturecube.h"
+#include "framebuffer/framebuffer.h"
+#include "framebuffer/cubebuffer.h"
+#include "transformation/transform.h"
+#include "shader/rendershader.h"
+#include "shader/sceneshader.h"
+#include "cameras/camera.h"
 #include "reflectionprobe.h"
-#include <iostream>
 
 using namespace glm;
+
 
 namespace geeL {
 

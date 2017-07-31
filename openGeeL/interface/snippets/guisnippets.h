@@ -5,9 +5,9 @@
 #include <vec2.hpp>
 #include <vec3.hpp>
 #include <functional>
-#include "../../renderer/materials/material.h"
-#include "../../renderer/materials/material.h"
-#include "../../renderer/materials/material.h"
+#include "materials/material.h"
+#include "materials/material.h"
+#include "materials/material.h"
 
 struct nk_context;
 

@@ -10,9 +10,9 @@
 #include <vec3.hpp>
 #include <mat4x4.hpp>
 #include "shaderbinding.h"
-#include "../texturing/texturetype.h"
-#include "../utility/properties.h"
-#include "../utility/defaults.h"
+#include "texturing/texturetype.h"
+#include "utility/properties.h"
+#include "utility/defaults.h"
 
 typedef int ShaderLocation;
 

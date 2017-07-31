@@ -3,7 +3,7 @@
 #include <glfw3.h>
 #include "stb_image.h"
 #include "imagetexture.h"
-#include "../shader/rendershader.h"
+#include "shader/rendershader.h"
 #include <iostream>
 
 using namespace std;

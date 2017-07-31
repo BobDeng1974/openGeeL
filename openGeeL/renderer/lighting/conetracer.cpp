@@ -1,8 +1,8 @@
-#include "../voxelization/voxelizer.h"
-#include "../voxelization/voxeloctree.h"
-#include "../voxelization/voxeltexture.h"
-#include "../voxelization/voxelstructure.h"
-#include "../scene.h"
+#include "voxelization/voxelizer.h"
+#include "voxelization/voxeloctree.h"
+#include "voxelization/voxeltexture.h"
+#include "voxelization/voxelstructure.h"
+#include "renderscene.h"
 #include "conetracer.h"
 
 namespace geeL {

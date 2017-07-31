@@ -2,11 +2,10 @@
 #include <glew.h>
 #include <glfw3.h>
 #include "mesh.h"
-#include "../materials/defaultmaterial.h"
-#include "../materials/material.h"
-#include "../animation/skeleton.h"
-#include "../transformation/transform.h"
-#include <iostream>
+#include "materials/defaultmaterial.h"
+#include "materials/material.h"
+#include "animation/skeleton.h"
+#include "transformation/transform.h"
 
 using namespace std;
 

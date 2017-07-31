@@ -1,9 +1,9 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include "../texturing/rendertexturecube.h"
-#include "../utility/viewport.h"
+#include "texturing/rendertexturecube.h"
+#include "utility/viewport.h"
 #include "cubebuffer.h"
-#include <iostream>
+
 
 namespace geeL {
 

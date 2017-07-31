@@ -1,10 +1,10 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "stb_image.h"
-#include "../primitives/screenquad.h"
-#include "../shader/rendershader.h"
-#include "../framebuffer/framebuffer.h"
-#include "../utility/viewport.h"
+#include "primitives/screenquad.h"
+#include "shader/rendershader.h"
+#include "framebuffer/framebuffer.h"
+#include "utility/viewport.h"
 #include "brdfIntMap.h"
 
 namespace geeL {

@@ -2,8 +2,7 @@
 #define POSTEFFECTLISTER_H
 
 #include <list>
-
-#include "../guielement.h"
+#include "guielement.h"
 
 namespace geeL {
 

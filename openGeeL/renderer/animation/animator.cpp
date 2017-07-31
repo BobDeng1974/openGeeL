@@ -1,10 +1,9 @@
-#include "../transformation/transform.h"
-#include "../utility/rendertime.h"
+#include "transformation/transform.h"
+#include "utility/rendertime.h"
 #include "animation.h"
 #include "skeleton.h"
 #include "animatedobject.h"
 #include "animator.h"
-#include <iostream>
 
 namespace geeL {
 

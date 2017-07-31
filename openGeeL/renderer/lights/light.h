@@ -5,7 +5,7 @@
 #include <mat4x4.hpp>
 #include <functional>
 #include <string>
-#include "../sceneobject.h"
+#include "sceneobject.h"
 
 using glm::vec3;
 

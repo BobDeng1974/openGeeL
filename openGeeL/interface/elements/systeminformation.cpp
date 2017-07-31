@@ -1,6 +1,6 @@
 
-#include "../../renderer/utility/rendertime.h"
-#include "../guiwrapper.h"
+#include "utility/rendertime.h"
+#include "guiwrapper.h"
 #include "systeminformation.h"
 
 namespace geeL {

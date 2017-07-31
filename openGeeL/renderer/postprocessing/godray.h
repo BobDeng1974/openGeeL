@@ -2,8 +2,8 @@
 #define GODRAY_H
 
 #include <vec3.hpp>
-#include "../framebuffer/framebuffer.h"
-#include "../utility/worldinformation.h"
+#include "framebuffer/framebuffer.h"
+#include "utility/worldinformation.h"
 #include "postprocessing.h"
 
 namespace geeL {

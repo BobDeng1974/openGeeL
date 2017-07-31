@@ -1,8 +1,8 @@
 #ifndef SPLITRENDERER_H
 #define SPLITRENDERER_H
 
-#include "../renderer.h"
 #include <utility>
+#include "renderer.h"
 
 using namespace std;
 

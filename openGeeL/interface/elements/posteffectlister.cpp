@@ -1,6 +1,6 @@
-#include "../guiwrapper.h"
-#include "../snippets/guisnippets.h"
-#include "../snippets/postsnippets.h"
+#include "guiwrapper.h"
+#include "snippets/guisnippets.h"
+#include "snippets/postsnippets.h"
 #include "posteffectlister.h"
 
 

@@ -2,7 +2,7 @@
 #define MATRIXEXTENSION_H
 
 #include <mat4x4.hpp>
-#include "../../dependencies/assimp/scene.h"
+#include "scene.h"
 #include <iostream>
 
 namespace geeL {

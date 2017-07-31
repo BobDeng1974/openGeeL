@@ -1,8 +1,8 @@
-#include "../cameras/camera.h"
-#include "../shader/rendershader.h"
-#include "../shader/sceneshader.h"
-#include "../lights/lightmanager.h"
-#include "../scene.h"
+#include "cameras/camera.h"
+#include "shader/rendershader.h"
+#include "shader/sceneshader.h"
+#include "lights/lightmanager.h"
+#include "renderscene.h"
 #include "ibl.h"
 
 namespace geeL {

@@ -3,9 +3,9 @@
 
 #include <vector>
 #include <vec3.hpp>
-#include "../texturing/imagetexture.h"
-#include "../framebuffer/colorbuffer.h"
-#include "../utility/worldinformation.h"
+#include "texturing/imagetexture.h"
+#include "framebuffer/colorbuffer.h"
+#include "utility/worldinformation.h"
 #include "postprocessing.h"
 
 namespace geeL {

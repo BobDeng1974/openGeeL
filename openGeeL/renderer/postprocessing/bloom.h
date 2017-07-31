@@ -1,7 +1,7 @@
 #ifndef BLOOM_H
 #define BLOOM_H
 
-#include "../framebuffer/framebuffer.h"
+#include "framebuffer/framebuffer.h"
 #include "brightnessfilter.h"
 #include "blurredeffect.h"
 #include "postprocessing.h"

@@ -1,6 +1,6 @@
-#include "../guiwrapper.h"
-#include "../../renderer/postprocessing/gaussianblur.h"
-#include "../../renderer/postprocessing/motionblur.h"
+#include "guiwrapper.h"
+#include "postprocessing/gaussianblur.h"
+#include "postprocessing/motionblur.h"
 #include "blursnippets.h"
 
 namespace geeL {

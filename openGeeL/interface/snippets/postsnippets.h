@@ -3,7 +3,7 @@
 
 #include <list>
 #include <string>
-#include "../../renderer/shader/shader.h"
+#include "shader/shader.h"
 #include "guisnippets.h"
 
 namespace geeL {

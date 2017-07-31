@@ -1,4 +1,4 @@
-#include "../scene.h"
+#include "renderscene.h"
 #include "scenerender.h"
 
 namespace geeL {

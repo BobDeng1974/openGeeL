@@ -2,7 +2,7 @@
 #define LENSFLARE_H
 
 #include <vec3.hpp>
-#include "../utility/worldinformation.h"
+#include "utility/worldinformation.h"
 #include "blurredeffect.h"
 #include "brightnessfilter.h"
 
