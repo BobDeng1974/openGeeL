@@ -50,6 +50,7 @@ namespace geeL {
 
 		virtual void addGUIRenderer(GUIRenderer* renderer);
 		virtual void setScene(RenderScene& scene);
+		virtual void linkInformation() const {}
 
 	protected:
 		RenderContext* context;

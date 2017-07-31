@@ -12,7 +12,6 @@
 #include "../renderer/renderer/rendercontext.h"
 #include "../application/application.h"
 
-#include "../renderer/scripting/scenecontrolobject.h"
 #include "../renderer/inputmanager.h"
 #include "../renderer/window.h"
 #include "../renderer/texturing/texture.h"
@@ -90,65 +89,7 @@
 
 #include "sciencescene.h"
 
-#define pi 3.141592f
-
 using namespace geeL;
-
-
-SpotLight* spotLight2 = nullptr;
-
-namespace {
-
-	class TestScene2 : public SceneControlObject {
-
-	public:
-		LightManager& lightManager;
-		MaterialFactory& materialFactory;
-		RenderPipeline& shaderManager;
-		TransformFactory transformFactory;
-		MeshFactory& meshFactory;
-		Physics* physics;
-
-		MeshRenderer* nanoRenderer;
-
-
-		TestScene2(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
-			RenderPipeline& shaderManager, RenderScene& scene, TransformFactory& transformFactory, Physics* physics)
-			: SceneControlObject(scene),
-			materialFactory(materialFactory), meshFactory(meshFactory), lightManager(lightManager),
-			shaderManager(shaderManager), transformFactory(transformFactory), physics(physics) {
-		
-			init();
-		}
-
-
-		virtual void init() {
-
-			float lightIntensity = 100.f;
-
-			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(7.1f, 4.9f, 2.4f), vec3(-180.0f, 0, -50), vec3(1.f, 1.f, 1.f), true);
-			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), defPLShadowMapConfig);
-
-			lightIntensity = 100.f;
-			float angle = glm::cos(glm::radians(25.5f));
-			float outerAngle = glm::cos(glm::radians(27.5f));
-
-			ShadowMapConfiguration config = ShadowMapConfiguration(0.0001f, ShadowMapType::Hard, ShadowmapResolution::Huge);
-			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-11, 11, -15), vec3(118.0f, 40, -23), vec3(1.f, 1.f, 1.f), true);
-			spotLight2 = &lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle, config);
-
-
-			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(0.1f, 0.1f, 0.1f));
-			MeshRenderer& science = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/mad/madScience.obj"),
-				meshTransform2, CullingMode::cullFront, "Science");
-			scene.addMeshRenderer(science);
-		}
-
-	};
-
-
-}
-
 
 
 void ScieneScene::draw() {
@@ -156,7 +97,7 @@ void ScieneScene::draw() {
 	InputManager manager;
 
 	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	TransformFactory& transFactory = TransformFactory(world);
+	TransformFactory& transformFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(0.0f, 2.0f, 9.0f), vec3(-90.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
@@ -167,16 +108,16 @@ void ScieneScene::draw() {
 	LightManager lightManager;
 	RenderPipeline& shaderManager = RenderPipeline(materialFactory);
 	
-	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory, manager);
+	RenderScene& scene = RenderScene(transformFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory, manager);
 	WorldPhysics& physics = WorldPhysics();
 
-	BilateralFilter& blur = BilateralFilter(1, 0.7f);
 	DefaultPostProcess& def = DefaultPostProcess(2.f);
-	SSAO& ssao = SSAO(blur, 3.f);
 	RenderContext context;
 	DeferredLighting& lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer);
-	renderer.addSSAO(ssao);
+	renderer.setScene(scene);
+
+	Application& app = Application(window, manager, renderer);
 
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 		[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
@@ -184,6 +125,11 @@ void ScieneScene::draw() {
 	CubeBuffer cubeBuffer;
 	BRDFIntegrationMap brdfInt;
 	CubeMapFactory& cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
+
+	GUIRenderer& gui = GUIRenderer(window, context);
+	//renderer.addGUIRenderer(&gui);
+
+
 
 	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv1/Playa_Sunrise.hdr");
 	EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 1024);
@@ -193,15 +139,26 @@ void ScieneScene::draw() {
 	scene.setSkybox(skybox);
 	lightManager.addReflectionProbe(iblMap);
 	
-	renderer.setScene(scene);
-	scene.addRequester(ssao);
 
-	SceneControlObject& testScene = TestScene2(materialFactory, meshFactory, 
-		lightManager, shaderManager, scene, transFactory, &physics);
+	float lightIntensity = 100.f;
+	Transform& lightTransform1 = transformFactory.CreateTransform(vec3(7.1f, 4.9f, 2.4f), vec3(-180.0f, 0, -50), vec3(1.f, 1.f, 1.f), true);
+	&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), defPLShadowMapConfig);
 
-	scene.init();
+	lightIntensity = 100.f;
+	float angle = glm::cos(glm::radians(25.5f));
+	float outerAngle = glm::cos(glm::radians(27.5f));
 
-	GUIRenderer& gui = GUIRenderer(window, context);
+	ShadowMapConfiguration config = ShadowMapConfiguration(0.0001f, ShadowMapType::Hard, ShadowmapResolution::Huge);
+	Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-11, 11, -15), vec3(118.0f, 40, -23), vec3(1.f, 1.f, 1.f), true);
+	SpotLight& spotLight = lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle, config);
+
+
+	Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(0.1f, 0.1f, 0.1f));
+	MeshRenderer& science = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/mad/madScience.obj"),
+		meshTransform2, CullingMode::cullFront, "Science");
+	scene.addMeshRenderer(science);
+	
+
 	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
 	objectLister.add(camera);
 	gui.addElement(objectLister);
@@ -209,17 +166,22 @@ void ScieneScene::draw() {
 	gui.addElement(postLister);
 	SystemInformation& sysInfo = SystemInformation(window, 0.01f, 0.74f, 0.17f, 0.075f);
 	gui.addElement(sysInfo);
-	//renderer.addGUIRenderer(&gui);
+
+
+	postLister.add(def);
+
+	BilateralFilter& blur = BilateralFilter(1, 0.7f);
+	SSAO& ssao = SSAO(blur, 3.f);
+	renderer.addSSAO(ssao);
+	scene.addRequester(ssao);
+	postLister.add(ssao);
 
 	ImageBasedLighting& ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);
-	
-	postLister.add(def);
-	postLister.add(ssao);
 
 	SobelFilter& sobel = SobelFilter(15);
 	SobelBlur& sobelBlur = SobelBlur(sobel);
-	VolumetricLight& vol = VolumetricLight(*spotLight2, 0.05f, 6.f, 100);
+	VolumetricLight& vol = VolumetricLight(spotLight, 0.05f, 6.f, 100);
 	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.3f, 0.3f);
 	VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 	renderer.addEffect(volSmooth, { &vol, &sobelBlur });
@@ -240,8 +202,6 @@ void ScieneScene::draw() {
 	FXAA& fxaa = FXAA();
 	renderer.addEffect(fxaa);
 
-	renderer.linkInformation();
-
-	Application& app = Application(window, manager, renderer);
+	
 	app.run();
 }

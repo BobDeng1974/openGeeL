@@ -27,6 +27,7 @@ namespace geeL {
 		shader.bind<float>("specularLOD", specularLOD);
 		shader.bind<float>("diffuseLOD", diffuseLOD);
 
+		scene.init();
 		voxelStructure.build();
 
 		farPlaneLocation = shader.getLocation("farClip");

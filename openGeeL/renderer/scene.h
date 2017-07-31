@@ -133,6 +133,7 @@ namespace geeL {
 		bool iterSkinnedObjects(SceneShader& shader, std::function<void(const SkinnedMeshRenderer&)> function) const;
 
 	private:
+		bool initialized = false;
 		Input& input;
 		const MaterialFactory& materialFactory;
 		

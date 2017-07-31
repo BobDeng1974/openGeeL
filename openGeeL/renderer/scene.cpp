@@ -127,8 +127,10 @@ namespace geeL {
 
 	
 	void RenderScene::init() {
-		lightManager.drawShadowmapsForced(*this, camera);
-
+		if (!initialized) {
+			lightManager.drawShadowmapsForced(*this, camera);
+			initialized = true;
+		}
 	}
 
 	void RenderScene::updateProbes() {

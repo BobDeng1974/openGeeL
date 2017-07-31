@@ -31,6 +31,7 @@ namespace geeL {
 	bool close = false;
 
 	void Application::run() {
+		renderer.linkInformation();
 		glfwMakeContextCurrent(0);
 		
 		thread renderThread([this]() { renderer.render(); });

@@ -17,6 +17,10 @@ namespace geeL {
 		}
 	}
 
+	CubeBuffer & CubeMapFactory::getBuffer() {
+		return buffer;
+	}
+
 
 	IrradianceMap& CubeMapFactory::createIrradianceMap(const CubeMap& environmentMap,
 		unsigned int resolution) {

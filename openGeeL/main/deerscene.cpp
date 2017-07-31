@@ -12,7 +12,6 @@
 #include "../renderer/renderer/rendercontext.h"
 #include "../application/application.h"
 
-#include "../renderer/scripting/scenecontrolobject.h"
 #include "../renderer/inputmanager.h"
 #include "../renderer/window.h"
 #include "../renderer/texturing/texture.h"
@@ -90,57 +89,7 @@
 
 #include "deerscene.h"
 
-#define pi 3.141592f
-
 using namespace geeL;
-
-
-namespace {
-
-	class TestScene5 : public SceneControlObject {
-
-	public:
-		LightManager& lightManager;
-		MaterialFactory& materialFactory;
-		RenderPipeline& shaderManager;
-		TransformFactory transformFactory;
-		MeshFactory& meshFactory;
-		Physics* physics;
-
-		MeshRenderer* nanoRenderer;
-
-
-		TestScene5(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
-			RenderPipeline& shaderManager, RenderScene& scene, TransformFactory& transformFactory, Physics* physics)
-			: SceneControlObject(scene),
-			materialFactory(materialFactory), meshFactory(meshFactory), lightManager(lightManager),
-			shaderManager(shaderManager), transformFactory(transformFactory), physics(physics) {
-		
-			init();
-		}
-			
-
-		virtual void init() {
-			float lightIntensity = 7.f;
-
-			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-0.29f, 0.39f, 1.80f), vec3(-180.0f, 0, -50), vec3(1.f));
-			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 2.f, 15);
-			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config);
-
-			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(0.1f, 0.1f, 0.1f));
-			MeshRenderer& deer = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/deer/scene2.obj"),
-				meshTransform2, CullingMode::cullFront, "Deer");
-			scene.addMeshRenderer(deer);
-
-
-			deer.iterateMaterials([&](MaterialContainer& container) {
-				container.setFloatValue("Metallic", 0.2f);
-			});
-
-		}
-
-	};
-}
 
 
 void DeerScene::draw() {
@@ -148,7 +97,7 @@ void DeerScene::draw() {
 	InputManager manager;
 
 	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	TransformFactory& transFactory = TransformFactory(world);
+	TransformFactory& transformFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(-0.03f, 0.17f, 2.66f), vec3(-91.59f, 2.78f, -3.f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 1.f, 0.45f, 25.f, window.getWidth(), window.getHeight(), 0.01f, 100.f);
@@ -159,15 +108,15 @@ void DeerScene::draw() {
 	LightManager lightManager;
 	RenderPipeline& shaderManager = RenderPipeline(materialFactory);
 
-	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory, manager);
+	RenderScene& scene = RenderScene(transformFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory, manager);
 
-	BilateralFilter& blur = BilateralFilter(2.f, 0.7f);
 	DefaultPostProcess& def = DefaultPostProcess(1.f);
-	SSAO& ssao = SSAO(blur, 0.5f);
 	RenderContext context;
 	DeferredLighting& lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer);
-	renderer.addSSAO(ssao);
+	renderer.setScene(scene);
+
+	Application& app = Application(window, manager, renderer);
 
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 		[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
@@ -176,7 +125,12 @@ void DeerScene::draw() {
 	BRDFIntegrationMap brdfInt;
 	CubeMapFactory& cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
 
-	Transform& probeTransform = transFactory.CreateTransform(vec3(-0.13f, 0.13f, 0.52f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	GUIRenderer& gui = GUIRenderer(window, context);
+	renderer.addGUIRenderer(&gui);
+
+
+
+	Transform& probeTransform = transformFactory.CreateTransform(vec3(-0.13f, 0.13f, 0.52f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024, 20, 20, 20);
 
 	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv4/WinterForest_Ref.hdr");
@@ -187,16 +141,22 @@ void DeerScene::draw() {
 	scene.setSkybox(skybox);
 	lightManager.addReflectionProbe(probe);
 
-	renderer.setScene(scene);
-	scene.addRequester(ssao);
 
-	SceneControlObject& testScene = TestScene5(materialFactory, meshFactory,
-		lightManager, shaderManager, scene, transFactory, nullptr);
+	float lightIntensity = 7.f;
+	Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-0.29f, 0.39f, 1.80f), vec3(-180.0f, 0, -50), vec3(1.f));
+	ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 2.f, 15);
+	&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config);
 
-	scene.init();
+	Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(0.1f, 0.1f, 0.1f));
+	MeshRenderer& deer = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/deer/scene2.obj"),
+		meshTransform2, CullingMode::cullFront, "Deer");
+	scene.addMeshRenderer(deer);
+
+	deer.iterateMaterials([&](MaterialContainer& container) {
+		container.setFloatValue("Metallic", 0.2f);
+	});
 
 	/*
-	GUIRenderer& gui = GUIRenderer(window, context);
 	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
 	objectLister.add(camera);
 	gui.addElement(objectLister);
@@ -204,8 +164,12 @@ void DeerScene::draw() {
 	gui.addElement(postLister);
 	SystemInformation& sysInfo = SystemInformation(renderer.getRenderTime(), window, 0.01f, 0.74f, 0.17f);
 	gui.addElement(sysInfo);
-	renderer.addGUIRenderer(&gui);
 	*/
+
+	BilateralFilter& blur = BilateralFilter(2.f, 0.7f);
+	SSAO& ssao = SSAO(blur, 0.5f);
+	renderer.addSSAO(ssao);
+	scene.addRequester(ssao);
 
 	ImageBasedLighting& ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);
@@ -223,8 +187,6 @@ void DeerScene::draw() {
 	FXAA& fxaa = FXAA(0.f, 0.f);
 	renderer.addEffect(fxaa);
 
-	renderer.linkInformation();
 	
-	Application& app = Application(window, manager, renderer);
 	app.run();
 }

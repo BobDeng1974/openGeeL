@@ -12,7 +12,6 @@
 #include "../renderer/renderer/rendercontext.h"
 #include "../application/application.h"
 
-#include "../renderer/scripting/scenecontrolobject.h"
 #include "../renderer/inputmanager.h"
 #include "../renderer/window.h"
 #include "../renderer/texturing/texture.h"
@@ -91,70 +90,15 @@
 
 #include "bedroomscene.h"
 
-#define pi 3.141592f
 
 using namespace geeL;
-
-
-SpotLight* spotLight3 = nullptr;
-
-namespace {
-
-	class TestScene3 : public SceneControlObject {
-
-	public:
-		LightManager& lightManager;
-		MaterialFactory& materialFactory;
-		RenderPipeline& shaderManager;
-		TransformFactory transformFactory;
-		MeshFactory& meshFactory;
-		Physics* physics;
-
-
-		TestScene3(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
-			RenderPipeline& shaderManager, RenderScene& scene, TransformFactory& transformFactory, Physics* physics)
-			: SceneControlObject(scene),
-			materialFactory(materialFactory), meshFactory(meshFactory), lightManager(lightManager),
-			shaderManager(shaderManager), transformFactory(transformFactory), physics(physics) {
-		
-			init();
-		}
-
-		virtual void init() {
-
-			float lightIntensity = 50.f;
-			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(0.01f, 9.4f, -0.1f), vec3(-180.0f, 0, -50), vec3(1.f), true);
-			ShadowMapConfiguration config = ShadowMapConfiguration(0.0001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 7.f, 10);
-			lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity * 0.69, lightIntensity * 0.32, lightIntensity * 0.22), config);
-
-			lightIntensity = 100.f;
-			float angle = glm::cos(glm::radians(25.5f));
-			float outerAngle = glm::cos(glm::radians(27.5f));
-
-			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-23.4f, 19.69f, -8.7f), vec3(123.4f, 58.5f, 2.9f), vec3(1.f), true);
-			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.0001f, ShadowMapType::Hard, ShadowmapResolution::Huge);
-			spotLight3 = &lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity * 0.85f, lightIntensity * 0.87f, lightIntensity * 0.66f), angle, outerAngle, config2);
-
-			float scale = 0.05f;
-			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(scale));
-			MeshRenderer& bedroom = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/bedroom/Bedroom2.obj"),
-				meshTransform2, CullingMode::cullFront, "Bedroom");
-			scene.addMeshRenderer(bedroom);
-		}
-
-	};
-
-
-}
-
-
 
 void BedroomScene::draw() {
 	RenderWindow& window = RenderWindow("Bedroom", Resolution(1920, 1080), WindowMode::Windowed);
 	InputManager manager;
 
 	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	TransformFactory& transFactory = TransformFactory(world);
+	TransformFactory& transformFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(5.4f, 10.0f, -2.9f), vec3(70.f, 50.f, -175.f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
@@ -165,16 +109,16 @@ void BedroomScene::draw() {
 	LightManager lightManager;
 	RenderPipeline& shaderManager = RenderPipeline(materialFactory);
 	
-	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory, manager);
+	RenderScene& scene = RenderScene(transformFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory, manager);
 	WorldPhysics& physics = WorldPhysics();
 
-	BilateralFilter& blur = BilateralFilter(1.5f, 0.7f);
 	DefaultPostProcess& def = DefaultPostProcess(9.f);
-	SSAO& ssao = SSAO(blur, 10.f);
 	RenderContext context;
 	DeferredLighting& lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer);
-	renderer.addSSAO(ssao);
+	renderer.setScene(scene);
+
+	Application& app = Application(window, manager, renderer);
 
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 		[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
@@ -183,7 +127,12 @@ void BedroomScene::draw() {
 	BRDFIntegrationMap brdfInt;
 	CubeMapFactory& cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
 
-	Transform& probeTransform = transFactory.CreateTransform(vec3(0.5f, 7.1f, 5.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+	GUIRenderer& gui = GUIRenderer(window, context);
+	renderer.addGUIRenderer(&gui);
+
+
+
+	Transform& probeTransform = transformFactory.CreateTransform(vec3(0.5f, 7.1f, 5.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 	DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024, 20, 20, 20);
 
 	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv3/Tropical_Beach_3k.hdr");
@@ -194,15 +143,27 @@ void BedroomScene::draw() {
 	scene.setSkybox(skybox);
 	lightManager.addReflectionProbe(probe);
 	
-	renderer.setScene(scene);
-	scene.addRequester(ssao);
 
-	SceneControlObject& testScene = TestScene3(materialFactory, meshFactory, 
-		lightManager, shaderManager, scene, transFactory, &physics);
+	float lightIntensity = 50.f;
+	Transform& lightTransform1 = transformFactory.CreateTransform(vec3(0.01f, 9.4f, -0.1f), vec3(-180.0f, 0, -50), vec3(1.f), true);
+	ShadowMapConfiguration config = ShadowMapConfiguration(0.0001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 7.f, 10);
+	lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity * 0.69, lightIntensity * 0.32, lightIntensity * 0.22), config);
 
-	scene.init();
+	lightIntensity = 100.f;
+	float angle = glm::cos(glm::radians(25.5f));
+	float outerAngle = glm::cos(glm::radians(27.5f));
 
-	GUIRenderer& gui = GUIRenderer(window, context);
+	Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-23.4f, 19.69f, -8.7f), vec3(123.4f, 58.5f, 2.9f), vec3(1.f), true);
+	ShadowMapConfiguration config2 = ShadowMapConfiguration(0.0001f, ShadowMapType::Hard, ShadowmapResolution::Huge);
+	SpotLight& spotLight = lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity * 0.85f, lightIntensity * 0.87f, lightIntensity * 0.66f), angle, outerAngle, config2);
+
+	float scale = 0.05f;
+	Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(scale));
+	MeshRenderer& bedroom = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/bedroom/Bedroom2.obj"),
+		meshTransform2, CullingMode::cullFront, "Bedroom");
+	scene.addMeshRenderer(bedroom);
+
+
 	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
 	objectLister.add(camera);
 	gui.addElement(objectLister);
@@ -210,7 +171,12 @@ void BedroomScene::draw() {
 	gui.addElement(postLister);
 	SystemInformation& sysInfo = SystemInformation(window, 0.01f, 0.74f, 0.17f, 0.075f);
 	gui.addElement(sysInfo);
-	renderer.addGUIRenderer(&gui);
+
+
+	BilateralFilter& blur = BilateralFilter(1.5f, 0.7f);
+	SSAO& ssao = SSAO(blur, 10.f);
+	renderer.addSSAO(ssao);
+	scene.addRequester(ssao);
 
 	ImageBasedLighting& ibl = ImageBasedLighting(scene);
 	renderer.addEffect(ibl, ibl);
@@ -223,7 +189,7 @@ void BedroomScene::draw() {
 	postLister.add(groupSnippet);
 
 	GaussianBlur& ayy = GaussianBlur();
-	VolumetricLight& vol = VolumetricLight(*spotLight3, 0.7f, 14.f, 250);
+	VolumetricLight& vol = VolumetricLight(spotLight, 0.7f, 14.f, 250);
 	BlurredPostEffect& volSmooth = BlurredPostEffect(vol, ayy, 0.25f, 0.2f);
 	VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 	GaussianBlurSnippet& blurSnippet = GaussianBlurSnippet(ayy);
@@ -249,8 +215,6 @@ void BedroomScene::draw() {
 	renderer.addEffect(fxaa);
 	postLister.add(fxaa);
 
-	renderer.linkInformation();
-	
-	Application& app = Application(window, manager, renderer);
+
 	app.run();
 }

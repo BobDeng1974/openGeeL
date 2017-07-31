@@ -12,7 +12,6 @@
 #include "../renderer/renderer/rendercontext.h"
 #include "../application/application.h"
 
-#include "../renderer/scripting/scenecontrolobject.h"
 #include "../renderer/inputmanager.h"
 #include "../renderer/window.h"
 #include "../renderer/texturing/texture.h"
@@ -89,70 +88,7 @@
 
 #include "giscene.h"
 
-#define pi 3.141592f
-
 using namespace geeL;
-
-
-namespace {
-
-	class TestScene7 : public SceneControlObject {
-
-	public:
-		LightManager& lightManager;
-		MaterialFactory& materialFactory;
-		RenderPipeline& shaderManager;
-		TransformFactory transformFactory;
-		MeshFactory& meshFactory;
-		Physics* physics;
-
-		PointLight* point;
-
-
-		TestScene7(MaterialFactory& materialFactory, MeshFactory& meshFactory, LightManager& lightManager,
-			RenderPipeline& shaderManager, RenderScene& scene, TransformFactory& transformFactory, Physics* physics)
-			: SceneControlObject(scene),
-			materialFactory(materialFactory), meshFactory(meshFactory), lightManager(lightManager),
-			shaderManager(shaderManager), transformFactory(transformFactory), physics(physics) {
-		
-			init();
-		}
-
-
-		virtual void init() {
-			float lightIntensity = 500.f;
-			//Transform& lightTransform1 = transformFactory.CreateTransform(vec3(144.f, 82.2f, 132.f), vec3(0.f), vec3(1.f));
-			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(131.f, 72.2f, 128.f), vec3(0.f), vec3(1.f), true);
-			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 20.f, 15U, 150.f);
-			lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
-
-
-			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 121.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
-			MeshRenderer& buddha = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/classics/buddha.obj"),
-				meshTransform2, CullingMode::cullFront, "Buddha");
-			scene.addMeshRenderer(buddha);
-
-			buddha.iterateMaterials([&](MaterialContainer& container) {
-				container.setFloatValue("Transparency", 0.01f);
-				container.setFloatValue("Roughness", 0.25f);
-				container.setFloatValue("Metallic", 0.4f);
-				container.setVectorValue("Color", vec3(0.1f));
-			});
-
-
-			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(152.f, 24.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
-			MeshRenderer& sponz = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
-				meshTransform6, CullingMode::cullFront, "Sponza");
-			scene.addMeshRenderer(sponz);
-
-			sponz.iterateMaterials([&](MaterialContainer& container) {
-				if(container.name == "fabric_g")
-					container.setVectorValue("Emissivity", vec3(0.08f));
-			});
-		}
-
-	};
-}
 
 
 void SponzaGIScene::draw() {
@@ -160,7 +96,7 @@ void SponzaGIScene::draw() {
 	InputManager manager;
 
 	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-	TransformFactory& transFactory = TransformFactory(world);
+	TransformFactory& transformFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(41.f, 40.2f, 115.0f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 15.f, 0.65f, 60.f, window.getWidth(), window.getHeight(), 0.1f, 500.f);
@@ -170,31 +106,64 @@ void SponzaGIScene::draw() {
 	MeshFactory& meshFactory = MeshFactory(materialFactory);
 	LightManager lightManager;
 	RenderPipeline& shaderManager = RenderPipeline(materialFactory);
-	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory, manager);
+	RenderScene& scene = RenderScene(transformFactory.getWorldTransform(), lightManager, shaderManager, camera, materialFactory, manager);
 	Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 
 	DefaultPostProcess& def = DefaultPostProcess(15.f);
 	RenderContext context;
 	DeferredLighting& lighting = DeferredLighting(scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer);
+	renderer.setScene(scene);
+
+	Application& app = Application(window, manager, renderer);
 
 	std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 		[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
 
 	CubeBuffer cubeBuffer;
+	
+	GUIRenderer& gui = GUIRenderer(window, context);
+	renderer.addGUIRenderer(&gui);
+
+
 	EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv4/MonValley_G_DirtRoad_3k.hdr");
 	EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeBuffer, 256);
 	Skybox& skybox = Skybox(envCubeMap);
 	scene.setSkybox(skybox);
 
-	renderer.setScene(scene);
 
-	SceneControlObject& testScene = TestScene7(materialFactory, meshFactory,
-		lightManager, shaderManager, scene, transFactory, nullptr);
 
-	scene.init();
+	float lightIntensity = 500.f;
+	Transform& lightTransform1 = transformFactory.CreateTransform(vec3(131.f, 72.2f, 128.f), vec3(0.f), vec3(1.f), true);
+	ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 20.f, 15U, 150.f);
+	lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
 
-	GUIRenderer& gui = GUIRenderer(window, context);
+
+	Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 121.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
+	MeshRenderer& buddha = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/classics/buddha.obj"),
+		meshTransform2, CullingMode::cullFront, "Buddha");
+	scene.addMeshRenderer(buddha);
+
+	buddha.iterateMaterials([&](MaterialContainer& container) {
+		container.setFloatValue("Transparency", 0.01f);
+		container.setFloatValue("Roughness", 0.25f);
+		container.setFloatValue("Metallic", 0.4f);
+		container.setVectorValue("Color", vec3(0.1f));
+	});
+
+
+	Transform& meshTransform6 = transformFactory.CreateTransform(vec3(152.f, 24.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
+	MeshRenderer& sponz = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
+		meshTransform6, CullingMode::cullFront, "Sponza");
+	scene.addMeshRenderer(sponz);
+
+	sponz.iterateMaterials([&](MaterialContainer& container) {
+		if (container.name == "fabric_g")
+			container.setVectorValue("Emissivity", vec3(0.08f));
+	});
+	
+
+
 	ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
 	objectLister.add(camera);
 	gui.addElement(objectLister);
@@ -202,7 +171,7 @@ void SponzaGIScene::draw() {
 	gui.addElement(postLister);
 	SystemInformation& sysInfo = SystemInformation(window, 0.01f, 0.74f, 0.17f, 0.075f);
 	gui.addElement(sysInfo);
-	renderer.addGUIRenderer(&gui);
+	
 
 	postLister.add(def);
 
@@ -237,8 +206,6 @@ void SponzaGIScene::draw() {
 	renderer.addEffect(fxaa);
 	postLister.add(fxaa);
 
-	renderer.linkInformation();
-
-	Application& app = Application(window, manager, renderer);
+	
 	app.run();
 }

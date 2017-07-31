@@ -1,7 +1,6 @@
 #include "renderer.h"
 #include "scene.h"
 #include "window.h"
-#include "scripting\scenecontrolobject.h"
 #include "inputmanager.h"
 #include "cameras/camera.h"
 #include "renderer\rendercontext.h"

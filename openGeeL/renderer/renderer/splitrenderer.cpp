@@ -10,7 +10,6 @@
 #include "splitrenderer.h"
 #include "../window.h"
 #include "../utility/viewport.h"
-#include "../scripting/scenecontrolobject.h"
 #include "../inputmanager.h"
 
 #define fps 10

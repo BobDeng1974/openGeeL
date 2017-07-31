@@ -29,6 +29,8 @@ namespace geeL {
 		CubeMapFactory(CubeBuffer& buffer, ReflectionProbeRender renderCall, BRDFIntegrationMap& integrationMap);
 		~CubeMapFactory();
 
+		CubeBuffer& getBuffer();
+
 		IrradianceMap& createIrradianceMap(const CubeMap& environmentMap, unsigned int resolution = 32);
 
 		PrefilteredEnvironmentMap& createPrefilteredEnvironmentMap(const CubeMap& environmentMap, 

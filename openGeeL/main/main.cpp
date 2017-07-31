@@ -6,6 +6,7 @@
 #include "deerscene.h"
 #include "sponzascene.h"
 #include "giscene.h"
+#include "sponza.h"
 
 
 int main() {
@@ -13,8 +14,10 @@ int main() {
 	//DeerScene::draw();
 	//ScieneScene::draw();
 	//ArthouseScene::draw();
-	SponzaScene::draw();
+	//SponzaScene::draw();
 	//SponzaGIScene::draw();
+
+	Sponza2Scene::draw();
 
 	//RenderTest::draw();
 	//RaymarchTest::draw();

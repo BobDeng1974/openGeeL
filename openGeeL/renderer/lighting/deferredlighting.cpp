@@ -15,6 +15,7 @@ namespace geeL {
 	void DeferredLighting::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
+		scene.init();
 		scene.getLightmanager().bindShadowMaps(shader);
 
 		projectionLocation = shader.getLocation("projection");

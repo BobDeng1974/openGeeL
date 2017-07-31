@@ -14,7 +14,6 @@
 #include "../texturing/rendertexture.h"
 #include "../texturing/imagetexture.h"
 #include "../framebuffer/gbuffer.h"
-#include "../scripting/scenecontrolobject.h"
 #include "../postprocessing/drawdefault.h"
 #include "../postprocessing/ssao.h"
 #include "../postprocessing/postprocessing.h"
