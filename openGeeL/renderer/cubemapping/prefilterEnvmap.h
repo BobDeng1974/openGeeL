@@ -18,7 +18,7 @@ namespace geeL {
 		~PrefilteredEnvironmentMap();
 
 		virtual void add(RenderShader& shader, std::string name) const;
-		virtual void update();
+		virtual void draw();
 
 	private:
 		RenderShader* conversionShader;

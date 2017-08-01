@@ -22,7 +22,7 @@ namespace geeL {
 		conversionShader->mapOffset = 1;
 		conversionShader->addMap(map, "environmentMap");
 
-		update();
+		draw();
 	}
 
 	EnvironmentCubeMap::~EnvironmentCubeMap() {
@@ -31,7 +31,7 @@ namespace geeL {
 	}
 
 
-	void EnvironmentCubeMap::update() {
+	void EnvironmentCubeMap::draw() {
 		frameBuffer.init(*texture);
 
 		glm::mat4 projection = perspective(90.0f, 1.0f, 0.1f, 10.0f);

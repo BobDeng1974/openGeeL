@@ -36,7 +36,7 @@ namespace geeL {
 		shader.addMap(*texture, name + "irradiance");
 	}
 
-	void IrradianceMap::update() {
+	void IrradianceMap::draw() {
 		frameBuffer.init(*texture);
 
 		glm::mat4 projection = perspective(90.0f, 1.0f, 0.1f, 10.0f);

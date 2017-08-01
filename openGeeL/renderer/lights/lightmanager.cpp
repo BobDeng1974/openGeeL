@@ -193,7 +193,7 @@ namespace geeL {
 	void LightManager::drawReflectionProbes() const {
 		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
 			DynamicCubeMap& probe = **it;
-			probe.update();
+			probe.draw();
 		}
 	}
 

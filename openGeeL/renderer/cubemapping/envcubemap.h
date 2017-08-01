@@ -22,7 +22,7 @@ namespace geeL {
 		CubeBuffer& frameBuffer;
 		RenderShader* conversionShader;
 
-		void update();
+		void draw();
 
 	};
 }

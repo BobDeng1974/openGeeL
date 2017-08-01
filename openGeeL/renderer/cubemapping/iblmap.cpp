@@ -9,7 +9,7 @@ namespace geeL {
 	IBLMap::IBLMap(BRDFIntegrationMap& brdfIntMap, IrradianceMap& irrMap, PrefilteredEnvironmentMap& preEnvMap)
 		: DynamicCubeMap(&irrMap.getTexture()), brdfIntMap(brdfIntMap), irrMap(irrMap), preEnvMap(preEnvMap) {
 	
-		update();
+		draw();
 	}
 
 	IBLMap::IBLMap(const IBLMap& map) 
@@ -27,9 +27,9 @@ namespace geeL {
 		preEnvMap.add(shader, name);
 	}
 
-	void IBLMap::update() {
-		irrMap.update();
-		preEnvMap.update();
+	void IBLMap::draw() {
+		irrMap.draw();
+		preEnvMap.draw();
 	}
 
 
@@ -53,10 +53,10 @@ namespace geeL {
 		preEnvMap.add(shader, name);
 	}
 
-	void DynamicIBLMap::update() {
-		baseMap.update();
-		irrMap.update();
-		preEnvMap.update();
+	void DynamicIBLMap::draw() {
+		baseMap.draw();
+		irrMap.draw();
+		preEnvMap.draw();
 	}
 
 	const CubeMap& DynamicIBLMap::getEnvironmentMap() const {

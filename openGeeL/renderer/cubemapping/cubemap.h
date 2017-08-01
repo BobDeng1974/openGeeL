@@ -40,7 +40,7 @@ namespace geeL {
 	class DynamicCubeMap : public CubeMap {
 
 	public:
-		virtual void update() = 0;
+		virtual void draw() = 0;
 
 	protected:
 		DynamicCubeMap(TextureCube* texture) : CubeMap(texture) {}

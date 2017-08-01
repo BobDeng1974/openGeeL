@@ -25,7 +25,7 @@ namespace geeL {
 		virtual void bind(const Camera& camera, const RenderShader& shader,
 			const std::string& name, ShaderTransformSpace space) const;
 
-		virtual void update();
+		virtual void draw();
 
 	private:
 		CubeBuffer& frameBuffer;

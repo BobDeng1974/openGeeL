@@ -47,7 +47,7 @@ namespace geeL {
 	}
 
 
-	void ReflectionProbe::update() {
+	void ReflectionProbe::draw() {
 		frameBuffer.init(*texture);
 
 		SimpleCamera& cam = SimpleCamera(transform);

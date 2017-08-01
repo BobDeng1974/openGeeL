@@ -19,7 +19,7 @@ namespace geeL {
 
 		virtual void bindMap(const RenderShader& shader, std::string name) const;
 		virtual void add(RenderShader& shader, std::string name) const;
-		virtual void update();
+		virtual void draw();
 
 	private:
 		BRDFIntegrationMap& brdfIntMap;
@@ -38,7 +38,7 @@ namespace geeL {
 
 		virtual void draw(const RenderShader& shader, std::string name) const;
 		virtual void add(RenderShader& shader, std::string name) const;
-		virtual void update();
+		virtual void draw();
 
 		const CubeMap& getEnvironmentMap() const;
 
