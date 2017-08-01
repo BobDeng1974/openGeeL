@@ -10,7 +10,7 @@ using namespace std;
 
 namespace geeL {
 
-	WorldPhysics::WorldPhysics() {
+	WorldPhysics::WorldPhysics() : ThreadedObject(30) {
 		init();
 	}
 

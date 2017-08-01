@@ -7,9 +7,16 @@ namespace geeL {
 	class ThreadedObject {
 
 	public:
+		ThreadedObject(long FPS = 60);
+
 		virtual void runStart() {}
 		virtual void run() {}
 		virtual void runEnd() {}
+
+		long getFPS() const;
+
+	private:
+		long FPS;
 
 	};
 
@@ -18,19 +25,23 @@ namespace geeL {
 	class ContinuousThread {
 
 	public:
-		ContinuousThread(ThreadedObject& obj, long FPS = 60);
+		ContinuousThread(ThreadedObject& obj);
 
 		//Returns and starts std::thread that runs containing threaded object
 		std::thread start();
 
 	private:
-		long FPS;
 		ThreadedObject& obj;
 
 		void run();
 
 	};
 
+
+
+	inline ThreadedObject::ThreadedObject(long FPS) : FPS(FPS) {}
+
+	inline long ThreadedObject::getFPS() const { return FPS; }
 
 }
 

@@ -8,7 +8,7 @@ using namespace std;
 
 namespace geeL {
 
-	ContinuousThread::ContinuousThread(ThreadedObject& obj, long FPS) : obj(obj), FPS(FPS) {}
+	ContinuousThread::ContinuousThread(ThreadedObject& obj) : obj(obj) {}
 
 
 	std::thread ContinuousThread::start() {
@@ -20,7 +20,7 @@ namespace geeL {
 		obj.runStart();
 
 		Time& time = Time();
-		long ms = 1000L / FPS;
+		long ms = 1000L / obj.getFPS();
 
 		while (!Application::closing()) {
 			time.reset();
