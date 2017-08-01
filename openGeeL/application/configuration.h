@@ -10,6 +10,7 @@
 #include "shader/rendershader.h"
 #include "renderer/rendercontext.h"
 #include "application.h"
+#include "threading.h"
 
 #include "inputmanager.h"
 #include "window.h"

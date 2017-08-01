@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="application\application.cpp" />
     <ClCompile Include="application\configuration.cpp" />
+    <ClCompile Include="application\threading.cpp" />
     <ClCompile Include="interface\elements\objectlister.cpp" />
     <ClCompile Include="interface\elements\posteffectlister.cpp" />
     <ClCompile Include="interface\elements\systeminformation.cpp" />
@@ -274,6 +275,7 @@
     <ClInclude Include="application\configuration.h" />
     <ClInclude Include="application\objectwrapper.h" />
     <ClInclude Include="application\scripting\component.h" />
+    <ClInclude Include="application\threading.h" />
     <ClInclude Include="interface\elements\objectlister.h" />
     <ClInclude Include="interface\elements\posteffectlister.h" />
     <ClInclude Include="interface\elements\systeminformation.h" />

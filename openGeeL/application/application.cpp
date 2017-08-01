@@ -9,6 +9,7 @@
 #include "renderer.h"
 #include "window.h"
 #include "inputmanager.h"
+#include "threading.h"
 #include "application.h"
  
 using namespace std;
@@ -35,7 +36,8 @@ namespace geeL {
 		glfwMakeContextCurrent(0);
 		
 		thread renderThread([this]() { renderer.render(); });
-		
+		initThreads();
+
 		Time& time = Time();
 		Time& inner = Time();
 
@@ -59,11 +61,36 @@ namespace geeL {
 		close = true;
 
 		renderThread.join();
+		joinThreads();
+
 		window.close();
+	}
+
+	void Application::addThread(ContinuousThread& thread) {
+		tempThreads.push_back(&thread);
 	}
 
 	bool Application::closing() {
 		return close;
+	}
+
+	void Application::initThreads() {
+		for (auto it(tempThreads.begin()); it != tempThreads.end(); it++) {
+			ContinuousThread& thread = **it;
+
+			threads.push_back(std::move(thread.start()));
+		}
+
+		tempThreads.clear();
+	}
+
+	void Application::joinThreads() {
+		for (auto it(threads.begin()); it != threads.end(); it++) {
+			std::thread& thread = *it;
+
+			if(thread.joinable())
+				thread.join();
+		}
 	}
 
 }

@@ -46,10 +46,7 @@ namespace geeL {
 	}
 
 	void WorldPhysics::run() {
-		while (!Application::closing()) {
-			update();
-			this_thread::sleep_for(chrono::milliseconds(33));
-		}
+		update();
 	}
 
 	void WorldPhysics::intersect(glm::vec3 start, glm::vec3 end, RayCastHit& hit) const {

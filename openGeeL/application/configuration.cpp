@@ -22,7 +22,7 @@ namespace geeL {
 		Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 
 
-		DefaultPostProcess& def = DefaultPostProcess(3.5f);
+		DefaultPostProcess& def = DefaultPostProcess();
 		RenderContext& context = RenderContext();
 		DeferredLighting& lighting = DeferredLighting(scene);
 		DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer);

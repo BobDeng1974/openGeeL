@@ -3,6 +3,7 @@
 
 #include <list>
 #include "physics.h"
+#include "threading.h"
 
 class btDiscreteDynamicsWorld;
 class btBroadphaseInterface;
@@ -17,7 +18,7 @@ namespace geeL {
 	class Collider;
 
 	//Physics that emulate those of the real world
-	class WorldPhysics : public Physics {
+	class WorldPhysics : public Physics, public ThreadedObject {
 
 	public:
 		WorldPhysics();
@@ -27,7 +28,7 @@ namespace geeL {
 
 		//Run complete physics simulation.  
 		//Should be called in separate thread
-		void run();
+		virtual void run();
 
 		virtual void intersect(glm::vec3 start, glm::vec3 end, RayCastHit& hit) const;
 

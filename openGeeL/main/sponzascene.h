@@ -53,7 +53,6 @@ public:
 			lightManager.addReflectionProbe(probe);
 
 
-
 			float lightIntensity = 3200.f;
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-2.4f, 45.6f, -4.6f), vec3(0.f), vec3(1.f), true);
 			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Huge);
@@ -88,6 +87,7 @@ public:
 			gui.addElement(sysInfo);
 
 
+			def.setExposure(3.5f);
 			postLister.add(def);
 
 			BilateralFilter& blur = BilateralFilter(1.3f, 0.7f);
@@ -119,6 +119,7 @@ public:
 			FXAA& fxaa = FXAA();
 			renderer.addEffect(fxaa);
 			postLister.add(fxaa);
+
 
 			app.run();
 		};

@@ -432,6 +432,9 @@
     <ClCompile Include="renderer\renderscene.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
+    <ClCompile Include="application\threading.cpp">
+      <Filter>application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -859,6 +862,9 @@
     </ClInclude>
     <ClInclude Include="main\testscene.h">
       <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="application\threading.h">
+      <Filter>application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
