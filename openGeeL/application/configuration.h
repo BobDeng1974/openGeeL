@@ -6,44 +6,54 @@
 #include <glfw3.h>
 #include <iostream>
 #include <functional>
-#include "framebuffer/gbuffer.h"
-#include "shader/rendershader.h"
-#include "renderer/rendercontext.h"
+
 #include "application.h"
 #include "threading.h"
-
 #include "inputmanager.h"
 #include "window.h"
-#include "texturing/texture.h"
-#include "texturing/imagetexture.h"
-#include "texturing/layeredtexture.h"
+#include "pipeline.h"
+#include "renderscene.h"
+
+#include "animation/animator.h"
+#include "animation/skeleton.h"
 
 #include "cameras/camera.h"
 #include "cameras/perspectivecamera.h"
+
+#include "cubemapping/cubemap.h"
+#include "cubemapping/texcubemap.h"
+#include "cubemapping/envcubemap.h"
+#include "cubemapping/irrmap.h"
+#include "cubemapping/prefilterEnvmap.h"
+#include "cubemapping/iblmap.h"
+#include "cubemapping/skybox.h"
+#include "cubemapping/reflectionprobe.h"
+#include "cubemapping/cubemapfactory.h"
+
+#include "framebuffer/cubebuffer.h"
+#include "framebuffer/gbuffer.h"
+
 #include "lights/light.h"
 #include "lights/lightmanager.h"
 #include "lights/pointlight.h"
 #include "lights/directionallight.h"
 #include "lights/spotlight.h"
-#include "renderer/deferredrenderer.h"
 
-#include "transformation/transform.h"
-#include "transformation/transformfactory.h"
+#include "lighting/deferredlighting.h"
+#include "lighting/ibl.h"
+#include "lighting/conetracer.h"
 
 #include "materials/material.h"
 #include "materials/defaultmaterial.h"
 #include "materials/genericmaterial.h"
 #include "materials/materialfactory.h"
-#include "pipeline.h"
+
 #include "meshes/mesh.h"
 #include "meshes/model.h"
 #include "meshes/meshrenderer.h"
 #include "meshes/skinnedrenderer.h"
 #include "meshes/meshfactory.h"
 
-#include "lighting/deferredlighting.h"
-#include "lighting/ibl.h"
-#include "lighting/conetracer.h"
 #include "postprocessing/postprocessing.h"
 #include "postprocessing/colorcorrection.h"
 #include "postprocessing/gammacorrection.h"
@@ -63,24 +73,21 @@
 #include "postprocessing/lensflare.h"
 #include "postprocessing/motionblur.h"
 
+#include "renderer/rendercontext.h"
+#include "renderer/deferredrenderer.h"
+
+#include "texturing/brdfIntMap.h"
+#include "texturing/envmap.h"
+#include "texturing/texture.h"
+#include "texturing/imagetexture.h"
+#include "texturing/layeredtexture.h"
+
+#include "transformation/transform.h"
+#include "transformation/transformfactory.h"
+
 #include "voxelization/voxelizer.h"
 #include "voxelization/voxeloctree.h"
 #include "voxelization/voxeltexture.h"
-
-#include "cubemapping/cubemap.h"
-#include "cubemapping/texcubemap.h"
-#include "texturing/envmap.h"
-#include "cubemapping/envcubemap.h"
-#include "cubemapping/irrmap.h"
-#include "cubemapping/prefilterEnvmap.h"
-#include "cubemapping/iblmap.h"
-#include "cubemapping/skybox.h"
-#include "cubemapping/reflectionprobe.h"
-#include "texturing/brdfIntMap.h"
-#include "renderscene.h"
-#include "utility/rendertime.h"
-#include "framebuffer/cubebuffer.h"
-#include "cubemapping/cubemapfactory.h"
 
 #include "guirenderer.h"
 #include "elements/objectlister.h"
@@ -92,8 +99,7 @@
 #include "physics.h"
 #include "worldphysics.h"
 #include "rigidbody.h"
-#include "animation/animator.h"
-#include "animation/skeleton.h"
+
 
 namespace geeL {
 
