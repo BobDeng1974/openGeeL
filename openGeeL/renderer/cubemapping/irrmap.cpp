@@ -28,8 +28,8 @@ namespace geeL {
 		delete conversionShader;
 	}
 
-	void IrradianceMap::draw(const RenderShader& shader, std::string name) const {
-		environmentMap.draw(shader, name);
+	void IrradianceMap::bindMap(const RenderShader& shader, std::string name) const {
+		environmentMap.bindMap(shader, name);
 	}
 
 	void IrradianceMap::add(RenderShader& shader, std::string name) const {

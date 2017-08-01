@@ -16,8 +16,8 @@ namespace geeL {
 		: DynamicCubeMap(map), brdfIntMap(map.brdfIntMap), irrMap(map.irrMap), preEnvMap(map.preEnvMap) {}
 
 
-	void IBLMap::draw(const RenderShader& shader, std::string name) const {
-		irrMap.draw(shader, name);
+	void IBLMap::bindMap(const RenderShader& shader, std::string name) const {
+		irrMap.bindMap(shader, name);
 	}
 
 	void IBLMap::add(RenderShader& shader, std::string name) const {
@@ -42,7 +42,7 @@ namespace geeL {
 		: DynamicCubeMap(map), baseMap(map.baseMap), brdfIntMap(map.brdfIntMap), irrMap(map.irrMap), preEnvMap(map.preEnvMap) {}
 
 	void DynamicIBLMap::draw(const RenderShader& shader, std::string name) const {
-		baseMap.draw(shader, name);
+		baseMap.bindMap(shader, name);
 	}
 
 	void DynamicIBLMap::add(RenderShader& shader, std::string name) const {

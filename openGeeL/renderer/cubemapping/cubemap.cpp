@@ -8,7 +8,7 @@
 
 namespace geeL {
 
-	void CubeMap::draw(const RenderShader& shader, std::string name) const {
+	void CubeMap::bindMap(const RenderShader& shader, std::string name) const {
 		glActiveTexture(GL_TEXTURE1);
 		shader.bind<int>(name, 1);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, getID());

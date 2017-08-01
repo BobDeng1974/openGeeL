@@ -22,7 +22,7 @@ namespace geeL {
 		shader.bind<glm::mat4>("view", view);
 		shader.bind<glm::mat4>("projection", camera.getProjectionMatrix());
 		
-		cubeMap.draw(shader, "skybox");
+		cubeMap.bindMap(shader, "skybox");
 
 		SCREENCUBE.drawComplete();
 		glDepthFunc(GL_LESS);
