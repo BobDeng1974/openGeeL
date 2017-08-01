@@ -243,9 +243,6 @@
     <ClCompile Include="interface\guielement.cpp">
       <Filter>interface</Filter>
     </ClCompile>
-    <ClCompile Include="main\testscene.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\animation\animation.cpp">
       <Filter>renderer\animation</Filter>
     </ClCompile>
@@ -309,23 +306,8 @@
     <ClCompile Include="main\raymarchscene.cpp">
       <Filter>main</Filter>
     </ClCompile>
-    <ClCompile Include="main\sciencescene.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
-    <ClCompile Include="main\bedroomscene.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
-    <ClCompile Include="main\arthouse.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\shadowmapping\shadowmapconfig.cpp">
       <Filter>renderer\shadowmapping</Filter>
-    </ClCompile>
-    <ClCompile Include="main\deerscene.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
-    <ClCompile Include="main\sponzascene.cpp">
-      <Filter>main</Filter>
     </ClCompile>
     <ClCompile Include="renderer\postprocessing\fxaa.cpp">
       <Filter>renderer\postprocessing</Filter>
@@ -362,9 +344,6 @@
     </ClCompile>
     <ClCompile Include="renderer\framebuffer\bufferutil.cpp">
       <Filter>renderer\framebuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="main\giscene.cpp">
-      <Filter>main</Filter>
     </ClCompile>
     <ClCompile Include="renderer\voxelization\voxeloctree.cpp">
       <Filter>renderer\voxelization</Filter>
@@ -629,9 +608,6 @@
     <ClInclude Include="interface\elements\systeminformation.h">
       <Filter>interface\elements</Filter>
     </ClInclude>
-    <ClInclude Include="main\testscene.h">
-      <Filter>main</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\animation\skeleton.h">
       <Filter>renderer\animation</Filter>
     </ClInclude>
@@ -707,23 +683,8 @@
     <ClInclude Include="main\raymarchscene.h">
       <Filter>main</Filter>
     </ClInclude>
-    <ClInclude Include="main\sciencescene.h">
-      <Filter>main</Filter>
-    </ClInclude>
-    <ClInclude Include="main\bedroomscene.h">
-      <Filter>main</Filter>
-    </ClInclude>
-    <ClInclude Include="main\arthouse.h">
-      <Filter>main</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\shadowmapping\shadowmapconfig.h">
       <Filter>renderer\shadowmapping</Filter>
-    </ClInclude>
-    <ClInclude Include="main\deerscene.h">
-      <Filter>main</Filter>
-    </ClInclude>
-    <ClInclude Include="main\sponzascene.h">
-      <Filter>main</Filter>
     </ClInclude>
     <ClInclude Include="renderer\lights\directionallight.h">
       <Filter>renderer\lights</Filter>
@@ -760,9 +721,6 @@
     </ClInclude>
     <ClInclude Include="renderer\framebuffer\bufferutil.h">
       <Filter>renderer\framebuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="main\giscene.h">
-      <Filter>main</Filter>
     </ClInclude>
     <ClInclude Include="renderer\voxelization\voxeloctree.h">
       <Filter>renderer\voxelization</Filter>
@@ -851,9 +809,6 @@
     <ClInclude Include="renderer\postprocessing\postfactory.h">
       <Filter>renderer\postprocessing</Filter>
     </ClInclude>
-    <ClInclude Include="main\sponza.h">
-      <Filter>main</Filter>
-    </ClInclude>
     <ClInclude Include="application\scripting\component.h">
       <Filter>application\scripting</Filter>
     </ClInclude>
@@ -883,6 +838,27 @@
     </ClInclude>
     <ClInclude Include="renderer\renderscene.h">
       <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="main\arthousescene.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="main\bedroomscene.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="main\deerscene.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="main\giscene.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sciencescene.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sponzascene.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="main\testscene.h">
+      <Filter>main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

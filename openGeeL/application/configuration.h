@@ -42,6 +42,7 @@
 
 #include "lighting/deferredlighting.h"
 #include "lighting/ibl.h"
+#include "lighting/conetracer.h"
 #include "postprocessing/postprocessing.h"
 #include "postprocessing/colorcorrection.h"
 #include "postprocessing/gammacorrection.h"
@@ -58,6 +59,12 @@
 #include "postprocessing/volumetriclight.h"
 #include "postprocessing/sobel.h"
 #include "postprocessing/drawdefault.h"
+#include "postprocessing/lensflare.h"
+#include "postprocessing/motionblur.h"
+
+#include "voxelization/voxelizer.h"
+#include "voxelization/voxeloctree.h"
+#include "voxelization/voxeltexture.h"
 
 #include "cubemapping/cubemap.h"
 #include "cubemapping/texcubemap.h"

@@ -1,25 +1,21 @@
-#include "testscene.h"
-#include "sciencescene.h"
-#include "raymarchscene.h"
+#include "arthousescene.h"
 #include "bedroomscene.h"
-#include "arthouse.h"
 #include "deerscene.h"
-#include "sponzascene.h"
 #include "giscene.h"
-#include "sponza.h"
-
+#include "raymarchscene.h"
+#include "sciencescene.h"
+#include "sponzascene.h"
+#include "testscene.h"
 
 int main() {
 	//BedroomScene::draw();
-	//DeerScene::draw();
-	//ScieneScene::draw();
+	DeerScene::draw();
 	//ArthouseScene::draw();
 	//SponzaScene::draw();
 	//SponzaGIScene::draw();
+	//ScienceScene::draw();
 
-	Sponza2Scene::draw();
-
-	//RenderTest::draw();
+	//TestScene::draw();
 	//RaymarchTest::draw();
 
 	return 0;
