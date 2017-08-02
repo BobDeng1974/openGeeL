@@ -41,15 +41,24 @@ namespace geeL {
 		renderer.addGUIRenderer(&gui);
 
 		Physics* physics;
-		if (physicsType == PhysicsType::World)
-			physics = new WorldPhysics();
+		ContinuousThread* physicsThread = nullptr;
+		if (physicsType == PhysicsType::World) {
+			WorldPhysics* wp = new WorldPhysics();
+			physicsThread = new ContinuousThread(*wp);
+			app.addThread(*physicsThread);
+
+			physics = wp;
+		}
 		else
 			physics = new NoPhysics();
+
 
 		initFunction(app, renderer, gui, scene, lightManager, transFactory, meshFactory,
 			materialFactory, cubeMapFactory, def, *physics);
 
+
 		delete physics;
+		if (physicsThread != nullptr) delete physicsThread;
 	}
 
 }
