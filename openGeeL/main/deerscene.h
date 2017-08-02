@@ -63,8 +63,8 @@ public:
 			renderer.addEffect(ssrrSmooth, ssrr);
 			scene.addRequester(ssrr);
 
-			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.3f);
-			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 30.f, 100.f, 0.3f);
+			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.3f, 10.f);
+			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 60.f, 100.f, 0.3f);
 			renderer.addEffect(dof, dof);
 
 			FXAA& fxaa = FXAA(0.f, 0.f);

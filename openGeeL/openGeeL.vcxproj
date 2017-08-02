@@ -257,6 +257,7 @@
     <ClCompile Include="renderer\texturing\rendertexture3D.cpp" />
     <ClCompile Include="renderer\texturing\rendertexturecube.cpp" />
     <ClCompile Include="renderer\texturing\texture.cpp" />
+    <ClCompile Include="renderer\transformation\threadedtransform.cpp" />
     <ClCompile Include="renderer\transformation\transform.cpp" />
     <ClCompile Include="renderer\transformation\transformfactory.cpp" />
     <ClCompile Include="renderer\utility\debug.cpp" />
@@ -394,6 +395,7 @@
     <ClInclude Include="renderer\texturing\rendertexturecube.h" />
     <ClInclude Include="renderer\texturing\texture.h" />
     <ClInclude Include="renderer\texturing\texturetype.h" />
+    <ClInclude Include="renderer\transformation\threadedtransform.h" />
     <ClInclude Include="renderer\transformation\transform.h" />
     <ClInclude Include="renderer\transformation\transformfactory.h" />
     <ClInclude Include="renderer\utility\debug.h" />

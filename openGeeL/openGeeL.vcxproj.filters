@@ -435,6 +435,9 @@
     <ClCompile Include="application\threading.cpp">
       <Filter>application</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\transformation\threadedtransform.cpp">
+      <Filter>renderer\transformation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -865,6 +868,9 @@
     </ClInclude>
     <ClInclude Include="application\threading.h">
       <Filter>application</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\transformation\threadedtransform.h">
+      <Filter>renderer\transformation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
