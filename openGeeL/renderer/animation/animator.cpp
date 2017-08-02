@@ -24,7 +24,7 @@ namespace geeL {
 		: Animator(object, skeleton), currentAnimation(nullptr), currentTime(0.) {}
 
 
-	void SimpleAnimator::update() {
+	void SimpleAnimator::update(Input& input) {
 		if (currentAnimation != nullptr && currentTime < currentAnimation->getDuration()) {
 			currentTime += currentAnimation->getFPS() * RenderTime::deltaTime;
 

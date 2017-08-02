@@ -21,7 +21,7 @@ namespace geeL {
 		~SceneObject();
 
 		//Update object and all its components
-		virtual void update();
+		virtual void update(Input& input);
 
 		//Update objects and all its components after transformation changes
 		virtual void lateUpdate();

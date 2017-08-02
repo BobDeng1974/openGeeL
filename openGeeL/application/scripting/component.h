@@ -1,6 +1,8 @@
 #ifndef  COMPONENT_H
 #define  COMPONENT_H
 
+#include "inputmanager.h"
+
 namespace geeL {
 
 	class SceneObject;
@@ -14,7 +16,7 @@ namespace geeL {
 		void setSceneObject(SceneObject& object);
 
 		virtual void init() {}
-		virtual void update() {}
+		virtual void update(Input& input) {}
 		virtual void lateUpdate() {}
 
 	};

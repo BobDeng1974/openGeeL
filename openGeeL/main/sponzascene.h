@@ -11,11 +11,16 @@ namespace {
 	public:
 
 		float step = 0.01f;
-		virtual void update() {
+		virtual void update(Input& input) {
 			vec3 position = sceneObject->transform.getPosition();
 
 			if (position.x > 12.5f || position.x < -7.f)
 				step = -step;
+
+			if(input.getKey(GLFW_KEY_UP) || input.getKeyHold(GLFW_KEY_UP))
+				sceneObject->transform.translate(vec3(0.1f, 0.f, 0.f));
+			else if(input.getKey(GLFW_KEY_DOWN) || input.getKeyHold(GLFW_KEY_DOWN))
+				sceneObject->transform.translate(vec3(-0.1f, 0.f, 0.f));
 
 			sceneObject->transform.translate(vec3(step, 0.f, 0.f));
 		}
@@ -23,7 +28,6 @@ namespace {
 	};
 
 }
-
 
 
 class SponzaScene {

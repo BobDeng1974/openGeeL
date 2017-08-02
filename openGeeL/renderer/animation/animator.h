@@ -23,7 +23,7 @@ namespace geeL {
 		virtual void resetSkeleton();
 
 		//Tick function of animator. Should be called every frame
-		virtual void update() = 0;
+		virtual void update(Input& input) = 0;
 
 		AnimatedObject& object;
 		Skeleton& skeleton;
@@ -40,7 +40,7 @@ namespace geeL {
 		void stop();
 
 	protected:
-		virtual void update();
+		virtual void update(Input& input);
 
 	private:
 		const Animation* currentAnimation;

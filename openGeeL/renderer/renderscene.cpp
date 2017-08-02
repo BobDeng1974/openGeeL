@@ -138,13 +138,13 @@ namespace geeL {
 
 	void RenderScene::update() {
 		camera->handleInput(input);
-		camera->update();
+		camera->update(input);
 		iterAllObjects([&](MeshRenderer& object) {
-			object.update();
+			object.update(input);
 		});
 
-		lightManager.iterLights([](Light& light) {
-			light.update();
+		lightManager.iterLights([&](Light& light) {
+			light.update(input);
 		});
 
 		worldTransform.update();

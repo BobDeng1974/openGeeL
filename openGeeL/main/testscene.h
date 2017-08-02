@@ -10,7 +10,7 @@ namespace {
 	class RotationComponent : public Component {
 
 	public:
-		virtual void update() {
+		virtual void update(Input& input) {
 			sceneObject->transform.rotate(vec3(0.f, 1.f, 0.f), 1.5f * RenderTime::deltaTime);
 		}
 	};

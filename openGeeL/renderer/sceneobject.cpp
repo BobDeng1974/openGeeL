@@ -17,9 +17,9 @@ namespace geeL {
 	}
 
 
-	void SceneObject::update() {
+	void SceneObject::update(Input& input) {
 		for_each(components.begin(), components.end(), [&](Component* comp) {
-			comp->update();
+			comp->update(input);
 		});
 	}
 
