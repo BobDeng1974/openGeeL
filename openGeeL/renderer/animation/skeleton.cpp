@@ -43,7 +43,7 @@ namespace geeL {
 		return nullptr;
 	}
 
-	void Skeleton::setBone(std::string name, const Transform& transform) {
+	void Skeleton::setBone(std::string name, Transform& transform) {
 		auto it = bones.find(name);
 		if (it != bones.end()) {
 			Transform* trans = it->second;

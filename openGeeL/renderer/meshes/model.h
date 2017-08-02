@@ -69,7 +69,7 @@ namespace geeL {
 		SkinnedModel() : Model(), AnimatedObject() {}
 		SkinnedModel(std::string path) : Model(path), AnimatedObject() {}
 
-		virtual void updateBones(const Skeleton& skeleton);
+		virtual void updateBones(Skeleton& skeleton);
 		virtual void setSkeleton(Skeleton* const skeleton);
 
 		SkinnedMesh& addMesh(SkinnedMesh&& mesh);

@@ -31,77 +31,81 @@ namespace geeL {
 		Transform(vec3 position, vec3 rotation, vec3 scaling, bool isStatic = false);
 		~Transform();
 		
-		const glm::vec3& getPosition() const;
-		const glm::quat& getRotation() const;
-		const glm::vec3& getScaling() const;
-		const glm::vec3& getForwardDirection() const;
-		const glm::vec3& getRightDirection() const;
-		const glm::vec3& getUpDirection() const;
-		const glm::mat4& getMatrix() const;
+		
+		virtual glm::vec3 getPosition() const;
+		virtual glm::quat getRotation() const;
+		virtual glm::vec3 getScaling() const;
+		virtual glm::vec3 getForwardDirection() const;
+		virtual glm::vec3 getRightDirection() const;
+		virtual glm::vec3 getUpDirection() const;
 
-		void setPosition(const vec3& position);
-		void setRotation(const glm::quat& quaternion);
-		void setScaling(const vec3& scaling);
-		void setMatrix(const mat4& matrix);
+		virtual const glm::vec3& getPosition();
+		virtual const glm::quat& getRotation();
+		virtual const glm::vec3& getScaling();
+		virtual const glm::vec3& getForwardDirection();
+		virtual const glm::vec3& getRightDirection();
+		virtual const glm::vec3& getUpDirection();
+		virtual const glm::mat4& getMatrix();
 
-		vec3 getEulerAngles() const;
-		void setEulerAngles(const vec3& eulerAngles);
+		virtual void setPosition(const vec3& position);
+		virtual void setRotation(const glm::quat& quaternion);
+		virtual void setScaling(const vec3& scaling);
+		virtual void setMatrix(const mat4& matrix);
 
-		void translate(const vec3& translation);
-		void rotate(const vec3& axis, float angle);
-		void scale(const vec3& scalar);
+		virtual vec3 getEulerAngles();
+		virtual void setEulerAngles(const vec3& eulerAngles);
 
-		mat4 lookAt() const;
+		virtual void translate(const vec3& translation);
+		virtual void rotate(const vec3& axis, float angle);
+		virtual void scale(const vec3& scalar);
 
-		void iterateChildren(std::function<void(Transform&)> function);
+		virtual mat4 lookAt();
 
-		const Transform* GetParent() const;
+		virtual void iterateChildren(std::function<void(Transform&)> function);
 
 		//Adds a copy of the given transform
 		//as a child to this transform and 
 		//returns a reference to it
-		Transform& AddChild(const Transform& child);
+		virtual Transform& AddChild(const Transform& child);
 
 		//Add the child to this transform. Memory of child will be 
 		//managed by this transform.
-		Transform& AddChild(Transform* child);
+		virtual Transform& AddChild(Transform* child);
 
 		//Remove child from transform. Memory of child will no longer
 		//be taken care off and needs to be managed by caller
-		void RemoveChild(Transform& child);
+		virtual void RemoveChild(Transform& child);
 
-		void ChangeParent(Transform& newParent);
+		virtual const Transform* GetParent() const;
+		virtual void ChangeParent(Transform& newParent);
 
 		//Updates transformation matrix with recent changes to position, rotation and scale.
 		//Needs therefore only to be called when actual changes were made.
-		void update();
-
-		//Returns true if the transform has changed during the 
-		//current cycle (since last 'update' call)
-		bool hasUpdated() const;
+		virtual void update();
 
 		bool Transform::operator==(const Transform& b) const;
 		bool Transform::operator!=(const Transform& b) const;
 
 		unsigned int getID() const;
 
-		void addChangeListener(std::function<void(const Transform&)> listener);
+		virtual void addChangeListener(std::function<void(const Transform&)> listener);
 
-		const std::string& getName() const;
-		void setName(std::string& name);
+		virtual const std::string& getName();
+		virtual void setName(std::string& name);
 
 		virtual std::string toString() const;
 
-	private:
-		unsigned int id;
-		std::string name;
-
+	protected:
 		glm::quat rotation;
 		vec3 position;
 		vec3 scaling;
 		vec3 forward;
 		vec3 up;
 		vec3 right;
+
+	private:
+		unsigned int id;
+		std::string name;
 
 		mat4 matrix;
 		mat4 translationMatrix;
@@ -118,6 +122,10 @@ namespace geeL {
 		void resetMatrix();
 		void updateDirections();
 		void onChange();
+
+		//Returns true if the transform has changed during the 
+		//current cycle (since last 'update' call)
+		virtual bool hasUpdated() const;
 	};
 
 

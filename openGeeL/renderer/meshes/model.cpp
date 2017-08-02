@@ -30,7 +30,7 @@ namespace geeL {
 
 
 
-	void SkinnedModel::updateBones(const Skeleton& skeleton) {
+	void SkinnedModel::updateBones(Skeleton& skeleton) {
 		for (auto it = meshes.begin(); it != meshes.end(); it++) {
 			SkinnedMesh& mesh = *it;
 			mesh.updateMeshBoneData(skeleton);

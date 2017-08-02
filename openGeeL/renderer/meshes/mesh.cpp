@@ -140,12 +140,12 @@ namespace geeL {
 		glBindVertexArray(0);
 	}
 
-	void SkinnedMesh::updateMeshBoneData(const Skeleton& skeleton) {
+	void SkinnedMesh::updateMeshBoneData(Skeleton& skeleton) {
 
 		for (auto it = bones.begin(); it != bones.end(); it++) {
 			const std::string& name = (*it).first;
 			MeshBoneData& data = (*it).second;
-			const Transform* bone = skeleton.getBone(name);
+			Transform* bone = skeleton.getBone(name);
 
 			if(bone != nullptr)
 				data.transform = bone->getMatrix() * data.offsetMatrix;

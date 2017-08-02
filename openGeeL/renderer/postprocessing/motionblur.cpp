@@ -28,7 +28,7 @@ namespace geeL {
 		glm::vec3 offset;
 
 		if (camera != nullptr) {
-			const Transform& transform = camera->transform;
+			Transform& transform = camera->transform;
 			glm::vec3 currPosition = transform.getPosition() + 20.f * transform.getForwardDirection();
 			diff = glm::length(currPosition - prevPosition);
 
@@ -130,7 +130,7 @@ namespace geeL {
 		if (camera == nullptr)
 			throw "No camera attached to velocity buffer\n";
 
-		const Transform& transform = camera->transform;
+		Transform& transform = camera->transform;
 		glm::vec3 currPosition = transform.getPosition() + 20.f * transform.getForwardDirection();
 		glm::vec3 a = camera->TranslateToScreenSpace(currPosition);
 		glm::vec3 b = camera->TranslateToScreenSpace(prevPosition);

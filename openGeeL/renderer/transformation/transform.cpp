@@ -62,36 +62,62 @@ namespace geeL {
 	}
 
 
-	const glm::vec3& Transform::getPosition() const {
+
+	glm::vec3 Transform::getPosition() const {
 		return position;
 	}
 
-	const glm::quat& Transform::getRotation() const {
+	glm::quat Transform::getRotation() const {
 		return rotation;
 	}
 
-	const glm::vec3& Transform::getScaling() const {
+	glm::vec3 Transform::getScaling() const {
 		return scaling;
 	}
 
-	const glm::vec3& Transform::getForwardDirection() const {
+
+	glm::vec3 Transform::getForwardDirection() const {
 		return forward;
 	}
 
-	const glm::vec3& Transform::getRightDirection() const {
+	glm::vec3 Transform::getRightDirection() const {
 		return right;
 	}
 
-	const glm::vec3& Transform::getUpDirection() const {
+	glm::vec3 Transform::getUpDirection() const {
 		return up;
 	}
 
-	const glm::mat4& Transform::getMatrix() const {
+	const glm::vec3& Transform::getPosition() {
+		return position;
+	}
+
+	const glm::quat& Transform::getRotation() {
+		return rotation;
+	}
+
+	const glm::vec3& Transform::getScaling() {
+		return scaling;
+	}
+
+	const glm::vec3& Transform::getForwardDirection() {
+		return forward;
+	}
+
+	const glm::vec3& Transform::getRightDirection() {
+		return right;
+	}
+
+	const glm::vec3& Transform::getUpDirection() {
+		return up;
+	}
+
+	const glm::mat4& Transform::getMatrix() {
 		return matrix;
 	}
 
 	
-	vec3 Transform::getEulerAngles() const {
+	vec3 Transform::getEulerAngles() {
 		return glm::eulerAngles(rotation);
 	}
 
@@ -234,7 +260,7 @@ namespace geeL {
 		status = TransformUpdateStatus::NeedsUpdate;
 	}
 
-	mat4 Transform::lookAt() const {
+	mat4 Transform::lookAt() {
 		return glm::lookAt(position, position + forward, up);
 	}
 
@@ -341,7 +367,7 @@ namespace geeL {
 	}
 
 
-	const string& Transform::getName() const {
+	const string& Transform::getName() {
 		return name;
 	}
 
@@ -351,9 +377,9 @@ namespace geeL {
 
 
 	std::string Transform::toString() const {
-		return "Transform " + getName() + ": " + std::to_string(id) + "\n"
+		return "Transform " + name + ": " + std::to_string(id) + "\n"
 			+ "--Position: " + VectorExtension::vectorString(position) + "\n"
-			+ "--Rotation: " + VectorExtension::vectorString(getEulerAngles()) + "\n"
+			+ "--Rotation: " + VectorExtension::vectorString(glm::eulerAngles(rotation)) + "\n"
 			+ "--Scale:    " + VectorExtension::vectorString(scaling) + "\n"
 			+ "--Forward:  " + VectorExtension::vectorString(forward) + "\n"
 			+ "--Up:       " + VectorExtension::vectorString(up) + "\n"

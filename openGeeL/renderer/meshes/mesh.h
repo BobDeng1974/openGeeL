@@ -119,7 +119,7 @@ namespace geeL {
 
 		virtual void draw() const;
 
-		void updateMeshBoneData(const Skeleton& skeleton);
+		void updateMeshBoneData(Skeleton& skeleton);
 
 		virtual size_t getIndicesCount() const;
 		virtual size_t getVerticesCount() const;
