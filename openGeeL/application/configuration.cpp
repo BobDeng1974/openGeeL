@@ -40,9 +40,10 @@ namespace geeL {
 		GUIRenderer& gui = GUIRenderer(window, context);
 		renderer.addGUIRenderer(&gui);
 
+		Physics& physics = NoPhysics();
 
 		initFunction(app, renderer, gui, scene, lightManager, transFactory, meshFactory,
-			materialFactory, cubeMapFactory, def, nullptr);
+			materialFactory, cubeMapFactory, def, physics);
 
 	}
 

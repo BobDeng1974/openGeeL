@@ -17,7 +17,7 @@ public:
 
 		auto init = [&window, &camera](Application& app, DeferredRenderer& renderer, GUIRenderer& gui, RenderScene& scene,
 			LightManager& lightManager, TransformFactory& transformFactory, MeshFactory& meshFactory, MaterialFactory& materialFactory,
-			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics* physics) {
+			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
 
 			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv4/MonValley_G_DirtRoad_3k.hdr");
 			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeMapFactory.getBuffer(), 256);

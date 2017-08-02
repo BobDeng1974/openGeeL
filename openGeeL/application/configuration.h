@@ -115,7 +115,7 @@ namespace geeL {
 		MaterialFactory& materialFactory,
 		CubeMapFactory& cubeMapFactory,
 		DefaultPostProcess& def,
-		Physics* physics)>;
+		Physics& physics)>;
 
 
 	class Configuration {

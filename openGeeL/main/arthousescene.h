@@ -17,7 +17,7 @@ public:
 
 		auto init = [&window, &camera](Application& app, DeferredRenderer& renderer, GUIRenderer& gui, RenderScene& scene,
 			LightManager& lightManager, TransformFactory& transformFactory, MeshFactory& meshFactory, MaterialFactory& materialFactory,
-			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics* physics) {
+			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
 
 			Transform& probeTransform = transformFactory.CreateTransform(vec3(-6.9f, 1.9f, 2.3f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 			DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024, 20, 20, 20);

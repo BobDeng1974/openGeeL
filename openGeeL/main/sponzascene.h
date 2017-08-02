@@ -38,7 +38,7 @@ public:
 
 		auto init = [&window, &camera](Application& app, DeferredRenderer& renderer, GUIRenderer& gui, RenderScene& scene, 
 			LightManager& lightManager, TransformFactory& transformFactory, MeshFactory& meshFactory, MaterialFactory& materialFactory, 
-			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics* physics) {
+			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
 
 			
 			Transform& probeTransform = transformFactory.CreateTransform(vec3(15.15f, 0.62f, -4.11f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));

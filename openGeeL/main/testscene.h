@@ -29,7 +29,7 @@ public:
 
 		auto init = [&window, &camera](Application& app, DeferredRenderer& renderer, GUIRenderer& gui, RenderScene& scene,
 			LightManager& lightManager, TransformFactory& transformFactory, MeshFactory& meshFactory, MaterialFactory& materialFactory,
-			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics* physics) {
+			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
 
 
 			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv2/Arches_E_PineTree_3k.hdr");
@@ -90,8 +90,8 @@ public:
 			MeshRenderer& sphere1 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/sphere.obj"),
 				meshTransform4, CullingMode::cullFront, "Sphere");
 			//scene.addMeshRenderer(sphere1);
-			//if (physics != nullptr) physics->addSphere(1.f, meshTransform4, RigidbodyProperties(10.f, false));
-			//if (physics != nullptr) physics->addMesh(sphere1.getModel(), meshTransform4, RigidbodyProperties(10.f, false));
+			//physics.addSphere(1.f, meshTransform4, RigidbodyProperties(10.f, false));
+			//physics.addMesh(sphere1.getModel(), meshTransform4, RigidbodyProperties(10.f, false));
 
 			sphere1.iterateMaterials([&](MaterialContainer& container) {
 				container.setVectorValue("Color", vec3(0.f));

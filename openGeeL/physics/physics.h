@@ -2,6 +2,7 @@
 #define PHYSICS_H
 
 #include <vec3.hpp>
+#include "rigidbody.h"
 
 namespace geeL {
 
@@ -42,6 +43,27 @@ namespace geeL {
 		virtual void addStaticMesh(const Model& model, Transform& transform, RigidbodyProperties properties) = 0;
 
 	};
+
+
+	//Physics class that computes no physics. Intended for use as default value
+	class NoPhysics : public Physics {
+
+	public:
+		virtual void update() {}
+
+		virtual void intersect(glm::vec3 start, glm::vec3 end, RayCastHit& hit) const {}
+
+		virtual void addSphere(float radius, Transform& transform, RigidbodyProperties properties) {}
+		virtual void addPlane(const glm::vec3 normal, Transform& transform, RigidbodyProperties properties) {}
+		virtual void addBox(const glm::vec3 magnitude, Transform& transform, RigidbodyProperties properties) {}
+		virtual void addCylinder(const glm::vec3 magnitude, Transform& transform, RigidbodyProperties properties) {}
+		virtual void addCapsule(float radius, float height, Transform& transform, RigidbodyProperties properties) {}
+		virtual void addMesh(const Model& model, Transform& transform, RigidbodyProperties properties) {}
+		virtual void addStaticMesh(const Model& model, Transform& transform, RigidbodyProperties properties) {}
+
+	};
+
+
 }
 
 #endif
