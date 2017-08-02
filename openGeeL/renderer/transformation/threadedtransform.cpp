@@ -60,25 +60,25 @@ namespace geeL {
 
 	void ThreadedTransform::setPosition(const vec3& position) {
 		mutexWrap([&position](Transform& transform) {
-			transform.setPosition(position);
+			transform.Transform::setPosition(position);
 		});
 	}
 
 	void ThreadedTransform::setRotation(const glm::quat& quaternion) {
 		mutexWrap([&quaternion](Transform& transform) {
-			transform.setRotation(quaternion);
+			transform.Transform::setRotation(quaternion);
 		});
 	}
 
 	void ThreadedTransform::setScaling(const vec3& scaling) {
 		mutexWrap([&scaling](Transform& transform) {
-			transform.setScaling(scaling);
+			transform.Transform::setScaling(scaling);
 		});
 	}
 
 	void ThreadedTransform::setMatrix(const mat4& matrix) {
 		mutexWrap([&matrix](Transform& transform) {
-			transform.setMatrix(matrix);
+			transform.Transform::setMatrix(matrix);
 		});
 	}
 
@@ -91,26 +91,26 @@ namespace geeL {
 
 	void ThreadedTransform::setEulerAngles(const vec3& eulerAngles) {
 		mutexWrap([&eulerAngles](Transform& transform) {
-			transform.setEulerAngles(eulerAngles);
+			transform.Transform::setEulerAngles(eulerAngles);
 		});
 	}
 
 
 	void ThreadedTransform::translate(const vec3& translation) {
 		mutexWrap([&translation](Transform& transform) {
-			transform.translate(translation);
+			transform.Transform::translate(translation);
 		});
 	}
 
 	void ThreadedTransform::rotate(const vec3& axis, float angle) {
 		mutexWrap([&axis, &angle](Transform& transform) {
-			transform.rotate(axis, angle);
+			transform.Transform::rotate(axis, angle);
 		});
 	}
 
 	void ThreadedTransform::scale(const vec3& scalar) {
 		mutexWrap([&scalar](Transform& transform) {
-			transform.scale(scalar);
+			transform.Transform::scale(scalar);
 		});
 	}
 
@@ -139,9 +139,11 @@ namespace geeL {
 			std::cout << "Warning: Adding non-threaded transform isn't " 
 				<< "thread safe and may cause data races\n";
 
-		mutexWrap([&child](Transform& transform) {
-			transform.Transform::AddChild(child);
-		});
+		mutex.lock();
+		Transform& c = Transform::AddChild(child);
+		mutex.unlock();
+
+		return c;
 	}
 
 	void ThreadedTransform::RemoveChild(Transform& child) {
@@ -150,6 +152,14 @@ namespace geeL {
 		});
 	}
 
+
+	const Transform* ThreadedTransform::GetParent() {
+		mutex.lock();
+		const Transform* t = Transform::GetParent();
+		mutex.unlock();
+
+		return t;
+	}
 
 	void ThreadedTransform::ChangeParent(Transform& newParent) {
 		mutexWrap([&newParent](Transform& transform) {
@@ -171,6 +181,7 @@ namespace geeL {
 	}
 
 
+	
 	const std::string& ThreadedTransform::getName() {
 		return mutexWrapRef<std::string>([](Transform& transform) -> const std::string& {
 			return transform.Transform::getName();
@@ -182,7 +193,7 @@ namespace geeL {
 			transform.Transform::setName(name);
 		});
 	}
-
+	
 
 	void ThreadedTransform::mutexWrap(std::function<void(Transform&)> function) {
 		mutex.lock();

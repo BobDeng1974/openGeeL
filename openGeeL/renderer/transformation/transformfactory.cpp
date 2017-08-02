@@ -1,4 +1,5 @@
 #include "transform.h"
+#include "threadedtransform.h"
 #include "transformfactory.h"
 
 namespace geeL {
@@ -19,7 +20,8 @@ namespace geeL {
 	}
 
 	Transform& TransformFactory::CreateTransform(Transform& parent, vec3 position, vec3 rotation, vec3 scaling, bool isStatic) {
-		return parent.AddChild(new Transform(position, rotation, scaling, isStatic));
+		//return parent.AddChild(new Transform(position, rotation, scaling, isStatic));
+		return parent.AddChild(new ThreadedTransform(position, rotation, scaling, isStatic));
 	}
 
 	Transform& TransformFactory::getWorldTransform() {

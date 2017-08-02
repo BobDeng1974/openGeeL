@@ -10,7 +10,7 @@ namespace geeL {
 	void Configuration::run() {
 		InputManager& manager = InputManager();
 
-		geeL::Transform& world = geeL::Transform(glm::vec3(0.f), vec3(0.f), vec3(1.f));
+		geeL::Transform& world = ThreadedTransform(glm::vec3(0.f), vec3(0.f), vec3(1.f));
 		TransformFactory& transFactory = TransformFactory(world);
 
 		GBuffer& gBuffer = GBuffer(window.resolution, content);

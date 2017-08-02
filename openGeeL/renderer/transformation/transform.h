@@ -76,7 +76,7 @@ namespace geeL {
 		//be taken care off and needs to be managed by caller
 		virtual void RemoveChild(Transform& child);
 
-		virtual const Transform* GetParent() const;
+		virtual const Transform* GetParent();
 		virtual void ChangeParent(Transform& newParent);
 
 		//Updates transformation matrix with recent changes to position, rotation and scale.
@@ -91,7 +91,7 @@ namespace geeL {
 		virtual void addChangeListener(std::function<void(const Transform&)> listener);
 
 		virtual const std::string& getName();
-		virtual void setName(std::string& name);
+		virtual void setName(const std::string& name);
 
 		virtual std::string toString() const;
 

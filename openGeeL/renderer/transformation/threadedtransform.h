@@ -42,6 +42,7 @@ namespace geeL {
 		virtual Transform& AddChild(Transform* child);
 		virtual void RemoveChild(Transform& child);
 
+		virtual const Transform* GetParent();
 		virtual void ChangeParent(Transform& newParent);
 
 		virtual void update();
@@ -59,7 +60,7 @@ namespace geeL {
 		T mutexWrap(std::function<T(Transform&)> function);
 
 		template<typename T>
-		const T& mutexWrapRef(std::function<T(Transform&)> function);
+		const T& mutexWrapRef(std::function<const T&(Transform&)> function);
 
 
 	};
@@ -75,7 +76,7 @@ namespace geeL {
 	}
 
 	template<typename T>
-	inline const T& ThreadedTransform::mutexWrapRef(std::function<T(Transform&)> function) {
+	inline const T& ThreadedTransform::mutexWrapRef(std::function<const T&(Transform&)> function) {
 		//Note: This is probably not thread safe
 
 		mutex.lock();
@@ -86,8 +87,6 @@ namespace geeL {
 	}
 
 
-
 }
-
 
 #endif

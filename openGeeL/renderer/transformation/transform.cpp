@@ -328,7 +328,7 @@ namespace geeL {
 		}
 	}
 
-	const Transform* Transform::GetParent() const {
+	const Transform* Transform::GetParent() {
 		return parent;
 	}
 
@@ -371,7 +371,7 @@ namespace geeL {
 		return name;
 	}
 
-	void Transform::setName(string& name) {
+	void Transform::setName(const string& name) {
 		this->name = name;
 	}
 
