@@ -3,8 +3,8 @@
 namespace geeL {
 
 	Configuration::Configuration(RenderWindow& window, PerspectiveCamera& camera,
-		SceneInitialization initFunction, GBufferContent content)
-			: window(window), camera(camera), initFunction(initFunction), content(content) {}
+		SceneInitialization initFunction, GBufferContent content, PhysicsType physicsType)
+			: window(window), camera(camera), initFunction(initFunction), content(content), physicsType(physicsType) {}
 
 
 	void Configuration::run() {
@@ -40,11 +40,16 @@ namespace geeL {
 		GUIRenderer& gui = GUIRenderer(window, context);
 		renderer.addGUIRenderer(&gui);
 
-		Physics& physics = NoPhysics();
+		Physics* physics;
+		if (physicsType == PhysicsType::World)
+			physics = new WorldPhysics();
+		else
+			physics = new NoPhysics();
 
 		initFunction(app, renderer, gui, scene, lightManager, transFactory, meshFactory,
-			materialFactory, cubeMapFactory, def, physics);
+			materialFactory, cubeMapFactory, def, *physics);
 
+		delete physics;
 	}
 
 }

@@ -117,12 +117,17 @@ namespace geeL {
 		DefaultPostProcess& def,
 		Physics& physics)>;
 
+	enum class PhysicsType {
+		None,
+		World
+	};
+
 
 	class Configuration {
 
 	public:
 		Configuration(RenderWindow& window, PerspectiveCamera& camera, SceneInitialization initFunction,
-			GBufferContent content = GBufferContent::Default);
+			GBufferContent content = GBufferContent::Default, PhysicsType physicsType = PhysicsType::None);
 
 		void run();
 
@@ -131,6 +136,7 @@ namespace geeL {
 		PerspectiveCamera& camera;
 		SceneInitialization initFunction;
 		GBufferContent content;
+		PhysicsType physicsType;
 
 	};
 
