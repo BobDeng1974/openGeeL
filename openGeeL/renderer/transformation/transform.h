@@ -53,8 +53,7 @@ namespace geeL {
 
 		mat4 lookAt() const;
 
-		std::list<Transform*>::iterator childrenStart();
-		std::list<Transform*>::iterator childrenEnd();
+		void iterateChildren(std::function<void(Transform&)> function);
 
 		const Transform* GetParent() const;
 
@@ -87,7 +86,6 @@ namespace geeL {
 		unsigned int getID() const;
 
 		void addChangeListener(std::function<void(const Transform&)> listener);
-		void removeChangeListener(std::function<void(const Transform&)> listener);
 
 		const std::string& getName() const;
 		void setName(std::string& name);
@@ -121,6 +119,7 @@ namespace geeL {
 		void updateDirections();
 		void onChange();
 	};
+
 
 }
 

@@ -294,9 +294,6 @@ namespace geeL {
 		changeListener.push_back(listener);
 	}
 
-	void Transform::removeChangeListener(function<void(const Transform&)> listener) {
-		//TODO: implement this
-	}
 
 	void Transform::onChange() {
 		for (auto it = changeListener.begin(); it != changeListener.end(); it++) {
@@ -305,43 +302,18 @@ namespace geeL {
 		}
 	}
 
-	const string& Transform::getName() const {
-		return name;
-	}
-
-	void Transform::setName(string& name) {
-		this->name = name;
-	}
-
-
-	list<Transform*>::iterator Transform::childrenStart() {
-		return children.begin();
-	}
-
-	std::string Transform::toString() const {
-		return "Transform " + getName() + ": " + std::to_string(id) + "\n"
-			+ "--Position: " + VectorExtension::vectorString(position) + "\n"
-			+ "--Rotation: " + VectorExtension::vectorString(getEulerAngles()) + "\n"
-			+ "--Scale:    " + VectorExtension::vectorString(scaling) + "\n"
-			+ "--Forward:  " + VectorExtension::vectorString(forward) + "\n"
-			+ "--Up:       " + VectorExtension::vectorString(up) + "\n"
-			+ "--Right:    " + VectorExtension::vectorString(right) + "\n";
-	}
-
-	list<Transform*>::iterator Transform::childrenEnd() {
-		return children.end();
-	}
-
 	const Transform* Transform::GetParent() const {
 		return parent;
 	}
 
-	Transform& Transform::AddChild(const Transform& child) {
-		Transform* newChild = new Transform(child);
-		children.push_back(newChild);
-		newChild->ChangeParent(*this);
+	void Transform::iterateChildren(std::function<void(Transform&)> function) {
+		for (auto it(children.begin()); it != children.end(); it++)
+			function(**it);
+	}
 
-		return *newChild;
+
+	Transform& Transform::AddChild(const Transform& child) {
+		return AddChild(new Transform(child));
 	}
 
 	Transform& Transform::AddChild(Transform* child) {
@@ -366,6 +338,26 @@ namespace geeL {
 			//TODO: change local transform to match old local 
 			//transform relative to old parent
 		}
+	}
+
+
+	const string& Transform::getName() const {
+		return name;
+	}
+
+	void Transform::setName(string& name) {
+		this->name = name;
+	}
+
+
+	std::string Transform::toString() const {
+		return "Transform " + getName() + ": " + std::to_string(id) + "\n"
+			+ "--Position: " + VectorExtension::vectorString(position) + "\n"
+			+ "--Rotation: " + VectorExtension::vectorString(getEulerAngles()) + "\n"
+			+ "--Scale:    " + VectorExtension::vectorString(scaling) + "\n"
+			+ "--Forward:  " + VectorExtension::vectorString(forward) + "\n"
+			+ "--Up:       " + VectorExtension::vectorString(up) + "\n"
+			+ "--Right:    " + VectorExtension::vectorString(right) + "\n";
 	}
 
 }

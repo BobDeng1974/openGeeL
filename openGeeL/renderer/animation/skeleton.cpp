@@ -54,8 +54,9 @@ namespace geeL {
 	void Skeleton::addBone(Transform* transform) {
 		bones[transform->getName()] = transform;
 
-		for (auto it = transform->childrenStart(); it != transform->childrenEnd(); it++)
-			addBone(*it);
+		transform->iterateChildren([this](Transform& child) {
+			addBone(&child);
+		});
 	}
 
 }
