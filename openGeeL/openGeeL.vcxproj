@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="application\application.cpp" />
     <ClCompile Include="application\configuration.cpp" />
+    <ClCompile Include="application\inputmanager.cpp" />
     <ClCompile Include="application\threading.cpp" />
     <ClCompile Include="interface\elements\objectlister.cpp" />
     <ClCompile Include="interface\elements\posteffectlister.cpp" />
@@ -190,7 +191,6 @@
     <ClCompile Include="renderer\framebuffer\gbuffer.cpp" />
     <ClCompile Include="renderer\framebuffer\pingpong.cpp" />
     <ClCompile Include="renderer\framebuffer\stackbuffer.cpp" />
-    <ClCompile Include="renderer\inputmanager.cpp" />
     <ClCompile Include="renderer\lighting\conetracer.cpp" />
     <ClCompile Include="renderer\lighting\deferredlighting.cpp" />
     <ClCompile Include="renderer\lighting\ibl.cpp" />
@@ -274,6 +274,7 @@
   <ItemGroup>
     <ClInclude Include="application\application.h" />
     <ClInclude Include="application\configuration.h" />
+    <ClInclude Include="application\inputmanager.h" />
     <ClInclude Include="application\objectwrapper.h" />
     <ClInclude Include="application\scripting\component.h" />
     <ClInclude Include="application\threading.h" />
@@ -322,7 +323,6 @@
     <ClInclude Include="renderer\framebuffer\gbuffer.h" />
     <ClInclude Include="renderer\framebuffer\pingpong.h" />
     <ClInclude Include="renderer\framebuffer\stackbuffer.h" />
-    <ClInclude Include="renderer\inputmanager.h" />
     <ClInclude Include="renderer\lighting\conetracer.h" />
     <ClInclude Include="renderer\lighting\deferredlighting.h" />
     <ClInclude Include="renderer\lighting\ibl.h" />
