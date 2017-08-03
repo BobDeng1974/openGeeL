@@ -38,21 +38,31 @@ namespace geeL {
 		Scene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline, SceneCamera& camera);
 
 		void addRequester(SceneRequester& requester);
-		void setCamera(SceneCamera& camera);
+		void addShader(SceneShader& shader);
 
 		const SceneCamera& getCamera() const;
 		SceneCamera& getCamera();
+		void setCamera(SceneCamera& camera);
 
 		const LightManager& getLightmanager() const;
 		LightManager& getLightmanager();
-
-		void addShader(SceneShader& shader);
 
 		void addMeshRenderer(MeshRenderer& renderer);
 		void addMeshRenderer(SkinnedMeshRenderer& renderer);
 
 		void removeMeshRenderer(MeshRenderer& renderer);
 		void removeMeshRenderer(SkinnedMeshRenderer& renderer);
+
+		void setSkybox(Skybox& skybox);
+
+		void iterSceneObjects(std::function<void(SceneObject&)> function);
+		void iterAllObjects(std::function<void(MeshRenderer&)> function);
+
+		void iterRenderObjects(std::function<void(const MeshRenderer&)> function) const;
+		bool iterRenderObjects(SceneShader& shader, std::function<void(const MeshRenderer&)> function) const;
+
+		void iterSkinnedObjects(std::function<void(const MeshRenderer&)> function) const;
+		bool iterSkinnedObjects(SceneShader& shader, std::function<void(const SkinnedMeshRenderer&)> function) const;
 
 	protected:
 		LightManager& lightManager;
@@ -118,7 +128,7 @@ namespace geeL {
 		//Draw all skinned objects in the scene with given shader
 		void drawSkinnedObjects(const RenderShader& shader) const;
 
-		void setSkybox(Skybox& skybox);
+		
 		void bindSkybox(RenderShader& shader) const;
 
 		//Draw skybox
@@ -128,15 +138,7 @@ namespace geeL {
 		void forwardScreenInfo(const ScreenInfo& info);
 
 
-		void iterAllObjects(std::function<void(MeshRenderer&)> function);
-
-		void iterRenderObjects(std::function<void(const MeshRenderer&)> function) const;
-		bool iterRenderObjects(SceneShader& shader, std::function<void(const MeshRenderer&)> function) const;
-
-		void iterSkinnedObjects(std::function<void(const MeshRenderer&)> function) const;
-		bool iterSkinnedObjects(SceneShader& shader, std::function<void(const SkinnedMeshRenderer&)> function) const;
-
-		void iterSceneObjects(std::function<void(SceneObject&)> function);
+		
 
 	private:
 		bool initialized = false;

@@ -16,7 +16,7 @@
 
 namespace geeL {
 
-	ObjectLister::ObjectLister(RenderScene& scene, RenderWindow& window, 
+	ObjectLister::ObjectLister(Scene& scene, RenderWindow& window, 
 		float x, float y, float width, float height) 
 			: GUIElement(window, x, y, width, height), scene(scene) {
 	

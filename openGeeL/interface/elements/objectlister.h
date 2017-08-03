@@ -12,14 +12,14 @@ namespace geeL {
 	class PerspectiveCamera;
 	class MeshRenderer;
 	class Light;
-	class RenderScene;
+	class Scene;
 	class ShadowMapSnippet;
 	class SimpleShadowMap;
 
 	class ObjectLister : public GUIElement {
 
 	public:
-		ObjectLister(RenderScene& scene, RenderWindow& window, 
+		ObjectLister(Scene& scene, RenderWindow& window, 
 			float x = 0.1f, float y = 0.1f, float width = 0.2f, float height = 0.2f);
 		~ObjectLister();
 
@@ -39,7 +39,7 @@ namespace geeL {
 		std::list<GUISnippet*> objectSnippets;
 		std::list<GUISnippet*> cameraSnippets;
 		std::list<GUISnippet*> otherSnippets;
-		RenderScene& scene;
+		Scene& scene;
 
 	};
 }

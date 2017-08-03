@@ -116,6 +116,18 @@ namespace geeL {
 		});
 	}
 
+	void Scene::setSkybox(Skybox& skybox) {
+		this->skybox = &skybox;
+
+		for (auto it = sceneRequester.begin(); it != sceneRequester.end(); it++) {
+			SceneRequester& requester = **it;
+			requester.updateSkybox(*this->skybox);
+		}
+
+		//Redraw reflection probes since skybox is also visible in them
+		lightManager.drawReflectionProbes();
+	}
+
 
 
 
@@ -277,17 +289,7 @@ namespace geeL {
 		});
 	}
 
-	void RenderScene::setSkybox(Skybox& skybox) {
-		this->skybox = &skybox;
-
-		for (auto it = sceneRequester.begin(); it != sceneRequester.end(); it++) {
-			SceneRequester& requester = **it;
-			requester.updateSkybox(*this->skybox);
-		}
-
-		//Redraw reflection probes since skybox is also visible in them
-		lightManager.drawReflectionProbes();
-	}
+	
 
 	void RenderScene::drawSkybox() const {
 		if (skybox != nullptr)
@@ -308,7 +310,11 @@ namespace geeL {
 		camera->updateDepth(info);
 	}
 
-	void RenderScene::iterAllObjects(function<void(MeshRenderer&)> function) {
+
+
+
+
+	void Scene::iterAllObjects(function<void(MeshRenderer&)> function) {
 		for (auto it = renderObjects.begin(); it != renderObjects.end(); it++) {
 			auto& elements = it->second;
 			for (auto et = elements.begin(); et != elements.end(); et++) {
@@ -326,7 +332,20 @@ namespace geeL {
 		}
 	}
 
-	void RenderScene::iterRenderObjects(function<void(const MeshRenderer&)> function) const {
+	void Scene::iterSceneObjects(std::function<void(SceneObject&)> function) {
+		function(*camera);
+
+		iterAllObjects([&](MeshRenderer& object) {
+			function(object);
+		});
+
+		lightManager.iterLights([&](Light& light) {
+			function(light);
+		});
+	}
+
+
+	void Scene::iterRenderObjects(function<void(const MeshRenderer&)> function) const {
 		for (auto it = renderObjects.begin(); it != renderObjects.end(); it++) {
 			auto& elements = it->second;
 			for (auto et = elements.begin(); et != elements.end(); et++) {
@@ -336,7 +355,7 @@ namespace geeL {
 		}
 	}
 
-	bool RenderScene::iterRenderObjects(SceneShader& shader, function<void(const MeshRenderer&)> function) const {
+	bool Scene::iterRenderObjects(SceneShader& shader, function<void(const MeshRenderer&)> function) const {
 		auto it = renderObjects.find(&shader);
 		if (it != renderObjects.end()) {
 			auto& elements = it->second;
@@ -351,7 +370,7 @@ namespace geeL {
 		return false;
 	}
 
-	void RenderScene::iterSkinnedObjects(function<void(const MeshRenderer&)> function) const {
+	void Scene::iterSkinnedObjects(function<void(const MeshRenderer&)> function) const {
 		for (auto it = skinnedObjects.begin(); it != skinnedObjects.end(); it++) {
 			auto& elements = it->second;
 			for (auto et = elements.begin(); et != elements.end(); et++) {
@@ -361,7 +380,7 @@ namespace geeL {
 		}
 	}
 
-	bool RenderScene::iterSkinnedObjects(SceneShader& shader, function<void(const SkinnedMeshRenderer&)> function) const {
+	bool Scene::iterSkinnedObjects(SceneShader& shader, function<void(const SkinnedMeshRenderer&)> function) const {
 		auto it = skinnedObjects.find(&shader);
 		if (it != skinnedObjects.end()) {
 			auto& elements = it->second;
@@ -376,18 +395,5 @@ namespace geeL {
 		return false;
 	}
 
-
-	void RenderScene::iterSceneObjects(std::function<void(SceneObject&)> function) {
-		function(*camera);
-		
-		iterAllObjects([&](MeshRenderer& object) {
-			function(object);
-		});
-
-		lightManager.iterLights([&](Light& light) {
-			function(light);
-		});
-	}
-	
 
 }
