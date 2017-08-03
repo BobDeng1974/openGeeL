@@ -16,8 +16,12 @@ namespace geeL{
 	}
 
 
-	long Time::deltaTime() const {
+	long Time::deltaTimeMS() const {
 		return delta().count();
+	}
+
+	float Time::deltaTime() const {
+		return float(deltaTimeMS() / 1000L);
 	}
 
 	void Time::update() {

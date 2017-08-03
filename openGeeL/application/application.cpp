@@ -52,7 +52,7 @@ namespace geeL {
 			inputLock.unlock();
 
 			inner.update();
-			long currFPS = std::max(0L, FPS - inner.deltaTime());
+			long currFPS = std::max(0L, FPS - inner.deltaTimeMS());
 			this_thread::sleep_for(chrono::milliseconds(currFPS));
 		}
 

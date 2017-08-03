@@ -29,7 +29,11 @@ namespace geeL {
 	class Time {
 
 	public:
-		long deltaTime() const;
+		//Return delta time in milliseconds
+		long deltaTimeMS() const;
+
+		//Return delta time percentage wise
+		float deltaTime() const;
 
 		void update();
 		void reset();
