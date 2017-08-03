@@ -46,6 +46,7 @@ namespace geeL {
 
 	};
 
+
 	//Thread that runs drawing operations of a renderer
 	class RenderThread : public ContinuousThread {
 

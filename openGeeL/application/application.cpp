@@ -59,6 +59,7 @@ namespace geeL {
 		close = true;
 
 		joinThreads();
+
 		window.close();
 	}
 
@@ -70,11 +71,24 @@ namespace geeL {
 		return close;
 	}
 
+	const ContinuousThread* const Application::getThread(ThreadID id) {
+		auto it = threads.find(id);
+		if (it != threads.end())
+			return it->second.first;
+
+		return nullptr;
+	}
+
+	const ContinuousThread* const Application::getCurrentThread() {
+		return getThread(this_thread::get_id());
+	}
+
 	void Application::initThreads() {
 		for (auto it(tempThreads.begin()); it != tempThreads.end(); it++) {
 			ContinuousThread& thread = **it;
 
-			threads.push_back(std::move(thread.start()));
+			std::thread t = std::move(thread.start());
+			threads[t.get_id()] = pair<ContinuousThread*, std::thread>(&thread, std::move(t));
 		}
 
 		tempThreads.clear();
@@ -82,10 +96,10 @@ namespace geeL {
 
 	void Application::joinThreads() {
 		for (auto it(threads.begin()); it != threads.end(); it++) {
-			std::thread& thread = *it;
+			std::thread* thread = &it->second.second;
 
-			if(thread.joinable())
-				thread.join();
+			if(thread->joinable())
+				thread->join();
 		}
 	}
 

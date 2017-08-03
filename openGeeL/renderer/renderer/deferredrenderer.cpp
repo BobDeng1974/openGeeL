@@ -26,9 +26,8 @@
 #include "application.h"
 #include "deferredrenderer.h"
 
-#define fps 10
-
 using namespace std;
+
 
 namespace geeL {
 
