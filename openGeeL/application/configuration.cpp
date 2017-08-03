@@ -2,9 +2,9 @@
 
 namespace geeL {
 
-	Configuration::Configuration(RenderWindow& window, PerspectiveCamera& camera,
+	Configuration::Configuration(RenderWindow& window,
 		SceneInitialization initFunction, GBufferContent content, PhysicsType physicsType)
-			: window(window), camera(camera), initFunction(initFunction), content(content), physicsType(physicsType) {}
+			: window(window), initFunction(initFunction), content(content), physicsType(physicsType) {}
 
 
 	void Configuration::run() {
@@ -13,12 +13,15 @@ namespace geeL {
 		geeL::Transform& world = ThreadedTransform(glm::vec3(0.f), vec3(0.f), vec3(1.f));
 		TransformFactory& transFactory = TransformFactory(world);
 
+		Transform& cameraTransform = Transform(vec3(0.f), vec3(0.f), vec3(1.f));
+		PerspectiveCamera& defaultCamera = PerspectiveCamera(cameraTransform, 0.f, 0.f, 60.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
+
 		GBuffer& gBuffer = GBuffer(window.resolution, content);
 		MaterialFactory& materialFactory = MaterialFactory(gBuffer);
 		MeshFactory& meshFactory = MeshFactory(materialFactory);
 		LightManager& lightManager = LightManager();
 		RenderPipeline& pipeline = RenderPipeline(materialFactory);
-		RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, camera, materialFactory, manager);
+		RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, defaultCamera, materialFactory, manager);
 		Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 
 

@@ -137,16 +137,13 @@ namespace geeL {
 
 		void forwardScreenInfo(const ScreenInfo& info);
 
-
-		
-
 	private:
 		bool initialized = false;
 		Input& input;
 		const MaterialFactory& materialFactory;
-		
 
 	};
+
 }
 
 #endif

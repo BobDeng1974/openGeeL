@@ -12,13 +12,14 @@ public:
 	static void draw() {
 		RenderWindow& window = RenderWindow("Deer", Resolution(1920, 1080), WindowMode::Windowed);
 
-		Transform& cameraTransform = Transform(vec3(-0.03f, 0.17f, 2.66f), vec3(-91.59f, 2.78f, -3.f), vec3(1.f));
-		PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 1.f, 0.45f, 25.f, window.getWidth(), window.getHeight(), 0.01f, 100.f);
 
-		auto init = [&window, &camera](Application& app, DeferredRenderer& renderer, GUIRenderer& gui, RenderScene& scene,
+		auto init = [&window](Application& app, DeferredRenderer& renderer, GUIRenderer& gui, RenderScene& scene,
 			LightManager& lightManager, TransformFactory& transformFactory, MeshFactory& meshFactory, MaterialFactory& materialFactory,
 			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
 
+			Transform& cameraTransform = ThreadedTransform(vec3(-0.03f, 0.17f, 2.66f), vec3(-91.59f, 2.78f, -3.f), vec3(1.f));
+			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 1.f, 0.45f, 25.f, window.getWidth(), window.getHeight(), 0.01f, 100.f);
+			scene.setCamera(camera);
 
 			Transform& probeTransform = transformFactory.CreateTransform(vec3(-0.13f, 0.13f, 0.52f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 			DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024, 20, 20, 20);
@@ -75,7 +76,7 @@ public:
 		};
 
 
-		Configuration config(window, camera, init);
+		Configuration config(window, init);
 		config.run();
 	}
 

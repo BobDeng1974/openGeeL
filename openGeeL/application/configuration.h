@@ -126,14 +126,13 @@ namespace geeL {
 	class Configuration {
 
 	public:
-		Configuration(RenderWindow& window, PerspectiveCamera& camera, SceneInitialization initFunction,
+		Configuration(RenderWindow& window, SceneInitialization initFunction,
 			GBufferContent content = GBufferContent::Default, PhysicsType physicsType = PhysicsType::None);
 
 		void run();
 
 	private:
 		RenderWindow& window;
-		PerspectiveCamera& camera;
 		SceneInitialization initFunction;
 		GBufferContent content;
 		PhysicsType physicsType;

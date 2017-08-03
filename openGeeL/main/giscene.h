@@ -12,18 +12,19 @@ public:
 	static void draw() {
 		RenderWindow& window = RenderWindow("Global Illumination Sponza", Resolution(1920, 1080), WindowMode::Windowed);
 
-		Transform& cameraTransform = Transform(vec3(41.f, 40.2f, 115.0f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f));
-		PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 15.f, 0.65f, 60.f, window.getWidth(), window.getHeight(), 0.1f, 500.f);
-
-		auto init = [&window, &camera](Application& app, DeferredRenderer& renderer, GUIRenderer& gui, RenderScene& scene,
+		auto init = [&window](Application& app, DeferredRenderer& renderer, GUIRenderer& gui, RenderScene& scene,
 			LightManager& lightManager, TransformFactory& transformFactory, MeshFactory& meshFactory, MaterialFactory& materialFactory,
 			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
+
+
+			Transform& cameraTransform = Transform(vec3(41.f, 40.2f, 115.0f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f));
+			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 15.f, 0.65f, 60.f, window.getWidth(), window.getHeight(), 0.1f, 500.f);
+			scene.setCamera(camera);
 
 			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv4/MonValley_G_DirtRoad_3k.hdr");
 			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeMapFactory.getBuffer(), 256);
 			Skybox& skybox = Skybox(envCubeMap);
 			scene.setSkybox(skybox);
-
 
 
 			float lightIntensity = 500.f;
@@ -104,7 +105,7 @@ public:
 		};
 
 
-		Configuration config(window, camera, init);
+		Configuration config(window, init);
 		config.run();
 	}
 
