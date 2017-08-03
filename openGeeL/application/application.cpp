@@ -38,10 +38,8 @@ namespace geeL {
 		thread renderThread([this]() { renderer.render(); });
 		initThreads();
 
-		Time& time = Time();
 		Time& inner = Time();
-
-		long FPS = 30;
+		long FPS = 10;
 
 		while (!window.shouldClose()) {
 			inner.reset();
@@ -54,8 +52,6 @@ namespace geeL {
 			inner.update();
 			long currFPS = std::max(0L, FPS - inner.deltaTime());
 			this_thread::sleep_for(chrono::milliseconds(currFPS));
-
-			time.update();
 		}
 
 		close = true;

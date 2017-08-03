@@ -2,6 +2,7 @@
 #define GEELTHREADING_H
 
 #include <thread>
+#include "utility/rendertime.h"
 
 namespace geeL {
 
@@ -32,8 +33,11 @@ namespace geeL {
 		//Returns and starts std::thread that runs containing threaded object
 		std::thread start();
 
+		const Time& getTime() const;
+
 	private:
 		ThreadedObject& obj;
+		Time time;
 
 		void run();
 

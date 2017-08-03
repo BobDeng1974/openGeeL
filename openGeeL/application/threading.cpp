@@ -1,6 +1,4 @@
-#include <thread>
 #include <chrono>
-#include "utility/rendertime.h"
 #include "application.h"
 #include "threading.h"
 
@@ -15,21 +13,28 @@ namespace geeL {
 		return std::thread([this]() { run(); });
 	}
 
+	const Time& ContinuousThread::getTime() const {
+		return time;
+	}
+
 
 	void ContinuousThread::run() {
 		obj.runStart();
 
-		Time& time = Time();
+		time.reset();
+		Time& inner = Time();
 		long ms = 1000L / obj.getFPS();
 
 		while (!Application::closing()) {
-			time.reset();
+			inner.reset();
 
 			obj.run();
 
-			time.update();
-			long currMS = ms - time.deltaTime();
+			inner.update();
+			long currMS = ms - inner.deltaTime();
 			if (currMS > 0L) this_thread::sleep_for(chrono::milliseconds(currMS));
+
+			time.update();
 		}
 
 		obj.runEnd();
