@@ -104,7 +104,6 @@ namespace geeL {
 
 		viewMatrix = computeViewMatrix();
 		inverseView = inverse(viewMatrix);
-		projectionMatrix = computeProjectionMatrix();
 
 		originViewSpace = TranslateToViewSpace(glm::vec3(0.f, 0.f, 0.f));
 	}
@@ -217,6 +216,8 @@ namespace geeL {
 	}
 
 	void  SceneCamera::onViewingPlaneChange() {
+		projectionMatrix = computeProjectionMatrix();
+
 		for (auto it = callbacks.begin(); it != callbacks.end(); it++) {
 			auto func = *it;
 
