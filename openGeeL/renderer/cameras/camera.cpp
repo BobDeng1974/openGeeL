@@ -136,8 +136,8 @@ namespace geeL {
 
 	void SceneCamera::computeMouseInput(const Input& input) {
 		if (input.getMouseKey(1)) {
-			float yOffset = float(input.getMouseYOffset()) * sensitivity * 0.01f;
-			float xOffset = -float(input.getMouseXOffset()) * sensitivity * 0.01f;
+			float yOffset = float(input.getMouseYOffset()) * sensitivity * 0.3f * RenderTime::deltaTime;
+			float xOffset = -float(input.getMouseXOffset()) * sensitivity * 0.3f * RenderTime::deltaTime;
 
 			transform.rotate(transform.getRightDirection(), yOffset);
 			transform.rotate(transform.getUpDirection(), xOffset);
