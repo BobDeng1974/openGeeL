@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <map>
+#include "objectwrapper.h"
 
 typedef std::chrono::high_resolution_clock Clock;
 typedef std::chrono::steady_clock::time_point TimePoint;
@@ -28,15 +29,14 @@ namespace geeL {
 	class Time {
 
 	public:
-
 		long deltaTime() const;
 
 		void update();
 		void reset();
 
 	private:
-		TimePoint lastFrame;
-		MS delta;
+		AtomicWrapper<TimePoint> lastFrame;
+		AtomicWrapper<MS> delta;
 
 
 	};

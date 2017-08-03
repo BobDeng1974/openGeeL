@@ -17,12 +17,12 @@ namespace geeL{
 
 
 	long Time::deltaTime() const {
-		return delta.count();
+		return delta().count();
 	}
 
 	void Time::update() {
 		TimePoint currFrame = Clock::now();
-		TimeFrame dur = currFrame - lastFrame;
+		TimeFrame dur = currFrame - lastFrame();
 		delta = std::chrono::duration_cast<MS>(dur);
 
 		lastFrame = currFrame;
