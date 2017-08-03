@@ -137,28 +137,22 @@ namespace geeL {
 	}
 
 	void RenderScene::update() {
-		camera->handleInput(input);
-		camera->update(input);
-		iterAllObjects([&](MeshRenderer& object) {
-			object.update(input);
-		});
+		run();
 
-		lightManager.iterLights([&](Light& light) {
-			light.update(input);
+		pipeline.bindCamera(*camera);
+	}
+
+	void RenderScene::run() {
+		iterSceneObjects([&](SceneObject& obj) {
+			obj.update(input);
 		});
 
 		worldTransform.update();
 
-		camera->lateUpdate();
-		iterAllObjects([&](MeshRenderer& object) {
-			object.lateUpdate();
+		iterSceneObjects([&](SceneObject& obj) {
+			obj.lateUpdate();
 		});
 
-		lightManager.iterLights([](Light& light) {
-			light.lateUpdate();
-		});
-
-		pipeline.bindCamera(*camera);
 	}
 
 	void RenderScene::draw(SceneShader& shader) {
@@ -380,6 +374,19 @@ namespace geeL {
 		}
 
 		return false;
+	}
+
+
+	void RenderScene::iterSceneObjects(std::function<void(SceneObject&)> function) {
+		function(*camera);
+		
+		iterAllObjects([&](MeshRenderer& object) {
+			function(object);
+		});
+
+		lightManager.iterLights([&](Light& light) {
+			function(light);
+		});
 	}
 	
 

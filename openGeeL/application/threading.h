@@ -1,6 +1,8 @@
 #ifndef GEELTHREADING_H
 #define GEELTHREADING_H
 
+#include <thread>
+
 namespace geeL {
 
 	//Interface for all objects that can run via a separate thread

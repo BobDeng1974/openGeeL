@@ -197,7 +197,7 @@ public:
 		};
 
 
-		Configuration config(window, camera, init);
+		Configuration config(window, camera, init, GBufferContent::Default, PhysicsType::World);
 		config.run();
 	}
 

@@ -76,10 +76,10 @@ namespace geeL {
 		SceneCamera(Transform& transform, float speed, float sensitivity, float nearClip, 
 			float farClip, const std::string& name = "Camera");
 
+		virtual void update(Input& input);
+
 		//Update view and projection matrices
 		virtual void lateUpdate();
-
-		virtual void handleInput(const Input& input);
 
 		//Update position and depth of center pixel of camera view
 		void updateDepth(const ScreenInfo& info);
@@ -119,6 +119,8 @@ namespace geeL {
 		virtual glm::mat4 computeProjectionMatrix() const = 0;
 
 		void onViewingPlaneChange();
+
+		void handleInput(const Input& input);
 	};
 }
 

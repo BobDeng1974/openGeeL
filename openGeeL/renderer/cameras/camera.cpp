@@ -94,6 +94,11 @@ namespace geeL {
 				nearClip(nearClip), farClip(farClip) {}
 
 
+	void SceneCamera::update(Input& input) {
+		handleInput(input);
+		Camera::update(input);
+	}
+
 	void SceneCamera::lateUpdate() {
 		SceneObject::lateUpdate();
 

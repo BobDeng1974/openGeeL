@@ -5,12 +5,14 @@
 #include <functional>
 #include <map>
 #include <list>
+#include "threading.h"
 
 namespace geeL {
 
 	class Camera;
 	class Input;
 	class SceneCamera;
+	class SceneObject;
 	class SceneRequester;
 	class LightManager;
 	class Skybox;
@@ -73,7 +75,7 @@ namespace geeL {
 
 
 	//Scene class that allows consecute drawing and updating of comprised structures
-	class RenderScene : public Scene {
+	class RenderScene : public Scene, public ThreadedObject {
 
 	public:
 		RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline, SceneCamera& camera, 
@@ -83,8 +85,11 @@ namespace geeL {
 		void init();
 		void updateProbes();
 
-		//Update scene information. Should be called once at beginning of frame
+		//Updates scene information. Should be called once at beginning of frame
 		void update();
+
+		//Tick function that updates scene information of current frame
+		virtual void run();
 		
 		//Draw all objects that are linked to given shader
 		void draw(SceneShader& shader);
@@ -130,6 +135,8 @@ namespace geeL {
 
 		void iterSkinnedObjects(std::function<void(const MeshRenderer&)> function) const;
 		bool iterSkinnedObjects(SceneShader& shader, std::function<void(const SkinnedMeshRenderer&)> function) const;
+
+		void iterSceneObjects(std::function<void(SceneObject&)> function);
 
 	private:
 		bool initialized = false;
