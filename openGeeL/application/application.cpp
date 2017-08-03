@@ -41,7 +41,7 @@ namespace geeL {
 		Time& time = Time();
 		Time& inner = Time();
 
-		long FPS = 10;
+		long FPS = 30;
 
 		while (!window.shouldClose()) {
 			inner.reset();

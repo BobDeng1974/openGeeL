@@ -13,7 +13,7 @@ namespace geeL {
 		geeL::Transform& world = ThreadedTransform(glm::vec3(0.f), vec3(0.f), vec3(1.f));
 		TransformFactory& transFactory = TransformFactory(world);
 
-		Transform& cameraTransform = Transform(vec3(0.f), vec3(0.f), vec3(1.f));
+		Transform& cameraTransform = ThreadedTransform(vec3(0.f), vec3(0.f), vec3(1.f));
 		PerspectiveCamera& defaultCamera = PerspectiveCamera(cameraTransform, 0.f, 0.f, 60.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
 
 		GBuffer& gBuffer = GBuffer(window.resolution, content);

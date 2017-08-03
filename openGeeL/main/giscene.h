@@ -17,7 +17,7 @@ public:
 			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
 
 
-			Transform& cameraTransform = Transform(vec3(41.f, 40.2f, 115.0f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f));
+			Transform& cameraTransform = transformFactory.CreateTransform(vec3(41.f, 40.2f, 115.0f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f));
 			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 15.f, 0.65f, 60.f, window.getWidth(), window.getHeight(), 0.1f, 500.f);
 			scene.setCamera(camera);
 
@@ -105,7 +105,7 @@ public:
 		};
 
 
-		Configuration config(window, init);
+		Configuration config(window, init, GBufferContent::DefaultEmissive);
 		config.run();
 	}
 

@@ -42,7 +42,7 @@ public:
 			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
 
 
-			Transform& cameraTransform = Transform(vec3(-7.36f, 4.76f, -1.75f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f));
+			Transform& cameraTransform = transformFactory.CreateTransform(vec3(-7.36f, 4.76f, -1.75f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f));
 			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
 			scene.setCamera(camera);
 			
