@@ -22,8 +22,7 @@ namespace geeL {
 	public:
 		SplitRenderer(RenderWindow& window, Input& inputManagerz, RenderContext& context);
 
-		virtual void init();
-		virtual void render();
+		virtual void run();
 		virtual void draw();
 		virtual void handleInput();
 

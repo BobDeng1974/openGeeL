@@ -1,5 +1,6 @@
 #include <chrono>
 #include "application.h"
+#include "renderer.h"
 #include "threading.h"
 
 using namespace std;
@@ -40,5 +41,13 @@ namespace geeL {
 		obj.runEnd();
 	}
 
+
+
+	RenderThread::RenderThread(Renderer& renderer) : ContinuousThread(renderer), renderer(renderer) {}
+
+
+	Renderer& RenderThread::getRenderer() {
+		return renderer;
+	}
 
 }

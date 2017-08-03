@@ -30,7 +30,8 @@ namespace geeL {
 
 		~DeferredRenderer();
 
-		virtual void render();
+		virtual void runStart();
+		virtual void run();
 		virtual void draw();
 		virtual void draw(const Camera& camera, const FrameBuffer& buffer);
 

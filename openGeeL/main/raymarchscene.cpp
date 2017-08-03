@@ -42,6 +42,7 @@ void RaymarchTest::draw() {
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, raymarch, context, def, gBuffer);
 	renderer.setScene(scene);
 
-	Application& app = Application(window, manager, renderer);
+	RenderThread renderThread(renderer);
+	Application& app = Application(window, manager, renderThread);
 	app.run();
 }

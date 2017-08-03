@@ -12,7 +12,6 @@
 #include "utility/viewport.h"
 #include "inputmanager.h"
 
-#define fps 10
 
 namespace geeL {
 
@@ -29,24 +28,15 @@ namespace geeL {
 	}
 
 
-	void SplitRenderer::init() {}
+	void SplitRenderer::run() {
+		glClearColor(0.02f, 0.02f, 0.02f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		draw();
+		window->swapBuffer();
 
-	void SplitRenderer::render() {
-		while (!window->shouldClose()) {
-			int currFPS = (int)ceil(RenderTime::deltaTime * 1000.f);
-			std::this_thread::sleep_for(std::chrono::milliseconds(fps - currFPS));
+		handleInput();
 
-			glClearColor(0.02f, 0.02f, 0.02f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			draw();
-			window->swapBuffer();
-
-			handleInput();
-
-			RenderTime::update();
-		}
-
-		window->close();
+		RenderTime::update();
 	}
 
 	void SplitRenderer::draw() {

@@ -6,6 +6,9 @@
 
 namespace geeL {
 
+	class Renderer;
+
+
 	//Interface for all objects that can run via a separate thread
 	class ThreadedObject {
 
@@ -13,7 +16,7 @@ namespace geeL {
 		ThreadedObject(long FPS = 60);
 
 		virtual void runStart() {}
-		virtual void run() {}
+		virtual void run() = 0;
 		virtual void runEnd() {}
 
 		long getFPS() const;
@@ -40,6 +43,19 @@ namespace geeL {
 		Time time;
 
 		void run();
+
+	};
+
+	//Thread that runs drawing operations of a renderer
+	class RenderThread : public ContinuousThread {
+
+	public:
+		RenderThread(Renderer& renderer);
+
+		Renderer& getRenderer();
+
+	private:
+		Renderer& renderer;
 
 	};
 

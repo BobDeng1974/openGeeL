@@ -16,17 +16,20 @@ using namespace std;
 
 namespace geeL {
 
-	Application::Application(RenderWindow& window, InputManager& inputManager, Renderer& renderer)
-		: window(window), inputManager(inputManager), renderer(renderer) {
+	Application::Application(RenderWindow& window, InputManager& inputManager, RenderThread& renderThread)
+		: window(window), inputManager(inputManager), renderer(renderThread.getRenderer()) {
 
-		auto exit = [this, &window](int key, int scancode, int action, int mode) { 
+		auto exit = [&window](int key, int scancode, int action, int mode) { 
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 				glfwSetWindowShouldClose(window.glWindow, GL_TRUE);
 		};
 
 		inputManager.addCallback(exit);
 		inputManager.init(&window);
+
+		addThread(renderThread);
 	}
+
 
 	mutex inputLock;
 	bool close = false;
@@ -35,7 +38,6 @@ namespace geeL {
 		renderer.linkInformation();
 		glfwMakeContextCurrent(0);
 		
-		thread renderThread([this]() { renderer.render(); });
 		initThreads();
 
 		Time& inner = Time();
@@ -56,9 +58,7 @@ namespace geeL {
 
 		close = true;
 
-		renderThread.join();
 		joinThreads();
-
 		window.close();
 	}
 

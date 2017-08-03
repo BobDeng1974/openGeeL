@@ -22,7 +22,7 @@ namespace geeL{
 
 
 	Renderer::Renderer(RenderWindow& window, Input& inputManager, RenderContext& context)
-		: window(&window), input(inputManager), context(&context), gui(nullptr) {}
+		: ThreadedObject(100L), window(&window), input(inputManager), context(&context), gui(nullptr) {}
 
 
 	void Renderer::addGUIRenderer(GUIRenderer* renderer) {

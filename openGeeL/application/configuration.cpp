@@ -31,7 +31,8 @@ namespace geeL {
 		DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer);
 		renderer.setScene(scene);
 
-		Application& app = Application(window, manager, renderer);
+		RenderThread renderThread(renderer);
+		Application& app = Application(window, manager, renderThread);
 
 		std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 			[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };

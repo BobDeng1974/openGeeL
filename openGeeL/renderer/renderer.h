@@ -2,6 +2,7 @@
 #define RENDERER_H
 
 #include <vector>
+#include "threading.h"
 
 namespace geeL {
 
@@ -35,13 +36,11 @@ namespace geeL {
 	};
 
 
-	class Renderer : public Drawer {
+	class Renderer : public Drawer, public ThreadedObject {
 
 	public:
 		Renderer(RenderWindow& window, Input& inputManager, RenderContext& context);
 
-		//Render scene until termination
-		virtual void render() = 0;
 
 		//Render single frame
 		virtual void draw() = 0;

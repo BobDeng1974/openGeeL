@@ -3,18 +3,20 @@
 
 #include <list>
 #include <thread>
+#include "threading.h"
 
 namespace geeL {
 
 	class Renderer;
 	class RenderWindow;
+	class RenderThread;
 	class InputManager;
 	class ContinuousThread;
 
 	class Application {
 
 	public:
-		Application(RenderWindow& window, InputManager& inputManager, Renderer& renderer);
+		Application(RenderWindow& window, InputManager& inputManager, RenderThread& renderThread);
 
 		void run();
 		void addThread(ContinuousThread& thread);

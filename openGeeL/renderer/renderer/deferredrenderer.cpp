@@ -48,7 +48,6 @@ namespace geeL {
 		delete texture2;
 	}
 
-
 	void DeferredRenderer::init() {
 		auto func = [this](int key, int scancode, int action, int mode) 
 			{ this->handleInput(key, scancode, action, mode); };
@@ -68,93 +67,87 @@ namespace geeL {
 	}
 
 
-	void DeferredRenderer::render() {
+	void DeferredRenderer::runStart() {
 		window->makeCurrent();
 
 		lighting.init(SCREENQUAD, stackBuffer, window->resolution);
 		scene->updateProbes(); //Draw reflection probes once at beginning
 		initDefaultEffect();
 
-		Time& time = Time();
+	}
 
-		//Render loop
-		while (!Application::closing()) {
-			long currFPS = fps - time.deltaTime();
-			if(currFPS > 0L) this_thread::sleep_for(chrono::milliseconds(currFPS));
-			time.reset();
+	void DeferredRenderer::run() {
+		RenderTime::update();
 
-			window->makeCurrent();
-			glEnable(GL_DEPTH_TEST);
+		//window->makeCurrent();
+		glEnable(GL_DEPTH_TEST);
 
-			RenderTexture* current = texture1; //Current of alternating textures is stored here
-			Viewport::setForced(0, 0, window->resolution.getWidth(), window->resolution.getHeight());
+		RenderTexture* current = texture1; //Current of alternating textures is stored here
+		Viewport::setForced(0, 0, window->resolution.getWidth(), window->resolution.getHeight());
 
-			//Geometry pass
-			gBuffer.fill(geometryPassFunc);
+		//Geometry pass
+		gBuffer.fill(geometryPassFunc);
 
-			//Hacky: Read camera depth from geometry pass and write it into the scene
-			scene->forwardScreenInfo(gBuffer.screenInfo);
+		//Hacky: Read camera depth from geometry pass and write it into the scene
+		scene->forwardScreenInfo(gBuffer.screenInfo);
 
-			scene->getLightmanager().draw(*scene, &scene->getCamera());
+		scene->getLightmanager().draw(*scene, &scene->getCamera());
 
-			//SSAO pass
-			if (ssao != nullptr) {
-				stackBuffer.push(*ssaoTexture);
-				stackBuffer.fill(*ssao);
-				FrameBuffer::resetSize(window->resolution);
-			}
-
-			//Lighting & forward pass
-			stackBuffer.push(*current);
-			stackBuffer.fill(lightingPassFunc);
-
-			glClear(GL_COLOR_BUFFER_BIT);
-			glDisable(GL_DEPTH_TEST);
-
-			//Post processing
-			//Draw single effect if wanted
-			if (isolatedEffect != nullptr) {
-				PostProcessingEffect* def = effects.front();
-
-				//Save regular rendering settings
-				bool onlyEffect = isolatedEffect->getEffectOnly();
-				const Texture& buffer = isolatedEffect->getImageBuffer();
-
-				//Draw isolated effect
-				isolatedEffect->effectOnly(true);
-				isolatedEffect->setImageBuffer(*texture1);
-
-				stackBuffer.push(*texture2);
-				isolatedEffect->fill();
-				
-				def->draw();
-
-				//Restore render settings
-				isolatedEffect->effectOnly(onlyEffect);
-				isolatedEffect->setImageBuffer(buffer);
-			}
-			//Draw all included post effects
-			else {
-				//Draw all the post processing effects on top of each other.
-				for (auto effect = next(effects.begin()); effect != effects.end(); effect++) {
-					current = (current == texture1) ? texture2 : texture1;
-					stackBuffer.push(*current);
-
-					(**effect).fill();
-				}
-
-				//Draw the last (default) effect to screen.
-				effects.front()->draw();
-			}
-
-			//Render GUI overlay on top of final image
-			if (gui != nullptr) gui->draw();
-			
-			window->swapBuffer();
-			
-			time.update();
-			RenderTime::update();
+		//SSAO pass
+		if (ssao != nullptr) {
+			stackBuffer.push(*ssaoTexture);
+			stackBuffer.fill(*ssao);
+			FrameBuffer::resetSize(window->resolution);
 		}
+
+		//Lighting & forward pass
+		stackBuffer.push(*current);
+		stackBuffer.fill(lightingPassFunc);
+
+		glClear(GL_COLOR_BUFFER_BIT);
+		glDisable(GL_DEPTH_TEST);
+
+		//Post processing
+		//Draw single effect if wanted
+		if (isolatedEffect != nullptr) {
+			PostProcessingEffect* def = effects.front();
+
+			//Save regular rendering settings
+			bool onlyEffect = isolatedEffect->getEffectOnly();
+			const Texture& buffer = isolatedEffect->getImageBuffer();
+
+			//Draw isolated effect
+			isolatedEffect->effectOnly(true);
+			isolatedEffect->setImageBuffer(*texture1);
+
+			stackBuffer.push(*texture2);
+			isolatedEffect->fill();
+				
+			def->draw();
+
+			//Restore render settings
+			isolatedEffect->effectOnly(onlyEffect);
+			isolatedEffect->setImageBuffer(buffer);
+		}
+		//Draw all included post effects
+		else {
+			//Draw all the post processing effects on top of each other.
+			for (auto effect = next(effects.begin()); effect != effects.end(); effect++) {
+				current = (current == texture1) ? texture2 : texture1;
+				stackBuffer.push(*current);
+
+				(**effect).fill();
+			}
+
+			//Draw the last (default) effect to screen.
+			effects.front()->draw();
+		}
+
+		//Render GUI overlay on top of final image
+		if (gui != nullptr) gui->draw();
+
+
+		window->swapBuffer();
 	}
 
 	void DeferredRenderer::draw() {
