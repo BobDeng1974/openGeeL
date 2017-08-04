@@ -10,10 +10,9 @@ using namespace glm;
 
 namespace geeL {
 
-	PerspectiveCamera::PerspectiveCamera(Transform& transform, float speed, float sensitivity,
-		float fov, unsigned int width, unsigned int height, float nearClip, float farClip, std::string name)
-			: SceneCamera(transform, speed, sensitivity, nearClip, farClip, name), FOV(fov), currentFOV(fov), width(float(width)), 
-				height(float(height)), aspectRatio(float(width) / float(height)) {
+	PerspectiveCamera::PerspectiveCamera(Transform& transform, float fov, unsigned int width, unsigned int height, 
+		float nearClip, float farClip, std::string name) : SceneCamera(transform, nearClip, farClip, name), FOV(fov), 
+			currentFOV(fov), width(float(width)), height(float(height)), aspectRatio(float(width) / float(height)) {
 	
 		projectionMatrix = std::move(computeProjectionMatrix());
 	}

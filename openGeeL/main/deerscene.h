@@ -18,7 +18,8 @@ public:
 			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
 
 			Transform& cameraTransform = transformFactory.CreateTransform(vec3(-0.03f, 0.17f, 2.66f), vec3(-91.59f, 2.78f, -3.f), vec3(1.f));
-			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 1.f, 0.45f, 25.f, window.getWidth(), window.getHeight(), 0.01f, 100.f);
+			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 25.f, window.getWidth(), window.getHeight(), 0.01f, 100.f);
+			camera.addComponent<MovableCamera>(MovableCamera(1.f, 0.45f));
 			scene.setCamera(camera);
 
 			Transform& probeTransform = transformFactory.CreateTransform(vec3(-0.13f, 0.13f, 0.52f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));

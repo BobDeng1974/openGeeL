@@ -438,6 +438,9 @@
     <ClCompile Include="application\inputmanager.cpp">
       <Filter>application</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\cameras\movablecamera.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -871,6 +874,9 @@
     </ClInclude>
     <ClInclude Include="application\inputmanager.h">
       <Filter>application</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\cameras\movablecamera.h">
+      <Filter>renderer\cameras</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

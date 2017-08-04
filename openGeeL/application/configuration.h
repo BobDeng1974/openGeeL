@@ -19,6 +19,7 @@
 
 #include "cameras/camera.h"
 #include "cameras/perspectivecamera.h"
+#include "cameras/movablecamera.h"
 
 #include "cubemapping/cubemap.h"
 #include "cubemapping/texcubemap.h"

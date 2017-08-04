@@ -9,6 +9,7 @@
 #include "transformation/transform.h"
 #include "transformation/transformfactory.h"
 #include "cameras/perspectivecamera.h"
+#include "cameras/movablecamera.h"
 #include "materials/materialfactory.h"
 #include "lights/lightmanager.h"
 #include "lighting/raymarcher.h"
@@ -28,7 +29,8 @@ void RaymarchTest::draw() {
 	TransformFactory& transFactory = TransformFactory(world);
 
 	geeL::Transform& cameraTransform = Transform(vec3(1.2f, 1.2f, -1.3f), vec3(70.f, 70.f, 180.f), vec3(1.f, 1.f, 1.f));
-	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 5.f, 0.45f, 60.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
+	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 60.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
+	camera.addComponent<MovableCamera>(MovableCamera(5.f, 0.45f));
 
 	GBuffer& gBuffer = GBuffer(window.resolution);
 	MaterialFactory &materialFactory = MaterialFactory(gBuffer);

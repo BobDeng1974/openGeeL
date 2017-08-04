@@ -175,6 +175,7 @@
     <ClCompile Include="renderer\animation\animator.cpp" />
     <ClCompile Include="renderer\animation\skeleton.cpp" />
     <ClCompile Include="renderer\cameras\camera.cpp" />
+    <ClCompile Include="renderer\cameras\movablecamera.cpp" />
     <ClCompile Include="renderer\cameras\perspectivecamera.cpp" />
     <ClCompile Include="renderer\cubemapping\cubemap.cpp" />
     <ClCompile Include="renderer\cubemapping\cubemapfactory.cpp" />
@@ -306,6 +307,7 @@
     <ClInclude Include="renderer\animation\animator.h" />
     <ClInclude Include="renderer\animation\skeleton.h" />
     <ClInclude Include="renderer\cameras\camera.h" />
+    <ClInclude Include="renderer\cameras\movablecamera.h" />
     <ClInclude Include="renderer\cameras\perspectivecamera.h" />
     <ClInclude Include="renderer\cubemapping\cubemap.h" />
     <ClInclude Include="renderer\cubemapping\cubemapfactory.h" />

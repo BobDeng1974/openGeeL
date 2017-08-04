@@ -110,12 +110,6 @@ namespace geeL {
 
 	void CameraSnippet::draw(GUIContext* context) {
 		SceneObjectSnippet::draw(context);
-
-		float speed = GUISnippets::drawBarFloat(context, cam.getSpeed(), 0.f, 30.f, 0.1f, "Speed");
-		cam.setSpeed(speed);
-
-		float sensitivity = GUISnippets::drawBarFloat(context, cam.getSensitivity(), 0.f, 30.f, 0.1f, "Sensitivity");
-		cam.setSensitivity(sensitivity);
 	}
 
 	std::string CameraSnippet::toString() const {

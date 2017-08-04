@@ -88,14 +88,12 @@ namespace geeL {
 
 
 
-	SceneCamera::SceneCamera(Transform& transform, float speed, float sensitivity, 
-		float nearClip, float farClip, const std::string& name)
-			: Camera(transform, name), speed(speed), sensitivity(sensitivity), 
-				nearClip(nearClip), farClip(farClip) {}
+	SceneCamera::SceneCamera(Transform& transform, float nearClip, float farClip, const std::string& name)
+		: Camera(transform, name), nearClip(nearClip), farClip(farClip) {}
 
 
 	void SceneCamera::update(Input& input) {
-		handleInput(input);
+		//handleInput(input);
 		Camera::update(input);
 	}
 
@@ -109,41 +107,6 @@ namespace geeL {
 	}
 
 	
-
-	void SceneCamera::handleInput(const Input& input) {
-		computeKeyboardInput(input);
-		computeMouseInput(input);
-	}
-
-	void SceneCamera::computeKeyboardInput(const Input& input) {
-		float cameraSpeed = speed * RenderTime::deltaTime();
-
-		if (input.getKeyHold(GLFW_KEY_LEFT_SHIFT) || input.getKey(GLFW_KEY_LEFT_SHIFT))
-			cameraSpeed *= 2.5f;
-		else if (input.getKeyHold(GLFW_KEY_LEFT_CONTROL) || input.getKey(GLFW_KEY_LEFT_CONTROL))
-			cameraSpeed *= 0.5f;
-		
-		if (input.getKeyHold(GLFW_KEY_W) || input.getKey(GLFW_KEY_W))
-			transform.translate(cameraSpeed * transform.getForwardDirection());
-		if (input.getKeyHold(GLFW_KEY_S) || input.getKey(GLFW_KEY_S))
-			transform.translate(-cameraSpeed * transform.getForwardDirection());
-		if (input.getKeyHold(GLFW_KEY_A) || input.getKey(GLFW_KEY_A))
-			transform.translate(-cameraSpeed * transform.getRightDirection());
-		if (input.getKeyHold(GLFW_KEY_D) || input.getKey(GLFW_KEY_D))
-			transform.translate(cameraSpeed * transform.getRightDirection());
-	}
-
-
-	void SceneCamera::computeMouseInput(const Input& input) {
-		if (input.getMouseKey(1)) {
-			float yOffset = float(input.getMouseYOffset()) * sensitivity * 0.3f * RenderTime::deltaTime();
-			float xOffset = -float(input.getMouseXOffset()) * sensitivity * 0.3f * RenderTime::deltaTime();
-
-			transform.rotate(transform.getRightDirection(), yOffset);
-			transform.rotate(transform.getUpDirection(), xOffset);
-		}
-	}
-
 	mat4 SceneCamera::computeViewMatrix() const {
 		return transform.lookAt();
 	}
@@ -163,23 +126,7 @@ namespace geeL {
 		return transform.getForwardDirection();
 	}
 
-	float SceneCamera::getSpeed() const {
-		return speed;
-	}
-
-	float SceneCamera::getSensitivity() const {
-		return sensitivity;
-	}
-
-	void SceneCamera::setSpeed(float speed) {
-		if (speed > 0.f)
-			this->speed = speed;
-	}
-
-	void SceneCamera::setSensitivity(float sensitivity) {
-		if (sensitivity > 0.f)
-			this->sensitivity = sensitivity;
-	}
+	
 
 	const float SceneCamera::getNearPlane() const {
 		return nearClip;

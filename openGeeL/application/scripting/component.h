@@ -13,7 +13,7 @@ namespace geeL {
 	protected:
 		SceneObject* sceneObject;
 
-		void setSceneObject(SceneObject& object);
+		virtual void setSceneObject(SceneObject& object);
 
 		virtual void init() {}
 		virtual void update(Input& input) {}
@@ -23,11 +23,12 @@ namespace geeL {
 
 	template<class Object>
 	class GenericComponent : public Component {
+		friend class SceneObject;
 
 	protected:
 		Object* genericObject;
 
-		void setSceneObject(Object& object);
+		virtual void setSceneObject(SceneObject& object);
 
 	};
 
@@ -37,10 +38,14 @@ namespace geeL {
 	}
 
 	template<class Object>
-	inline void GenericComponent<Object>::setSceneObject(Object& object) {
-		static_assert(std::is_base_of<SceneObject, Object>::value, "Given class is not a scene object");
+	inline void GenericComponent<Object>::setSceneObject(SceneObject& object) {
+		Component::setSceneObject(object);
 
-		genericObject = &object;
+		Object* obj = dynamic_cast<Object*>(&object);
+		if (obj == nullptr)
+			throw "Given scene object has wrong child type\n";
+
+		genericObject = obj;
 	}
 
 }

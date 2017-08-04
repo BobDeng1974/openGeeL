@@ -19,7 +19,8 @@ public:
 
 
 			Transform& cameraTransform = transformFactory.CreateTransform(vec3(2.93f, 0.71f, -0.59f), vec3(90.f, 76.86f, 179.f), vec3(1.f));
-			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 5.f, 0.65f, 45.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
+			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 45.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
+			camera.addComponent<MovableCamera>(MovableCamera(5.f, 0.65f));
 			scene.setCamera(camera);
 
 			Transform& probeTransform = transformFactory.CreateTransform(vec3(-6.9f, 1.9f, 2.3f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));

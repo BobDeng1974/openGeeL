@@ -73,8 +73,7 @@ namespace geeL {
 
 	public:
 		//Defines a movable camera
-		SceneCamera(Transform& transform, float speed, float sensitivity, float nearClip, 
-			float farClip, const std::string& name = "Camera");
+		SceneCamera(Transform& transform, float nearClip, float farClip, const std::string& name = "Camera");
 
 		virtual void update(Input& input);
 
@@ -86,12 +85,6 @@ namespace geeL {
 
 		const glm::vec3& getPosition() const;
 		const glm::vec3& getDirection() const;
-
-		float getSpeed() const;
-		float getSensitivity() const;
-
-		void setSpeed(float speed);
-		void setSensitivity(float sensitivity);
 
 		const float getNearPlane() const;
 		const float getFarPlane() const;
@@ -105,22 +98,15 @@ namespace geeL {
 		//Returns view borders for given frustum 
 		virtual std::vector<glm::vec3> getViewBorders(float near, float far) const = 0;
 
-		
-
 	protected:
-		float speed, sensitivity;
 		float nearClip, farClip;
 		std::list<std::function<void(float, float)>> callbacks;
-
-		virtual void computeKeyboardInput(const Input& input);
-		virtual void computeMouseInput(const Input& input);
 
 		glm::mat4 computeViewMatrix() const;
 		virtual glm::mat4 computeProjectionMatrix() const = 0;
 
 		void onViewingPlaneChange();
 
-		void handleInput(const Input& input);
 	};
 }
 
