@@ -116,11 +116,11 @@ namespace geeL {
 
 
 	mat4 ThreadedTransform::lookAt() {
-		mutex.lock();
+		std::lock_guard<std::recursive_mutex> guard(mutex);
+		
 		vec3 p = position;
 		vec3 f = forward;
 		vec3 u = up;
-		mutex.unlock();
 		
 		return glm::lookAt(p, p + f, u);
 	}
@@ -139,11 +139,8 @@ namespace geeL {
 			std::cout << "Warning: Adding non-threaded transform isn't " 
 				<< "thread safe and may cause data races\n";
 
-		mutex.lock();
-		Transform& c = Transform::AddChild(child);
-		mutex.unlock();
-
-		return c;
+		std::lock_guard<std::recursive_mutex> guard(mutex);
+		return Transform::AddChild(child);
 	}
 
 	void ThreadedTransform::RemoveChild(Transform& child) {
@@ -154,11 +151,8 @@ namespace geeL {
 
 
 	const Transform* ThreadedTransform::GetParent() {
-		mutex.lock();
-		const Transform* t = Transform::GetParent();
-		mutex.unlock();
-
-		return t;
+		std::lock_guard<std::recursive_mutex> guard(mutex);
+		return Transform::GetParent();
 	}
 
 	void ThreadedTransform::ChangeParent(Transform& newParent) {

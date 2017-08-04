@@ -439,7 +439,7 @@
       <Filter>application</Filter>
     </ClCompile>
     <ClCompile Include="renderer\cameras\movablecamera.cpp">
-      <Filter>renderer</Filter>
+      <Filter>renderer\cameras</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

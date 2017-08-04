@@ -81,17 +81,15 @@ namespace geeL {
 	}
 
 	const ContinuousThread* const Application::getThread(ThreadID id) {
-		threadLock.lock();
-		
+		std::lock_guard<std::mutex> guard(threadLock);
+
 		auto it = threads.find(id);
 		if (it != threads.end()) {
 			auto* thread = it->second.first;
-			threadLock.unlock();
 
 			return thread;
 		}
 		
-		threadLock.unlock();
 		return nullptr;
 	}
 
@@ -122,16 +120,15 @@ namespace geeL {
 	}
 
 	void Application::joinThreads() {
-		threadLock.lock();
+		std::lock_guard<std::mutex> guard(threadLock);
 
 		for (auto it(threads.begin()); it != threads.end(); it++) {
 			std::thread* thread = &it->second.second;
 
-			if(thread->joinable())
+			if (thread->joinable())
 				thread->join();
 		}
 
-		threadLock.unlock();
 	}
 
 }

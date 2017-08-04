@@ -68,22 +68,16 @@ namespace geeL {
 
 	template<typename T>
 	inline T ThreadedTransform::mutexWrap(std::function<T(Transform&)> function) {
-		mutex.lock();
-		T t = function(*this);
-		mutex.unlock();
+		std::lock_guard<std::recursive_mutex> guard(mutex);
 
-		return t;
+		return function(*this);
 	}
 
 	template<typename T>
 	inline const T& ThreadedTransform::mutexWrapRef(std::function<const T&(Transform&)> function) {
-		//Note: This is probably not thread safe
+		std::lock_guard<std::recursive_mutex> guard(mutex);
 
-		mutex.lock();
-		const T& t = function(*this);
-		mutex.unlock();
-
-		return t;
+		return function(*this);
 	}
 
 
