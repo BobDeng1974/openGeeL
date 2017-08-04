@@ -27,7 +27,7 @@ namespace geeL {
 		nk_layout_row_dynamic(context, 30, 2);
 		nk_label(context, name.c_str(), NK_TEXT_RIGHT);
 
-		std::string t = std::to_string(RenderTime::deltaTime) + " ms";
+		std::string t = std::to_string(RenderTime::deltaTime()) + " ms";
 		nk_label(context, t.c_str(), NK_TEXT_LEFT);
 	}
 

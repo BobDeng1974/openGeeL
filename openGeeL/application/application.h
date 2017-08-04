@@ -5,7 +5,6 @@
 #include <map>
 #include <mutex>
 #include <thread>
-#include "threading.h"
 
 namespace geeL {
 

@@ -116,7 +116,7 @@ namespace geeL {
 	}
 
 	void SceneCamera::computeKeyboardInput(const Input& input) {
-		float cameraSpeed = speed * RenderTime::deltaTime;
+		float cameraSpeed = speed * RenderTime::deltaTime();
 
 		if (input.getKeyHold(GLFW_KEY_LEFT_SHIFT) || input.getKey(GLFW_KEY_LEFT_SHIFT))
 			cameraSpeed *= 2.5f;
@@ -136,8 +136,8 @@ namespace geeL {
 
 	void SceneCamera::computeMouseInput(const Input& input) {
 		if (input.getMouseKey(1)) {
-			float yOffset = float(input.getMouseYOffset()) * sensitivity * 0.3f * RenderTime::deltaTime;
-			float xOffset = -float(input.getMouseXOffset()) * sensitivity * 0.3f * RenderTime::deltaTime;
+			float yOffset = float(input.getMouseYOffset()) * sensitivity * 0.3f * RenderTime::deltaTime();
+			float xOffset = -float(input.getMouseXOffset()) * sensitivity * 0.3f * RenderTime::deltaTime();
 
 			transform.rotate(transform.getRightDirection(), yOffset);
 			transform.rotate(transform.getUpDirection(), xOffset);

@@ -56,8 +56,8 @@ namespace geeL {
 		else
 			physics = new NoPhysics();
 
-		//ContinuousThread sceneThread(scene);
-		//app.addThread(sceneThread);
+		//ContinuousThread scriptingThread(scene);
+		//app.addThread(scriptingThread);
 
 		initFunction(app, renderer, gui, scene, lightManager, transFactory, meshFactory,
 			materialFactory, cubeMapFactory, def, *physics);

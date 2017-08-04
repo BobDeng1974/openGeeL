@@ -5,13 +5,17 @@
 
 namespace geeL{
 
-	float RenderTime::deltaTime;
+	float RenderTime::delta;
 	float RenderTime::lastFrame;
+
+	float RenderTime::deltaTime() {
+		return delta;
+	}
 
 	void RenderTime::update() {
 
 		float currentFrame = (float)glfwGetTime();
-		RenderTime::deltaTime = currentFrame - RenderTime::lastFrame;
+		RenderTime::delta = currentFrame - RenderTime::lastFrame;
 		RenderTime::lastFrame = currentFrame;
 	}
 

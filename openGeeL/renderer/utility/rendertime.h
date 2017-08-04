@@ -16,11 +16,12 @@ namespace geeL {
 	class RenderTime {
 
 	public:
-		static float deltaTime;
+		static float deltaTime();
 
 		static void update();
 
 	private:
+		static float delta;
 		static float lastFrame;
 
 	};
