@@ -878,6 +878,9 @@
     <ClInclude Include="renderer\cameras\movablecamera.h">
       <Filter>renderer\cameras</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\renderer\postrenderer.h">
+      <Filter>renderer\renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\lighting.vert">

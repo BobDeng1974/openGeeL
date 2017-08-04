@@ -12,7 +12,7 @@ public:
 	static void draw() {
 		RenderWindow& window = RenderWindow("Global Illumination Sponza", Resolution(1920, 1080), WindowMode::Windowed);
 
-		auto init = [&window](Application& app, DeferredRenderer& renderer, GUIRenderer& gui, RenderScene& scene,
+		auto init = [&window](Application& app, PostEffectDrawer& renderer, GUIRenderer& gui, RenderScene& scene,
 			LightManager& lightManager, TransformFactory& transformFactory, MeshFactory& meshFactory, MaterialFactory& materialFactory,
 			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
 

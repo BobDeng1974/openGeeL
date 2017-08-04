@@ -371,6 +371,7 @@
     <ClInclude Include="renderer\primitives\screenquad.h" />
     <ClInclude Include="renderer\renderer.h" />
     <ClInclude Include="renderer\renderer\deferredrenderer.h" />
+    <ClInclude Include="renderer\renderer\postrenderer.h" />
     <ClInclude Include="renderer\renderer\rendercontext.h" />
     <ClInclude Include="renderer\renderer\splitrenderer.h" />
     <ClInclude Include="renderer\renderscene.h" />

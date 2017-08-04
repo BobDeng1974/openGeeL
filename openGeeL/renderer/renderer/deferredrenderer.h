@@ -6,6 +6,7 @@
 #include "framebuffer/stackbuffer.h"
 #include "utility/worldinformation.h"
 #include "utility/rendertime.h"
+#include "postrenderer.h"
 #include "renderer.h"
 
 namespace geeL {
@@ -22,7 +23,7 @@ namespace geeL {
 	class Texture;
 
 
-	class DeferredRenderer : public Renderer, public WorldMapProvider {
+	class DeferredRenderer : public Renderer, public WorldMapProvider, public PostEffectDrawer {
 
 	public:
 		DeferredRenderer(RenderWindow& window, Input& inputManager, SceneRender& lighting,
@@ -35,12 +36,12 @@ namespace geeL {
 		virtual void draw();
 		virtual void draw(const Camera& camera, const FrameBuffer& buffer);
 
-		void addSSAO(SSAO& ssao);
+		virtual void addSSAO(SSAO& ssao);
 
 		//Add new post processing effect to renderer. 
-		void addEffect(PostProcessingEffect& effect);
-		void addEffect(PostProcessingEffect& effect, WorldMapRequester& requester);
-		void addEffect(PostProcessingEffect& effect, std::list<WorldMapRequester*> requester);
+		virtual void addEffect(PostProcessingEffect& effect);
+		virtual void addEffect(PostProcessingEffect& effect, WorldMapRequester& requester);
+		virtual void addEffect(PostProcessingEffect& effect, std::list<WorldMapRequester*> requester);
 
 		virtual void addRequester(WorldMapRequester& requester);
 		virtual void linkInformation() const;

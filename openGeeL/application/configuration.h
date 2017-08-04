@@ -107,7 +107,7 @@ namespace geeL {
 
 	using SceneInitialization = std::function<void(
 		Application& app,
-		DeferredRenderer& renderer,
+		PostEffectDrawer& renderer,
 		GUIRenderer& gui,
 		RenderScene& scene,
 		LightManager& lightManager, 
