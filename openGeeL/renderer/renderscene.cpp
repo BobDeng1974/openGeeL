@@ -148,13 +148,13 @@ namespace geeL {
 		lightManager.drawReflectionProbes();
 	}
 
-	void RenderScene::update() {
-		run();
-
+	void RenderScene::updateCamera() {
 		pipeline.bindCamera(*camera);
 	}
 
 	void RenderScene::run() {
+		lock();
+
 		iterSceneObjects([&](SceneObject& obj) {
 			obj.update(input);
 		});
@@ -165,6 +165,7 @@ namespace geeL {
 			obj.lateUpdate();
 		});
 
+		unlock();
 	}
 
 	void RenderScene::draw(SceneShader& shader) {
@@ -304,6 +305,14 @@ namespace geeL {
 	void RenderScene::bindSkybox(RenderShader& shader) const {
 		if (skybox != nullptr)
 			skybox->bind(shader);
+	}
+
+	void RenderScene::lock() {
+		mutex.lock();
+	}
+
+	void RenderScene::unlock() {
+		mutex.unlock();
 	}
 
 	void RenderScene::forwardScreenInfo(const ScreenInfo& info) {

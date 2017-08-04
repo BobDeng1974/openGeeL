@@ -81,6 +81,7 @@ namespace geeL {
 
 		RenderTexture* current = texture1; //Current of alternating textures is stored here
 		Viewport::setForced(0, 0, window->resolution.getWidth(), window->resolution.getHeight());
+		scene->lock();
 
 		//Geometry pass
 		gBuffer.fill(geometryPassFunc);
@@ -140,6 +141,8 @@ namespace geeL {
 			effects.front()->draw();
 		}
 
+		scene->unlock();
+
 		//Render GUI overlay on top of final image
 		if (gui != nullptr) gui->draw();
 
@@ -177,7 +180,7 @@ namespace geeL {
 		glEnable(GL_DEPTH_TEST);
 
 		//Geometry pass
-		gBuffer.fill([this, camera] () { scene->drawDeferred(camera); });
+		gBuffer.fill([this, &camera] () { scene->drawDeferred(camera); });
 
 		scene->getLightmanager().drawShadowmaps(*scene, nullptr);
 
@@ -199,7 +202,7 @@ namespace geeL {
 
 	
 	void DeferredRenderer::geometryPass() {
-		scene->update();
+		scene->updateCamera();
 		scene->drawDeferred();
 	}
 

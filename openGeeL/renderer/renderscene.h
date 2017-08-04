@@ -4,6 +4,7 @@
 #include <vec3.hpp>
 #include <functional>
 #include <map>
+#include <mutex>
 #include <list>
 #include "threading.h"
 
@@ -94,9 +95,7 @@ namespace geeL {
 
 		void init();
 		void updateProbes();
-
-		//Updates scene information. Should be called once at beginning of frame
-		void update();
+		void updateCamera();
 
 		//Tick function that updates scene information of current frame
 		virtual void run();
@@ -135,12 +134,17 @@ namespace geeL {
 		void drawSkybox() const;
 		void drawSkybox(const Camera& camera) const;
 
+		//Lock scene for reading and writing
+		void lock();
+		void unlock();
+
 		void forwardScreenInfo(const ScreenInfo& info);
 
 	private:
 		bool initialized = false;
 		Input& input;
 		const MaterialFactory& materialFactory;
+		std::mutex mutex;
 
 	};
 
