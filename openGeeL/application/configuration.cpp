@@ -62,7 +62,6 @@ namespace geeL {
 		initFunction(app, renderer, gui, scene, lightManager, transFactory, meshFactory,
 			materialFactory, cubeMapFactory, def, *physics);
 
-
 		delete physics;
 		if (physicsThread != nullptr) delete physicsThread;
 	}

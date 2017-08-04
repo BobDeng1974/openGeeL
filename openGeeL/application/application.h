@@ -5,6 +5,7 @@
 #include <map>
 #include <mutex>
 #include <thread>
+#include "utility/rendertime.h"
 
 namespace geeL {
 
@@ -27,8 +28,8 @@ namespace geeL {
 
 		static bool closing();
 
-		const ContinuousThread* const getThread(ThreadID id);
 		const ContinuousThread* const getCurrentThread();
+		Time getCurrentTime();
 
 	private:
 		RenderWindow& window;
@@ -41,6 +42,8 @@ namespace geeL {
 
 		void initThreads();
 		void joinThreads();
+
+		const ContinuousThread* const getThread(ThreadID id);
 
 	};
 

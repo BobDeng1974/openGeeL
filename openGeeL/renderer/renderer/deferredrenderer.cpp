@@ -76,8 +76,6 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::run() {
-		RenderTime::update();
-
 		//window->makeCurrent();
 		glEnable(GL_DEPTH_TEST);
 

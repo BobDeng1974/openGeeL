@@ -35,8 +35,6 @@ namespace geeL {
 		window->swapBuffer();
 
 		handleInput();
-
-		RenderTime::update();
 	}
 
 	void SplitRenderer::draw() {

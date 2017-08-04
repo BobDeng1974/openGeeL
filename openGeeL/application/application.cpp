@@ -16,8 +16,17 @@ using namespace std;
 
 namespace geeL {
 
+	//TODO: Very hacky and problematic when using multiple applications
+	Application* application;
+	float RenderTime::deltaTime() {
+		return application->getCurrentTime().deltaTime();
+	}
+
+
 	Application::Application(RenderWindow& window, InputManager& inputManager, RenderThread& renderThread)
 		: window(window), inputManager(inputManager), renderer(renderThread.getRenderer()) {
+
+		application = this;
 
 		auto exit = [&window](int key, int scancode, int action, int mode) { 
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -73,11 +82,16 @@ namespace geeL {
 
 	const ContinuousThread* const Application::getThread(ThreadID id) {
 		threadLock.lock();
+		
 		auto it = threads.find(id);
-		if (it != threads.end())
-			return it->second.first;
-		threadLock.unlock();
+		if (it != threads.end()) {
+			auto* thread = it->second.first;
+			threadLock.unlock();
 
+			return thread;
+		}
+		
+		threadLock.unlock();
 		return nullptr;
 	}
 
@@ -85,12 +99,23 @@ namespace geeL {
 		return getThread(this_thread::get_id());
 	}
 
+	Time Application::getCurrentTime() {
+		auto* thread = getCurrentThread();
+		if (thread != nullptr) {
+			return thread->getTime();
+		}
+
+		return Time();
+	}
+
 	void Application::initThreads() {
 		for (auto it(tempThreads.begin()); it != tempThreads.end(); it++) {
 			ContinuousThread& thread = **it;
 
 			std::thread t = std::move(thread.start());
-			threads[t.get_id()] = pair<ContinuousThread*, std::thread>(&thread, std::move(t));
+			ThreadID id = t.get_id();
+
+			threads[id] = pair<ContinuousThread*, std::thread>(&thread, std::move(t));
 		}
 
 		tempThreads.clear();

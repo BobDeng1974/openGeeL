@@ -1,31 +1,15 @@
-#include <glfw3.h>
-
 #include "rendertime.h"
-
+#include "application.h"
+#include "threading.h"
 
 namespace geeL{
-
-	float RenderTime::delta;
-	float RenderTime::lastFrame;
-
-	float RenderTime::deltaTime() {
-		return delta;
-	}
-
-	void RenderTime::update() {
-
-		float currentFrame = (float)glfwGetTime();
-		RenderTime::delta = currentFrame - RenderTime::lastFrame;
-		RenderTime::lastFrame = currentFrame;
-	}
-
 
 	long Time::deltaTimeMS() const {
 		return delta().count();
 	}
 
 	float Time::deltaTime() const {
-		return float(deltaTimeMS() / 1000L);
+		return float(deltaTimeMS()) / 1000.f;
 	}
 
 	void Time::update() {

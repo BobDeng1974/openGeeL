@@ -12,21 +12,10 @@ typedef std::chrono::duration<float> TimeFrame;
 
 namespace geeL {
 
-	//Class that holds information about elapsed time inside the application
-	class RenderTime {
-
-	public:
-		static float deltaTime();
-
-		static void update();
-
-	private:
-		static float delta;
-		static float lastFrame;
-
-	};
+	class Application;
 
 
+	//Class that holds information about elapsed time periods
 	class Time {
 
 	public:
@@ -43,6 +32,14 @@ namespace geeL {
 		AtomicWrapper<TimePoint> lastFrame;
 		AtomicWrapper<MS> delta;
 
+	};
+
+
+	//Class that holds time information from current thread
+	class RenderTime {
+
+	public:
+		static float deltaTime();
 
 	};
 
