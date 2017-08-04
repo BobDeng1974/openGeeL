@@ -40,8 +40,9 @@ namespace geeL {
 	}
 
 
+	//TODO: Very hacky and problematic when using multiple applications
 	mutex inputLock;
-	bool close = false;
+	AtomicWrapper<bool> close = false;
 
 	void Application::run() {
 		renderer.linkInformation();
@@ -66,7 +67,6 @@ namespace geeL {
 		}
 
 		close = true;
-
 		joinThreads();
 
 		window.close();
@@ -120,8 +120,6 @@ namespace geeL {
 	}
 
 	void Application::joinThreads() {
-		std::lock_guard<std::mutex> guard(threadLock);
-
 		for (auto it(threads.begin()); it != threads.end(); it++) {
 			std::thread* thread = &it->second.second;
 
