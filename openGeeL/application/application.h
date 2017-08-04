@@ -1,8 +1,9 @@
 #ifndef GEEL_APPLICATION_H
 #define GEEL_APPLICATION_H
 
-#include <map>
 #include <list>
+#include <map>
+#include <mutex>
 #include <thread>
 #include "threading.h"
 
@@ -35,6 +36,7 @@ namespace geeL {
 		InputManager& inputManager;
 		Renderer& renderer;
 
+		std::mutex threadLock;
 		std::list<ContinuousThread*> tempThreads;
 		std::map<ThreadID, std::pair<ContinuousThread*, std::thread>> threads;
 
