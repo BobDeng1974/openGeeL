@@ -33,7 +33,6 @@ namespace geeL {
 		void setColor(const glm::vec3& value);
 		void setEmissivity(const glm::vec3& value);
 
-		virtual void bindTextures(SceneShader& shader) const;
 		virtual void bind(SceneShader& shader) const;
 
 		virtual float getFloatValue(std::string name) const;

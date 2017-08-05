@@ -35,7 +35,6 @@ namespace geeL{
 
 				//Draw individual material
 				const Material& mat = container.material;
-				mat.bindTextures();
 				mat.bind();
 
 				//Draw mesh
@@ -62,7 +61,6 @@ namespace geeL{
 
 				//Draw individual material
 				const Material& mat = container.material;
-				mat.bindTextures();
 				mat.bind();
 
 				//Draw mesh
@@ -86,7 +84,6 @@ namespace geeL{
 				//Draw individual material
 				const Material& mat = mapping.material;
 				const MaterialContainer& container = mat.getMaterialContainer();
-				container.bindTextures(shader);
 				container.bind(shader);
 
 				//Draw mesh

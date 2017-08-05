@@ -8,10 +8,6 @@ namespace geeL {
 		: shader(&shader), container(&container) {}
 
 
-	void Material::bindTextures() const {
-		container->bindTextures(*shader);
-	}
-
 	void Material::bind() const {
 		container->bind(*shader);
 	}

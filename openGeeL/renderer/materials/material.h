@@ -23,7 +23,6 @@ namespace geeL {
 		MaterialContainer(std::string name = "material")
 			: name(name) {}
 
-		virtual void bindTextures(SceneShader& shader) const = 0;
 		virtual void bind(SceneShader& shader) const = 0;
 
 		virtual float getFloatValue(std::string name) const = 0;
@@ -43,7 +42,6 @@ namespace geeL {
 		Material();
 		Material(SceneShader& shader, MaterialContainer& container);
 
-		void bindTextures() const;
 		void bind() const;
 
 		const SceneShader& getShader() const;

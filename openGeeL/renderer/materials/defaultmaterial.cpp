@@ -123,11 +123,8 @@ namespace geeL {
 	}
 
 
-	void DefaultMaterialContainer::bindTextures(SceneShader& shader) const {
-		textureStack.bind(shader);
-	}
-
 	void DefaultMaterialContainer::bind(SceneShader& shader) const {
+		textureStack.bind(shader);
 		textureStack.draw(shader);
 
 		shader.bind<int>("material.mapFlags", textureStack.mapFlags);
@@ -136,4 +133,5 @@ namespace geeL {
 		shader.bind<glm::vec4>("material.color", glm::vec4(color, transparency));
 		shader.bind<glm::vec3>("material.emissivity", emissivity);
 	}
+
 }

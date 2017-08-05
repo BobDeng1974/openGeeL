@@ -23,15 +23,13 @@ namespace geeL {
 	public:
 		GenericMaterialContainer(std::string name = "material");
 
-		void addTexture(std::string name, TextureMap& texture);
-		void addTextures(std::vector<TextureMap*> textures);
+		void addTexture(std::string name, Texture2D& texture);
 
 		void addParameter(std::string name, float parameter);
 		void addParameter(std::string name, int parameter);
 		void addParameter(std::string name, vec3 parameter);
 		void addParameter(std::string name, mat4 parameter);
 
-		void bindTextures(SceneShader& shader) const;
 		void bind(SceneShader& shader) const;
 
 		virtual float getFloatValue(std::string name) const;
@@ -46,8 +44,7 @@ namespace geeL {
 
 
 	private:
-		LayeredTexture textureStack;
-
+		std::map<std::string, Texture2D*> textures;
 		std::map<std::string, float> floatParameters;
 		std::map<std::string, int> intParameters;
 		std::map<std::string, vec3> vec3Parameters;

@@ -15,18 +15,10 @@ namespace geeL {
 		: MaterialContainer(name) {}
 
 
-	void GenericMaterialContainer::addTexture(string name, TextureMap& texture) {
-		textureStack.addTexture(this->name + "." + name, texture);
+	void GenericMaterialContainer::addTexture(string name, Texture2D& texture) {
+		textures[this->name + "." + name] = &texture;
 	}
 
-	void GenericMaterialContainer::addTextures(vector<TextureMap*> textures) {
-		for (size_t i = 0; i < textures.size(); i++) {
-			TextureMap& texture = *textures[i];
-			string name = this->name + "." + texture.getTypeAsString();
-
-			textureStack.addTexture(name, texture);
-		}
-	}
 
 	void GenericMaterialContainer::addParameter(string name, float parameter) {
 		floatParameters[this->name + "." + name] = parameter;
@@ -45,16 +37,12 @@ namespace geeL {
 	}
 
 
-	void GenericMaterialContainer::bindTextures(SceneShader& shader) const {
-		textureStack.bind(shader);
-	}
-
 	void GenericMaterialContainer::bind(SceneShader& shader) const {
-		textureStack.draw(shader);
+		for (auto it(textures.begin()); it != textures.end(); it++)
+			shader.addMap(*it->second, it->first);
 
-		shader.bind<int>("material.mapFlags", textureStack.mapFlags);
+		shader.loadMaps();
 
-		//GLint location;
 		for (auto it = floatParameters.begin(); it != floatParameters.end(); it++) {
 			pair<string, float> pair = *it;
 
