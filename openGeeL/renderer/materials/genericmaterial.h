@@ -22,6 +22,13 @@ namespace geeL {
 	public:
 		GenericMaterialContainer(std::string name = "material");
 
+		//Add a new texture unit with given name. Shader will be notified
+		//if unit is filled or not during rendering process via variable 
+		//$(name)Bound. (E.g. unit diffuse bound => diffuseBound = true) 
+		virtual void addTextureUnit(const std::string& name);
+
+		//Add a new texture to material and fill the texture unit that has given name
+		//(or create a new one if such unit doens't exist)
 		virtual void addTexture(const std::string& name, Texture2D& texture);
 
 		void addParameter(std::string name, float parameter);

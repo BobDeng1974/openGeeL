@@ -15,6 +15,12 @@ namespace geeL {
 		: MaterialContainer(name) {}
 
 
+	void GenericMaterialContainer::addTextureUnit(const std::string & name) {
+		auto it = textures.find(this->name + "." + name);
+		if (it == textures.end())
+			it->second = nullptr;
+	}
+
 	void GenericMaterialContainer::addTexture(const std::string& name, Texture2D& texture) {
 		textures[this->name + "." + name] = &texture;
 	}
@@ -38,8 +44,17 @@ namespace geeL {
 
 
 	void GenericMaterialContainer::bind(SceneShader& shader) const {
-		for (auto it(textures.begin()); it != textures.end(); it++)
-			shader.addMap(*it->second, it->first);
+		for (auto it(textures.begin()); it != textures.end(); it++) {
+			Texture2D* texture = it->second;
+			std::string boundName = it->first + "Bound";
+
+			if (texture != nullptr) {
+				shader.addMap(*texture, it->first);
+				shader.bind<int>(boundName, 1);
+			}
+			else
+				shader.bind<int>(boundName, 0);
+		}
 
 		shader.loadMaps();
 
