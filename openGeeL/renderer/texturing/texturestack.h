@@ -9,11 +9,11 @@
 
 namespace geeL {
 
-	class LayeredTexture : public Texture2D {
+	class TextureStack : public Texture2D {
 
 	public:
 		int mapFlags;
-		LayeredTexture() : Texture2D(ColorType::None), mapFlags(0) {}
+		TextureStack() : Texture2D(ColorType::None), mapFlags(0) {}
 
 		void addTexture(const std::string& name, TextureMap& texture);
 		void addTexture(const std::string& name, Texture2D& texture, MapType type);

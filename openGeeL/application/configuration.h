@@ -81,7 +81,6 @@
 #include "texturing/envmap.h"
 #include "texturing/texture.h"
 #include "texturing/imagetexture.h"
-#include "texturing/layeredtexture.h"
 
 #include "transformation/transform.h"
 #include "transformation/threadedtransform.h"

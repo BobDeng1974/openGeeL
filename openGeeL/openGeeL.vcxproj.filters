@@ -84,9 +84,6 @@
     <ClCompile Include="main\main.cpp">
       <Filter>main</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\texturing\layeredtexture.cpp">
-      <Filter>renderer\texturing</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\window.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
@@ -441,15 +438,15 @@
     <ClCompile Include="renderer\cameras\movablecamera.cpp">
       <Filter>renderer\cameras</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\texturing\texturestack.cpp">
+      <Filter>renderer\texturing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
       <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\texturing\texture.h">
-      <Filter>renderer\texturing</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\texturing\layeredtexture.h">
       <Filter>renderer\texturing</Filter>
     </ClInclude>
     <ClInclude Include="renderer\window.h">
@@ -882,6 +879,9 @@
       <Filter>renderer\renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\texturing\maptype.h">
+      <Filter>renderer\texturing</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\texturing\texturestack.h">
       <Filter>renderer\texturing</Filter>
     </ClInclude>
   </ItemGroup>

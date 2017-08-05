@@ -4,7 +4,7 @@
 #include <list>
 #include <vector>
 #include <string>
-#include "texturing/layeredtexture.h"
+#include "texturing/texturestack.h"
 #include "material.h"
 
 namespace geeL {
@@ -49,7 +49,7 @@ namespace geeL {
 		float transparency;
 		float roughness;
 		float metallic;
-		LayeredTexture textureStack;
+		TextureStack textureStack;
 
 	};
 }

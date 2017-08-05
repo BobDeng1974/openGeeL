@@ -4,17 +4,17 @@
 #include <algorithm>
 #include "shader/rendershader.h"
 #include "imagetexture.h"
-#include "layeredtexture.h"
+#include "texturestack.h"
 
 using namespace std;
 
 namespace geeL {
 
-	void LayeredTexture::addTexture(const string& name, TextureMap& texture) {
+	void TextureStack::addTexture(const string& name, TextureMap& texture) {
 		addTexture(name, texture, texture.type);
 	}
 
-	void LayeredTexture::addTexture(const std::string& name, Texture2D& texture, MapType type) {
+	void TextureStack::addTexture(const std::string& name, Texture2D& texture, MapType type) {
 		//Set color type to the one of the first added map
 		if (textures.size() == 0)
 			colorType = texture.getColorType();
@@ -26,7 +26,7 @@ namespace geeL {
 	}
 
 
-	void LayeredTexture::bind() const {
+	void TextureStack::bind() const {
 		auto it = textures.begin();
 		Texture* map = it->second.second;
 
@@ -34,7 +34,7 @@ namespace geeL {
 			return map->bind();
 	}
 
-	void LayeredTexture::bind(const RenderShader& shader, int texLayer) const {
+	void TextureStack::bind(const RenderShader& shader, int texLayer) const {
 		int counter = 0;
 		iterTextures([&counter, &shader](const std::string& name, const Texture2D& texture) {
 			shader.bind<int>(name, counter + shader.mapBindingPos);
@@ -42,7 +42,7 @@ namespace geeL {
 		});
 	}
 
-	void LayeredTexture::draw(const RenderShader& shader, int texLayer) const {
+	void TextureStack::draw(const RenderShader& shader, int texLayer) const {
 		int layer = GL_TEXTURE0 + texLayer;
 
 		int counter = 0;
@@ -53,7 +53,7 @@ namespace geeL {
 		});
 	}
 
-	unsigned int LayeredTexture::getID() const {
+	unsigned int TextureStack::getID() const {
 		auto it = textures.begin();
 		Texture2D* map = it->second.second;
 
@@ -63,24 +63,24 @@ namespace geeL {
 		return 0;
 	}
 
-	void LayeredTexture::remove() {
+	void TextureStack::remove() {
 		iterTextures([](const std::string& name, Texture2D& texture) {
 			texture.remove();
 		});
 	}
 
-	void LayeredTexture::iterTextures(std::function<void(const std::string&, const Texture2D&)> function) const {
+	void TextureStack::iterTextures(std::function<void(const std::string&, const Texture2D&)> function) const {
 		for (auto it(textures.begin()); it != textures.end(); it++)
 			function(it->second.first, *it->second.second);
 	}
 
-	void LayeredTexture::iterTextures(std::function<void(const std::string&, Texture2D&)> function) {
+	void TextureStack::iterTextures(std::function<void(const std::string&, Texture2D&)> function) {
 		for (auto it(textures.begin()); it != textures.end(); it++)
 			function(it->second.first, *it->second.second);
 	}
 
 
-	void LayeredTexture::updateMapFlags(MapType type) {
+	void TextureStack::updateMapFlags(MapType type) {
 		switch (type) {
 			case MapType::Diffuse:
 				mapFlags += 1;

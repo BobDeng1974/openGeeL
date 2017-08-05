@@ -11,9 +11,6 @@
 #define GL_LINEAR 0x2601
 
 namespace geeL {
-
-	
-
 	
 	//Simple 2D Texutre loaded from image file
 	class ImageTexture : public Texture2D {
@@ -64,10 +61,6 @@ namespace geeL {
 		TextureMap& operator= (const TextureMap& other) = delete;
 
 	};
-
-
-
-	
 
 }
 

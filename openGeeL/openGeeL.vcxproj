@@ -252,7 +252,7 @@
     <ClCompile Include="renderer\texturing\brdfIntMap.cpp" />
     <ClCompile Include="renderer\texturing\envmap.cpp" />
     <ClCompile Include="renderer\texturing\imagetexturecube.cpp" />
-    <ClCompile Include="renderer\texturing\layeredtexture.cpp" />
+    <ClCompile Include="renderer\texturing\texturestack.cpp" />
     <ClCompile Include="renderer\texturing\imagetexture.cpp" />
     <ClCompile Include="renderer\texturing\rendertexture.cpp" />
     <ClCompile Include="renderer\texturing\rendertexture3D.cpp" />
@@ -391,7 +391,7 @@
     <ClInclude Include="renderer\texturing\brdfIntMap.h" />
     <ClInclude Include="renderer\texturing\envmap.h" />
     <ClInclude Include="renderer\texturing\imagetexturecube.h" />
-    <ClInclude Include="renderer\texturing\layeredtexture.h" />
+    <ClInclude Include="renderer\texturing\texturestack.h" />
     <ClInclude Include="renderer\texturing\imagetexture.h" />
     <ClInclude Include="renderer\texturing\maptype.h" />
     <ClInclude Include="renderer\texturing\rendertexture.h" />
