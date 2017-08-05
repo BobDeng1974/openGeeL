@@ -15,7 +15,7 @@ namespace geeL {
 		: MaterialContainer(name) {}
 
 
-	void GenericMaterialContainer::addTexture(string name, Texture2D& texture) {
+	void GenericMaterialContainer::addTexture(const std::string& name, Texture2D& texture) {
 		textures[this->name + "." + name] = &texture;
 	}
 

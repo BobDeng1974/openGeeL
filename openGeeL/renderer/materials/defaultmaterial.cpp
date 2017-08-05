@@ -15,14 +15,19 @@ namespace geeL {
 		: MaterialContainer("material"), transparency(1.f) {}
 
 
-	void DefaultMaterialContainer::addTexture(std::string name, TextureMap& texture) {
-		textureStack.addTexture(this->name + "." + name, texture);
+	void DefaultMaterialContainer::addTexture(const std::string& name, Texture2D& texture) {
+		MapType type = MapTypeConversion::getMapFromString(name);
+		textureStack.addTexture(this->name + ".", texture, type);
+	}
+
+	void DefaultMaterialContainer::addTexture(TextureMap& texture) {
+		textureStack.addTexture(this->name + ".", texture);
 	}
 
 	void DefaultMaterialContainer::addTextures(std::vector<TextureMap*> textures) {
 		for (size_t i = 0; i < textures.size(); i++) {
 			TextureMap& texture = *textures[i];
-			string name = this->name + "." + texture.getTypeAsString();
+			string name = this->name + ".";
 
 			textureStack.addTexture(name, texture);
 		}

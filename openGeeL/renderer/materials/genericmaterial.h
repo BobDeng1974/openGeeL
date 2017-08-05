@@ -23,7 +23,7 @@ namespace geeL {
 	public:
 		GenericMaterialContainer(std::string name = "material");
 
-		void addTexture(std::string name, Texture2D& texture);
+		virtual void addTexture(const std::string& name, Texture2D& texture);
 
 		void addParameter(std::string name, float parameter);
 		void addParameter(std::string name, int parameter);

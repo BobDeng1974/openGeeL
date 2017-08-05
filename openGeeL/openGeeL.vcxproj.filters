@@ -881,6 +881,9 @@
     <ClInclude Include="renderer\renderer\postrenderer.h">
       <Filter>renderer\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\texturing\maptype.h">
+      <Filter>renderer\texturing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\lighting.vert">

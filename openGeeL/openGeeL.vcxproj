@@ -393,6 +393,7 @@
     <ClInclude Include="renderer\texturing\imagetexturecube.h" />
     <ClInclude Include="renderer\texturing\layeredtexture.h" />
     <ClInclude Include="renderer\texturing\imagetexture.h" />
+    <ClInclude Include="renderer\texturing\maptype.h" />
     <ClInclude Include="renderer\texturing\rendertexture.h" />
     <ClInclude Include="renderer\texturing\rendertexture3D.h" />
     <ClInclude Include="renderer\texturing\rendertexturecube.h" />

@@ -7,6 +7,8 @@
 namespace geeL {
 
 	class SceneShader;
+	class Texture2D;
+
 
 	enum MaterialType {
 		Opaque = 0,
@@ -23,7 +25,7 @@ namespace geeL {
 		MaterialContainer(std::string name = "material")
 			: name(name) {}
 
-		virtual void bind(SceneShader& shader) const = 0;
+		virtual void addTexture(const std::string& name, Texture2D& texture) = 0;
 
 		virtual float getFloatValue(std::string name) const = 0;
 		virtual int getIntValue(std::string name) const = 0;
@@ -32,6 +34,8 @@ namespace geeL {
 		virtual void setFloatValue(std::string name, float value) = 0;
 		virtual void setIntValue(std::string name, int value) = 0;
 		virtual void setVectorValue(std::string name, const glm::vec3& value) = 0;
+
+		virtual void bind(SceneShader& shader) const = 0;
 
 	};
 

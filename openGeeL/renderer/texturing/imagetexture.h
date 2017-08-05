@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <vec3.hpp>
+#include "maptype.h"
 #include "texture.h"
 
 #define GL_REPEAT 0x2901 
@@ -11,14 +12,9 @@
 
 namespace geeL {
 
-	enum class MapType {
-		Diffuse,
-		Specular,
-		Normal,
-		Metallic
-	};
+	
 
-
+	
 	//Simple 2D Texutre loaded from image file
 	class ImageTexture : public Texture2D {
 
@@ -61,12 +57,17 @@ namespace geeL {
 			AnisotropicFilter filter = AnisotropicFilter::Medium);
 
 		std::string getTypeAsString() const;
+		
 
 	private:
 		TextureMap(const TextureMap& other) = delete;
 		TextureMap& operator= (const TextureMap& other) = delete;
 
 	};
+
+
+
+	
 
 }
 

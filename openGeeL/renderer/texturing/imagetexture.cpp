@@ -66,16 +66,7 @@ namespace geeL {
 
 
 	string TextureMap::getTypeAsString() const {
-		switch (type) {
-			case MapType::Diffuse:
-				return "diffuse";
-			case MapType::Specular:
-				return "specular";
-			case MapType::Normal:
-				return "normal";
-		}
-
-		return "";
+		return MapTypeConversion::getTypeAsString(type);
 	}
 
 }
