@@ -46,7 +46,7 @@ namespace geeL {
 
 
 	void GenericMaterialContainer::bindTextures(SceneShader& shader) const {
-		textureStack.bind(shader, "");
+		textureStack.bind(shader);
 	}
 
 	void GenericMaterialContainer::bind(SceneShader& shader) const {

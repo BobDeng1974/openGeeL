@@ -41,13 +41,13 @@ namespace geeL {
 			return map->bind();
 	}
 
-	void LayeredTexture::bind(const RenderShader& shader, std::string name, int texLayer) const {
+	void LayeredTexture::bind(const RenderShader& shader, int texLayer) const {
 
 		int counter = 0;
 		for_each(textures.begin(), textures.end(), [&](pair<std::string, TextureMap*> tex) {
 			TextureMap* texture = tex.second;
 
-			texture->bind(shader, tex.first, counter + shader.mapBindingPos);
+			shader.bind<int>(tex.first, counter + shader.mapBindingPos);
 			counter++;
 		});
 	}
@@ -57,10 +57,10 @@ namespace geeL {
 
 		int counter = 0;
 		for_each(textures.begin(), textures.end(), [&](pair<std::string, TextureMap*> tex) {
-			TextureMap* texture = tex.second;
+			Texture2D* texture = tex.second;
 
 			glActiveTexture(layer + counter + shader.mapBindingPos);
-			texture->draw(shader);
+			texture->bind();
 			counter++;
 		});
 	}

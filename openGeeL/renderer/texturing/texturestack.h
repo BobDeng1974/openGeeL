@@ -2,21 +2,23 @@
 #define LAYEREDTEXTURE_H
 
 #include <utility>
-#include <list>
+#include <map>
 #include "texture.h"
 #include "imagetexture.h"
 
 namespace geeL {
 
-	class LayeredTexture : public Texture2D {
+	//Object that holds a stack of textures of different types (E.g. diffuse or specular maps)
+	class TextureStack : public Texture2D {
 
 	public:
 		int mapFlags;
-		LayeredTexture() : Texture2D(ColorType::None), mapFlags(0) {}
+		TextureStack() : Texture2D(ColorType::None), mapFlags(0) {}
 
-		//Add texture. Ill behaviour possible (and not checked)
-		//if more than one texture of each type is added (e.g. two normal maps)
+		//Add texture map
 		void addTexture(std::string name, TextureMap& texture);
+		void addTexture(std::string name, Texture2D& texture, MapType type);
+
 
 		//Bind (only) first texture
 		virtual void bind() const;
@@ -27,7 +29,9 @@ namespace geeL {
 		virtual void remove();
 
 	private:
-		std::list<std::pair<std::string, TextureMap*>> textures;
+		std::map<MapType, std::pair<std::string, Texture2D*>> textures;
+
+		void updateMapFlags(MapType type);
 
 	};
 }

@@ -65,14 +65,6 @@ namespace geeL {
 			: ImageTexture(fileName, colorType, wrapMode, filterMode, filter), type(type) {}
 
 
-	void TextureMap::bind(const RenderShader& shader, std::string name, int texLayer) const {
-		shader.bind<int>(name, texLayer);
-	}
-
-	void TextureMap::draw(const RenderShader& shader, int texLayer) const {
-		glBindTexture(GL_TEXTURE_2D, id);
-	}
-
 	string TextureMap::getTypeAsString() const {
 		switch (type) {
 			case MapType::Diffuse:
