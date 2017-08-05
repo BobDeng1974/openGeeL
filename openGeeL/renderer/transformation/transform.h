@@ -29,6 +29,7 @@ namespace geeL {
 		Transform(mat4& matrix, bool isStatic = false);
 		Transform(vec3 position, glm::quat rotation, vec3 scaling, bool isStatic = false);
 		Transform(vec3 position, vec3 rotation, vec3 scaling, bool isStatic = false);
+		Transform(const Transform& transform);
 		~Transform();
 		
 		
@@ -85,6 +86,7 @@ namespace geeL {
 
 		bool Transform::operator==(const Transform& b) const;
 		bool Transform::operator!=(const Transform& b) const;
+		Transform& operator= (const Transform& other);
 
 		unsigned int getID() const;
 

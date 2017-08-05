@@ -55,6 +55,18 @@ namespace geeL {
 		idCounter++;
 	}
 
+	Transform::Transform(const Transform& transform) : 
+		position(transform.position), rotation(transform.rotation), scaling(transform.scaling), 
+		forward(transform.forward), up(transform.up), right(transform.right),
+		translationMatrix(transform.translationMatrix), rotationMatrix(transform.rotationMatrix), scaleMatrix(transform.scaleMatrix), 
+		isStatic(transform.isStatic), parent(transform.parent), status(TransformUpdateStatus::None), name(transform.name) {
+
+		resetMatrix();
+
+		id = idCounter;
+		idCounter++;
+	}
+
 
 	Transform::~Transform() {
 		for (auto it = children.begin(); it != children.end(); it++)
@@ -310,6 +322,13 @@ namespace geeL {
 
 	bool Transform::operator!=(const Transform& b) const {
 		return this != &b;
+	}
+
+	Transform& Transform::operator=(const Transform& other) {
+		if (this != &other)
+			*this = std::move(Transform(other));
+
+		return *this;
 	}
 
 	unsigned int Transform::getID() const {
