@@ -12,7 +12,12 @@ namespace geeL {
 	}
 
 
-	bool TextureBinding::operator== (const TextureBinding &rhs) {
-		return *texture == *rhs.texture;
+	bool TextureBinding::operator== (const TextureBinding& rhs) const {
+		return *texture == *rhs.texture && offset == rhs.offset && name == rhs.name;
 	}
+
+	bool TextureBinding::operator!= (const TextureBinding& rhs) const {
+		return !(*this == rhs);
+	}
+
 }

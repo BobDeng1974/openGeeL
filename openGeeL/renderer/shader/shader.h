@@ -13,6 +13,7 @@
 #include "texturing/texturetype.h"
 #include "utility/properties.h"
 #include "utility/defaults.h"
+#include "bindingstack.h"
 
 typedef int ShaderLocation;
 
@@ -48,6 +49,13 @@ namespace geeL {
 
 		//Load maps into their binding points in the shader
 		virtual void loadMaps() const;
+
+		//Load maps into their binding points in the shader
+		//with some internal optimizations.
+		//Note: Should only be used if texture repetition is
+		//expected in concurrent calls since some overhead is
+		//to be expected
+		virtual void loadMapsDynamic() const;
 
 		ShaderLocation getLocation(const std::string& name) const;
 
@@ -112,6 +120,7 @@ namespace geeL {
 		void bindParameters();
 
 		void iterateBindings(std::function<void(const ShaderBinding&)> function);
+		void iterateTextures(std::function<void(const TextureBinding& binding)> function) const;
 
 	protected:
 		unsigned int program;

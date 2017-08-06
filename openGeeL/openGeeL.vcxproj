@@ -239,6 +239,7 @@
     <ClCompile Include="renderer\renderer\splitrenderer.cpp" />
     <ClCompile Include="renderer\renderscene.cpp" />
     <ClCompile Include="renderer\sceneobject.cpp" />
+    <ClCompile Include="renderer\shader\bindingstack.cpp" />
     <ClCompile Include="renderer\shader\computeshader.cpp" />
     <ClCompile Include="renderer\shader\sceneshader.cpp" />
     <ClCompile Include="renderer\shader\rendershader.cpp" />
@@ -376,6 +377,7 @@
     <ClInclude Include="renderer\renderer\splitrenderer.h" />
     <ClInclude Include="renderer\renderscene.h" />
     <ClInclude Include="renderer\sceneobject.h" />
+    <ClInclude Include="renderer\shader\bindingstack.h" />
     <ClInclude Include="renderer\shader\computeshader.h" />
     <ClInclude Include="renderer\shader\defshading.h" />
     <ClInclude Include="renderer\shader\sceneshader.h" />

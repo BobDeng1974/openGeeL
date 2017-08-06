@@ -441,6 +441,9 @@
     <ClCompile Include="renderer\texturing\texturestack.cpp">
       <Filter>renderer\texturing</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\shader\bindingstack.cpp">
+      <Filter>renderer\shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -883,6 +886,9 @@
     </ClInclude>
     <ClInclude Include="renderer\texturing\texturestack.h">
       <Filter>renderer\texturing</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shader\bindingstack.h">
+      <Filter>renderer\shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

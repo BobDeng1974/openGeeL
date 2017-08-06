@@ -34,7 +34,7 @@ namespace geeL {
 			return map->bind();
 	}
 
-	void TextureStack::bind(const RenderShader& shader, int texLayer) const {
+	void TextureStack::bind(const RenderShader& shader) const {
 		int counter = 0;
 		iterTextures([&counter, &shader](const std::string& name, const Texture2D& texture) {
 			shader.bind<int>(name, counter + shader.mapBindingPos);
@@ -42,8 +42,8 @@ namespace geeL {
 		});
 	}
 
-	void TextureStack::draw(const RenderShader& shader, int texLayer) const {
-		int layer = GL_TEXTURE0 + texLayer;
+	void TextureStack::draw(const RenderShader& shader) const {
+		int layer = GL_TEXTURE0;
 
 		int counter = 0;
 		iterTextures([&layer, &counter, &shader](const std::string& name, const Texture2D& texture) {
@@ -96,4 +96,5 @@ namespace geeL {
 				break;
 		}
 	}
+
 }

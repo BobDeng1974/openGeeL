@@ -56,7 +56,7 @@ namespace geeL {
 				shader.bind<int>(boundName, 0);
 		}
 
-		shader.loadMaps();
+		shader.loadMapsDynamic();
 
 		for (auto it = floatParameters.begin(); it != floatParameters.end(); it++) {
 			pair<string, float> pair = *it;

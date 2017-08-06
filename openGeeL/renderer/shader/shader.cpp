@@ -29,6 +29,12 @@ namespace geeL {
 
 
 	void Shader::addMap(const Texture& texture, const std::string& name) {
+		if (maps.size() >= TextureBindingStack::MAX_TEXTURE_BINDINGS) {
+			std::cout << "Can't add more than " << TextureBindingStack::MAX_TEXTURE_BINDINGS 
+				<< "texture to shader\n";
+			return;
+		}
+
 		auto it = maps.find(name);
 		//Update texture ID if a binding with same name already exists
 		if (it != maps.end()) {
@@ -39,7 +45,7 @@ namespace geeL {
 		else {
 			use();
 			unsigned int offset = maps.size();
-			glUniform1i(glGetUniformLocation(program, name.c_str()), mapOffset + offset);
+			bind<int>(name, mapOffset + offset);
 
 			maps[name] = TextureBinding(&texture, offset, name);
 			mapBindingPos = maps.size() + mapOffset;
@@ -88,7 +94,7 @@ namespace geeL {
 		for (auto it = maps.begin(); it != maps.end(); it++) {
 			TextureBinding& binding = (*it).second;
 			binding.offset = counter;
-			glUniform1i(glGetUniformLocation(program, binding.name.c_str()), mapOffset + binding.offset);
+			bind<int>(binding.name, mapOffset + binding.offset);
 			counter++;
 		}
 
@@ -96,14 +102,13 @@ namespace geeL {
 	}
 
 	void Shader::loadMaps() const {
-		int layer = GL_TEXTURE0;
-		for (auto it = maps.begin(); it != maps.end(); it++) {
-			const TextureBinding& binding = (*it).second;
-			glActiveTexture(layer + mapOffset + binding.offset);
-			binding.texture->bind();
-		}
+		TextureBindingStack::bindTexturesSimple(*this, mapOffset);
 	}
 
+
+	void Shader::loadMapsDynamic() const {
+		TextureBindingStack::bindTexturesDynamic(*this, mapOffset);
+	}
 
 	ShaderLocation Shader::getLocation(const string& name) const {
 		return glGetUniformLocation(program, name.c_str());
@@ -330,6 +335,13 @@ namespace geeL {
 	void Shader::iterateBindings(std::function<void(const ShaderBinding&)> function) {
 		for (auto it(shaderBindings.begin()); it != shaderBindings.end(); it++)
 			function(*it->second);
+	}
+
+	void Shader::iterateTextures(std::function<void(const TextureBinding&binding)> function) const {
+		for (auto it(maps.begin()); it != maps.end(); it++) {
+			const TextureBinding& binding = (*it).second;
+			function(binding);
+		}
 	}
 
 

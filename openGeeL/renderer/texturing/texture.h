@@ -18,9 +18,13 @@ namespace geeL {
 
 		//Bind texture as texture sampler
 		virtual void bind() const;
+		void unbind() const;
 
 		//Bind texture as image texture
 		void bindImage(unsigned int position = 0, AccessType access = AccessType::All) const;
+
+		//Call GL disable function with appropriate texture type
+		void disable() const;
 
 		//Remove texture from GPU memory
 		virtual void remove();
@@ -59,6 +63,8 @@ namespace geeL {
 		void setRenderResolution() const;
 		const Resolution& getResolution() const;
 
+		static void unbind();
+
 	protected:
 		Resolution resolution;
 
@@ -80,6 +86,8 @@ namespace geeL {
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
 
+		static void unbind();
+
 	protected:
 		Texture3D(ColorType colorType) : Texture(colorType) {}
 
@@ -95,6 +103,8 @@ namespace geeL {
 		virtual TextureType getTextureType() const;
 
 		virtual unsigned int getResolution() const = 0;
+
+		static void unbind();
 
 	protected:
 		TextureCube(ColorType colorType) : Texture(colorType) {}

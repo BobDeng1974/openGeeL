@@ -21,8 +21,8 @@ namespace geeL {
 
 		//Bind (only) first texture
 		virtual void bind() const;
-		void bind(const RenderShader& shader, int texLayer = 0) const;
-		void draw(const RenderShader& shader, int texLayer = 0) const;
+		void bind(const RenderShader& shader) const;
+		void draw(const RenderShader& shader) const;
 
 		virtual unsigned int getID() const;
 		virtual void remove();

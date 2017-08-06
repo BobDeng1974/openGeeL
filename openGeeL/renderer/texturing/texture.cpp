@@ -19,8 +19,16 @@ namespace geeL {
 		glBindTexture((int)getTextureType(), getID());
 	}
 
+	void Texture::unbind() const {
+		glBindTexture((int)getTextureType(), 0);
+	}
+
 	void Texture::bindImage(unsigned int position, AccessType access) const {
 		glBindImageTexture(position, getID(), 0, GL_TRUE, 0, (int)access, (int)getTextureType());
+	}
+
+	void Texture::disable() const {
+		glDisable((int)getTextureType());
 	}
 
 	void Texture::clear() {
@@ -170,6 +178,10 @@ namespace geeL {
 		}
 	}
 
+	void Texture2D::unbind() {
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
 
 	void Texture3D::mipmap() const {
 		glBindTexture(GL_TEXTURE_3D, getID());
@@ -200,6 +212,10 @@ namespace geeL {
 				glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
 				break;
 		}
+	}
+
+	void Texture3D::unbind() {
+		glBindTexture(GL_TEXTURE_3D, 0);
 	}
 
 
@@ -233,5 +249,10 @@ namespace geeL {
 				break;
 		}
 	}
+
+	void TextureCube::unbind() {
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
+
 
 }
