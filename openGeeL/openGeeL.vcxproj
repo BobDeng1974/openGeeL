@@ -489,6 +489,7 @@
     <None Include="renderer\shadowmapping\shadowmapping.geom" />
     <None Include="renderer\shadowmapping\shadowmapping.vert" />
     <None Include="renderer\shadowmapping\shadows.glsl" />
+    <None Include="renderer\shadowmapping\shadowsView.glsl" />
     <None Include="renderer\texturing\brdfIntMap.frag" />
     <None Include="renderer\voxelization\leavesFill.com.glsl" />
     <None Include="renderer\voxelization\nodeAlloc.com.glsl" />

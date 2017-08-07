@@ -111,6 +111,12 @@ namespace geeL {
 		set<string> includedFiles;
 		includedFiles.insert(shaderPath);
 		preprocessIncludes(shaderCode, includedFiles);
+
+		//Lazy fix: Run pre process again if there is at least one #include found in code
+		size_t check = shaderCode.find("#include");
+		if (check != string::npos)
+			preprocessIncludes(shaderCode, includedFiles);
+
 	}
 
 }

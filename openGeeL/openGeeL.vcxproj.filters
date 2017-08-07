@@ -1117,5 +1117,8 @@
     <None Include="renderer\shaders\samplingvector.glsl">
       <Filter>renderer\shaders</Filter>
     </None>
+    <None Include="renderer\shadowmapping\shadowsView.glsl">
+      <Filter>renderer\shadowmapping</Filter>
+    </None>
   </ItemGroup>
 </Project>
