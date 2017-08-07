@@ -26,7 +26,12 @@ namespace geeL {
 		void staticBind(const Camera& camera, const LightManager& lightManager, SceneShader& shader) const;
 
 		//Dynamically bind scene information into shader during runtime
-		void dynamicBind(const Camera& camera, const LightManager& lightManager, SceneShader& shader) const;
+		void dynamicBind(const LightManager& lightManager, SceneShader& shader, const Camera& camera) const;
+
+		//Dynamically bind scene information into shader during runtime.
+		//Note: Make sure that given scene shader doesn't operate in screen space 
+		//(No camera attached in this overload)
+		void dynamicBind(const LightManager& lightManager, SceneShader& shader) const;
 
 		//Bind uniform camera information
 		void bindCamera(const Camera& camera) const;

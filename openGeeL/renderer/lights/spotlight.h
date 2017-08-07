@@ -15,8 +15,8 @@ namespace geeL {
 		SpotLight(Transform& transform, vec3 diffuse, float angle = 30.f, 
 			float outerAngle = 5.f, const std::string& name = "SpotLight");
 
-		virtual void bind(const Camera& camera, const RenderShader& shader,
-			const std::string& name, ShaderTransformSpace space) const;
+		virtual void bind(const RenderShader& shader,
+			const std::string& name, ShaderTransformSpace space, const Camera* const camera = nullptr) const;
 
 		//Set light cookie for this spotlight
 		void setLightCookie(ImageTexture& cookie);

@@ -73,7 +73,8 @@ namespace geeL{
 	}
 
 	void MeshRenderer::drawExclusive(SceneShader& shader) const {
-		shader.bind<glm::mat4>("model", transform.getMatrix());
+		shader.setModelMatrix(transform.getMatrix());
+		shader.bindMatrices();
 
 		for (auto it = materials.begin(); it != materials.end(); it++) {
 			const list<MaterialMapping>& elements = it->second;

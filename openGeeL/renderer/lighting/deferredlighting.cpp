@@ -24,7 +24,7 @@ namespace geeL {
 	}
 
 	void DeferredLighting::bindValues() {
-		scene.getLightmanager().bind(*camera, shader, ShaderTransformSpace::View);
+		scene.getLightmanager().bind(shader, ShaderTransformSpace::View, camera);
 
 		shader.bind<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
 		shader.bind<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());

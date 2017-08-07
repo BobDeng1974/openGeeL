@@ -1,5 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <cassert>
 #include <string>
 #include <gtc/matrix_transform.hpp>
 #include "shader/rendershader.h"
@@ -19,14 +20,17 @@ namespace geeL {
 		: Light(transform, diffuse, name) {}
 
 
-	void DirectionalLight::bind(const Camera& camera, const RenderShader& shader,
-		const string& name, ShaderTransformSpace space) const {
-		Light::bind(camera, shader, name, space);
+	void DirectionalLight::bind(const RenderShader& shader, const string& name, 
+		ShaderTransformSpace space, const Camera* const camera) const {
+		
+		Light::bind(shader, name, space, camera);
 
 		switch (space) {
 			case ShaderTransformSpace::View:
-				shader.bind<glm::vec3>(name + "direction", camera.GetOriginInViewSpace() -
-					camera.TranslateToViewSpace(transform.getForwardDirection()));
+				assert(camera != nullptr);
+
+				shader.bind<glm::vec3>(name + "direction", camera->GetOriginInViewSpace() -
+					camera->TranslateToViewSpace(transform.getForwardDirection()));
 				break;
 			case ShaderTransformSpace::World:
 				shader.bind<glm::vec3>(name + "direction", transform.getForwardDirection());

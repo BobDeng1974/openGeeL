@@ -57,6 +57,10 @@ namespace geeL {
 			bind<glm::mat4>(modelViewLocation, modelView);
 			bind<glm::mat3>(transInvModelViewLocation, transInvModelView);
 		}
+		//Only bind model if no view matrix was attached
+		else if(model != nullptr)
+			bind<glm::mat4>("model", *model);
+
 	}
 
 }

@@ -46,7 +46,7 @@ namespace geeL {
 		shader.bind<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());
 		shader.bind<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
 
-		light.bind(*camera, shader, "light.", ShaderTransformSpace::View);
+		light.bind(shader, "light.", ShaderTransformSpace::View, camera);
 	}
 
 

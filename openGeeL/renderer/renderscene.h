@@ -115,8 +115,9 @@ namespace geeL {
 		//Draw all forward shaded objects from given camera's perspective
 		void drawForward(const Camera& camera) const;
 	
-		//Draw all objects in the scene with given shader
-		void drawObjects(SceneShader& shader) const;
+		//Draw all objects in the scene with given shader and given camera.
+		//Note: Scene gets drawn in world space if no camera gets attached
+		void drawObjects(SceneShader& shader, const Camera* const camera = nullptr) const;
 
 		//Draw the geometry of all objects in the scene with given shader
 		void drawGeometry(const RenderShader& shader) const;

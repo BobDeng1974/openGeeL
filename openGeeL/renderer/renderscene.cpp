@@ -169,7 +169,7 @@ namespace geeL {
 	}
 
 	void RenderScene::draw(SceneShader& shader) {
-		pipeline.dynamicBind(*camera, lightManager, shader);
+		pipeline.dynamicBind(lightManager, shader, *camera);
 
 		//Try to find static object with shader first and draw if successfull
 		bool found = iterRenderObjects(shader, [&](const MeshRenderer& object) {
@@ -198,14 +198,14 @@ namespace geeL {
 			pipeline.bindCamera(camera);
 
 		SceneShader* shader = &materialFactory.getDeferredShader();
-		pipeline.dynamicBind(camera, lightManager, *shader);
+		pipeline.dynamicBind(lightManager, *shader, camera);
 		iterRenderObjects(*shader, [&](const MeshRenderer& object) {
 			if (object.isActive())
 				object.draw(materialFactory.getDeferredShader());
 		});
 
 		shader = &materialFactory.getDefaultShader(DefaultShading::DeferredSkinned);
-		pipeline.dynamicBind(camera, lightManager, *shader);
+		pipeline.dynamicBind(lightManager, *shader, camera);
 		iterSkinnedObjects(*shader, [&](const SkinnedMeshRenderer& object) {
 			if (object.isActive())
 				object.draw();
@@ -230,7 +230,7 @@ namespace geeL {
 			if (shader == &defShader)
 				continue;
 
-			pipeline.dynamicBind(camera, lightManager, *shader);
+			pipeline.dynamicBind(lightManager, *shader, camera);
 
 			auto& elements = it->second;
 			for (auto et = elements.begin(); et != elements.end(); et++) {
@@ -246,7 +246,7 @@ namespace geeL {
 			if (shader == &defSkinnedShader)
 				continue;
 
-			pipeline.dynamicBind(camera, lightManager, *shader);
+			pipeline.dynamicBind(lightManager, *shader, camera);
 
 			auto& elements = it->second;
 			for (auto et = elements.begin(); et != elements.end(); et++) {
@@ -257,8 +257,11 @@ namespace geeL {
 		}
 	}
 
-	void RenderScene::drawObjects(SceneShader& shader) const {
-		pipeline.dynamicBind(*camera, lightManager, shader);
+	void RenderScene::drawObjects(SceneShader& shader, const Camera* const camera) const {
+		if (camera != nullptr)
+			pipeline.dynamicBind(lightManager, shader, *camera);
+		else
+			pipeline.dynamicBind(lightManager, shader);
 
 		for (auto it = renderObjects.begin(); it != renderObjects.end(); it++) {
 			auto& elements = it->second;

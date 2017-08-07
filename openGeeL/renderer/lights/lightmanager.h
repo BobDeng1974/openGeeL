@@ -79,8 +79,8 @@ namespace geeL {
 		void bindReflectionProbes(const Camera& camera, const RenderShader& shader, ShaderTransformSpace space) const;
 		void drawReflectionProbes() const;
 
-		void bind(const Camera& camera, const RenderShader& shader, ShaderTransformSpace space) const;
-		void bind(const Camera& camera, const SceneShader& shader) const;
+		void bind(const RenderShader& shader, ShaderTransformSpace space, const Camera* const camera = nullptr) const;
+		void bind(const SceneShader& shader, const Camera* const camera = nullptr) const;
 
 		void bindShadowMaps(RenderShader& shader) const;
 
