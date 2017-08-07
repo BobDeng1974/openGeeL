@@ -481,6 +481,7 @@
     <None Include="renderer\shaders\lighting.frag" />
     <None Include="renderer\shaders\lighting.vert" />
     <None Include="renderer\shaders\material.glsl" />
+    <None Include="renderer\shaders\materialproperties.glsl" />
     <None Include="renderer\shaders\sampling.glsl" />
     <None Include="renderer\shaders\samplingvector.glsl" />
     <None Include="renderer\shaders\screen.frag" />
