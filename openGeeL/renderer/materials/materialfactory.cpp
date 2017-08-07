@@ -1,6 +1,7 @@
 #include "shader/sceneshader.h"
 #include "texturing/imagetexture.h"
 #include "texturing/envmap.h"
+#include "texturing/dynamictexture.h"
 #include "framebuffer/gbuffer.h"
 #include "genericmaterial.h"
 #include "defaultmaterial.h"
@@ -31,6 +32,11 @@ namespace geeL {
 
 		for (auto material = container.begin(); material != container.end(); material++)
 			delete *material;
+
+		for (auto it = otherTextures.begin(); it != otherTextures.end(); it++) {
+			Texture2D* tex = *it;
+			delete tex;
+		}
 
 		for (auto it = textures.begin(); it != textures.end(); it++) {
 			ImageTexture* tex = it->second;
@@ -65,6 +71,13 @@ namespace geeL {
 			textureMaps[filePath] = new TextureMap(filePath.c_str(),  type, colorType, wrapMode, filterMode, filter);
 
 		return *textureMaps[filePath];
+	}
+
+	DynamicRenderTexture& MaterialFactory::CreateDynamicRenderTexture(const Camera& camera, Resolution resolution) {
+		DynamicRenderTexture* texture = new DynamicRenderTexture(camera, resolution, renderCall);
+		otherTextures.push_back(texture);
+
+		return *texture;
 	}
 
 	EnvironmentMap& MaterialFactory::CreateEnvironmentMap(string filePath) {
@@ -149,6 +162,10 @@ namespace geeL {
 
 	SceneShader& MaterialFactory::getDeferredShader() const {
 		return *deferredShader;
+	}
+
+	void MaterialFactory::setRenderCall(RenderCall function) {
+		renderCall = function;
 	}
 
 }

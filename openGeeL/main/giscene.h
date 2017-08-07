@@ -52,11 +52,15 @@ public:
 				meshTransform6, CullingMode::cullFront, "Sponza");
 			scene.addMeshRenderer(sponz);
 
-			sponz.iterateMaterials([&](MaterialContainer& container) {
-				if (container.name == "fabric_g")
-					container.setVectorValue("Emissivity", vec3(0.08f));
-			});
+			//DynamicRenderTexture& renderTex = materialFactory.CreateDynamicRenderTexture(camera, Resolution(300));
+			//renderer.addRenderTexture(renderTex);
 
+			sponz.iterateMaterials([&](MaterialContainer& container) {
+				if (container.name == "fabric_g") {
+					//container.addTexture("Diffuse", renderTex);
+					container.setVectorValue("Emissivity", vec3(0.08f));
+				}
+			});
 
 
 			ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);

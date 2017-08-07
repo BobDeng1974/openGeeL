@@ -13,6 +13,7 @@ namespace geeL {
 
 	class Camera;
 	class DefaultPostProcess;
+	class DynamicRenderTexture;
 	class GBuffer;
 	class MaterialFactory;
 	class RenderTexture;
@@ -35,6 +36,7 @@ namespace geeL {
 		virtual void run();
 		virtual void draw();
 		virtual void draw(const Camera& camera, const FrameBuffer& buffer);
+		virtual void drawSimple(const Camera& camera, const FrameBuffer& buffer);
 
 		virtual void addSSAO(SSAO& ssao);
 
@@ -42,6 +44,8 @@ namespace geeL {
 		virtual void addEffect(PostProcessingEffect& effect);
 		virtual void addEffect(PostProcessingEffect& effect, WorldMapRequester& requester);
 		virtual void addEffect(PostProcessingEffect& effect, std::list<WorldMapRequester*> requester);
+
+		virtual void addRenderTexture(DynamicRenderTexture& texture);
 
 		virtual void addRequester(WorldMapRequester& requester);
 		virtual void linkInformation() const;
@@ -51,6 +55,7 @@ namespace geeL {
 		int toggle;
 		
 		std::vector<PostProcessingEffect*> effects;
+		std::list<DynamicRenderTexture*> renderTextures;
 		std::list<WorldMapRequester*> requester;
 
 		RenderTexture* texture1;

@@ -1,6 +1,7 @@
 #ifndef MATERIALFACTORY_H
 #define MATERIALFACTORY_H
 
+#include <functional>
 #include <list>
 #include <map>
 #include <string>
@@ -10,6 +11,9 @@
 
 namespace geeL {
 
+	class Camera;
+	class DynamicRenderTexture;
+	class FrameBuffer;
 	class GBuffer;
 	class Material;
 	class MaterialContainer;
@@ -17,6 +21,9 @@ namespace geeL {
 	class GenericMaterialContainer;
 	class SceneShader;
 	class ShaderProvider;
+
+	using RenderCall = std::function<void(const Camera&, const FrameBuffer& buffer)>;
+
 
 	class MaterialFactory {
 
@@ -36,6 +43,10 @@ namespace geeL {
 			MapType type = MapType::Diffuse, ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::None,
 			AnisotropicFilter filter = AnisotropicFilter::Medium);
+
+		//Create dynamic render texture that can render scene from given camera's point of view.
+		//Note: Returned texture won't get drawn automatically and needs to be attached to an appropriate renderer
+		DynamicRenderTexture& CreateDynamicRenderTexture(const Camera& camera, Resolution resolution);
 
 		//Create and returns new environment map or returns existing one if file is already in use
 		EnvironmentMap& CreateEnvironmentMap(std::string filePath);
@@ -59,8 +70,11 @@ namespace geeL {
 		//Returns default shader for static deferred rendering
 		SceneShader& getDeferredShader() const;
 
+		void setRenderCall(RenderCall function);
+
 	private:
 		ShaderProvider* const provider;
+		RenderCall renderCall;
 
 		SceneShader* forwardShader;
 		SceneShader* deferredShader;
@@ -68,6 +82,7 @@ namespace geeL {
 
 		std::list<MaterialContainer*> container;
 		std::list<SceneShader*> shaders;
+		std::list<Texture2D*> otherTextures;
 		std::map<std::string, ImageTexture*> textures;
 		std::map<std::string, TextureMap*> textureMaps;
 		std::map<std::string, EnvironmentMap*> envMaps;

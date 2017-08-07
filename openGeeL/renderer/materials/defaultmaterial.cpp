@@ -49,7 +49,7 @@ namespace geeL {
 		return color;
 	}
 
-	const glm::vec3 & DefaultMaterialContainer::getEmissivity() const {
+	const glm::vec3& DefaultMaterialContainer::getEmissivity() const {
 		return emissivity;
 	}
 

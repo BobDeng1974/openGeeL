@@ -5,6 +5,7 @@
 
 namespace geeL {
 
+	class DynamicRenderTexture;
 	class PostProcessingEffect;
 	class SSAO;
 	class WorldMapRequester;
@@ -19,6 +20,8 @@ namespace geeL {
 		virtual void addEffect(PostProcessingEffect& effect) = 0;
 		virtual void addEffect(PostProcessingEffect& effect, WorldMapRequester& requester) = 0;
 		virtual void addEffect(PostProcessingEffect& effect, std::list<WorldMapRequester*> requester) = 0;
+
+		virtual void addRenderTexture(DynamicRenderTexture& texture) = 0;
 
 	};
 

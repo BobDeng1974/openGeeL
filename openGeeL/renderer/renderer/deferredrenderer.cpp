@@ -13,6 +13,7 @@
 #include "primitives/screenquad.h"
 #include "texturing/texture.h"
 #include "texturing/rendertexture.h"
+#include "texturing/dynamictexture.h"
 #include "texturing/imagetexture.h"
 #include "framebuffer/gbuffer.h"
 #include "postprocessing/drawdefault.h"
@@ -82,6 +83,12 @@ namespace geeL {
 		RenderTexture* current = texture1; //Current of alternating textures is stored here
 		Viewport::setForced(0, 0, window->resolution.getWidth(), window->resolution.getHeight());
 		scene->lock();
+
+
+		for (auto it(renderTextures.begin()); it != renderTextures.end(); it++) {
+			DynamicRenderTexture& texture = **it;
+			texture.update();
+		}
 
 		//Geometry pass
 		gBuffer.fill(geometryPassFunc);
@@ -200,6 +207,20 @@ namespace geeL {
 		scene->drawSkybox(camera);
 	}
 
+	void DeferredRenderer::drawSimple(const Camera& camera, const FrameBuffer& buffer) {
+		glEnable(GL_DEPTH_TEST);
+
+		//Geometry pass
+		gBuffer.fill([this, &camera]() { scene->drawDeferred(camera); });
+
+		buffer.resetSize();
+		buffer.bind();
+
+		//Draw lighting pass and skybox directly into given framebuffer
+		lightingPass(camera);
+		forwardPass();
+	}
+
 	
 	void DeferredRenderer::geometryPass() {
 		scene->updateCamera();
@@ -258,6 +279,10 @@ namespace geeL {
 			WorldMapRequester* req = *it;
 			addRequester(*req);
 		}
+	}
+
+	void DeferredRenderer::addRenderTexture(DynamicRenderTexture& texture) {
+		renderTextures.push_back(&texture);
 	}
 
 	void DeferredRenderer::addRequester(WorldMapRequester& requester) {
