@@ -205,14 +205,14 @@ namespace geeL {
 		pipeline.dynamicBind(lightManager, *shader, camera);
 		iterRenderObjects(*shader, [&](const MeshRenderer& object) {
 			if (object.isActive())
-				object.draw(materialFactory.getDeferredShader());
+				object.draw(*shader);
 		});
 
 		shader = &materialFactory.getDefaultShader(DefaultShading::DeferredSkinned);
 		pipeline.dynamicBind(lightManager, *shader, camera);
 		iterRenderObjects(*shader, [&](const MeshRenderer& object) {
 			if (object.isActive())
-				object.draw();
+				object.draw(*shader);
 		});
 	}
 

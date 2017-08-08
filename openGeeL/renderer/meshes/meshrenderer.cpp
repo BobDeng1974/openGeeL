@@ -192,7 +192,7 @@ namespace geeL{
 		}
 	}
 
-	void MeshRenderer::addMaterialChangeListener(std::function<void(MeshRenderer&)> listener) {
+	void MeshRenderer::addMaterialChangeListener(std::function<void(MeshRenderer&, Material, Material)> listener) {
 		materialListeners.push_back(listener);
 	}
 
