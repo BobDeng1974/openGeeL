@@ -101,7 +101,7 @@ namespace geeL{
 	}
 	
 
-	void MeshRenderer::changeMaterial(Material&& material, const Mesh& mesh) {
+	void MeshRenderer::changeMaterial(Material& material, const Mesh& mesh) {
 
 		//Remove old element from materials since new material probably uses a different shader
 		std::list<MaterialMapping>* elements;
@@ -118,6 +118,7 @@ namespace geeL{
 			}
 
 			if (toRemove != nullptr) {
+				Material oldMaterial = toRemove->material;
 				elements->remove(*toRemove);
 
 				//Add moved 'copy' of new material
@@ -126,7 +127,7 @@ namespace geeL{
 
 				//Inform material change listeners
 				for (auto it(materialListeners.begin()); it != materialListeners.end(); it++)
-					(*it)(*this);
+					(*it)(*this, oldMaterial, material);
 
 				return;
 			}

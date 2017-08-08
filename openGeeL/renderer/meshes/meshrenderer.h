@@ -58,8 +58,8 @@ namespace geeL {
 		virtual void drawGeometry(const RenderShader& shader) const;
 
 		//Customize material of given mesh (If it is actually part of this mesh renderer)
-		void changeMaterial(Material&& material, const Mesh& mesh);
-		void addMaterialChangeListener(std::function<void(MeshRenderer&)> listener);
+		void changeMaterial(Material& material, const Mesh& mesh);
+		void addMaterialChangeListener(std::function<void(MeshRenderer&, Material, Material)> listener);
 
 		
 		void iterateMaterials(std::function<void(MaterialContainer&)> function) const;
@@ -92,7 +92,7 @@ namespace geeL {
 		};
 
 		std::map<SceneShader*, std::list<MaterialMapping>> materials;
-		std::list<std::function<void(MeshRenderer&)>> materialListeners;
+		std::list<std::function<void(MeshRenderer&, Material, Material)>> materialListeners;
 
 	private:
 		Model* model;

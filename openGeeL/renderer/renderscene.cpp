@@ -56,7 +56,7 @@ namespace geeL {
 		return *camera;
 	}
 
-	const LightManager & Scene::getLightmanager() const {
+	const LightManager& Scene::getLightmanager() const {
 		return lightManager;
 	}
 
@@ -77,16 +77,11 @@ namespace geeL {
 			//Init shader if it hasn't been added to the scene yet
 			addShader(shader);
 
+			renderer.addMaterialChangeListener([this](MeshRenderer& renderer, Material oldMaterial, Material newMaterial) {
+				updateMeshRenderer(renderer, oldMaterial, newMaterial);
+			});
+
 			renderObjects[&shader][renderer.transform.getID()] = &renderer;
-		});
-	}
-
-	void Scene::addMeshRenderer(SkinnedMeshRenderer& renderer) {
-		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
-			//Init shader if it hasn't been added to the scene before
-			addShader(shader);
-
-			skinnedObjects[&shader][renderer.transform.getID()] = &renderer;
 		});
 	}
 
@@ -100,24 +95,30 @@ namespace geeL {
 				if (obj != objects.end())
 					objects.erase(obj);
 			}
-
-			//TODO: maybe also remove shader when this renderer was the last associated object
 		});
 
 	}
 
-	void Scene::removeMeshRenderer(SkinnedMeshRenderer& renderer) {
-		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
-			auto shaders = skinnedObjects.find(&shader);
-			if (shaders != skinnedObjects.end()) {
-				auto& objects = (*shaders).second;
 
-				auto obj = objects.find(renderer.transform.getID());
-				if (obj != objects.end())
-					objects.erase(obj);
-			}
-		});
+	void Scene::updateMeshRenderer(MeshRenderer& renderer, Material oldMaterial, Material newMaterial) {
+		SceneShader& oldShader = oldMaterial.getShader();
+		SceneShader& newShader = newMaterial.getShader();
+
+		if (&oldShader == &newShader) return;
+
+		//Remove mesh renderer from old materials shaders bucket
+		auto shaders = renderObjects.find(&oldShader);
+		if (shaders != renderObjects.end()) {
+			auto& objects = (*shaders).second;
+
+			auto obj = objects.find(renderer.transform.getID());
+			if (obj != objects.end())
+				objects.erase(obj);
+		}
+
+		renderObjects[&newShader][renderer.transform.getID()] = &renderer;
 	}
+
 
 	void Scene::setSkybox(Skybox& skybox) {
 		this->skybox = &skybox;
@@ -183,19 +184,10 @@ namespace geeL {
 	void RenderScene::draw(SceneShader& shader) {
 		pipeline.dynamicBind(lightManager, shader, *camera);
 
-		//Try to find static object with shader first and draw if successfull
-		bool found = iterRenderObjects(shader, [&](const MeshRenderer& object) {
+		iterRenderObjects(shader, [&](const MeshRenderer& object) {
 			if (object.isActive())
 				object.draw();
 		});
-
-		//Otherwise try to draw skinned objects
-		if (!found) {
-			iterSkinnedObjects(shader, [&](const SkinnedMeshRenderer& object) {
-				if (object.isActive())
-					object.draw();
-			});
-		}
 	}
 
 	void RenderScene::drawDefault() const {
@@ -218,7 +210,7 @@ namespace geeL {
 
 		shader = &materialFactory.getDefaultShader(DefaultShading::DeferredSkinned);
 		pipeline.dynamicBind(lightManager, *shader, camera);
-		iterSkinnedObjects(*shader, [&](const SkinnedMeshRenderer& object) {
+		iterRenderObjects(*shader, [&](const MeshRenderer& object) {
 			if (object.isActive())
 				object.draw();
 		});
@@ -246,9 +238,10 @@ namespace geeL {
 
 		//Draw all registered objects with shaders other than deferred shader
 		const SceneShader& defShader = materialFactory.getDeferredShader();
+		const SceneShader& defSkinnedShader = materialFactory.getDefaultShader(DefaultShading::DeferredSkinned);
 		for (auto it = renderObjects.begin(); it != renderObjects.end(); it++) {
 			SceneShader* shader = it->first;
-			if (shader == &defShader)
+			if (shader == &defShader || shader == &defSkinnedShader)
 				continue;
 
 			pipeline.dynamicBind(lightManager, *shader, camera);
@@ -257,23 +250,7 @@ namespace geeL {
 			for (auto et = elements.begin(); et != elements.end(); et++) {
 				const MeshRenderer& object = *et->second;
 				if (object.isActive())
-					object.draw();
-			}
-		}
-
-		const SceneShader& defSkinnedShader = materialFactory.getDefaultShader(DefaultShading::DeferredSkinned);
-		for (auto it = skinnedObjects.begin(); it != skinnedObjects.end(); it++) {
-			SceneShader* shader = it->first;
-			if (shader == &defSkinnedShader)
-				continue;
-
-			pipeline.dynamicBind(lightManager, *shader, camera);
-
-			auto& elements = it->second;
-			for (auto et = elements.begin(); et != elements.end(); et++) {
-				const SkinnedMeshRenderer& object = *et->second;
-				if (object.isActive())
-					object.draw();
+					object.draw(*shader);
 			}
 		}
 	}
@@ -296,20 +273,22 @@ namespace geeL {
 	}
 	
 	void RenderScene::drawGeometry(const RenderShader& shader) const {
-		drawStaticObjects(shader);
-		drawSkinnedObjects(shader);
-	}
-
-	void RenderScene::drawStaticObjects(const RenderShader& shader) const {
 		iterRenderObjects([&](const MeshRenderer& object) {
 			if (object.isActive())
 				object.drawGeometry(shader);
 		});
 	}
 
+	void RenderScene::drawStaticObjects(const RenderShader& shader) const {
+		iterRenderObjects([&](const MeshRenderer& object) {
+			if (object.isActive() && object.getRenderMode() == RenderMode::Static)
+				object.drawGeometry(shader);
+		});
+	}
+
 	void RenderScene::drawSkinnedObjects(const RenderShader& shader) const {
-		iterSkinnedObjects([&](const MeshRenderer& object) {
-			if (object.isActive())
+		iterRenderObjects([&](const MeshRenderer& object) {
+			if (object.isActive() && object.getRenderMode() == RenderMode::Skinned)
 				object.drawGeometry(shader);
 		});
 	}
@@ -355,14 +334,6 @@ namespace geeL {
 				function(object);
 			}
 		}
-
-		for (auto it = skinnedObjects.begin(); it != skinnedObjects.end(); it++) {
-			auto& elements = it->second;
-			for (auto et = elements.begin(); et != elements.end(); et++) {
-				SkinnedMeshRenderer& object = *et->second;
-				function(object);
-			}
-		}
 	}
 
 	void Scene::iterSceneObjects(std::function<void(SceneObject&)> function) {
@@ -388,7 +359,7 @@ namespace geeL {
 		}
 	}
 
-	bool Scene::iterRenderObjects(SceneShader& shader, function<void(const MeshRenderer&)> function) const {
+	void Scene::iterRenderObjects(SceneShader& shader, function<void(const MeshRenderer&)> function) const {
 		auto it = renderObjects.find(&shader);
 		if (it != renderObjects.end()) {
 			auto& elements = it->second;
@@ -396,37 +367,7 @@ namespace geeL {
 				const MeshRenderer& object = *et->second;
 				function(object);
 			}
-
-			return true;
-		}
-
-		return false;
-	}
-
-	void Scene::iterSkinnedObjects(function<void(const MeshRenderer&)> function) const {
-		for (auto it = skinnedObjects.begin(); it != skinnedObjects.end(); it++) {
-			auto& elements = it->second;
-			for (auto et = elements.begin(); et != elements.end(); et++) {
-				const SkinnedMeshRenderer& object = *et->second;
-				function(object);
-			}
 		}
 	}
-
-	bool Scene::iterSkinnedObjects(SceneShader& shader, function<void(const SkinnedMeshRenderer&)> function) const {
-		auto it = skinnedObjects.find(&shader);
-		if (it != skinnedObjects.end()) {
-			auto& elements = it->second;
-			for (auto et = elements.begin(); et != elements.end(); et++) {
-				const SkinnedMeshRenderer& object = *et->second;
-				function(object);
-			}
-
-			return true;
-		}
-
-		return false;
-	}
-
 
 }

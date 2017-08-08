@@ -49,10 +49,7 @@ namespace geeL {
 		LightManager& getLightmanager();
 
 		void addMeshRenderer(MeshRenderer& renderer);
-		void addMeshRenderer(SkinnedMeshRenderer& renderer);
-
 		void removeMeshRenderer(MeshRenderer& renderer);
-		void removeMeshRenderer(SkinnedMeshRenderer& renderer);
 
 		void setSkybox(Skybox& skybox);
 
@@ -60,10 +57,7 @@ namespace geeL {
 		void iterAllObjects(std::function<void(MeshRenderer&)> function);
 
 		void iterRenderObjects(std::function<void(const MeshRenderer&)> function) const;
-		bool iterRenderObjects(SceneShader& shader, std::function<void(const MeshRenderer&)> function) const;
-
-		void iterSkinnedObjects(std::function<void(const MeshRenderer&)> function) const;
-		bool iterSkinnedObjects(SceneShader& shader, std::function<void(const SkinnedMeshRenderer&)> function) const;
+		void iterRenderObjects(SceneShader& shader, std::function<void(const MeshRenderer&)> function) const;
 
 	protected:
 		LightManager& lightManager;
@@ -78,8 +72,9 @@ namespace geeL {
 		//therefore no unnecessary shader programm switching. Objects with multiple materials are linked to
 		//all their shaders respectively
 		std::map<SceneShader*, std::map<unsigned int, MeshRenderer*>> renderObjects;
-		std::map<SceneShader*, std::map<unsigned int, SkinnedMeshRenderer*>> skinnedObjects;
 
+
+		void updateMeshRenderer(MeshRenderer& renderer, Material oldMaterial, Material newMaterial);
 
 	};
 
