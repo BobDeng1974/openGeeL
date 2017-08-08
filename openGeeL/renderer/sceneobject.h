@@ -35,7 +35,7 @@ namespace geeL {
 		T& addComponent(T&& component);
 
 		bool isActive() const;
-		void setActive(bool active);
+		virtual void setActive(bool active);
 
 		std::string getName() const;
 		void setName(const std::string& name);

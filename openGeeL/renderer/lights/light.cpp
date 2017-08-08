@@ -16,7 +16,10 @@ using namespace glm;
 namespace geeL {
 
 	Light::Light(Transform& transform, vec3 diffuse, const std::string& name)
-		: SceneObject(transform, name), diffuse(diffuse), shadowMap(nullptr) {}
+		: SceneObject(transform, name), diffuse(diffuse), shadowMap(nullptr) {
+	
+		transform.addChangeListener([this](const Transform& transform) { onChange(); });
+	}
 
 	Light::~Light() {
 		if (shadowMap != nullptr)
@@ -88,8 +91,29 @@ namespace geeL {
 	}
 
 	void Light::setColor(vec3 color) {
-		if (!transform.isStatic && !VectorExtension::equals(diffuse, color))
+		if (!transform.isStatic && !VectorExtension::equals(diffuse, color)) {
 			diffuse = color;
+			onChange();
+		}
+	}
+
+	void Light::setActive(bool active) {
+		SceneObject::setActive(active);
+
+		onChange();
+	}
+
+	void Light::addChangeListener(std::function<void(const Light&)> function, bool invoke) {
+		changeListeners.push_back(function);
+
+		if (invoke) function(*this);
+	}
+
+	void Light::onChange() {
+		for (auto it(changeListeners.begin()); it != changeListeners.end(); it++) {
+			auto function = *it;
+			function(*this);
+		}
 	}
 
 }

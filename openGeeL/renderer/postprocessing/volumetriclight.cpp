@@ -12,7 +12,7 @@ using namespace std;
 
 namespace geeL {
 
-	VolumetricLight::VolumetricLight(const SpotLight& light, float density, float minDistance, unsigned int samples, bool useCookie)
+	VolumetricLight::VolumetricLight(SpotLight& light, float density, float minDistance, unsigned int samples, bool useCookie)
 		: PostProcessingEffectFS("renderer/postprocessing/volumetriclight.frag"), 
 			light(light), density(density), minDistance(minDistance), samples(samples), useCookie(useCookie) {}
 
@@ -33,11 +33,11 @@ namespace geeL {
 			shader.bind<int>("useCookie", (int)useCookie);
 		}
 
+		shader.bind<int>("samples", samples);
 		shader.bind<int>("effectOnly", onlyEffect);
 		shader.bind<float>("minCutoff", minDistance);
 		shader.bind<float>("density", density);
-		shader.bind<int>("samples", samples);
-
+		
 		projectionLocation = shader.getLocation("projection");
 		invViewLocation = shader.getLocation("inverseView");
 	}

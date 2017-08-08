@@ -110,8 +110,8 @@ public:
 			BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.5f);
 			VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 			SobelBlurSnippet& snip = SobelBlurSnippet(sobelBlur);
-			renderer.addEffect(volSmooth, { &vol, &sobelBlur });
 			scene.addRequester(vol);
+			renderer.addEffect(volSmooth, { &vol, &sobelBlur });
 			postLister.add(volSmooth, lightSnippet, snip);
 
 			FXAA& fxaa = FXAA();

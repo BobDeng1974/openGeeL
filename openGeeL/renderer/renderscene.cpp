@@ -26,7 +26,10 @@ using namespace std;
 namespace geeL {
 
 	Scene::Scene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline, SceneCamera& camera)
-		: lightManager(lightManager), pipeline(pipeline), camera(&camera), worldTransform(world), skybox(nullptr) {}
+		: lightManager(lightManager), pipeline(pipeline), camera(&camera), worldTransform(world), skybox(nullptr) {
+	
+		addRequester(lightManager);
+	}
 
 
 	void Scene::addRequester(SceneRequester& requester) {
@@ -65,7 +68,7 @@ namespace geeL {
 		auto it = renderObjects.find(&shader);
 		if (it == renderObjects.end()) {
 			pipeline.staticBind(*camera, lightManager, shader);
-			lightManager.addShaderListener(shader);
+			if(shader.getUseLight()) lightManager.addShaderListener(shader);
 		}
 	}
 
@@ -155,6 +158,11 @@ namespace geeL {
 		pipeline.bindCamera(*camera);
 	}
 
+	void RenderScene::setCamera(SceneCamera& camera) {
+		Scene::setCamera(camera);
+		updateCamera();
+	}
+
 	void RenderScene::run() {
 		lock();
 
@@ -170,6 +178,7 @@ namespace geeL {
 
 		unlock();
 	}
+
 
 	void RenderScene::draw(SceneShader& shader) {
 		pipeline.dynamicBind(lightManager, shader, *camera);

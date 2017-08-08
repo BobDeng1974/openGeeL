@@ -16,6 +16,7 @@ namespace geeL {
 	public:
 		size_t index;
 
+		LightBinding() {}
 		LightBinding(size_t index, std::string baseName) : index(index), base(baseName) {}
 
 		std::string getName() const {
@@ -37,11 +38,12 @@ namespace geeL {
 	public:
 		SpotLight* light;
 
+		SLightBinding() : light(nullptr) {}
 		SLightBinding(SpotLight* light, size_t index, std::string baseName)
 			: LightBinding(index, baseName), light(light) {}
 
 		bool operator== (const SLightBinding &rhs) {
-			return light == rhs.light;
+			return light != nullptr && rhs.light != nullptr &&light == rhs.light;
 		}
 	};
 
@@ -51,11 +53,12 @@ namespace geeL {
 	public:
 		DirectionalLight* light;
 
+		DLightBinding() : light(nullptr) {}
 		DLightBinding(DirectionalLight* light, size_t index, std::string baseName)
 			: LightBinding(index, baseName), light(light) {}
 
 		bool operator== (const DLightBinding &rhs) {
-			return light == rhs.light;
+			return light != nullptr && rhs.light != nullptr &&light == rhs.light;
 		}
 	};
 
@@ -65,11 +68,12 @@ namespace geeL {
 	public:
 		PointLight* light;
 
+		PLightBinding() : light(nullptr) {}
 		PLightBinding(PointLight* light, size_t index, std::string baseName)
 			: LightBinding(index, baseName), light(light) {}
 
 		bool operator== (const PLightBinding &rhs) {
-			return light == rhs.light;
+			return light != nullptr && rhs.light != nullptr && light == rhs.light;
 		}
 	};
 

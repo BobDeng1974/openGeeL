@@ -12,8 +12,8 @@ namespace geeL {
 	class VolumetricLight : public PostProcessingEffectFS, public WorldMapRequester, public CameraRequester {
 
 	public:
-		VolumetricLight(const SpotLight& light, 
-			float density = 1.f, float minDistance = 1.f, unsigned int samples = 30, bool useCookie = false);
+		VolumetricLight(SpotLight& light,  float density = 1.f, float minDistance = 1.f, 
+			unsigned int samples = 30, bool useCookie = false);
 
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 
@@ -38,7 +38,7 @@ namespace geeL {
 		bool useCookie;
 		float density;
 		float minDistance;
-		const SpotLight& light;
+		SpotLight& light;
 
 		ShaderLocation projectionLocation;
 		ShaderLocation invViewLocation;

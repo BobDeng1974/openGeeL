@@ -4,9 +4,11 @@
 #include <functional>
 #include <list>
 #include <set>
+#include <map>
 #include <string>
 #include <vec3.hpp>
 #include "shadowmapping/shadowmapconfig.h"
+#include "utility/worldinformation.h"
 
 #define MAX_POINTLIGHTS 5
 #define MAX_DIRECTIONALLIGHTS 5
@@ -40,7 +42,7 @@ namespace geeL {
 
 
 	//Managing class for all light sources in a scene
-	class LightManager {
+	class LightManager : public CameraRequester {
 
 	public:
 		std::string plName = "pointLights";
@@ -84,9 +86,6 @@ namespace geeL {
 
 		void bindShadowMaps(RenderShader& shader) const;
 
-		void bindShadowmap(RenderShader& shader, DirectionalLight& light) const;
-		void bindShadowmap(RenderShader& shader, PointLight& light) const;
-		void bindShadowmap(RenderShader& shader, SpotLight& light) const;
 
 		//Update all internal structures depending on their state
 		void draw(const RenderScene& scene, const SceneCamera* const camera);
@@ -103,11 +102,10 @@ namespace geeL {
 		void iterPointLights(std::function<void(PointLight&)> function);
 		void iterSpotLights(std::function<void(SpotLight&)> function);
 
-		void addLightAddListener(std::function<void(Light const *, ShadowMap const *)> listener);
-		void addLightRemoveListener(std::function<void(Light const *, ShadowMap const *)> listener);
 
 		//Add shader that shall be updated when lights are added/removed
 		void addShaderListener(RenderShader& shader);
+		void addShaderListener(SceneShader& shader);
 
 		const glm::vec3& getAmbientColor() const;
 		void setAmbientColor(const glm::vec3& color);
@@ -118,23 +116,16 @@ namespace geeL {
 		RenderShader* dlShader; //RenderShader for spot and directional light shadow map
 		RenderShader* plShader; //RenderShader for point light shadow maps
 
-		std::list<DLightBinding> dirLights;
-		std::list<SLightBinding> spotLights;
-		std::list<PLightBinding> pointLights;
+		std::map<DirectionalLight*, DLightBinding> dirLights;
+		std::map<SpotLight*, SLightBinding> spotLights;
+		std::map<PointLight*, PLightBinding> pointLights;
 		std::list<DynamicCubeMap*> reflectionProbes;
 
-		std::list<std::function<void(Light const *, ShadowMap const *)>> addListener;
-		std::list<std::function<void(Light const *, ShadowMap const *)>> removeListener;
 		std::set<RenderShader*> shaderListener;
 
 		void onRemove(Light* light, LightBinding& binding);
 		void onAdd(Light* light, LightBinding& binding);
-
-		template<class B, class L, class A>
-		const B* getBinding(const L& light, const A& list) const;
-
-		template<class B, class L, class A>
-		B* getBinding(const L& light, A& list);
+		void onChange(const Light& light);
 
 		template<class A>
 		void reindexLights(A& list) const;

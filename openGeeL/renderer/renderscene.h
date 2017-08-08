@@ -43,7 +43,7 @@ namespace geeL {
 
 		const SceneCamera& getCamera() const;
 		SceneCamera& getCamera();
-		void setCamera(SceneCamera& camera);
+		virtual void setCamera(SceneCamera& camera);
 
 		const LightManager& getLightmanager() const;
 		LightManager& getLightmanager();
@@ -95,6 +95,8 @@ namespace geeL {
 
 		void init();
 		void updateProbes();
+
+		virtual void setCamera(SceneCamera& camera);
 		void updateCamera();
 
 		//Tick function that updates scene information of current frame

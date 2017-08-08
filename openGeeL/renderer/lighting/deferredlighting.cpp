@@ -18,7 +18,6 @@ namespace geeL {
 		scene.init();
 
 		LightManager& manager = scene.getLightmanager();
-		manager.bindShadowMaps(shader);
 		manager.addShaderListener(shader);
 
 		projectionLocation = shader.getLocation("projection");

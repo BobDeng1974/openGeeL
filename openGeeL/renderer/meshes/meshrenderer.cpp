@@ -124,11 +124,16 @@ namespace geeL{
 				SceneShader& shader = material.getShader();
 				materials[&shader].push_back(MaterialMapping(mesh, material));
 
+				//Inform material change listeners
+				for (auto it(materialListeners.begin()); it != materialListeners.end(); it++)
+					(*it)(*this);
+
 				return;
 			}
 		}
 	}
 
+	
 	void MeshRenderer::initMaterials(SceneShader& shader) {
 		model->iterateMeshes([&](const Mesh& mesh) {
 			MaterialContainer& container = mesh.getMaterialContainer();
@@ -184,6 +189,10 @@ namespace geeL{
 			SceneShader& shader = *it->first;
 			function(shader);
 		}
+	}
+
+	void MeshRenderer::addMaterialChangeListener(std::function<void(MeshRenderer&)> listener) {
+		materialListeners.push_back(listener);
 	}
 
 

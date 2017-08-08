@@ -59,6 +59,7 @@ namespace geeL {
 
 		//Customize material of given mesh (If it is actually part of this mesh renderer)
 		void changeMaterial(Material&& material, const Mesh& mesh);
+		void addMaterialChangeListener(std::function<void(MeshRenderer&)> listener);
 
 		
 		void iterateMaterials(std::function<void(MaterialContainer&)> function) const;
@@ -91,6 +92,7 @@ namespace geeL {
 		};
 
 		std::map<SceneShader*, std::list<MaterialMapping>> materials;
+		std::list<std::function<void(MeshRenderer&)>> materialListeners;
 
 	private:
 		Model* model;

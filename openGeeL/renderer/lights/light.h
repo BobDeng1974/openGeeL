@@ -4,6 +4,7 @@
 #include <vec3.hpp>
 #include <mat4x4.hpp>
 #include <functional>
+#include <list>
 #include <string>
 #include "sceneobject.h"
 
@@ -59,13 +60,22 @@ namespace geeL {
 		vec3 getColor() const;
 		void setColor(vec3 color);
 
+		virtual void setActive(bool active);
+
+		//Add change callback to this light and specify whether function should
+		//be invoked once immediately or not
+		void addChangeListener(std::function<void(const Light&)> function, bool invoke = false);
+
 	protected:
 		vec3 diffuse;
-
 		unsigned int shadowmapFBO;
 		unsigned int shadowmapID;
-
 		ShadowMap* shadowMap;
+
+		void onChange();
+
+	private:
+		std::list<std::function<void(const Light&)>> changeListeners;
 
 	};
 }
