@@ -27,12 +27,10 @@ public:
 			Skybox& skybox = Skybox(envCubeMap);
 			scene.setSkybox(skybox);
 
-
 			float lightIntensity = 500.f;
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(131.f, 72.2f, 128.f), vec3(0.f), vec3(1.f), true);
 			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 20.f, 15U, 150.f);
 			lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
-
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 121.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
 			MeshRenderer& buddha = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/classics/buddha.obj"),
@@ -52,12 +50,12 @@ public:
 				meshTransform6, CullingMode::cullFront, "Sponza");
 			scene.addMeshRenderer(sponz);
 
-			//DynamicRenderTexture& renderTex = materialFactory.CreateDynamicRenderTexture(camera, Resolution(300));
-			//renderer.addRenderTexture(renderTex);
+			DynamicRenderTexture& renderTex = materialFactory.CreateDynamicRenderTexture(camera, Resolution(1000));
+			renderer.addRenderTexture(renderTex);
 
 			sponz.iterateMaterials([&](MaterialContainer& container) {
 				if (container.name == "fabric_g") {
-					//container.addTexture("Diffuse", renderTex);
+					container.addTexture("Diffuse", renderTex);
 					container.setVectorValue("Emissivity", vec3(0.08f));
 				}
 			});

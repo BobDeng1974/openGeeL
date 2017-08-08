@@ -22,7 +22,7 @@ namespace geeL {
 	class SceneShader;
 	class ShaderProvider;
 
-	using RenderCall = std::function<void(const Camera&, const FrameBuffer& buffer)>;
+	using RenderCall = std::function<void(const Camera&)>;
 
 
 	class MaterialFactory {

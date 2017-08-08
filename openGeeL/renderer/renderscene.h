@@ -103,17 +103,23 @@ namespace geeL {
 		//Draw all objects that are linked to given shader
 		void draw(SceneShader& shader);
 
-		//Draw all those objects with a deferred rendering shader
-		void drawDeferred() const;
+		//Draw all those objects with default material (Deferred shading)
+		void drawDefault() const;
 
-		//Draw all deferred shaded objects from given camera's perspective
-		void drawDeferred(const Camera& camera) const;
+		//Draw all objects with default material from given camera's perspective
+		//(Deferred shading)
+		void drawDefault(const Camera& camera) const;
 
-		//Draw all those objects with a forward rendering shader
-		void drawForward() const;
+		//Draw all objects with default material from given camera's perspective
+		//(Forward shading)
+		void drawDefaultForward(const Camera& camera) const;
 
-		//Draw all forward shaded objects from given camera's perspective
-		void drawForward(const Camera& camera) const;
+		//Draw all those objects with generic materials (Forward shading)
+		void drawGeneric() const;
+
+		//Draw all objects with generic materials from given camera's perspective
+		//(Forward shading)
+		void drawGeneric(const Camera& camera) const;
 	
 		//Draw all objects in the scene with given shader and given camera.
 		//Note: Scene gets drawn in world space if no camera gets attached

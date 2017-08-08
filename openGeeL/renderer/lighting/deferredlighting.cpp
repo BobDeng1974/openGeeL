@@ -16,7 +16,10 @@ namespace geeL {
 		PostProcessingEffectFS::init(screen, buffer, resolution);
 
 		scene.init();
-		scene.getLightmanager().bindShadowMaps(shader);
+
+		LightManager& manager = scene.getLightmanager();
+		manager.bindShadowMaps(shader);
+		manager.addShaderListener(shader);
 
 		projectionLocation = shader.getLocation("projection");
 		invViewLocation = shader.getLocation("inverseView");

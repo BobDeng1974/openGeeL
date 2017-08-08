@@ -134,7 +134,10 @@ namespace geeL {
 	RenderScene::RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline,
 		SceneCamera& camera, const MaterialFactory& materialFactory, Input& input)
 			: Scene(world, lightManager, pipeline, camera), 
-				materialFactory(materialFactory), input(input) {}
+				materialFactory(materialFactory), input(input) {
+	
+		addShader(materialFactory.getForwardShader());
+	}
 
 	
 	void RenderScene::init() {
@@ -186,11 +189,11 @@ namespace geeL {
 		}
 	}
 
-	void RenderScene::drawDeferred() const {
-		drawDeferred(*camera);
+	void RenderScene::drawDefault() const {
+		drawDefault(*camera);
 	}
 
-	void RenderScene::drawDeferred(const Camera& camera) const {
+	void RenderScene::drawDefault(const Camera& camera) const {
 
 		//Only bind camera if it is external since the scene 
 		//camera was already bound during update process 
@@ -212,11 +215,20 @@ namespace geeL {
 		});
 	}
 
-	void RenderScene::drawForward() const {
-		drawForward(*camera);
+	void RenderScene::drawDefaultForward(const Camera& camera) const {
+		SceneShader& shader = materialFactory.getForwardShader();
+
+		shader.bind<glm::mat4>("projection", camera.getProjectionMatrix());
+		shader.bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
+
+		drawObjects(shader, &camera);
 	}
 
-	void RenderScene::drawForward(const Camera& camera) const {
+	void RenderScene::drawGeneric() const {
+		drawGeneric(*camera);
+	}
+
+	void RenderScene::drawGeneric(const Camera& camera) const {
 
 		//Only bind camera if it is external since the scene 
 		//camera was already bound during update process 

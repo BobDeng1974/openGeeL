@@ -113,9 +113,11 @@ namespace geeL {
 		preprocessIncludes(shaderCode, includedFiles);
 
 		//Lazy fix: Run pre process again if there is at least one #include found in code
-		size_t check = shaderCode.find("#include");
-		if (check != string::npos)
+		unsigned int counter = 0;
+		while (shaderCode.find("#include") != string::npos && counter < 5) {
 			preprocessIncludes(shaderCode, includedFiles);
+			counter++;
+		}
 
 	}
 

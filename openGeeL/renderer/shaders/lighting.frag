@@ -13,7 +13,6 @@ in mat3 TBN;
 
 out vec4 color;
 
-
 uniform int plCount;
 uniform int dlCount;
 uniform int slCount;
@@ -46,7 +45,6 @@ void main() {
 	
 	vec3 viewDirection = normalize(cameraPosition - fragPosition.xyz);
 
-
 	vec3 irradiance = vec3(0.f);
 	for(int i = 0; i < plCount; i++) 
 		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
@@ -58,7 +56,6 @@ void main() {
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
 
 	irradiance += albedo * material.emissivity;
-	irradiance = 1.f - exp(-irradiance * 1.f); // Tone mapping
 	irradiance = pow(irradiance, vec3(0.4545f)); //Gamma 
 
 	color = vec4(irradiance, 1.f);

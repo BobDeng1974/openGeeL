@@ -19,7 +19,8 @@ namespace geeL {
 			ShaderTransformSpace::View)),
 		deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", FragmentShader(buffer.getFragmentPath()),
 			ShaderTransformSpace::View)), provider(provider) {
-	
+
+		forwardShader->mapOffset = 1;
 		shaders.push_back(forwardShader);
 	}
 

@@ -187,7 +187,7 @@ namespace geeL {
 		glEnable(GL_DEPTH_TEST);
 
 		//Geometry pass
-		gBuffer.fill([this, &camera] () { scene->drawDeferred(camera); });
+		gBuffer.fill([this, &camera] () { scene->drawDefault(camera); });
 
 		scene->getLightmanager().drawShadowmaps(*scene, nullptr);
 
@@ -207,24 +207,15 @@ namespace geeL {
 		scene->drawSkybox(camera);
 	}
 
-	void DeferredRenderer::drawSimple(const Camera& camera, const FrameBuffer& buffer) {
+	void DeferredRenderer::drawSimple(const Camera& camera) {
 		glEnable(GL_DEPTH_TEST);
-
-		//Geometry pass
-		gBuffer.fill([this, &camera]() { scene->drawDeferred(camera); });
-
-		buffer.resetSize();
-		buffer.bind();
-
-		//Draw lighting pass and skybox directly into given framebuffer
-		lightingPass(camera);
-		forwardPass();
+		scene->drawDefaultForward(camera);
 	}
 
 	
 	void DeferredRenderer::geometryPass() {
 		scene->updateCamera();
-		scene->drawDeferred();
+		scene->drawDefault();
 	}
 
 	void DeferredRenderer::lightingPass() {
@@ -245,7 +236,7 @@ namespace geeL {
 		stackBuffer.copyDepth(gBuffer);
 
 		//Forward pass
-		scene->drawForward();
+		scene->drawGeneric();
 		scene->drawSkybox();
 	}
 
