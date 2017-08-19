@@ -5,6 +5,7 @@
 
 namespace geeL {
 
+	class Light;
 	class PointLight;
 	class DirectionalLight;
 	class SpotLight;
@@ -14,10 +15,11 @@ namespace geeL {
 	class LightBinding {
 
 	public:
+		Light* light;
 		size_t index;
 
-		LightBinding() {}
-		LightBinding(size_t index, std::string baseName) : index(index), base(baseName) {}
+		LightBinding() : light(nullptr) {}
+		LightBinding(Light* light, size_t index, std::string baseName) : light(light), index(index), base(baseName) {}
 
 		std::string getName() const {
 			return base + "[" + std::to_string(index) + "].";
@@ -27,55 +29,15 @@ namespace geeL {
 			return base + "[" + std::to_string(index) + "].";
 		}
 
+		bool operator== (const LightBinding &rhs) {
+			return light != nullptr && rhs.light != nullptr &&light == rhs.light;
+		}
+
 	private:
 		std::string base;
 
 	};
 
-
-	class SLightBinding : public LightBinding {
-
-	public:
-		SpotLight* light;
-
-		SLightBinding() : light(nullptr) {}
-		SLightBinding(SpotLight* light, size_t index, std::string baseName)
-			: LightBinding(index, baseName), light(light) {}
-
-		bool operator== (const SLightBinding &rhs) {
-			return light != nullptr && rhs.light != nullptr &&light == rhs.light;
-		}
-	};
-
-
-	class DLightBinding : public LightBinding {
-
-	public:
-		DirectionalLight* light;
-
-		DLightBinding() : light(nullptr) {}
-		DLightBinding(DirectionalLight* light, size_t index, std::string baseName)
-			: LightBinding(index, baseName), light(light) {}
-
-		bool operator== (const DLightBinding &rhs) {
-			return light != nullptr && rhs.light != nullptr &&light == rhs.light;
-		}
-	};
-
-
-	class PLightBinding : public LightBinding {
-
-	public:
-		PointLight* light;
-
-		PLightBinding() : light(nullptr) {}
-		PLightBinding(PointLight* light, size_t index, std::string baseName)
-			: LightBinding(index, baseName), light(light) {}
-
-		bool operator== (const PLightBinding &rhs) {
-			return light != nullptr && rhs.light != nullptr && light == rhs.light;
-		}
-	};
 
 
 }

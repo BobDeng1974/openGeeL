@@ -45,7 +45,7 @@ public:
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
 
-			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-31.4f, 18.79f, -9.7f), vec3(119.4f, 58.5f, 2.9f), vec3(2.9f), false);
+			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-31.4f, 18.79f, -9.7f), vec3(119.4f, 58.5f, 2.9f), vec3(2.9f), true);
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.0001f, ShadowMapType::Hard, ShadowmapResolution::Huge);
 			SpotLight& spotLight = lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity * 0.85f, lightIntensity * 0.87f, lightIntensity * 0.66f), angle, outerAngle, config2);
 

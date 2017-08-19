@@ -33,9 +33,6 @@ namespace geeL {
 	class VoxelStructure;
 
 	class LightBinding;
-	class DLightBinding;
-	class PLightBinding;
-	class SLightBinding;
 
 	struct ScreenInfo;
 	enum class ShaderTransformSpace;
@@ -98,9 +95,6 @@ namespace geeL {
 		void drawVoxelStructure();
 
 		void iterLights(std::function<void(Light&)> function);
-		void iterDirectionalLights(std::function<void(DirectionalLight&)> function);
-		void iterPointLights(std::function<void(PointLight&)> function);
-		void iterSpotLights(std::function<void(SpotLight&)> function);
 
 
 		//Add shader that shall be updated when lights are added/removed
@@ -116,9 +110,9 @@ namespace geeL {
 		RenderShader* dlShader; //RenderShader for spot and directional light shadow map
 		RenderShader* plShader; //RenderShader for point light shadow maps
 
-		std::map<DirectionalLight*, DLightBinding> dirLights;
-		std::map<SpotLight*, SLightBinding> spotLights;
-		std::map<PointLight*, PLightBinding> pointLights;
+		std::map<DirectionalLight*, LightBinding> dirLights;
+		std::map<SpotLight*, LightBinding> spotLights;
+		std::map<PointLight*, LightBinding> pointLights;
 		std::list<DynamicCubeMap*> reflectionProbes;
 
 		std::set<RenderShader*> shaderListener;
