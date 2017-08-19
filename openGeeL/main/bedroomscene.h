@@ -45,7 +45,7 @@ public:
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
 
-			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-23.4f, 19.69f, -8.7f), vec3(123.4f, 58.5f, 2.9f), vec3(1.f), true);
+			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-31.4f, 18.79f, -9.7f), vec3(119.4f, 58.5f, 2.9f), vec3(2.9f), false);
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.0001f, ShadowMapType::Hard, ShadowmapResolution::Huge);
 			SpotLight& spotLight = lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity * 0.85f, lightIntensity * 0.87f, lightIntensity * 0.66f), angle, outerAngle, config2);
 
@@ -65,10 +65,10 @@ public:
 			gui.addElement(sysInfo);
 
 
-			def.setExposure(9.f);
+			def.setExposure(15.f);
 			postLister.add(def);
 
-			BilateralFilter& blur = BilateralFilter(1.5f, 0.7f);
+			BilateralFilter& blur = BilateralFilter(2.26f, 0.7f);
 			SSAO& ssao = SSAO(blur, 10.f);
 			renderer.addSSAO(ssao);
 			scene.addRequester(ssao);
@@ -83,13 +83,17 @@ public:
 			postLister.add(groupSnippet);
 
 			GaussianBlur& ayy = GaussianBlur();
+			SobelFilter& sobel = SobelFilter(5.f);
+			SobelBlur& sobelBlur = SobelBlur(sobel, 15.f);
+
 			VolumetricLight& vol = VolumetricLight(spotLight, 0.7f, 14.f, 250);
-			BlurredPostEffect& volSmooth = BlurredPostEffect(vol, ayy, 0.25f, 0.2f);
+			BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.25f, 0.2f);
 			VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 			GaussianBlurSnippet& blurSnippet = GaussianBlurSnippet(ayy);
-			renderer.addEffect(volSmooth, { &vol });
+			SobelBlurSnippet& snip = SobelBlurSnippet(sobelBlur);
+			renderer.addEffect(volSmooth, { &vol, &sobelBlur });
 			scene.addRequester(vol);
-			postLister.add(volSmooth, lightSnippet, blurSnippet);
+			postLister.add(volSmooth, lightSnippet, snip);
 
 			GaussianBlur& blur4 = GaussianBlur();
 			SSRR& ssrr = SSRR();
