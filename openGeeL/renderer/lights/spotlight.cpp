@@ -55,9 +55,15 @@ namespace geeL {
 		return lightCookie;
 	}
 
+	void SpotLight::addShadowmap(RenderShader& shader, const std::string& name) {
+		Light::addShadowmap(shader, name);
+
+		addLightCookie(shader, name);
+	}
+
 	void SpotLight::addLightCookie(RenderShader& shader, const string& name) {
 		if(lightCookie != nullptr)
-			shader.addMap(*lightCookie, name);
+			shader.addMap(*lightCookie, name + "cookie");
 	}
 
 

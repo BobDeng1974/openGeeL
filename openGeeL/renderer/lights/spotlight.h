@@ -22,7 +22,10 @@ namespace geeL {
 		void setLightCookie(ImageTexture& cookie);
 		const Texture * const getLightCookie() const;
 
+		virtual void addShadowmap(RenderShader& shader, const std::string& name);
+
 		//Add light cookie of this spotlight to given shader.
+		//Note: 'addShadowmap' has same effect
 		void addLightCookie(RenderShader& shader, const std::string& name);
 
 		float getAngle() const;

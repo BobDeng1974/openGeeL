@@ -41,7 +41,7 @@ namespace geeL {
 		void setShadowMap(ShadowMap& map);
 
 		//Add shadow map to given shader
-		void addShadowmap(RenderShader& shader, const std::string& name);
+		virtual void addShadowmap(RenderShader& shader, const std::string& name);
 
 		//Remove shadow map from given shader
 		void removeShadowmap(RenderShader& shader);

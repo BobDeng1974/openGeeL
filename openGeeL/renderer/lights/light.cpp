@@ -55,7 +55,7 @@ namespace geeL {
 
 	void Light::addShadowmap(RenderShader& shader, const std::string& name) {
 		if (shadowMap != nullptr)
-			shader.addMap(*shadowMap, name);
+			shader.addMap(*shadowMap, name + "shadowMap");
 	}
 
 	void Light::removeShadowmap(RenderShader& shader) {

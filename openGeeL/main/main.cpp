@@ -8,9 +8,9 @@
 #include "testscene.h"
 
 int main() {
-	BedroomScene::draw();
+	//BedroomScene::draw();
 	//DeerScene::draw();
-	//ArthouseScene::draw();
+	ArthouseScene::draw();
 	//SponzaScene::draw();
 	//SponzaGIScene::draw();
 	//ScienceScene::draw();

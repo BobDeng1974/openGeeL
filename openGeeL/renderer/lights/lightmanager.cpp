@@ -100,6 +100,7 @@ namespace geeL {
 		return *light;
 	}
 
+
 	void LightManager::removeLight(DirectionalLight& light) {
 
 		auto it = dirLights.find(&light);
@@ -192,21 +193,21 @@ namespace geeL {
 		for (auto it = pointLights.begin(); it != pointLights.end(); it++) {
 			const PLightBinding& binding = it->second;
 			Light& light = *binding.light;
-			light.addShadowmap(shader, binding.getName() + "shadowMap");
+			light.addShadowmap(shader, binding.getName());
 		}
 		
 		for (auto it = dirLights.begin(); it != dirLights.end(); it++) {
 			const DLightBinding& binding = it->second;
 			Light& light = *binding.light;
-			light.addShadowmap(shader, binding.getName() + "shadowMap");
+			light.addShadowmap(shader, binding.getName());
 		}
 
 		for (auto it = spotLights.begin(); it != spotLights.end(); it++) {
 			const SLightBinding& binding = it->second;
 			SpotLight& light = *binding.light;
 
-			light.addShadowmap(shader, binding.getName() + "shadowMap");
-			light.addLightCookie(shader, binding.getName() + "cookie");
+			light.addShadowmap(shader, binding.getName());
+			//light.addLightCookie(shader, binding.getName() + "cookie");
 		}
 	}
 
@@ -280,66 +281,6 @@ namespace geeL {
 
 
 
-	DynamicIBLMap& LightManager::addReflectionProbe(const DynamicIBLMap& probe) {
-		DynamicIBLMap* map = new DynamicIBLMap(probe);
-		reflectionProbes.push_back(map);
-
-		return *map;
-	}
-
-	IBLMap& LightManager::addReflectionProbe(const IBLMap& probe) {
-		IBLMap* map = new IBLMap(probe);
-		reflectionProbes.push_back(map);
-
-		return *map;
-	}
-
-	void LightManager::removeReflectionProbe(DynamicCubeMap& probe) {
-		//TODO: implement this
-		reflectionProbes.remove(&probe);
-	}
-
-	void LightManager::addReflectionProbes(RenderShader& shader) const {
-		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
-			DynamicCubeMap& probe = **it;
-			probe.add(shader, "skybox.");
-		}
-	}
-
-	void LightManager::bindReflectionProbes(const Camera& camera, const RenderShader& shader, ShaderTransformSpace space) const {
-
-		unsigned int rpCount = 0;
-		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
-			DynamicCubeMap& probe = **it;
-
-			probe.bind(camera, shader, "skybox.", space);
-			rpCount++;
-		}
-
-		//shader.setInteger(rpCountName, rpCount);
-	}
-
-
-	void LightManager::drawReflectionProbes() const {
-		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
-			DynamicCubeMap& probe = **it;
-			probe.draw();
-		}
-	}
-
-
-
-
-	void LightManager::addVoxelStructure(VoxelStructure& structure) {
-		voxelStructure = &structure;
-	}
-
-	void LightManager::drawVoxelStructure() {
-		if (voxelStructure != nullptr)
-			voxelStructure->build();
-	}
-
-
 
 
 	void LightManager::iterLights(std::function<void(Light&)> function) {
@@ -397,7 +338,7 @@ namespace geeL {
 	void LightManager::onAdd(Light* light, LightBinding& binding) {
 		for (auto it = shaderListener.begin(); it != shaderListener.end(); it++) {
 			RenderShader& shader = **it;
-			light->addShadowmap(shader, binding.getName() + "shadowMap");
+			light->addShadowmap(shader, binding.getName());
 		}
 	}
 
@@ -409,6 +350,10 @@ namespace geeL {
 	}
 
 	void LightManager::onChange(const Light& light) {
+
+		std::cout << "asfsdf\n";
+
+		
 
 	}
 
@@ -432,5 +377,67 @@ namespace geeL {
 	void LightManager::setAmbientColor(const glm::vec3& color) {
 		ambient = color;
 	}
+
+
+
+
+	DynamicIBLMap& LightManager::addReflectionProbe(const DynamicIBLMap& probe) {
+		DynamicIBLMap* map = new DynamicIBLMap(probe);
+		reflectionProbes.push_back(map);
+
+		return *map;
+	}
+
+	IBLMap& LightManager::addReflectionProbe(const IBLMap& probe) {
+		IBLMap* map = new IBLMap(probe);
+		reflectionProbes.push_back(map);
+
+		return *map;
+	}
+
+	void LightManager::removeReflectionProbe(DynamicCubeMap& probe) {
+		//TODO: implement this
+		reflectionProbes.remove(&probe);
+	}
+
+	void LightManager::addReflectionProbes(RenderShader& shader) const {
+		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
+			DynamicCubeMap& probe = **it;
+			probe.add(shader, "skybox.");
+		}
+	}
+
+	void LightManager::bindReflectionProbes(const Camera& camera, const RenderShader& shader, ShaderTransformSpace space) const {
+
+		unsigned int rpCount = 0;
+		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
+			DynamicCubeMap& probe = **it;
+
+			probe.bind(camera, shader, "skybox.", space);
+			rpCount++;
+		}
+
+		//shader.setInteger(rpCountName, rpCount);
+	}
+
+
+	void LightManager::drawReflectionProbes() const {
+		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
+			DynamicCubeMap& probe = **it;
+			probe.draw();
+		}
+	}
+
+
+	void LightManager::addVoxelStructure(VoxelStructure& structure) {
+		voxelStructure = &structure;
+	}
+
+	void LightManager::drawVoxelStructure() {
+		if (voxelStructure != nullptr)
+			voxelStructure->build();
+	}
+
+
 
 }
