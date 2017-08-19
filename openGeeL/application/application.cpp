@@ -22,6 +22,8 @@ namespace geeL {
 		return application->getCurrentTime().deltaTime();
 	}
 
+	AtomicWrapper<bool> close = false;
+
 
 	Application::Application(RenderWindow& window, InputManager& inputManager, RenderThread& renderThread)
 		: window(window), inputManager(inputManager), renderer(renderThread.getRenderer()) {
@@ -39,10 +41,6 @@ namespace geeL {
 		addThread(renderThread);
 	}
 
-
-	//TODO: Very hacky and problematic when using multiple applications
-	mutex inputLock;
-	AtomicWrapper<bool> close = false;
 
 	void Application::run() {
 		renderer.linkInformation();

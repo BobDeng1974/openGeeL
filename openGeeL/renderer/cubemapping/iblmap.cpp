@@ -41,6 +41,13 @@ namespace geeL {
 	DynamicIBLMap::DynamicIBLMap(const DynamicIBLMap& map) 
 		: DynamicCubeMap(map), baseMap(map.baseMap), brdfIntMap(map.brdfIntMap), irrMap(map.irrMap), preEnvMap(map.preEnvMap) {}
 
+
+	void DynamicIBLMap::bind(const Camera& camera, const RenderShader& shader, 
+		const std::string& name, ShaderTransformSpace space) const {
+
+		baseMap.bind(camera, shader, name, space);
+	}
+
 	void DynamicIBLMap::draw(const RenderShader& shader, std::string name) const {
 		baseMap.bindMap(shader, name);
 	}

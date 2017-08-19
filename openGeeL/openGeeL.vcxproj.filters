@@ -447,6 +447,9 @@
     <ClCompile Include="renderer\texturing\dynamictexture.cpp">
       <Filter>renderer\texturing</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\utility\gvector.cpp">
+      <Filter>renderer\utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -895,6 +898,9 @@
     </ClInclude>
     <ClInclude Include="renderer\texturing\dynamictexture.h">
       <Filter>renderer\texturing</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\utility\gvector.h">
+      <Filter>renderer\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

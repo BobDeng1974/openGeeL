@@ -21,7 +21,7 @@ inline T PostProcessingFactory::createEffect(Args& ...args) {
 }
 
 template<typename T, typename V, typename ...Args>
-inline T PostProcessingFactory::createEffect(V& v, const Args & ...args) {
+inline T PostProcessingFactory::createEffect(V& v, const Args& ...args) {
 	return T(v, args...);
 }
 

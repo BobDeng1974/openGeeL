@@ -20,11 +20,12 @@ public:
 
 			Transform& cameraTransform = transformFactory.CreateTransform(vec3(5.4f, 10.0f, -2.9f), vec3(70.f, 50.f, -175.f), vec3(1.f));
 			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 60.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
-			camera.addComponent<MovableCamera>(MovableCamera(5.f, 0.45f));
+			camera.addComponent<MovableCamera>(5.f, 0.45f);
 			scene.setCamera(camera);
 
 			Transform& probeTransform = transformFactory.CreateTransform(vec3(0.5f, 7.1f, 5.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-			DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024, 20, 20, 20);
+			unsigned int probeSize = 12;
+			DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024, probeSize, probeSize, probeSize);
 
 			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv3/Tropical_Beach_3k.hdr");
 			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeMapFactory.getBuffer(), 1024);

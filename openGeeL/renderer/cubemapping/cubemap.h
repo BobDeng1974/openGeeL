@@ -18,7 +18,7 @@ namespace geeL {
 		virtual void bindMap(const RenderShader& shader, std::string name) const;
 
 		virtual void bind(const Camera& camera, const RenderShader& shader,
-			const std::string& name, ShaderTransformSpace space) const {}
+			const std::string& name, ShaderTransformSpace space) const;
 
 		virtual void add(RenderShader& shader, std::string name) const;
 		virtual void remove(RenderShader& shader) const;

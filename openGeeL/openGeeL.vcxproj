@@ -265,6 +265,7 @@
     <ClCompile Include="renderer\transformation\transformfactory.cpp" />
     <ClCompile Include="renderer\utility\debug.cpp" />
     <ClCompile Include="renderer\utility\defaults.cpp" />
+    <ClCompile Include="renderer\utility\gvector.cpp" />
     <ClCompile Include="renderer\utility\linearkernel.cpp" />
     <ClCompile Include="renderer\utility\rendertime.cpp" />
     <ClCompile Include="renderer\utility\stb_image_importer.cpp" />
@@ -408,6 +409,7 @@
     <ClInclude Include="renderer\transformation\transformfactory.h" />
     <ClInclude Include="renderer\utility\debug.h" />
     <ClInclude Include="renderer\utility\defaults.h" />
+    <ClInclude Include="renderer\utility\gvector.h" />
     <ClInclude Include="renderer\utility\linearkernel.h" />
     <ClInclude Include="renderer\utility\matrixextension.h" />
     <ClInclude Include="renderer\utility\properties.h" />

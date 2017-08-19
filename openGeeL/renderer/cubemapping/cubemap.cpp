@@ -14,6 +14,13 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, getID());
 	}
 
+
+	void CubeMap::bind(const Camera& camera, const RenderShader& shader, 
+		const std::string& name, ShaderTransformSpace space) const {
+
+		shader.bind<int>(name + "global", true);
+	}
+
 	void CubeMap::add(RenderShader& shader, std::string name) const {
 		shader.addMap(*texture, name + "albedo");
 	}
