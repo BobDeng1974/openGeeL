@@ -55,7 +55,7 @@ public:
 
 			sponz.iterateMaterials([&](MaterialContainer& container) {
 				if (container.name == "fabric_g") {
-				//	container.addTexture("Diffuse", renderTex);
+					//container.addTexture("Diffuse", renderTex);
 					container.setVectorValue("Emissivity", vec3(0.08f));
 				}
 			});

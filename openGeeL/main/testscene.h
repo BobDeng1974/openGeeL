@@ -78,16 +78,6 @@ public:
 				container.setVectorValue("Color", vec3(0.4f, 0.4f, 0.4f));
 			});
 
-			Transform& meshTransform3 = transformFactory.CreateTransform(vec3(-9.f, -3.f, -10.0f), vec3(0.5f, 0.5f, 0.5f), vec3(0.3f));
-			MeshRenderer& state = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/empire/EmpireState_lp.obj"),
-				meshTransform3, CullingMode::cullFront, "Empire State");
-			//scene.addMeshRenderer(state);
-
-			state.iterateMaterials([&](MaterialContainer& container) {
-				container.setFloatValue("Roughness", 0.5f);
-				container.setVectorValue("Color", vec3(0.5f, 0.5f, 0.5f));
-			});
-
 
 			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 2.f, 4.f), vec3(0.f), vec3(1.f));
 			MeshRenderer& sphere1 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/sphere.obj"),
