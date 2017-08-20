@@ -9,23 +9,17 @@
 
 namespace geeL {
 
-	class TextureStack : public Texture2D {
+	class TextureStack {
 
 	public:
 		int mapFlags;
-		TextureStack() : Texture2D(ColorType::None), mapFlags(0) {}
+		TextureStack() {}
 
 		void addTexture(const std::string& name, TextureMap& texture);
 		void addTexture(const std::string& name, Texture2D& texture, MapType type);
 
-
-		//Bind (only) first texture
-		virtual void bind() const;
 		void bind(const RenderShader& shader) const;
 		void draw(const RenderShader& shader) const;
-
-		virtual unsigned int getID() const;
-		virtual void remove();
 
 		void iterTextures(std::function<void(const std::string&, const Texture2D&)> function) const;
 

@@ -15,24 +15,12 @@ namespace geeL {
 	}
 
 	void TextureStack::addTexture(const std::string& name, Texture2D& texture, MapType type) {
-		//Set color type to the one of the first added map
-		if (textures.size() == 0)
-			colorType = texture.getColorType();
-
 		if (textures.count(type) == 0)
 			updateMapFlags(type);
 
 		textures[type] = pair<string, Texture2D*>(name + MapTypeConversion::getTypeAsString(type), &texture);
 	}
 
-
-	void TextureStack::bind() const {
-		auto it = textures.begin();
-		Texture* map = it->second.second;
-
-		if (map != nullptr)
-			return map->bind();
-	}
 
 	void TextureStack::bind(const RenderShader& shader) const {
 		int counter = 0;
@@ -53,21 +41,6 @@ namespace geeL {
 		});
 	}
 
-	unsigned int TextureStack::getID() const {
-		auto it = textures.begin();
-		Texture2D* map = it->second.second;
-
-		if (map != nullptr)
-			return map->getID();
-
-		return 0;
-	}
-
-	void TextureStack::remove() {
-		iterTextures([](const std::string& name, Texture2D& texture) {
-			texture.remove();
-		});
-	}
 
 	void TextureStack::iterTextures(std::function<void(const std::string&, const Texture2D&)> function) const {
 		for (auto it(textures.begin()); it != textures.end(); it++)
