@@ -5,6 +5,7 @@
 #include <list>
 #include <memory>
 #include "scripting/component.h"
+#include "utility/property.h"
 
 namespace geeL {
 
@@ -40,12 +41,13 @@ namespace geeL {
 
 		bool isActive() const;
 		virtual void setActive(bool active);
+		void addStatusListener(std::function<void(SceneObject&, bool status)> listener);
 
 		std::string getName() const;
 		void setName(const std::string& name);
 
 	protected:
-		bool active;
+		Property<bool> active;
 		std::string name;
 		std::list<Component*> components;
 

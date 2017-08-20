@@ -6,9 +6,6 @@
 namespace geeL {
 
 	class Light;
-	class PointLight;
-	class DirectionalLight;
-	class SpotLight;
 
 
 	//Helper structure for indexing lights. Primarily used by light manager
@@ -37,8 +34,6 @@ namespace geeL {
 		std::string base;
 
 	};
-
-
 
 }
 

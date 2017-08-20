@@ -22,8 +22,14 @@ namespace geeL {
 	const RenderScene;
 
 	enum class ShaderTransformSpace;
-	
+	enum class LightType {
+		Directional,
+		Point,
+		Spot
+	};
 
+
+	//Base class for all light scene objects
 	class Light : public SceneObject {
 
 	public:
@@ -60,11 +66,11 @@ namespace geeL {
 		vec3 getColor() const;
 		void setColor(vec3 color);
 
-		virtual void setActive(bool active);
-
 		//Add change callback to this light and specify whether function should
 		//be invoked once immediately or not
-		void addChangeListener(std::function<void(const Light&)> function, bool invoke = false);
+		void addChangeListener(std::function<void(Light&)> function, bool invoke = false);
+
+		virtual LightType getLightType() const = 0;
 
 	protected:
 		vec3 diffuse;
@@ -75,7 +81,7 @@ namespace geeL {
 		void onChange();
 
 	private:
-		std::list<std::function<void(const Light&)>> changeListeners;
+		std::list<std::function<void(Light&)>> changeListeners;
 
 	};
 }

@@ -42,6 +42,12 @@ namespace geeL {
 		}
 	}
 
+	void SceneObject::addStatusListener(std::function<void(SceneObject&, bool status)> listener) {
+		active.addListener([this, listener](const bool& value) {
+			listener(*this, value);
+		});
+	}
+
 	std::string SceneObject::getName() const {
 		return name;
 	}

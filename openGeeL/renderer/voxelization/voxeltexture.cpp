@@ -41,7 +41,7 @@ namespace geeL {
 		const Camera& camera = scene.getCamera();
 		voxelShader->bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
 
-		scene.getLightmanager().bindShadowMaps(*voxelShader);
+		scene.getLightmanager().bindShadowmaps(*voxelShader);
 
 		glBindImageTexture(0, texture->getID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA8);
 

@@ -14,7 +14,15 @@ namespace geeL {
 		virtual void bind(const RenderShader& shader, const std::string& name, ShaderTransformSpace space, 
 			const Camera* const camera = nullptr) const;
 
+		virtual LightType getLightType() const;
+
 	};
+
+
+	inline LightType PointLight::getLightType() const {
+		return LightType::Point;
+	}
+
 }
 
 #endif

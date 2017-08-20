@@ -96,7 +96,7 @@ namespace geeL {
 		//Hacky: Read camera depth from geometry pass and write it into the scene
 		scene->forwardScreenInfo(gBuffer.screenInfo);
 
-		scene->getLightmanager().draw(*scene, &scene->getCamera());
+		scene->getLightmanager().update(*scene, &scene->getCamera());
 
 		//SSAO pass
 		if (ssao != nullptr) {
@@ -163,7 +163,7 @@ namespace geeL {
 		//Geometry pass
 		gBuffer.fill(geometryPassFunc);
 
-		scene->getLightmanager().drawShadowmaps(*scene, &scene->getCamera());
+		scene->getLightmanager().update(*scene, &scene->getCamera());
 
 		//SSAO pass
 		if (ssao != nullptr) {
@@ -189,7 +189,7 @@ namespace geeL {
 		//Geometry pass
 		gBuffer.fill([this, &camera] () { scene->drawDefault(camera); });
 
-		scene->getLightmanager().drawShadowmaps(*scene, nullptr);
+		scene->getLightmanager().update(*scene, nullptr);
 
 		//SSAO pass
 		if (ssao != nullptr) {

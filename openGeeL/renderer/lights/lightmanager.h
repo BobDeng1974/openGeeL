@@ -64,13 +64,27 @@ namespace geeL {
 		SpotLight& addSpotlight(Transform& transform, glm::vec3 diffuse,
 			float angle, float outerAngle, const ShadowMapConfiguration& config);
 
-		void removeLight(DirectionalLight& light);
-		void removeLight(PointLight& light);
-		void removeLight(SpotLight& light);
+		void removeLight(Light& light);
+
+
+		void bind(const RenderShader& shader, ShaderTransformSpace space, const Camera* const camera = nullptr) const;
+		void bind(const SceneShader& shader, const Camera* const camera = nullptr) const;
+		void bindShadowmaps(RenderShader& shader) const;
+
+		//Update all internal structures depending on their state
+		void update(const RenderScene& scene, const SceneCamera* const camera);
+
+		//Draw shadow maps no matter the lights properties. E.g.if they are static or not
+		void drawShadowmapsForced(const RenderScene& scene, const SceneCamera* const camera) const;
+		
+
+		void iterLights(std::function<void(Light&)> function);
+		void iterLights(std::function<void(LightBinding&)> function);
+		void iterLights(std::function<void(const LightBinding&)> function) const;
+
 
 		DynamicIBLMap& addReflectionProbe(const DynamicIBLMap& probe);
 		IBLMap& addReflectionProbe(const IBLMap& probe);
-
 		void removeReflectionProbe(DynamicCubeMap& probe);
 
 		//Add all reflection probes to given shader
@@ -78,25 +92,10 @@ namespace geeL {
 		void bindReflectionProbes(const Camera& camera, const RenderShader& shader, ShaderTransformSpace space) const;
 		void drawReflectionProbes() const;
 
-		void bind(const RenderShader& shader, ShaderTransformSpace space, const Camera* const camera = nullptr) const;
-		void bind(const SceneShader& shader, const Camera* const camera = nullptr) const;
-
-		void bindShadowMaps(RenderShader& shader) const;
-
-
-		//Update all internal structures depending on their state
-		void draw(const RenderScene& scene, const SceneCamera* const camera);
-
-		//Draw shadow maps no matter the lights properties. E.g.if they are static or not
-		void drawShadowmapsForced(const RenderScene& scene, const SceneCamera* const camera) const;
-		void drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera) const;
-
 		void addVoxelStructure(VoxelStructure& structure);
 		void drawVoxelStructure();
 
-		void iterLights(std::function<void(Light&)> function);
-
-
+		
 		//Add shader that shall be updated when lights are added/removed
 		void addShaderListener(RenderShader& shader);
 		void addShaderListener(SceneShader& shader);
@@ -109,20 +108,20 @@ namespace geeL {
 		VoxelStructure* voxelStructure;
 		RenderShader* dlShader; //RenderShader for spot and directional light shadow map
 		RenderShader* plShader; //RenderShader for point light shadow maps
+		size_t plCount, dlCount, slCount;
 
-		std::map<DirectionalLight*, LightBinding> dirLights;
-		std::map<SpotLight*, LightBinding> spotLights;
-		std::map<PointLight*, LightBinding> pointLights;
+		std::map<Light*, LightBinding> lights;
 		std::list<DynamicCubeMap*> reflectionProbes;
-
 		std::set<RenderShader*> shaderListener;
+
+		void addLight(Light* light, LightBinding& binding);
 
 		void onRemove(Light* light, LightBinding& binding);
 		void onAdd(Light* light, LightBinding& binding);
-		void onChange(const Light& light);
+		void onChange(Light& light);
 
-		template<class A>
-		void reindexLights(A& list) const;
+		void drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera) const;
+		void reindexLights();
 	};
 }
 

@@ -300,6 +300,7 @@
     <ClInclude Include="main\sciencescene.h" />
     <ClInclude Include="main\sponzascene.h" />
     <ClInclude Include="main\testscene.h" />
+    <ClInclude Include="main\capsulescene.h" />
     <ClInclude Include="physics\collider.h" />
     <ClInclude Include="physics\motionstate.h" />
     <ClInclude Include="physics\physics.h" />

@@ -28,6 +28,12 @@ namespace geeL {
 		PropertyBase<T>& operator= (const PropertyBase<T>& other);
 		PropertyBase<T>& operator= (const T& other);
 
+		bool operator==(const PropertyBase<T>& other);
+		bool operator==(const T& other);
+
+		bool operator!=(const PropertyBase<T>& other);
+		bool operator!=(const T& other);
+
 	protected:
 		T value;
 
@@ -156,6 +162,26 @@ namespace geeL {
 		onChange();
 
 		return *this;
+	}
+
+	template<class T>
+	inline bool PropertyBase<T>::operator==(const PropertyBase<T>& other) {
+		return value == other.value;
+	}
+
+	template<class T>
+	inline bool PropertyBase<T>::operator==(const T& other) {
+		return value == other;
+	}
+
+	template<class T>
+	inline bool PropertyBase<T>::operator!=(const PropertyBase<T>& other) {
+		return value != other.value;
+	}
+
+	template<class T>
+	inline bool PropertyBase<T>::operator!=(const T& other) {
+		return value != other;
 	}
 
 

@@ -902,6 +902,9 @@
     <ClInclude Include="renderer\utility\gvector.h">
       <Filter>renderer\utility</Filter>
     </ClInclude>
+    <ClInclude Include="main\capsulescene.h">
+      <Filter>main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\lighting.vert">

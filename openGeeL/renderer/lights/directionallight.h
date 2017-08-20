@@ -17,7 +17,15 @@ namespace geeL {
 
 		virtual float getIntensity(glm::vec3 point) const;
 
+		virtual LightType getLightType() const;
+
 	};
+
+
+	inline LightType DirectionalLight::getLightType() const {
+		return LightType::Directional;
+	}
+
 }
 
 #endif

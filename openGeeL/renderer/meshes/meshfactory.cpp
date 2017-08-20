@@ -325,8 +325,7 @@ namespace geeL {
 			loadMaterialTextures(textures, material, aiTextureType_DIFFUSE, MapType::Diffuse, directory, ColorType::GammaSpace);
 			loadMaterialTextures(textures, material, aiTextureType_SPECULAR, MapType::Specular, directory, ColorType::RGBA);
 			loadMaterialTextures(textures, material, aiTextureType_HEIGHT, MapType::Normal, directory, ColorType::RGBA);
-			//loadMaterialTextures(textures, material, aiTextureType_AMBIENT, MapType::Reflection, directory, ColorType::RGBA);
-			loadMaterialTextures(textures, material, aiTextureType_EMISSIVE, MapType::Metallic, directory, ColorType::RGBA);
+			loadMaterialTextures(textures, material, aiTextureType_AMBIENT, MapType::Metallic, directory, ColorType::RGBA);
 		}
 	}
 

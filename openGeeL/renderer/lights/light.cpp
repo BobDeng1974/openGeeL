@@ -97,13 +97,8 @@ namespace geeL {
 		}
 	}
 
-	void Light::setActive(bool active) {
-		SceneObject::setActive(active);
 
-		onChange();
-	}
-
-	void Light::addChangeListener(std::function<void(const Light&)> function, bool invoke) {
+	void Light::addChangeListener(std::function<void(Light&)> function, bool invoke) {
 		changeListeners.push_back(function);
 
 		if (invoke) function(*this);
