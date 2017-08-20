@@ -7,6 +7,8 @@ struct Material {
 	sampler2D metal;
 
 	int mapFlags;
+	bool invSpec;
+
 	float roughness;
 	float metallic;
 	vec4  color;
@@ -20,6 +22,8 @@ struct EmissiveMaterial {
 	sampler2D metal;
 
 	int mapFlags;
+	bool invSpec;
+
 	float roughness;
 	float metallic;
 

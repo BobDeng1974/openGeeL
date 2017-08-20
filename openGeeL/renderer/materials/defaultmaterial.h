@@ -49,6 +49,7 @@ namespace geeL {
 		float transparency;
 		float roughness;
 		float metallic;
+		bool inverseRoughness = false;
 		TextureStack textureStack;
 
 	};

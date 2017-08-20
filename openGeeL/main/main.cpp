@@ -9,13 +9,13 @@
 #include "capsulescene.h"
 
 int main() {
-	BedroomScene::draw();
+	//BedroomScene::draw();
 	//DeerScene::draw();
 	//ArthouseScene::draw();
 	//SponzaScene::draw();
 	//SponzaGIScene::draw();
 	//ScienceScene::draw();
-	//CapsuleScene::draw();
+	CapsuleScene::draw();
 
 	//TestScene::draw();
 	//RaymarchTest::draw();

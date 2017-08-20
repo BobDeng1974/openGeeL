@@ -115,7 +115,10 @@ namespace geeL {
 	}
 
 	void  DefaultMaterialContainer::setIntValue(std::string name, int value) {
-		cout << "Value '" + name + "' not present in material\n";
+		if (name == "InverseRoughness")
+			inverseRoughness = bool(value);
+		else
+			cout << "Value '" + name + "' not present in material\n";
 	}
 
 	void  DefaultMaterialContainer::setVectorValue(std::string name, const glm::vec3& value) {
@@ -133,6 +136,7 @@ namespace geeL {
 		textureStack.draw(shader);
 
 		shader.bind<int>("material.mapFlags", textureStack.mapFlags);
+		shader.bind<int>("material.invSpec", inverseRoughness);
 		shader.bind<float>("material.roughness", roughness);
 		shader.bind<float>("material.metallic", metallic);
 		shader.bind<glm::vec4>("material.color", glm::vec4(color, transparency));

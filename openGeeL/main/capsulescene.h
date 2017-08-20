@@ -56,6 +56,7 @@ public:
 			scene.addMeshRenderer(capsule);
 
 			capsule.iterateMaterials([&](MaterialContainer& container) {
+				container.setIntValue("InverseRoughness", 1);
 				container.setFloatValue("Roughness", 0.25f);
 				container.setFloatValue("Metallic", 0.f);
 				container.setVectorValue("Color", vec3(0.4f, 0.4f, 0.4f));
@@ -73,7 +74,7 @@ public:
 			gui.addElement(sysInfo);
 
 
-			def.setExposure(1.f);
+			def.setExposure(2.f);
 			postLister.add(def);
 
 			BilateralFilter& blur = BilateralFilter(1.8f, 0.7f);

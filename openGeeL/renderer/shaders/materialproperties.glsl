@@ -23,6 +23,6 @@ void readMaterialProperties(out vec3 albedo, out vec3 norm, out float roughness,
 	}
 
 	albedo = diffuse.rgb;
-	roughness = (specFlag == 1) ? 1.f - texture(material.specular, texCoords).r : material.roughness; 
-	metallic = (metaFlag == 1) ? texture(material.metal, texCoords).r : material.metallic;
+	roughness = (specFlag == 1) ? abs((1.f - float(material.invSpec)) - texture(material.specular, texCoords).r) : material.roughness; 
+	metallic = (metaFlag == 1) ? 1.f - texture(material.metal, texCoords).r : material.metallic;
 }

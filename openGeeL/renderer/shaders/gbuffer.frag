@@ -35,8 +35,8 @@ void main() {
 	}
 
 	//Interpret roughness as (1 - specuarlity)
-	vec3 speColor = (specFlag == 1) ? 1.f - texture(material.specular, textureCoordinates).rgb : vec3(material.roughness);
-	float metallic = (metaFlag == 1) ? texture(material.metal, textureCoordinates).r : material.metallic;
+	vec3 speColor = (specFlag == 1) ? abs((1.f - float(material.invSpec)) - texture(material.specular, textureCoordinates).rgb) : vec3(material.roughness);
+	float metallic = (metaFlag == 1) ? 1.f - texture(material.metal, textureCoordinates).r : material.metallic;
 
 	gNormalMet.rgb = norm;
 	gNormalMet.a = metallic;
