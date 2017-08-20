@@ -10,7 +10,8 @@ namespace geeL {
 		Diffuse,
 		Specular,
 		Normal,
-		Metallic
+		Metallic,
+		Alpha
 
 	};
 
@@ -32,6 +33,8 @@ namespace geeL {
 				return "specular";
 			case MapType::Normal:
 				return "normal";
+			case MapType::Alpha:
+				return "alpha";
 		}
 
 		return "";
@@ -44,6 +47,7 @@ namespace geeL {
 		if (type == "diffuse") return MapType::Diffuse;
 		if (type == "specular") return MapType::Specular;
 		if (type == "normal") return MapType::Normal;
+		if (type == "alpha") return MapType::Alpha;
 
 		throw "Given name can't be converted into a map type\n";
 	}
