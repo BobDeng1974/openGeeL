@@ -21,6 +21,7 @@ namespace geeL {
 		virtual void addTexture(const std::string& name, Texture2D& texture);
 		void addTexture(TextureMap& texture);
 		void addTextures(std::vector<TextureMap*> textures);
+		void addTexture(const MapType& type, Texture2D& texture);
 
 		float getTransparency() const;
 		float getRoughness() const;

@@ -49,10 +49,8 @@ public:
 
 			capsule.iterateMaterials([&](MaterialContainer& container) {
 				container.setIntValue("InverseRoughness", 1);
-				container.setFloatValue("Roughness", 0.25f);
-				container.setFloatValue("Metallic", 0.f);
-				container.setVectorValue("Color", vec3(0.4f, 0.4f, 0.4f));
 			});
+
 
 			Transform& meshTransform22 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 5.9f), vec3(0.f, 0.f, 0.f), vec3(0.12f));
 			MeshRenderer& girl = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/girl/girl_complete_03.obj"),
@@ -68,10 +66,17 @@ public:
 					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/hair_inner_alpha_01.jpg"));
 				else if (container.name == "hair_outer")
 					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/hair_outer_alpha_01.jpg"));
-				else if (container.name == "cloth")
-					container.addTexture("emission", materialFactory.CreateTexture("resources/girl/cloth_glow_01.jpg", ColorType::GammaSpace));
-				else if(container.name == "light")
+				else if (container.name == "cloth") {
+					container.addTexture("emission", materialFactory.CreateTexture("resources/girl/cloth_spec_01.jpg", ColorType::GammaSpace));
+					container.setVectorValue("Emissivity", vec3(50.f));
+					container.setFloatValue("Roughness", 0.5f);
+					container.setFloatValue("Metallic", 1.f);
+				}
+				else if (container.name == "light")
 					container.setVectorValue("Emissivity", vec3(100.f));
+				else if (container.name == "body")
+					container.setFloatValue("Roughness", 0.7f);
+
 			});
 
 
@@ -117,8 +122,8 @@ public:
 			//postLister.add(dof);
 
 			BrightnessFilterCutoff& filter = BrightnessFilterCutoff(1.f);
-			GaussianBlur& bloomBlur = GaussianBlur(KernelSize::Large, 5.f);
-			Bloom& bloom = Bloom(filter, bloomBlur);
+			GaussianBlur& bloomBlur = GaussianBlur(KernelSize::Large, 4.f);
+			Bloom& bloom = Bloom(filter, bloomBlur, 1.f, 0.7f);
 			renderer.addEffect(bloom);
 			postLister.add(bloom);
 

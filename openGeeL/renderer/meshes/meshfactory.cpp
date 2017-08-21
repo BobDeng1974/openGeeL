@@ -114,8 +114,9 @@ namespace geeL {
 			processTextures(textures, directory, mesh, scene);
 
 			DefaultMaterialContainer& mat = factory.CreateMaterial();
-			mat.addTextures(textures);
 			processMaterial(mat, mesh, scene);
+			mat.addTextures(textures);
+			
 
 			model.addMesh(StaticMesh(vertices, indices, mat));
 		}
@@ -170,8 +171,8 @@ namespace geeL {
 			processTextures(textures, directory, mesh, scene);
 
 			DefaultMaterialContainer& mat = factory.CreateMaterial();
-			mat.addTextures(textures);
 			processMaterial(mat, mesh, scene);
+			mat.addTextures(textures);
 
 			model.addMesh(SkinnedMesh(vertices, indices, bones, mat));
 		}

@@ -17,21 +17,43 @@ namespace geeL {
 
 	void DefaultMaterialContainer::addTexture(const std::string& name, Texture2D& texture) {
 		MapType type = MapTypeConversion::getMapFromString(name);
-		textureStack.addTexture("material.", texture, type);
+		addTexture(type, texture);
 	}
 
+	
 	void DefaultMaterialContainer::addTexture(TextureMap& texture) {
-		textureStack.addTexture("material.", texture);
+		addTexture(texture.type, texture);
 	}
 
 	void DefaultMaterialContainer::addTextures(std::vector<TextureMap*> textures) {
 		for (size_t i = 0; i < textures.size(); i++) {
 			TextureMap& texture = *textures[i];
-			string name = "material.";
-
-			textureStack.addTexture(name, texture);
+			addTexture(texture.type, texture);
 		}
 	}
+
+	void DefaultMaterialContainer::addTexture(const MapType& type, Texture2D & texture) {
+		textureStack.addTexture("material.", texture, type);
+
+		//Reset corresponding property to default value 
+		//(e.g. roughness to 1 if specular map is added)
+		switch (type) {
+			case MapType::Diffuse:
+				setColor(glm::vec3(1.f));
+				break;
+			case MapType::Specular:
+				setRoughness(1.f);
+				break;
+			case MapType::Metallic:
+				setMetallic(1.f);
+				break;
+			case MapType::Emission:
+				setEmissivity(glm::vec3(1.f));
+				break;
+		}
+	}
+
+
 
 	float DefaultMaterialContainer::getTransparency() const {
 		return transparency;
