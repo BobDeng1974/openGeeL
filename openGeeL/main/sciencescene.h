@@ -23,7 +23,7 @@ public:
 			camera.addComponent<MovableCamera>(MovableCamera(5.f, 0.45f));
 			scene.setCamera(camera);
 
-			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/hdrenv1/Playa_Sunrise.hdr");
+			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/Playa_Sunrise.hdr");
 			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeMapFactory.getBuffer(), 1024);
 			IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
