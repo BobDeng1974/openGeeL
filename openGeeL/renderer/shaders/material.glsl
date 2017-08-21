@@ -5,6 +5,7 @@ struct Material {
 	sampler2D specular;
 	sampler2D normal;
 	sampler2D metal;
+	sampler2D alpha;
 
 	int mapFlags;
 	bool invSpec;
@@ -20,6 +21,7 @@ struct EmissiveMaterial {
 	sampler2D specular;
 	sampler2D normal;
 	sampler2D metal;
+	sampler2D alpha;
 
 	int mapFlags;
 	bool invSpec;

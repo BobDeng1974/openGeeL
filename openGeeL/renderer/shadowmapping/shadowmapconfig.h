@@ -28,12 +28,13 @@ namespace geeL {
 		const float shadowBias;
 		const float farPlane;
 		const float softShadowScale;
+		const float intensity;
 		const unsigned int softShadowResolution;
 		const ShadowmapResolution resolution;
 
 		ShadowMapConfiguration();
 		ShadowMapConfiguration(float bias, ShadowMapType type, ShadowmapResolution resolution = ShadowmapResolution::Adaptive,
-			float softShadowScale = 1.f, unsigned int softShadowResolution = 8, float farPlane = 100);
+			float softShadowScale = 1.f, unsigned int softShadowResolution = 8, float farPlane = 100, float intensity = 1.f);
 
 		bool useShadowMap() const;
 

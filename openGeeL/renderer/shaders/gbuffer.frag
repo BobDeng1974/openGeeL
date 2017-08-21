@@ -21,11 +21,16 @@ void main() {
 	float specFlag = mod(material.mapFlags / 10, 10);
 	float normFlag = mod(material.mapFlags / 100, 10);
 	float metaFlag = mod(material.mapFlags / 1000, 10);
+	float alphaFlag = mod(material.mapFlags / 10000, 10);
 
 	vec4 diffuse = (diffFlag == 1) ? texture(material.diffuse, textureCoordinates) : material.color;
 
-	//Discard fragment if alpha value is very low
-	//discard(diffuse.a < 0.1f);
+	if(alphaFlag == 1) {
+		diffuse.a = texture(material.alpha, textureCoordinates).r;
+
+		//Discard fragment if alpha value is low
+		discard(diffuse.a < 0.5f);
+	}
     
 	vec3 norm = normalize(normal);
 	if(normFlag == 1) {

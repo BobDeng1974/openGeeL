@@ -17,17 +17,17 @@ namespace geeL {
 
 	void DefaultMaterialContainer::addTexture(const std::string& name, Texture2D& texture) {
 		MapType type = MapTypeConversion::getMapFromString(name);
-		textureStack.addTexture(this->name + ".", texture, type);
+		textureStack.addTexture("material.", texture, type);
 	}
 
 	void DefaultMaterialContainer::addTexture(TextureMap& texture) {
-		textureStack.addTexture(this->name + ".", texture);
+		textureStack.addTexture("material.", texture);
 	}
 
 	void DefaultMaterialContainer::addTextures(std::vector<TextureMap*> textures) {
 		for (size_t i = 0; i < textures.size(); i++) {
 			TextureMap& texture = *textures[i];
-			string name = this->name + ".";
+			string name = "material.";
 
 			textureStack.addTexture(name, texture);
 		}

@@ -5,6 +5,7 @@
 #include "shader/rendershader.h"
 #include "imagetexture.h"
 #include "texturestack.h"
+#include <iostream>
 
 using namespace std;
 
@@ -66,6 +67,9 @@ namespace geeL {
 				break;
 			case MapType::Metallic:
 				mapFlags += 1000;
+				break;
+			case MapType::Alpha:
+				mapFlags += 10000;
 				break;
 		}
 	}
