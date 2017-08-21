@@ -32,12 +32,17 @@ public:
 			lightManager.addReflectionProbe(iblMap);
 
 
-			float lightIntensity = 300.f;
-			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(7, 5, 5), vec3(-180.0f, 0, -50), vec3(1.f));
-			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), defPLShadowMapConfig);
+			float lightIntensity = 40.f;
+			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-0.5f, -2.9f, 3), vec3(-180.0f, 0, -50), vec3(1.f), true);
+			ShadowMapConfiguration config = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Huge, 6.f, 15U, 150.f);
+			lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config);
 
-			float height = -2.f;
-			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.1f));
+			lightIntensity = 1.5f;
+			Transform& lightTransform21 = transformFactory.CreateTransform(vec3(-5.8f, -0.2f, -3.6f), vec3(-180.0f, 0, -50), vec3(1.f), true);
+			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::High, 6.f, 15U, 150.f, 1.f);
+			lightManager.addPointLight(lightTransform21, glm::vec3(lightIntensity * 3.f, lightIntensity * 59.f, lightIntensity * 43.f), config2);
+
+			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.1f));
 			MeshRenderer& capsule = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/capsule/Capsule.obj"),
 				meshTransform2, CullingMode::cullFront, "Capsule");
 			scene.addMeshRenderer(capsule);
@@ -47,6 +52,23 @@ public:
 				container.setFloatValue("Roughness", 0.25f);
 				container.setFloatValue("Metallic", 0.f);
 				container.setVectorValue("Color", vec3(0.4f, 0.4f, 0.4f));
+			});
+
+			Transform& meshTransform22 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 5.9f), vec3(0.f, 0.f, 0.f), vec3(0.12f));
+			MeshRenderer& grill = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/girl/girl_complete_03.obj"),
+				meshTransform22, CullingMode::cullFront, "Girl");
+			scene.addMeshRenderer(grill);
+
+			grill.iterateMaterials([&](MaterialContainer& container) {
+				if (container.name == "fur")
+					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/fur_alpha_02.jpg"));
+				else if (container.name == "eyelash")
+					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/eyelash_alpha_01.jpg"));
+				else if (container.name == "hair_inner")
+					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/hair_inner_alpha_01.jpg"));
+				else if (container.name == "hair_outer")
+					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/hair_outer_alpha_01.jpg"));
+
 			});
 
 
@@ -63,7 +85,7 @@ public:
 			postLister.add(def);
 
 			BilateralFilter& blur = BilateralFilter(1.8f, 0.7f);
-			SSAO& ssao = SSAO(blur, 1.f);
+			SSAO& ssao = SSAO(blur, 0.5f);
 			renderer.addSSAO(ssao);
 			scene.addRequester(ssao);
 			postLister.add(ssao);
@@ -88,7 +110,7 @@ public:
 
 			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.4f, 155.f);
 			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 25.f, camera.getFarPlane(), 1.f);
-			renderer.addEffect(dof, dof);
+		//	renderer.addEffect(dof, dof);
 			postLister.add(dof);
 
 			ColorCorrection& colorCorrect = ColorCorrection();

@@ -58,6 +58,13 @@ public:
 					//container.addTexture("Diffuse", renderTex);
 					container.setVectorValue("Emissivity", vec3(0.08f));
 				}
+				else if (container.name == "Material__57")
+					container.addTexture("alpha", materialFactory.CreateTexture("resources/sponza/textures/vase_plant_mask.tga"));
+				else if (container.name == "chain")
+					container.addTexture("alpha", materialFactory.CreateTexture("resources/sponza/textures/chain_texture_mask.tga"));
+				else if (container.name == "leaf")
+					container.addTexture("alpha", materialFactory.CreateTexture("resources/sponza/textures/sponza_thorn_mask.tga"));
+
 			});
 
 
