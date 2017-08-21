@@ -23,6 +23,7 @@ void main() {
 	float normFlag = mod(material.mapFlags / 100, 10);
 	float metaFlag = mod(material.mapFlags / 1000, 10);
 	float alphaFlag = mod(material.mapFlags / 10000, 10);
+	float emisFlag = mod(material.mapFlags / 100000, 10);
 
 	vec4 diffuse = (diffFlag == 1) ? texture(material.diffuse, textureCoordinates) : material.color;
 
@@ -50,5 +51,5 @@ void main() {
 	gPositionRough.a = speColor.r;
 	gDiffuse = diffuse;
 
-	gEmissivity.rgb = material.emissivity;
+	gEmissivity.rgb = (emisFlag == 1) ? texture(material.emission, textureCoordinates).rgb : material.emissivity;
 } 

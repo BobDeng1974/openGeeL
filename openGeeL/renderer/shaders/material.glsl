@@ -22,6 +22,7 @@ struct EmissiveMaterial {
 	sampler2D normal;
 	sampler2D metal;
 	sampler2D alpha;
+	sampler2D emission;
 
 	int mapFlags;
 	bool invSpec;

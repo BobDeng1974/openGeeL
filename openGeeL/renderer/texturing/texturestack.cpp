@@ -71,6 +71,9 @@ namespace geeL {
 			case MapType::Alpha:
 				mapFlags += 10000;
 				break;
+			case MapType::Emission:
+				mapFlags += 100000;
+				break;
 		}
 	}
 

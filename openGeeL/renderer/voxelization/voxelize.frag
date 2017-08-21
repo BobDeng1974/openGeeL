@@ -122,9 +122,9 @@ vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal,
 
 vec3 getIrradiance() {
 	
-	vec3 albedo, norm;
+	vec3 albedo, norm, emission;
 	float roughness, metallic;
-	readMaterialProperties(albedo, norm, roughness, metallic);
+	readMaterialProperties(albedo, norm, roughness, metallic, emission);
 	
 	vec3 viewDirection = normalize(cameraPosition - fragPosition.xyz);
 
@@ -138,6 +138,7 @@ vec3 getIrradiance() {
 	for(int i = 0; i < slCount; i++)
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
 
+	irradiance += albedo * emission;
 	irradiance = 1.f - exp(-irradiance * 1.f); // Tone mapping
 	irradiance = pow(irradiance, vec3(0.4545f)); //Gamma 
 
