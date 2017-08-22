@@ -23,8 +23,7 @@ namespace geeL {
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolution, resolution);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-		glGenTextures(1, &id.token);
-		glBindTexture(GL_TEXTURE_2D, id.token);
+		glBindTexture(GL_TEXTURE_2D, id);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, resolution, resolution, 0, GL_RG, GL_FLOAT, 0);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -36,7 +35,7 @@ namespace geeL {
 		FrameBuffer::bind(fbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolution, resolution);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, id.token, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, id, 0);
 
 		shader->bindParameters();
 		Viewport::set(0, 0, resolution, resolution);

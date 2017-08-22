@@ -17,8 +17,7 @@ namespace geeL {
 		setResolution(width, height);
 
 		if (image) {
-			glGenTextures(1, &id.token);
-			glBindTexture(GL_TEXTURE_2D, id.token);
+			glBindTexture(GL_TEXTURE_2D, id);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, image);
 
 			initWrapMode(WrapMode::ClampEdge);

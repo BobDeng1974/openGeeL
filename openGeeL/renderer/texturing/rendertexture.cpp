@@ -8,9 +8,7 @@ namespace geeL {
 		ColorType colorType, WrapMode wrapMode, FilterMode filterMode) 
 			: Texture2D(colorType, resolution) {
 
-		glGenTextures(1, &id.token);
-		glBindTexture(GL_TEXTURE_2D, id.token);
-
+		glBindTexture(GL_TEXTURE_2D, id);
 		initColorType(resolution.getWidth(), resolution.getHeight(), 0);
 		initWrapMode(wrapMode);
 		initFilterMode(filterMode);
@@ -19,7 +17,7 @@ namespace geeL {
 
 
 	void RenderTexture::resize(Resolution resolution) {
-		glBindTexture(GL_TEXTURE_2D, id.token);
+		glBindTexture(GL_TEXTURE_2D, id);
 
 		initColorType(resolution.getWidth(), resolution.getHeight(), 0);
 		setResolution(resolution);

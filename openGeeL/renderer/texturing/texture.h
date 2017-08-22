@@ -1,7 +1,7 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include <cassert>
+#include "texturetoken.h"
 #include "texturetype.h"
 #include "utility/resolution.h"
 
@@ -9,31 +9,7 @@ namespace geeL {
 
 	class RenderShader;
 
-	//Wrapper for texture id that manages GPU memory automatically
-	class TextureToken {
-
-	public:
-		unsigned int token;
-
-		TextureToken();
-		TextureToken(const TextureToken& other);
-		TextureToken(unsigned int token);
-		~TextureToken();
-
-		bool operator== (const TextureToken& other) const;
-		bool operator!= (const TextureToken& other) const;
-
-		bool operator== (unsigned int other) const;
-		bool operator!= (unsigned int other) const;
-
-	private:
-		bool external;
-
-		TextureToken& operator= (const TextureToken& other) = delete;
-
-	};
-
-
+	
 	class Texture {
 
 	public:
@@ -144,34 +120,12 @@ namespace geeL {
 	};
 
 
-	inline TextureToken::TextureToken() : token(0), external(false) {}
+	
 
-	inline TextureToken::TextureToken(const TextureToken& other) : token(other.token), external(true) {
-		assert(other.token != 0);
-	}
-
-	inline TextureToken::TextureToken(unsigned int token) : token(token), external(true) {
-		assert(token != 0);
-	}
-
-	inline bool TextureToken::operator== (const TextureToken& other) const {
-		return token == other.token;
-	}
-
-	inline bool TextureToken::operator!= (const TextureToken& other) const {
-		return token != other.token;
-	}
-
-	inline bool TextureToken::operator== (unsigned int other) const {
-		return token == other;
-	}
-	inline bool TextureToken::operator!= (unsigned int other) const {
-		return token != other;
-	}
 
 
 	inline unsigned int Texture::getID() const {
-		return id.token;
+		return id;
 	}
 
 	inline ColorType Texture::getColorType() const {

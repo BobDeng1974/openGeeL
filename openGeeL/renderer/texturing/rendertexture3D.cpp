@@ -9,8 +9,7 @@ namespace geeL {
 		
 		//buffer = std::vector<float>(4 * width * height * depth, 0.f);
 
-		glGenTextures(1, &id.token);
-		glBindTexture(GL_TEXTURE_3D, id.token);
+		glBindTexture(GL_TEXTURE_3D, id);
 
 		initWrapMode(wrapMode);
 		initFilterMode(filterMode);

@@ -21,8 +21,7 @@ namespace geeL {
 		float shadowBias, unsigned int width, unsigned int height)
 			: CascadedShadowMap(light, shadowBias, width, height) {
 		
-		glGenTextures(1, &id.token);
-		glBindTexture(GL_TEXTURE_2D, id.token);
+		glBindTexture(GL_TEXTURE_2D, id);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 
 			0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
@@ -36,7 +35,7 @@ namespace geeL {
 		
 		glGenFramebuffers(1, &fbo.token);
 		FrameBuffer::bind(fbo.token);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id.token, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id, 0);
 
 		//Disable writing to color buffer
 		glDrawBuffer(GL_NONE);
@@ -86,7 +85,7 @@ namespace geeL {
 			computeLightTransforms(*camera);
 
 		FrameBuffer::bind(fbo.token);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id.token, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id, 0);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		unsigned int hWidth = width / 2;

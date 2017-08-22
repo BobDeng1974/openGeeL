@@ -450,6 +450,9 @@
     <ClCompile Include="renderer\utility\gvector.cpp">
       <Filter>renderer\utility</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\texturing\texturetoken.cpp">
+      <Filter>renderer\texturing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -907,6 +910,9 @@
     </ClInclude>
     <ClInclude Include="renderer\framebuffer\fbotoken.h">
       <Filter>renderer\framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\texturing\texturetoken.h">
+      <Filter>renderer\texturing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -10,11 +10,6 @@ namespace geeL {
 	AnisotropicFilter Texture::maxAnisotropy;
 
 
-	TextureToken::~TextureToken() {
-		if (token != 0 && !external)
-			glDeleteTextures(1, &token);
-	}
-
 	void Texture::bind() const {
 		glBindTexture((int)getTextureType(), getID());
 	}

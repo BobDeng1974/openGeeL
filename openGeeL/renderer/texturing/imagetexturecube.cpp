@@ -11,13 +11,12 @@ namespace geeL {
 		const string& bottomPath, const string& backPath, const string& frontPath, WrapMode wrapMode, FilterMode filterMode) 
 			: TextureCube(ColorType::GammaSpace) {
 
-		glGenTextures(1, &id.token);
 		glActiveTexture(GL_TEXTURE0);
 
 		int width, height;
 		unsigned char* image;
 
-		glBindTexture(GL_TEXTURE_CUBE_MAP, id.token);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
 		image = stbi_load(rightPath.c_str(), &width, &height, 0, STBI_rgb);
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
