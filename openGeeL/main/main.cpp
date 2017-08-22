@@ -17,8 +17,6 @@ int main() {
 	//ScienceScene::draw();
 	CapsuleScene::draw();
 
-	getchar();
-
 	//TestScene::draw();
 	//RaymarchTest::draw();
 

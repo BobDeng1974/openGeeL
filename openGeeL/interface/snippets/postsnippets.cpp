@@ -260,7 +260,7 @@ namespace geeL {
 		glm::vec3 position = GUISnippets::drawVector(context, ray.getLightPosition(), "", 100, 0.1f);
 		ray.setLightPosition(position);
 
-		int samples = GUISnippets::drawBarInteger(context, ray.getSampleCount(), 0, 25, 1, "Samples");
+		int samples = GUISnippets::drawBarInteger(context, ray.getSampleCount(), 0, 100, 1, "Samples");
 		ray.setSampleCount(samples);
 	}
 

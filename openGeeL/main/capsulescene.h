@@ -102,7 +102,7 @@ public:
 			renderer.addEffect(ibl, ibl);
 
 			BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
-			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 25);
+			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 100);
 			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
 			GodRaySnippet& godRaySnippet = GodRaySnippet(ray);
 			renderer.addEffect(raySmooth);

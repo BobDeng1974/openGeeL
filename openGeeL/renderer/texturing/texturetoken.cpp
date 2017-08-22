@@ -1,14 +1,11 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include <iostream>
 #include "texturetoken.h"
 
 namespace geeL {
 
 	inline TextureToken::TokenInner::~TokenInner() {
 		glDeleteTextures(1, &id);
-
-		//std::cout << "Delete " << id << "\n";
 	}
 
 
