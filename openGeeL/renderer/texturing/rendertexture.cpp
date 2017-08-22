@@ -1,5 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <cassert>
 #include "rendertexture.h"
 
 namespace geeL {
@@ -13,6 +14,13 @@ namespace geeL {
 		initWrapMode(wrapMode);
 		initFilterMode(filterMode);
 		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	RenderTexture::RenderTexture(const Texture& other, Resolution resolution) 
+		: Texture2D(other.getColorType(), resolution) {
+
+		assert(other.getTextureType() == TextureType::Texture2D, "Texture has to be a 2D texture");
+		id = other.getTextureToken();
 	}
 
 

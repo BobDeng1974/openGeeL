@@ -12,6 +12,8 @@ namespace geeL {
 		RenderTextureCube() : TextureCube(ColorType::Single) {}
 		RenderTextureCube(unsigned int resolution, WrapMode wrapMode = WrapMode::ClampEdge, 
 			FilterMode filterMode = FilterMode::Linear);
+		RenderTextureCube(const Texture& other, unsigned int resolution);
+
 
 		virtual unsigned int getResolution() const;
 

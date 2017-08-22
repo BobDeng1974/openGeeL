@@ -18,4 +18,11 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
+	RenderTextureCube::RenderTextureCube(const Texture& other, unsigned int resolution) 
+		: TextureCube(other.getColorType()), resolution(resolution) {
+
+		assert(other.getTextureType() == TextureType::TextureCube, "Texture has to be a texture cube");
+		id = other.getTextureToken();
+	}
+
 }

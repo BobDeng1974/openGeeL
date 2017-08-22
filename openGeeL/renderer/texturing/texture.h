@@ -16,6 +16,7 @@ namespace geeL {
 		virtual ~Texture() {}
 
 		unsigned int getID() const;
+		const TextureToken& getTextureToken() const;
 		virtual TextureType getTextureType() const = 0;
 		virtual ColorType getColorType() const;
 
@@ -125,6 +126,10 @@ namespace geeL {
 
 
 	inline unsigned int Texture::getID() const {
+		return id;
+	}
+
+	inline const TextureToken & Texture::getTextureToken() const {
 		return id;
 	}
 
