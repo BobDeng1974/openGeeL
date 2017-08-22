@@ -30,6 +30,8 @@ namespace geeL {
 	class Physics {
 		
 	public:
+		virtual ~Physics() {}
+
 		virtual void update() = 0;
 
 		virtual void intersect(glm::vec3 start, glm::vec3 end, RayCastHit& hit) const = 0;

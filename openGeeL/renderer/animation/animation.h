@@ -28,7 +28,7 @@ namespace geeL{
 
 	public:
 		Animation(std::string name, double duration, double fps);
-		~Animation();
+		virtual ~Animation();
 
 		void addBoneData(std::string name, AnimationBoneData* data);
 		Transform getFrame(const std::string& bone, double time) const;

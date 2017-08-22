@@ -22,7 +22,7 @@ namespace geeL {
 
 	public:
 		WorldPhysics();
-		~WorldPhysics();
+		virtual ~WorldPhysics();
 
 		virtual void update();
 

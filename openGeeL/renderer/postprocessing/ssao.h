@@ -19,7 +19,7 @@ namespace geeL {
 	public:
 		SSAO(PostProcessingEffectFS& blur, float radius = 5.f, ResolutionScale resolution = HALFSCREEN);
 		SSAO(const SSAO& other);
-		~SSAO();
+		virtual ~SSAO();
 
 		SSAO& operator= (const SSAO& other);
 

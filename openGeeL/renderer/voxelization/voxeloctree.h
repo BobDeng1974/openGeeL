@@ -18,7 +18,7 @@ namespace geeL {
 
 	public:
 		VoxelOctree(Voxelizer& voxelizer, unsigned int treeLevels = 7);
-		~VoxelOctree();
+		virtual ~VoxelOctree();
 
 		virtual void build();
 		virtual void bind(const Shader& shader) const;

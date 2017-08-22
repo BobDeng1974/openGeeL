@@ -37,6 +37,8 @@ namespace geeL {
 	class Texture {
 
 	public:
+		virtual ~Texture() {}
+
 		unsigned int getID() const;
 		virtual TextureType getTextureType() const = 0;
 		virtual ColorType getColorType() const;
@@ -78,6 +80,8 @@ namespace geeL {
 	class Texture2D : public Texture {
 
 	public:
+		virtual ~Texture2D() {}
+
 		void mipmap() const;
 		
 		virtual void initWrapMode(WrapMode mode);
@@ -105,6 +109,8 @@ namespace geeL {
 	class Texture3D : public Texture {
 
 	public:
+		virtual ~Texture3D() {}
+
 		void mipmap() const;
 
 		virtual void initWrapMode(WrapMode mode);
@@ -121,6 +127,8 @@ namespace geeL {
 	class TextureCube : public Texture {
 
 	public:
+		virtual ~TextureCube() {}
+
 		void mipmap() const;
 
 		virtual void initWrapMode(WrapMode mode);
@@ -134,7 +142,6 @@ namespace geeL {
 		TextureCube(ColorType colorType) : Texture(colorType) {}
 
 	};
-
 
 
 	inline TextureToken::TextureToken() : token(0), external(false) {}

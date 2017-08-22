@@ -11,7 +11,7 @@ namespace geeL {
 
 	public:
 		ColorBuffer() {}
-		~ColorBuffer();
+		virtual ~ColorBuffer();
 
 		//Init color buffer with external textures which will be filled by subsequent drawcalls
 		//Note: Memory of render textures won't be managed by this color buffer

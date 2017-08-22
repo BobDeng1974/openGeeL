@@ -23,6 +23,8 @@ namespace geeL {
 	class PostProcessingEffect : public Drawer {
 
 	public:
+		virtual ~PostProcessingEffect() {}
+
 		//Returns first (and main) buffer of this effect
 		virtual const Texture& getImageBuffer() const = 0;
 
@@ -61,6 +63,7 @@ namespace geeL {
 	public:
 		PostProcessingEffectFS(const std::string& fragmentPath);
 		PostProcessingEffectFS(const std::string& vertexPath, const std::string& fragmentPath);
+		virtual ~PostProcessingEffectFS() {}
 
 		virtual const Texture& getImageBuffer() const;
 
@@ -90,6 +93,7 @@ namespace geeL {
 
 	public:
 		PostProcessingEffectCS(const std::string& path);
+		virtual ~PostProcessingEffectCS() {}
 
 		virtual const Texture& getImageBuffer() const;
 

@@ -19,7 +19,7 @@ namespace geeL {
 		Transform& transform;
 
 		SceneObject(Transform& transform, const std::string& name = "Scene Object");
-		~SceneObject();
+		virtual ~SceneObject();
 
 		//Update object and all its components
 		virtual void update(Input& input);

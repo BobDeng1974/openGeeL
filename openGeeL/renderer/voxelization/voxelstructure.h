@@ -9,6 +9,8 @@ namespace geeL {
 	class VoxelStructure {
 
 	public:
+		virtual ~VoxelStructure() {}
+
 		virtual void build() = 0;
 		virtual void bind(const Shader& shader) const = 0;
 

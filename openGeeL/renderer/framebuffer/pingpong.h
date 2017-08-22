@@ -10,7 +10,7 @@ namespace geeL {
 
 	public:
 		PingPongBuffer() : first(nullptr), second(nullptr) {}
-		~PingPongBuffer();
+		virtual ~PingPongBuffer();
 
 		//Init buffer with external textures which will be filled by subsequent drawcalls
 		//Note: Memory of render textures won't be managed by this color buffer

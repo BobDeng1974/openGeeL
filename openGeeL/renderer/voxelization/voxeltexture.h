@@ -16,7 +16,7 @@ namespace geeL {
 
 	public:
 		VoxelTexture(const RenderScene& scene, unsigned int dimensions = 256);
-		~VoxelTexture();
+		virtual ~VoxelTexture();
 
 		virtual void build();
 		virtual void bind(const Shader& shader) const;

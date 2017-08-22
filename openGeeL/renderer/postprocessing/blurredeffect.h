@@ -13,7 +13,7 @@ namespace geeL {
 	public:
 		BlurredPostEffect(PostProcessingEffectFS& effect, PostProcessingEffectFS& blur, 
 			ResolutionScale effectResolution = FULLSCREEN, ResolutionScale blurResolution = FULLSCREEN);
-		~BlurredPostEffect();
+		virtual ~BlurredPostEffect();
 
 		virtual void setImageBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);

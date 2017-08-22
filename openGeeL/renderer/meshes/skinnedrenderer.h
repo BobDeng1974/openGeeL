@@ -12,7 +12,7 @@ namespace geeL {
 		SkinnedMeshRenderer(Transform& transform, SceneShader& shader, SkinnedModel& model,
 			CullingMode faceCulling = CullingMode::cullFront, const std::string& name = "SkinnedMeshRenderer");
 
-		~SkinnedMeshRenderer();
+		virtual ~SkinnedMeshRenderer();
 
 		//Updates model with current transformational data of skeleton
 		virtual void lateUpdate();

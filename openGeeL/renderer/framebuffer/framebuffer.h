@@ -29,6 +29,7 @@ namespace geeL {
 
 	protected:
 		IFrameBuffer() {}
+		virtual ~IFrameBuffer() {};
 
 	private:
 		IFrameBuffer(const IFrameBuffer& other) = delete;
@@ -44,6 +45,7 @@ namespace geeL {
 
 	public:
 		FrameBuffer() {}
+		virtual ~FrameBuffer() {}
 
 		virtual void fill(std::function<void()> drawCall) = 0;
 		virtual void fill(Drawer& drawer);

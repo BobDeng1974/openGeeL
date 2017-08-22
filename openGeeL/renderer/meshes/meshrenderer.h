@@ -41,6 +41,7 @@ namespace geeL {
 		//Constructor for mesh renderer with an unique assigned model
 		MeshRenderer(Transform& transform, SceneShader& shader, Model& model,
 			CullingMode faceCulling = CullingMode::cullFront, const std::string& name = "MeshRenderer");
+		virtual ~MeshRenderer() {}
 
 		//Draw all meshes of with their respective shader and material.
 		//Meshes with same shaders will be rendered in groups to avoid

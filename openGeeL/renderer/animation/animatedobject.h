@@ -13,7 +13,7 @@ namespace geeL {
 
 	public:
 		AnimatedObject();
-		~AnimatedObject();
+		virtual ~AnimatedObject();
 
 		//Add animation. Memory will be managed by this model
 		virtual void addAnimation(Animation* animation);

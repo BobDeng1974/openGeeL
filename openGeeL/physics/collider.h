@@ -13,7 +13,7 @@ namespace geeL {
 	class Collider {
 
 	public:
-		~Collider();
+		virtual ~Collider();
 
 		btCollisionShape* getShape() const;
 

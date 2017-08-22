@@ -12,7 +12,7 @@ namespace geeL {
 	public:
 		DefaultPostProcess(float exposure = 1.f);
 		DefaultPostProcess(const DefaultPostProcess& other);
-		~DefaultPostProcess();
+		virtual ~DefaultPostProcess();
 
 		DefaultPostProcess& operator= (const DefaultPostProcess& other);
 

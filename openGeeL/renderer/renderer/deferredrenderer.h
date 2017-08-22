@@ -29,8 +29,7 @@ namespace geeL {
 	public:
 		DeferredRenderer(RenderWindow& window, Input& inputManager, SceneRender& lighting,
 			RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer);
-
-		~DeferredRenderer();
+		virtual ~DeferredRenderer();
 
 		virtual void runStart();
 		virtual void run();

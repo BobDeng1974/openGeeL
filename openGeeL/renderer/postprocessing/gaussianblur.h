@@ -24,7 +24,7 @@ namespace geeL {
 	class GaussianBlurBase : public PostProcessingEffectFS {
 
 	public:
-		~GaussianBlurBase();
+		virtual ~GaussianBlurBase();
 
 		virtual void setImageBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
@@ -106,7 +106,7 @@ namespace geeL {
 
 	public:
 		SobelBlur(SobelFilter& sobel, float sigma = 1.5f, bool depth = true);
-		~SobelBlur();
+		virtual ~SobelBlur();
 
 		virtual void setImageBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);

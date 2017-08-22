@@ -15,6 +15,8 @@ namespace geeL {
 	class CubeMap {
 
 	public:
+		virtual ~CubeMap() {}
+
 		virtual void bindMap(const RenderShader& shader, std::string name) const;
 
 		virtual void bind(const Camera& camera, const RenderShader& shader,
@@ -40,6 +42,8 @@ namespace geeL {
 	class DynamicCubeMap : public CubeMap {
 
 	public:
+		virtual ~DynamicCubeMap() {}
+
 		virtual void draw() = 0;
 
 	protected:

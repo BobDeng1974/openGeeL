@@ -33,7 +33,7 @@ namespace geeL {
 		unsigned int mapOffset = 0;
 		std::string name;
 
-		~Shader();
+		virtual ~Shader();
 		
 		unsigned int getProgram() const;
 

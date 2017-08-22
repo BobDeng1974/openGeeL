@@ -15,7 +15,7 @@ namespace geeL {
 
 	public:
 		EnvironmentCubeMap(const EnvironmentMap& map, CubeBuffer& frameBuffer, unsigned int resolution = 512);
-		~EnvironmentCubeMap();
+		virtual ~EnvironmentCubeMap();
 
 	private:
 		const EnvironmentMap& map;

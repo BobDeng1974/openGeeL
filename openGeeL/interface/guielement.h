@@ -14,6 +14,7 @@ namespace geeL {
 
 	public:
 		GUIElement(RenderWindow& window, float x = 0.1f, float y = 0.1f, float width = 0.2f, float height = 0.2f);
+		virtual ~GUIElement() {}
 
 		virtual void draw(GUIContext* context) = 0;
 

@@ -40,7 +40,7 @@ namespace geeL {
 	public:
 		DepthOfFieldBlurred(DepthOfFieldBlur& blur, const float& focalLength, float aperture = 10.f, 
 			float farDistance = 100.f, ResolutionScale blurResolution = FULLSCREEN);
-		~DepthOfFieldBlurred();
+		virtual ~DepthOfFieldBlurred();
 
 		virtual void setImageBuffer(const Texture& texture);
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);

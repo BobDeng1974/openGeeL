@@ -10,6 +10,9 @@ namespace geeL {
 	class Component {
 		friend class SceneObject;
 
+	public:
+		virtual ~Component() {}
+
 	protected:
 		SceneObject* sceneObject;
 
@@ -24,6 +27,9 @@ namespace geeL {
 	template<class Object>
 	class GenericComponent : public Component {
 		friend class SceneObject;
+
+	public:
+		virtual ~GenericComponent() {}
 
 	protected:
 		Object* genericObject;

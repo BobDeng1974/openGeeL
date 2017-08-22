@@ -49,7 +49,7 @@ namespace geeL {
 
 	public:
 		VelocityBuffer();
-		~VelocityBuffer();
+		virtual ~VelocityBuffer();
 
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 		virtual void draw();
@@ -71,7 +71,7 @@ namespace geeL {
 
 	public:
 		MotionBlurPerPixel(VelocityBuffer& velocity, float strength = 0.5f, unsigned int LOD = 15);
-		~MotionBlurPerPixel();
+		virtual ~MotionBlurPerPixel();
 
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 

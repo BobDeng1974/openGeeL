@@ -34,7 +34,7 @@ namespace geeL {
 
 	public:
 		Light(Transform& transform, vec3 diffuse, const std::string& name = "Light");
-		~Light();
+		virtual ~Light();
 
 		virtual void bind(const RenderShader& shader, 
 			const std::string& name, ShaderTransformSpace space, const Camera* const camera = nullptr) const;

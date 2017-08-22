@@ -6,7 +6,6 @@
 #include "renderer.h"
 #include "framebuffer.h"
 
-
 using namespace std;
 
 namespace geeL {
@@ -14,8 +13,6 @@ namespace geeL {
 	FrameBufferToken::~FrameBufferToken() {
 		if (token != 0)
 			glDeleteFramebuffers(1, &token);
-
-		std::cout << "Delete " << token << "\n";
 	}
 
 

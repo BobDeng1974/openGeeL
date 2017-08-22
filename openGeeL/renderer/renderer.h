@@ -40,7 +40,7 @@ namespace geeL {
 
 	public:
 		Renderer(RenderWindow& window, Input& inputManager, RenderContext& context);
-
+		virtual ~Renderer() {}
 
 		//Render single frame
 		virtual void draw() = 0;

@@ -13,7 +13,7 @@ namespace geeL {
 	public:
 		TempWrapper(T& obj);
 		TempWrapper(T& obj, std::recursive_mutex& mutex);
-		~TempWrapper();
+		virtual ~TempWrapper();
 
 		T* operator->();
 
