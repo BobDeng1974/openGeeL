@@ -8,12 +8,8 @@
 namespace geeL {
 
 	CubeBuffer::CubeBuffer() : texture(nullptr) {
-		glGenFramebuffers(1, &fbo);
+		glGenFramebuffers(1, &fbo.token);
 		glGenRenderbuffers(1, &rbo);
-	}
-
-	CubeBuffer::~CubeBuffer() {
-		remove();
 	}
 
 
@@ -69,7 +65,7 @@ namespace geeL {
 	}
 
 	std::string CubeBuffer::toString() const {
-		return "Cube buffer " + std::to_string(fbo) +
+		return "Cube buffer " + std::to_string(fbo.token) +
 			"\n -- Texture " + std::to_string(texture->getID()) + "\n";
 	}
 

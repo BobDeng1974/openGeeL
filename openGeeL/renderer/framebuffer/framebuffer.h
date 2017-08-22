@@ -6,6 +6,7 @@
 #include "utility/resolution.h"
 #include "texturing/texture.h"
 #include "texturing/rendertexture.h"
+#include "fbotoken.h"
 
 namespace geeL {
 
@@ -36,6 +37,8 @@ namespace geeL {
 	};
 
 
+	
+
 	//Abstract base class for all framebuffer objects
 	class FrameBuffer : public IFrameBuffer {
 
@@ -54,13 +57,12 @@ namespace geeL {
 		virtual const Resolution& getResolution() const;
 		virtual void resetSize() const;
 		static void resetSize(Resolution resolution);
-		void remove();
 		
 		virtual bool initialized() const;
 		virtual std::string toString() const = 0;
 
 	protected:
-		unsigned int fbo;
+		FrameBufferToken fbo;
 		Resolution resolution;
 
 		unsigned int getFBO() const;
@@ -84,6 +86,7 @@ namespace geeL {
 		virtual const RenderTexture* const getTexture() const = 0;
 
 	};
+
 
 
 	inline bool FrameBuffer::initialized() const {

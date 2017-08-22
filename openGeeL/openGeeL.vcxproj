@@ -325,6 +325,7 @@
     <ClInclude Include="renderer\framebuffer\bufferutil.h" />
     <ClInclude Include="renderer\framebuffer\colorbuffer.h" />
     <ClInclude Include="renderer\framebuffer\cubebuffer.h" />
+    <ClInclude Include="renderer\framebuffer\fbotoken.h" />
     <ClInclude Include="renderer\framebuffer\framebuffer.h" />
     <ClInclude Include="renderer\framebuffer\gbuffer.h" />
     <ClInclude Include="renderer\framebuffer\pingpong.h" />

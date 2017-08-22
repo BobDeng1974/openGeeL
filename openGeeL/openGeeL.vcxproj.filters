@@ -905,6 +905,9 @@
     <ClInclude Include="main\capsulescene.h">
       <Filter>main</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\framebuffer\fbotoken.h">
+      <Filter>renderer\framebuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\lighting.vert">

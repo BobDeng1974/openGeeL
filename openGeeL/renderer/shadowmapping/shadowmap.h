@@ -1,6 +1,7 @@
 #ifndef SHADOWMAP_H
 #define SHADOWMAP_H
 
+#include "framebuffer/fbotoken.h"
 #include "texturing/texture.h"
 #include "shadowmapconfig.h"
 #include "lights/light.h"
@@ -30,6 +31,7 @@ namespace geeL {
 		ShadowMapType getType() const;
 
 	protected:
+		FrameBufferToken fbo;
 		float intensity;
 		const ShadowMapType type;
 		const Light& light;

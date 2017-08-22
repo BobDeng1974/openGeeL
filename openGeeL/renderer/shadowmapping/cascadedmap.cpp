@@ -17,10 +17,6 @@
 
 namespace geeL {
 
-	CascadedShadowMap::~CascadedShadowMap() {
-		glDeleteFramebuffers(1, &fbo);
-	}
-
 	CascadedDirectionalShadowMap::CascadedDirectionalShadowMap(const Light& light, const SceneCamera& camera, 
 		float shadowBias, unsigned int width, unsigned int height)
 			: CascadedShadowMap(light, shadowBias, width, height) {
@@ -38,8 +34,8 @@ namespace geeL {
 		
 		glBindTexture(GL_TEXTURE_2D, 0);
 		
-		glGenFramebuffers(1, &fbo);
-		FrameBuffer::bind(fbo);
+		glGenFramebuffers(1, &fbo.token);
+		FrameBuffer::bind(fbo.token);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id.token, 0);
 
 		//Disable writing to color buffer
@@ -89,7 +85,7 @@ namespace geeL {
 		if(camera != nullptr)
 			computeLightTransforms(*camera);
 
-		FrameBuffer::bind(fbo);
+		FrameBuffer::bind(fbo.token);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id.token, 0);
 		glClear(GL_DEPTH_BUFFER_BIT);
 

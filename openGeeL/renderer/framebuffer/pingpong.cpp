@@ -9,8 +9,6 @@ using namespace std;
 namespace geeL {
 
 	PingPongBuffer::~PingPongBuffer() {
-		remove();
-
 		if (!external) {
 			if (first != nullptr) delete first;
 			if (second != nullptr) delete second;
@@ -20,7 +18,7 @@ namespace geeL {
 	void PingPongBuffer::init(RenderTexture& texture1, RenderTexture& texture2) {
 		external = true;
 	
-		glGenFramebuffers(1, &fbo);
+		glGenFramebuffers(1, &fbo.token);
 		bind();
 
 		first = &texture1;
@@ -41,7 +39,7 @@ namespace geeL {
 	void PingPongBuffer::init(Resolution resolution, ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
 		external = false;
 
-		glGenFramebuffers(1, &fbo);
+		glGenFramebuffers(1, &fbo.token);
 		bind();
 
 		first = new RenderTexture(resolution, colorType, wrapMode, filterMode);

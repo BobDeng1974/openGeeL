@@ -11,7 +11,6 @@ namespace geeL {
 
 	public:
 		CubeBuffer();
-		~CubeBuffer();
 
 		void init(const TextureCube& texture);
 

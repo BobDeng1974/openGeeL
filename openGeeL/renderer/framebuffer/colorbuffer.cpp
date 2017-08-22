@@ -12,8 +12,6 @@ namespace geeL {
 
 
 	ColorBuffer::~ColorBuffer() {
-		remove();
-
 		for (auto it = buffers.begin(); it != buffers.end(); it++) {
 			//Only remove texture if it was created by this color buffer
 			if (it->first) {
@@ -31,7 +29,7 @@ namespace geeL {
 
 		this->resolution = resolution;
 
-		glGenFramebuffers(1, &fbo);
+		glGenFramebuffers(1, &fbo.token);
 		bind();
 
 		int amount = min(3, (int)buffers.size());
@@ -71,7 +69,7 @@ namespace geeL {
 	void ColorBuffer::init(Resolution resolution, RenderTexture& texture) {
 		this->resolution = resolution;
 
-		glGenFramebuffers(1, &fbo);
+		glGenFramebuffers(1, &fbo.token);
 		bind();
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getID(), 0);
@@ -89,7 +87,7 @@ namespace geeL {
 	void ColorBuffer::init(Resolution resolution, ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
 		this->resolution = resolution;
 
-		glGenFramebuffers(1, &fbo);
+		glGenFramebuffers(1, &fbo.token);
 		bind();
 
 		// Create color attachment textures
@@ -166,7 +164,7 @@ namespace geeL {
 	}
 
 	std::string ColorBuffer::toString() const {
-		std::string s = "Color buffer " + std::to_string(fbo) + "\n";
+		std::string s = "Color buffer " + std::to_string(fbo.token) + "\n";
 
 		unsigned int counter = 0;
 		for (auto it = buffers.begin(); it != buffers.end(); it++) {

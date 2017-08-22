@@ -18,15 +18,13 @@ namespace geeL {
 		delete normalMet;
 		delete diffuse;
 		delete emissivity;
-
-		remove();
 	}
 
 
 	void GBuffer::init(Resolution resolution) {
 		this->resolution = resolution;
 
-		glGenFramebuffers(1, &fbo);
+		glGenFramebuffers(1, &fbo.token);
 		bind();
 
 		//Create attachements for all color buffers
@@ -106,7 +104,7 @@ namespace geeL {
 	}
 
 	std::string GBuffer::toString() const {
-		return "GBuffer " + std::to_string(fbo) + "\n"
+		return "GBuffer " + std::to_string(fbo.token) + "\n"
 			+ "--Diffuse " + std::to_string(diffuse->getID()) + "\n"
 			+ "--PositionRoughness " + std::to_string(positionRough->getID()) + "\n"
 			+ "--NormalMetallic " + std::to_string(normalMet->getID()) + "\n";

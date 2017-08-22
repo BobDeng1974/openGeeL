@@ -11,7 +11,6 @@ namespace geeL {
 
 	public:
 		StackBuffer();
-		~StackBuffer();
 
 		//Adds a new render texture to the stack. The current texture (Top of stack)
 		//will always be used for the next draw/fill call and then removed from the stack.

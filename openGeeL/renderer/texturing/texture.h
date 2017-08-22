@@ -9,7 +9,7 @@ namespace geeL {
 
 	class RenderShader;
 
-
+	//Wrapper for texture id that manages GPU memory automatically
 	class TextureToken {
 
 	public:

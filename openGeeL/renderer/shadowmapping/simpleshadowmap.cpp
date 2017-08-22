@@ -25,12 +25,6 @@ namespace geeL {
 		setResolution(config.resolution);
 	}
 
-	SimpleShadowMap::~SimpleShadowMap() {
-		glDeleteFramebuffers(1, &fbo);
-	}
-
-
-
 	void SimpleShadowMap::init() {
 
 		//Generate depth map texture
@@ -47,8 +41,8 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		//Bind depth map to frame buffer (the shadow map)
-		glGenFramebuffers(1, &fbo);
-		FrameBuffer::bind(fbo);
+		glGenFramebuffers(1, &fbo.token);
+		FrameBuffer::bind(fbo.token);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id.token, 0);
 
 		//Disable writes to color buffer
@@ -179,7 +173,7 @@ namespace geeL {
 			adaptShadowmap(camera);
 
 		Viewport::set(0, 0, width, height);
-		FrameBuffer::bind(fbo);
+		FrameBuffer::bind(fbo.token);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		renderCall(shader);
@@ -256,8 +250,8 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 		//Bind depth map to frame buffer (the shadow map)
-		glGenFramebuffers(1, &fbo);
-		FrameBuffer::bind(fbo);
+		glGenFramebuffers(1, &fbo.token);
+		FrameBuffer::bind(fbo.token);
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, id.token, 0);
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
@@ -282,7 +276,7 @@ namespace geeL {
 			adaptShadowmap(camera);
 
 		Viewport::set(0, 0, width, height);
-		FrameBuffer::bind(fbo);
+		FrameBuffer::bind(fbo.token);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		renderCall(shader);
@@ -363,7 +357,7 @@ namespace geeL {
 		shader.bind<glm::mat4>("lightTransform", lightTransform);
 
 		Viewport::set(0, 0, width, height);
-		FrameBuffer::bind(fbo);
+		FrameBuffer::bind(fbo.token);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		renderCall(shader);

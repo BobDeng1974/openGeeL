@@ -22,7 +22,6 @@ namespace geeL {
 	public:
 		CascadedShadowMap(const Light& light, float shadowBias, unsigned int width, unsigned int height)
 			: ShadowMap(light), shadowBias(shadowBias), width(width), height(height) {}
-		~CascadedShadowMap();
 
 		virtual void bindData(const RenderShader& shader, const std::string& name) = 0;
 		virtual void removeMap(RenderShader& shader) = 0;
@@ -33,7 +32,7 @@ namespace geeL {
 		virtual TextureType getTextureType() const = 0;
 
 	protected:
-		unsigned int fbo, width, height;
+		unsigned int width, height;
 		float shadowBias;
 
 		CascadedShadowMap(const CascadedShadowMap& other) = delete;

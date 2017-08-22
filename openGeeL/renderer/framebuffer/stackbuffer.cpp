@@ -12,10 +12,6 @@ namespace geeL {
 		init();
 	}
 
-	StackBuffer::~StackBuffer() {
-		remove();
-	}
-
 
 	void StackBuffer::push(RenderTexture& texture) {
 		stackBuffer.push(&texture);
@@ -41,7 +37,7 @@ namespace geeL {
 
 
 	void StackBuffer::init() {
-		glGenFramebuffers(1, &fbo);
+		glGenFramebuffers(1, &fbo.token);
 		bind();
 		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
