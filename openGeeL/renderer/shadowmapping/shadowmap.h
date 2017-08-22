@@ -22,9 +22,7 @@ namespace geeL {
 		virtual void draw(const SceneCamera* const camera,
 			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader) = 0;
 
-		virtual unsigned int getID() const = 0;
 		virtual TextureType getTextureType() const = 0;
-		virtual void remove() = 0;
 
 		float getIntensity() const;
 		void setIntensity(float value);

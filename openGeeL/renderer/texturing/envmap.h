@@ -11,15 +11,12 @@ namespace geeL {
 
 	public:
 		EnvironmentMap() : Texture2D(ColorType::RGB32) {}
-		EnvironmentMap(const EnvironmentMap& map);
 		EnvironmentMap(const std::string& fileName);
-		
-		virtual unsigned int getID() const;
-		virtual void remove();
 
 	private:
-		unsigned int id;
-
+		EnvironmentMap(const EnvironmentMap& map) = delete;
+		EnvironmentMap& operator= (const EnvironmentMap& other) = delete;
+		
 	};
 
 }

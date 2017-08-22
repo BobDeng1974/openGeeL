@@ -24,7 +24,6 @@ namespace geeL {
 	}
 
 	DefaultPostProcess::~DefaultPostProcess() {
-		noise->remove();
 		delete noise;
 	}
 

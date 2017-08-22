@@ -17,16 +17,16 @@
 
 namespace geeL {
 
-	CascadedDirectionalShadowMap::~CascadedDirectionalShadowMap() {
-		remove();
+	CascadedShadowMap::~CascadedShadowMap() {
+		glDeleteFramebuffers(1, &fbo);
 	}
 
 	CascadedDirectionalShadowMap::CascadedDirectionalShadowMap(const Light& light, const SceneCamera& camera, 
 		float shadowBias, unsigned int width, unsigned int height)
 			: CascadedShadowMap(light, shadowBias, width, height) {
 		
-		glGenTextures(1, &ID);
-		glBindTexture(GL_TEXTURE_2D, ID);
+		glGenTextures(1, &id.token);
+		glBindTexture(GL_TEXTURE_2D, id.token);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 
 			0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
@@ -40,7 +40,7 @@ namespace geeL {
 		
 		glGenFramebuffers(1, &fbo);
 		FrameBuffer::bind(fbo);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ID, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id.token, 0);
 
 		//Disable writing to color buffer
 		glDrawBuffer(GL_NONE);
@@ -90,7 +90,7 @@ namespace geeL {
 			computeLightTransforms(*camera);
 
 		FrameBuffer::bind(fbo);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ID, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id.token, 0);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		unsigned int hWidth = width / 2;
@@ -147,17 +147,11 @@ namespace geeL {
 		}
 	}
 
-	unsigned int CascadedDirectionalShadowMap::getID() const {
-		return ID;
-	}
 
 	TextureType CascadedDirectionalShadowMap::getTextureType() const {
 		return TextureType::Texture2D;
 	}
 
-	void CascadedDirectionalShadowMap::remove() {
-		glDeleteTextures(1, &ID);
-		glDeleteFramebuffers(1, &fbo);
-	}
+
 
 }

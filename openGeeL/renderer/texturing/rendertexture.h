@@ -9,19 +9,13 @@ namespace geeL {
 	class RenderTexture : public Texture2D {
 
 	public:
-		RenderTexture() : Texture2D(ColorType::None), id(0) {}
+		RenderTexture() : Texture2D(ColorType::None) {}
 		RenderTexture(Resolution resolution, ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::None);
-		~RenderTexture();
-
-		virtual unsigned int getID() const;
-		virtual void remove();
 
 		virtual void resize(Resolution resolution);
 
 	private:
-		unsigned int id;
-
 		RenderTexture(const RenderTexture& other) = delete;
 		RenderTexture& operator= (const RenderTexture& other) = delete;
 

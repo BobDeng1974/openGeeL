@@ -8,9 +8,6 @@ using namespace std;
 
 namespace geeL {
 
-	EnvironmentMap::EnvironmentMap(const EnvironmentMap& map) 
-		: Texture2D(map), id(map.getID()) {}
-
 	EnvironmentMap::EnvironmentMap(const string& fileName) : Texture2D(ColorType::RGB32) {
 
 		stbi_set_flip_vertically_on_load(true);
@@ -20,8 +17,8 @@ namespace geeL {
 		setResolution(width, height);
 
 		if (image) {
-			glGenTextures(1, &id);
-			glBindTexture(GL_TEXTURE_2D, id);
+			glGenTextures(1, &id.token);
+			glBindTexture(GL_TEXTURE_2D, id.token);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, image);
 
 			initWrapMode(WrapMode::ClampEdge);
@@ -33,15 +30,6 @@ namespace geeL {
 			cout << "Failed to load environment map image.\n";
 
 		stbi_set_flip_vertically_on_load(false);
-	}
-
-
-	unsigned int EnvironmentMap::getID() const {
-		return id;
-	}
-
-	void EnvironmentMap::remove() {
-		glDeleteTextures(1, &id);
 	}
 
 }

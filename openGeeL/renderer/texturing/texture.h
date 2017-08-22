@@ -1,6 +1,7 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include <cassert>
 #include "texturetype.h"
 #include "utility/resolution.h"
 
@@ -9,10 +10,34 @@ namespace geeL {
 	class RenderShader;
 
 
+	class TextureToken {
+
+	public:
+		unsigned int token;
+
+		TextureToken();
+		TextureToken(const TextureToken& other);
+		TextureToken(unsigned int token);
+		~TextureToken();
+
+		bool operator== (const TextureToken& other) const;
+		bool operator!= (const TextureToken& other) const;
+
+		bool operator== (unsigned int other) const;
+		bool operator!= (unsigned int other) const;
+
+	private:
+		bool external;
+
+		TextureToken& operator= (const TextureToken& other) = delete;
+
+	};
+
+
 	class Texture {
 
 	public:
-		virtual unsigned int getID() const = 0;
+		unsigned int getID() const;
 		virtual TextureType getTextureType() const = 0;
 		virtual ColorType getColorType() const;
 
@@ -26,8 +51,6 @@ namespace geeL {
 		//Call GL disable function with appropriate texture type
 		void disable() const;
 
-		//Remove texture from GPU memory
-		virtual void remove();
 		virtual void clear();
 		virtual bool isEmpty() const;
 
@@ -43,10 +66,11 @@ namespace geeL {
 		bool operator== (const Texture& rhs) const;
 
 	protected:
-		Texture(ColorType colorType) : colorType(colorType) {}
-
+		TextureToken id;
 		ColorType colorType;
 		static AnisotropicFilter maxAnisotropy;
+
+		Texture(ColorType colorType) : colorType(colorType) {}
 
 	};
 	
@@ -112,6 +136,36 @@ namespace geeL {
 	};
 
 
+
+	inline TextureToken::TextureToken() : token(0), external(false) {}
+
+	inline TextureToken::TextureToken(const TextureToken& other) : token(other.token), external(true) {
+		assert(other.token != 0);
+	}
+
+	inline TextureToken::TextureToken(unsigned int token) : token(token), external(true) {
+		assert(token != 0);
+	}
+
+	inline bool TextureToken::operator== (const TextureToken& other) const {
+		return token == other.token;
+	}
+
+	inline bool TextureToken::operator!= (const TextureToken& other) const {
+		return token != other.token;
+	}
+
+	inline bool TextureToken::operator== (unsigned int other) const {
+		return token == other;
+	}
+	inline bool TextureToken::operator!= (unsigned int other) const {
+		return token != other;
+	}
+
+
+	inline unsigned int Texture::getID() const {
+		return id.token;
+	}
 
 	inline ColorType Texture::getColorType() const {
 		return colorType;

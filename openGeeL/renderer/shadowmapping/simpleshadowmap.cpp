@@ -26,15 +26,16 @@ namespace geeL {
 	}
 
 	SimpleShadowMap::~SimpleShadowMap() {
-		remove();
+		glDeleteFramebuffers(1, &fbo);
 	}
+
 
 
 	void SimpleShadowMap::init() {
 
 		//Generate depth map texture
-		glGenTextures(1, &id);
-		glBindTexture(GL_TEXTURE_2D, id);
+		glGenTextures(1, &id.token);
+		glBindTexture(GL_TEXTURE_2D, id.token);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
 			width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
@@ -48,7 +49,7 @@ namespace geeL {
 		//Bind depth map to frame buffer (the shadow map)
 		glGenFramebuffers(1, &fbo);
 		FrameBuffer::bind(fbo);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id.token, 0);
 
 		//Disable writes to color buffer
 		glDrawBuffer(GL_NONE);
@@ -70,10 +71,6 @@ namespace geeL {
 		shader.removeMap(*this);
 	}
 
-	void SimpleShadowMap::remove() {
-		glDeleteTextures(1, &id);
-		glDeleteFramebuffers(1, &fbo);
-	}
 
 	void SimpleShadowMap::adaptShadowmap(const SceneCamera* const camera) {
 
@@ -105,7 +102,7 @@ namespace geeL {
 	}
 
 	void SimpleShadowMap::bindShadowmapResolution(unsigned int width, unsigned int height) const {
-		glBindTexture(GL_TEXTURE_2D, id);
+		glBindTexture(GL_TEXTURE_2D, id.token);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
 			width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
@@ -244,8 +241,8 @@ namespace geeL {
 	void SimplePointLightMap::init() {
 
 		//Generate depth cube map texture
-		glGenTextures(1, &id);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+		glGenTextures(1, &id.token);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, id.token);
 
 		//Write faces of the cubemap
 		for (int i = 0; i < 6; i++)
@@ -261,7 +258,7 @@ namespace geeL {
 		//Bind depth map to frame buffer (the shadow map)
 		glGenFramebuffers(1, &fbo);
 		FrameBuffer::bind(fbo);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, id, 0);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, id.token, 0);
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 		FrameBuffer::unbind();
@@ -331,7 +328,7 @@ namespace geeL {
 	}
 
 	void SimplePointLightMap::bindShadowmapResolution(unsigned int width, unsigned int height) const {
-		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, id.token);
 
 		//Write faces of the cubemap
 		for (int i = 0; i < 6; i++)

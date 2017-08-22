@@ -18,8 +18,8 @@ namespace geeL {
 
 		setResolution(imgWidth, imgHeight);
 
-		glGenTextures(1, &id);
-		glBindTexture(GL_TEXTURE_2D, id);
+		glGenTextures(1, &id.token);
+		glBindTexture(GL_TEXTURE_2D, id.token);
 
 		initColorType(imgWidth, imgHeight, image);
 		initWrapMode(wrapMode);
@@ -32,15 +32,11 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	ImageTexture::~ImageTexture() {
-		remove();
-	}
-
 	ImageTexture::ImageTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height,
 		WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter) : Texture2D(colorType) {
 
-		glGenTextures(1, &id);
-		glBindTexture(GL_TEXTURE_2D, id);
+		glGenTextures(1, &id.token);
+		glBindTexture(GL_TEXTURE_2D, id.token);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, &colors[0]);
 
 		Texture2D::initFilterMode(filterMode);
@@ -50,15 +46,6 @@ namespace geeL {
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-
-	unsigned int ImageTexture::getID() const {
-		return id;
-	}
-
-	void ImageTexture::remove() {
-		glDeleteTextures(1, &id);
-	}
-
 
 	TextureMap::TextureMap(const char* fileName, MapType type, ColorType colorType, 
 		WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter)

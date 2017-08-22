@@ -9,8 +9,8 @@ namespace geeL {
 		
 		//buffer = std::vector<float>(4 * width * height * depth, 0.f);
 
-		glGenTextures(1, &id);
-		glBindTexture(GL_TEXTURE_3D, id);
+		glGenTextures(1, &id.token);
+		glBindTexture(GL_TEXTURE_3D, id.token);
 
 		initWrapMode(wrapMode);
 		initFilterMode(filterMode);
@@ -20,15 +20,6 @@ namespace geeL {
 		
 		glGenerateMipmap(GL_TEXTURE_3D);
 		glBindTexture(GL_TEXTURE_3D, 0);
-	}
-
-	RenderTexture3D::~RenderTexture3D() {
-		remove();
-	}
-
-
-	void RenderTexture3D::remove() {
-		glDeleteTextures(1, &id);
 	}
 
 }

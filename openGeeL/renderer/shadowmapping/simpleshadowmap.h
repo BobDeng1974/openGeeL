@@ -27,9 +27,7 @@ namespace geeL {
 		virtual void draw(const SceneCamera* const camera,
 			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader) = 0;
 
-		virtual unsigned int getID() const;
 		virtual TextureType getTextureType() const = 0;
-		virtual void remove();
 
 		void setResolution(ShadowmapResolution resolution);
 
@@ -45,7 +43,7 @@ namespace geeL {
 
 	protected:
 		float shadowBias, dynamicBias, farPlane, softShadowScale;
-		unsigned int id, fbo, width, height, softShadowResolution;
+		unsigned int fbo, width, height, softShadowResolution;
 		ShadowmapResolution resolution;
 
 		SimpleShadowMap(const SimpleShadowMap& other) = delete;
@@ -67,9 +65,6 @@ namespace geeL {
 		bool setResolution(int resolution, float biasFactor);
 	};
 
-	inline unsigned int SimpleShadowMap::getID() const {
-		return id;
-	}
 
 	class SimpleSpotLightMap : public SimpleShadowMap {
 
