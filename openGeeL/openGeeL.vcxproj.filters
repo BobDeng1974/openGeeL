@@ -1147,9 +1147,6 @@
     <None Include="renderer\shaders\materialproperties.glsl">
       <Filter>renderer\shaders</Filter>
     </None>
-    <None Include="renderer\shaders\grr.frag">
-      <Filter>renderer\shaders</Filter>
-    </None>
     <None Include="renderer\postprocessing\gaussianblur5.frag">
       <Filter>renderer\postprocessing</Filter>
     </None>

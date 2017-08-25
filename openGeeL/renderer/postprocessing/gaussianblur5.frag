@@ -2,9 +2,9 @@
 
 in vec2 TexCoords;
 
-out float color;
+out vec2 color;
 
-const int kernelSize = 5;
+const int kernelSize = 9;
 
 uniform float weights[kernelSize];
 uniform float offsets[kernelSize];
@@ -17,7 +17,7 @@ void main() {
 
 	//Size of single texel
     vec2 texOffset = 1.f / textureSize(image, 0); 
-    float result = texture(image, TexCoords).r * weights[0]; 
+    vec2 result = texture(image, TexCoords).rg * weights[0]; 
 
 	float hor = step(1.f, float(horizontal));
 	float ver = 1.f - hor;
@@ -27,12 +27,11 @@ void main() {
 		vec2 off = offset * offsets[i];
 
 		//Sample right / top pixel
-		result += texture(image, TexCoords + off).r * weights[i];
+		result += texture(image, TexCoords + off).rg * weights[i];
             
 		//Sample left / bottom pixel
-		result += texture(image, TexCoords - off).r * weights[i];
+		result += texture(image, TexCoords - off).rg * weights[i];
     }
 
     color = result;
-	gl_FragDepth = result;
 }

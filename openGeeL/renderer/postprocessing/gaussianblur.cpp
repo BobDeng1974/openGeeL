@@ -113,10 +113,10 @@ namespace geeL {
 		int size;
 		switch (kernelSize) {
 			case KernelSize::Medium:
-			case KernelSize::Depth:
 				size = 9;
 				break;
 			case KernelSize::Large:
+			case KernelSize::Depth:
 				size = 17;
 				break;
 			case KernelSize::Huge:

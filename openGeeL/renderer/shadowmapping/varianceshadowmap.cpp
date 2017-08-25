@@ -7,7 +7,7 @@ namespace geeL {
 
 	VarianceSpotLightMap::VarianceSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config)
 		: SimpleSpotLightMap(light, config, false), texture(Resolution((int)config.resolution)), 
-			temp(*this, Resolution((int)config.resolution)), blur(KernelSize::Depth) {
+			temp(*this, Resolution((int)config.resolution)), blur(KernelSize::Depth, 2.f) {
 
 		init();
 
