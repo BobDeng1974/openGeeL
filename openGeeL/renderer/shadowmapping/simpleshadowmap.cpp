@@ -12,7 +12,6 @@
 #include "lights/directionallight.h"
 #include "framebuffer/framebuffer.h"
 #include "simpleshadowmap.h"
-#include <iostream>
 
 using namespace glm;
 
@@ -70,7 +69,7 @@ namespace geeL {
 		if (camera == nullptr) {
 			//Draw with fixed resolution
 			width = height = 512;
-			bindShadowmapResolution(width, height);
+			bindShadowmapResolution();
 			return;
 		}
 
@@ -89,11 +88,11 @@ namespace geeL {
 		bool changed = adaptShadowmapResolution(distance);
 
 		//Only update texture if resolution actually changed
-		if (changed)
-			bindShadowmapResolution(width, height);
+		if (changed) bindShadowmapResolution();
+
 	}
 
-	void SimpleShadowMap::bindShadowmapResolution(unsigned int width, unsigned int height) const {
+	void SimpleShadowMap::bindShadowmapResolution() const {
 		glBindTexture(GL_TEXTURE_2D, id);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
 			width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
@@ -153,6 +152,10 @@ namespace geeL {
 	}
 
 
+	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight & light, const ShadowMapConfiguration & config, bool init)
+		: SimpleShadowMap(light, config), spotLight(light) {}
+
+
 	void SimpleSpotLightMap::bindData(const RenderShader& shader, const std::string& name) {
 		SimpleShadowMap::bindData(shader, name);
 
@@ -160,7 +163,14 @@ namespace geeL {
 	}
 
 	void SimpleSpotLightMap::draw(const SceneCamera* const camera,
-		std::function<void(const RenderShader&)> renderCall, const RenderShader& shader) {
+		std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository) {
+
+		const RenderShader& shader = repository.getSimple2DShader();
+		draw(camera, renderCall, shader);
+	}
+
+	void SimpleSpotLightMap::draw(const SceneCamera * const camera, std::function<void(const RenderShader&)> renderCall, 
+		const RenderShader& shader) {
 
 		//Write light transform into shader
 		computeLightTransform();
@@ -256,11 +266,12 @@ namespace geeL {
 	}
 
 	void SimplePointLightMap::draw(const SceneCamera* const camera,
-		std::function<void(const RenderShader&)> renderCall, const RenderShader& shader) {
+		std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository) {
 
 		//Write light transforms of cubemap faces into shader
 		computeLightTransform();
 
+		const RenderShader& shader = repository.getSimpleCubeShader();
 		for (int i = 0; i < 6; i++) {
 			std::string name = "lightTransforms[" + std::to_string(i) + "]";
 			shader.bind<glm::mat4>(name, lightTransforms[i]);
@@ -318,7 +329,7 @@ namespace geeL {
 		return false;
 	}
 
-	void SimplePointLightMap::bindShadowmapResolution(unsigned int width, unsigned int height) const {
+	void SimplePointLightMap::bindShadowmapResolution() const {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
 		//Write faces of the cubemap
@@ -346,11 +357,12 @@ namespace geeL {
 	}
 
 	void SimpleDirectionalLightMap::draw(const SceneCamera* const camera,
-		std::function<void(const RenderShader&)> renderCall, const RenderShader& shader) {
+		std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository) {
 
 		//Write light transform into shader
 		computeLightTransform();
 
+		const RenderShader& shader = repository.getSimple2DShader();
 		shader.bind<glm::mat4>("lightTransform", lightTransform);
 
 		Viewport::set(0, 0, width, height);

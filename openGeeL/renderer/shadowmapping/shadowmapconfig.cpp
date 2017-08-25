@@ -1,3 +1,4 @@
+#include "shader/rendershader.h"
 #include "shadowmapconfig.h"
 
 namespace geeL {
@@ -14,6 +15,34 @@ namespace geeL {
 
 	bool ShadowMapConfiguration::useShadowMap() const {
 		return type != ShadowMapType::None;
+	}
+
+
+
+	ShadowmapRepository::ShadowmapRepository() {
+		simple2D = new RenderShader("renderer/shadowmapping/shadowmapping.vert", "renderer/shaders/empty.frag");
+		variance2D = new RenderShader("renderer/shadowmapping/varshadowmapping.vert", "renderer/shadowmapping/varshadowmapping.frag");
+		simpleCube = new RenderShader("renderer/shaders/empty.vert", "renderer/shadowmapping/shadowmapping.geom",
+			"renderer/shadowmapping/shadowmapping.frag");
+
+	}
+
+	ShadowmapRepository::~ShadowmapRepository() {
+		delete simple2D;
+		delete variance2D;
+		delete simpleCube;
+	}
+
+	const RenderShader& ShadowmapRepository::getSimple2DShader() const {
+		return *simple2D;
+	}
+
+	const RenderShader& ShadowmapRepository::getSimpleCubeShader() const {
+		return *simpleCube;
+	}
+
+	const RenderShader& ShadowmapRepository::getVariance2DShader() const {
+		return *variance2D;
 	}
 
 }

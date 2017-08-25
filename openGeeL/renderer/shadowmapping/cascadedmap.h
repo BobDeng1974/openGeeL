@@ -27,7 +27,7 @@ namespace geeL {
 		virtual void removeMap(RenderShader& shader) = 0;
 
 		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader) = 0;
+			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository) = 0;
 
 		virtual TextureType getTextureType() const = 0;
 
@@ -51,7 +51,7 @@ namespace geeL {
 		virtual void removeMap(RenderShader& shader);
 
 		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader);
+			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository);
 
 		//Set split planes (between cameras near and far clip plane)
 		void setCascades(const SceneCamera& camera);

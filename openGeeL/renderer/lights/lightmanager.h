@@ -31,7 +31,6 @@ namespace geeL {
 	class RenderScene;
 	class Transform;
 	class VoxelStructure;
-
 	class LightBinding;
 
 	struct ScreenInfo;
@@ -106,8 +105,7 @@ namespace geeL {
 	private:
 		glm::vec3 ambient;
 		VoxelStructure* voxelStructure;
-		RenderShader* dlShader; //RenderShader for spot and directional light shadow map
-		RenderShader* plShader; //RenderShader for point light shadow maps
+		ShadowmapRepository shaderRepository;
 		size_t plCount, dlCount, slCount;
 
 		std::map<Light*, LightBinding> lights;
@@ -122,6 +120,7 @@ namespace geeL {
 
 		void drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera) const;
 		void reindexLights();
+
 	};
 }
 

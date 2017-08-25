@@ -453,6 +453,9 @@
     <ClCompile Include="renderer\texturing\texturetoken.cpp">
       <Filter>renderer\texturing</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\shadowmapping\varianceshadowmap.cpp">
+      <Filter>renderer\shadowmapping</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -914,6 +917,9 @@
     <ClInclude Include="renderer\texturing\texturetoken.h">
       <Filter>renderer\texturing</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\shadowmapping\varianceshadowmap.h">
+      <Filter>renderer\shadowmapping</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\lighting.vert">
@@ -1140,6 +1146,18 @@
     </None>
     <None Include="renderer\shaders\materialproperties.glsl">
       <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\grr.frag">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\postprocessing\gaussianblur5.frag">
+      <Filter>renderer\postprocessing</Filter>
+    </None>
+    <None Include="renderer\shadowmapping\varshadowmapping.frag">
+      <Filter>renderer\shadowmapping</Filter>
+    </None>
+    <None Include="renderer\shadowmapping\varshadowmapping.vert">
+      <Filter>renderer\shadowmapping</Filter>
     </None>
   </ItemGroup>
 </Project>

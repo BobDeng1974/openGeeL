@@ -19,6 +19,7 @@ namespace geeL {
 	class RenderScene;
 	class RenderShader;
 	class SceneShader;
+	class ShadowmapRepository;
 	const RenderScene;
 
 	enum class ShaderTransformSpace;
@@ -43,7 +44,7 @@ namespace geeL {
 			const std::string& name, const Camera* const camera = nullptr) const;
 
 		const ShadowMap* const getShadowMap() const;
-		ShadowMap* const getShadowMap();
+		ShadowMap* getShadowMap();
 		void setShadowMap(ShadowMap& map);
 
 		//Add shadow map to given shader
@@ -53,11 +54,11 @@ namespace geeL {
 		void removeShadowmap(RenderShader& shader);
 
 		void renderShadowmap(const SceneCamera* const camera, 
-			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader);
+			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository);
 
 		//Draw shadow map no matter the lights properties. E.g. if it is static or not
 		void renderShadowmapForced(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader);
+			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository);
 
 		//Computes experienced intensity at given point. Ranges between 0 and 1
 		virtual float getIntensity(glm::vec3 point) const;

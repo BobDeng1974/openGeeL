@@ -5,10 +5,13 @@
 #include "shadowmapconfig.h"
 #include "shadowmap.h"
 
+#include "framebuffer/stackbuffer.h"
+#include "texturing/rendertexture.h"
+#include "postprocessing/gaussianblur.h"
+
 namespace geeL {
 
 	struct ScreenInfo;
-	//struct ShadowMapConfiguration;
 
 	class SpotLight;
 	class PointLight;
@@ -24,7 +27,7 @@ namespace geeL {
 		virtual void removeMap(RenderShader& shader);
 
 		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader) = 0;
+			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository) = 0;
 
 		virtual TextureType getTextureType() const = 0;
 
@@ -42,7 +45,7 @@ namespace geeL {
 
 	protected:
 		float shadowBias, dynamicBias, farPlane, softShadowScale;
-		unsigned int width, height, softShadowResolution;
+		unsigned int width, height, softShadowResolution, depthID;
 		ShadowmapResolution resolution;
 
 		SimpleShadowMap(const SimpleShadowMap& other) = delete;
@@ -59,7 +62,7 @@ namespace geeL {
 		virtual bool adaptShadowmapResolution(float distance) = 0;
 
 		//Bind resolution to shadow map texture(s)
-		virtual void bindShadowmapResolution(unsigned int width, unsigned int height) const;
+		virtual void bindShadowmapResolution() const;
 
 		bool setResolution(int resolution, float biasFactor);
 	};
@@ -72,17 +75,23 @@ namespace geeL {
 
 		virtual void bindData(const RenderShader& shader, const std::string& name);
 
-		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader);
+		virtual void draw(const SceneCamera* const camera, std::function<void(const RenderShader&)> renderCall, 
+			const ShadowmapRepository& repository);
+
+		void draw(const SceneCamera* const camera, std::function<void(const RenderShader&)> renderCall,
+			const RenderShader& shader);
 
 		virtual TextureType getTextureType() const;
 
-	private:
+	protected:
 		const SpotLight& spotLight;
 		glm::mat4 lightTransform;
 
+		SimpleSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config, bool init);
+
 		void computeLightTransform();
 		virtual bool adaptShadowmapResolution(float distance);
+
 	};
 
 
@@ -91,16 +100,17 @@ namespace geeL {
 
 	public:
 		SimplePointLightMap(const PointLight& light, const ShadowMapConfiguration& config);
-
+		
 		virtual void bindData(const RenderShader& shader, const std::string& name);
 
 		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader);
+			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository);
 
 		virtual TextureType getTextureType() const;
 
 	protected:
 		virtual void init();
+		virtual void bindShadowmapResolution() const;
 
 	private:
 		const PointLight& pointLight;
@@ -109,7 +119,7 @@ namespace geeL {
 		
 		void computeLightTransform();
 		virtual bool adaptShadowmapResolution(float distance);
-		virtual void bindShadowmapResolution(unsigned int width, unsigned int height) const;
+		
 	};
 
 
@@ -122,7 +132,7 @@ namespace geeL {
 		virtual void bindData(const RenderShader& shader, const std::string& name);
 
 		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, const RenderShader& shader);
+			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository);
 
 		virtual TextureType getTextureType() const;
 

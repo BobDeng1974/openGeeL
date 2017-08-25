@@ -3,6 +3,9 @@
  
 namespace geeL {
 
+	class RenderShader;
+
+
 	enum class ShadowMapType {
 		None = 0,
 		Hard = 1,
@@ -45,6 +48,26 @@ namespace geeL {
 	static ShadowMapConfiguration defPLShadowMapConfig = ShadowMapConfiguration(0.0001f, ShadowMapType::Soft, ShadowmapResolution::Adaptive, 4.f, 16);
 	static ShadowMapConfiguration defSLShadowMapConfig = ShadowMapConfiguration(0.0001f, ShadowMapType::Soft);
 	static ShadowMapConfiguration defDLShadowMapConfig = ShadowMapConfiguration(0.00002f, ShadowMapType::Soft);
+
+
+
+	//Repository of default shadow map shaders
+	class ShadowmapRepository {
+
+	public:
+		ShadowmapRepository();
+		~ShadowmapRepository();
+
+		const RenderShader& getSimple2DShader() const;
+		const RenderShader& getSimpleCubeShader() const;
+		const RenderShader& getVariance2DShader() const;
+
+	private:
+		RenderShader* simple2D;
+		RenderShader* variance2D;
+		RenderShader* simpleCube;
+
+	};
 
 }
 

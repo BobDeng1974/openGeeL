@@ -50,6 +50,7 @@ namespace geeL {
 		MaterialFactory& factory;
 
 	};
+
 }
 
 #endif

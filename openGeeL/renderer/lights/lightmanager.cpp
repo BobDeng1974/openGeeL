@@ -10,6 +10,7 @@
 #include "shader/sceneshader.h"
 #include "shadowmapping/shadowmap.h"
 #include "shadowmapping/simpleshadowmap.h"
+#include "shadowmapping/varianceshadowmap.h"
 #include "shadowmapping/cascadedmap.h"
 #include "cubemapping/reflectionprobe.h"
 #include "cubemapping/iblmap.h"
@@ -26,14 +27,9 @@ using namespace glm;
 namespace geeL {
 
 	LightManager::LightManager() : ambient(ambient), voxelStructure(nullptr),
-		dlShader(new RenderShader("renderer/shadowmapping/shadowmapping.vert", "renderer/shaders/empty.frag")),
-		plShader(new RenderShader("renderer/shaders/empty.vert", "renderer/shadowmapping/shadowmapping.geom", 
-				"renderer/shadowmapping/shadowmapping.frag")), plCount(0), dlCount(0), slCount(0) {}
+		plCount(0), dlCount(0), slCount(0) {}
 
 	LightManager::~LightManager() {
-		delete dlShader;
-		delete plShader;
-
 		iterLights([this](Light& light) {
 			delete &light;
 		});
@@ -90,7 +86,8 @@ namespace geeL {
 		LightBinding s = LightBinding(light, slCount++, slName);
 		
 		if (config.useShadowMap()) {
-			SimpleSpotLightMap* map = new SimpleSpotLightMap(*light, config);
+			//SimpleSpotLightMap* map = new SimpleSpotLightMap(*light, config);
+			VarianceSpotLightMap* map = new VarianceSpotLightMap(*light, config);
 			map->setIntensity(config.intensity);
 			light->setShadowMap(*map);
 		}
@@ -155,19 +152,9 @@ namespace geeL {
 		iterLights([this, &scene, &camera](const LightBinding& binding) {
 			Light& light = *binding.light;
 
-			RenderShader* shader;
-			switch (light.getLightType()) {
-				case LightType::Point:
-					shader = plShader;
-					break;
-				default:
-					shader = dlShader;
-					break;
-			}
-
 			if (light.isActive())
 				light.renderShadowmap(camera,
-					[&](const RenderShader& shader) { scene.drawStaticObjects(shader); }, *shader);
+					[&](const RenderShader& shader) { scene.drawStaticObjects(shader); }, shaderRepository);
 
 		});
 
@@ -181,19 +168,9 @@ namespace geeL {
 		iterLights([this, &scene, &camera](const LightBinding& binding) {
 			Light& light = *binding.light;
 
-			RenderShader* shader;
-			switch (light.getLightType()) {
-				case LightType::Point:
-					shader = plShader;
-					break;
-				default:
-					shader = dlShader;
-					break;
-			}
-
 			if (light.isActive())
 				light.renderShadowmapForced(camera,
-					[&](const RenderShader& shader) { scene.drawStaticObjects(shader); }, *shader);
+					[&](const RenderShader& shader) { scene.drawStaticObjects(shader); }, shaderRepository);
 
 		});
 
