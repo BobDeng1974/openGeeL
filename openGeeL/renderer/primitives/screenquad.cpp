@@ -5,13 +5,14 @@
 namespace geeL {
 
 	void ScreenQuad::init() {
+		if (initialized()) return;
 
 		GLfloat quadVertices[] = {
-			// Positions        // Texture Coords
-			-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-			-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-			1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-			1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+			//Positions     //Texture Coords
+			-1.f, 1.f, 0.f,  0.f, 1.f,
+			-1.f, -1.f, 0.f, 0.f, 0.f,
+			1.f, 1.f, 0.f,   1.f, 1.f,
+			1.f, -1.f, 0.f,  1.f, 0.f,
 		};
 
 		glGenVertexArrays(1, &vao);
@@ -30,6 +31,11 @@ namespace geeL {
 		glBindVertexArray(vao);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		glBindVertexArray(0);
+	}
+
+	ScreenQuad SCREENQUAD;
+	ScreenQuad& ScreenQuad::get() {
+		return SCREENQUAD;
 	}
 
 }

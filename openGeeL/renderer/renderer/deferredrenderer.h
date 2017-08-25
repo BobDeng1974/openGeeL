@@ -6,6 +6,8 @@
 #include "framebuffer/stackbuffer.h"
 #include "utility/worldinformation.h"
 #include "utility/rendertime.h"
+#include "postprocessing\postprocessing.h"
+#include "postprocessing\gaussianblur.h"
 #include "postrenderer.h"
 #include "renderer.h"
 

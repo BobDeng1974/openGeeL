@@ -1,5 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <cassert>
 #include "rendertexturecube.h"
 
 namespace geeL {

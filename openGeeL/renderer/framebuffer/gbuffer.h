@@ -20,7 +20,7 @@ namespace geeL {
 		ScreenInfo screenInfo;
 
 		GBuffer(Resolution resolution, GBufferContent content = GBufferContent::Default);
-		~GBuffer();
+		virtual ~GBuffer();
 
 		virtual void fill(std::function<void()> drawCall);
 

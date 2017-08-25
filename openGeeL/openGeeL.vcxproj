@@ -250,6 +250,7 @@
     <ClCompile Include="renderer\shadowmapping\cascadedmap.cpp" />
     <ClCompile Include="renderer\shadowmapping\shadowmapconfig.cpp" />
     <ClCompile Include="renderer\shadowmapping\simpleshadowmap.cpp" />
+    <ClCompile Include="renderer\shadowmapping\varianceshadowmap.cpp" />
     <ClCompile Include="renderer\texturing\brdfIntMap.cpp" />
     <ClCompile Include="renderer\texturing\dynamictexture.cpp" />
     <ClCompile Include="renderer\texturing\envmap.cpp" />
@@ -395,6 +396,7 @@
     <ClInclude Include="renderer\shadowmapping\shadowmap.h" />
     <ClInclude Include="renderer\shadowmapping\shadowmapconfig.h" />
     <ClInclude Include="renderer\shadowmapping\simpleshadowmap.h" />
+    <ClInclude Include="renderer\shadowmapping\varianceshadowmap.h" />
     <ClInclude Include="renderer\texturing\brdfIntMap.h" />
     <ClInclude Include="renderer\texturing\dynamictexture.h" />
     <ClInclude Include="renderer\texturing\envmap.h" />
@@ -461,6 +463,7 @@
     <None Include="renderer\postprocessing\gaussianblur2.frag" />
     <None Include="renderer\postprocessing\gaussianblur3.frag" />
     <None Include="renderer\postprocessing\gaussianblur4.frag" />
+    <None Include="renderer\postprocessing\gaussianblur5.frag" />
     <None Include="renderer\postprocessing\godray.frag" />
     <None Include="renderer\postprocessing\kernelprocessing.frag" />
     <None Include="renderer\postprocessing\lensflare.frag" />
@@ -483,6 +486,7 @@
     <None Include="renderer\shaders\gbuffer.vert" />
     <None Include="renderer\shaders\gbufferEmi.frag" />
     <None Include="renderer\shaders\gbufferanim.vert" />
+    <None Include="renderer\shaders\grr.frag" />
     <None Include="renderer\shaders\helperfunctions.glsl" />
     <None Include="renderer\shaders\lighting.frag" />
     <None Include="renderer\shaders\lighting.vert" />
@@ -497,6 +501,8 @@
     <None Include="renderer\shadowmapping\shadowmapping.vert" />
     <None Include="renderer\shadowmapping\shadows.glsl" />
     <None Include="renderer\shadowmapping\shadowsView.glsl" />
+    <None Include="renderer\shadowmapping\varshadowmapping.frag" />
+    <None Include="renderer\shadowmapping\varshadowmapping.vert" />
     <None Include="renderer\texturing\brdfIntMap.frag" />
     <None Include="renderer\voxelization\leavesFill.com.glsl" />
     <None Include="renderer\voxelization\nodeAlloc.com.glsl" />

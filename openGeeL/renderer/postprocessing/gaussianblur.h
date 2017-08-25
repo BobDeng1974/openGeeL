@@ -16,7 +16,8 @@ namespace geeL {
 		Small = 1,
 		Medium = 2,
 		Large = 3,
-		Huge = 4
+		Huge = 4,
+		Depth = 5
 	};
 
 
@@ -37,8 +38,6 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	protected:
-		unsigned int currBuffer;
-		
 		GaussianBlurBase(float sigma = 1.3f);
 		GaussianBlurBase(std::string shaderPath, float sigma = 1.3f);
 

@@ -11,8 +11,6 @@ namespace geeL {
 		const string& bottomPath, const string& backPath, const string& frontPath, WrapMode wrapMode, FilterMode filterMode) 
 			: TextureCube(ColorType::GammaSpace) {
 
-		glActiveTexture(GL_TEXTURE0);
-
 		int width, height;
 		unsigned char* image;
 

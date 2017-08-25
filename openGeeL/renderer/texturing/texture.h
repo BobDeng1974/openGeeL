@@ -15,7 +15,7 @@ namespace geeL {
 	public:
 		virtual ~Texture() {}
 
-		unsigned int getID() const;
+		virtual unsigned int getID() const;
 		const TextureToken& getTextureToken() const;
 		virtual TextureType getTextureType() const = 0;
 		virtual ColorType getColorType() const;

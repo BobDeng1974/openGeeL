@@ -16,6 +16,10 @@ namespace geeL {
 			draw();
 		}
 
+		bool initialized() {
+			return !(vao == 0 || vbo == 0);
+		}
+
 	protected:
 		unsigned int vbo;
 		unsigned int vao;

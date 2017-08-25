@@ -12,10 +12,13 @@ namespace geeL {
 		virtual void init();
 		virtual void draw() const;
 
+		//Returns the default screen quad
+		//Note: It is not guaranteed that this primitive
+		//has been initialized
+		static ScreenQuad& get();
+
 	};
 
-
-	static ScreenQuad SCREENQUAD = ScreenQuad();
 }
 
 #endif

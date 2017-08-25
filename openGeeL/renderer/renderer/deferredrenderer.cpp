@@ -26,6 +26,9 @@
 #include "utility/viewport.h"
 #include "application.h"
 #include "deferredrenderer.h"
+#include "lights\spotlight.h"
+#include "shadowmapping\shadowmap.h"
+#include "shadowmapping\simpleshadowmap.h"
 
 using namespace std;
 
@@ -63,14 +66,15 @@ namespace geeL {
 		stackBuffer.initResolution(window->resolution);
 
 		addRequester(lighting);
-		SCREENQUAD.init();
+		ScreenQuad& defQuad = ScreenQuad::get();
+		defQuad.init();
 	}
 
 
 	void DeferredRenderer::runStart() {
 		window->makeCurrent();
 
-		lighting.init(SCREENQUAD, stackBuffer, window->resolution);
+		lighting.init(ScreenQuad::get(), stackBuffer, window->resolution);
 		scene->updateProbes(); //Draw reflection probes once at beginning
 		initDefaultEffect();
 
@@ -96,8 +100,6 @@ namespace geeL {
 		//Hacky: Read camera depth from geometry pass and write it into the scene
 		scene->forwardScreenInfo(gBuffer.screenInfo);
 
-		scene->getLightmanager().update(*scene, &scene->getCamera());
-
 		//SSAO pass
 		if (ssao != nullptr) {
 			stackBuffer.push(*ssaoTexture);
@@ -105,11 +107,13 @@ namespace geeL {
 			FrameBuffer::resetSize(window->resolution);
 		}
 
+		scene->getLightmanager().update(*scene, &scene->getCamera());
+
 		//Lighting & forward pass
 		stackBuffer.push(*current);
 		stackBuffer.fill(lightingPassFunc);
 
-		glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT);
 		glDisable(GL_DEPTH_TEST);
 
 		//Post processing
@@ -247,7 +251,7 @@ namespace geeL {
 		Resolution ssaoRes = Resolution(window->resolution, ssao.getResolution());
 		ssaoTexture = new RenderTexture(ssaoRes, ColorType::Single, WrapMode::ClampEdge, FilterMode::None);
 
-		ssao.init(SCREENQUAD, stackBuffer, ssaoRes);
+		ssao.init(ScreenQuad::get(), stackBuffer, ssaoRes);
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {
@@ -314,7 +318,7 @@ namespace geeL {
 		const Texture& buffer = (effects.size() % 2 == 0) ? *texture1 : *texture2;
 		
 		effect.setImageBuffer(buffer);
-		effect.init(SCREENQUAD, stackBuffer, window->resolution);
+		effect.init(ScreenQuad::get(), stackBuffer, window->resolution);
 	}
 
 	void DeferredRenderer::initDefaultEffect() {
@@ -322,7 +326,7 @@ namespace geeL {
 		const Texture& buffer = (effects.size() % 2 == 0) ? *texture2 : *texture1;
 
 		effects.front()->setImageBuffer(buffer);
-		effects.front()->init(SCREENQUAD, stackBuffer, window->resolution);
+		effects.front()->init(ScreenQuad::get(), stackBuffer, window->resolution);
 	}
 
 

@@ -40,7 +40,7 @@ namespace geeL {
 		shader->bindParameters();
 		Viewport::set(0, 0, resolution, resolution);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		SCREENQUAD.drawComplete();
+		ScreenQuad::get().drawComplete();
 
 		FrameBuffer::unbind();
 		glDeleteFramebuffers(1, &fbo);
