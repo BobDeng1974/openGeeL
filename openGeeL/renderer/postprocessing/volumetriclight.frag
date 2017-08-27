@@ -33,6 +33,7 @@ uniform mat4 projection;
 
 uniform int effectOnly;
 uniform bool useCookie;
+uniform bool lightActive;
 
 float random(vec2 co);
 vec3 convertToLightSpace(vec3 fragPosition);
@@ -42,6 +43,12 @@ float calculateSpotLightShadows(vec3 coords);
 
 void main() {
 	vec3 result = step(effectOnly, 0.f) * texture(image, TexCoords).rgb;
+
+	if(!lightActive) {
+		color = vec4(result, 1.f);
+		return;
+	}
+
 	vec3 fragPos = texture(gPositionDepth, TexCoords).xyz;
 	float depth = length(fragPos);
 

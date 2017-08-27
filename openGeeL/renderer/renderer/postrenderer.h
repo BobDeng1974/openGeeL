@@ -1,8 +1,6 @@
 #ifndef POSTRENDERER_H
 #define POSTRENDERER_H
 
-#include <list>
-
 namespace geeL {
 
 	class DynamicRenderTexture;

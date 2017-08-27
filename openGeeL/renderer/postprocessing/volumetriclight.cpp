@@ -47,6 +47,7 @@ namespace geeL {
 		shader.bind<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
 
 		light.bind(shader, "light.", ShaderTransformSpace::View, camera);
+		shader.bind<int>("lightActive", light.isActive());
 	}
 
 
