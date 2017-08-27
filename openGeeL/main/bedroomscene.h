@@ -91,7 +91,7 @@ public:
 			VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 			GaussianBlurSnippet& blurSnippet = GaussianBlurSnippet(ayy);
 			SobelBlurSnippet& snip = SobelBlurSnippet(sobelBlur);
-			renderer.addEffect(volSmooth, { &vol, &sobelBlur });
+			renderer.addEffect(volSmooth, vol, sobelBlur);
 			scene.addRequester(vol);
 			postLister.add(volSmooth, lightSnippet, snip);
 

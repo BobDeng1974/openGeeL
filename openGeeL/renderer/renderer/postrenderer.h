@@ -7,6 +7,7 @@ namespace geeL {
 
 	class DynamicRenderTexture;
 	class PostProcessingEffect;
+	class RenderTexture;
 	class SSAO;
 	class WorldMapRequester;
 
@@ -17,13 +18,41 @@ namespace geeL {
 
 	public:
 		virtual void addSSAO(SSAO& ssao) = 0;
+
+		template<typename... WorldMapRequesters>
+		void addEffect(PostProcessingEffect& effect, WorldMapRequesters& ...requester);
 		virtual void addEffect(PostProcessingEffect& effect) = 0;
-		virtual void addEffect(PostProcessingEffect& effect, WorldMapRequester& requester) = 0;
-		virtual void addEffect(PostProcessingEffect& effect, std::list<WorldMapRequester*> requester) = 0;
+
+		template<typename... WorldMapRequesters>
+		void addEffect(PostProcessingEffect& effect, RenderTexture& texture, WorldMapRequesters& ...requester);
+		virtual void addEffect(PostProcessingEffect& effect, RenderTexture& texture) = 0;
+
+		template<typename... WorldMapRequesters>
+		void addRequester(WorldMapRequester& requester, WorldMapRequesters& ...other);
+		virtual void addRequester(WorldMapRequester& requester) = 0;
 
 		virtual void addRenderTexture(DynamicRenderTexture& texture) = 0;
 
 	};
+
+
+	template<typename ...WorldMapRequesters>
+	inline void PostEffectDrawer::addEffect(PostProcessingEffect& effect, WorldMapRequesters& ...requester) {
+		addEffect(effect);
+		addRequester(requester...);
+	}
+
+	template<typename ...WorldMapRequesters>
+	inline void PostEffectDrawer::addEffect(PostProcessingEffect& effect, RenderTexture& texture, WorldMapRequesters& ...requester) {
+		addEffect(effect, texture);
+		addRequester(requester...);
+	}
+
+	template<typename ...WorldMapRequesters>
+	inline void PostEffectDrawer::addRequester(WorldMapRequester& requester, WorldMapRequesters& ...other) {
+		addRequester(requester);
+		addRequester(other...);
+	}
 
 }
 

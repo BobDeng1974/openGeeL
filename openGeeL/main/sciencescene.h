@@ -76,7 +76,7 @@ public:
 			VolumetricLight& vol = VolumetricLight(spotLight, 0.05f, 6.f, 100);
 			BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.3f, 0.3f);
 			VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
-			renderer.addEffect(volSmooth, { &vol, &sobelBlur });
+			renderer.addEffect(volSmooth, vol, sobelBlur);
 			scene.addRequester(vol);
 			postLister.add(volSmooth, lightSnippet);
 

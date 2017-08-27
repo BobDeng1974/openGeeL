@@ -47,8 +47,8 @@ public:
 			ImageTexture& texture = materialFactory.CreateTexture("resources/textures/cookie.png",
 				ColorType::GammaSpace, WrapMode::ClampBorder, FilterMode::Linear);
 
-			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-14.88f, 0.4f, -1.88f), vec3(90.f, -56.24f, 179.f), vec3(1.f, 1.f, 1.f), false);
-			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Medium);
+			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-14.88f, 0.4f, -1.88f), vec3(90.f, -56.24f, 179.f), vec3(1.f, 1.f, 1.f), true);
+			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00001f, ShadowMapType::Soft, ShadowmapResolution::High);
 			SpotLight& spotLight = lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle, config2);
 			spotLight.setLightCookie(texture);
 
@@ -111,7 +111,7 @@ public:
 			VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 			SobelBlurSnippet& snip = SobelBlurSnippet(sobelBlur);
 			scene.addRequester(vol);
-			renderer.addEffect(volSmooth, { &vol, &sobelBlur });
+			renderer.addEffect(volSmooth, vol, sobelBlur);
 			postLister.add(volSmooth, lightSnippet, snip);
 
 			FXAA& fxaa = FXAA();

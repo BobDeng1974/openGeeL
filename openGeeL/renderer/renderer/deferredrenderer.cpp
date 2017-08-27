@@ -40,7 +40,7 @@ namespace geeL {
 			: Renderer(window, inputManager, context), gBuffer(gBuffer),
 				ssao(nullptr), lighting(lighting), toggle(0) {
 
-		effects.push_back(&def);
+		effects.push_back(PostEffectRender(nullptr, &def));
 		init();
 	}
 
@@ -84,7 +84,6 @@ namespace geeL {
 		//window->makeCurrent();
 		glEnable(GL_DEPTH_TEST);
 
-		RenderTexture* current = texture1; //Current of alternating textures is stored here
 		Viewport::setForced(0, 0, window->resolution.getWidth(), window->resolution.getHeight());
 		scene->lock();
 
@@ -110,7 +109,7 @@ namespace geeL {
 		scene->getLightmanager().update(*scene, &scene->getCamera());
 
 		//Lighting & forward pass
-		stackBuffer.push(*current);
+		stackBuffer.push(*texture1);
 		stackBuffer.fill(lightingPassFunc);
 
 		//glClear(GL_COLOR_BUFFER_BIT);
@@ -119,7 +118,7 @@ namespace geeL {
 		//Post processing
 		//Draw single effect if wanted
 		if (isolatedEffect != nullptr) {
-			PostProcessingEffect* def = effects.front();
+			PostProcessingEffect* def = effects.front().second;
 
 			//Save regular rendering settings
 			bool onlyEffect = isolatedEffect->getEffectOnly();
@@ -140,16 +139,18 @@ namespace geeL {
 		}
 		//Draw all included post effects
 		else {
-			//Draw all the post processing effects on top of each other.
-			for (auto effect = next(effects.begin()); effect != effects.end(); effect++) {
-				current = (current == texture1) ? texture2 : texture1;
-				stackBuffer.push(*current);
+			//Draw all the post processing effects on top of each other. (Skip default effect)
+			for (auto it = next(effects.begin()); it != effects.end(); it++) {
+				PostProcessingEffect& effect = *it->second;
+				RenderTexture& texture = *it->first;
 
-				(**effect).fill();
+				stackBuffer.push(texture);
+				effect.fill();
 			}
 
 			//Draw the last (default) effect to screen.
-			effects.front()->draw();
+			PostProcessingEffect& def = *effects.front().second;
+			def.draw();
 		}
 
 		scene->unlock();
@@ -255,26 +256,13 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {
-		effects.push_back(&effect);
 		linkImageBuffer(effect);
 	}
 
-	void DeferredRenderer::addEffect(PostProcessingEffect& effect, WorldMapRequester& requester) {
-		effects.push_back(&effect);
-		linkImageBuffer(effect);
-
-		addRequester(requester);
+	void DeferredRenderer::addEffect(PostProcessingEffect& effect, RenderTexture& texture) {
+		linkImageBuffer(effect, &texture);
 	}
 
-	void DeferredRenderer::addEffect(PostProcessingEffect& effect, list<WorldMapRequester*> requester) {
-		effects.push_back(&effect);
-		linkImageBuffer(effect);
-
-		for (auto it = requester.begin(); it != requester.end(); it++) {
-			WorldMapRequester* req = *it;
-			addRequester(*req);
-		}
-	}
 
 	void DeferredRenderer::addRenderTexture(DynamicRenderTexture& texture) {
 		renderTextures.push_back(&texture);
@@ -312,12 +300,14 @@ namespace geeL {
 	}
 
 
-	void DeferredRenderer::linkImageBuffer(PostProcessingEffect& effect) {
+	void DeferredRenderer::linkImageBuffer(PostProcessingEffect& effect, RenderTexture* texture) {
 		//Init all post processing effects with two alternating textures
 		//Current effect will then always read from one and write to the other
-		const Texture& buffer = (effects.size() % 2 == 0) ? *texture1 : *texture2;
+		const Texture& source = (effects.size() % 2 == 0) ? *texture2 : *texture1;
+		RenderTexture& target = (texture != nullptr) ? *texture : (effects.size() % 2 == 0) ? *texture1 : *texture2;
 		
-		effect.setImageBuffer(buffer);
+		effects.push_back(PostEffectRender(&target, &effect));
+		effect.setImageBuffer(source);
 		effect.init(ScreenQuad::get(), stackBuffer, window->resolution);
 	}
 
@@ -325,8 +315,9 @@ namespace geeL {
 		//Link framebuffer of last added post processing effect to default effect
 		const Texture& buffer = (effects.size() % 2 == 0) ? *texture2 : *texture1;
 
-		effects.front()->setImageBuffer(buffer);
-		effects.front()->init(ScreenQuad::get(), stackBuffer, window->resolution);
+		PostProcessingEffect& def = *effects.front().second;
+		def.setImageBuffer(buffer);
+		def.init(ScreenQuad::get(), stackBuffer, window->resolution);
 	}
 
 
@@ -340,7 +331,8 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::toggleBuffer(bool next) {
-		std::vector<const Texture*> buffers = { &effects.front()->getImageBuffer(), 
+		PostProcessingEffect& def = *effects.front().second;
+		std::vector<const Texture*> buffers = { &def.getImageBuffer(), 
 			&gBuffer.getDiffuse(), &gBuffer.getNormalMetallic() };
 
 		const RenderTexture& emisTex = gBuffer.getEmissivity();
@@ -364,10 +356,10 @@ namespace geeL {
 			currBuffer = texture2;
 
 			int index = toggle - buffers.size();
-			isolatedEffect = effects[index];
+			isolatedEffect = effects[index].second;
 		}
 
-		effects.front()->setImageBuffer(*currBuffer);
+		def.setImageBuffer(*currBuffer);
 		
 	}
 

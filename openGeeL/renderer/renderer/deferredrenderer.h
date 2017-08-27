@@ -23,6 +23,8 @@ namespace geeL {
 	class PostProcessingEffect;
 	class Texture;
 
+	using PostEffectRender = std::pair<RenderTexture*, PostProcessingEffect*>;
+
 
 	class DeferredRenderer : public Renderer, public WorldMapProvider, public PostEffectDrawer {
 
@@ -41,19 +43,18 @@ namespace geeL {
 
 		//Add new post processing effect to renderer. 
 		virtual void addEffect(PostProcessingEffect& effect);
-		virtual void addEffect(PostProcessingEffect& effect, WorldMapRequester& requester);
-		virtual void addEffect(PostProcessingEffect& effect, std::list<WorldMapRequester*> requester);
-
-		virtual void addRenderTexture(DynamicRenderTexture& texture);
+		virtual void addEffect(PostProcessingEffect& effect, RenderTexture& texture);
 
 		virtual void addRequester(WorldMapRequester& requester);
+		virtual void addRenderTexture(DynamicRenderTexture& texture);
+
 		virtual void linkInformation() const;
 		virtual std::map<WorldMaps, const Texture*> getMaps() const;
 
 	private:
 		int toggle;
 		
-		std::vector<PostProcessingEffect*> effects;
+		std::vector<PostEffectRender> effects;
 		std::list<DynamicRenderTexture*> renderTextures;
 		std::list<WorldMapRequester*> requester;
 
@@ -81,12 +82,14 @@ namespace geeL {
 		void lightingPass(const Camera& camera);
 		void forwardPass();
 
-		void linkImageBuffer(PostProcessingEffect& effect);
+		void linkImageBuffer(PostProcessingEffect& effect, RenderTexture* texture = nullptr);
 		void handleInput(int key, int scancode, int action, int mode);
 
 		//Toggle through all framebuffers for screen display 
 		void toggleBuffer(bool next);
+
 	};
+
 }
 
 #endif
