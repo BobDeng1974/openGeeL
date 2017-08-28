@@ -81,7 +81,9 @@ namespace geeL {
 	class DynamicBuffer : public FrameBuffer {
 
 	public:
-		virtual void add(RenderTexture& texture) = 0;
+		virtual void add(RenderTexture& texture);
+		virtual void push(RenderTexture& texture) = 0;
+		virtual void pop() = 0;
 
 		//Returns current render texture of this buffer or null pointer
 		//if no texture is attached
@@ -93,6 +95,10 @@ namespace geeL {
 
 	inline bool FrameBuffer::initialized() const {
 		return fbo != 0;
+	}
+
+	inline void DynamicBuffer::add(RenderTexture& texture) {
+		push(texture);
 	}
 
 

@@ -5,6 +5,15 @@
 #define GL_TEXTURE_3D 0x806F
 #define GL_TEXTURE_CUBE_MAP 0x8513
 
+#define GL_SRGB_ALPHA 0x8C42
+#define GL_RED 0x1903
+#define GL_RGB 0x1907
+#define GL_RGB16F 0x881B
+#define GL_RGB32F 0x8815
+#define GL_RGBA 0x1908
+#define GL_RGBA16F 0x881A
+#define GL_RGBA32F 0x8814
+
 #define GL_READ_ONLY 0x88B8
 #define GL_WRITE_ONLY 0x88B9
 #define GL_READ_WRITE 0x88BA
@@ -19,15 +28,15 @@ namespace geeL {
 	};
 
 	enum class ColorType {
-		None,
-		GammaSpace,
-		Single,
-		RGB,
-		RGB16,
-		RGB32,
-		RGBA,
-		RGBA16,
-		RGBA32
+		None = 0,
+		GammaSpace = GL_SRGB_ALPHA,
+		Single = GL_RED,
+		RGB = GL_RGB,
+		RGB16 = GL_RGB16F,
+		RGB32 = GL_RGB32F,
+		RGBA = GL_RGBA,
+		RGBA16 = GL_RGBA16F,
+		RGBA32 = GL_RGBA32F
 	};
 
 	enum class FilterMode {

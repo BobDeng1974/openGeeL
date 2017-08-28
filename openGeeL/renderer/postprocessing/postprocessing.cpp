@@ -123,10 +123,12 @@ namespace geeL {
 		
 		shader.invoke(width, height, 1);
 		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+		
+		buffer->pop();
 	}
 
 	void PostProcessingEffectCS::fill() {
-		fill();
+		draw();
 	}
 
 	Shader& PostProcessingEffectCS::getShader() {

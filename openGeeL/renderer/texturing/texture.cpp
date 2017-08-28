@@ -19,7 +19,7 @@ namespace geeL {
 	}
 
 	void Texture::bindImage(unsigned int position, AccessType access) const {
-		glBindImageTexture(position, getID(), 0, GL_TRUE, 0, (int)access, (int)getTextureType());
+		glBindImageTexture(position, getID(), 0, GL_TRUE, 0, (int)access, (int)getColorType());
 	}
 
 	void Texture::disable() const {

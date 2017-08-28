@@ -17,10 +17,6 @@ namespace geeL {
 		stackBuffer.push(&texture);
 	}
 
-	void StackBuffer::add(RenderTexture& texture) {
-		push(texture);
-	}
-
 	void StackBuffer::pop() {
 		stackBuffer.pop();
 
