@@ -116,7 +116,16 @@ namespace geeL {
 		glDisable(GL_DEPTH_TEST);
 
 		//Post processing
-		//Draw single effect if wanted
+		//Draw external post processing effects first.
+		for (auto it = externalEffects.begin(); it != externalEffects.end(); it++) {
+			PostProcessingEffect& effect = *it->second;
+			RenderTexture& texture = *it->first;
+
+			stackBuffer.push(texture);
+			effect.fill();
+		}
+
+		//Draw single effect to screen (if wanted)
 		if (isolatedEffect != nullptr) {
 			PostProcessingEffect* def = effects.front().second;
 
@@ -137,7 +146,7 @@ namespace geeL {
 			isolatedEffect->effectOnly(onlyEffect);
 			isolatedEffect->setImageBuffer(buffer);
 		}
-		//Draw all included post effects
+		//Draw all included post effects to screen
 		else {
 			//Draw all the post processing effects on top of each other. (Skip default effect)
 			for (auto it = next(effects.begin()); it != effects.end(); it++) {
@@ -301,13 +310,18 @@ namespace geeL {
 
 
 	void DeferredRenderer::linkImageBuffer(PostProcessingEffect& effect, RenderTexture* texture) {
-		//Init all post processing effects with two alternating textures
-		//Current effect will then always read from one and write to the other
-		const Texture& source = (effects.size() % 2 == 0) ? *texture2 : *texture1;
-		RenderTexture& target = (texture != nullptr) ? *texture : (effects.size() % 2 == 0) ? *texture1 : *texture2;
+		if (texture != nullptr)
+			externalEffects.push_back(PostEffectRender(texture, &effect));
+		else {
+			//Init all post processing effects with two alternating textures
+			//Current effect will then always read from one and write to the other
+			const Texture& source = (effects.size() % 2 == 0) ? *texture2 : *texture1;
+			RenderTexture& target = (effects.size() % 2 == 0) ? *texture1 : *texture2;
+
+			effects.push_back(PostEffectRender(&target, &effect));
+			effect.setImageBuffer(source);
+		}
 		
-		effects.push_back(PostEffectRender(&target, &effect));
-		effect.setImageBuffer(source);
 		effect.init(ScreenQuad::get(), stackBuffer, window->resolution);
 	}
 
