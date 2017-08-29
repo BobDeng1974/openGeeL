@@ -29,6 +29,7 @@ namespace geeL {
 	class ShadowMap;
 	class SceneShader;
 	class RenderScene;
+	class Shader;
 	class Transform;
 	class VoxelStructure;
 	class LightBinding;
@@ -66,9 +67,9 @@ namespace geeL {
 		void removeLight(Light& light);
 
 
-		void bind(const RenderShader& shader, ShaderTransformSpace space, const Camera* const camera = nullptr) const;
+		void bind(const Shader& shader, ShaderTransformSpace space, const Camera* const camera = nullptr) const;
 		void bind(const SceneShader& shader, const Camera* const camera = nullptr) const;
-		void bindShadowmaps(RenderShader& shader) const;
+		void bindShadowmaps(Shader& shader) const;
 
 		//Update all internal structures depending on their state
 		void update(const RenderScene& scene, const SceneCamera* const camera);
@@ -96,7 +97,7 @@ namespace geeL {
 
 		
 		//Add shader that shall be updated when lights are added/removed
-		void addShaderListener(RenderShader& shader);
+		void addShaderListener(Shader& shader);
 		void addShaderListener(SceneShader& shader);
 
 		const glm::vec3& getAmbientColor() const;
@@ -110,7 +111,7 @@ namespace geeL {
 
 		std::map<Light*, LightBinding> lights;
 		std::list<DynamicCubeMap*> reflectionProbes;
-		std::set<RenderShader*> shaderListener;
+		std::set<Shader*> shaderListener;
 
 		void addLight(Light* light, LightBinding& binding);
 

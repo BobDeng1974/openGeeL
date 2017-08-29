@@ -20,7 +20,7 @@ namespace geeL {
 		: Light(transform, diffuse, name) {}
 
 
-	void DirectionalLight::bind(const RenderShader& shader, const string& name, 
+	void DirectionalLight::bind(const Shader& shader, const string& name, 
 		ShaderTransformSpace space, const Camera* const camera) const {
 		
 		Light::bind(shader, name, space, camera);

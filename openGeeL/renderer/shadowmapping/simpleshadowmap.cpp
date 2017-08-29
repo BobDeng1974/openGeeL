@@ -49,7 +49,7 @@ namespace geeL {
 	}
 
 
-	void SimpleShadowMap::bindData(const RenderShader& shader, const std::string& name) {
+	void SimpleShadowMap::bindData(const Shader& shader, const std::string& name) {
 		shader.bind<float>(name + "bias", dynamicBias);
 		shader.bind<float>(name + "shadowIntensity", intensity);
 		shader.bind<int>(name + "resolution", softShadowResolution);
@@ -58,7 +58,7 @@ namespace geeL {
 	}
 
 
-	void SimpleShadowMap::removeMap(RenderShader& shader) {
+	void SimpleShadowMap::removeMap(Shader& shader) {
 		shader.removeMap(*this);
 	}
 
@@ -156,7 +156,7 @@ namespace geeL {
 		: SimpleShadowMap(light, config), spotLight(light) {}
 
 
-	void SimpleSpotLightMap::bindData(const RenderShader& shader, const std::string& name) {
+	void SimpleSpotLightMap::bindData(const Shader& shader, const std::string& name) {
 		SimpleShadowMap::bindData(shader, name);
 
 		shader.bind<glm::mat4>(name + "lightTransform", lightTransform);
@@ -230,7 +230,7 @@ namespace geeL {
 	}
 
 
-	void SimplePointLightMap::bindData(const RenderShader& shader, const std::string& name) {
+	void SimplePointLightMap::bindData(const Shader& shader, const std::string& name) {
 		SimpleShadowMap::bindData(shader, name);
 
 		shader.bind<float>(name + "farPlane", farPlane);
@@ -350,7 +350,7 @@ namespace geeL {
 	}
 
 
-	void SimpleDirectionalLightMap::bindData(const RenderShader& shader, const std::string& name) {
+	void SimpleDirectionalLightMap::bindData(const Shader& shader, const std::string& name) {
 		SimpleShadowMap::bindData(shader, name);
 
 		shader.bind<glm::mat4>(name + "lightTransform", lightTransform);

@@ -20,7 +20,7 @@ namespace geeL {
 		: Light(transform, diffuse, name) {}
 
 
-	void PointLight::bind(const RenderShader& shader, const string& name, 
+	void PointLight::bind(const Shader& shader, const string& name, 
 		ShaderTransformSpace space, const Camera* const camera) const {
 		
 		Light::bind(shader, name, space, camera);

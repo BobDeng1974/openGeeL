@@ -15,7 +15,7 @@ namespace geeL {
 		SpotLight(Transform& transform, vec3 diffuse, float angle = 30.f, 
 			float outerAngle = 5.f, const std::string& name = "SpotLight");
 
-		virtual void bind(const RenderShader& shader,
+		virtual void bind(const Shader& shader,
 			const std::string& name, ShaderTransformSpace space, const Camera* const camera = nullptr) const;
 
 		//Set light cookie for this spotlight
@@ -25,8 +25,8 @@ namespace geeL {
 		
 		//Add light cookie of this spotlight to given shader.
 		//Note: 'addShadowmap' has same effect
-		void addLightCookie(RenderShader& shader, const std::string& name);
-		virtual void addShadowmap(RenderShader& shader, const std::string& name);
+		void addLightCookie(Shader& shader, const std::string& name);
+		virtual void addShadowmap(Shader& shader, const std::string& name);
 
 		float getAngle() const;
 		virtual LightType getLightType() const;

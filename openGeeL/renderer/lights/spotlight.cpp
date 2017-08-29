@@ -21,7 +21,7 @@ namespace geeL {
 			: Light(transform, diffuse, name), angle(angle), outerAngle(outerAngle), lightCookie(nullptr) {}
 
 
-	void SpotLight::bind(const RenderShader& shader, const string& name, ShaderTransformSpace space, const Camera* const camera) const {
+	void SpotLight::bind(const Shader& shader, const string& name, ShaderTransformSpace space, const Camera* const camera) const {
 		Light::bind(shader, name, space, camera);
 
 		switch (space) {
@@ -55,13 +55,13 @@ namespace geeL {
 		return lightCookie;
 	}
 
-	void SpotLight::addShadowmap(RenderShader& shader, const std::string& name) {
+	void SpotLight::addShadowmap(Shader& shader, const std::string& name) {
 		Light::addShadowmap(shader, name);
 
 		addLightCookie(shader, name);
 	}
 
-	void SpotLight::addLightCookie(RenderShader& shader, const string& name) {
+	void SpotLight::addLightCookie(Shader& shader, const string& name) {
 		if(lightCookie != nullptr)
 			shader.addMap(*lightCookie, name + "cookie");
 	}

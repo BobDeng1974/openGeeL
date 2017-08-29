@@ -62,7 +62,7 @@ namespace geeL {
 		}
 	}
 
-	void CascadedDirectionalShadowMap::bindData(const RenderShader& shader, const std::string& name) {
+	void CascadedDirectionalShadowMap::bindData(const Shader& shader, const std::string& name) {
 		shader.bind<float>(name + "bias", shadowBias);
 		shader.bind<int>(name + "type", (int)type);
 
@@ -72,7 +72,7 @@ namespace geeL {
 		}
 	}
 
-	void CascadedDirectionalShadowMap::removeMap(RenderShader& shader) {
+	void CascadedDirectionalShadowMap::removeMap(Shader& shader) {
 		shader.removeMap(*this);
 	}
 

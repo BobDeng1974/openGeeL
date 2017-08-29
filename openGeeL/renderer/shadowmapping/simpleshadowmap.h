@@ -23,8 +23,8 @@ namespace geeL {
 	public:
 		SimpleShadowMap(const Light& light, const ShadowMapConfiguration& config);
 
-		virtual void bindData(const RenderShader& shader, const std::string& name) = 0;
-		virtual void removeMap(RenderShader& shader);
+		virtual void bindData(const Shader& shader, const std::string& name) = 0;
+		virtual void removeMap(Shader& shader);
 
 		virtual void draw(const SceneCamera* const camera,
 			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository) = 0;
@@ -73,7 +73,7 @@ namespace geeL {
 	public:
 		SimpleSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config);
 
-		virtual void bindData(const RenderShader& shader, const std::string& name);
+		virtual void bindData(const Shader& shader, const std::string& name);
 
 		virtual void draw(const SceneCamera* const camera, std::function<void(const RenderShader&)> renderCall, 
 			const ShadowmapRepository& repository);
@@ -101,7 +101,7 @@ namespace geeL {
 	public:
 		SimplePointLightMap(const PointLight& light, const ShadowMapConfiguration& config);
 		
-		virtual void bindData(const RenderShader& shader, const std::string& name);
+		virtual void bindData(const Shader& shader, const std::string& name);
 
 		virtual void draw(const SceneCamera* const camera,
 			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository);
@@ -129,7 +129,7 @@ namespace geeL {
 	public:
 		SimpleDirectionalLightMap(const DirectionalLight& light, const ShadowMapConfiguration& config);
 
-		virtual void bindData(const RenderShader& shader, const std::string& name);
+		virtual void bindData(const Shader& shader, const std::string& name);
 
 		virtual void draw(const SceneCamera* const camera,
 			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository);

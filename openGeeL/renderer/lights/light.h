@@ -19,6 +19,7 @@ namespace geeL {
 	class RenderScene;
 	class RenderShader;
 	class SceneShader;
+	class Shader;
 	class ShadowmapRepository;
 	const RenderScene;
 
@@ -37,7 +38,7 @@ namespace geeL {
 		Light(Transform& transform, vec3 diffuse, const std::string& name = "Light");
 		virtual ~Light();
 
-		virtual void bind(const RenderShader& shader, 
+		virtual void bind(const Shader& shader, 
 			const std::string& name, ShaderTransformSpace space, const Camera* const camera = nullptr) const;
 
 		virtual void bind(const SceneShader& shader,
@@ -48,10 +49,10 @@ namespace geeL {
 		void setShadowMap(ShadowMap& map);
 
 		//Add shadow map to given shader
-		virtual void addShadowmap(RenderShader& shader, const std::string& name);
+		virtual void addShadowmap(Shader& shader, const std::string& name);
 
 		//Remove shadow map from given shader
-		void removeShadowmap(RenderShader& shader);
+		void removeShadowmap(Shader& shader);
 
 		void renderShadowmap(const SceneCamera* const camera, 
 			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository);

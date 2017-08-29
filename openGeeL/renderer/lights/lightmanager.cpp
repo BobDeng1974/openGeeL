@@ -113,7 +113,7 @@ namespace geeL {
 
 	
 
-	void LightManager::bind(const RenderShader& shader, ShaderTransformSpace space, const Camera* const camera) const {
+	void LightManager::bind(const Shader& shader, ShaderTransformSpace space, const Camera* const camera) const {
 		iterLights([&](const LightBinding& binding) {
 			Light& light = *binding.light;
 
@@ -132,7 +132,7 @@ namespace geeL {
 	}
 
 
-	void LightManager::bindShadowmaps(RenderShader& shader) const {
+	void LightManager::bindShadowmaps(Shader& shader) const {
 		iterLights([this, &shader](const LightBinding& binding) {
 			Light& light = *binding.light;
 
@@ -203,7 +203,7 @@ namespace geeL {
 	}
 
 
-	void LightManager::addShaderListener(RenderShader& shader) {
+	void LightManager::addShaderListener(Shader& shader) {
 		bindShadowmaps(shader);
 		shaderListener.insert(&shader);
 	}
@@ -218,7 +218,7 @@ namespace geeL {
 
 	void LightManager::onAdd(Light* light, LightBinding& binding) {
 		for (auto it = shaderListener.begin(); it != shaderListener.end(); it++) {
-			RenderShader& shader = **it;
+			Shader& shader = **it;
 			light->addShadowmap(shader, binding.getName());
 		}
 	}
@@ -228,7 +228,7 @@ namespace geeL {
 		reindexLights();
 
 		for (auto it = shaderListener.begin(); it != shaderListener.end(); it++) {
-			RenderShader& shader = **it;
+			Shader& shader = **it;
 			light->removeShadowmap(shader);
 		}
 	}
@@ -243,7 +243,7 @@ namespace geeL {
 		//Remove shadow maps from all shader listeners since 
 		//light index are changing
 		for (auto it = shaderListener.begin(); it != shaderListener.end(); it++) {
-			RenderShader& shader = **it;
+			Shader& shader = **it;
 
 			iterLights([this, &shader](Light& light) {
 				light.removeShadowmap(shader);
@@ -281,7 +281,7 @@ namespace geeL {
 
 		//Add newly indexed shadow maps to shaders again
 		for (auto it = shaderListener.begin(); it != shaderListener.end(); it++) {
-			RenderShader& shader = **it;
+			Shader& shader = **it;
 
 			iterLights([this, &shader](LightBinding& binding) {
 				Light& light = *binding.light;

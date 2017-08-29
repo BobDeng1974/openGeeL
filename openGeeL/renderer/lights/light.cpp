@@ -39,7 +39,7 @@ namespace geeL {
 		shadowMap = &map;
 	}
 
-	void Light::bind(const RenderShader& shader, const std::string& name, ShaderTransformSpace space, const Camera* const camera) const {
+	void Light::bind(const Shader& shader, const std::string& name, ShaderTransformSpace space, const Camera* const camera) const {
 		shader.bind<glm::vec3>(name + "diffuse", diffuse);
 
 		if (shadowMap != nullptr)
@@ -53,12 +53,12 @@ namespace geeL {
 		bind(shader, name, shader.getSpace(), camera);
 	}
 
-	void Light::addShadowmap(RenderShader& shader, const std::string& name) {
+	void Light::addShadowmap(Shader& shader, const std::string& name) {
 		if (shadowMap != nullptr)
 			shader.addMap(*shadowMap, name + "shadowMap");
 	}
 
-	void Light::removeShadowmap(RenderShader& shader) {
+	void Light::removeShadowmap(Shader& shader) {
 		if (shadowMap != nullptr)
 			shadowMap->removeMap(shader);
 	}

@@ -14,8 +14,8 @@ namespace geeL {
 		ShadowMap(const Light& light, ShadowMapType type = ShadowMapType::Soft) 
 			: Texture(ColorType::None), light(light), type(type), intensity(1.f) {}
 
-		virtual void bindData(const RenderShader& shader, const std::string& name) = 0;
-		virtual void removeMap(RenderShader& shader) = 0;
+		virtual void bindData(const Shader& shader, const std::string& name) = 0;
+		virtual void removeMap(Shader& shader) = 0;
 
 		//Render function for shadow maps. Takes current scene camera, render function
 		//that  draws desired objects of scene and the actual shadow map shader.

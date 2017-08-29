@@ -23,8 +23,8 @@ namespace geeL {
 		CascadedShadowMap(const Light& light, float shadowBias, unsigned int width, unsigned int height)
 			: ShadowMap(light), shadowBias(shadowBias), width(width), height(height) {}
 
-		virtual void bindData(const RenderShader& shader, const std::string& name) = 0;
-		virtual void removeMap(RenderShader& shader) = 0;
+		virtual void bindData(const Shader& shader, const std::string& name) = 0;
+		virtual void removeMap(Shader& shader) = 0;
 
 		virtual void draw(const SceneCamera* const camera,
 			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository) = 0;
@@ -47,8 +47,8 @@ namespace geeL {
 		CascadedDirectionalShadowMap(const Light& light, const SceneCamera& camera, 
 			float shadowBias, unsigned int width, unsigned int height);
 
-		virtual void bindData(const RenderShader& shader, const std::string& name);
-		virtual void removeMap(RenderShader& shader);
+		virtual void bindData(const Shader& shader, const std::string& name);
+		virtual void removeMap(Shader& shader);
 
 		virtual void draw(const SceneCamera* const camera,
 			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository);
