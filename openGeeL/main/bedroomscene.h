@@ -109,6 +109,9 @@ public:
 			//renderer.addEffect(dof, dof);
 			//postLister.add(dof);
 
+			PostProcessingEffectCS cs("renderer/shaders/computeshared.com.glsl");
+			renderer.addEffect(cs);
+
 			FXAA& fxaa = FXAA(0.f, 0.f);
 			renderer.addEffect(fxaa);
 			postLister.add(fxaa);

@@ -92,7 +92,7 @@ namespace geeL {
 	class PostProcessingEffectCS : public PostProcessingEffect {
 
 	public:
-		PostProcessingEffectCS(const std::string& path);
+		PostProcessingEffectCS(const std::string& path, Resolution groupSize = Resolution(8, 8));
 		virtual ~PostProcessingEffectCS() {}
 
 		virtual const Texture& getImageBuffer() const;
@@ -112,6 +112,7 @@ namespace geeL {
 	protected:
 		DynamicBuffer* buffer = nullptr;
 		ComputeShader shader;
+		Resolution groupSize;
 
 		virtual void bindValues() {}
 

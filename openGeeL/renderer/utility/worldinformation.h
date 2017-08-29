@@ -17,7 +17,8 @@ namespace geeL {
 		PositionRoughness = 2,
 		NormalMetallic = 4,
 		SSAO = 8,
-		Emissivity = 16
+		Emissivity = 16,
+		Image = 32
 	};
 
 

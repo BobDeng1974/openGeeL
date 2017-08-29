@@ -10,7 +10,7 @@ namespace geeL {
 			: Texture2D(colorType, resolution) {
 
 		glBindTexture(GL_TEXTURE_2D, id);
-		initColorType(resolution.getWidth(), resolution.getHeight(), 0);
+		initStorage(0);
 		initWrapMode(wrapMode);
 		initFilterMode(filterMode);
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -27,7 +27,7 @@ namespace geeL {
 	void RenderTexture::resize(Resolution resolution) {
 		glBindTexture(GL_TEXTURE_2D, id);
 
-		initColorType(resolution.getWidth(), resolution.getHeight(), 0);
+		initStorage(0);
 		setResolution(resolution);
 		
 		glBindTexture(GL_TEXTURE_2D, 0);

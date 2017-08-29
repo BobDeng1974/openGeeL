@@ -2,6 +2,7 @@
 #define RENDERRESOLUTION_H
 
 #include <string>
+#include <vec2.hpp>
 #include "viewport.h"
 
 namespace geeL {
@@ -45,6 +46,7 @@ namespace geeL {
 		bool operator== (const Resolution& o) const;
 		bool operator!= (const Resolution& o) const;
 
+		operator glm::vec2() const;
 		std::string toString() const;
 
 	private:
@@ -72,6 +74,10 @@ namespace geeL {
 
 	inline void Resolution::setRenderResolution() const {
 		Viewport::set(0, 0, width, height);
+	}
+
+	inline Resolution::operator glm::vec2() const {
+		return glm::vec2(width, height);
 	}
 
 	inline std::string Resolution::toString() const {

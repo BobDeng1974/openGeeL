@@ -33,7 +33,7 @@ namespace geeL {
 		virtual void clear();
 		virtual bool isEmpty() const;
 
-		virtual void initColorType(int width, int height, unsigned char* image);
+		
 		virtual void initFilterMode(FilterMode mode);
 		virtual void initWrapMode(WrapMode mode);
 		virtual void initAnisotropyFilter(AnisotropicFilter filter);
@@ -61,6 +61,9 @@ namespace geeL {
 
 		void mipmap() const;
 		
+		virtual void initStorage(unsigned char* image);
+		virtual void reserveStorage(unsigned int levels = 1);
+
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
 

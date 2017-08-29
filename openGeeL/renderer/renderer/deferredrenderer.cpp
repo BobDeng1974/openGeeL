@@ -294,6 +294,7 @@ namespace geeL {
 
 	map<WorldMaps, const Texture*> DeferredRenderer::getMaps() const {
 		map<WorldMaps, const Texture*> worldMaps;
+		worldMaps[WorldMaps::Image] = texture1;
 		worldMaps[WorldMaps::Diffuse] = &gBuffer.getDiffuse();
 		worldMaps[WorldMaps::PositionRoughness] = &gBuffer.getPositionRoughness();
 		worldMaps[WorldMaps::NormalMetallic] = &gBuffer.getNormalMetallic();

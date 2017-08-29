@@ -1,9 +1,12 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <algorithm>
 #include <iostream>
 #include <limits.h>
 #include "utility/viewport.h"
 #include "texture.h"
+
+using namespace std;
 
 namespace geeL {
 
@@ -30,8 +33,10 @@ namespace geeL {
 		clear(colorType, getID());
 	}
 
-	void Texture::initColorType(int width, int height, unsigned char* image) {
+	void Texture2D::initStorage(unsigned char* image) {
 		int textureType = (int)getTextureType();
+		int width  = resolution.getWidth();
+		int height = resolution.getHeight();
 
 		switch (colorType) {
 			case ColorType::GammaSpace:
@@ -59,6 +64,14 @@ namespace geeL {
 				glTexImage2D(textureType, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, image);
 				break;
 		}
+	}
+
+	void Texture2D::reserveStorage(unsigned int levels) {
+		int width = resolution.getWidth();
+		int height = resolution.getHeight();
+		unsigned int level = (levels == 0) ? 1 + floor(log2(max(width, height))) : levels;
+
+		glTexStorage2D(GL_TEXTURE_2D, level, (int)getColorType(), width, height);
 	}
 
 	void Texture::initFilterMode(FilterMode mode) {

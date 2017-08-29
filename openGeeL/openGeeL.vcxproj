@@ -480,8 +480,11 @@
     <None Include="renderer\postprocessing\tonemapping.frag" />
     <None Include="renderer\postprocessing\velocity.frag" />
     <None Include="renderer\postprocessing\volumetriclight.frag" />
+    <None Include="renderer\shaders\computeshared.com.glsl" />
+    <None Include="renderer\shaders\computetest.com.glsl" />
     <None Include="renderer\shaders\empty.frag" />
     <None Include="renderer\shaders\empty.vert" />
+    <None Include="renderer\shaders\fragtest.frag" />
     <None Include="renderer\shaders\gbuffer.frag" />
     <None Include="renderer\shaders\gbuffer.vert" />
     <None Include="renderer\shaders\gbufferEmi.frag" />

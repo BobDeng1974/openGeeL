@@ -28,6 +28,7 @@ namespace geeL {
 		virtual void resetSize() const;
 		virtual void resize(ResolutionScale resolution);
 
+		size_t size() const;
 		virtual std::string toString() const;
 
 	private:
@@ -41,6 +42,11 @@ namespace geeL {
 		StackBuffer& operator= (const StackBuffer& other) = delete;
 
 	};
+
+
+	inline size_t StackBuffer::size() const {
+		return stackBuffer.size();
+	}
 
 }
 

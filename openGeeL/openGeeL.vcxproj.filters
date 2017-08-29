@@ -1156,5 +1156,14 @@
     <None Include="renderer\shadowmapping\varshadowmapping.vert">
       <Filter>renderer\shadowmapping</Filter>
     </None>
+    <None Include="renderer\shaders\computetest.com.glsl">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\fragtest.frag">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\computeshared.com.glsl">
+      <Filter>renderer\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
