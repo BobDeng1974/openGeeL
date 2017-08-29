@@ -7,7 +7,6 @@
 
 
 in vec2 textureCoordinates;
-in mat3 TBN;
 
 layout (location = 0) out vec4 color;
   
@@ -35,7 +34,6 @@ uniform SpotLight spotLights[5];
 
 
 vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightColor, float density);
-float luminance(vec3 color);
 
 
 void main() {
@@ -97,9 +95,3 @@ vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightC
 	return lightColor * attenuation * density * lightInView;
 }
 
-
-//Helper functions......................................................................................................................
-
-float luminance(vec3 color) {
-	return (0.2126f * color.r + 0.7152f * color.g + 0.0722f * color.b);
-}

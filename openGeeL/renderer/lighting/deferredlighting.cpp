@@ -57,7 +57,7 @@ namespace geeL {
 
 
 	TiledDeferredLighting::TiledDeferredLighting(RenderScene& scene)
-		: SceneRender(scene), PostProcessingEffectCS("") {}
+		: SceneRender(scene), PostProcessingEffectCS("renderer/lighting/tileddeferred.com.glsl") {}
 
 
 	void TiledDeferredLighting::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
@@ -87,15 +87,15 @@ namespace geeL {
 
 
 	void TiledDeferredLighting::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
-		addTextureSampler(*maps[WorldMaps::Diffuse], "1");
-		addTextureSampler(*maps[WorldMaps::PositionRoughness], "2");
-		addTextureSampler(*maps[WorldMaps::NormalMetallic], "3");
+		addTextureSampler(*maps[WorldMaps::Diffuse], "gDiffuse");
+		addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
+		addTextureSampler(*maps[WorldMaps::NormalMetallic], "gNormalMet");
 
 		auto emissivity = maps.find(WorldMaps::Emissivity);
 		if (emissivity != maps.end()) {
 			const Texture& texture = *emissivity->second;
 
-			addTextureSampler(texture, "4");
+			addTextureSampler(texture, "gEmissivity");
 			shader.bind<int>("useEmissivity", 1);
 		}
 	}

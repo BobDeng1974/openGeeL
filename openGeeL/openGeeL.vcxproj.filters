@@ -1162,5 +1162,8 @@
     <None Include="renderer\lighting\cooktorrancelights.glsl">
       <Filter>renderer\lighting</Filter>
     </None>
+    <None Include="renderer\lighting\tileddeferred.com.glsl">
+      <Filter>renderer\lighting</Filter>
+    </None>
   </ItemGroup>
 </Project>
