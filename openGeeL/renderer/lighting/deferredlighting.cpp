@@ -51,4 +51,54 @@ namespace geeL {
 			shader.bind<int>("useEmissivity", 1);
 		}
 	}
+
+
+
+
+
+	TiledDeferredLighting::TiledDeferredLighting(RenderScene& scene)
+		: SceneRender(scene), PostProcessingEffectCS("") {}
+
+
+	void TiledDeferredLighting::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
+		PostProcessingEffectCS::init(screen, buffer, resolution);
+
+		scene.init();
+
+		LightManager& manager = scene.getLightmanager();
+		manager.addShaderListener(shader);
+
+		projectionLocation = shader.getLocation("projection");
+		invViewLocation = shader.getLocation("inverseView");
+		originLocation = shader.getLocation("origin");
+	}
+
+	void TiledDeferredLighting::draw() {
+		PostProcessingEffectCS::draw();
+	}
+
+	void TiledDeferredLighting::bindValues() {
+		scene.getLightmanager().bind(shader, ShaderTransformSpace::View, camera);
+
+		shader.bind<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
+		shader.bind<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());
+		shader.bind<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
+	}
+
+
+	void TiledDeferredLighting::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
+		addImageBuffer(*maps[WorldMaps::Diffuse], "1");
+		addImageBuffer(*maps[WorldMaps::PositionRoughness], "2");
+		addImageBuffer(*maps[WorldMaps::NormalMetallic], "3");
+
+		auto emissivity = maps.find(WorldMaps::Emissivity);
+		if (emissivity != maps.end()) {
+			const Texture& texture = *emissivity->second;
+
+			addImageBuffer(texture, "4");
+			shader.bind<int>("useEmissivity", 1);
+		}
+	}
+
+
 }

@@ -37,7 +37,7 @@ namespace geeL {
 		
 		unsigned int getProgram() const;
 
-		//Add a new map to the shader
+		//Add a new map as texture sampler to the shader
 		void addMap(const Texture& texture, const std::string& name);
 		const Texture* const getMap(const std::string& name) const;
 
@@ -47,11 +47,11 @@ namespace geeL {
 		//Remove map with given name from shader (if it exists)
 		void removeMap(const std::string& name);
 
-		//Load maps into their binding points in the shader
+		//Load associated texture samplers into their binding points in the shader
 		virtual void loadMaps() const;
 
-		//Load maps into their binding points in the shader
-		//with some internal optimizations.
+		//Load associated texture samplers into their binding points 
+		//in the shader with some internal optimizations.
 		//Note: Should only be used if texture repetition is
 		//expected in concurrent calls since some overhead is
 		//to be expected

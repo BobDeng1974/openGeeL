@@ -45,21 +45,22 @@ namespace geeL {
 		glDeleteShader(shader);
 	}
 
-	void ComputeShader::loadMaps() const {
-		loadMaps(0);
+
+	void ComputeShader::addImage(const Texture& texture, unsigned int bindingPosition) {
+		images[bindingPosition] = &texture;
 	}
 
-	void ComputeShader::loadMaps(unsigned int offset) const {
-		unsigned int counter = offset;
-		for (auto it = maps.begin(); it != maps.end(); it++) {
-			const TextureBinding& binding = (*it).second;
-			binding.texture->bindImage(counter, AccessType::Read);
-
-			counter++;
+	void ComputeShader::loadImages() const {
+		for (auto it = images.begin(); it != images.end(); it++) {
+			unsigned int position = it->first;
+			const Texture& texture = *it->second;
+			
+			texture.bindImage(position, AccessType::Read);
 		}
 	}
 
 	void ComputeShader::invoke(unsigned int x, unsigned int y, unsigned int z) {
 		glDispatchCompute(x, y, z);
 	}
+
 }

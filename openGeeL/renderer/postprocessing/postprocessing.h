@@ -100,6 +100,7 @@ namespace geeL {
 		//Set main image buffer that will be used as base for post processing
 		virtual void setImageBuffer(const Texture& texture);
 		virtual void addImageBuffer(const Texture& texture, const std::string& name);
+		virtual void addImageTexture(const Texture& texture, unsigned int bindingPosition);
 
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 		virtual void draw();

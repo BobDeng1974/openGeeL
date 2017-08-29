@@ -447,6 +447,7 @@
     <None Include="renderer\lighting\deferredlighting.vert" />
     <None Include="renderer\lighting\ibl.frag" />
     <None Include="renderer\lighting\raymarch.frag" />
+    <None Include="renderer\lighting\tileddeferred.com.glsl" />
     <None Include="renderer\lights\lights.glsl" />
     <None Include="renderer\postprocessing\bilateral.frag" />
     <None Include="renderer\postprocessing\bilateraldepth.frag" />

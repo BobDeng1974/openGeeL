@@ -103,6 +103,10 @@ namespace geeL {
 		shader.addMap(texture, name);
 	}
 
+	void PostProcessingEffectCS::addImageTexture(const Texture& texture, unsigned int bindingPosition) {
+		shader.addImage(texture, bindingPosition);
+	}
+
 	void PostProcessingEffectCS::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		this->resolution = resolution;
 
@@ -119,7 +123,8 @@ namespace geeL {
 		shader.bind<glm::vec2>("resolution", target->getResolution());
 
 		//Bind source textures from shader
-		shader.loadMaps(1);
+		shader.loadMaps();
+		shader.loadImages();
 
 		unsigned int width  = resolution.getWidth() / groupSize.getWidth();
 		unsigned int height = resolution.getHeight() / groupSize.getHeight();

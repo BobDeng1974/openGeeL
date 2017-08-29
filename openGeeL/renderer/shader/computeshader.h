@@ -13,10 +13,16 @@ namespace geeL {
 	public:
 		ComputeShader(const char* shaderPath, ShaderProvider* const provider = nullptr);
 
-		virtual void loadMaps() const;
-		virtual void loadMaps(unsigned int offset) const;
+		//Add a new map as image texture to the shader
+		void addImage(const Texture& texture, unsigned int bindingPosition);
+
+		//Load associated image texture into shader
+		virtual void loadImages() const;
 
 		static void invoke(unsigned int x, unsigned int y, unsigned int z);
+
+	private:
+		std::map<unsigned int, const Texture*> images;
 
 	};
 
