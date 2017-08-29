@@ -27,9 +27,9 @@ namespace geeL {
 	void RenderTexture::resize(Resolution resolution) {
 		glBindTexture(GL_TEXTURE_2D, id);
 
-		initStorage(0);
 		setResolution(resolution);
-		
+		initStorage(0);
+
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
