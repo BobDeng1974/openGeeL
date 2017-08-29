@@ -443,6 +443,7 @@
     <None Include="renderer\lighting\conetracer.frag" />
     <None Include="renderer\lighting\conetracerTex.frag" />
     <None Include="renderer\lighting\cooktorrance.glsl" />
+    <None Include="renderer\lighting\cooktorrancelights.glsl" />
     <None Include="renderer\lighting\deferredlighting.frag" />
     <None Include="renderer\lighting\deferredlighting.vert" />
     <None Include="renderer\lighting\ibl.frag" />

@@ -16,7 +16,8 @@ void main() {
 	ivec2 coords = ivec2(gl_GlobalInvocationID.xy);
 	groupColors[gl_LocalInvocationID.x][gl_LocalInvocationID.y] = imageLoad(source, coords);
 
-	groupMemoryBarrier();	barrier();
+	groupMemoryBarrier();
+	barrier();
 
 	if(gl_LocalInvocationID.x == 0 && gl_LocalInvocationID.y == 0) {
 		groupColor = vec4(0.f);		
@@ -29,7 +30,8 @@ void main() {
 		groupColor = groupColor / 64.f;
 	}
 
-	groupMemoryBarrier();	barrier();
+	groupMemoryBarrier();
+	barrier();
 
 	imageStore(image, coords, groupColor);
 }
