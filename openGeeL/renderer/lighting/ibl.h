@@ -7,12 +7,13 @@ namespace geeL {
 
 	class RenderScene;
 
-	class ImageBasedLighting : public SceneRender {
+	class ImageBasedLighting : public SceneRender, public PostProcessingEffectFS {
 
 	public:
 		ImageBasedLighting(RenderScene& scene);
 
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void draw();
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 	protected:
@@ -23,6 +24,7 @@ namespace geeL {
 		ShaderLocation originLocation;
 
 	};
+
 }
 
 #endif

@@ -7,13 +7,14 @@ namespace geeL {
 
 	class RenderScene;
 
-	class DeferredLighting : public SceneRender {
+	class DeferredLighting : public SceneRender, public PostProcessingEffectFS {
 
 	public:
 		DeferredLighting(RenderScene& scene);
 
 		virtual void setBuffer(unsigned int buffer) {}
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void draw();
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 

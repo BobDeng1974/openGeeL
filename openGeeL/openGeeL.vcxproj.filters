@@ -327,9 +327,6 @@
     <ClCompile Include="renderer\lighting\raymarcher.cpp">
       <Filter>renderer\lighting</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\lighting\scenerender.cpp">
-      <Filter>renderer\lighting</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\lighting\ibl.cpp">
       <Filter>renderer\lighting</Filter>
     </ClCompile>

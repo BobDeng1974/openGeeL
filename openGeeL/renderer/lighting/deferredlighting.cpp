@@ -8,7 +8,7 @@
 namespace geeL {
 
 	DeferredLighting::DeferredLighting(RenderScene& scene) 
-		: SceneRender(scene, "renderer/lighting/deferredlighting.vert", 
+		: SceneRender(scene), PostProcessingEffectFS( "renderer/lighting/deferredlighting.vert",
 			"renderer/lighting/deferredlighting.frag") {}
 
 
@@ -23,6 +23,10 @@ namespace geeL {
 		projectionLocation = shader.getLocation("projection");
 		invViewLocation = shader.getLocation("inverseView");
 		originLocation = shader.getLocation("origin");
+	}
+
+	void DeferredLighting::draw() {
+		PostProcessingEffectFS::draw();
 	}
 
 	void DeferredLighting::bindValues() {

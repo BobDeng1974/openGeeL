@@ -8,11 +8,11 @@
 namespace geeL {
 
 	VoxelConeTracer::VoxelConeTracer(RenderScene& scene, VoxelOctree& octree, int maxStep) :
-		SceneRender(scene, "renderer/lighting/conetracer.frag"), voxelStructure(octree), 
+		SceneRender(scene), PostProcessingEffectFS("renderer/lighting/conetracer.frag"), voxelStructure(octree),
 			maxStepDiffuse(maxStep), maxStepSpecular(maxStep), specularLOD(1.f), diffuseLOD(1.f) {}
 
 	VoxelConeTracer::VoxelConeTracer(RenderScene& scene, VoxelTexture& texture, int maxStepSpecular, int maxStepDiffuse) :
-		SceneRender(scene, "renderer/lighting/conetracerTex.frag"), voxelStructure(texture), 
+		SceneRender(scene), PostProcessingEffectFS("renderer/lighting/conetracerTex.frag"), voxelStructure(texture),
 			maxStepSpecular(maxStepSpecular), maxStepDiffuse(maxStepDiffuse), specularLOD(1.f), diffuseLOD(1.f) {
 	
 		texture.bindTexture(shader, "voxelTexture");
@@ -33,6 +33,10 @@ namespace geeL {
 		farPlaneLocation = shader.getLocation("farClip");
 		invViewLocation = shader.getLocation("inverseView");
 		originLocation = shader.getLocation("origin");
+	}
+
+	void VoxelConeTracer::draw() {
+		PostProcessingEffectFS::draw();
 	}
 
 	void VoxelConeTracer::bindValues() {

@@ -11,13 +11,14 @@ namespace geeL {
 	class VoxelStructure;
 	class VoxelTexture;
 
-	class VoxelConeTracer : public SceneRender {
+	class VoxelConeTracer : public SceneRender, public PostProcessingEffectFS {
 
 	public:
 		VoxelConeTracer(RenderScene& scene, VoxelOctree& octree, int maxStep = 5);
 		VoxelConeTracer(RenderScene& scene, VoxelTexture& texture, int maxStepSpecular = 20, int maxStepDiffuse = 10);
 
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void draw();
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 		unsigned int getSpecularSampleSize() const;

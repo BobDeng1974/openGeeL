@@ -6,7 +6,15 @@
 namespace geeL {
 
 	RayMarcher::RayMarcher(RenderScene& scene) 
-		: SceneRender(scene, "renderer/lighting/raymarch.frag") {}
+		: SceneRender(scene), PostProcessingEffectFS("renderer/lighting/raymarch.frag") {}
+
+	void RayMarcher::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
+		PostProcessingEffectFS::init(screen, buffer, resolution);
+	}
+
+	void RayMarcher::draw() {
+		PostProcessingEffectFS::draw();
+	}
 
 
 	void RayMarcher::bindValues() {

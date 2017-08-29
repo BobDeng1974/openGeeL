@@ -196,7 +196,6 @@
     <ClCompile Include="renderer\lighting\deferredlighting.cpp" />
     <ClCompile Include="renderer\lighting\ibl.cpp" />
     <ClCompile Include="renderer\lighting\raymarcher.cpp" />
-    <ClCompile Include="renderer\lighting\scenerender.cpp" />
     <ClCompile Include="renderer\lights\directionallight.cpp" />
     <ClCompile Include="renderer\lights\light.cpp" />
     <ClCompile Include="renderer\lights\lightmanager.cpp" />

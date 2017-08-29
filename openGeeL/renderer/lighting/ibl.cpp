@@ -8,7 +8,7 @@
 namespace geeL {
 
 	ImageBasedLighting::ImageBasedLighting(RenderScene& scene)
-		: SceneRender(scene, "renderer/lighting/deferredlighting.vert",
+		: SceneRender(scene), PostProcessingEffectFS("renderer/lighting/deferredlighting.vert",
 			"renderer/lighting/ibl.frag") {}
 
 
@@ -18,6 +18,10 @@ namespace geeL {
 		scene.getLightmanager().addReflectionProbes(shader);
 		invViewLocation = shader.getLocation("inverseView");
 		originLocation = shader.getLocation("origin");
+	}
+
+	void ImageBasedLighting::draw() {
+		PostProcessingEffectFS::draw();
 	}
 
 	void ImageBasedLighting::bindValues() {
