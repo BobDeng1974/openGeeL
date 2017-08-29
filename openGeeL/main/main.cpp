@@ -10,7 +10,7 @@
 
 
 int main() {
-	BedroomScene::draw();
+	//BedroomScene::draw();
 	//DeerScene::draw();
 	//ArthouseScene::draw();
 	//SponzaScene::draw();
@@ -19,7 +19,7 @@ int main() {
 	//CapsuleScene::draw();
 
 	//TestScene::draw();
-	//RaymarchTest::draw();
+	RaymarchTest::draw();
 
 	return 0;
 }

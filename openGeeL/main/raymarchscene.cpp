@@ -47,5 +47,9 @@ void RaymarchTest::draw() {
 
 	RenderThread renderThread(renderer);
 	Application& app = Application(window, manager, renderThread);
+
+	ContinuousThread scriptingThread(scene);
+	app.addThread(scriptingThread);
+
 	app.run();
 }
