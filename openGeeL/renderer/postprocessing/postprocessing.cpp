@@ -36,7 +36,7 @@ namespace geeL {
 		: shader(RenderShader(vertexPath.c_str(), fragmentPath.c_str())) {}
 
 
-	const Texture& PostProcessingEffectFS::getImageBuffer() const {
+	const Texture& PostProcessingEffectFS::getImage() const {
 		return *shader.getMap("image");
 	}
 
@@ -90,7 +90,7 @@ namespace geeL {
 		: shader(path.c_str()), groupSize(groupSize) {}
 
 
-	const Texture& PostProcessingEffectCS::getImageBuffer() const {
+	const Texture& PostProcessingEffectCS::getImage() const {
 		return *shader.getMap("image");
 	}
 

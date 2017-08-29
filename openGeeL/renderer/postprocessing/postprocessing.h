@@ -25,8 +25,8 @@ namespace geeL {
 	public:
 		virtual ~PostProcessingEffect() {}
 
-		//Returns first (and main) buffer of this effect
-		virtual const Texture& getImageBuffer() const = 0;
+		//Returns main image of this effect
+		virtual const Texture& getImage() const = 0;
 
 		//Set main image buffer as texture sampler that will be used as base for post processing
 		virtual void setImage(const Texture& texture) = 0;
@@ -65,8 +65,7 @@ namespace geeL {
 		PostProcessingEffectFS(const std::string& vertexPath, const std::string& fragmentPath);
 		virtual ~PostProcessingEffectFS() {}
 
-		virtual const Texture& getImageBuffer() const;
-
+		virtual const Texture& getImage() const;
 		virtual void setImage(const Texture& texture);
 		virtual void addTextureSampler(const Texture& texture, const std::string& name);
 
@@ -94,8 +93,7 @@ namespace geeL {
 		PostProcessingEffectCS(const std::string& path, Resolution groupSize = Resolution(8, 8));
 		virtual ~PostProcessingEffectCS() {}
 
-		virtual const Texture& getImageBuffer() const;
-
+		virtual const Texture& getImage() const;
 		virtual void setImage(const Texture& texture);
 		virtual void addTextureSampler(const Texture& texture, const std::string& name);
 		virtual void addImageTexture(const Texture& texture, unsigned int bindingPosition);

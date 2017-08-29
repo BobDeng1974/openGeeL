@@ -185,7 +185,7 @@ namespace geeL {
 			sobel.setImage(texture);
 		//... or if depth texture wasn't linked properly
 		else {
-			const Texture& buffer = getImageBuffer();
+			const Texture& buffer = getImage();
 			if (buffer.isEmpty()) {
 				sobel.setImage(texture);
 

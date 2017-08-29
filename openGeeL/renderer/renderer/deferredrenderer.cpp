@@ -131,7 +131,7 @@ namespace geeL {
 
 			//Save regular rendering settings
 			bool onlyEffect = isolatedEffect->getEffectOnly();
-			const Texture& buffer = isolatedEffect->getImageBuffer();
+			const Texture& buffer = isolatedEffect->getImage();
 
 			//Draw isolated effect
 			isolatedEffect->effectOnly(true);
@@ -347,7 +347,7 @@ namespace geeL {
 
 	void DeferredRenderer::toggleBuffer(bool next) {
 		PostProcessingEffect& def = *effects.front().second;
-		std::vector<const Texture*> buffers = { &def.getImageBuffer(), 
+		std::vector<const Texture*> buffers = { &def.getImage(), 
 			&gBuffer.getDiffuse(), &gBuffer.getNormalMetallic() };
 
 		const RenderTexture& emisTex = gBuffer.getEmissivity();
