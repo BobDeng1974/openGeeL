@@ -67,6 +67,25 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition, inout floa
 	}
 }
 
+
+float chebyshevInequality(int i, vec3 coords) {
+
+	float dist = coords.z;
+	vec2 moments = texture2D(spotLights[i].shadowMap, coords.xy).rg;
+	
+	// Surface is fully lit. as the current fragment is before the light occluder
+	if (dist <= moments.x) return 1.f;
+
+
+	float variance = moments.y - (moments.x * moments.x);
+	variance = max(variance, spotLights[i].bias);
+
+	float d = dist - moments.x;
+	float m = variance / (variance + d * d);
+
+	return m;
+}
+
 float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 coords) {
 
 	vec4 posLightSpace = spotLights[i].lightTransform * inverseView * vec4(fragPosition, 1.0f);
@@ -93,7 +112,9 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 
 		}
 
 		//Soft shadow
+		return 1.f - chebyshevInequality(i, coords);
 
+		/*
 		float shadow = 0.f;
 		vec2 texelSize = spotLights[i].scale / textureSize(spotLights[i].shadowMap, 0);
 		int samples = spotLights[i].resolution;
@@ -105,6 +126,7 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 
 		}    
 	
 		return shadow / float(samples);
+		*/
 	}
 }
 

@@ -197,7 +197,7 @@ namespace geeL {
 		Transform& transform = light.transform;
 
 		float fov = glm::degrees(spotLight.getAngle());
-		mat4&& projection = glm::perspective(fov, 1.f, 1.0f, farPlane);
+		mat4&& projection = glm::perspective(fov, 1.f, 1.f, farPlane);
 		mat4&& view = lookAt(transform.getPosition(), transform.getPosition() +
 			transform.getForwardDirection(), transform.getUpDirection());
 
