@@ -12,7 +12,7 @@ namespace geeL {
 		init();
 
 		buffer.initResolution(Resolution((int)config.resolution));
-		blur.setImageBuffer(temp);
+		blur.setImage(temp);
 		blur.init(ScreenQuad::get(), buffer, Resolution((int)config.resolution));
 	}
 

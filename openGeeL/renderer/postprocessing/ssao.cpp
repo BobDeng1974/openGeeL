@@ -81,7 +81,7 @@ namespace geeL {
 		tempTexture = new RenderTexture(resolution, ColorType::Single, WrapMode::Repeat, FilterMode::None);
 
 		blur.init(screen, buffer, resolution);
-		blur.setImageBuffer(*tempTexture);
+		blur.setImage(*tempTexture);
 
 		projectionLocation = shader.getLocation("projection");
 	}
@@ -101,9 +101,9 @@ namespace geeL {
 	}
 
 	void SSAO::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		addImageBuffer(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
-		addImageBuffer(*maps[WorldMaps::NormalMetallic], "gNormalMet");
-		addImageBuffer(*noiseTexture, "noiseTexture");
+		addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
+		addTextureSampler(*maps[WorldMaps::NormalMetallic], "gNormalMet");
+		addTextureSampler(*noiseTexture, "noiseTexture");
 	}
 
 	float SSAO::getRadius() const {

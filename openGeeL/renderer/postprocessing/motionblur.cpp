@@ -94,7 +94,7 @@ namespace geeL {
 
 		velocity.init(screen, buffer, velocityRes);
 
-		addImageBuffer(*velocityTexture, "velocity");
+		addTextureSampler(*velocityTexture, "velocity");
 	}
 
 	void MotionBlurPerPixel::bindValues() {
@@ -123,7 +123,7 @@ namespace geeL {
 
 		prevPositionEffect.init(screen, buffer, positionRes);
 
-		addImageBuffer(*positionTexture, "previousPosition");
+		addTextureSampler(*positionTexture, "previousPosition");
 	}
 
 	void VelocityBuffer::bindValues() {
@@ -152,8 +152,8 @@ namespace geeL {
 	}
 
 	void VelocityBuffer::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
-		prevPositionEffect.setImageBuffer(*maps[WorldMaps::PositionRoughness]);
-		addImageBuffer(*maps[WorldMaps::PositionRoughness], "currentPosition");
+		prevPositionEffect.setImage(*maps[WorldMaps::PositionRoughness]);
+		addTextureSampler(*maps[WorldMaps::PositionRoughness], "currentPosition");
 	}
 
 }

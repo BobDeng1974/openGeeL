@@ -20,10 +20,10 @@ namespace geeL {
 	}
 
 
-	void LensFlare::setImageBuffer(const Texture& texture) {
-		PostProcessingEffectFS::setImageBuffer(texture);
+	void LensFlare::setImage(const Texture& texture) {
+		PostProcessingEffectFS::setImage(texture);
 
-		filter.setImageBuffer(texture);
+		filter.setImage(texture);
 	}
 
 	void LensFlare::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
@@ -39,7 +39,7 @@ namespace geeL {
 
 		filter.init(screen, buffer, filterRes);
 
-		addImageBuffer(*filterTexture, "brightnessFilter");
+		addTextureSampler(*filterTexture, "brightnessFilter");
 	}
 
 	float LensFlare::getStrength() const {

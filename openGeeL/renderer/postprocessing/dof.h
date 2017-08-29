@@ -42,7 +42,7 @@ namespace geeL {
 			float farDistance = 100.f, ResolutionScale blurResolution = FULLSCREEN);
 		virtual ~DepthOfFieldBlurred();
 
-		virtual void setImageBuffer(const Texture& texture);
+		virtual void setImage(const Texture& texture);
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);

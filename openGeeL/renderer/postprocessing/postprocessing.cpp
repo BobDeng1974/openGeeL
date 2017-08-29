@@ -40,12 +40,12 @@ namespace geeL {
 		return *shader.getMap("image");
 	}
 
-	void PostProcessingEffectFS::setImageBuffer(const Texture& texture) {
+	void PostProcessingEffectFS::setImage(const Texture& texture) {
 		shader.addMap(texture, "image");
 	}
 
 
-	void PostProcessingEffectFS::addImageBuffer(const Texture& texture, const std::string& name) {
+	void PostProcessingEffectFS::addTextureSampler(const Texture& texture, const std::string& name) {
 		shader.addMap(texture, name);
 	}
 
@@ -95,11 +95,11 @@ namespace geeL {
 	}
 
 
-	void PostProcessingEffectCS::setImageBuffer(const Texture& texture) {
+	void PostProcessingEffectCS::setImage(const Texture& texture) {
 		shader.addMap(texture, "image");
 	}
 
-	void PostProcessingEffectCS::addImageBuffer(const Texture& texture, const std::string& name) {
+	void PostProcessingEffectCS::addTextureSampler(const Texture& texture, const std::string& name) {
 		shader.addMap(texture, name);
 	}
 

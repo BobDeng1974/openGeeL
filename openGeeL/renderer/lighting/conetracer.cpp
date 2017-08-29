@@ -48,9 +48,9 @@ namespace geeL {
 	}
 
 	void VoxelConeTracer::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
-		addImageBuffer(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
-		addImageBuffer(*maps[WorldMaps::NormalMetallic], "gNormalMet");
-		addImageBuffer(*maps[WorldMaps::Diffuse], "gDiffuse");
+		addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
+		addTextureSampler(*maps[WorldMaps::NormalMetallic], "gNormalMet");
+		addTextureSampler(*maps[WorldMaps::Diffuse], "gDiffuse");
 	}
 
 	unsigned int VoxelConeTracer::getSpecularSampleSize() const {

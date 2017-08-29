@@ -28,9 +28,9 @@ namespace geeL {
 		//Returns first (and main) buffer of this effect
 		virtual const Texture& getImageBuffer() const = 0;
 
-		//Set main image buffer that will be used as base for post processing
-		virtual void setImageBuffer(const Texture& texture) = 0;
-		virtual void addImageBuffer(const Texture& texture, const std::string& name) = 0;
+		//Set main image buffer as texture sampler that will be used as base for post processing
+		virtual void setImage(const Texture& texture) = 0;
+		virtual void addTextureSampler(const Texture& texture, const std::string& name) = 0;
 
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) = 0;
 		virtual void draw() = 0;
@@ -67,9 +67,8 @@ namespace geeL {
 
 		virtual const Texture& getImageBuffer() const;
 
-		//Set main image buffer that will be used as base for post processing
-		virtual void setImageBuffer(const Texture& texture);
-		virtual void addImageBuffer(const Texture& texture, const std::string& name);
+		virtual void setImage(const Texture& texture);
+		virtual void addTextureSampler(const Texture& texture, const std::string& name);
 
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 		virtual void draw();
@@ -97,9 +96,8 @@ namespace geeL {
 
 		virtual const Texture& getImageBuffer() const;
 
-		//Set main image buffer that will be used as base for post processing
-		virtual void setImageBuffer(const Texture& texture);
-		virtual void addImageBuffer(const Texture& texture, const std::string& name);
+		virtual void setImage(const Texture& texture);
+		virtual void addTextureSampler(const Texture& texture, const std::string& name);
 		virtual void addImageTexture(const Texture& texture, unsigned int bindingPosition);
 
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);

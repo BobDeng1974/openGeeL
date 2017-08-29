@@ -39,15 +39,15 @@ namespace geeL {
 
 
 	void DeferredLighting::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
-		addImageBuffer(*maps[WorldMaps::Diffuse], "gDiffuse");
-		addImageBuffer(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
-		addImageBuffer(*maps[WorldMaps::NormalMetallic], "gNormalMet");
+		addTextureSampler(*maps[WorldMaps::Diffuse], "gDiffuse");
+		addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
+		addTextureSampler(*maps[WorldMaps::NormalMetallic], "gNormalMet");
 
 		auto emissivity = maps.find(WorldMaps::Emissivity);
 		if (emissivity != maps.end()) {
 			const Texture& texture = *emissivity->second;
 
-			addImageBuffer(texture, "gEmissivity");
+			addTextureSampler(texture, "gEmissivity");
 			shader.bind<int>("useEmissivity", 1);
 		}
 	}
@@ -87,15 +87,15 @@ namespace geeL {
 
 
 	void TiledDeferredLighting::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
-		addImageBuffer(*maps[WorldMaps::Diffuse], "1");
-		addImageBuffer(*maps[WorldMaps::PositionRoughness], "2");
-		addImageBuffer(*maps[WorldMaps::NormalMetallic], "3");
+		addTextureSampler(*maps[WorldMaps::Diffuse], "1");
+		addTextureSampler(*maps[WorldMaps::PositionRoughness], "2");
+		addTextureSampler(*maps[WorldMaps::NormalMetallic], "3");
 
 		auto emissivity = maps.find(WorldMaps::Emissivity);
 		if (emissivity != maps.end()) {
 			const Texture& texture = *emissivity->second;
 
-			addImageBuffer(texture, "4");
+			addTextureSampler(texture, "4");
 			shader.bind<int>("useEmissivity", 1);
 		}
 	}

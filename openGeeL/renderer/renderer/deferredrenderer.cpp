@@ -135,7 +135,7 @@ namespace geeL {
 
 			//Draw isolated effect
 			isolatedEffect->effectOnly(true);
-			isolatedEffect->setImageBuffer(*texture1);
+			isolatedEffect->setImage(*texture1);
 
 			stackBuffer.push(*texture2);
 			isolatedEffect->fill();
@@ -144,7 +144,7 @@ namespace geeL {
 
 			//Restore render settings
 			isolatedEffect->effectOnly(onlyEffect);
-			isolatedEffect->setImageBuffer(buffer);
+			isolatedEffect->setImage(buffer);
 		}
 		//Draw all included post effects to screen
 		else {
@@ -320,7 +320,7 @@ namespace geeL {
 			RenderTexture& target = (effects.size() % 2 == 0) ? *texture1 : *texture2;
 
 			effects.push_back(PostEffectRender(&target, &effect));
-			effect.setImageBuffer(source);
+			effect.setImage(source);
 		}
 		
 		effect.init(ScreenQuad::get(), stackBuffer, window->resolution);
@@ -331,7 +331,7 @@ namespace geeL {
 		const Texture& buffer = (effects.size() % 2 == 0) ? *texture2 : *texture1;
 
 		PostProcessingEffect& def = *effects.front().second;
-		def.setImageBuffer(buffer);
+		def.setImage(buffer);
 		def.init(ScreenQuad::get(), stackBuffer, window->resolution);
 	}
 
@@ -374,7 +374,7 @@ namespace geeL {
 			isolatedEffect = effects[index].second;
 		}
 
-		def.setImageBuffer(*currBuffer);
+		def.setImage(*currBuffer);
 		
 	}
 

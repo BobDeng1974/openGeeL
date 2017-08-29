@@ -27,7 +27,7 @@ namespace geeL {
 	public:
 		virtual ~GaussianBlurBase();
 
-		virtual void setImageBuffer(const Texture& texture);
+		virtual void setImage(const Texture& texture);
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 
 		std::vector<float> computeKernel(float sigma) const;
@@ -107,7 +107,7 @@ namespace geeL {
 		SobelBlur(SobelFilter& sobel, float sigma = 1.5f, bool depth = true);
 		virtual ~SobelBlur();
 
-		virtual void setImageBuffer(const Texture& texture);
+		virtual void setImage(const Texture& texture);
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);

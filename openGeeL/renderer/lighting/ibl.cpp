@@ -31,15 +31,15 @@ namespace geeL {
 	}
 
 	void ImageBasedLighting::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
-		addImageBuffer(*maps[WorldMaps::Diffuse], "gDiffuse");
-		addImageBuffer(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
-		addImageBuffer(*maps[WorldMaps::NormalMetallic], "gNormalMet");
+		addTextureSampler(*maps[WorldMaps::Diffuse], "gDiffuse");
+		addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
+		addTextureSampler(*maps[WorldMaps::NormalMetallic], "gNormalMet");
 
 		auto ssao = maps.find(WorldMaps::SSAO);
 		if (ssao != maps.end()) {
 			const Texture& texture = *ssao->second;
 
-			addImageBuffer(texture, "ssao");
+			addTextureSampler(texture, "ssao");
 			shader.bind<int>("useSSAO", 1);
 		}
 	}
