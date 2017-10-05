@@ -8,6 +8,9 @@
 
 using namespace std;
 
+typedef pair<size_t, string> IndexedMatch;
+
+
 namespace geeL {
 
 	string ShaderFileReader::readShaderFile(const char * shaderPath) {
@@ -41,8 +44,16 @@ namespace geeL {
 	void preprocessIncludes(std::string& file, set<string>& includedFiles) {
 		regex include("^\\s*#\\s*include\\s+(?:<[^>]*>|\"[^\"]*\")\\s*");
 
-		for (sregex_iterator it(file.begin(), file.end(), include); it != sregex_iterator(); it++) {
-			string current = (*it).str();
+		list<IndexedMatch> includeList;
+		for (sregex_iterator it(file.begin(), file.end(), include); it != sregex_iterator(); it++)
+			includeList.push_back(IndexedMatch((*it).position(), (*it).str()));
+
+		//Order regex matches to guarantee correct include order 
+		includeList.sort([](const IndexedMatch& a, const IndexedMatch& b) { return a.first < b.first; });
+
+
+		for(auto it(includeList.begin()); it != includeList.end(); it++) {
+			string current = it->second;
 			regex repl(current);
 
 			size_t startIndex = current.find("<");
@@ -51,16 +62,17 @@ namespace geeL {
 
 			//File has already been included so the include is simply removed
 			if (includedFiles.count(filePath))
-				file = regex_replace(file, repl, "");
+				file = regex_replace(file, repl, "\n");
 			//Recursivly add included file (if it exists)
 			else {
 				includedFiles.insert(filePath);
 
 				string includeCode = ShaderFileReader::readShaderFile(filePath.c_str());
 				preprocessIncludes(includeCode, includedFiles);
-				file.replace(file.find(current), current.length(), includeCode + "\n\n");
+				file.replace(file.find(current), current.length(), "\n" + includeCode + "\n\n");
 			}
 		}
+		
 	}
 
 	void preprocessRequirements(Shader& shader, std::string& file, set<string>& requirements, ShaderProvider * const provider) {
@@ -112,7 +124,7 @@ namespace geeL {
 		includedFiles.insert(shaderPath);
 		preprocessIncludes(shaderCode, includedFiles);
 
-		//Lazy fix: Run pre process again if there is at least one #include found in code
+		//Lazy fix: Run pre process again if there is at least one #include still found in code
 		unsigned int counter = 0;
 		while (shaderCode.find("#include") != string::npos && counter < 5) {
 			preprocessIncludes(shaderCode, includedFiles);

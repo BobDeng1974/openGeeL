@@ -337,7 +337,7 @@ namespace geeL {
 			function(*it->second);
 	}
 
-	void Shader::iterateTextures(std::function<void(const TextureBinding&binding)> function) const {
+	void Shader::iterateTextures(std::function<void(const TextureBinding&)> function) const {
 		for (auto it(maps.begin()); it != maps.end(); it++) {
 			const TextureBinding& binding = (*it).second;
 			function(binding);
