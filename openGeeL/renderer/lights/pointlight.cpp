@@ -1,6 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <cassert>
+#include <algorithm>
 #include <gtc/matrix_transform.hpp>
 #include <string>
 #include "shader/rendershader.h"
@@ -24,6 +25,7 @@ namespace geeL {
 		ShaderTransformSpace space, const Camera* const camera) const {
 		
 		Light::bind(shader, name, space, camera);
+		shader.bind<float>(name + "radius", getLightRadius());
 
 		switch (space) {
 			case ShaderTransformSpace::View:
@@ -36,6 +38,13 @@ namespace geeL {
 				break;
 		}
 		
+	}
+
+	float PointLight::getLightRadius() const {
+		float maxIntensity = std::max(diffuse.x, std::max(diffuse.y, diffuse.z)) * 1000.f;
+		float minFalloff = 5.f / 256.f;
+		
+		return std::sqrtf(maxIntensity / minFalloff);
 	}
 
 	

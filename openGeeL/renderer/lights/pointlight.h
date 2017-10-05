@@ -15,6 +15,7 @@ namespace geeL {
 			const Camera* const camera = nullptr) const;
 
 		virtual LightType getLightType() const;
+		float getLightRadius() const;
 
 	};
 

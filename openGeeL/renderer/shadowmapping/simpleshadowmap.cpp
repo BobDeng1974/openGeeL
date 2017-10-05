@@ -79,7 +79,7 @@ namespace geeL {
 		float depth = fminf(info.CTdepth, fminf(info.BLdepth,
 			fminf(info.BRdepth, fminf(info.TLdepth, info.TRdepth))));
 
-		float intensity = 1.f - light.getIntensity(center);
+		float intensity = 1.f - light.getAttenuation(center);
 
 		//Check distance between camera and center pixel of camera 
 		//and scale it with experienced intensity at center pixel.

@@ -38,7 +38,7 @@ namespace geeL {
 		}
 	}
 
-	float DirectionalLight::getIntensity(glm::vec3 point) const {
+	float DirectionalLight::getAttenuation(glm::vec3 point) const {
 		return 1.f;
 	}
 

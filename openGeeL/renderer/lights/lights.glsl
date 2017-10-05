@@ -8,6 +8,7 @@ struct PointLight {
 	float shadowIntensity;
 	float bias;
 	float farPlane;
+	float radius;
 
 	int resolution;
 	float scale;

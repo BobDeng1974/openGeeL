@@ -15,7 +15,7 @@ namespace geeL {
 		virtual void bind(const Shader& shader,
 			const std::string& name, ShaderTransformSpace space, const Camera* const camera = nullptr) const;
 
-		virtual float getIntensity(glm::vec3 point) const;
+		virtual float getAttenuation(glm::vec3 point) const;
 
 		virtual LightType getLightType() const;
 

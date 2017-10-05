@@ -17,19 +17,22 @@ namespace geeL {
 	public:
 		virtual void addSSAO(SSAO& ssao) = 0;
 
-		template<typename... WorldMapRequesters>
-		void addEffect(PostProcessingEffect& effect, WorldMapRequesters& ...requester);
 		virtual void addEffect(PostProcessingEffect& effect) = 0;
+		virtual void addEffect(PostProcessingEffect& effect, RenderTexture& texture) = 0;
+		
+		virtual void addRequester(WorldMapRequester& requester) = 0;
+		virtual void addRenderTexture(DynamicRenderTexture& texture) = 0;
+
 
 		template<typename... WorldMapRequesters>
+		void addEffect(PostProcessingEffect& effect, WorldMapRequesters& ...requester);
+		
+		template<typename... WorldMapRequesters>
 		void addEffect(PostProcessingEffect& effect, RenderTexture& texture, WorldMapRequesters& ...requester);
-		virtual void addEffect(PostProcessingEffect& effect, RenderTexture& texture) = 0;
+		
 
 		template<typename... WorldMapRequesters>
 		void addRequester(WorldMapRequester& requester, WorldMapRequesters& ...other);
-		virtual void addRequester(WorldMapRequester& requester) = 0;
-
-		virtual void addRenderTexture(DynamicRenderTexture& texture) = 0;
 
 	};
 

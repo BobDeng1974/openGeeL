@@ -2,7 +2,7 @@
 
 #include <renderer/shaders/helperfunctions.glsl>
 #include <renderer/shaders/material.glsl>
-#include <renderer/lights/lights.glsl>
+
 #include <renderer/lighting/cooktorrance.glsl>
 
 
@@ -17,12 +17,15 @@ uniform int plCount;
 uniform int dlCount;
 uniform int slCount;
 
+#include <renderer/lights/lights.glsl>
+
 uniform PointLight pointLights[5];
 uniform DirectionalLight directionalLights[5];
 uniform SpotLight spotLights[5];
 
 uniform EmissiveMaterial material;
 uniform vec3 cameraPosition;
+
 
 #include <renderer/shaders/materialproperties.glsl>
 #include <renderer/shadowmapping/shadows.glsl>

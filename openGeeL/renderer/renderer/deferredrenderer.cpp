@@ -112,7 +112,6 @@ namespace geeL {
 		stackBuffer.push(*texture1);
 		stackBuffer.fill(lightingPassFunc);
 
-		//glClear(GL_COLOR_BUFFER_BIT);
 		glDisable(GL_DEPTH_TEST);
 
 		//Post processing
