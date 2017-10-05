@@ -90,12 +90,13 @@ namespace geeL {
 		if (nk_tree_push(context, NK_TREE_NODE, id.c_str(), NK_MINIMIZED)) {
 			SceneObjectSnippet::draw(context);
 
-			vec3 color = light.getDiffuse() / vec3(intensity);
+			vec3 color = light.getColor();
 			GUISnippets::drawColor(context, color);
+			light.setColor(color);
 
-			intensity = GUISnippets::drawBarFloat(context, intensity, 0.001f, 1.f, 0.001f, "Intensity");
+			float intensity = GUISnippets::drawBarFloat(context, light.getIntensity(), 1.f, 2000.f, 1.f, "Intensity");
+			light.setIntensity(intensity);
 
-			light.setDiffuse(color * vec3(intensity));
 			
 			if (snippet != nullptr)
 				snippet->draw(context);

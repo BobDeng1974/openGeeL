@@ -18,6 +18,7 @@ namespace geeL {
 	Light::Light(Transform& transform, vec3 diffuse, const std::string& name)
 		: SceneObject(transform, name), diffuse(diffuse), shadowMap(nullptr) {
 	
+		setColorAndIntensityFromDiffuse();
 		transform.addChangeListener([this](const Transform& transform) { onChange(); });
 	}
 
@@ -104,6 +105,8 @@ namespace geeL {
 	void Light::setDiffuse(vec3 value) {
 		if (!transform.isStatic && !VectorExtension::equals(diffuse, value)) {
 			diffuse = value;
+			
+			setColorAndIntensityFromDiffuse();
 			onChange();
 		}
 	}
@@ -115,7 +118,7 @@ namespace geeL {
 
 	void Light::setColor(vec3 value) {
 		if (!transform.isStatic && !VectorExtension::equals(color, value)) {
-			color = value;
+			color = clamp(value, 0.f, 1.f);
 			updateDiffuse();
 		}
 	}
@@ -135,7 +138,19 @@ namespace geeL {
 	}
 
 	void Light::updateDiffuse() {
-		setDiffuse(color * vec3(intensity));
+		setDiffuseOnly(color * vec3(intensity));
+	}
+
+	void Light::setColorAndIntensityFromDiffuse() {
+		intensity = fmax(diffuse.x, fmax(diffuse.y, diffuse.z));
+		color = diffuse / intensity;
+	}
+
+	void Light::setDiffuseOnly(vec3 value) {
+		if (!transform.isStatic && !VectorExtension::equals(diffuse, value)) {
+			diffuse = value;
+			onChange();
+		}
 	}
 
 }

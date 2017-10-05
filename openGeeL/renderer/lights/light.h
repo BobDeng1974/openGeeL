@@ -65,16 +65,19 @@ namespace geeL {
 		virtual float getAttenuation(glm::vec3 point) const;
 
 		
-
-		//Returns diffuse color of this light
-		vec3 getDiffuse() const;
+		//Sets diffuse color of this light
 		void setDiffuse(vec3 diffuse);
-
-		float getIntensity() const;
+		vec3 getDiffuse() const;
+		
+		//Sets intensity of diffuse color
 		void  setIntensity(float value);
+		float getIntensity() const;
+		
 
-		vec3 getColor() const;
+		//Sets base color of diffuse color (Normalized without intensity)
 		void setColor(vec3 color);
+		vec3 getColor() const;
+		
 
 		//Add change callback to this light and specify whether function should
 		//be invoked once immediately or not
@@ -83,17 +86,19 @@ namespace geeL {
 		virtual LightType getLightType() const = 0;
 
 	protected:
-		float intensity;
-		vec3 diffuse, color;
-		unsigned int shadowmapFBO;
-		unsigned int shadowmapID;
+		vec3 diffuse;
 		ShadowMap* shadowMap;
 
 		void onChange();
-		void updateDiffuse();
 
 	private:
+		float intensity;
+		vec3 color;
 		std::list<std::function<void(Light&)>> changeListeners;
+
+		void updateDiffuse();
+		void setColorAndIntensityFromDiffuse();
+		void setDiffuseOnly(vec3 diffuse);
 
 	};
 }

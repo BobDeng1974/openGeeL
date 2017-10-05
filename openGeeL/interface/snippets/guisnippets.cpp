@@ -107,15 +107,14 @@ namespace geeL {
 
 	void GUISnippets::drawColor(GUIContext* context, glm::vec3& color) {
 
-		
-		nk_color c = nk_rgb(color.r, color.g, color.b);
+		nk_color c = nk_rgb(color.r * 256.f, color.g * 256.f, color.b * 256.f);
 		if (nk_combo_begin_color(context, c, nk_vec2(nk_widget_width(context), 400))) {
 			nk_layout_row_dynamic(context, 120, 1);
 			c = nk_color_picker(context, c, NK_RGB);
 			nk_layout_row_dynamic(context, 25, 1);
-			color.r = (nk_byte)nk_propertyi(context, "#R:", 0, c.r, 255, 1, 1);
-			color.g = (nk_byte)nk_propertyi(context, "#G:", 0, c.g, 255, 1, 1);
-			color.b = (nk_byte)nk_propertyi(context, "#B:", 0, c.b, 255, 1, 1);
+			color.r = (float) nk_propertyi(context, "#R:", 0, c.r, 255, 1, 1) / 256.f;
+			color.g = (float) nk_propertyi(context, "#G:", 0, c.g, 255, 1, 1) / 256.f;
+			color.b = (float) nk_propertyi(context, "#B:", 0, c.b, 255, 1, 1) / 256.f;
 			nk_combo_end(context);
 		}
 	}

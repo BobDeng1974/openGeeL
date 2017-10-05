@@ -66,7 +66,6 @@ namespace geeL {
 	private:
 		Light& light;
 		ShadowMapSnippet* snippet;
-		float intensity = 1.f;
 
 	};
 
