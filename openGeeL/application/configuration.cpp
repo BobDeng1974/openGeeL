@@ -27,7 +27,7 @@ namespace geeL {
 
 		DefaultPostProcess& def = DefaultPostProcess();
 		RenderContext& context = RenderContext();
-		DeferredLighting& lighting = DeferredLighting(scene);
+		SceneRender& lighting = DeferredLighting(scene);
 		DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer);
 		renderer.setScene(scene);
 

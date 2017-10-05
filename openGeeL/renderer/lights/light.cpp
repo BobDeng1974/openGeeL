@@ -77,7 +77,7 @@ namespace geeL {
 			shadowMap->draw(camera, renderCall, repository);
 	}
 
-	float Light::getIntensity(glm::vec3 point) const {
+	float Light::getAttenuation(glm::vec3 point) const {
 		float distance = length(transform.getPosition() - point);
 
 		if (distance == 0.f)
@@ -86,17 +86,40 @@ namespace geeL {
 		return 1.f / (distance * distance);
 	}
 
-	vec3 Light::getColor() const {
+	float Light::getIntensity() const {
+		return intensity;
+	}
+
+	void Light::setIntensity(float value) {
+		if (!transform.isStatic && value > 0.f && value != intensity) {
+			intensity = value;
+			updateDiffuse();
+		}
+	}
+
+	vec3 Light::getDiffuse() const {
 		return diffuse;
 	}
 
-	void Light::setColor(vec3 color) {
-		if (!transform.isStatic && !VectorExtension::equals(diffuse, color)) {
-			diffuse = color;
+	void Light::setDiffuse(vec3 value) {
+		if (!transform.isStatic && !VectorExtension::equals(diffuse, value)) {
+			diffuse = value;
 			onChange();
 		}
 	}
 
+	
+	vec3 Light::getColor() const {
+		return color;
+	}
+
+	void Light::setColor(vec3 value) {
+		if (!transform.isStatic && !VectorExtension::equals(color, value)) {
+			color = value;
+			updateDiffuse();
+		}
+	}
+	
 
 	void Light::addChangeListener(std::function<void(Light&)> function, bool invoke) {
 		changeListeners.push_back(function);
@@ -109,6 +132,10 @@ namespace geeL {
 			auto function = *it;
 			function(*this);
 		}
+	}
+
+	void Light::updateDiffuse() {
+		setDiffuse(color * vec3(intensity));
 	}
 
 }

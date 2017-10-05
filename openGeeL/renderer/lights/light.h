@@ -61,10 +61,18 @@ namespace geeL {
 		void renderShadowmapForced(const SceneCamera* const camera,
 			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository);
 
-		//Computes experienced intensity at given point. Ranges between 0 and 1
-		virtual float getIntensity(glm::vec3 point) const;
+		//Computes experienced attenuation at given point. Ranges between 0 and 1
+		virtual float getAttenuation(glm::vec3 point) const;
+
+		
 
 		//Returns diffuse color of this light
+		vec3 getDiffuse() const;
+		void setDiffuse(vec3 diffuse);
+
+		float getIntensity() const;
+		void  setIntensity(float value);
+
 		vec3 getColor() const;
 		void setColor(vec3 color);
 
@@ -75,12 +83,14 @@ namespace geeL {
 		virtual LightType getLightType() const = 0;
 
 	protected:
-		vec3 diffuse;
+		float intensity;
+		vec3 diffuse, color;
 		unsigned int shadowmapFBO;
 		unsigned int shadowmapID;
 		ShadowMap* shadowMap;
 
 		void onChange();
+		void updateDiffuse();
 
 	private:
 		std::list<std::function<void(Light&)>> changeListeners;
