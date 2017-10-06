@@ -103,7 +103,7 @@ namespace geeL {
 
 	void DefaultSnippet::draw(GUIContext* context) {
 		float defExposure = def.getExposure();
-		float exposure = GUISnippets::drawBarFloat(context, defExposure, 0.f, 25.f, 0.1f, "Exposure");
+		float exposure = GUISnippets::drawBarFloatLogaritmic(context, defExposure, 0.f, 100.f, 0.1f, "Exposure");
 		if (exposure != defExposure)
 			def.setExposure(exposure);
 	}
@@ -220,13 +220,13 @@ namespace geeL {
 		if (blurResolution != oldResolution.get())
 			dof.resizeBlurResolution(blurResolution);
 
-		float aperture = GUISnippets::drawBarFloat(context, dof.getAperture(), 0.f, 200.f, 0.1f, "Aperture");
+		float aperture = GUISnippets::drawBarFloatLogaritmic(context, dof.getAperture(), 0.f, 1000.f, 0.1f, "Aperture");
 		dof.setAperture(aperture);
 
 		GUISnippets::drawTreeNode(context, "Blur", true, [this](GUIContext* context) {
 			DepthOfFieldBlur& blur = dof.getBlur();
 
-			float sigma = GUISnippets::drawBarFloat(context, blur.getSigma(), 0.1f, 25.f, 0.001f, "Sigma");
+			float sigma = GUISnippets::drawBarFloatLogaritmic(context, blur.getSigma(), 0.1f, 25.f, 0.001f, "Sigma");
 			blur.setSigma(sigma);
 
 			float threshold = GUISnippets::drawBarFloat(context, blur.getThreshold(), 0.f, 1.f, 0.01f, "Threshold");

@@ -34,7 +34,10 @@ namespace geeL {
 	public:
 
 		static int drawBarInteger(GUIContext* context, int value, int min, int max, int step, std::string name);
+		static int drawBarIntegerLogaritmic(GUIContext* context, int value, int min, int max, int step, std::string name);
+
 		static float drawBarFloat(GUIContext* context, float value, float min, float max, float step, std::string name);
+		static float drawBarFloatLogaritmic(GUIContext* context, float value, float min, float max, float step, std::string name);
 
 		static glm::vec2 drawVector(GUIContext* context, const glm::vec2& vector, std::string prefix, float border, float step);
 		static glm::vec3 drawVector(GUIContext* context, const glm::vec3& vector, std::string prefix, float border, float step);

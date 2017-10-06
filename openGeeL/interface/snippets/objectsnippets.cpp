@@ -94,7 +94,7 @@ namespace geeL {
 			GUISnippets::drawColor(context, color);
 			light.setColor(color);
 
-			float intensity = GUISnippets::drawBarFloat(context, light.getIntensity(), 1.f, 2000.f, 1.f, "Intensity");
+			float intensity = GUISnippets::drawBarFloatLogaritmic(context, light.getIntensity(), 1.f, 2000.f, 0.01f, "Intensity");
 			light.setIntensity(intensity);
 
 			

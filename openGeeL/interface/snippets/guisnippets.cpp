@@ -23,12 +23,45 @@ namespace geeL {
 		return val;
 	}
 
+	int GUISnippets::drawBarIntegerLogaritmic(GUIContext * context, int value, int min, int max, int step, std::string name) {
+		int val  = log(value);
+		int maxi = log(max);
+
+		nk_layout_row_dynamic(context, 30, 3);
+		nk_label(context, name.c_str(), NK_TEXT_CENTERED);
+		nk_slider_int(context, min, &val, max, step);
+
+		val = exp(val);
+
+		std::string valName = std::to_string(val);
+		nk_label(context, valName.c_str(), NK_TEXT_CENTERED);
+
+		return val;
+	}
+
 	float GUISnippets::drawBarFloat(GUIContext* context, float value, float min, float max, float step, std::string name) {
 		float val = value;
 
 		nk_layout_row_dynamic(context, 30, 3);
 		nk_label(context, name.c_str(), NK_TEXT_CENTERED);
 		nk_slider_float(context, min, &val, max, step);
+
+		std::string valName = std::to_string(val);
+		valName = valName.substr(0, 5);
+		nk_label(context, valName.c_str(), NK_TEXT_CENTERED);
+
+		return val;
+	}
+
+	float GUISnippets::drawBarFloatLogaritmic(GUIContext* context, float value, float min, float max, float step, std::string name) {
+		float val  = log(value);
+		float maxi = log(max);
+
+		nk_layout_row_dynamic(context, 30, 3);
+		nk_label(context, name.c_str(), NK_TEXT_CENTERED);
+		nk_slider_float(context, min, &val, maxi, step);
+
+		val = exp(val);
 
 		std::string valName = std::to_string(val);
 		valName = valName.substr(0, 5);

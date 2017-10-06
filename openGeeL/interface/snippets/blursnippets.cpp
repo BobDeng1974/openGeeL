@@ -8,7 +8,7 @@ namespace geeL {
 	GaussianBlurSnippet::GaussianBlurSnippet(GaussianBlurBase& blur) : PostEffectSnippet(blur), blur(blur) {}
 
 	void GaussianBlurSnippet::draw(GUIContext * context) {
-		float sigma = GUISnippets::drawBarFloat(context, blur.getSigma(), 0.1f, 15.f, 0.001f, "Sigma");
+		float sigma = GUISnippets::drawBarFloatLogaritmic(context, blur.getSigma(), 0.1f, 25.f, 0.001f, "Sigma");
 		blur.setSigma(sigma);
 
 	}
