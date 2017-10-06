@@ -13,7 +13,6 @@ namespace geeL {
 
 	class Renderer;
 	class RenderWindow;
-	class RenderThread;
 	class InputManager;
 	class ContinuousThread;
 
@@ -21,7 +20,7 @@ namespace geeL {
 	class Application {
 
 	public:
-		Application(RenderWindow& window, InputManager& inputManager, RenderThread& renderThread);
+		Application(RenderWindow& window, InputManager& inputManager, Renderer& renderer, ContinuousThread& mainThread);
 
 		void run();
 		void addThread(ContinuousThread& thread);

@@ -31,8 +31,8 @@ namespace geeL {
 		DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer);
 		renderer.setScene(scene);
 
-		RenderThread renderThread(renderer);
-		Application& app = Application(window, manager, renderThread);
+		ContinuousSingleThread renderThread(renderer);
+		Application& app = Application(window, manager, renderer, renderThread);
 
 		std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 			[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
@@ -48,10 +48,10 @@ namespace geeL {
 		renderer.addGUIRenderer(&gui);
 
 		Physics* physics;
-		ContinuousThread* physicsThread = nullptr;
+		ContinuousSingleThread* physicsThread = nullptr;
 		if (physicsType == PhysicsType::World) {
 			WorldPhysics* wp = new WorldPhysics();
-			physicsThread = new ContinuousThread(*wp);
+			physicsThread = new ContinuousSingleThread(*wp);
 			app.addThread(*physicsThread);
 
 			physics = wp;
@@ -59,7 +59,7 @@ namespace geeL {
 		else
 			physics = new NoPhysics();
 
-		ContinuousThread scriptingThread(scene);
+		ContinuousSingleThread scriptingThread(scene);
 		app.addThread(scriptingThread);
 
 		initFunction(app, renderer, gui, scene, lightManager, transFactory, meshFactory,

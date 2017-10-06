@@ -25,12 +25,12 @@ namespace geeL {
 	AtomicWrapper<bool> close = false;
 
 
-	Application::Application(RenderWindow& window, InputManager& inputManager, RenderThread& renderThread)
-		: window(window), inputManager(inputManager), renderer(renderThread.getRenderer()) {
-
+	Application::Application(RenderWindow & window, InputManager & inputManager, Renderer & renderer, ContinuousThread & mainThread)
+		: window(window), inputManager(inputManager), renderer(renderer) {
+	
 		application = this;
 
-		auto exit = [&window](int key, int scancode, int action, int mode) { 
+		auto exit = [&window](int key, int scancode, int action, int mode) {
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 				glfwSetWindowShouldClose(window.glWindow, GL_TRUE);
 		};
@@ -38,9 +38,8 @@ namespace geeL {
 		inputManager.addCallback(exit);
 		inputManager.init(&window);
 
-		addThread(renderThread);
+		addThread(mainThread);
 	}
-
 
 	void Application::run() {
 		renderer.linkInformation();

@@ -44,11 +44,10 @@ void RaymarchTest::draw() {
 	DeferredRenderer& renderer = DeferredRenderer(window, manager, raymarch, context, def, gBuffer);
 	renderer.setScene(scene);
 
+	ContinuousSingleThread renderThread(renderer);
+	Application& app = Application(window, manager, renderer, renderThread);
 
-	RenderThread renderThread(renderer);
-	Application& app = Application(window, manager, renderThread);
-
-	ContinuousThread scriptingThread(scene);
+	ContinuousSingleThread scriptingThread(scene);
 	app.addThread(scriptingThread);
 
 	app.run();

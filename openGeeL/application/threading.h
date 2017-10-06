@@ -1,6 +1,8 @@
 #ifndef GEELTHREADING_H
 #define GEELTHREADING_H
 
+#include <functional>
+#include <list>
 #include <thread>
 #include "utility/rendertime.h"
 
@@ -27,36 +29,52 @@ namespace geeL {
 	};
 
 
-	//Thread object that runs at a specified framerate
 	class ContinuousThread {
 
 	public:
-		ContinuousThread(ThreadedObject& obj);
-
 		//Returns and starts std::thread that runs containing threaded object
 		std::thread start();
 
 		const Time& getTime() const;
 
-	private:
-		ThreadedObject& obj;
+	protected:
 		Time time;
 
-		void run();
+		virtual void run() = 0;
 
 	};
 
 
-	//Thread that runs drawing operations of a renderer
-	class RenderThread : public ContinuousThread {
+	//Thread that runs one threaded object at its specified specified framerate
+	class ContinuousSingleThread : public ContinuousThread {
 
 	public:
-		RenderThread(Renderer& renderer);
+		ContinuousSingleThread(ThreadedObject& obj);
 
-		Renderer& getRenderer();
+	protected:
+		virtual void run();
 
 	private:
-		Renderer& renderer;
+		ThreadedObject& obj;
+
+	};
+
+
+	//Thread that runs several threaded object at lowest specified framerate
+	class ContinuousMultiThread : public ContinuousThread {
+
+	public:
+		ContinuousMultiThread();
+
+		void addObject(ThreadedObject& obj);
+
+	protected:
+		virtual void run();
+
+	private:
+		std::list<ThreadedObject*> objects;
+
+		void iterateObjects(std::function<void(ThreadedObject&)> function);
 
 	};
 
