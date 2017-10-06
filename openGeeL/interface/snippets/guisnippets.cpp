@@ -23,7 +23,7 @@ namespace geeL {
 		return val;
 	}
 
-	int GUISnippets::drawBarIntegerLogaritmic(GUIContext * context, int value, int min, int max, int step, std::string name) {
+	int GUISnippets::drawBarIntegerLogarithmic(GUIContext * context, int value, int min, int max, int step, std::string name) {
 		int val  = log(value);
 		int maxi = log(max);
 
@@ -53,7 +53,7 @@ namespace geeL {
 		return val;
 	}
 
-	float GUISnippets::drawBarFloatLogaritmic(GUIContext* context, float value, float min, float max, float step, std::string name) {
+	float GUISnippets::drawBarFloatLogarithmic(GUIContext* context, float value, float min, float max, float step, std::string name) {
 		float val  = log(value);
 		float maxi = log(max);
 
