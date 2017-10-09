@@ -24,14 +24,14 @@ namespace geeL {
 	}
 
 	int GUISnippets::drawBarIntegerLogarithmic(GUIContext * context, int value, int min, int max, int step, std::string name) {
-		int val  = log(value);
+		int val  = log(1 + value);
 		int maxi = log(max);
 
 		nk_layout_row_dynamic(context, 30, 3);
 		nk_label(context, name.c_str(), NK_TEXT_CENTERED);
 		nk_slider_int(context, min, &val, max, step);
 
-		val = exp(val);
+		val = exp(val) - 1;
 
 		std::string valName = std::to_string(val);
 		nk_label(context, valName.c_str(), NK_TEXT_CENTERED);
@@ -54,14 +54,14 @@ namespace geeL {
 	}
 
 	float GUISnippets::drawBarFloatLogarithmic(GUIContext* context, float value, float min, float max, float step, std::string name) {
-		float val  = log(value);
+		float val  = log(1.f + value);
 		float maxi = log(max);
 
 		nk_layout_row_dynamic(context, 30, 3);
 		nk_label(context, name.c_str(), NK_TEXT_CENTERED);
 		nk_slider_float(context, min, &val, maxi, step);
 
-		val = exp(val);
+		val = exp(val) - 1.f;
 
 		std::string valName = std::to_string(val);
 		valName = valName.substr(0, 5);
@@ -145,9 +145,11 @@ namespace geeL {
 			nk_layout_row_dynamic(context, 120, 1);
 			c = nk_color_picker(context, c, NK_RGB);
 			nk_layout_row_dynamic(context, 25, 1);
+
 			color.r = (float) nk_propertyi(context, "#R:", 0, c.r, 255, 1, 1) / 256.f;
 			color.g = (float) nk_propertyi(context, "#G:", 0, c.g, 255, 1, 1) / 256.f;
 			color.b = (float) nk_propertyi(context, "#B:", 0, c.b, 255, 1, 1) / 256.f;
+
 			nk_combo_end(context);
 		}
 	}
@@ -158,30 +160,19 @@ namespace geeL {
 	}
 
 	void GUISnippets::drawMaterial(GUIContext* context, DefaultMaterialContainer* material) {
-		float transparency = drawBarFloat(context, material->getTransparency(), 0.f, 1.0f, 0.001f, "Transparency");
+		float transparency = drawBarFloat(context, material->getTransparency(), 0.f, 1.f, 0.001f, "Transparency");
 		material->setTransparency(transparency);
 
-		float roughness = drawBarFloat(context, material->getRoughness(), 0.f, 1.0f, 0.001f, "Roughness");
+		float roughness = drawBarFloat(context, material->getRoughness(), 0.f, 1.f, 0.001f, "Roughness");
 		material->setRoughness(roughness);
 
-		float metallic = drawBarFloat(context, material->getMetallic(), 0.f, 1.0f, 0.001f, "Metallic");
+		float metallic = drawBarFloat(context, material->getMetallic(), 0.f, 1.f, 0.001f, "Metallic");
 		material->setMetallic(metallic);
 
 		nk_layout_row_dynamic(context, 20, 1);
 		glm::vec3 color = material->getColor();
-		color = glm::vec3(color.r * 255.f, color.g * 255.f, color.b * 255.f);
 
 		drawColor(context, color);
-		material->setColor(glm::vec3(color.r / 255.f, color.g / 255.f, color.b / 255.f));
-
-		/*
-		nk_layout_row_dynamic(context, 20, 1);
-		glm::vec3 emissivity = material->getEmissivity();
-		emissivity = glm::vec3(emissivity.r * 255.f, emissivity.g * 255.f, emissivity.b * 255.f);
-
-		drawColor(context, emissivity);
-		material->setEmissivity(glm::vec3(emissivity.r / 255.f, emissivity.g / 255.f, emissivity.b / 255.f));
-		*/
 	}
 
 	void GUISnippets::drawTreeNode(GUIContext* context, const std::string& name, 
