@@ -1,3 +1,4 @@
+#include "appmanager.h"
 #include "configuration.h"
 
 namespace geeL {
@@ -32,7 +33,7 @@ namespace geeL {
 		renderer.setScene(scene);
 
 		ContinuousSingleThread renderThread(renderer);
-		Application& app = Application(window, manager, renderer, renderThread);
+		Application& app = ApplicationManager::createApplicationGlobal(window, manager, renderer, renderThread);
 
 		std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 			[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };

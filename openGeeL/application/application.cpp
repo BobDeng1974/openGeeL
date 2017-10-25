@@ -16,19 +16,9 @@ using namespace std;
 
 namespace geeL {
 
-	//TODO: Very hacky and problematic when using multiple applications
-	Application* application;
-	float RenderTime::deltaTime() {
-		return application->getCurrentTime().deltaTime();
-	}
-
-
-
 	Application::Application(RenderWindow& window, InputManager& inputManager, Renderer& renderer, ContinuousThread& mainThread)
 		: window(window), inputManager(inputManager), renderer(renderer) {
 	
-		application = this;
-
 		auto exit = [&window](int key, int scancode, int action, int mode) {
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 				glfwSetWindowShouldClose(window.glWindow, GL_TRUE);
@@ -39,6 +29,7 @@ namespace geeL {
 
 		addThread(mainThread);
 	}
+
 
 	void Application::run() {
 		renderer.linkInformation();

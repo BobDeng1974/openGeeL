@@ -1,3 +1,5 @@
+#include "appmanager.h"
+
 #include "arthousescene.h"
 #include "bedroomscene.h"
 #include "deerscene.h"
@@ -10,6 +12,8 @@
 
 
 int main() {
+	ApplicationLock lock;
+
 	//BedroomScene::draw();
 	//DeerScene::draw();
 	//ArthouseScene::draw();

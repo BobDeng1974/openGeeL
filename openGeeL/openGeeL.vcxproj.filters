@@ -453,6 +453,9 @@
     <ClCompile Include="renderer\shadowmapping\varianceshadowmap.cpp">
       <Filter>renderer\shadowmapping</Filter>
     </ClCompile>
+    <ClCompile Include="application\appmanager.cpp">
+      <Filter>application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -916,6 +919,9 @@
     </ClInclude>
     <ClInclude Include="renderer\shadowmapping\varianceshadowmap.h">
       <Filter>renderer\shadowmapping</Filter>
+    </ClInclude>
+    <ClInclude Include="application\appmanager.h">
+      <Filter>application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
