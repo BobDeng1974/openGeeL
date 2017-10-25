@@ -25,7 +25,7 @@ namespace geeL {
 		void run();
 		void addThread(ContinuousThread& thread);
 
-		static bool closing();
+		bool closing() const;
 
 		const ContinuousThread* const getCurrentThread();
 		Time getCurrentTime();
@@ -35,6 +35,7 @@ namespace geeL {
 		InputManager& inputManager;
 		Renderer& renderer;
 
+		AtomicWrapper<bool> close;
 		std::mutex inputLock;
 		std::mutex threadLock;
 		std::list<ContinuousThread*> tempThreads;

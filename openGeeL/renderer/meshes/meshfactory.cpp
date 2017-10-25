@@ -403,20 +403,4 @@ namespace geeL {
 	}
 
 
-	map<string, StaticModel>::iterator MeshFactory::modelsBegin() {
-		return staticModels.begin();
-	}
-
-	map<string, StaticModel>::iterator MeshFactory::modelsEnd() {
-		return staticModels.end();
-	}
-
-	list<MeshRenderer*>::iterator MeshFactory::rendererBegin() {
-		return meshRenderer.begin();
-	}
-
-	list<MeshRenderer*>::iterator MeshFactory::rendererEnd() {
-		return meshRenderer.end();
-	}
-
 }

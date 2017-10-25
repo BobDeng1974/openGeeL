@@ -8,6 +8,7 @@
 
 namespace geeL {
 
+	class Application;
 	class Renderer;
 
 
@@ -36,8 +37,10 @@ namespace geeL {
 		std::thread start();
 
 		const Time& getTime() const;
+		void setApplication(const Application& app);
 
 	protected:
+		const Application* app = nullptr;
 		Time time;
 
 		virtual void run() = 0;

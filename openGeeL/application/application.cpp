@@ -22,10 +22,9 @@ namespace geeL {
 		return application->getCurrentTime().deltaTime();
 	}
 
-	AtomicWrapper<bool> close = false;
 
 
-	Application::Application(RenderWindow & window, InputManager & inputManager, Renderer & renderer, ContinuousThread & mainThread)
+	Application::Application(RenderWindow& window, InputManager& inputManager, Renderer& renderer, ContinuousThread& mainThread)
 		: window(window), inputManager(inputManager), renderer(renderer) {
 	
 		application = this;
@@ -70,10 +69,11 @@ namespace geeL {
 	}
 
 	void Application::addThread(ContinuousThread& thread) {
+		thread.setApplication(*this);
 		tempThreads.push_back(&thread);
 	}
 
-	bool Application::closing() {
+	bool Application::closing() const {
 		return close;
 	}
 

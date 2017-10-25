@@ -1,3 +1,4 @@
+#include <cassert>
 #include <chrono>
 #include <limits>
 #include "application.h"
@@ -19,15 +20,22 @@ namespace geeL {
 		return time;
 	}
 
+	void ContinuousThread::setApplication(const Application& app) {
+		assert(this->app == nullptr, "Can't attach thread to multiple applications");
+
+		this->app = &app;
+	}
+
 
 	void ContinuousSingleThread::run() {
+		assert(app != nullptr);
 		obj.runStart();
 
 		time.reset();
 		Time& inner = Time();
 		long ms = 1000L / obj.getFPS();
 
-		while (!Application::closing()) {
+		while (!app->closing()) {
 			inner.reset();
 
 			obj.run();
@@ -50,6 +58,8 @@ namespace geeL {
 	}
 
 	void ContinuousMultiThread::run() {
+		assert(app != nullptr);
+
 		iterateObjects([this](ThreadedObject& obj) { obj.runStart(); });
 
 		time.reset();
@@ -64,7 +74,7 @@ namespace geeL {
 		long ms = 1000L / fps;
 
 
-		while (!Application::closing()) {
+		while (!app->closing()) {
 			inner.reset();
 
 			iterateObjects([this](ThreadedObject& obj) { obj.run(); });

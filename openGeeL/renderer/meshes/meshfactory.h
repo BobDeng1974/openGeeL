@@ -64,12 +64,6 @@ namespace geeL {
 		//returns an existing model if it already uses this file
 		SkinnedModel& CreateSkinnedModel(std::string filePath);
 
-		std::map<std::string, StaticModel>::iterator modelsBegin();
-		std::map<std::string, StaticModel>::iterator modelsEnd();
-
-		std::list<MeshRenderer*>::iterator rendererBegin();
-		std::list<MeshRenderer*>::iterator rendererEnd();
-
 	private:
 		MaterialFactory& factory;
 		std::map<std::string, StaticModel> staticModels;
