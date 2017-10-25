@@ -16,7 +16,7 @@ namespace geeL {
 	class ThreadedObject {
 
 	public:
-		ThreadedObject(long FPS = 60);
+		ThreadedObject(long targetFPS = 60);
 
 		virtual void runStart() {}
 		virtual void run() = 0;
@@ -82,10 +82,10 @@ namespace geeL {
 	};
 
 
-
 	inline ThreadedObject::ThreadedObject(long FPS) : FPS(FPS) {}
 
 	inline long ThreadedObject::getFPS() const { return FPS; }
+
 
 }
 

@@ -50,8 +50,8 @@ public:
 				meshTransform6, CullingMode::cullFront, "Sponza");
 			scene.addMeshRenderer(sponz);
 
-			DynamicRenderTexture& renderTex = materialFactory.CreateDynamicRenderTexture(camera, Resolution(1000));
-			renderer.addRenderTexture(renderTex);
+			//DynamicRenderTexture& renderTex = materialFactory.CreateDynamicRenderTexture(camera, Resolution(1000));
+			//renderer.addRenderTexture(renderTex);
 
 			sponz.iterateMaterials([&](MaterialContainer& container) {
 				if (container.name == "fabric_g") {

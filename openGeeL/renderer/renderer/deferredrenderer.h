@@ -37,7 +37,9 @@ namespace geeL {
 		virtual void run();
 		virtual void draw();
 		virtual void draw(const Camera& camera, const FrameBuffer& buffer);
-		virtual void drawSimple(const Camera& camera);
+
+		//Render current frame of scene with classic forward rendering
+		virtual void drawForward(const Camera& camera);
 
 		virtual void addSSAO(SSAO& ssao);
 

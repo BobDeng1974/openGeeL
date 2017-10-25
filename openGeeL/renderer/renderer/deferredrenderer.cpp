@@ -90,7 +90,7 @@ namespace geeL {
 
 		for (auto it(renderTextures.begin()); it != renderTextures.end(); it++) {
 			DynamicRenderTexture& texture = **it;
-			texture.update();
+			texture.update([this](const Camera& camera) { drawForward(camera); });
 		}
 
 		//Geometry pass
@@ -220,7 +220,7 @@ namespace geeL {
 		scene->drawSkybox(camera);
 	}
 
-	void DeferredRenderer::drawSimple(const Camera& camera) {
+	void DeferredRenderer::drawForward(const Camera& camera) {
 		glEnable(GL_DEPTH_TEST);
 		scene->drawDefaultForward(camera);
 	}

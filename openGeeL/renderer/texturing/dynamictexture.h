@@ -16,13 +16,11 @@ namespace geeL {
 	class DynamicRenderTexture : public RenderTexture {
 
 	public:
-		DynamicRenderTexture(const Camera& camera, Resolution resolution, 
-			std::function<void(const Camera&)> renderCall);
+		DynamicRenderTexture(const Camera& camera, Resolution resolution);
 
-		void update();
+		void update(std::function<void(const Camera&)> renderCall);
 
 	private:
-		std::function<void(const Camera&)> renderCall;
 		const Camera& camera;
 		ColorBuffer buffer;
 

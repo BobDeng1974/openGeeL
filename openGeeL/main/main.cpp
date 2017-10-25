@@ -10,11 +10,11 @@
 
 
 int main() {
-	BedroomScene::draw();
+	//BedroomScene::draw();
 	//DeerScene::draw();
 	//ArthouseScene::draw();
 	//SponzaScene::draw();
-	//SponzaGIScene::draw();
+	SponzaGIScene::draw();
 	//ScienceScene::draw();
 	//CapsuleScene::draw();
 

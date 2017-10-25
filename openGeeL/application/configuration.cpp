@@ -37,8 +37,6 @@ namespace geeL {
 		std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 			[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
 
-		materialFactory.setRenderCall([&](const Camera& camera) 
-			{ renderer.drawSimple(camera); });
 
 		CubeBuffer cubeBuffer;
 		BRDFIntegrationMap brdfInt;

@@ -22,8 +22,6 @@ namespace geeL {
 	class SceneShader;
 	class ShaderProvider;
 
-	using RenderCall = std::function<void(const Camera&)>;
-
 
 	class MaterialFactory {
 
@@ -70,11 +68,8 @@ namespace geeL {
 		//Returns default shader for static deferred rendering
 		SceneShader& getDeferredShader() const;
 
-		void setRenderCall(RenderCall function);
-
 	private:
 		ShaderProvider* const provider;
-		RenderCall renderCall;
 
 		SceneShader* forwardShader;
 		SceneShader* deferredShader;

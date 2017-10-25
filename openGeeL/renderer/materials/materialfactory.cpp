@@ -75,7 +75,7 @@ namespace geeL {
 	}
 
 	DynamicRenderTexture& MaterialFactory::CreateDynamicRenderTexture(const Camera& camera, Resolution resolution) {
-		DynamicRenderTexture* texture = new DynamicRenderTexture(camera, resolution, renderCall);
+		DynamicRenderTexture* texture = new DynamicRenderTexture(camera, resolution);
 		otherTextures.push_back(texture);
 
 		return *texture;
@@ -163,10 +163,6 @@ namespace geeL {
 
 	SceneShader& MaterialFactory::getDeferredShader() const {
 		return *deferredShader;
-	}
-
-	void MaterialFactory::setRenderCall(RenderCall function) {
-		renderCall = function;
 	}
 
 }
