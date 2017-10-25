@@ -14,10 +14,8 @@ namespace geeL {
 	ApplicationManager* singleton = nullptr;
 
 	ApplicationManager& ApplicationManager::getInstance() {
-		if (singleton == nullptr) {
+		if (singleton == nullptr)
 			singleton = new ApplicationManager();
-
-		}
 
 		return *singleton;
 	}
@@ -25,6 +23,7 @@ namespace geeL {
 	void ApplicationManager::removeInstance() {
 		if (singleton != nullptr) {
 			delete singleton;
+			singleton = nullptr;
 		}
 	}
 
