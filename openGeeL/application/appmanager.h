@@ -20,7 +20,7 @@ namespace geeL {
 		~ApplicationManager();
 		
 		template<typename ...Args>
-		static Application& createApplicationGlobal(Args& ...args);
+		static Application& createApplication(Args& ...args);
 
 		static std::list<Application*>::iterator applicationsBegin();
 		static std::list<Application*>::iterator applicationsEnd();
@@ -33,7 +33,7 @@ namespace geeL {
 		ApplicationManager& operator= (const ApplicationManager& other) = delete;
 
 		template<typename ...Args>
-		Application& createApplication(Args& ...args);
+		Application& createApplicationLocal(Args& ...args);
 
 		static ApplicationManager& getInstance();
 		static void removeInstance();
@@ -52,7 +52,7 @@ namespace geeL {
 
 
 	template<typename ...Args>
-	inline Application& ApplicationManager::createApplication(Args& ...args) {
+	inline Application& ApplicationManager::createApplicationLocal(Args& ...args) {
 		Application* app = new Application(args...);
 		apps.push_back(app);
 
@@ -60,8 +60,8 @@ namespace geeL {
 	}
 
 	template<typename ...Args>
-	inline Application& ApplicationManager::createApplicationGlobal(Args& ...args) {
-		return getInstance().createApplication(args...);
+	inline Application& ApplicationManager::createApplication(Args& ...args) {
+		return getInstance().createApplicationLocal(args...);
 	}
 
 
