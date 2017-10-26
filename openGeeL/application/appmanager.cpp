@@ -10,21 +10,13 @@ namespace geeL {
 			delete *it;
 	}
 
-
-	ApplicationManager* singleton = nullptr;
-
+	ApplicationManager singleton;
 	ApplicationManager& ApplicationManager::getInstance() {
-		if (singleton == nullptr)
-			singleton = new ApplicationManager();
-
-		return *singleton;
+		return singleton;
 	}
 
-	void ApplicationManager::removeInstance() {
-		if (singleton != nullptr) {
-			delete singleton;
-			singleton = nullptr;
-		}
+	Application& ApplicationManager::getFirst() {
+		return **getInstance().apps.begin();
 	}
 
 	std::list<Application*>::iterator ApplicationManager::applicationsBegin() {
@@ -38,14 +30,21 @@ namespace geeL {
 
 
 	float RenderTime::deltaTime() {
+#if MULTI_APPLICATION_SUPPORT
 		for (auto it(ApplicationManager::applicationsBegin()); it != ApplicationManager::applicationsEnd(); it++) {
 			Application& app = **it;
 			const ContinuousThread* thread = app.getCurrentThread();
 
 			if (thread != nullptr) return thread->getTime().deltaTime();
 		}
-
+		
 		return 0.f;
+
+#else
+		Application& app = ApplicationManager::getFirst();
+		return app.getCurrentTime().deltaTime();
+
+#endif
 	}
 
 }
