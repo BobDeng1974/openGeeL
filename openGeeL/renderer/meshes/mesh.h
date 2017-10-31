@@ -12,7 +12,6 @@
 
 namespace geeL {
 
-	class Material;
 	class MaterialContainer;
 	class Skeleton;
 
@@ -65,7 +64,7 @@ namespace geeL {
 
 	public:
 		Mesh() {}
-		Mesh(MaterialContainer& material) : material(&material) {}
+		Mesh(const std::string& name, MaterialContainer& material) : name(name), material(&material) {}
 
 		virtual void draw() const = 0;
 
@@ -76,9 +75,11 @@ namespace geeL {
 		virtual unsigned int getIndex(size_t i) const = 0;
 		virtual const glm::vec3& getVertexPosition(size_t i) const = 0;
 
+		const std::string& getName() const;
 		MaterialContainer& getMaterialContainer() const;
 
 	protected:
+		std::string name;
 		MaterialContainer* material;
 
 	};
@@ -89,7 +90,8 @@ namespace geeL {
 
 	public:
 		StaticMesh() : Mesh() {}
-		StaticMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, MaterialContainer& material);
+		StaticMesh(const std::string& name, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, 
+			MaterialContainer& material);
 
 		virtual void draw() const;
 
@@ -114,7 +116,7 @@ namespace geeL {
 	class SkinnedMesh : public Mesh {
 
 	public:
-		SkinnedMesh(std::vector<SkinnedVertex>& vertices, std::vector<unsigned int>& indices, 
+		SkinnedMesh(const std::string& name, std::vector<SkinnedVertex>& vertices, std::vector<unsigned int>& indices,
 			std::map<std::string, MeshBoneData>& bones, MaterialContainer& material);
 
 		virtual void draw() const;
@@ -146,6 +148,16 @@ namespace geeL {
 
 		void init();
 	};
+
+
+
+
+	inline const std::string& Mesh::getName() const {
+		return name;
+	}
+
+
+
 }
 
 #endif

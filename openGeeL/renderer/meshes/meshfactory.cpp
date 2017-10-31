@@ -98,10 +98,13 @@ namespace geeL {
 	}
 
 	void MeshFactory::processStaticNode(StaticModel& model, string directory, aiNode* node, const aiScene* scene) {
+		string name = node->mName.C_Str();
 
 		//Add mesh if current node contains one
 		for (unsigned int i = 0; i < node->mNumMeshes; i++) {
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+
+			
 
 			vector<Vertex> vertices;
 			vector<unsigned int> indices;
@@ -118,7 +121,7 @@ namespace geeL {
 			mat.addTextures(textures);
 			
 
-			model.addMesh(StaticMesh(vertices, indices, mat));
+			model.addMesh(StaticMesh(name, vertices, indices, mat));
 		}
 
 		//Traverse node tree
@@ -154,6 +157,8 @@ namespace geeL {
 	void MeshFactory::processSkinnedNode(SkinnedModel& model, Transform& bone, 
 		string directory, aiNode* node, const aiScene* scene) {
 
+		string name = node->mName.C_Str();
+
 		//Add mesh if current node contains one
 		for (unsigned int i = 0; i < node->mNumMeshes; i++) {
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
@@ -174,7 +179,7 @@ namespace geeL {
 			processMaterial(mat, mesh, scene);
 			mat.addTextures(textures);
 
-			model.addMesh(SkinnedMesh(vertices, indices, bones, mat));
+			model.addMesh(SkinnedMesh(name, vertices, indices, bones, mat));
 		}
 
 		//Traverse node tree
