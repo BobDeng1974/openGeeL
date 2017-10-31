@@ -197,9 +197,9 @@ namespace geeL {
 	}
 
 	
-	void RenderScene::draw(ShadingMethod shadingMethod) const {
-		iterRenderObjects(shadingMethod, [this](const MeshRenderer& object, SceneShader& shader) {
-			pipeline.dynamicBind(lightManager, shader, *camera);
+	void RenderScene::draw(ShadingMethod shadingMethod, const Camera& camera) const {
+		iterRenderObjects(shadingMethod, [this, &camera](const MeshRenderer& object, SceneShader& shader) {
+			pipeline.dynamicBind(lightManager, shader, camera);
 
 			if (object.isActive())
 				object.draw(shader);
@@ -216,8 +216,8 @@ namespace geeL {
 		if (&camera != this->camera)
 			pipeline.bindCamera(camera);
 
-		draw(ShadingMethod::Deferred);
-		draw(ShadingMethod::DeferredSkinned);
+		draw(ShadingMethod::Deferred, camera);
+		draw(ShadingMethod::DeferredSkinned, camera);
 	}
 
 	void RenderScene::drawDefaultForward(const Camera& camera) const {
@@ -239,8 +239,8 @@ namespace geeL {
 		if (&camera != this->camera)
 			pipeline.bindCamera(camera);
 
-		draw(ShadingMethod::Forward);
-		draw(ShadingMethod::ForwardSkinned);
+		draw(ShadingMethod::Forward, camera);
+		draw(ShadingMethod::ForwardSkinned, camera);
 	}
 
 	void RenderScene::drawObjects(SceneShader& shader, const Camera* const camera) const {

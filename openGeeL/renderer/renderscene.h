@@ -104,7 +104,7 @@ namespace geeL {
 		virtual void run();
 		
 		//Draw all objects whose materials have given shading method
-		void draw(ShadingMethod shadingMethod) const;
+		void draw(ShadingMethod shadingMethod, const Camera& camera) const;
 
 		//Draw all those objects with default material (Deferred shading)
 		void drawDefault() const;
