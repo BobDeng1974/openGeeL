@@ -134,6 +134,27 @@ namespace geeL{
 		}
 	}
 
+
+	void MeshRenderer::changeMaterial(SceneShader& shader, const Mesh& mesh) {
+		//Find mesh in this mesh renderer
+		for (auto it = materials.begin(); it != materials.end(); it++) {
+			std::list<MaterialMapping>* elements = &it->second;
+
+			for (auto et = elements->begin(); et != elements->end(); et++) {
+				MaterialMapping& container = *et;
+
+				if (container.mesh == &mesh) {
+					//Create new material with given shader and old container
+					Material material(container.material, shader);
+					changeMaterial(material, mesh);
+
+					return;
+				}
+			}
+		}
+	}
+
+
 	
 	void MeshRenderer::initMaterials(SceneShader& shader) {
 		model->iterateMeshes([&](const Mesh& mesh) {
@@ -167,6 +188,11 @@ namespace geeL{
 		}
 	}
 
+
+	void MeshRenderer::iterateMeshes(std::function<void(const Mesh&)> function) const {
+		model->iterateMeshes(function);
+	}
+
 	void MeshRenderer::iterateMaterials(std::function<void(MaterialContainer&)> function) const {
 		for (auto it = materials.begin(); it != materials.end(); it++) {
 			const std::list<MaterialMapping>& elements = it->second;
@@ -192,6 +218,7 @@ namespace geeL{
 		}
 	}
 
+	
 	void MeshRenderer::addMaterialChangeListener(std::function<void(MeshRenderer&, Material, Material)> listener) {
 		materialListeners.push_back(listener);
 	}

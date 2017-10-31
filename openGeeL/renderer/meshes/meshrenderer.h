@@ -58,11 +58,18 @@ namespace geeL {
 		//Draw only the meshes without material properties with given shader
 		virtual void drawGeometry(const RenderShader& shader) const;
 
+
 		//Customize material of given mesh (If it is actually part of this mesh renderer)
 		void changeMaterial(Material& material, const Mesh& mesh);
+
+		//Customize material of given mesh but keep original material container and 
+		//only change its shader (If it is actually part of this mesh renderer)
+		void changeMaterial(SceneShader& material, const Mesh& mesh);
+		
 		void addMaterialChangeListener(std::function<void(MeshRenderer&, Material, Material)> listener);
 
-		
+
+		void iterateMeshes(std::function<void(const Mesh&)> function) const;
 		void iterateMaterials(std::function<void(MaterialContainer&)> function) const;
 		void iterateShaders(std::function<void(const SceneShader&)> function) const;
 		void iterateShaders(std::function<void(SceneShader&)> function);

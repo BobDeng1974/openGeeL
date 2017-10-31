@@ -39,6 +39,13 @@ namespace geeL {
 		Material();
 		Material(SceneShader& shader, MaterialContainer& container);
 
+		//Copy other material but use given shader
+		Material(const Material& other, SceneShader& shader);
+
+		//Copy other material but use given material container
+		Material(const Material& other, MaterialContainer& container);
+
+
 		void bind() const;
 
 		const SceneShader& getShader() const;
