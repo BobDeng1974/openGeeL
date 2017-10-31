@@ -21,7 +21,6 @@ namespace geeL {
 	class SceneShader;
 	class Shader;
 	class ShadowmapRepository;
-	const RenderScene;
 
 	enum class ShaderTransformSpace;
 	enum class LightType {

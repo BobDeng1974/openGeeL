@@ -65,10 +65,23 @@ namespace geeL {
 	}
 
 	void Scene::addShader(SceneShader& shader) {
-		auto it = renderObjects.find(&shader);
-		if (it == renderObjects.end()) {
+		bool needAdd = false;
+
+		auto it = renderObjects.find(shader.getMethod());
+		if (it == renderObjects.end())
+			needAdd = true;
+		else {
+			ShaderMapping& shaders = it->second;
+			auto et = shaders.find(&shader);
+
+			needAdd = (et == shaders.end());
+		}
+
+		if (needAdd) {
 			pipeline.staticBind(*camera, lightManager, shader);
-			if(shader.getUseLight()) lightManager.addShaderListener(shader);
+			if (shader.getUseLight()) lightManager.addShaderListener(shader);
+
+			renderObjects[shader.getMethod()][&shader] = TransformMapping();
 		}
 	}
 
@@ -81,22 +94,32 @@ namespace geeL {
 				updateMeshRenderer(renderer, oldMaterial, newMaterial);
 			});
 
-			renderObjects[&shader][renderer.transform.getID()] = &renderer;
+			renderObjects[shader.getMethod()][&shader][renderer.transform.getID()] = &renderer;
 		});
+	}
+
+
+
+	void Scene::removeMeshRenderer(MeshRenderer& renderer, SceneShader& shader) {
+		auto itMethod = renderObjects.find(shader.getMethod());
+		if (itMethod != renderObjects.end()) {
+			auto& shaders = (*itMethod).second;
+			auto itShader = shaders.find(&shader);
+
+			if (itShader != shaders.end()) {
+				auto& objects = (*itShader).second;
+				auto obj = objects.find(renderer.transform.getID());
+				if (obj != objects.end())
+					objects.erase(obj);
+
+			}
+		}
 	}
 
 	void Scene::removeMeshRenderer(MeshRenderer& renderer) {
 		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
-			auto shaders = renderObjects.find(&shader);
-			if (shaders != renderObjects.end()) {
-				auto& objects = (*shaders).second;
-
-				auto obj = objects.find(renderer.transform.getID());
-				if (obj != objects.end())
-					objects.erase(obj);
-			}
+			removeMeshRenderer(renderer, shader);
 		});
-
 	}
 
 
@@ -104,19 +127,12 @@ namespace geeL {
 		SceneShader& oldShader = oldMaterial.getShader();
 		SceneShader& newShader = newMaterial.getShader();
 
-		if (&oldShader == &newShader) return;
+		if (&oldShader == &newShader || oldShader.getMethod() == newShader.getMethod()) return;
 
 		//Remove mesh renderer from old materials shaders bucket
-		auto shaders = renderObjects.find(&oldShader);
-		if (shaders != renderObjects.end()) {
-			auto& objects = (*shaders).second;
+		removeMeshRenderer(renderer, oldShader);
 
-			auto obj = objects.find(renderer.transform.getID());
-			if (obj != objects.end())
-				objects.erase(obj);
-		}
-
-		renderObjects[&newShader][renderer.transform.getID()] = &renderer;
+		renderObjects[newShader.getMethod()][&newShader][renderer.transform.getID()] = &renderer;
 	}
 
 
@@ -180,13 +196,13 @@ namespace geeL {
 		unlock();
 	}
 
+	
+	void RenderScene::draw(ShadingMethod shadingMethod) const {
+		iterRenderObjects(shadingMethod, [this](const MeshRenderer& object, SceneShader& shader) {
+			pipeline.dynamicBind(lightManager, shader, *camera);
 
-	void RenderScene::draw(SceneShader& shader) {
-		pipeline.dynamicBind(lightManager, shader, *camera);
-
-		iterRenderObjects(shader, [&](const MeshRenderer& object) {
 			if (object.isActive())
-				object.draw();
+				object.draw(shader);
 		});
 	}
 
@@ -195,25 +211,13 @@ namespace geeL {
 	}
 
 	void RenderScene::drawDefault(const Camera& camera) const {
-
 		//Only bind camera if it is external since the scene 
 		//camera was already bound during update process 
 		if (&camera != this->camera)
 			pipeline.bindCamera(camera);
 
-		SceneShader* shader = &materialFactory.getDeferredShader();
-		pipeline.dynamicBind(lightManager, *shader, camera);
-		iterRenderObjects(*shader, [&](const MeshRenderer& object) {
-			if (object.isActive())
-				object.draw(*shader);
-		});
-
-		shader = &materialFactory.getDefaultShader(ShadingMethod::DeferredSkinned);
-		pipeline.dynamicBind(lightManager, *shader, camera);
-		iterRenderObjects(*shader, [&](const MeshRenderer& object) {
-			if (object.isActive())
-				object.draw(*shader);
-		});
+		draw(ShadingMethod::Deferred);
+		draw(ShadingMethod::DeferredSkinned);
 	}
 
 	void RenderScene::drawDefaultForward(const Camera& camera) const {
@@ -230,29 +234,13 @@ namespace geeL {
 	}
 
 	void RenderScene::drawGeneric(const Camera& camera) const {
-
 		//Only bind camera if it is external since the scene 
 		//camera was already bound during update process 
 		if (&camera != this->camera)
 			pipeline.bindCamera(camera);
 
-		//Draw all registered objects with shaders other than deferred shader
-		const SceneShader& defShader = materialFactory.getDeferredShader();
-		const SceneShader& defSkinnedShader = materialFactory.getDefaultShader(ShadingMethod::DeferredSkinned);
-		for (auto it = renderObjects.begin(); it != renderObjects.end(); it++) {
-			SceneShader* shader = it->first;
-			if (shader == &defShader || shader == &defSkinnedShader)
-				continue;
-
-			pipeline.dynamicBind(lightManager, *shader, camera);
-
-			auto& elements = it->second;
-			for (auto et = elements.begin(); et != elements.end(); et++) {
-				const MeshRenderer& object = *et->second;
-				if (object.isActive())
-					object.draw(*shader);
-			}
-		}
+		draw(ShadingMethod::Forward);
+		draw(ShadingMethod::ForwardSkinned);
 	}
 
 	void RenderScene::drawObjects(SceneShader& shader, const Camera* const camera) const {
@@ -261,15 +249,10 @@ namespace geeL {
 		else
 			pipeline.dynamicBind(lightManager, shader);
 
-		for (auto it = renderObjects.begin(); it != renderObjects.end(); it++) {
-			auto& elements = it->second;
-			for (auto et = elements.begin(); et != elements.end(); et++) {
-				const MeshRenderer& object = *et->second;
-
-				if (object.isActive())
-					object.drawExclusive(shader);
-			}
-		}
+		iterRenderObjects([&shader](const MeshRenderer& object) {
+			if (object.isActive())
+				object.drawExclusive(shader);
+		});
 	}
 	
 	void RenderScene::drawGeometry(const RenderShader& shader) const {
@@ -327,11 +310,16 @@ namespace geeL {
 
 
 	void Scene::iterAllObjects(function<void(MeshRenderer&)> function) {
-		for (auto it = renderObjects.begin(); it != renderObjects.end(); it++) {
-			auto& elements = it->second;
-			for (auto et = elements.begin(); et != elements.end(); et++) {
-				MeshRenderer& object = *et->second;
-				function(object);
+		for (auto it(renderObjects.begin()); it != renderObjects.end(); it++) {
+			ShaderMapping& shaders = it->second;
+
+			for (auto et(shaders.begin()); et != shaders.end(); et++) {
+				TransformMapping& elements = et->second;
+
+				for (auto ut(elements.begin()); ut != elements.end(); ut++) {
+					MeshRenderer& object = *ut->second;
+					function(object);
+				}
 			}
 		}
 	}
@@ -350,22 +338,51 @@ namespace geeL {
 
 
 	void Scene::iterRenderObjects(function<void(const MeshRenderer&)> function) const {
-		for (auto it = renderObjects.begin(); it != renderObjects.end(); it++) {
-			auto& elements = it->second;
-			for (auto et = elements.begin(); et != elements.end(); et++) {
-				const MeshRenderer& object = *et->second;
-				function(object);
+		for (auto it(renderObjects.begin()); it != renderObjects.end(); it++) {
+			const ShaderMapping& shaders = it->second;
+			
+			for (auto et(shaders.begin()); et != shaders.end(); et++) {
+				const TransformMapping& elements = et->second;
+
+				for (auto ut(elements.begin()); ut != elements.end(); ut++) {
+					const MeshRenderer& object = *ut->second;
+					function(object);
+				}
 			}
 		}
 	}
 
 	void Scene::iterRenderObjects(SceneShader& shader, function<void(const MeshRenderer&)> function) const {
-		auto it = renderObjects.find(&shader);
-		if (it != renderObjects.end()) {
-			auto& elements = it->second;
-			for (auto et = elements.begin(); et != elements.end(); et++) {
-				const MeshRenderer& object = *et->second;
-				function(object);
+		auto itMethod = renderObjects.find(shader.getMethod());
+		if (itMethod != renderObjects.end()) {
+			const ShaderMapping& shaders = itMethod->second;
+			auto itShader = shaders.find(&shader);
+
+			if (itShader != shaders.end()) {
+				const TransformMapping& elements = itShader->second;
+
+				for (auto ut(elements.begin()); ut != elements.end(); ut++) {
+					const MeshRenderer& object = *ut->second;
+					function(object);
+				}
+
+			}
+		}
+	}
+
+	void Scene::iterRenderObjects(ShadingMethod shadingMethod, std::function<void(const MeshRenderer&, SceneShader&)> function) const {
+		auto itMethod = renderObjects.find(shadingMethod);
+		if (itMethod != renderObjects.end()) {
+			const ShaderMapping& shaders = itMethod->second;
+
+			for (auto itShader(shaders.begin()); itShader != shaders.end(); itShader++) {
+				SceneShader& shader = *itShader->first;
+				const TransformMapping& elements = itShader->second;
+
+				for (auto ut(elements.begin()); ut != elements.end(); ut++) {
+					const MeshRenderer& object = *ut->second;
+					function(object, shader);
+				}
 			}
 		}
 	}

@@ -36,7 +36,7 @@ namespace geeL {
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);	
 
-		voxelShader->bind<glm::vec2>("resolution", glm::vec2(dimensions));
+		voxelShader->bind<glm::vec2>("resolution", glm::vec2(float(dimensions)));
 
 		const Camera& camera = scene.getCamera();
 		voxelShader->bind<glm::vec3>("cameraPosition", camera.transform.getPosition());

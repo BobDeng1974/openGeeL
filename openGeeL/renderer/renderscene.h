@@ -7,6 +7,7 @@
 #include <mutex>
 #include <list>
 #include "threading.h"
+#include "shader/defshading.h"
 
 namespace geeL {
 
@@ -30,6 +31,9 @@ namespace geeL {
 
 	struct ScreenInfo;
 	enum class CullingMode;
+
+	using TransformMapping = std::map<unsigned int, MeshRenderer*>;
+	using ShaderMapping    = std::map<SceneShader*, TransformMapping>;
 
 
 	//Class that holds scene information (Objects, cameras, lights, ...)
@@ -58,6 +62,8 @@ namespace geeL {
 
 		void iterRenderObjects(std::function<void(const MeshRenderer&)> function) const;
 		void iterRenderObjects(SceneShader& shader, std::function<void(const MeshRenderer&)> function) const;
+		void iterRenderObjects(ShadingMethod shadingMethod, 
+			std::function<void(const MeshRenderer&, SceneShader&)> function) const;
 
 	protected:
 		LightManager& lightManager;
@@ -68,12 +74,12 @@ namespace geeL {
 
 		std::list<SceneRequester*> sceneRequester;
 
-		//Objects are indexed by their used shaders (and their transforms id) to allow grouped drawing and 
+		//Objects are indexed by their used shaders, shading method their transforms id to allow grouped drawing and 
 		//therefore no unnecessary shader programm switching. Objects with multiple materials are linked to
 		//all their shaders respectively
-		std::map<SceneShader*, std::map<unsigned int, MeshRenderer*>> renderObjects;
+		std::map<ShadingMethod, ShaderMapping> renderObjects;
 
-
+		void removeMeshRenderer(MeshRenderer& renderer, SceneShader& shader);
 		void updateMeshRenderer(MeshRenderer& renderer, Material oldMaterial, Material newMaterial);
 
 	};
@@ -97,8 +103,8 @@ namespace geeL {
 		//Tick function that updates scene information of current frame
 		virtual void run();
 		
-		//Draw all objects that are linked to given shader
-		void draw(SceneShader& shader);
+		//Draw all objects whose materials have given shading method
+		void draw(ShadingMethod shadingMethod) const;
 
 		//Draw all those objects with default material (Deferred shading)
 		void drawDefault() const;

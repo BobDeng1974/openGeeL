@@ -49,6 +49,7 @@ namespace geeL {
 		void bindMatrices() const;
 
 		ShaderTransformSpace getSpace() const;
+		ShadingMethod getMethod() const;
 
 	private:
 		FragmentShader shader;
@@ -80,6 +81,10 @@ namespace geeL {
 
 	inline ShaderTransformSpace SceneShader::getSpace() const {
 		return space;
+	}
+
+	inline ShadingMethod SceneShader::getMethod() const {
+		return shadingMethod;
 	}
 
 }
