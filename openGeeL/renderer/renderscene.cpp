@@ -208,7 +208,7 @@ namespace geeL {
 				object.draw(*shader);
 		});
 
-		shader = &materialFactory.getDefaultShader(DefaultShading::DeferredSkinned);
+		shader = &materialFactory.getDefaultShader(ShadingMethod::DeferredSkinned);
 		pipeline.dynamicBind(lightManager, *shader, camera);
 		iterRenderObjects(*shader, [&](const MeshRenderer& object) {
 			if (object.isActive())
@@ -238,7 +238,7 @@ namespace geeL {
 
 		//Draw all registered objects with shaders other than deferred shader
 		const SceneShader& defShader = materialFactory.getDeferredShader();
-		const SceneShader& defSkinnedShader = materialFactory.getDefaultShader(DefaultShading::DeferredSkinned);
+		const SceneShader& defSkinnedShader = materialFactory.getDefaultShader(ShadingMethod::DeferredSkinned);
 		for (auto it = renderObjects.begin(); it != renderObjects.end(); it++) {
 			SceneShader* shader = it->first;
 			if (shader == &defShader || shader == &defSkinnedShader)

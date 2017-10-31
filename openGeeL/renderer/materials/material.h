@@ -10,13 +10,6 @@ namespace geeL {
 	class Texture2D;
 
 
-	enum MaterialType {
-		Opaque = 0,
-		Cutout = 1,
-		Transparent = 2
-	};
-
-
 	class MaterialContainer {
 
 	public:
@@ -57,6 +50,7 @@ namespace geeL {
 		MaterialContainer* container;
 
 	};
+
 }
 
 #endif

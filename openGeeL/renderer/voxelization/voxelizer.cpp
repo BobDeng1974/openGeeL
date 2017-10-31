@@ -18,7 +18,7 @@ namespace geeL {
 	Voxelizer::Voxelizer(const RenderScene& scene, unsigned int dimensions) : scene(scene), dimensions(dimensions) {
 		FragmentShader frag = FragmentShader("renderer/voxelization/voxelize.frag", true, false);
 		voxelShader = new SceneShader("renderer/voxelization/voxelize.vert", "renderer/voxelization/voxelize.geom", 
-			frag, ShaderTransformSpace::World);
+			frag, ShaderTransformSpace::World, ShadingMethod::Other);
 
 		BufferUtility::generateAtomicBuffer(atomicBuffer);
 		voxelShader->mapOffset = 1;

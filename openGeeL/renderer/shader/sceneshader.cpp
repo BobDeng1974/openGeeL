@@ -5,13 +5,13 @@ using namespace std;
 
 namespace geeL {
 
-	SceneShader::SceneShader() : RenderShader(), shader(""), space(ShaderTransformSpace::View), cameraName("camera"),
-		skyboxName("skybox"), view(nullptr), model(nullptr) {}
+	SceneShader::SceneShader() : RenderShader(), shader(""), 
+		space(ShaderTransformSpace::View), view(nullptr), model(nullptr) {}
 
 	SceneShader::SceneShader(const std::string& vertexPath, const FragmentShader& fragmentPath, 
-		ShaderTransformSpace space, string cameraName, string skyboxName, ShaderProvider* const provider)
+		ShaderTransformSpace space, ShadingMethod shadingMethod, ShaderProvider* const provider)
 			: RenderShader(vertexPath.c_str(), fragmentPath.path.c_str(), provider), shader(fragmentPath), space(space), 
-				cameraName(cameraName), skyboxName(skyboxName), view(nullptr), model(nullptr) {
+				shadingMethod(shadingMethod), view(nullptr), model(nullptr) {
 
 		viewLocation = getLocation("viewMatrix");
 		modelLocation = getLocation("model");
@@ -20,9 +20,9 @@ namespace geeL {
 	}
 
 	SceneShader::SceneShader(const std::string& vertexPath, const std::string& geometryPath, const FragmentShader& fragmentPath, 
-		ShaderTransformSpace space, string cameraName, string skyboxName, ShaderProvider* const provider)
+		ShaderTransformSpace space, ShadingMethod shadingMethod, ShaderProvider* const provider)
 			: RenderShader(vertexPath.c_str(), geometryPath.c_str(), fragmentPath.path.c_str(), provider), shader(fragmentPath), 
-				space(space), cameraName(cameraName), skyboxName(skyboxName), view(nullptr), model(nullptr) {
+				space(space), shadingMethod(shadingMethod), view(nullptr), model(nullptr) {
 
 		viewLocation = getLocation("viewMatrix");
 		modelLocation = getLocation("model");

@@ -32,7 +32,7 @@ namespace geeL {
 	}
 
 	void Camera::bind(const SceneShader& shader) const {
-		shader.bind<glm::vec3>(shader.cameraName + ".position", transform.getPosition());
+		shader.bind<glm::vec3>("camera.position", transform.getPosition());
 		shader.bind<glm::mat4>("view", viewMatrix);
 		shader.bind<glm::mat4>("projection", projectionMatrix);
 	}

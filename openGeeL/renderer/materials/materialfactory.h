@@ -57,10 +57,10 @@ namespace geeL {
 
 		//Creates and returns a new shader program with given file paths
 		//for vertex and fragment shaders
-		SceneShader& CreateShader(DefaultShading shading, std::string fragmentPath);
+		SceneShader& CreateShader(ShadingMethod shading, std::string fragmentPath);
 		SceneShader& CreateShader(std::string fragmentPath, bool animated = false);
 
-		SceneShader& getDefaultShader(DefaultShading shading) const;
+		SceneShader& getDefaultShader(ShadingMethod shading) const;
 
 		//Returns default shader for static forward rendering
 		SceneShader& getForwardShader() const;

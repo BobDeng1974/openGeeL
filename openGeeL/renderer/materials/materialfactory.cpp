@@ -14,11 +14,11 @@ namespace geeL {
 
 	MaterialFactory::MaterialFactory(const GBuffer& buffer, ShaderProvider* const provider) :
 		forwardShader(new SceneShader("renderer/shaders/lighting.vert", FragmentShader("renderer/shaders/lighting.frag"), 
-			ShaderTransformSpace::World)),
+			ShaderTransformSpace::World, ShadingMethod::Forward)),
 		deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", FragmentShader(buffer.getFragmentPath(), false), 
-			ShaderTransformSpace::View)),
+			ShaderTransformSpace::View, ShadingMethod::Deferred)),
 		deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", FragmentShader(buffer.getFragmentPath()),
-			ShaderTransformSpace::View)), provider(provider) {
+			ShaderTransformSpace::View, ShadingMethod::DeferredSkinned)), provider(provider) {
 
 		forwardShader->mapOffset = 1;
 		shaders.push_back(forwardShader);
@@ -102,30 +102,30 @@ namespace geeL {
 		return *mat;
 	}
 
-	SceneShader& MaterialFactory::CreateShader(DefaultShading shading, string fragmentPath) {
+	SceneShader& MaterialFactory::CreateShader(ShadingMethod shading, string fragmentPath) {
 		std::string vertexPath;
 
 		switch (shading) {
-			case DefaultShading::DeferredStatic:
+			case ShadingMethod::Deferred:
 				vertexPath = "renderer/shaders/gbuffer.vert";
 				break;
-			case DefaultShading::DeferredSkinned:
+			case ShadingMethod::DeferredSkinned:
 				vertexPath = "renderer/shaders/gbufferanim.vert";
 				break;
-			case DefaultShading::ForwardStatic:
+			case ShadingMethod::Forward:
 				vertexPath = "renderer/shaders/lighting.vert";
 				break;
-			case DefaultShading::ForwardSkinned:
+			case ShadingMethod::ForwardSkinned:
 				vertexPath = "renderer/shaders/lighting.vert"; //TODO: create actual shader
 				break;
 		}
 
 		FragmentShader frag = FragmentShader(fragmentPath);
 
-		ShaderTransformSpace space = (shading == DefaultShading::DeferredSkinned) || (shading == DefaultShading::DeferredStatic) ?
+		ShaderTransformSpace space = (shading == ShadingMethod::DeferredSkinned) || (shading == ShadingMethod::Deferred) ?
 			ShaderTransformSpace::View : ShaderTransformSpace::World;
 
-		shaders.push_back(new SceneShader(vertexPath, frag, space, "camera", "skybox", provider));
+		shaders.push_back(new SceneShader(vertexPath, frag, space, shading, provider));
 		return *shaders.back();
 	}
 
@@ -133,23 +133,25 @@ namespace geeL {
 		std::string vertexPath = animated ? "renderer/shaders/lighting.vert"
 			: "renderer/shaders/lighting.vert"; //TODO: create actual shader
 
+		ShadingMethod shadingMethod = animated ? ShadingMethod::ForwardSkinned 
+			: ShadingMethod::Forward;
 		FragmentShader frag = FragmentShader(fragmentPath);
 
 		shaders.push_back(new SceneShader(vertexPath, frag, ShaderTransformSpace::World, 
-			"camera", "skybox", provider));
+			shadingMethod, provider));
 
 		return *shaders.back();
 	}
 	
-	SceneShader& MaterialFactory::getDefaultShader(DefaultShading shading) const {
+	SceneShader& MaterialFactory::getDefaultShader(ShadingMethod shading) const {
 		switch (shading) {
-			case DefaultShading::DeferredStatic:
+			case ShadingMethod::Deferred:
 				return *deferredShader;
-			case DefaultShading::DeferredSkinned:
+			case ShadingMethod::DeferredSkinned:
 				return *deferredAnimatedShader;
-			case DefaultShading::ForwardStatic:
+			case ShadingMethod::Forward:
 				return *forwardShader;
-			case DefaultShading::ForwardSkinned:
+			case ShadingMethod::ForwardSkinned:
 				//TODO: implement animated forward shader
 				return *forwardShader;
 		}

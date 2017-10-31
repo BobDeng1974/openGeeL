@@ -3,11 +3,18 @@
 
 namespace geeL {
 
-	enum class DefaultShading {
-		DeferredStatic,
+	enum class ShaderTransformSpace {
+		World,
+		View
+	};
+
+	enum class ShadingMethod {
+		Deferred,
 		DeferredSkinned,
-		ForwardStatic,
-		ForwardSkinned
+		Forward,
+		ForwardSkinned,
+		Other
+
 	};
 
 }

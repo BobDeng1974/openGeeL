@@ -15,7 +15,6 @@ namespace geeL {
 	//Static control class that can manage multiple applications in the same program.
 	//All applications should be instanced by this class to ensure correct render time data
 	class ApplicationManager {
-		friend class ApplicationLock;
 
 	public:
 		ApplicationManager() {}

@@ -16,7 +16,7 @@ namespace geeL {
 
 		FragmentShader frag = FragmentShader("renderer/voxelization/voxelizeTex.frag", true, false);
 		voxelShader = new SceneShader("renderer/voxelization/voxelize.vert", "renderer/voxelization/voxelize.geom",
-			frag, ShaderTransformSpace::World);
+			frag, ShaderTransformSpace::World, ShadingMethod::Other);
 
 		voxelShader->mapOffset = 1;
 	}
