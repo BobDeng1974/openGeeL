@@ -173,6 +173,7 @@ namespace geeL {
 		glm::vec3 color = material->getColor();
 
 		drawColor(context, color);
+		material->setColor(color);
 	}
 
 	void GUISnippets::drawTreeNode(GUIContext* context, const std::string& name, 
