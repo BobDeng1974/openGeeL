@@ -93,7 +93,7 @@ public:
 			});
 
 			sphere1.iterateMeshes([&](const Mesh& mesh) {
-				SceneShader& ss = materialFactory.getForwardShader();
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Forward);
 				sphere1.changeMaterial(ss, mesh);
 			});
 

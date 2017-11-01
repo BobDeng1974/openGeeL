@@ -13,6 +13,8 @@ using namespace std;
 namespace geeL {
 
 	MaterialFactory::MaterialFactory(const GBuffer& buffer, ShaderProvider* const provider) :
+		genericShader(new SceneShader("renderer/shaders/lighting.vert", FragmentShader("renderer/shaders/lighting.frag"),
+			ShaderTransformSpace::World, ShadingMethod::Generic)),
 		forwardShader(new SceneShader("renderer/shaders/lighting.vert", FragmentShader("renderer/shaders/lighting.frag"), 
 			ShaderTransformSpace::World, ShadingMethod::Forward)),
 		deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", FragmentShader(buffer.getFragmentPath(), false), 
@@ -20,7 +22,10 @@ namespace geeL {
 		deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", FragmentShader(buffer.getFragmentPath()),
 			ShaderTransformSpace::View, ShadingMethod::DeferredSkinned)), provider(provider) {
 
+		genericShader->mapOffset = 1;
 		forwardShader->mapOffset = 1;
+
+		shaders.push_back(genericShader);
 		shaders.push_back(forwardShader);
 	}
 
@@ -106,6 +111,9 @@ namespace geeL {
 		std::string vertexPath;
 
 		switch (shading) {
+			case ShadingMethod::Generic:
+				vertexPath = "renderer/shaders/lighting.vert";
+				break;
 			case ShadingMethod::Deferred:
 				vertexPath = "renderer/shaders/gbuffer.vert";
 				break;
@@ -145,6 +153,8 @@ namespace geeL {
 	
 	SceneShader& MaterialFactory::getDefaultShader(ShadingMethod shading) const {
 		switch (shading) {
+			case ShadingMethod::Generic:
+				return *genericShader;
 			case ShadingMethod::Deferred:
 				return *deferredShader;
 			case ShadingMethod::DeferredSkinned:
@@ -157,10 +167,6 @@ namespace geeL {
 		}
 
 		return *deferredShader;
-	}
-
-	SceneShader& MaterialFactory::getForwardShader() const {
-		return *forwardShader;
 	}
 
 	SceneShader& MaterialFactory::getDeferredShader() const {

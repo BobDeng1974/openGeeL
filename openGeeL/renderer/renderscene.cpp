@@ -156,7 +156,8 @@ namespace geeL {
 			: Scene(world, lightManager, pipeline, camera), 
 				materialFactory(materialFactory), input(input) {
 	
-		addShader(materialFactory.getForwardShader());
+		addShader(materialFactory.getDefaultShader(ShadingMethod::Generic));
+		addShader(materialFactory.getDefaultShader(ShadingMethod::Forward));
 	}
 
 	
@@ -239,7 +240,7 @@ namespace geeL {
 	}
 
 	void RenderScene::drawDefaultForward(const Camera& camera) const {
-		SceneShader& shader = materialFactory.getForwardShader();
+		SceneShader& shader = materialFactory.getDefaultShader(ShadingMethod::Generic);
 
 		shader.bind<glm::mat4>("projection", camera.getProjectionMatrix());
 		shader.bind<glm::vec3>("cameraPosition", camera.transform.getPosition());

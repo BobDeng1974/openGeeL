@@ -62,15 +62,13 @@ namespace geeL {
 
 		SceneShader& getDefaultShader(ShadingMethod shading) const;
 
-		//Returns default shader for static forward rendering
-		SceneShader& getForwardShader() const;
-
 		//Returns default shader for static deferred rendering
 		SceneShader& getDeferredShader() const;
 
 	private:
 		ShaderProvider* const provider;
 
+		SceneShader* genericShader;
 		SceneShader* forwardShader;
 		SceneShader* deferredShader;
 		SceneShader* deferredAnimatedShader;
