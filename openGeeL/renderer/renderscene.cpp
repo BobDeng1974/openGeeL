@@ -128,7 +128,7 @@ namespace geeL {
 		SceneShader& newShader = newMaterial.getShader();
 
 		if (&oldShader == &newShader || oldShader.getMethod() == newShader.getMethod()) return;
-
+		
 		//Remove mesh renderer from old materials shaders bucket
 		removeMeshRenderer(renderer, oldShader);
 
@@ -206,6 +206,24 @@ namespace geeL {
 		});
 	}
 
+	void RenderScene::drawSimple(ShadingMethod shadingMethod, const Camera & camera) const {
+		SceneShader* currentShader = nullptr;
+
+		iterRenderObjects(shadingMethod, [this, &camera, &currentShader](const MeshRenderer& object, SceneShader& shader) {
+			if (currentShader != &shader) {
+				shader.bind<glm::mat4>("projection", camera.getProjectionMatrix());
+				shader.bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
+
+				pipeline.dynamicBind(lightManager, shader, camera);
+				currentShader = &shader;
+			}
+
+			if (object.isActive())
+				object.draw(shader);
+		});
+	}
+
+
 	void RenderScene::drawDefault() const {
 		drawDefault(*camera);
 	}
@@ -234,13 +252,8 @@ namespace geeL {
 	}
 
 	void RenderScene::drawGeneric(const Camera& camera) const {
-		//Only bind camera if it is external since the scene 
-		//camera was already bound during update process 
-		if (&camera != this->camera)
-			pipeline.bindCamera(camera);
-
-		draw(ShadingMethod::Forward, camera);
-		draw(ShadingMethod::ForwardSkinned, camera);
+		drawSimple(ShadingMethod::Forward, camera);
+		drawSimple(ShadingMethod::ForwardSkinned, camera);
 	}
 
 	void RenderScene::drawObjects(SceneShader& shader, const Camera* const camera) const {
@@ -305,11 +318,12 @@ namespace geeL {
 		camera->updateDepth(info);
 	}
 
-
-
+	
 
 
 	void Scene::iterAllObjects(function<void(MeshRenderer&)> function) {
+
+		std::set<MeshRenderer*> renderers;
 		for (auto it(renderObjects.begin()); it != renderObjects.end(); it++) {
 			ShaderMapping& shaders = it->second;
 
@@ -318,7 +332,14 @@ namespace geeL {
 
 				for (auto ut(elements.begin()); ut != elements.end(); ut++) {
 					MeshRenderer& object = *ut->second;
-					function(object);
+
+					//Only call method if it hasen't been called on same renderer before.
+					//This check is necessary because same renderer can be in present in 
+					//several shader buckets
+					if(renderers.find(&object) == renderers.end())
+						function(object);
+
+					renderers.emplace(&object);
 				}
 			}
 		}

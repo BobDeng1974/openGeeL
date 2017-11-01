@@ -82,14 +82,19 @@ public:
 			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 2.f, 4.f), vec3(0.f), vec3(1.f));
 			MeshRenderer& sphere1 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/sphere.obj"),
 				meshTransform4, CullingMode::cullFront, "Sphere");
-			//scene.addMeshRenderer(sphere1);
+			scene.addMeshRenderer(sphere1);
 			//physics.addSphere(1.f, meshTransform4, RigidbodyProperties(10.f, false));
 			//physics.addMesh(sphere1.getModel(), meshTransform4, RigidbodyProperties(10.f, false));
-
+			
 			sphere1.iterateMaterials([&](MaterialContainer& container) {
 				container.setVectorValue("Color", vec3(0.f));
 				container.setFloatValue("Roughness", 0.05f);
 				container.setFloatValue("Metallic", 0.5f);
+			});
+
+			sphere1.iterateMeshes([&](const Mesh& mesh) {
+				SceneShader& ss = materialFactory.getForwardShader();
+				sphere1.changeMaterial(ss, mesh);
 			});
 
 

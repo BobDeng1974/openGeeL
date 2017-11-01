@@ -156,6 +156,8 @@ namespace geeL {
 		const MaterialFactory& materialFactory;
 		std::mutex mutex;
 
+		void RenderScene::drawSimple(ShadingMethod shadingMethod, const Camera& camera) const;
+
 	};
 
 }
