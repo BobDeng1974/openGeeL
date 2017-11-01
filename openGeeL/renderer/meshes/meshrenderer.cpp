@@ -129,6 +129,10 @@ namespace geeL{
 				for (auto it(materialListeners.begin()); it != materialListeners.end(); it++)
 					(*it)(*this, oldMaterial, material);
 
+				//Remove shader bucket if all associated materials have been removed
+				if (elements->size() == 0)
+					materials.erase(it);
+
 				return;
 			}
 		}
