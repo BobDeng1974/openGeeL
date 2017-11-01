@@ -19,15 +19,15 @@ uniform mat4 projection;
 
 
 void main() {
-	vec4 localPosition = modelView * vec4(position, 1.0f);
-
-	normal = normalize(transInvModelView * norm);
-	fragPosition = vec3(localPosition);
+	vec4 localPosition = modelView * vec4(position, 1.f);
+	normal = norm;
+	fragPosition = (model * vec4(position, 1.f)).xyz;
 	texCoords = texCoordss;
 
-	vec3 T = normalize(transInvModelView * tangent);
-	vec3 B = normalize(transInvModelView * bitangent);
-	vec3 N = normalize(transInvModelView * norm);
+	mat3 normalMat = mat3(model);
+	vec3 T = normalize(normalMat * tangent);
+	vec3 B = normalize(normalMat * bitangent);
+	vec3 N = normalize(normalMat * norm);
 	TBN = mat3(T, B, N);
 
     gl_Position = projection * localPosition;

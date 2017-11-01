@@ -333,7 +333,7 @@ namespace geeL {
 				for (auto ut(elements.begin()); ut != elements.end(); ut++) {
 					MeshRenderer& object = *ut->second;
 
-					//Only call method if it hasen't been called on same renderer before.
+					//Only call method if it hasn't been called on same renderer before.
 					//This check is necessary because same renderer can be in present in 
 					//several shader buckets
 					if(renderers.find(&object) == renderers.end())
