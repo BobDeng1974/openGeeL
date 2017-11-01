@@ -55,15 +55,13 @@ namespace geeL {
 		//Creates and returns a new materials with given shading
 		GenericMaterialContainer& CreateMaterial(RenderShader& shader);
 
-		//Creates and returns a new shader program with given file paths
-		//for vertex and fragment shaders
+		//Creates and returns a new shader program from given fragment path
+		//Note: Only generic and forward shading methods allowed
 		SceneShader& CreateShader(ShadingMethod shading, std::string fragmentPath);
-		SceneShader& CreateShader(std::string fragmentPath, bool animated = false);
-
-		SceneShader& getDefaultShader(ShadingMethod shading) const;
 
 		//Returns default shader for static deferred rendering
 		SceneShader& getDeferredShader() const;
+		SceneShader& getDefaultShader(ShadingMethod shading) const;
 
 	private:
 		ShaderProvider* const provider;

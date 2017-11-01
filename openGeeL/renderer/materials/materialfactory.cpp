@@ -1,3 +1,4 @@
+#include <iostream>
 #include "shader/sceneshader.h"
 #include "texturing/imagetexture.h"
 #include "texturing/envmap.h"
@@ -109,52 +110,41 @@ namespace geeL {
 
 	SceneShader& MaterialFactory::CreateShader(ShadingMethod shading, string fragmentPath) {
 		std::string vertexPath;
+		ShaderTransformSpace space;
 
 		switch (shading) {
 			case ShadingMethod::Generic:
 				vertexPath = "renderer/shaders/lighting.vert";
+				space = ShaderTransformSpace::World;
 				break;
-			case ShadingMethod::Deferred:
-				vertexPath = "renderer/shaders/gbuffer.vert";
-				break;
-			case ShadingMethod::DeferredSkinned:
-				vertexPath = "renderer/shaders/gbufferanim.vert";
+			case ShadingMethod::GenericSkinned:
+				vertexPath = "renderer/shaders/lighting.vert"; //TODO: create actual shader
+				space = ShaderTransformSpace::World;
 				break;
 			case ShadingMethod::Forward:
 				vertexPath = "renderer/shaders/lighting.vert";
+				space = ShaderTransformSpace::View;
 				break;
 			case ShadingMethod::ForwardSkinned:
 				vertexPath = "renderer/shaders/lighting.vert"; //TODO: create actual shader
+				space = ShaderTransformSpace::View;
 				break;
+			default:
+				throw "This shading method isn't allowed\n";
 		}
 
 		FragmentShader frag = FragmentShader(fragmentPath);
-
-		ShaderTransformSpace space = (shading == ShadingMethod::DeferredSkinned) || (shading == ShadingMethod::Deferred) ?
-			ShaderTransformSpace::View : ShaderTransformSpace::World;
 
 		shaders.push_back(new SceneShader(vertexPath, frag, space, shading, provider));
 		return *shaders.back();
 	}
 
-	SceneShader& MaterialFactory::CreateShader(std::string fragmentPath, bool animated) {
-		std::string vertexPath = animated ? "renderer/shaders/lighting.vert"
-			: "renderer/shaders/lighting.vert"; //TODO: create actual shader
-
-		ShadingMethod shadingMethod = animated ? ShadingMethod::ForwardSkinned 
-			: ShadingMethod::Forward;
-		FragmentShader frag = FragmentShader(fragmentPath);
-
-		shaders.push_back(new SceneShader(vertexPath, frag, ShaderTransformSpace::World, 
-			shadingMethod, provider));
-
-		return *shaders.back();
-	}
-	
 	SceneShader& MaterialFactory::getDefaultShader(ShadingMethod shading) const {
 		switch (shading) {
 			case ShadingMethod::Generic:
 				return *genericShader;
+			case ShadingMethod::GenericSkinned:
+				return *genericShader; //TODO: create actual shader
 			case ShadingMethod::Deferred:
 				return *deferredShader;
 			case ShadingMethod::DeferredSkinned:
@@ -162,8 +152,7 @@ namespace geeL {
 			case ShadingMethod::Forward:
 				return *forwardShader;
 			case ShadingMethod::ForwardSkinned:
-				//TODO: implement animated forward shader
-				return *forwardShader;
+				return *forwardShader; //TODO: create actual shader
 		}
 
 		return *deferredShader;

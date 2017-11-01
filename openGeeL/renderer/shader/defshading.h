@@ -10,6 +10,7 @@ namespace geeL {
 
 	enum class ShadingMethod {
 		Generic,
+		GenericSkinned,
 		Deferred,
 		DeferredSkinned,
 		Forward,
