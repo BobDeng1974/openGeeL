@@ -36,8 +36,8 @@ using namespace std;
 namespace geeL {
 
 	DeferredRenderer::DeferredRenderer(RenderWindow& window, Input& inputManager, SceneRender& lighting,
-		RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer)
-			: Renderer(window, inputManager, context), gBuffer(gBuffer),
+		RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer, ForwardBuffer* fBuffer)
+			: Renderer(window, inputManager, context), gBuffer(gBuffer), fBuffer(fBuffer),
 				ssao(nullptr), lighting(lighting), toggle(0) {
 
 		effects.push_back(PostEffectRender(nullptr, &def));
@@ -68,6 +68,8 @@ namespace geeL {
 		addRequester(lighting);
 		ScreenQuad& defQuad = ScreenQuad::get();
 		defQuad.init();
+
+		if(fBuffer != nullptr) fBuffer->init(*texture1);
 	}
 
 
@@ -111,6 +113,16 @@ namespace geeL {
 		//Lighting & forward pass
 		stackBuffer.push(*texture1);
 		stackBuffer.fill(lightingPassFunc);
+
+
+		if (fBuffer != nullptr) {
+			fBuffer->fill([this]() {
+				glClear(GL_DEPTH_BUFFER_BIT);
+				fBuffer->copyDepth(gBuffer);
+				scene->drawGeneric();
+			});
+		}
+		
 
 		glDisable(GL_DEPTH_TEST);
 
@@ -249,7 +261,7 @@ namespace geeL {
 		stackBuffer.copyDepth(gBuffer);
 
 		//Forward pass
-		scene->drawGeneric();
+		if(fBuffer == nullptr) scene->drawGeneric();
 		scene->drawSkybox();
 	}
 

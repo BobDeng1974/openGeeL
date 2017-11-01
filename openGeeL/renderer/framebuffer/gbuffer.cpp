@@ -138,4 +138,48 @@ namespace geeL {
 		}
 	}
 
+	ForwardBuffer::ForwardBuffer(GBuffer& gBuffer) : gBuffer(gBuffer) {}
+
+	void ForwardBuffer::init(RenderTexture & colorTexture) {
+		this->resolution = gBuffer.getResolution();
+
+		glGenFramebuffers(1, &fbo.token);
+		bind();
+
+		//Create attachements for all color buffers
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gBuffer.getPositionRoughness().getID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gBuffer.getNormalMetallic().getID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, colorTexture.getID(), 0);
+
+		//TODO: add emissivity texture
+
+		unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+		glDrawBuffers(3, attachments);
+
+
+		// Create a renderbuffer object for depth and stencil attachment
+		unsigned int rbo;
+		glGenRenderbuffers(1, &rbo);
+		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, resolution.getWidth(), resolution.getHeight());
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			std::cout << "ERROR::FRAMEBUFFER:: Gbuffer is not complete!" << "\n";
+
+		unbind();
+	}
+
+	void ForwardBuffer::fill(std::function<void()> drawCall) {
+		bind();
+		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
+		drawCall();
+		unbind();
+	}
+
+
+	std::string ForwardBuffer::toString() const {
+		return "FBuffer " + std::to_string(fbo.token) + "\n";
+	}
+
 }

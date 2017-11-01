@@ -50,6 +50,24 @@ namespace geeL {
 		void initTextures(Resolution resolution);
 
 	};
+
+
+	//Framebuffer that can extend gBuffer by information of forward rendered objects
+	class ForwardBuffer : public FrameBuffer {
+
+	public:
+		ForwardBuffer(GBuffer& gBuffer);
+
+		void init(RenderTexture& colorTexture);
+		virtual void fill(std::function<void()> drawCall);
+
+		virtual std::string toString() const;
+
+	private:
+		GBuffer& gBuffer;
+
+	};
+
 }
 
 #endif

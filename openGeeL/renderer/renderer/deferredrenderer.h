@@ -14,6 +14,7 @@ namespace geeL {
 	class Camera;
 	class DefaultPostProcess;
 	class DynamicRenderTexture;
+	class ForwardBuffer;
 	class GBuffer;
 	class MaterialFactory;
 	class RenderTexture;
@@ -30,7 +31,7 @@ namespace geeL {
 
 	public:
 		DeferredRenderer(RenderWindow& window, Input& inputManager, SceneRender& lighting,
-			RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer);
+			RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer, ForwardBuffer* fBuffer = nullptr);
 		virtual ~DeferredRenderer();
 
 		virtual void runStart();
@@ -64,6 +65,7 @@ namespace geeL {
 		RenderTexture* texture1;
 		RenderTexture* texture2;
 		GBuffer& gBuffer;
+		ForwardBuffer* fBuffer;
 		StackBuffer stackBuffer;
 
 		SceneRender& lighting;
