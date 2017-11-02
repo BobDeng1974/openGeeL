@@ -24,11 +24,24 @@ namespace geeL {
 
 
 	void BlendGuard::blendAlpha() const {
+		blend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
+	void BlendGuard::blendReverseAlpha() const {
+		blend(GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
+
+	}
+
+	void BlendGuard::blendAdd() const {
+		blend(GL_ONE, GL_ONE);
+	}
+
+	void BlendGuard::blend(unsigned int source, unsigned int destination) const {
 		if (i < 0) {
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glBlendFunc(source, destination);
 		}
 		else {
-			glBlendFunci(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, i);
+			glBlendFunci(source, destination, i);
 		}
 	}
 

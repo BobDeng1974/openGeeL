@@ -10,10 +10,19 @@ namespace geeL {
 		BlendGuard(unsigned int i);
 		~BlendGuard();
 
+		//Blend with GL_SRC_ALPHA and GL_ONE_MINUS_SRC_ALPHA
 		void blendAlpha() const;
+
+		//Blend with GL_ZERO and GL_ONE_MINUS_SRC_COLOR
+		void blendReverseAlpha() const;
+
+		//Blend with GL_ONE and GL_ONE
+		void blendAdd() const;
 
 	private:
 		int i;
+
+		void blend(unsigned int source, unsigned int destination) const;
 
 	};
 
