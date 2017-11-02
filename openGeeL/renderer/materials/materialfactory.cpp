@@ -16,8 +16,8 @@ namespace geeL {
 	MaterialFactory::MaterialFactory(const GBuffer& buffer, ShaderProvider* const provider) :
 		genericShader(new SceneShader("renderer/shaders/lighting.vert", FragmentShader("renderer/shaders/lighting.frag"),
 			ShaderTransformSpace::World, ShadingMethod::Generic)),
-		forwardShader(new SceneShader("renderer/shaders/lighting.vert", FragmentShader("renderer/shaders/lighting.frag"), 
-			ShaderTransformSpace::World, ShadingMethod::Forward)),
+		forwardShader(new SceneShader("renderer/shaders/forwardlighting.vert", FragmentShader("renderer/shaders/forwardlighting.frag"), 
+			ShaderTransformSpace::View, ShadingMethod::Forward)),
 		deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", FragmentShader(buffer.getFragmentPath(), false), 
 			ShaderTransformSpace::View, ShadingMethod::Deferred)),
 		deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", FragmentShader(buffer.getFragmentPath()),

@@ -1171,5 +1171,11 @@
     <None Include="renderer\lighting\tileddeferred.com.glsl">
       <Filter>renderer\lighting</Filter>
     </None>
+    <None Include="renderer\shaders\forwardlighting.vert">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\forwardlighting.frag">
+      <Filter>renderer\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

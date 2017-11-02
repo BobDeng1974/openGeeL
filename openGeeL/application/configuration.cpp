@@ -31,7 +31,7 @@ namespace geeL {
 		DefaultPostProcess& def = DefaultPostProcess();
 		RenderContext& context = RenderContext();
 		SceneRender& lighting = DeferredLighting(scene);
-		DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer);
+		DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer, &fBuffer);
 		renderer.setScene(scene);
 
 		ContinuousSingleThread renderThread(renderer);

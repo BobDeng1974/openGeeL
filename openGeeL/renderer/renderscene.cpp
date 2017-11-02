@@ -207,24 +207,6 @@ namespace geeL {
 		});
 	}
 
-	void RenderScene::drawSimple(ShadingMethod shadingMethod, const Camera & camera) const {
-		SceneShader* currentShader = nullptr;
-
-		iterRenderObjects(shadingMethod, [this, &camera, &currentShader](const MeshRenderer& object, SceneShader& shader) {
-			if (currentShader != &shader) {
-				shader.bind<glm::mat4>("projection", camera.getProjectionMatrix());
-				shader.bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
-
-				pipeline.dynamicBind(lightManager, shader, camera);
-				currentShader = &shader;
-			}
-
-			if (object.isActive())
-				object.draw(shader);
-		});
-	}
-
-
 	void RenderScene::drawDefault() const {
 		drawDefault(*camera);
 	}
@@ -248,14 +230,62 @@ namespace geeL {
 		drawObjects(shader, &camera);
 	}
 
+
+	void RenderScene::drawGeneric(ShadingMethod shadingMethod, const Camera & camera) const {
+		SceneShader* currentShader = nullptr;
+
+		iterRenderObjects(shadingMethod, [this, &camera, &currentShader](const MeshRenderer& object, SceneShader& shader) {
+			if (currentShader != &shader) {
+				shader.bind<glm::mat4>("projection", camera.getProjectionMatrix());
+				shader.bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
+
+				pipeline.dynamicBind(lightManager, shader, camera);
+				currentShader = &shader;
+			}
+
+			if (object.isActive())
+				object.draw(shader);
+		});
+	}
+
 	void RenderScene::drawGeneric() const {
 		drawGeneric(*camera);
 	}
 
 	void RenderScene::drawGeneric(const Camera& camera) const {
-		drawSimple(ShadingMethod::Forward, camera);
-		drawSimple(ShadingMethod::ForwardSkinned, camera);
+		drawGeneric(ShadingMethod::Generic, camera);
+		drawGeneric(ShadingMethod::GenericSkinned, camera);
 	}
+
+
+	void RenderScene::drawForward(ShadingMethod shadingMethod, const Camera & camera) const {
+		SceneShader* currentShader = nullptr;
+
+		iterRenderObjects(shadingMethod, [this, &camera, &currentShader](const MeshRenderer& object, SceneShader& shader) {
+			if (currentShader != &shader) {
+				shader.bind<glm::mat4>("projection", camera.getProjectionMatrix());
+				shader.bind<glm::mat4>("inverseView", camera.getInverseViewMatrix());
+				shader.bind<glm::vec3>("origin", camera.GetOriginInViewSpace());
+
+				pipeline.dynamicBind(lightManager, shader, camera);
+				currentShader = &shader;
+			}
+
+			if (object.isActive())
+				object.draw(shader);
+		});
+
+	}
+
+	void RenderScene::drawForward() const {
+		drawForward(*camera);
+	}
+
+	void RenderScene::drawForward(const Camera & camera) const {
+		drawForward(ShadingMethod::Forward, camera);
+		drawForward(ShadingMethod::ForwardSkinned, camera);
+	}
+
 
 	void RenderScene::drawObjects(SceneShader& shader, const Camera* const camera) const {
 		if (camera != nullptr)

@@ -110,20 +110,19 @@ namespace geeL {
 
 		scene->getLightmanager().update(*scene, &scene->getCamera());
 
-		//Lighting & forward pass
+		//Lighting & generic pass
 		stackBuffer.push(*texture1);
 		stackBuffer.fill(lightingPassFunc);
 
-
+		//Forward pass
 		if (fBuffer != nullptr) {
 			fBuffer->fill([this]() {
 				glClear(GL_DEPTH_BUFFER_BIT);
 				fBuffer->copyDepth(gBuffer);
-				scene->drawGeneric();
+				scene->drawForward();
 			});
 		}
 		
-
 		glDisable(GL_DEPTH_TEST);
 
 		//Post processing
@@ -260,8 +259,8 @@ namespace geeL {
 		//rendered objects 'into' the scene instead of 'on top'
 		stackBuffer.copyDepth(gBuffer);
 
-		//Forward pass
-		if(fBuffer == nullptr) scene->drawGeneric();
+		//Generic pass
+		scene->drawGeneric();
 		scene->drawSkybox();
 	}
 
