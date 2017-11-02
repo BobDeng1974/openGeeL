@@ -2,7 +2,7 @@
 #include <renderer/shaders/material.glsl>
 
 //Read values from a previously declared Material 'material'
-void readMaterialProperties(out vec3 albedo, out vec3 norm, out float roughness, out float metallic, out vec3 emission) {
+void readMaterialProperties(out vec4 albedo, out vec3 norm, out float roughness, out float metallic, out vec3 emission) {
 	
 	//Check if materials is actually textured
 	float diffFlag = mod(material.mapFlags, 10);
@@ -28,7 +28,7 @@ void readMaterialProperties(out vec3 albedo, out vec3 norm, out float roughness,
 		norm = normalize(TBN * norm);
 	}
 
-	albedo = diffuse.rgb;
+	albedo = diffuse;
 	roughness = (specFlag == 1) ? abs((1.f - float(material.invSpec)) - texture(material.specular, texCoords).r) * material.roughness : material.roughness; 
 	metallic = (metaFlag == 1) ? 1.f - texture(material.metal, texCoords).r * material.metallic : material.metallic;
 	emission = (emisFlag == 1) ? texture(material.emission, texCoords).rgb * material.emissivity : material.emissivity;

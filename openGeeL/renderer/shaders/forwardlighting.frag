@@ -39,25 +39,26 @@ uniform vec3 origin;
 
 
 void main() {
-	vec3 albedo, norm, emission;
+	vec4 albedo;
+	vec3 norm, emission;
 	float roughness, metallic;
 	readMaterialProperties(albedo, norm, roughness, metallic, emission);
 	
 	vec3 viewDirection = normalize(-fragPosition.xyz);
-	vec3 irradiance = albedo * emission;
+	vec3 irradiance = albedo.xyz * emission;
 
 	for(int i = 0; i < plCount; i++) 
-		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition.xyz, viewDirection, vec4(albedo, 1.f), roughness, metallic);
+		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
        
 	for(int i = 0; i < dlCount; i++) 
-        irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
+        irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
 
 	for(int i = 0; i < slCount; i++)
-		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
+		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
 
 	gPositionRough = vec4(fragPosition.xyz, roughness);
 	gNormalMet = vec4(norm, metallic);
-	gDiffuse = vec4(albedo, 1.f);
+	gDiffuse = albedo;
 	color = vec4(irradiance, 1.f);
 }
 

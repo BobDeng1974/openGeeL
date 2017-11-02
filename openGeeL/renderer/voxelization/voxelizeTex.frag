@@ -61,8 +61,8 @@ vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal,
 	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float roughness, float metallic);
 
 vec3 getIrradiance() {
-	
-	vec3 albedo, norm, emission;
+	vec4 albedo;
+	vec3 norm, emission;
 	float roughness, metallic;
 	readMaterialProperties(albedo, norm, roughness, metallic, emission);
 	
@@ -70,15 +70,15 @@ vec3 getIrradiance() {
 
 	vec3 irradiance = vec3(0.f);
 	for(int i = 0; i < plCount; i++) 
-		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
+		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
        
 	for(int i = 0; i < dlCount; i++) 
-        irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
+        irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
 
 	for(int i = 0; i < slCount; i++)
-		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
+		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
 
-	irradiance += albedo * emission;
+	irradiance += albedo.xyz * emission;
 	irradiance = 1.f - exp(-irradiance * 1.f); // Tone mapping
 	irradiance = pow(irradiance, vec3(0.4545f)); //Gamma 
 
