@@ -130,7 +130,7 @@ namespace geeL {
 		if (&oldShader == &newShader || oldShader.getMethod() == newShader.getMethod()) return;
 		
 		//Remove mesh renderer from old materials shaders bucket
-		removeMeshRenderer(renderer, oldShader);
+		if(!renderer.containsShader(oldShader)) removeMeshRenderer(renderer, oldShader);
 
 		renderObjects[newShader.getMethod()][&newShader][renderer.transform.getID()] = &renderer;
 	}

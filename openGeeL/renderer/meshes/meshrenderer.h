@@ -77,6 +77,8 @@ namespace geeL {
 		const Model& getModel() const;
 		virtual RenderMode getRenderMode() const;
 
+		bool containsShader(SceneShader& shader) const;
+
 	protected:
 		const CullingMode faceCulling;
 

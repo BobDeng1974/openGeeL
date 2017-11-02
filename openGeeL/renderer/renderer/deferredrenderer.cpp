@@ -366,7 +366,6 @@ namespace geeL {
 		if (ssao != nullptr)
 			buffers.push_back(ssaoTexture);
 
-		//int bufferSize = 4;
 		int max = int(buffers.size() + effects.size());
 		int i = next ? 1 : -1;
 		toggle = abs((toggle + i) % max);

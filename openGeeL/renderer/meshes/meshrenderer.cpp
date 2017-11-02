@@ -241,4 +241,8 @@ namespace geeL{
 	RenderMode MeshRenderer::getRenderMode() const {
 		return RenderMode::Static;
 	}
+
+	bool MeshRenderer::containsShader(SceneShader& shader) const {
+		return materials.find(&shader) != materials.end();
+	}
 }
