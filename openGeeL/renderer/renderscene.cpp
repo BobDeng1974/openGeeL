@@ -149,6 +149,30 @@ namespace geeL {
 		lightManager.drawReflectionProbes();
 	}
 
+	size_t Scene::count(ShadingMethod shadingMethod) const {
+
+		auto itMethod = renderObjects.find(shadingMethod);
+		if (itMethod != renderObjects.end()) {
+			const ShaderMapping& shaders = itMethod->second;
+
+			if (shaders.size() > 0) {
+				size_t count = 0;
+
+				for (auto et(shaders.begin()); et != shaders.end(); et++) {
+					const TransformMapping& elements = et->second;
+
+					count += elements.size();
+
+				}
+
+				return count;
+			}
+		}
+
+		return 0;
+	}
+
+
 
 
 
@@ -458,4 +482,5 @@ namespace geeL {
 		}
 	}
 
+	
 }

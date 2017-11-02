@@ -65,6 +65,14 @@ namespace geeL {
 		void iterRenderObjects(ShadingMethod shadingMethod, 
 			std::function<void(const MeshRenderer&, SceneShader&)> function) const;
 
+
+		//Returns amount of contained objects that are drawn by given shading method
+		size_t count(ShadingMethod shadingMethod) const;
+
+		//Returns amount of contained objects that are drawn by given shading methods
+		template<typename... ShaderMethods>
+		size_t count(ShadingMethod shadingMethod, ShaderMethods ...other) const;
+
 	protected:
 		LightManager& lightManager;
 		SceneCamera* camera;
@@ -172,6 +180,13 @@ namespace geeL {
 		void RenderScene::drawForward(ShadingMethod shadingMethod, const Camera& camera) const;
 
 	};
+
+
+
+	template<typename ...ShaderMethods>
+	inline size_t Scene::count(ShadingMethod shadingMethod, ShaderMethods ...other) const {
+		return count(shadingMethod) + count(other...);
+	}
 
 }
 

@@ -115,7 +115,7 @@ namespace geeL {
 		stackBuffer.fill(lightingPassFunc);
 
 		//Forward pass
-		if (fBuffer != nullptr) {
+		if (fBuffer != nullptr && scene->count(ShadingMethod::Forward, ShadingMethod::ForwardSkinned) > 0) {
 			fBuffer->fill([this]() {
 				glClear(GL_DEPTH_BUFFER_BIT);
 				fBuffer->copyDepth(gBuffer);
