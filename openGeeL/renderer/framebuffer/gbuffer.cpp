@@ -4,6 +4,7 @@
 #include <iostream>
 #include "shader/rendershader.h"
 #include "utility/viewport.h"
+#include "utility/glguards.h"
 #include "renderer.h"
 #include "gbuffer.h"
 
@@ -36,9 +37,6 @@ namespace geeL {
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, resolution.getWidth(), resolution.getHeight());
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
-
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			std::cout << "ERROR::FRAMEBUFFER:: Gbuffer is not complete!" << "\n";
 
 		unbind();
 	}
@@ -138,11 +136,11 @@ namespace geeL {
 		}
 	}
 
-	ForwardBuffer::ForwardBuffer(GBuffer& gBuffer) : gBuffer(gBuffer) {}
-
-	void ForwardBuffer::init(RenderTexture & colorTexture) {
+	ForwardBuffer::ForwardBuffer(GBuffer& gBuffer) : gBuffer(gBuffer) {
 		this->resolution = gBuffer.getResolution();
+	}
 
+	void ForwardBuffer::init(RenderTexture& colorTexture) {
 		glGenFramebuffers(1, &fbo.token);
 		bind();
 
@@ -165,15 +163,16 @@ namespace geeL {
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, resolution.getWidth(), resolution.getHeight());
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			std::cout << "ERROR::FRAMEBUFFER:: Gbuffer is not complete!" << "\n";
-
 		unbind();
 	}
 
 	void ForwardBuffer::fill(std::function<void()> drawCall) {
 		bind();
 		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
+
+		BlendGuard blend(3);
+		blend.blendAlpha();
+
 		drawCall();
 		unbind();
 	}
@@ -181,6 +180,67 @@ namespace geeL {
 
 	std::string ForwardBuffer::toString() const {
 		return "FBuffer " + std::to_string(fbo.token) + "\n";
+	}
+
+
+
+	TransparentBuffer::TransparentBuffer(GBuffer & gBuffer) : gBuffer(gBuffer), compositionTexture(nullptr) {
+		this->resolution = gBuffer.getResolution();
+
+		accumulationTexture = new RenderTexture(Resolution(resolution.getWidth(), resolution.getHeight()), ColorType::RGBA16);
+		revealageTexture = new RenderTexture(Resolution(resolution.getWidth(), resolution.getHeight()), ColorType::Single);
+	}
+
+	TransparentBuffer::~TransparentBuffer() {
+		delete accumulationTexture;
+		delete revealageTexture;
+	}
+
+
+	void TransparentBuffer::init(RenderTexture& colorTexture) {
+		compositionTexture = &colorTexture;
+
+		glGenFramebuffers(1, &fbo.token);
+		bind();
+
+		//Create attachements for all color buffers
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gBuffer.getPositionRoughness().getID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gBuffer.getNormalMetallic().getID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gBuffer.getDiffuse().getID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, accumulationTexture->getID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, revealageTexture->getID(), 0);
+
+
+		unsigned int attachments[5] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, 
+			GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 };
+		glDrawBuffers(5, attachments);
+
+		// Create a renderbuffer object for depth and stencil attachment
+		unsigned int rbo;
+		glGenRenderbuffers(1, &rbo);
+		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, resolution.getWidth(), resolution.getHeight());
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+		unbind();
+	}
+
+	void TransparentBuffer::fill(std::function<void()> drawCall) {
+		bind();
+		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
+
+		BlendGuard accuBlend(3);
+		accuBlend.blendAdd();
+
+		BlendGuard revBlend(3);
+		revBlend.blendReverseAlpha();
+
+		drawCall();
+		unbind();
+	}
+
+	std::string TransparentBuffer::toString() const {
+		return "TBuffer " + std::to_string(fbo.token) + "\n";
 	}
 
 }

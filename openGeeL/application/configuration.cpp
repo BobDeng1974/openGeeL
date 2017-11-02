@@ -19,6 +19,7 @@ namespace geeL {
 
 		GBuffer& gBuffer = GBuffer(window.resolution, content);
 		ForwardBuffer& fBuffer = ForwardBuffer(gBuffer);
+		TransparentBuffer& tBuffer = TransparentBuffer(gBuffer);
 
 		MaterialFactory& materialFactory = MaterialFactory(gBuffer);
 		MeshFactory& meshFactory = MeshFactory(materialFactory);
@@ -31,8 +32,10 @@ namespace geeL {
 		DefaultPostProcess& def = DefaultPostProcess();
 		RenderContext& context = RenderContext();
 		SceneRender& lighting = DeferredLighting(scene);
-		DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer, &fBuffer);
+		DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer);
 		renderer.setScene(scene);
+		renderer.addFBuffer(fBuffer);
+		renderer.addTBuffer(tBuffer);
 
 		ContinuousSingleThread renderThread(renderer);
 		Application& app = ApplicationManager::createApplication(window, manager, renderer, renderThread);

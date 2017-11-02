@@ -68,6 +68,29 @@ namespace geeL {
 
 	};
 
+
+	//Framebuffer that can extend gBuffer by information of transparently rendered objects
+	class TransparentBuffer : public FrameBuffer {
+
+	public:
+		TransparentBuffer(GBuffer& gBuffer);
+		virtual ~TransparentBuffer();
+
+		void init(RenderTexture& colorTexture);
+		virtual void fill(std::function<void()> drawCall);
+
+		virtual std::string toString() const;
+
+	private:
+		GBuffer& gBuffer;
+
+		RenderTexture* accumulationTexture;
+		RenderTexture* revealageTexture;
+		RenderTexture* compositionTexture;
+
+	};
+
+
 }
 
 #endif

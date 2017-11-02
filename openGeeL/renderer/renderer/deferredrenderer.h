@@ -23,6 +23,7 @@ namespace geeL {
 	class SSAO;
 	class PostProcessingEffect;
 	class Texture;
+	class TransparentBuffer;
 
 	using PostEffectRender = std::pair<RenderTexture*, PostProcessingEffect*>;
 
@@ -31,7 +32,7 @@ namespace geeL {
 
 	public:
 		DeferredRenderer(RenderWindow& window, Input& inputManager, SceneRender& lighting,
-			RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer, ForwardBuffer* fBuffer = nullptr);
+			RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer);
 		virtual ~DeferredRenderer();
 
 		virtual void runStart();
@@ -54,6 +55,9 @@ namespace geeL {
 		virtual void linkInformation() const;
 		virtual std::map<WorldMaps, const Texture*> getMaps() const;
 
+		void addFBuffer(ForwardBuffer& buffer);
+		void addTBuffer(TransparentBuffer& buffer);
+
 	private:
 		int toggle;
 		
@@ -66,6 +70,7 @@ namespace geeL {
 		RenderTexture* texture2;
 		GBuffer& gBuffer;
 		ForwardBuffer* fBuffer;
+		TransparentBuffer* tBuffer;
 		StackBuffer stackBuffer;
 
 		SceneRender& lighting;

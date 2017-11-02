@@ -70,8 +70,8 @@ namespace geeL {
 		size_t count(ShadingMethod shadingMethod) const;
 
 		//Returns amount of contained objects that are drawn by given shading methods
-		template<typename... ShaderMethods>
-		size_t count(ShadingMethod shadingMethod, ShaderMethods ...other) const;
+		template<typename... ShadingMethods>
+		size_t count(ShadingMethod shadingMethod, ShadingMethods ...other) const;
 
 	protected:
 		LightManager& lightManager;
@@ -183,8 +183,8 @@ namespace geeL {
 
 
 
-	template<typename ...ShaderMethods>
-	inline size_t Scene::count(ShadingMethod shadingMethod, ShaderMethods ...other) const {
+	template<typename ...ShadingMethods>
+	inline size_t Scene::count(ShadingMethod shadingMethod, ShadingMethods ...other) const {
 		return count(shadingMethod) + count(other...);
 	}
 

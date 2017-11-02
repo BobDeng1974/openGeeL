@@ -310,10 +310,6 @@ namespace geeL {
 	}
 
 	void RenderScene::drawForward(const Camera & camera) const {
-		BlendGuard blend(3);
-		blend.blendAlpha();
-
-
 		drawForward(ShadingMethod::Forward, camera);
 		drawForward(ShadingMethod::ForwardSkinned, camera);
 	}
@@ -323,8 +319,6 @@ namespace geeL {
 	}
 
 	void RenderScene::drawTransparent(const Camera & camera) const {
-		//TODO: set blend guards
-
 		drawForward(ShadingMethod::Transparent, camera);
 		drawForward(ShadingMethod::TransparentSkinned, camera);
 	}

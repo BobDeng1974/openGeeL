@@ -36,8 +36,8 @@ using namespace std;
 namespace geeL {
 
 	DeferredRenderer::DeferredRenderer(RenderWindow& window, Input& inputManager, SceneRender& lighting,
-		RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer, ForwardBuffer* fBuffer)
-			: Renderer(window, inputManager, context), gBuffer(gBuffer), fBuffer(fBuffer),
+		RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer)
+			: Renderer(window, inputManager, context), gBuffer(gBuffer),
 				ssao(nullptr), lighting(lighting), toggle(0) {
 
 		effects.push_back(PostEffectRender(nullptr, &def));
@@ -68,8 +68,6 @@ namespace geeL {
 		addRequester(lighting);
 		ScreenQuad& defQuad = ScreenQuad::get();
 		defQuad.init();
-
-		if(fBuffer != nullptr) fBuffer->init(*texture1);
 	}
 
 
@@ -122,6 +120,18 @@ namespace geeL {
 				scene->drawForward();
 			});
 		}
+
+		//Transparent pass
+		if (tBuffer != nullptr && scene->count(ShadingMethod::Transparent, ShadingMethod::TransparentSkinned) > 0) {
+			tBuffer->fill([this]() {
+				glClear(GL_DEPTH_BUFFER_BIT);
+				tBuffer->copyDepth(gBuffer);
+
+				//TODO: complete this
+				scene->drawTransparent();
+			});
+		}
+
 		
 		glDisable(GL_DEPTH_TEST);
 
@@ -317,6 +327,16 @@ namespace geeL {
 			worldMaps[WorldMaps::SSAO] = ssaoTexture;
 
 		return worldMaps;
+	}
+
+	void DeferredRenderer::addFBuffer(ForwardBuffer& buffer) {
+		fBuffer = &buffer;
+		fBuffer->init(*texture1);
+	}
+
+	void DeferredRenderer::addTBuffer(TransparentBuffer& buffer) {
+		tBuffer = &buffer;
+		tBuffer->init(*texture1);
 	}
 
 
