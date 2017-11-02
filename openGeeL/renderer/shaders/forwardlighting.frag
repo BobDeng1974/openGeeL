@@ -13,7 +13,8 @@ in mat3 TBN;
 
 layout (location = 0) out vec4 gPositionRough;
 layout (location = 1) out vec4 gNormalMet;
-layout (location = 2) out vec4 color;
+layout (location = 2) out vec4 gDiffuse;
+layout (location = 3) out vec4 color;
 
 uniform int plCount;
 uniform int dlCount;
@@ -56,6 +57,7 @@ void main() {
 
 	gPositionRough = vec4(fragPosition.xyz, roughness);
 	gNormalMet = vec4(norm, metallic);
+	gDiffuse = vec4(albedo, 1.f);
 	color = vec4(irradiance, 1.f);
 }
 

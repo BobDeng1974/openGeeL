@@ -75,7 +75,6 @@ void main() {
 	//vec3 ambienceSpecular = calculateIndirectSpecular(position, normal, viewDirection, albedo, roughness, metallic);
 	vec3 ambienceSpecular = calculateIndirectSpecularSplitSum(position, normal, viewDirection, albedo, roughness, metallic);
 
-	color = vec4(ambienceSpecular, 1.f);
 	color = vec4(base + ambienceDiffuse + ambienceSpecular, 1.f);
 }
 
