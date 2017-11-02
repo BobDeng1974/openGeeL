@@ -45,6 +45,9 @@ namespace geeL {
 			case ColorType::Single:
 				glTexImage2D(textureType, 0, GL_RED, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 				break;
+			case ColorType::Single16:
+				glTexImage2D(textureType, 0, GL_R16, width, height, 0, GL_RGB, GL_FLOAT, image);
+				break;
 			case ColorType::RGB:
 				glTexImage2D(textureType, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 				break;
@@ -124,6 +127,7 @@ namespace geeL {
 	void Texture::clear(ColorType type, unsigned int id) {
 		switch (type) {
 			case ColorType::Single:
+			case ColorType::Single16:
 			case ColorType::RGB:
 			case ColorType::RGB16:
 			case ColorType::RGB32: {

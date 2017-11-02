@@ -31,6 +31,7 @@ namespace geeL {
 		None = 0,
 		GammaSpace = GL_SRGB_ALPHA,
 		Single = GL_RED,
+		Single16 = GL_R16,
 		RGB = GL_RGB,
 		RGB16 = GL_RGB16F,
 		RGB32 = GL_RGB32F,
