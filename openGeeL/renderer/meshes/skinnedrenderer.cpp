@@ -30,7 +30,7 @@ namespace geeL {
 	}
 
 	void SkinnedMeshRenderer::draw(bool deferred) const {
-		cullFaces();
+		CullingGuard culling(faceCulling);
 
 		/*
 		for (auto it = materials->begin(); it != materials->end(); it++) {
@@ -56,15 +56,12 @@ namespace geeL {
 			mesh.draw();
 		}
 		*/
-		uncullFaces();
 	}
 
 	void SkinnedMeshRenderer::draw(const SceneShader& shader) const {
-		cullFaces();
+		CullingGuard culling(faceCulling);
 
 		//TODO: implement this
-
-		uncullFaces();
 	}
 
 	void SkinnedMeshRenderer::draw(const RenderShader& shader) const {

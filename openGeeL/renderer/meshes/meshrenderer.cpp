@@ -21,7 +21,7 @@ namespace geeL{
 
 
 	void MeshRenderer::draw() const {
-		cullFaces();
+		CullingGuard culling(faceCulling);
 
 		for (auto it = materials.begin(); it != materials.end(); it++) {
 			//Activate and forward information to shader
@@ -42,12 +42,10 @@ namespace geeL{
 				mesh.draw();
 			}
 		}
-
-		uncullFaces();
 	}
 
 	void MeshRenderer::draw(SceneShader& shader) const {
-		cullFaces();
+		CullingGuard culling(faceCulling);
 
 		auto it = materials.find(&shader);
 		if (it != materials.end()) {
@@ -70,8 +68,6 @@ namespace geeL{
 				mesh.draw();
 			}
 		}
-
-		uncullFaces();
 	}
 
 	void MeshRenderer::drawExclusive(SceneShader& shader) const {
@@ -175,28 +171,18 @@ namespace geeL{
 	}
 
 
-	void MeshRenderer::cullFaces() const {
-		switch (faceCulling) {
-			case CullingMode::cullNone:
-				glDisable(GL_CULL_FACE);
-				break;
-			case CullingMode::cullBack:
-				glCullFace(GL_BACK);
-				break;
+	void MeshRenderer::iterate(std::function<void(const Mesh&, const Material&)> function) const {
+		for (auto it = materials.begin(); it != materials.end(); it++) {
+			const std::list<MaterialMapping>& elements = it->second;
+
+			for (auto et = elements.begin(); et != elements.end(); et++) {
+				const Material& mat = (*et).material;
+				const Mesh& mesh = *(*et).mesh;
+
+				function(mesh, mat);
+			}
 		}
 	}
-
-	void MeshRenderer::uncullFaces() const {
-		switch (faceCulling) {
-			case CullingMode::cullNone:
-				glEnable(GL_CULL_FACE);
-				break;
-			case CullingMode::cullBack:
-				glCullFace(GL_FRONT);
-				break;
-		}
-	}
-
 
 	void MeshRenderer::iterateMeshes(std::function<void(const Mesh&)> function) const {
 		model->iterateMeshes(function);

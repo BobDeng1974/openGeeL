@@ -6,6 +6,7 @@
 #include <map>
 #include "sceneobject.h"
 #include "materials/material.h"
+#include "utility/glguards.h"
 
 namespace geeL {
 
@@ -20,12 +21,6 @@ namespace geeL {
 	class SkinnedModel;
 	class StaticModel;
 	class Transform;
-
-	enum class CullingMode {
-		cullNone,
-		cullFront,
-		cullBack
-	};
 
 	enum class RenderMode {
 		Static,
@@ -68,7 +63,7 @@ namespace geeL {
 		
 		void addMaterialChangeListener(std::function<void(MeshRenderer&, Material, Material)> listener);
 
-
+		void iterate(std::function<void(const Mesh&, const Material&)> function) const;
 		void iterateMeshes(std::function<void(const Mesh&)> function) const;
 		void iterateMaterials(std::function<void(MaterialContainer&)> function) const;
 		void iterateShaders(std::function<void(const SceneShader&)> function) const;
@@ -84,9 +79,6 @@ namespace geeL {
 
 		//Init materials with data from the meshes material containers
 		void initMaterials(SceneShader& shader);
-
-		void cullFaces() const;
-		void uncullFaces() const;
 
 
 		struct MaterialMapping {

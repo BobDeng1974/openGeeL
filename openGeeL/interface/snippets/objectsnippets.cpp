@@ -4,6 +4,7 @@
 #include "materials/material.h"
 #include "materials/defaultmaterial.h"
 #include "materials/genericmaterial.h"
+#include "meshes/mesh.h"
 #include "meshes/meshrenderer.h"
 #include "lights/light.h"
 #include "sceneobject.h"
@@ -47,8 +48,10 @@ namespace geeL {
 			if (nk_tree_push(context, NK_TREE_NODE, materials.c_str(), NK_MINIMIZED)) {
 				
 				unsigned int counter = 0;
-				mesh.iterateMaterials([&](MaterialContainer& container) {
-					std::string name = "Material " + std::to_string(counter) + ": " + container.name;
+				mesh.iterate([&](const Mesh& mesh, const Material& material) {
+					MaterialContainer& container = material.getMaterialContainer();
+
+					std::string name = "Material " + std::to_string(counter) + ": " + container.name + " (" + mesh.getName() + ")";
 					nk_layout_row_dynamic(context, 30, 1);
 					nk_label(context, name.c_str(), NK_TEXT_LEFT);
 
