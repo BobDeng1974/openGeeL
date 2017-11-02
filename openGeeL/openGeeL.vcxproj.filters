@@ -456,6 +456,9 @@
     <ClCompile Include="application\appmanager.cpp">
       <Filter>application</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\utility\glguards.cpp">
+      <Filter>renderer\utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -922,6 +925,9 @@
     </ClInclude>
     <ClInclude Include="application\appmanager.h">
       <Filter>application</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\utility\glguards.h">
+      <Filter>renderer\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

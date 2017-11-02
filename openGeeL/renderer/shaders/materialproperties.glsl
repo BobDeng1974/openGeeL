@@ -2,7 +2,7 @@
 #include <renderer/shaders/material.glsl>
 
 //Read values from a previously declared Material 'material'
-void readMaterialProperties(out vec4 albedo, out vec3 norm, out float roughness, out float metallic, out vec3 emission) {
+void readMaterialProperties(out vec4 albedo, out vec3 norm, out float roughness, out float metallic, out vec3 emission, bool cutout) {
 	
 	//Check if materials is actually textured
 	float diffFlag = mod(material.mapFlags, 10);
@@ -15,10 +15,10 @@ void readMaterialProperties(out vec4 albedo, out vec3 norm, out float roughness,
 	vec4 diffuse = (diffFlag == 1) ? texture(material.diffuse, texCoords) * material.color : material.color;
 
 	if(alphaFlag == 1) {
-		diffuse.a = texture(material.alpha, texCoords).r;
+		diffuse.a = texture(material.alpha, texCoords).r * diffuse.a;
 
 		//Discard fragment if alpha value is low
-		discard(diffuse.a < 0.5f);
+		discard(cutout && diffuse.a < 0.5f);
 	}
 
 	norm = normalize(normal);

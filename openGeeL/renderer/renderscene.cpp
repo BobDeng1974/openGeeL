@@ -19,6 +19,7 @@
 #include "inputmanager.h"
 #include "transformation/transform.h"
 #include "utility/worldinformation.h"
+#include "utility/glguards.h"
 #include "renderscene.h"
 
 using namespace std;
@@ -253,6 +254,9 @@ namespace geeL {
 	}
 
 	void RenderScene::drawGeneric(const Camera& camera) const {
+		BlendGuard blend;
+		blend.blendAlpha();
+
 		drawGeneric(ShadingMethod::Generic, camera);
 		drawGeneric(ShadingMethod::GenericSkinned, camera);
 	}
@@ -282,6 +286,10 @@ namespace geeL {
 	}
 
 	void RenderScene::drawForward(const Camera & camera) const {
+		BlendGuard blend(3);
+		blend.blendAlpha();
+
+
 		drawForward(ShadingMethod::Forward, camera);
 		drawForward(ShadingMethod::ForwardSkinned, camera);
 	}

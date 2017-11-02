@@ -68,8 +68,8 @@ void main() {
 	vec3  viewDirection = normalize(-fragPosition);
 
 	vec3 ks = calculateFresnelTerm(doto(normal, viewDirection), albedo, metallic, roughness);
-    vec3 kd = vec3(1.0f) - ks;
-    kd *= 1.0f - metallic; //metallic surfaces don't refract light => nullify kD if metallic
+    vec3 kd = vec3(1.f) - ks;
+    kd *= 1.f - metallic; //metallic surfaces don't refract light => nullify kD if metallic
 
 	vec3 ambienceDiffuse = calculateIndirectDiffuse(position, normal, kd, albedo, occlusion); 
 	//vec3 ambienceSpecular = calculateIndirectSpecular(position, normal, viewDirection, albedo, roughness, metallic);

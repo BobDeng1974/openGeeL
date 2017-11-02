@@ -42,7 +42,7 @@ void main() {
 	vec4 albedo;
 	vec3 norm, emission;
 	float roughness, metallic;
-	readMaterialProperties(albedo, norm, roughness, metallic, emission);
+	readMaterialProperties(albedo, norm, roughness, metallic, emission, false);
 	
 	vec3 viewDirection = normalize(-fragPosition.xyz);
 	vec3 irradiance = albedo.xyz * emission;
@@ -59,6 +59,6 @@ void main() {
 	gPositionRough = vec4(fragPosition.xyz, roughness);
 	gNormalMet = vec4(norm, metallic);
 	gDiffuse = albedo;
-	color = vec4(irradiance, 1.f);
+	color = vec4(irradiance, albedo.a);
 }
 

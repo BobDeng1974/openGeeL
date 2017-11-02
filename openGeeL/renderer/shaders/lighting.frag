@@ -45,11 +45,11 @@ void main() {
 	vec4 albedo;
 	vec3 norm, emission;
 	float roughness, metallic;
-	readMaterialProperties(albedo, norm, roughness, metallic, emission);
+	readMaterialProperties(albedo, norm, roughness, metallic, emission, false);
 	
 	vec3 viewDirection = normalize(cameraPosition - fragPosition.xyz);
+	vec3 irradiance = albedo.xyz * emission;
 
-	vec3 irradiance = vec3(0.f);
 	for(int i = 0; i < plCount; i++) 
 		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
        
@@ -59,10 +59,8 @@ void main() {
 	for(int i = 0; i < slCount; i++)
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
 
-	irradiance += albedo.xyz * emission;
 	irradiance = pow(irradiance, vec3(0.4545f)); //Gamma 
-
-	color = vec4(irradiance, 1.f);
+	color = vec4(irradiance, albedo.a);
 }
 
 

@@ -57,6 +57,17 @@ public:
 				meshTransform22, CullingMode::cullFront, "Girl");
 			scene.addMeshRenderer(girl);
 
+			/*
+			girl.iterateMeshes([&](const Mesh& mesh) {
+				if (mesh.getName() == "g eyelash" || mesh.getName() == "g hair_outer" 
+					|| mesh.getName() == "g hair_inner" || mesh.getName() == "g fur") {
+					
+					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Forward);
+					girl.changeMaterial(ss, mesh);
+				}
+			});
+			*/
+
 			girl.iterateMaterials([&](MaterialContainer& container) {
 				if (container.name == "fur")
 					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/fur_alpha_02.jpg"));
@@ -94,7 +105,7 @@ public:
 
 			BilateralFilter& blur = BilateralFilter(1.8f, 0.7f);
 			SSAO& ssao = SSAO(blur, 0.5f);
-			renderer.addSSAO(ssao);
+			//renderer.addSSAO(ssao);
 			scene.addRequester(ssao);
 			postLister.add(ssao);
 
