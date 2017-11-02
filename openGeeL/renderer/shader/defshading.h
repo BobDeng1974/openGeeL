@@ -15,6 +15,8 @@ namespace geeL {
 		DeferredSkinned,
 		Forward,
 		ForwardSkinned,
+		Transparent,
+		TransparentSkinned,
 		Other
 
 	};

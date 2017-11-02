@@ -56,7 +56,7 @@ namespace geeL {
 		GenericMaterialContainer& CreateMaterial(RenderShader& shader);
 
 		//Creates and returns a new shader program from given fragment path
-		//Note: Only generic and forward shading methods allowed
+		//Note: Only generic, forward and transparent shading methods allowed
 		SceneShader& CreateShader(ShadingMethod shading, std::string fragmentPath);
 
 		//Returns default shader for static deferred rendering
@@ -70,6 +70,7 @@ namespace geeL {
 		SceneShader* forwardShader;
 		SceneShader* deferredShader;
 		SceneShader* deferredAnimatedShader;
+		SceneShader* transparentShader;
 
 		std::list<MaterialContainer*> container;
 		std::list<SceneShader*> shaders;

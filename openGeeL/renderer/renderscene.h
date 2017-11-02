@@ -124,13 +124,18 @@ namespace geeL {
 		//(Forward shading)
 		void drawGeneric(const Camera& camera) const;
 
-		//Draw all those objects with generic materials (Forward shading)
+		//Draw all those objects that have forward shaded materials
 		void drawForward() const;
 
-		//Draw all objects with generic materials from given camera's perspective
-		//(Forward shading)
+		//Draw all objects that have forward shaded materials from given camera's perspective
 		void drawForward(const Camera& camera) const;
-	
+
+		//Draw all those objects that have transparently shaded materials
+		void drawTransparent() const;
+
+		//Draw all objects that have transparently shaded materials from given camera's perspective
+		void drawTransparent(const Camera& camera) const;
+
 		//Draw all objects in the scene with given shader and given camera.
 		//Note: Scene gets drawn in world space if no camera gets attached
 		void drawObjects(SceneShader& shader, const Camera* const camera = nullptr) const;

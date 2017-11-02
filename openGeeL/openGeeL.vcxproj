@@ -504,6 +504,7 @@
     <None Include="renderer\shaders\samplingvector.glsl" />
     <None Include="renderer\shaders\screen.frag" />
     <None Include="renderer\shaders\screen.vert" />
+    <None Include="renderer\shaders\transparentlighting.frag" />
     <None Include="renderer\shadowmapping\shadowmapping.frag" />
     <None Include="renderer\shadowmapping\shadowmapping.geom" />
     <None Include="renderer\shadowmapping\shadowmapping.vert" />

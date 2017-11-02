@@ -294,6 +294,17 @@ namespace geeL {
 		drawForward(ShadingMethod::ForwardSkinned, camera);
 	}
 
+	void RenderScene::drawTransparent() const {
+		drawTransparent(*camera);
+	}
+
+	void RenderScene::drawTransparent(const Camera & camera) const {
+		//TODO: set blend guards
+
+		drawForward(ShadingMethod::Transparent, camera);
+		drawForward(ShadingMethod::TransparentSkinned, camera);
+	}
+
 
 	void RenderScene::drawObjects(SceneShader& shader, const Camera* const camera) const {
 		if (camera != nullptr)
