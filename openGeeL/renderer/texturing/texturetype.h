@@ -7,6 +7,7 @@
 
 #define GL_SRGB_ALPHA 0x8C42
 #define GL_RED 0x1903
+#define GL_R16 0x822A
 #define GL_RGB 0x1907
 #define GL_RGB16F 0x881B
 #define GL_RGB32F 0x8815
