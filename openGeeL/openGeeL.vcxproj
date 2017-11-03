@@ -193,6 +193,7 @@
     <ClCompile Include="renderer\framebuffer\gbuffer.cpp" />
     <ClCompile Include="renderer\framebuffer\pingpong.cpp" />
     <ClCompile Include="renderer\framebuffer\stackbuffer.cpp" />
+    <ClCompile Include="renderer\framebuffer\tbuffer.cpp" />
     <ClCompile Include="renderer\lighting\conetracer.cpp" />
     <ClCompile Include="renderer\lighting\deferredlighting.cpp" />
     <ClCompile Include="renderer\lighting\ibl.cpp" />
@@ -334,6 +335,7 @@
     <ClInclude Include="renderer\framebuffer\gbuffer.h" />
     <ClInclude Include="renderer\framebuffer\pingpong.h" />
     <ClInclude Include="renderer\framebuffer\stackbuffer.h" />
+    <ClInclude Include="renderer\framebuffer\tbuffer.h" />
     <ClInclude Include="renderer\lighting\conetracer.h" />
     <ClInclude Include="renderer\lighting\deferredlighting.h" />
     <ClInclude Include="renderer\lighting\ibl.h" />
@@ -443,6 +445,7 @@
     <None Include="renderer\cubemapping\prefilterEnvmap.frag" />
     <None Include="renderer\cubemapping\skybox.frag" />
     <None Include="renderer\cubemapping\skybox.vert" />
+    <None Include="renderer\framebuffer\tcomp.frag" />
     <None Include="renderer\lighting\conetracer.frag" />
     <None Include="renderer\lighting\conetracerTex.frag" />
     <None Include="renderer\lighting\cooktorrance.glsl" />

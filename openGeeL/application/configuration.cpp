@@ -1,3 +1,4 @@
+#include "framebuffer/tbuffer.h"
 #include "appmanager.h"
 #include "configuration.h"
 
@@ -18,9 +19,6 @@ namespace geeL {
 		PerspectiveCamera& defaultCamera = PerspectiveCamera(cameraTransform, 60.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
 
 		GBuffer& gBuffer = GBuffer(window.resolution, content);
-		ForwardBuffer& fBuffer = ForwardBuffer(gBuffer);
-		TransparentBuffer& tBuffer = TransparentBuffer(gBuffer);
-
 		MaterialFactory& materialFactory = MaterialFactory(gBuffer);
 		MeshFactory& meshFactory = MeshFactory(materialFactory);
 		LightManager& lightManager = LightManager();
@@ -34,7 +32,11 @@ namespace geeL {
 		SceneRender& lighting = DeferredLighting(scene);
 		DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer);
 		renderer.setScene(scene);
+
+		ForwardBuffer& fBuffer = ForwardBuffer(gBuffer);
 		renderer.addFBuffer(fBuffer);
+
+		TransparentBuffer& tBuffer = TransparentBuffer(gBuffer, renderer.getStackbuffer());
 		renderer.addTBuffer(tBuffer);
 
 		ContinuousSingleThread renderThread(renderer);

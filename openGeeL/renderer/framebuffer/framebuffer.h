@@ -13,14 +13,21 @@ namespace geeL {
 	class Drawer;
 
 
+	enum class ClearMethod {
+		None,
+		Depth,
+		Color,
+		All
+	};
+
 	//Interface for all framebuffer objects
 	class IFrameBuffer {
 
 	public:
 		virtual void add(RenderTexture& texture) {} //TODO: remove this later on
 
-		virtual void fill(std::function<void()> drawCall) = 0;
-		virtual void fill(Drawer& drawer) = 0;
+		virtual void fill(std::function<void()> drawCall, ClearMethod method = ClearMethod::All) = 0;
+		virtual void fill(Drawer& drawer, ClearMethod method = ClearMethod::All) = 0;
 
 		virtual void bind() const = 0;
 
@@ -38,6 +45,9 @@ namespace geeL {
 	};
 
 
+
+	
+
 	
 
 	//Abstract base class for all framebuffer objects
@@ -47,8 +57,8 @@ namespace geeL {
 		FrameBuffer() {}
 		virtual ~FrameBuffer() {}
 
-		virtual void fill(std::function<void()> drawCall) = 0;
-		virtual void fill(Drawer& drawer);
+		virtual void fill(std::function<void()> drawCall, ClearMethod method = ClearMethod::All) = 0;
+		virtual void fill(Drawer& drawer, ClearMethod method = ClearMethod::All);
 
 		virtual void bind() const;
 		static void bind(unsigned int fbo);
@@ -68,7 +78,7 @@ namespace geeL {
 		Resolution resolution;
 
 		unsigned int getFBO() const;
-		void clear() const;
+		void clear(ClearMethod method) const;
 
 	private:
 		FrameBuffer(const FrameBuffer& other) = delete;

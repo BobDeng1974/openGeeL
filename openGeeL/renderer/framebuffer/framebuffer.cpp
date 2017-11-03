@@ -16,10 +16,10 @@ namespace geeL {
 	}
 
 
-	void FrameBuffer::fill(Drawer& drawer) {
+	void FrameBuffer::fill(Drawer& drawer, ClearMethod method) {
 		fill([&drawer]() {
 			drawer.draw();
-		});
+		}, method);
 	}
 
 	static unsigned int currentFBO = 0;
@@ -63,9 +63,21 @@ namespace geeL {
 		return fbo.token;
 	}
 
-	void FrameBuffer::clear() const {
-		glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	void FrameBuffer::clear(ClearMethod method) const {
+		//glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
+
+		switch (method) {
+			case ClearMethod::Color:
+				glClear(GL_COLOR_BUFFER_BIT);
+				break;
+			case ClearMethod::Depth:
+				glClear(GL_DEPTH_BUFFER_BIT);
+				break;
+			case ClearMethod::All:
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				break;
+		}
+
 	}
 
 	const Resolution& FrameBuffer::getResolution() const {

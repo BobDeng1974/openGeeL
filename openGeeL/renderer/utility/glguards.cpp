@@ -28,7 +28,7 @@ namespace geeL {
 	}
 
 	void BlendGuard::blendReverseAlpha() const {
-		blend(GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
+		blend(GL_ZERO, GL_ONE_MINUS_SRC_ALPHA);
 
 	}
 

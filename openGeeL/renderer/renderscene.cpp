@@ -133,6 +133,7 @@ namespace geeL {
 		//Remove mesh renderer from old materials shaders bucket
 		if(!renderer.containsShader(oldShader)) removeMeshRenderer(renderer, oldShader);
 
+		addShader(newShader);
 		renderObjects[newShader.getMethod()][&newShader][renderer.transform.getID()] = &renderer;
 	}
 
@@ -179,11 +180,7 @@ namespace geeL {
 	RenderScene::RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline,
 		SceneCamera& camera, const MaterialFactory& materialFactory, Input& input)
 			: Scene(world, lightManager, pipeline, camera), 
-				materialFactory(materialFactory), input(input) {
-	
-		addShader(materialFactory.getDefaultShader(ShadingMethod::Generic));
-		addShader(materialFactory.getDefaultShader(ShadingMethod::Forward));
-	}
+				materialFactory(materialFactory), input(input) {}
 
 	
 	void RenderScene::init() {

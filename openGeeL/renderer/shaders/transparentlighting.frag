@@ -40,6 +40,19 @@ uniform vec3 origin;
 #include <renderer/lighting/cooktorrancelights.glsl>
 
 
+void blendCoverage(vec4 color, float z) {
+	float weight = clamp(pow(min(1.0, color.a * 10.0) + 0.01, 3.0) * 1e8 * 
+		pow(1.0 - z * 0.9, 3.0), 1e-2, 3e3);
+ 
+	// Blend Func: GL_ONE, GL_ONE
+	accumulation = vec4(color.rgb * color.a, color.a);// * weight;
+ 
+	// Blend Func: GL_ZERO, GL_ONE_MINUS_SRC_ALPHA
+	revealage = color.a;
+
+}
+
+
 void main() {
 	vec4 albedo;
 	vec3 norm, emission;
@@ -62,7 +75,7 @@ void main() {
 	gNormalMet = vec4(norm, metallic);
 	gDiffuse = albedo;
 
-	//color = vec4(irradiance, albedo.a);
-	//TODO: implement this
+	float z = gl_FragCoord.z;
+	blendCoverage(vec4(irradiance, albedo.a), z);
 }
 

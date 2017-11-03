@@ -58,6 +58,8 @@ namespace geeL {
 		void addFBuffer(ForwardBuffer& buffer);
 		void addTBuffer(TransparentBuffer& buffer);
 
+		StackBuffer& getStackbuffer();
+
 	private:
 		int toggle;
 		

@@ -459,6 +459,9 @@
     <ClCompile Include="renderer\utility\glguards.cpp">
       <Filter>renderer\utility</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\framebuffer\tbuffer.cpp">
+      <Filter>renderer\framebuffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -929,6 +932,9 @@
     <ClInclude Include="renderer\utility\glguards.h">
       <Filter>renderer\utility</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\framebuffer\tbuffer.h">
+      <Filter>renderer\framebuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\lighting.vert">
@@ -1185,6 +1191,9 @@
     </None>
     <None Include="renderer\shaders\transparentlighting.frag">
       <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\framebuffer\tcomp.frag">
+      <Filter>renderer\framebuffer</Filter>
     </None>
   </ItemGroup>
 </Project>

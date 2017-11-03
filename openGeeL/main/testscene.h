@@ -87,13 +87,13 @@ public:
 			//physics.addMesh(sphere1.getModel(), meshTransform4, RigidbodyProperties(10.f, false));
 			
 			sphere1.iterateMaterials([&](MaterialContainer& container) {
-				container.setVectorValue("Color", vec3(0.f));
+				container.setVectorValue("Color", vec3(0.6f));
 				container.setFloatValue("Roughness", 0.05f);
 				container.setFloatValue("Metallic", 0.5f);
 			});
 
 			sphere1.iterateMeshes([&](const Mesh& mesh) {
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Forward);
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
 				sphere1.changeMaterial(ss, mesh);
 			});
 

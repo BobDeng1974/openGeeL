@@ -14,8 +14,8 @@ namespace geeL {
 
 		void init(const TextureCube& texture);
 
-		virtual void fill(std::function<void()> drawCall);
-		void fill(std::function<void(unsigned int)> drawCall, unsigned int mipLevel = 0);
+		virtual void fill(std::function<void()> drawCall, ClearMethod method = ClearMethod::All);
+		void fill(std::function<void(unsigned int)> drawCall, unsigned int mipLevel = 0, ClearMethod method = ClearMethod::All);
 
 		void resize(ResolutionScale resolution);
 

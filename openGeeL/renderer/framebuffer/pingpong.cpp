@@ -56,13 +56,13 @@ namespace geeL {
 		unbind();
 	}
 
-	void PingPongBuffer::fill(std::function<void()> drawCall) {
+	void PingPongBuffer::fill(std::function<void()> drawCall, ClearMethod method) {
 		unsigned int id = (current == first) ? 0 : 1;
 
 		bind();
 		glDrawBuffer(GL_COLOR_ATTACHMENT0 + id);
 		current->setRenderResolution();
-		clear();
+		clear(method);
 
 		drawCall();
 		unbind();
@@ -70,13 +70,13 @@ namespace geeL {
 		swap();
 	}
 
-	void PingPongBuffer::fill(Drawer & drawer) {
+	void PingPongBuffer::fill(Drawer & drawer, ClearMethod method) {
 		unsigned int id = (current == first) ? 0 : 1;
 
 		bind();
 		glDrawBuffer(GL_COLOR_ATTACHMENT0 + id);
 		current->setRenderResolution();
-		clear();
+		clear(method);
 
 		drawer.draw();
 		unbind();

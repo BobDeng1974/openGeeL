@@ -16,6 +16,7 @@
 #include "texturing/dynamictexture.h"
 #include "texturing/imagetexture.h"
 #include "framebuffer/gbuffer.h"
+#include "framebuffer/tbuffer.h"
 #include "postprocessing/drawdefault.h"
 #include "postprocessing/ssao.h"
 #include "postprocessing/postprocessing.h"
@@ -26,12 +27,8 @@
 #include "utility/viewport.h"
 #include "application.h"
 #include "deferredrenderer.h"
-#include "lights\spotlight.h"
-#include "shadowmapping\shadowmap.h"
-#include "shadowmapping\simpleshadowmap.h"
 
 using namespace std;
-
 
 namespace geeL {
 
@@ -126,10 +123,10 @@ namespace geeL {
 			tBuffer->fill([this]() {
 				glClear(GL_DEPTH_BUFFER_BIT);
 				tBuffer->copyDepth(gBuffer);
-
-				//TODO: complete this
 				scene->drawTransparent();
 			});
+
+			tBuffer->composite();
 		}
 
 		
@@ -337,6 +334,10 @@ namespace geeL {
 	void DeferredRenderer::addTBuffer(TransparentBuffer& buffer) {
 		tBuffer = &buffer;
 		tBuffer->init(*texture1);
+	}
+
+	StackBuffer& DeferredRenderer::getStackbuffer() {
+		return stackBuffer;
 	}
 
 

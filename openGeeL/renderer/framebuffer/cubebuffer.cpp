@@ -27,13 +27,13 @@ namespace geeL {
 	}
 
 
-	void CubeBuffer::fill(std::function<void()> drawCall) {
+	void CubeBuffer::fill(std::function<void()> drawCall, ClearMethod method) {
 
 		bind();
 		for (unsigned int side = 0; side < 6; side++) {
 			Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, texture->getID(), 0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			clear(method);
 
 			drawCall();
 		}
@@ -41,13 +41,13 @@ namespace geeL {
 		unbind();
 	}
 
-	void CubeBuffer::fill(std::function<void(unsigned int)> drawCall, unsigned int mipLevel) {
+	void CubeBuffer::fill(std::function<void(unsigned int)> drawCall, unsigned int mipLevel, ClearMethod method) {
 
 		bind();
 		for (unsigned int side = 0; side < 6; side++) {
 			Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, texture->getID(), mipLevel);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			clear(method);
 
 			drawCall(side);
 		}
