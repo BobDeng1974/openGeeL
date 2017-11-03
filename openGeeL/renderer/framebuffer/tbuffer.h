@@ -17,7 +17,7 @@ namespace geeL {
 		virtual ~TransparentBuffer();
 
 		void init(RenderTexture& colorTexture);
-		virtual void fill(std::function<void()> drawCall, ClearMethod method = ClearMethod::All);
+		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearAll);
 		void composite();
 
 		virtual std::string toString() const;
@@ -33,7 +33,6 @@ namespace geeL {
 		PostProcessingEffectFS tComp;
 
 	};
-
 
 }
 

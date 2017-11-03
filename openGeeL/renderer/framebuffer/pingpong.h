@@ -25,8 +25,8 @@ namespace geeL {
 		virtual void initDepth();
 		void reset();
 
-		virtual void fill(std::function<void()> drawCall, ClearMethod method = ClearMethod::All);
-		virtual void fill(Drawer& drawer, ClearMethod method = ClearMethod::All);
+		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearAll);
+		virtual void fill(Drawer& drawer, Clearer clearer = clearAll);
 
 		virtual const Resolution& getResolution() const;
 		const RenderTexture& getTexture(unsigned int position = 0) const;

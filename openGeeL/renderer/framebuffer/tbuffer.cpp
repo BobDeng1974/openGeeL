@@ -56,7 +56,7 @@ namespace geeL {
 		unbind();
 	}
 
-	void TransparentBuffer::fill(std::function<void()> drawCall, ClearMethod method) {
+	void TransparentBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
 		bind();
 		glDepthMask(GL_FALSE);
 
@@ -88,7 +88,7 @@ namespace geeL {
 		stackBuffer.push(*compositionTexture);
 		stackBuffer.fill([this]() {
 			tComp.draw();
-		}, ClearMethod::None);
+		}, clearNothing);
 
 		glEnable(GL_DEPTH_TEST);
 	}

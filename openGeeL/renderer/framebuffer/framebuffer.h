@@ -4,6 +4,7 @@
 #include <functional>
 #include <string>
 #include "utility/resolution.h"
+#include "utility/clearing.h"
 #include "texturing/texture.h"
 #include "texturing/rendertexture.h"
 #include "fbotoken.h"
@@ -13,21 +14,14 @@ namespace geeL {
 	class Drawer;
 
 
-	enum class ClearMethod {
-		None,
-		Depth,
-		Color,
-		All
-	};
-
 	//Interface for all framebuffer objects
 	class IFrameBuffer {
 
 	public:
-		virtual void add(RenderTexture& texture) {} //TODO: remove this later on
+		virtual void add(RenderTexture& texture) {}
 
-		virtual void fill(std::function<void()> drawCall, ClearMethod method = ClearMethod::All) = 0;
-		virtual void fill(Drawer& drawer, ClearMethod method = ClearMethod::All) = 0;
+		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearAll) = 0;
+		virtual void fill(Drawer& drawer, Clearer clearer = clearAll) = 0;
 
 		virtual void bind() const = 0;
 
@@ -46,10 +40,6 @@ namespace geeL {
 
 
 
-	
-
-	
-
 	//Abstract base class for all framebuffer objects
 	class FrameBuffer : public IFrameBuffer {
 
@@ -57,14 +47,15 @@ namespace geeL {
 		FrameBuffer() {}
 		virtual ~FrameBuffer() {}
 
-		virtual void fill(std::function<void()> drawCall, ClearMethod method = ClearMethod::All) = 0;
-		virtual void fill(Drawer& drawer, ClearMethod method = ClearMethod::All);
+		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearAll) = 0;
+		virtual void fill(Drawer& drawer, Clearer clearer = clearAll);
 
 		virtual void bind() const;
 		static void bind(unsigned int fbo);
 		static void unbind();
 
 		virtual void copyDepth(const FrameBuffer& buffer) const;
+		virtual void copyStencil(const FrameBuffer& buffer) const;
 		
 		virtual const Resolution& getResolution() const;
 		virtual void resetSize() const;
@@ -78,7 +69,6 @@ namespace geeL {
 		Resolution resolution;
 
 		unsigned int getFBO() const;
-		void clear(ClearMethod method) const;
 
 	private:
 		FrameBuffer(const FrameBuffer& other) = delete;

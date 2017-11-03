@@ -16,10 +16,10 @@ namespace geeL {
 	}
 
 
-	void FrameBuffer::fill(Drawer& drawer, ClearMethod method) {
+	void FrameBuffer::fill(Drawer& drawer, Clearer clearer) {
 		fill([&drawer]() {
 			drawer.draw();
-		}, method);
+		}, clearer);
 	}
 
 	static unsigned int currentFBO = 0;
@@ -51,6 +51,15 @@ namespace geeL {
 			res.getWidth(), res.getHeight(), GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	}
 
+	void FrameBuffer::copyStencil(const FrameBuffer & buffer) const {
+		const Resolution& res = getResolution();
+
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, buffer.getFBO());
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo.token);
+		glBlitFramebuffer(0, 0, res.getWidth(), res.getHeight(), 0, 0,
+			res.getWidth(), res.getHeight(), GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+	}
+
 	void FrameBuffer::resetSize() const {
 		Viewport::set(0, 0, getResolution().getWidth(), getResolution().getHeight());
 	}
@@ -61,23 +70,6 @@ namespace geeL {
 
 	unsigned int FrameBuffer::getFBO() const {
 		return fbo.token;
-	}
-
-	void FrameBuffer::clear(ClearMethod method) const {
-		//glClearColor(0.0001f, 0.0001f, 0.0001f, 1.0f);
-
-		switch (method) {
-			case ClearMethod::Color:
-				glClear(GL_COLOR_BUFFER_BIT);
-				break;
-			case ClearMethod::Depth:
-				glClear(GL_DEPTH_BUFFER_BIT);
-				break;
-			case ClearMethod::All:
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				break;
-		}
-
 	}
 
 	const Resolution& FrameBuffer::getResolution() const {

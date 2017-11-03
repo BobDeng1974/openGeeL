@@ -41,10 +41,10 @@ namespace geeL {
 		unbind();
 	}
 
-	void GBuffer::fill(std::function<void()> drawCall, ClearMethod method) {
+	void GBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
 		bind();
 		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
-		clear(method);
+		clearer.clear();
 
 		drawCall();
 
@@ -165,7 +165,7 @@ namespace geeL {
 		unbind();
 	}
 
-	void ForwardBuffer::fill(std::function<void()> drawCall, ClearMethod method) {
+	void ForwardBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
 		bind();
 		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 

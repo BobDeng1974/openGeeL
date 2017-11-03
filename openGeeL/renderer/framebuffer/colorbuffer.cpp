@@ -138,19 +138,19 @@ namespace geeL {
 	}
 
 
-	void ColorBuffer::fill(std::function<void()> drawCall, ClearMethod method) {
+	void ColorBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
 		bind();
 		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
-		clear(method);
+		clearer.clear();
 
 		drawCall();
 		unbind();
 	}
 
-	void ColorBuffer::fill(Drawer& drawer, ClearMethod method) {
+	void ColorBuffer::fill(Drawer& drawer, Clearer clearer) {
 		bind();
 		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
-		clear(method);
+		clearer.clear();
 
 		drawer.draw();
 		unbind();

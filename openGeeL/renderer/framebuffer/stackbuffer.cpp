@@ -52,13 +52,13 @@ namespace geeL {
 	}
 	
 
-	void StackBuffer::fill(std::function<void()> drawCall, ClearMethod method) {
+	void StackBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
 		RenderTexture* current = stackBuffer.top();
 		
 		bind();
 		bindTexture(*current);
 		current->setRenderResolution();
-		clear(method);
+		clearer.clear();
 
 		drawCall();
 		if(stackBuffer.size() <= 1) unbind();
@@ -66,13 +66,13 @@ namespace geeL {
 		pop();
 	}
 
-	void StackBuffer::fill(Drawer& drawer, ClearMethod method) {
+	void StackBuffer::fill(Drawer& drawer, Clearer clearer) {
 		RenderTexture* current = stackBuffer.top();
 
 		bind();
 		bindTexture(*current);
 		current->setRenderResolution();
-		clear(method);
+		clearer.clear();
 
 		drawer.draw();
 		if (stackBuffer.size() <= 1) unbind();

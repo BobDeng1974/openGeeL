@@ -22,7 +22,7 @@ namespace geeL {
 		GBuffer(Resolution resolution, GBufferContent content = GBufferContent::Default);
 		virtual ~GBuffer();
 
-		virtual void fill(std::function<void()> drawCall, ClearMethod method = ClearMethod::All);
+		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearAll);
 
 		//Returns depth of current drawn image
 		float getDepth() const;
@@ -59,7 +59,7 @@ namespace geeL {
 		ForwardBuffer(GBuffer& gBuffer);
 
 		void init(RenderTexture& colorTexture);
-		virtual void fill(std::function<void()> drawCall, ClearMethod method = ClearMethod::All);
+		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearAll);
 
 		virtual std::string toString() const;
 
