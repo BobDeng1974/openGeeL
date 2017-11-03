@@ -27,8 +27,12 @@ namespace geeL {
 		blend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	void BlendGuard::blendReverseAlpha() const {
-		blend(GL_ZERO, GL_ONE_MINUS_SRC_ALPHA);
+	void BlendGuard::blendInverseAlpha() const {
+		blend(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
+	}
+
+	void BlendGuard::blendUnder() const {
+		blend(GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
 
 	}
 
@@ -41,7 +45,7 @@ namespace geeL {
 			glBlendFunc(source, destination);
 		}
 		else {
-			glBlendFunci(source, destination, i);
+			glBlendFunci(i, source, destination);
 		}
 	}
 

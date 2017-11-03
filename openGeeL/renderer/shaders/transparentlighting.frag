@@ -40,16 +40,16 @@ uniform vec3 origin;
 #include <renderer/lighting/cooktorrancelights.glsl>
 
 
-void blendCoverage(vec4 color, float z) {
-	float weight = clamp(pow(min(1.0, color.a * 10.0) + 0.01, 3.0) * 1e8 * 
-		pow(1.0 - z * 0.9, 3.0), 1e-2, 3e3);
- 
-	// Blend Func: GL_ONE, GL_ONE
-	accumulation = vec4(color.rgb * color.a, color.a);// * weight;
- 
-	// Blend Func: GL_ZERO, GL_ONE_MINUS_SRC_ALPHA
-	revealage = color.a;
+void blendCoverage(vec4 premultipliedReflect, vec3 transmit, float z) {
+	premultipliedReflect.a *= 1.0 - clamp((transmit.r + transmit.g + transmit.b) * (1.0 / 3.0), 0, 1);
+    
+	float a = min(1.0, premultipliedReflect.a) * 8.0 + 0.01;
+    float b = z * 0.95 + 1.0;
+    float w = clamp(a * a * a * 1e8 * b * b * b, 1e-2, 3e2);
 
+	//accumulation = vec4(premultipliedReflect.rgb * premultipliedReflect.a, premultipliedReflect.a) * w;
+	accumulation = premultipliedReflect * w;
+    revealage    = premultipliedReflect.a;
 }
 
 
@@ -75,7 +75,8 @@ void main() {
 	gNormalMet = vec4(norm, metallic);
 	gDiffuse = albedo;
 
-	float z = gl_FragCoord.z;
-	blendCoverage(vec4(irradiance, albedo.a), z);
+	vec3 transmit = vec3(1.f - albedo.a);
+	float z = -gl_FragCoord.z;
+	blendCoverage(vec4(irradiance, albedo.a), transmit, z);
 }
 

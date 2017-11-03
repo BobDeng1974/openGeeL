@@ -97,6 +97,24 @@ public:
 				sphere1.changeMaterial(ss, mesh);
 			});
 
+			Transform& meshTransform42 = transformFactory.CreateTransform(vec3(12.f, 2.f, 4.f), vec3(0.f), vec3(1.f));
+			MeshRenderer& sphere12 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/sphere.obj"),
+				meshTransform42, CullingMode::cullFront, "Sphere");
+			scene.addMeshRenderer(sphere12);
+			//physics.addSphere(1.f, meshTransform4, RigidbodyProperties(10.f, false));
+			//physics.addMesh(sphere1.getModel(), meshTransform4, RigidbodyProperties(10.f, false));
+
+			sphere12.iterateMaterials([&](MaterialContainer& container) {
+				container.setVectorValue("Color", vec3(0.6f));
+				container.setFloatValue("Roughness", 0.05f);
+				container.setFloatValue("Metallic", 0.5f);
+			});
+
+			sphere12.iterateMeshes([&](const Mesh& mesh) {
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
+				sphere12.changeMaterial(ss, mesh);
+			});
+
 
 			Transform& meshTransform5 = transformFactory.CreateTransform(vec3(0.0f, 0.5f, -2.0f), vec3(0.5f, 0.5f, 0.5f), vec3(5.2f, 2.2f, 1.2f));
 			MeshRenderer& box = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/cube.obj"),
@@ -152,7 +170,7 @@ public:
 			postLister.add(ssao);
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
-			renderer.addEffect(ibl, ibl);
+			//renderer.addEffect(ibl, ibl);
 
 			BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 25);

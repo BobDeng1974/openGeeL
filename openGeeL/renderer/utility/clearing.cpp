@@ -2,8 +2,6 @@
 #include <glew.h>
 #include "clearing.h"
 
-#include <iostream>
-
 namespace geeL {
 
 	void Clearer::clear() const {
@@ -14,6 +12,10 @@ namespace geeL {
 			+ ((i & (unsigned int)ClearingMethod::Stencil) != 0) * GL_STENCIL_BUFFER_BIT;
 
 		glClear(clear);
+	}
+
+	void Clearer::setClearColor(float r, float g, float b, float a) {
+		glClearColor(r, g, b, a);
 	}
 
 }

@@ -13,8 +13,11 @@ namespace geeL {
 		//Blend with GL_SRC_ALPHA and GL_ONE_MINUS_SRC_ALPHA
 		void blendAlpha() const;
 
+		//Blend with GL_ONE_MINUS_SRC_ALPHA and GL_SRC_ALPHA
+		void blendInverseAlpha() const;
+
 		//Blend with GL_ZERO and GL_ONE_MINUS_SRC_COLOR
-		void blendReverseAlpha() const;
+		void blendUnder() const;
 
 		//Blend with GL_ONE and GL_ONE
 		void blendAdd() const;

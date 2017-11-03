@@ -9,8 +9,8 @@
 namespace geeL {
 
 
-	TransparentBuffer::TransparentBuffer(GBuffer& gBuffer, StackBuffer& stackBuffer) : gBuffer(gBuffer), 
-		stackBuffer(stackBuffer), compositionTexture(nullptr), tComp("renderer/framebuffer/tcomp.frag") {
+	TransparentBuffer::TransparentBuffer(GBuffer& gBuffer, DynamicBuffer& compBuffer) : gBuffer(gBuffer), 
+		compBuffer(compBuffer), compositionTexture(nullptr), tComp("renderer/framebuffer/tcomp.frag") {
 		
 		this->resolution = gBuffer.getResolution();
 
@@ -27,7 +27,7 @@ namespace geeL {
 	void TransparentBuffer::init(RenderTexture& colorTexture) {
 		compositionTexture = &colorTexture;
 
-		tComp.init(ScreenQuad::get(), stackBuffer, resolution);
+		tComp.init(ScreenQuad::get(), compBuffer, resolution);
 		tComp.addTextureSampler(*accumulationTexture, "accumulation");
 		tComp.addTextureSampler(*revealageTexture, "revealage");
 
@@ -60,10 +60,12 @@ namespace geeL {
 		bind();
 		glDepthMask(GL_FALSE);
 
-		//Clear only accumulation and revealage textures since others are still needed later on
-		float clear[4] = { 0.f, 0.f, 0.f, 0.f };
-		glClearBufferfv(GL_COLOR, 3, clear);
-		glClearBufferfv(GL_COLOR, 4, clear);
+		//Clear only accumulation and revealage textures since others 
+		//contain information that is still needed later on
+		float clearAcc[4] = { 0.f, 0.f, 0.f, 0.f };
+		float clearRev[4] = { 1.f, 0.f, 0.f, 0.f };
+		glClearBufferfv(GL_COLOR, 3, clearAcc);
+		glClearBufferfv(GL_COLOR, 4, clearRev);
 
 		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 
@@ -71,7 +73,7 @@ namespace geeL {
 		accuBlend.blendAdd();
 
 		BlendGuard revBlend(4);
-		revBlend.blendReverseAlpha();
+		revBlend.blendUnder();
 
 		drawCall();
 
@@ -83,10 +85,10 @@ namespace geeL {
 		glDisable(GL_DEPTH_TEST);
 
 		BlendGuard blend;
-		blend.blendAdd();
+		blend.blendAlpha();
 
-		stackBuffer.push(*compositionTexture);
-		stackBuffer.fill([this]() {
+		compBuffer.push(*compositionTexture);
+		compBuffer.fill([this]() {
 			tComp.draw();
 		}, clearNothing);
 

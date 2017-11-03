@@ -6,14 +6,16 @@
 
 namespace geeL {
 
-	class StackBuffer;
+	class DynamicBuffer;
 
 
 	//Framebuffer that draws transparent objects and extends gBuffer with their information
+	//Implements Weighted, Order-Independent Transparency according to
+	//http://casual-effects.blogspot.de/2015/03/implemented-weighted-blended-order.html
 	class TransparentBuffer : public FrameBuffer {
 
 	public:
-		TransparentBuffer(GBuffer& gBuffer, StackBuffer& stackBuffer);
+		TransparentBuffer(GBuffer& gBuffer, DynamicBuffer& compBuffer);
 		virtual ~TransparentBuffer();
 
 		void init(RenderTexture& colorTexture);
@@ -24,7 +26,7 @@ namespace geeL {
 
 	private:
 		GBuffer& gBuffer;
-		StackBuffer& stackBuffer;
+		DynamicBuffer& compBuffer;
 
 		RenderTexture* accumulationTexture;
 		RenderTexture* revealageTexture;

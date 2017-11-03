@@ -20,9 +20,10 @@ namespace geeL {
 
 		template<typename... ClearingMethods>
 		Clearer(ClearingMethod method, ClearingMethods ...methods);
-
-
+		
 		void clear() const;
+		static void setClearColor(float r = 0.f, float g = 0.f, float b = 0.f, float a = 1.f);
+
 
 	private:
 		unsigned int i;
@@ -53,11 +54,9 @@ namespace geeL {
 	}
 
 
-
 	inline void Clearer::add(ClearingMethod method) {
 		i = i | (unsigned int) method;
 	}
-
 
 	template<typename ...ClearingMethods>
 	inline void Clearer::add(ClearingMethod method, ClearingMethods ...methods) {
