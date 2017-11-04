@@ -24,7 +24,7 @@ namespace geeL {
 			ShaderTransformSpace::View, ShadingMethod::DeferredSkinned)),
 		transparentODShader(new SceneShader("renderer/shaders/forwardlighting.vert", FragmentShader("renderer/shaders/forwardlighting.frag"),
 			ShaderTransformSpace::View, ShadingMethod::TransparentOD)), 
-		transparentOIDShader(new SceneShader("renderer/shaders/forwardlighting.vert", FragmentShader("renderer/shaders/oidtransparentlighting.frag"),
+		transparentOIDShader(new SceneShader("renderer/shaders/forwardlighting.vert", FragmentShader("renderer/shaders/transparentlighting.frag"),
 			ShaderTransformSpace::View, ShadingMethod::TransparentOID)), provider(provider) {
 
 		genericShader->mapOffset = 1;
