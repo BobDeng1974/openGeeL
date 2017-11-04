@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <vec4.hpp>
 #include <mat4x4.hpp>
+#include <vector>
 #include "shader/rendershader.h"
 #include "shader/sceneshader.h"
 #include "materials/material.h"
@@ -23,6 +24,8 @@
 #include "renderscene.h"
 
 using namespace std;
+
+
 
 namespace geeL {
 
@@ -311,13 +314,69 @@ namespace geeL {
 		drawForward(ShadingMethod::ForwardSkinned, camera);
 	}
 
-	void RenderScene::drawTransparent() const {
-		drawTransparent(*camera);
+
+	void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera) const {
+		using MSPair = pair<const MeshRenderer*, SceneShader*>;
+
+		SceneShader* currentShader = nullptr;
+
+		//Write all objects into sortable data structure
+		size_t c = count(shadingMethod);
+		vector<MSPair> sortedObjects;
+		sortedObjects.reserve(c);
+		iterRenderObjects(shadingMethod, [&sortedObjects](const MeshRenderer& object, SceneShader& shader) {
+			sortedObjects.push_back(MSPair(&object, &shader));
+		});
+
+		//Sort by distance to camera
+		sort(sortedObjects.begin(), sortedObjects.end(), [&camera](const MSPair& a, const MSPair& b) -> bool {
+			const MeshRenderer& x = *a.first;
+			const MeshRenderer& y = *b.first;
+
+			glm::vec3 camPos = camera.transform.getPosition();
+			float xDist = glm::distance(x.transform.getPosition(), camPos);
+			float yDist = glm::distance(y.transform.getPosition(), camPos);
+
+			return xDist > yDist;
+		});
+
+		//Read sorted data structure
+		for (auto it(sortedObjects.begin()); it != sortedObjects.end(); it++) {
+			const MeshRenderer& object = *it->first;
+			SceneShader& shader = *it->second;
+
+			if (currentShader != &shader) {
+				shader.bind<glm::mat4>("projection", camera.getProjectionMatrix());
+				shader.bind<glm::mat4>("inverseView", camera.getInverseViewMatrix());
+				shader.bind<glm::vec3>("origin", camera.GetOriginInViewSpace());
+
+				pipeline.dynamicBind(lightManager, shader, camera);
+				currentShader = &shader;
+			}
+
+			if (object.isActive())
+				object.draw(shader);
+		}
+
 	}
 
-	void RenderScene::drawTransparent(const Camera & camera) const {
-		drawForward(ShadingMethod::Transparent, camera);
-		drawForward(ShadingMethod::TransparentSkinned, camera);
+	void RenderScene::drawTransparentOD() const {
+		drawTransparentOD(*camera);
+	}
+
+	void RenderScene::drawTransparentOD(const Camera& camera) const {
+		drawForwardOrdered(ShadingMethod::TransparentOD, camera);
+		drawForwardOrdered(ShadingMethod::TransparentODSkinned, camera);
+	}
+
+
+	void RenderScene::drawTransparentOID() const {
+		drawTransparentOID(*camera);
+	}
+
+	void RenderScene::drawTransparentOID(const Camera & camera) const {
+		drawForward(ShadingMethod::TransparentOID, camera);
+		drawForward(ShadingMethod::TransparentOIDSkinned, camera);
 	}
 
 

@@ -138,11 +138,17 @@ namespace geeL {
 		//Draw all objects that have forward shaded materials from given camera's perspective
 		void drawForward(const Camera& camera) const;
 
-		//Draw all those objects that have transparently shaded materials
-		void drawTransparent() const;
+		//Draw all those objects that have order-dependent transparency
+		void drawTransparentOD() const;
 
-		//Draw all objects that have transparently shaded materials from given camera's perspective
-		void drawTransparent(const Camera& camera) const;
+		//Draw all objects that have order-dependent transparency from given camera's perspective
+		void drawTransparentOD(const Camera& camera) const;
+
+		//Draw all those objects that have order-independent transparency
+		void drawTransparentOID() const;
+
+		//Draw all objects that have order-independent transparency from given camera's perspective
+		void drawTransparentOID(const Camera& camera) const;
 
 		//Draw all objects in the scene with given shader and given camera.
 		//Note: Scene gets drawn in world space if no camera gets attached
@@ -178,6 +184,7 @@ namespace geeL {
 
 		void RenderScene::drawGeneric(ShadingMethod shadingMethod, const Camera& camera) const;
 		void RenderScene::drawForward(ShadingMethod shadingMethod, const Camera& camera) const;
+		void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera) const;
 
 	};
 

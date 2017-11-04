@@ -22,16 +22,20 @@ namespace geeL {
 			ShaderTransformSpace::View, ShadingMethod::Deferred)),
 		deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", FragmentShader(buffer.getFragmentPath()),
 			ShaderTransformSpace::View, ShadingMethod::DeferredSkinned)),
-		transparentShader(new SceneShader("renderer/shaders/forwardlighting.vert", FragmentShader("renderer/shaders/transparentlighting.frag"),
-			ShaderTransformSpace::View, ShadingMethod::Transparent)), provider(provider) {
+		transparentODShader(new SceneShader("renderer/shaders/forwardlighting.vert", FragmentShader("renderer/shaders/forwardlighting.frag"),
+			ShaderTransformSpace::View, ShadingMethod::TransparentOD)), 
+		transparentOIDShader(new SceneShader("renderer/shaders/forwardlighting.vert", FragmentShader("renderer/shaders/oidtransparentlighting.frag"),
+			ShaderTransformSpace::View, ShadingMethod::TransparentOID)), provider(provider) {
 
 		genericShader->mapOffset = 1;
 		forwardShader->mapOffset = 1;
-		transparentShader->mapOffset = 1;
+		transparentODShader->mapOffset = 1;
+		transparentOIDShader->mapOffset = 1;
 
 		shaders.push_back(genericShader);
 		shaders.push_back(forwardShader);
-		shaders.push_back(transparentShader);
+		shaders.push_back(transparentODShader);
+		shaders.push_back(transparentOIDShader);
 	}
 
 	MaterialFactory::~MaterialFactory() {
@@ -126,12 +130,14 @@ namespace geeL {
 				space = ShaderTransformSpace::World;
 				break;
 			case ShadingMethod::Forward:
-			case ShadingMethod::Transparent:
+			case ShadingMethod::TransparentOD:
+			case ShadingMethod::TransparentOID:
 				vertexPath = "renderer/shaders/forwardlighting.vert";
 				space = ShaderTransformSpace::View;
 				break;
 			case ShadingMethod::ForwardSkinned:
-			case ShadingMethod::TransparentSkinned:
+			case ShadingMethod::TransparentODSkinned:
+			case ShadingMethod::TransparentOIDSkinned:
 				vertexPath = "renderer/shaders/lighting.vert"; //TODO: create actual shader
 				space = ShaderTransformSpace::View;
 				break;
@@ -159,10 +165,14 @@ namespace geeL {
 				return *forwardShader;
 			case ShadingMethod::ForwardSkinned:
 				return *forwardShader; //TODO: create actual shader
-			case ShadingMethod::Transparent:
-				return *transparentShader;
-			case ShadingMethod::TransparentSkinned:
-				return *transparentShader; //TODO: create actual shader
+			case ShadingMethod::TransparentOD:
+				return *transparentODShader;
+			case ShadingMethod::TransparentODSkinned:
+				return *transparentODShader; //TODO: create actual shader
+			case ShadingMethod::TransparentOID:
+				return *transparentOIDShader;
+			case ShadingMethod::TransparentOIDSkinned:
+				return *transparentOIDShader; //TODO: create actual shader
 		}
 
 		return *deferredShader;

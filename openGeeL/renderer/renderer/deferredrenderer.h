@@ -23,7 +23,7 @@ namespace geeL {
 	class SSAO;
 	class PostProcessingEffect;
 	class Texture;
-	class TransparentBuffer;
+	class TransparentOIDBuffer;
 
 	using PostEffectRender = std::pair<RenderTexture*, PostProcessingEffect*>;
 
@@ -56,7 +56,7 @@ namespace geeL {
 		virtual std::map<WorldMaps, const Texture*> getMaps() const;
 
 		void addFBuffer(ForwardBuffer& buffer);
-		void addTBuffer(TransparentBuffer& buffer);
+		void addTBuffer(TransparentOIDBuffer& buffer);
 
 		StackBuffer& getStackbuffer();
 
@@ -72,7 +72,7 @@ namespace geeL {
 		RenderTexture* texture2;
 		GBuffer& gBuffer;
 		ForwardBuffer* fBuffer;
-		TransparentBuffer* tBuffer;
+		TransparentOIDBuffer* tBuffer;
 		StackBuffer stackBuffer;
 
 		SceneRender& lighting;

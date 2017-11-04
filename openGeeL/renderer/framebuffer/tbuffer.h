@@ -12,11 +12,11 @@ namespace geeL {
 	//Framebuffer that draws transparent objects and extends gBuffer with their information
 	//Implements Weighted, Order-Independent Transparency according to
 	//http://casual-effects.blogspot.de/2015/03/implemented-weighted-blended-order.html
-	class TransparentBuffer : public FrameBuffer {
+	class TransparentOIDBuffer : public FrameBuffer {
 
 	public:
-		TransparentBuffer(GBuffer& gBuffer, DynamicBuffer& compBuffer);
-		virtual ~TransparentBuffer();
+		TransparentOIDBuffer(GBuffer& gBuffer, DynamicBuffer& compBuffer);
+		virtual ~TransparentOIDBuffer();
 
 		void init(RenderTexture& colorTexture);
 		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearAll);

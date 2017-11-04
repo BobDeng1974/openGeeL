@@ -1195,11 +1195,11 @@
     <None Include="renderer\shaders\forwardlighting.frag">
       <Filter>renderer\shaders</Filter>
     </None>
-    <None Include="renderer\shaders\transparentlighting.frag">
-      <Filter>renderer\shaders</Filter>
-    </None>
     <None Include="renderer\framebuffer\tcomp.frag">
       <Filter>renderer\framebuffer</Filter>
+    </None>
+    <None Include="renderer\shaders\oidtransparentlighting.frag">
+      <Filter>renderer\shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

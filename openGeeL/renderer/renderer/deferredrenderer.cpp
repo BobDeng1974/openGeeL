@@ -110,20 +110,35 @@ namespace geeL {
 		stackBuffer.fill(lightingPassFunc);
 
 		//Forward pass
+		bool copiedDepth = false;
 		if (fBuffer != nullptr && scene->count(ShadingMethod::Forward, ShadingMethod::ForwardSkinned) > 0) {
 			fBuffer->fill([this]() {
 				glClear(GL_DEPTH_BUFFER_BIT);
 				fBuffer->copyDepth(gBuffer);
 				scene->drawForward();
 			});
+
+			copiedDepth = true;
 		}
 
 		//Transparent pass
-		if (tBuffer != nullptr && scene->count(ShadingMethod::Transparent, ShadingMethod::TransparentSkinned) > 0) {
+		if (fBuffer != nullptr && scene->count(ShadingMethod::TransparentOD, ShadingMethod::TransparentODSkinned) > 0) {
+			fBuffer->fill([this, &copiedDepth]() {
+				if (!copiedDepth) {
+					glClear(GL_DEPTH_BUFFER_BIT);
+					fBuffer->copyDepth(gBuffer);
+				}
+
+				scene->drawTransparentOD();
+			});
+		}
+
+		//Order-independent Transparent pass
+		if (tBuffer != nullptr && scene->count(ShadingMethod::TransparentOID, ShadingMethod::TransparentOIDSkinned) > 0) {
 			tBuffer->fill([this]() {
 				glClear(GL_DEPTH_BUFFER_BIT);
 				tBuffer->copyDepth(gBuffer);
-				scene->drawTransparent();
+				scene->drawTransparentOID();
 			});
 
 			tBuffer->composite();
@@ -331,7 +346,7 @@ namespace geeL {
 		fBuffer->init(*texture1);
 	}
 
-	void DeferredRenderer::addTBuffer(TransparentBuffer& buffer) {
+	void DeferredRenderer::addTBuffer(TransparentOIDBuffer& buffer) {
 		tBuffer = &buffer;
 		tBuffer->init(*texture1);
 	}

@@ -93,7 +93,7 @@ public:
 			});
 
 			sphere1.iterateMeshes([&](const Mesh& mesh) {
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
 				sphere1.changeMaterial(ss, mesh);
 			});
 
@@ -111,7 +111,7 @@ public:
 			});
 
 			sphere12.iterateMeshes([&](const Mesh& mesh) {
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
 				sphere12.changeMaterial(ss, mesh);
 			});
 
@@ -170,7 +170,7 @@ public:
 			postLister.add(ssao);
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
-			//renderer.addEffect(ibl, ibl);
+			renderer.addEffect(ibl, ibl);
 
 			BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 25);

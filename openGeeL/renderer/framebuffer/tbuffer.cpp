@@ -9,7 +9,7 @@
 namespace geeL {
 
 
-	TransparentBuffer::TransparentBuffer(GBuffer& gBuffer, DynamicBuffer& compBuffer) : gBuffer(gBuffer), 
+	TransparentOIDBuffer::TransparentOIDBuffer(GBuffer& gBuffer, DynamicBuffer& compBuffer) : gBuffer(gBuffer), 
 		compBuffer(compBuffer), compositionTexture(nullptr), tComp("renderer/framebuffer/tcomp.frag") {
 		
 		this->resolution = gBuffer.getResolution();
@@ -18,13 +18,13 @@ namespace geeL {
 		revealageTexture = new RenderTexture(resolution, ColorType::Single);
 	}
 
-	TransparentBuffer::~TransparentBuffer() {
+	TransparentOIDBuffer::~TransparentOIDBuffer() {
 		delete accumulationTexture;
 		delete revealageTexture;
 	}
 
 
-	void TransparentBuffer::init(RenderTexture& colorTexture) {
+	void TransparentOIDBuffer::init(RenderTexture& colorTexture) {
 		compositionTexture = &colorTexture;
 
 		tComp.init(ScreenQuad::get(), compBuffer, resolution);
@@ -56,7 +56,7 @@ namespace geeL {
 		unbind();
 	}
 
-	void TransparentBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
+	void TransparentOIDBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
 		bind();
 		glDepthMask(GL_FALSE);
 
@@ -81,7 +81,7 @@ namespace geeL {
 		unbind();
 	}
 
-	void TransparentBuffer::composite() {
+	void TransparentOIDBuffer::composite() {
 		glDisable(GL_DEPTH_TEST);
 
 		BlendGuard blend;
@@ -96,7 +96,7 @@ namespace geeL {
 	}
 
 
-	std::string TransparentBuffer::toString() const {
+	std::string TransparentOIDBuffer::toString() const {
 		return "TBuffer " + std::to_string(fbo.token) + "\n";
 	}
 
