@@ -18,7 +18,7 @@ public:
 			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
 
 
-			Transform& cameraTransform = transformFactory.CreateTransform(vec3(2.93f, 0.71f, -0.59f), vec3(90.f, 76.86f, 179.f), vec3(1.f));
+			Transform& cameraTransform = transformFactory.CreateTransform(vec3(2.93f, 0.71f, -0.59f), vec3(86.f, 76.86f, 179.f), vec3(1.f));
 			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 45.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
 			camera.addComponent<MovableCamera>(MovableCamera(5.f, 0.65f));
 			scene.setCamera(camera);
@@ -71,7 +71,7 @@ public:
 			postLister.add(def);
 
 			BilateralFilter& blur = BilateralFilter(1.5f, 0.7f);
-			SSAO& ssao = SSAO(blur, 2.f);
+			SSAO& ssao = SSAO(blur, 1.f);
 			renderer.addEffect(ssao);
 			scene.addRequester(ssao);
 			postLister.add(ssao);

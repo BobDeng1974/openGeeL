@@ -168,11 +168,12 @@ namespace geeL {
 	void ForwardBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
 		bind();
 		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
-
+		//glDepthMask(GL_FALSE);
 		BlendGuard blend(3);
 		blend.blendAlpha();
 
 		drawCall();
+		//glDepthMask(GL_TRUE);
 		unbind();
 	}
 
