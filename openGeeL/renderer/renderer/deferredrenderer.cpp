@@ -111,7 +111,7 @@ namespace geeL {
 
 		//Forward pass
 		bool copiedDepth = false;
-		if (fBuffer != nullptr && scene->count(ShadingMethod::Forward, ShadingMethod::ForwardSkinned) > 0) {
+		if (fBuffer != nullptr && scene->count(ShadingMethod::Forward) > 0) {
 			fBuffer->fill([this]() {
 				glClear(GL_DEPTH_BUFFER_BIT);
 				fBuffer->copyDepth(gBuffer);
@@ -122,7 +122,7 @@ namespace geeL {
 		}
 
 		//Transparent pass
-		if (fBuffer != nullptr && scene->count(ShadingMethod::TransparentOD, ShadingMethod::TransparentODSkinned) > 0) {
+		if (fBuffer != nullptr && scene->count(ShadingMethod::TransparentOD) > 0) {
 			fBuffer->fill([this, &copiedDepth]() {
 				if (!copiedDepth) {
 					glClear(GL_DEPTH_BUFFER_BIT);
@@ -134,7 +134,7 @@ namespace geeL {
 		}
 
 		//Order-independent Transparent pass
-		if (tBuffer != nullptr && scene->count(ShadingMethod::TransparentOID, ShadingMethod::TransparentOIDSkinned) > 0) {
+		if (tBuffer != nullptr && scene->count(ShadingMethod::TransparentOID) > 0) {
 			tBuffer->fill([this]() {
 				glClear(GL_DEPTH_BUFFER_BIT);
 				tBuffer->copyDepth(gBuffer);

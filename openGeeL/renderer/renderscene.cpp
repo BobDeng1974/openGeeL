@@ -243,7 +243,6 @@ namespace geeL {
 			pipeline.bindCamera(camera);
 
 		draw(ShadingMethod::Deferred, camera);
-		draw(ShadingMethod::DeferredSkinned, camera);
 	}
 
 	void RenderScene::drawDefaultForward(const Camera& camera) const {
@@ -282,7 +281,6 @@ namespace geeL {
 		blend.blendAlpha();
 
 		drawGeneric(ShadingMethod::Generic, camera);
-		drawGeneric(ShadingMethod::GenericSkinned, camera);
 	}
 
 
@@ -311,7 +309,6 @@ namespace geeL {
 
 	void RenderScene::drawForward(const Camera & camera) const {
 		drawForward(ShadingMethod::Forward, camera);
-		drawForward(ShadingMethod::ForwardSkinned, camera);
 	}
 
 
@@ -366,7 +363,6 @@ namespace geeL {
 
 	void RenderScene::drawTransparentOD(const Camera& camera) const {
 		drawForwardOrdered(ShadingMethod::TransparentOD, camera);
-		drawForwardOrdered(ShadingMethod::TransparentODSkinned, camera);
 	}
 
 
@@ -376,7 +372,6 @@ namespace geeL {
 
 	void RenderScene::drawTransparentOID(const Camera & camera) const {
 		drawForward(ShadingMethod::TransparentOID, camera);
-		drawForward(ShadingMethod::TransparentOIDSkinned, camera);
 	}
 
 

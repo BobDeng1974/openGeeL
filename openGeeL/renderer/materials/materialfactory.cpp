@@ -21,7 +21,7 @@ namespace geeL {
 		deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", FragmentShader(buffer.getFragmentPath(), false), 
 			ShaderTransformSpace::View, ShadingMethod::Deferred)),
 		deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", FragmentShader(buffer.getFragmentPath()),
-			ShaderTransformSpace::View, ShadingMethod::DeferredSkinned)),
+			ShaderTransformSpace::View, ShadingMethod::Deferred)),
 		transparentODShader(new SceneShader("renderer/shaders/forwardlighting.vert", FragmentShader("renderer/shaders/forwardlighting.frag"),
 			ShaderTransformSpace::View, ShadingMethod::TransparentOD)), 
 		transparentOIDShader(new SceneShader("renderer/shaders/forwardlighting.vert", FragmentShader("renderer/shaders/transparentlighting.frag"),
@@ -116,7 +116,7 @@ namespace geeL {
 		return *mat;
 	}
 
-	SceneShader& MaterialFactory::CreateShader(ShadingMethod shading, string fragmentPath) {
+	SceneShader& MaterialFactory::CreateShader(ShadingMethod shading, string fragmentPath, bool animated) {
 		std::string vertexPath;
 		ShaderTransformSpace space;
 
@@ -125,20 +125,12 @@ namespace geeL {
 				vertexPath = "renderer/shaders/lighting.vert";
 				space = ShaderTransformSpace::World;
 				break;
-			case ShadingMethod::GenericSkinned:
-				vertexPath = "renderer/shaders/lighting.vert"; //TODO: create actual shader
 				space = ShaderTransformSpace::World;
 				break;
 			case ShadingMethod::Forward:
 			case ShadingMethod::TransparentOD:
 			case ShadingMethod::TransparentOID:
 				vertexPath = "renderer/shaders/forwardlighting.vert";
-				space = ShaderTransformSpace::View;
-				break;
-			case ShadingMethod::ForwardSkinned:
-			case ShadingMethod::TransparentODSkinned:
-			case ShadingMethod::TransparentOIDSkinned:
-				vertexPath = "renderer/shaders/lighting.vert"; //TODO: create actual shader
 				space = ShaderTransformSpace::View;
 				break;
 			default:
@@ -151,28 +143,18 @@ namespace geeL {
 		return *shaders.back();
 	}
 
-	SceneShader& MaterialFactory::getDefaultShader(ShadingMethod shading) const {
+	SceneShader& MaterialFactory::getDefaultShader(ShadingMethod shading, bool animated) const {
 		switch (shading) {
 			case ShadingMethod::Generic:
 				return *genericShader;
-			case ShadingMethod::GenericSkinned:
-				return *genericShader; //TODO: create actual shader
 			case ShadingMethod::Deferred:
-				return *deferredShader;
-			case ShadingMethod::DeferredSkinned:
-				return *deferredAnimatedShader;
+				return animated ? *deferredAnimatedShader : *deferredShader;
 			case ShadingMethod::Forward:
 				return *forwardShader;
-			case ShadingMethod::ForwardSkinned:
-				return *forwardShader; //TODO: create actual shader
 			case ShadingMethod::TransparentOD:
 				return *transparentODShader;
-			case ShadingMethod::TransparentODSkinned:
-				return *transparentODShader; //TODO: create actual shader
 			case ShadingMethod::TransparentOID:
 				return *transparentOIDShader;
-			case ShadingMethod::TransparentOIDSkinned:
-				return *transparentOIDShader; //TODO: create actual shader
 		}
 
 		return *deferredShader;

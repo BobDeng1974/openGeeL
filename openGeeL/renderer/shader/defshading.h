@@ -10,15 +10,10 @@ namespace geeL {
 
 	enum class ShadingMethod {
 		Generic,
-		GenericSkinned,
 		Deferred,
-		DeferredSkinned,
 		Forward,
-		ForwardSkinned,
 		TransparentOD,
-		TransparentODSkinned,
 		TransparentOID,
-		TransparentOIDSkinned,
 		Other
 
 	};

@@ -50,7 +50,7 @@ namespace geeL {
 	SkinnedMeshRenderer& MeshFactory::CreateSkinnedMeshRenderer(SkinnedModel& model, Transform& transform,
 		CullingMode faceCulling, const string& name) {
 
-		return CreateSkinnedMeshRenderer(model, factory.getDefaultShader(ShadingMethod::DeferredSkinned), 
+		return CreateSkinnedMeshRenderer(model, factory.getDefaultShader(ShadingMethod::Deferred, true), 
 			transform, faceCulling, name);
 	}
 
