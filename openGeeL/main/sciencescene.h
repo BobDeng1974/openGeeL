@@ -80,7 +80,7 @@ public:
 					if (mesh.getName().find("TestTubes") != std::string::npos)
 						container.setFloatValue("Transparency", 0.75f);
 					else 
-						container.setFloatValue("Transparency", 0.4f);
+						container.setFloatValue("Transparency", 0.5f);
 
 					container.setVectorValue("Color", glm::vec3(0.3f));
 				}

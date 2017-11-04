@@ -347,7 +347,7 @@ namespace geeL {
 		}
 	}
 
-	const Transform* Transform::GetParent() {
+	Transform* Transform::GetParent() {
 		return parent;
 	}
 

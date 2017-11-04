@@ -49,6 +49,9 @@ namespace geeL {
 		MeshRenderer& CreateMeshRenderer(StaticModel& model, SceneShader& shader, Transform& transform,
 			CullingMode faceCulling, const std::string& name = "MeshRenderer");
 
+		std::list<MeshRenderer*> CreateMeshRendererSeparated(StaticModel& model, SceneShader& shader, Transform& transform,
+			CullingMode faceCulling, const std::string& name = "MeshRenderer");
+
 		//Create new skinned mesh renderer with default shading
 		SkinnedMeshRenderer& CreateSkinnedMeshRenderer(SkinnedModel& model, Transform& transform,
 			CullingMode faceCulling, const std::string& name = "SkinnedMeshRenderer");

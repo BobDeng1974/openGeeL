@@ -27,7 +27,9 @@ namespace geeL {
 		for_each(meshes.begin(), meshes.end(), function);
 	}
 
-
+	void StaticModel::iterateMeshes(std::function<void(const StaticMesh&)> function) const {
+		for_each(meshes.begin(), meshes.end(), function);
+	}
 
 
 	void SkinnedModel::updateBones(Skeleton& skeleton) {

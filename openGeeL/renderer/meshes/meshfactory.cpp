@@ -46,6 +46,34 @@ namespace geeL {
 		return *renderer;
 	}
 
+	list<MeshRenderer*> MeshFactory::CreateMeshRendererSeparated(StaticModel& model, SceneShader& shader, 
+		Transform& transform, CullingMode faceCulling, const std::string& name) {
+
+		list<MeshRenderer*> renderers;
+		string path = model.getPath();
+		
+		size_t counter = 1;
+		model.iterateMeshes([&](const StaticMesh& mesh) {
+			string newName = path + std::to_string(counter);
+
+			staticModels[newName] = StaticModel(path);
+
+			StaticMesh newMesh(mesh);
+			staticModels[newName].addMesh(std::move(newMesh));
+
+			Transform& newTransform = transform.GetParent()->AddChild(transform);
+			MeshRenderer* renderer = new MeshRenderer(newTransform, shader, staticModels[newName], 
+				faceCulling, mesh.getName());
+
+			meshRenderer.push_back(renderer);
+			renderers.push_back(renderer);
+
+			counter++;
+		});
+		
+		return renderers;
+	}
+
 
 	SkinnedMeshRenderer& MeshFactory::CreateSkinnedMeshRenderer(SkinnedModel& model, Transform& transform,
 		CullingMode faceCulling, const string& name) {

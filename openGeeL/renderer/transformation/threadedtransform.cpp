@@ -13,6 +13,8 @@ namespace geeL {
 	ThreadedTransform::ThreadedTransform(vec3 position, vec3 rotation, vec3 scaling, bool isStatic) 
 		: Transform(position, rotation, scaling, isStatic) {}
 
+	ThreadedTransform::ThreadedTransform(const Transform& transform) : Transform(transform) {}
+
 
 
 	const glm::vec3& ThreadedTransform::getPosition() {
@@ -132,6 +134,10 @@ namespace geeL {
 		});
 	}
 
+	Transform & ThreadedTransform::AddChild(const Transform & child) {
+		return AddChild(new ThreadedTransform(child));
+	}
+
 
 	Transform& ThreadedTransform::AddChild(Transform* child) {
 		ThreadedTransform* t = dynamic_cast<ThreadedTransform*>(child);
@@ -150,7 +156,7 @@ namespace geeL {
 	}
 
 
-	const Transform* ThreadedTransform::GetParent() {
+	Transform* ThreadedTransform::GetParent() {
 		std::lock_guard<std::recursive_mutex> guard(mutex);
 		return Transform::GetParent();
 	}

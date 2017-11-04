@@ -14,7 +14,7 @@ namespace geeL {
 		ThreadedTransform(mat4& matrix, bool isStatic = false);
 		ThreadedTransform(vec3 position, glm::quat rotation, vec3 scaling, bool isStatic = false);
 		ThreadedTransform(vec3 position, vec3 rotation, vec3 scaling, bool isStatic = false);
-
+		ThreadedTransform(const Transform& transform);
 
 		virtual const glm::vec3& getPosition();
 		virtual const glm::quat& getRotation();
@@ -39,10 +39,11 @@ namespace geeL {
 		virtual mat4 lookAt();
 
 		virtual void iterateChildren(std::function<void(Transform&)> function);
+		virtual Transform& AddChild(const Transform& child);
 		virtual Transform& AddChild(Transform* child);
 		virtual void RemoveChild(Transform& child);
 
-		virtual const Transform* GetParent();
+		virtual Transform* GetParent();
 		virtual void ChangeParent(Transform& newParent);
 
 		virtual void update();

@@ -37,6 +37,8 @@ namespace geeL {
 		virtual unsigned int meshCount() const = 0;
 		virtual const Mesh& getMesh(unsigned int index) const = 0;
 
+		const std::string& getPath() const;
+
 	protected:
 		std::string path;
 	};
@@ -52,6 +54,7 @@ namespace geeL {
 		StaticMesh& addMesh(StaticMesh&& mesh);
 
 		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const;
+		void iterateMeshes(std::function<void(const StaticMesh&)> function) const;
 		
 		virtual unsigned int meshCount() const;
 		virtual const Mesh& getMesh(unsigned int index) const;
@@ -88,9 +91,14 @@ namespace geeL {
 
 
 
+	inline const std::string& Model::getPath() const {
+		return path;
+	}
+
 	inline const Mesh& StaticModel::getMesh(unsigned int index) const {
 		return meshes[index];
 	}
+	
 
 	inline unsigned int StaticModel::meshCount() const {
 		return unsigned int(meshes.size());
