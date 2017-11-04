@@ -99,6 +99,7 @@ namespace geeL {
 			});
 
 			renderObjects[shader.getMethod()][&shader][renderer.transform.getID()] = &renderer;
+			renderers.emplace(&renderer);
 		});
 	}
 
@@ -118,6 +119,8 @@ namespace geeL {
 
 			}
 		}
+
+		renderers.erase(&renderer);
 	}
 
 	void Scene::removeMeshRenderer(MeshRenderer& renderer) {
@@ -439,35 +442,10 @@ namespace geeL {
 
 	
 
-
-	void Scene::iterAllObjects(function<void(MeshRenderer&)> function) {
-
-		std::set<MeshRenderer*> renderers;
-		for (auto it(renderObjects.begin()); it != renderObjects.end(); it++) {
-			ShaderMapping& shaders = it->second;
-
-			for (auto et(shaders.begin()); et != shaders.end(); et++) {
-				TransformMapping& elements = et->second;
-
-				for (auto ut(elements.begin()); ut != elements.end(); ut++) {
-					MeshRenderer& object = *ut->second;
-
-					//Only call method if it hasn't been called on same renderer before.
-					//This check is necessary because same renderer can be in present in 
-					//several shader buckets
-					if(renderers.find(&object) == renderers.end())
-						function(object);
-
-					renderers.emplace(&object);
-				}
-			}
-		}
-	}
-
 	void Scene::iterSceneObjects(std::function<void(SceneObject&)> function) {
 		function(*camera);
 
-		iterAllObjects([&](MeshRenderer& object) {
+		iterRenderObjects([&](MeshRenderer& object) {
 			function(object);
 		});
 
@@ -477,18 +455,10 @@ namespace geeL {
 	}
 
 
-	void Scene::iterRenderObjects(function<void(const MeshRenderer&)> function) const {
-		for (auto it(renderObjects.begin()); it != renderObjects.end(); it++) {
-			const ShaderMapping& shaders = it->second;
-			
-			for (auto et(shaders.begin()); et != shaders.end(); et++) {
-				const TransformMapping& elements = et->second;
-
-				for (auto ut(elements.begin()); ut != elements.end(); ut++) {
-					const MeshRenderer& object = *ut->second;
-					function(object);
-				}
-			}
+	void Scene::iterRenderObjects(function<void(MeshRenderer&)> function) const {
+		for (auto it(renderers.begin()); it != renderers.end(); it++) {
+			MeshRenderer& renderer = **it;
+			function(renderer);
 		}
 	}
 

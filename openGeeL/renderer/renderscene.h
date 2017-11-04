@@ -6,6 +6,7 @@
 #include <map>
 #include <mutex>
 #include <list>
+#include <set>
 #include "threading.h"
 #include "shader/defshading.h"
 
@@ -58,9 +59,8 @@ namespace geeL {
 		void setSkybox(Skybox& skybox);
 
 		void iterSceneObjects(std::function<void(SceneObject&)> function);
-		void iterAllObjects(std::function<void(MeshRenderer&)> function);
 
-		void iterRenderObjects(std::function<void(const MeshRenderer&)> function) const;
+		void iterRenderObjects(std::function<void(MeshRenderer&)> function) const;
 		void iterRenderObjects(SceneShader& shader, std::function<void(const MeshRenderer&)> function) const;
 		void iterRenderObjects(ShadingMethod shadingMethod, 
 			std::function<void(const MeshRenderer&, SceneShader&)> function) const;
@@ -86,6 +86,9 @@ namespace geeL {
 		//therefore no unnecessary shader programm switching. Objects with multiple materials are linked to
 		//all their shaders respectively
 		std::map<ShadingMethod, ShaderMapping> renderObjects;
+
+		//Second indexing structure of mesh renderers that is mainly used for better iteration performance
+		std::set<MeshRenderer*> renderers;
 
 		void removeMeshRenderer(MeshRenderer& renderer, SceneShader& shader);
 		void updateMeshRenderer(MeshRenderer& renderer, Material oldMaterial, Material newMaterial);
