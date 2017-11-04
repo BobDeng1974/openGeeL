@@ -46,7 +46,7 @@ namespace geeL {
 		//Add new post processing effect to renderer. 
 		virtual void addEffect(PostProcessingEffect& effect);
 		virtual void addEffect(PostProcessingEffect& effect, RenderTexture& texture);
-		void addSSAO(SSAO& ssao);
+		void addEffect(SSAO& ssao);
 
 		virtual void addRequester(WorldMapRequester& requester);
 		virtual void addRenderTexture(DynamicRenderTexture& texture);

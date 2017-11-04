@@ -286,7 +286,7 @@ namespace geeL {
 		scene->drawSkybox();
 	}
 
-	void DeferredRenderer::addSSAO(SSAO& ssao) {
+	void DeferredRenderer::addEffect(SSAO& ssao) {
 		this->ssao = &ssao;
 		addRequester(*this->ssao);
 
@@ -299,7 +299,7 @@ namespace geeL {
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {
 		SSAO* ssao = dynamic_cast<SSAO*>(&effect);
 		if (ssao != nullptr) {
-			addSSAO(*ssao);
+			addEffect(*ssao);
 			return;
 		}
 
