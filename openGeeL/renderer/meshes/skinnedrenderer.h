@@ -17,9 +17,9 @@ namespace geeL {
 		//Updates model with current transformational data of skeleton
 		virtual void lateUpdate();
 
-		virtual void draw(bool deferred = true) const;
-		virtual void draw(const SceneShader& shader) const;
-		virtual void draw(const RenderShader& shader) const;
+		virtual void draw(SceneShader& shader) const;
+		virtual void drawExclusive(SceneShader& shader) const;
+		virtual void drawGeometry(const RenderShader& shader) const;
 
 		Skeleton& getSkeleton();
 		SkinnedModel& getSkinnedModel();

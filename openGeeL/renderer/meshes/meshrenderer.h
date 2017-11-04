@@ -38,10 +38,6 @@ namespace geeL {
 			CullingMode faceCulling = CullingMode::cullFront, const std::string& name = "MeshRenderer");
 		virtual ~MeshRenderer() {}
 
-		//Draw all meshes of with their respective shader and material.
-		//Meshes with same shaders will be rendered in groups to avoid
-		//unnecessary program switching in GPU
-		virtual void draw() const;
 
 		//Only draw those meshes whose materials
 		//are linked to given shader

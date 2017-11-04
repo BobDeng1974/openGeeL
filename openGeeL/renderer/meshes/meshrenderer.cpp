@@ -20,30 +20,6 @@ namespace geeL{
 	}
 
 
-	void MeshRenderer::draw() const {
-		CullingGuard culling(faceCulling);
-
-		for (auto it = materials.begin(); it != materials.end(); it++) {
-			//Activate and forward information to shader
-			SceneShader& shader = *it->first;
-			shader.setModelMatrix(transform.getMatrix());
-			shader.bindMatrices();
-
-			const std::list<MaterialMapping>& elements = it->second;
-			for (auto et = elements.begin(); et != elements.end(); et++) {
-				const MaterialMapping& container = *et;
-
-				//Draw individual material
-				const Material& mat = container.material;
-				mat.bind();
-
-				//Draw mesh
-				const Mesh& mesh = *container.mesh;
-				mesh.draw();
-			}
-		}
-	}
-
 	void MeshRenderer::draw(SceneShader& shader) const {
 		CullingGuard culling(faceCulling);
 
