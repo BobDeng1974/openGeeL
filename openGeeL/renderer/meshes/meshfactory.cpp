@@ -46,18 +46,19 @@ namespace geeL {
 		return *renderer;
 	}
 
-	list<MeshRenderer*> MeshFactory::CreateMeshRendererSeparated(StaticModel& model, SceneShader& shader, 
-		Transform& transform, CullingMode faceCulling, const std::string& name) {
+	list<MeshRenderer*> MeshFactory::CreateMeshRenderers(StaticModel& model, SceneShader& shader, 
+		Transform& transform, CullingMode faceCulling) {
 
 		list<MeshRenderer*> renderers;
 		string path = model.getPath();
 		
 		size_t counter = 1;
 		model.iterateMeshes([&](const StaticMesh& mesh) {
-			string newName = path + std::to_string(counter);
+			string newName = path + " " + mesh.getName() + std::to_string(counter++);
 
 			staticModels[newName] = StaticModel(path);
 
+			//TODO: change the way meshes are saved to avoid unnecessary copying here
 			StaticMesh newMesh(mesh);
 			staticModels[newName].addMesh(std::move(newMesh));
 
@@ -67,8 +68,6 @@ namespace geeL {
 
 			meshRenderer.push_back(renderer);
 			renderers.push_back(renderer);
-
-			counter++;
 		});
 		
 		return renderers;
