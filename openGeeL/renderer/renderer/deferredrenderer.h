@@ -43,11 +43,10 @@ namespace geeL {
 		//Render current frame of scene with classic forward rendering
 		virtual void drawForward(const Camera& camera);
 
-		virtual void addSSAO(SSAO& ssao);
-
 		//Add new post processing effect to renderer. 
 		virtual void addEffect(PostProcessingEffect& effect);
 		virtual void addEffect(PostProcessingEffect& effect, RenderTexture& texture);
+		void addSSAO(SSAO& ssao);
 
 		virtual void addRequester(WorldMapRequester& requester);
 		virtual void addRenderTexture(DynamicRenderTexture& texture);

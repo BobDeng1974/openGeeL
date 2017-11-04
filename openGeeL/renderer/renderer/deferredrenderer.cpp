@@ -297,6 +297,12 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {
+		SSAO* ssao = dynamic_cast<SSAO*>(&effect);
+		if (ssao != nullptr) {
+			addSSAO(*ssao);
+			return;
+		}
+
 		linkImageBuffer(effect);
 	}
 

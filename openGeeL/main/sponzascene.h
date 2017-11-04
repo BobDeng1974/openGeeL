@@ -99,7 +99,7 @@ public:
 			BilateralFilter& blur = BilateralFilter(1.3f, 0.7f);
 			SSAO& ssao = SSAO(blur, 2.5f);
 			scene.addRequester(ssao);
-			renderer.addSSAO(ssao);
+			renderer.addEffect(ssao);
 			postLister.add(ssao);
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);

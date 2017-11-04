@@ -51,7 +51,7 @@ public:
 
 			BilateralFilter& blur = BilateralFilter(2.f, 0.7f);
 			SSAO& ssao = SSAO(blur, 0.5f);
-			renderer.addSSAO(ssao);
+			renderer.addEffect(ssao);
 			scene.addRequester(ssao);
 
 			def.setExposure(1.f);

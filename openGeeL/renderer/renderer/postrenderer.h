@@ -15,8 +15,6 @@ namespace geeL {
 	class PostEffectDrawer {
 
 	public:
-		virtual void addSSAO(SSAO& ssao) = 0;
-
 		virtual void addEffect(PostProcessingEffect& effect) = 0;
 		virtual void addEffect(PostProcessingEffect& effect, RenderTexture& texture) = 0;
 		

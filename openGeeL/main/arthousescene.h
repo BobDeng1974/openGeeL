@@ -72,7 +72,7 @@ public:
 
 			BilateralFilter& blur = BilateralFilter(1.5f, 0.7f);
 			SSAO& ssao = SSAO(blur, 2.f);
-			renderer.addSSAO(ssao);
+			renderer.addEffect(ssao);
 			scene.addRequester(ssao);
 			postLister.add(ssao);
 
