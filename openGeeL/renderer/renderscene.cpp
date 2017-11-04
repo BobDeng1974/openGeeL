@@ -186,7 +186,12 @@ namespace geeL {
 	RenderScene::RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline,
 		SceneCamera& camera, const MaterialFactory& materialFactory, Input& input)
 			: Scene(world, lightManager, pipeline, camera), 
-				materialFactory(materialFactory), input(input) {}
+				materialFactory(materialFactory), input(input) {
+			
+		//Add generic shader to scene to allow method 'drawGenericForced' to work
+		addShader(materialFactory.getDefaultShader(ShadingMethod::Generic, false));
+		addShader(materialFactory.getDefaultShader(ShadingMethod::Generic, true));
+	}
 
 	
 	void RenderScene::init() {
@@ -248,17 +253,21 @@ namespace geeL {
 		draw(ShadingMethod::Deferred, camera);
 	}
 
-	void RenderScene::drawDefaultForward(const Camera& camera) const {
+	void RenderScene::drawGenericForced(const Camera& camera, bool forceGamma) const {
 		SceneShader& shader = materialFactory.getDefaultShader(ShadingMethod::Generic);
+
+		if (forceGamma) shader.bind<int>("gammaCorrection", true);
 
 		shader.bind<glm::mat4>("projection", camera.getProjectionMatrix());
 		shader.bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
 
 		drawObjects(shader, &camera);
+
+		if (forceGamma) shader.bind<int>("gammaCorrection", false);
 	}
 
 
-	void RenderScene::drawGeneric(ShadingMethod shadingMethod, const Camera & camera) const {
+	void RenderScene::drawGeneric(ShadingMethod shadingMethod, const Camera& camera) const {
 		SceneShader* currentShader = nullptr;
 
 		iterRenderObjects(shadingMethod, [this, &camera, &currentShader](const MeshRenderer& object, SceneShader& shader) {

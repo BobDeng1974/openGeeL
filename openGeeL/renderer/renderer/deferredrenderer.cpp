@@ -255,7 +255,7 @@ namespace geeL {
 
 	void DeferredRenderer::drawForward(const Camera& camera) {
 		glEnable(GL_DEPTH_TEST);
-		scene->drawDefaultForward(camera);
+		scene->drawGenericForced(camera, true);
 	}
 
 	

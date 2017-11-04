@@ -17,6 +17,8 @@ uniform int plCount;
 uniform int dlCount;
 uniform int slCount;
 
+uniform bool gammaCorrection;
+
 #include <renderer/lights/lights.glsl>
 
 uniform PointLight pointLights[5];
@@ -59,8 +61,7 @@ void main() {
 	for(int i = 0; i < slCount; i++)
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
 
-	irradiance = pow(irradiance, vec3(0.4545f)); //Gamma 
-	color = vec4(irradiance, albedo.a);
+	color = vec4(gammaCorrection ? pow(irradiance, vec3(0.4545f)) : irradiance, albedo.a);
 }
 
 
