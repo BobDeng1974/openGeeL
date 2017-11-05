@@ -6,7 +6,22 @@
 namespace geeL {
 
 
-	//Wrapper for texture id that manages GPU memory automatically
+	//Wrapper for framebuffer id that manages GPU memory automatically
+	class FrameBufferToken {
+
+	public:
+		unsigned int token;
+
+		FrameBufferToken();
+		~FrameBufferToken();
+
+		bool operator== (unsigned int other) const;
+		bool operator!= (unsigned int other) const;
+
+	};
+
+
+	//Wrapper for RBO id that manages GPU memory automatically
 	class RenderBufferToken {
 
 	public:
@@ -41,23 +56,16 @@ namespace geeL {
 
 
 
-	//Wrapper for framebuffer id that manages GPU memory automatically
-	class FrameBufferToken {
+	inline FrameBufferToken::FrameBufferToken() : token(0) {}
 
-	public:
-		unsigned int token;
+	inline bool FrameBufferToken::operator== (unsigned int other) const {
+		return token == other;
+	}
 
-		FrameBufferToken();
-		~FrameBufferToken();
+	inline bool FrameBufferToken::operator!= (unsigned int other) const {
+		return token != other;
+	}
 
-		bool operator== (unsigned int other) const;
-		bool operator!= (unsigned int other) const;
-
-	};
-
-
-
-	
 
 	inline RenderBufferToken::TokenInner::TokenInner(unsigned int id) : id(id) {}
 
@@ -83,18 +91,7 @@ namespace geeL {
 		return token.get()->id;
 	}
 
-
-	inline FrameBufferToken::FrameBufferToken() : token(0) {}
-
-	inline bool FrameBufferToken::operator== (unsigned int other) const {
-		return token == other;
-	}
-
-	inline bool FrameBufferToken::operator!= (unsigned int other) const {
-		return token != other;
-	}
-
-
+	
 }
 
 #endif
