@@ -45,14 +45,14 @@ vec3 calculateIndirectSpecularSplitSum(vec3 position, vec3 normal, vec3 view, ve
 
 
 void main() {
-	vec3 base = texture(image, textureCoordinates).rgb;
+	//vec3 base = texture(image, textureCoordinates).rgb;
 	vec4 posRough = texture(gPositionRoughness, textureCoordinates);
 	vec3 fragPosition = posRough.rgb;
 	vec3 position = (inverseView * vec4(fragPosition, 1.f)).xyz;
 
 	//Discard pixel if it is not connected to any position in scene (Will be rendered black anyway)
 	if(length(fragPosition) <= 0.001f) {
-		color = vec4(base, 1.f);
+		//color = vec4(base, 1.f);
 		return;
 	}
 
@@ -75,7 +75,7 @@ void main() {
 	//vec3 ambienceSpecular = calculateIndirectSpecular(position, normal, viewDirection, albedo, roughness, metallic);
 	vec3 ambienceSpecular = calculateIndirectSpecularSplitSum(position, normal, viewDirection, albedo, roughness, metallic);
 
-	color = vec4(base + ambienceDiffuse + ambienceSpecular, 1.f);
+	color = vec4(ambienceDiffuse + ambienceSpecular, 1.f);
 }
 
 //Lighting.....................................................................................................................................

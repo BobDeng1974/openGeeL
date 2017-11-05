@@ -2,12 +2,13 @@
 #define IMAGEBASEDLIGHTING_H
 
 #include "scenerender.h"
+#include "postprocessing/additiveeffect.h"
 
 namespace geeL {
 
 	class RenderScene;
 
-	class ImageBasedLighting : public SceneRender, public PostProcessingEffectFS {
+	class ImageBasedLighting : public SceneRender, public AdditiveEffect {
 
 	public:
 		ImageBasedLighting(RenderScene& scene);
