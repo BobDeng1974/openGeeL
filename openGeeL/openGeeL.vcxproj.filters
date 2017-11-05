@@ -471,6 +471,9 @@
     <ClCompile Include="renderer\utility\masking.cpp">
       <Filter>renderer\utility</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\postprocessing\additiveeffect.cpp">
+      <Filter>renderer\postprocessing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -950,6 +953,9 @@
     <ClInclude Include="renderer\utility\masking.h">
       <Filter>renderer\utility</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\postprocessing\additiveeffect.h">
+      <Filter>renderer\postprocessing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\lighting.vert">
@@ -1208,6 +1214,9 @@
       <Filter>renderer\framebuffer</Filter>
     </None>
     <None Include="renderer\shaders\transparentlighting.frag">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\ayy.frag">
       <Filter>renderer\shaders</Filter>
     </None>
   </ItemGroup>

@@ -56,6 +56,7 @@
 #include "meshes/meshfactory.h"
 
 #include "postprocessing/postprocessing.h"
+#include "postprocessing/additiveeffect.h"
 #include "postprocessing/colorcorrection.h"
 #include "postprocessing/gammacorrection.h"
 #include "postprocessing/tonemapping.h"

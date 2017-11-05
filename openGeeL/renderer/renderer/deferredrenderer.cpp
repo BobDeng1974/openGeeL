@@ -20,6 +20,7 @@
 #include "postprocessing/drawdefault.h"
 #include "postprocessing/ssao.h"
 #include "postprocessing/postprocessing.h"
+#include "postprocessing/additiveeffect.h"
 #include "cameras/camera.h"
 #include "lights/lightmanager.h"
 #include "guirenderer.h"
@@ -312,24 +313,40 @@ namespace geeL {
 		if (texture != nullptr)
 			externalEffects.push_back(PostEffectRender(texture, &effect));
 		else {
-			//Init all post processing effects with two alternating textures
+			//Filter out additive effects and resuse previous texture target
+			AdditiveEffect* add = dynamic_cast<AdditiveEffect*>(&effect);
+			if (add != nullptr) {
+				RenderTexture* target = nullptr;
+
+				if (effects.size() <= 1)
+					target = texture1;
+				else {
+					PostEffectRender& previous = effects.back();
+					target = previous.first;
+				}
+
+				effects.push_back(PostEffectRender(target, &effect));
+			}
+			//Init all normal post processing effects with two alternating textures
 			//Current effect will then always read from one and write to the other
-			const Texture* source = nullptr;
-			RenderTexture* target = nullptr;
-
-			if (effects.size() <= 1) {
-				source = texture1;
-				target = texture2;
-			}
 			else {
-				PostEffectRender& previous = effects.back();
+				const Texture* source = nullptr;
+				RenderTexture* target = nullptr;
 
-				source = (previous.first == texture2) ? texture2 : texture1;
-				target = (previous.first == texture2) ? texture1 : texture2;
+				if (effects.size() <= 1) {
+					source = texture1;
+					target = texture2;
+				}
+				else {
+					PostEffectRender& previous = effects.back();
+
+					source = (previous.first == texture2) ? texture2 : texture1;
+					target = (previous.first == texture2) ? texture1 : texture2;
+				}
+
+				effects.push_back(PostEffectRender(target, &effect));
+				effect.setImage(*source);
 			}
-
-			effects.push_back(PostEffectRender(target, &effect));
-			effect.setImage(*source);
 		}
 		
 		effect.init(ScreenQuad::get(), stackBuffer, window->resolution);

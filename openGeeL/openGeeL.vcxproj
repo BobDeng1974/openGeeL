@@ -214,6 +214,7 @@
     <ClCompile Include="renderer\meshes\model.cpp" />
     <ClCompile Include="renderer\meshes\skinnedrenderer.cpp" />
     <ClCompile Include="renderer\pipeline.cpp" />
+    <ClCompile Include="renderer\postprocessing\additiveeffect.cpp" />
     <ClCompile Include="renderer\postprocessing\bloom.cpp" />
     <ClCompile Include="renderer\postprocessing\blurredeffect.cpp" />
     <ClCompile Include="renderer\postprocessing\brightnessfilter.cpp" />
@@ -360,6 +361,7 @@
     <ClInclude Include="renderer\meshes\model.h" />
     <ClInclude Include="renderer\meshes\skinnedrenderer.h" />
     <ClInclude Include="renderer\pipeline.h" />
+    <ClInclude Include="renderer\postprocessing\additiveeffect.h" />
     <ClInclude Include="renderer\postprocessing\bloom.h" />
     <ClInclude Include="renderer\postprocessing\blurredeffect.h" />
     <ClInclude Include="renderer\postprocessing\brightnessfilter.h" />
@@ -493,6 +495,7 @@
     <None Include="renderer\postprocessing\tonemapping.frag" />
     <None Include="renderer\postprocessing\velocity.frag" />
     <None Include="renderer\postprocessing\volumetriclight.frag" />
+    <None Include="renderer\shaders\ayy.frag" />
     <None Include="renderer\shaders\computeshared.com.glsl" />
     <None Include="renderer\shaders\computetest.com.glsl" />
     <None Include="renderer\shaders\empty.frag" />
