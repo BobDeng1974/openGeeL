@@ -91,7 +91,7 @@ namespace geeL {
 		parentBuffer->fill([this]() {
 			bindValues();
 			bindToScreen();
-		});
+		}, clearColor);
 
 		blur.draw();
 	}

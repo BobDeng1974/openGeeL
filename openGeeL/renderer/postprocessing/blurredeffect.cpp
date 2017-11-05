@@ -51,10 +51,10 @@ namespace geeL {
 
 	void BlurredPostEffect::bindValues() {
 		parentBuffer->add(*effectTexture);
-		parentBuffer->fill(effect);
+		parentBuffer->fill(effect, clearColor);
 
 		parentBuffer->add(*blurTexture);
-		parentBuffer->fill(blur);
+		parentBuffer->fill(blur, clearColor);
 
 	}
 

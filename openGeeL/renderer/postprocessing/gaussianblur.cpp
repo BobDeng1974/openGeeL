@@ -86,7 +86,7 @@ namespace geeL {
 		parentBuffer->add(*tempTexture);
 		parentBuffer->fill([this]() {
 			bindToScreen();
-		});
+		}, clearColor);
 
 		//2. Draw final image via vertical blurring of the previous (horizontally) blurred image
 		shader.bind<int>(horLocation, false);
@@ -206,7 +206,7 @@ namespace geeL {
 
 	void SobelBlur::bindValues() {
 		parentBuffer->add(*sobelTexture);
-		parentBuffer->fill(sobel);
+		parentBuffer->fill(sobel, clearColor);
 
 		GaussianBlurBase::bindValues();
 	}

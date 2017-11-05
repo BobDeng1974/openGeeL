@@ -92,7 +92,7 @@ namespace geeL {
 
 		blur.setFocalLength(dist);
 		parentBuffer->add(*blurTexture);
-		parentBuffer->fill(blur);
+		parentBuffer->fill(blur, clearColor);
 
 	}
 

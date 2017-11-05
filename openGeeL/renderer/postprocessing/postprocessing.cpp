@@ -69,7 +69,7 @@ namespace geeL {
 
 	void PostProcessingEffectFS::fill() {
 		if (parentBuffer != nullptr)
-			parentBuffer->fill(*this);
+			parentBuffer->fill(*this, clearColor);
 	}
 
 	void PostProcessingEffectFS::bindToScreen() {

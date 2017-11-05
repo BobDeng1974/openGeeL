@@ -115,7 +115,7 @@ namespace geeL {
 
 	void LensFlare::bindValues() {
 		parentBuffer->add(*filterTexture);
-		parentBuffer->fill(filter);
+		parentBuffer->fill(filter, clearColor);
 
 		Transform& transform = camera->transform;
 		vec3 camX = transform.getRightDirection(); 

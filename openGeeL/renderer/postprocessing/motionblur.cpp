@@ -99,7 +99,7 @@ namespace geeL {
 
 	void MotionBlurPerPixel::bindValues() {
 		parentBuffer->add(*velocityTexture);
-		parentBuffer->fill(velocity);
+		parentBuffer->fill(velocity, clearColor);
 
 		shader.bind<float>(strengthLocation, getStrength());
 	}
@@ -147,7 +147,7 @@ namespace geeL {
 		PostProcessingEffectFS::draw();
 
 		parentBuffer->add(*positionTexture);
-		parentBuffer->fill(prevPositionEffect);
+		parentBuffer->fill(prevPositionEffect, clearColor);
 
 	}
 
