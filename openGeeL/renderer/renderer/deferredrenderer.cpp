@@ -110,25 +110,15 @@ namespace geeL {
 		stackBuffer.fill(lightingPassFunc);
 
 		//Forward pass
-		bool copiedDepth = false;
 		if (fBuffer != nullptr && scene->count(ShadingMethod::Forward) > 0) {
 			fBuffer->fill([this]() {
-				glClear(GL_DEPTH_BUFFER_BIT);
-				fBuffer->copyDepth(gBuffer);
 				scene->drawForward();
 			});
-
-			copiedDepth = true;
 		}
 
 		//Transparent pass
 		if (fBuffer != nullptr && scene->count(ShadingMethod::TransparentOD) > 0) {
-			fBuffer->fill([this, &copiedDepth]() {
-				if (!copiedDepth) {
-					glClear(GL_DEPTH_BUFFER_BIT);
-					fBuffer->copyDepth(gBuffer);
-				}
-
+			fBuffer->fill([this]() {
 				scene->drawTransparentOD();
 			});
 		}
@@ -136,8 +126,6 @@ namespace geeL {
 		//Order-independent Transparent pass
 		if (tBuffer != nullptr && scene->count(ShadingMethod::TransparentOID) > 0) {
 			tBuffer->fill([this]() {
-				glClear(GL_DEPTH_BUFFER_BIT);
-				tBuffer->copyDepth(gBuffer);
 				scene->drawTransparentOID();
 			});
 

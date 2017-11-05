@@ -1,7 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "fbotoken.h"
-#include <iostream>
 
 namespace geeL {
 
@@ -11,8 +10,10 @@ namespace geeL {
 	}
 
 	void RenderBufferToken::TokenInner::remove() {
-		if (id != 0)
+		if (id != 0) {
 			glDeleteRenderbuffers(1, &id);
+			id = 0;
+		}
 	}
 
 	RenderBufferToken::RenderBufferToken() {
@@ -34,12 +35,9 @@ namespace geeL {
 
 
 
-
 	FrameBufferToken::~FrameBufferToken() {
 		if (token != 0)
 			glDeleteFramebuffers(1, &token);
 	}
-
-
 
 }

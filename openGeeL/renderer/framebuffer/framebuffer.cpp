@@ -38,6 +38,12 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	void FrameBuffer::referenceRBO(FrameBuffer& buffer) {
+		rbo = buffer.rbo;
+		bind();
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, buffer.rbo);
+	}
+
 	void FrameBuffer::copyDepth(const FrameBuffer& buffer) const {
 		const Resolution& res = getResolution();
 

@@ -54,6 +54,11 @@ namespace geeL {
 		static void bind(unsigned int fbo);
 		static void unbind();
 
+		//Use RBO of given framebuffer
+		//Note: RBO will be referenced and not copied. 
+		//Therefore, their behaviour will affect each other
+		void referenceRBO(FrameBuffer& buffer);
+
 		virtual void copyDepth(const FrameBuffer& buffer) const;
 		virtual void copyStencil(const FrameBuffer& buffer) const;
 		

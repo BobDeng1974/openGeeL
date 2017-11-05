@@ -154,11 +154,7 @@ namespace geeL {
 		unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 		glDrawBuffers(4, attachments);
 
-		//Create a renderbuffer object for depth and stencil attachment
-		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, resolution.getWidth(), resolution.getHeight());
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+		referenceRBO(gBuffer);
 
 		unbind();
 	}
@@ -166,12 +162,12 @@ namespace geeL {
 	void ForwardBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
 		bind();
 		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
-		//glDepthMask(GL_FALSE);
+
 		BlendGuard blend(3);
 		blend.blendAlpha();
 
 		drawCall();
-		//glDepthMask(GL_TRUE);
+
 		unbind();
 	}
 
