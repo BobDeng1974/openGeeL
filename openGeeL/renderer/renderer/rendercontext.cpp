@@ -6,7 +6,8 @@ namespace geeL {
 
 	RenderContext::RenderContext() {
 
-		//glEnable(GL_STENCIL_TEST);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT);
@@ -15,6 +16,7 @@ namespace geeL {
 
 
 	void RenderContext::reset() {
+
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 	}
