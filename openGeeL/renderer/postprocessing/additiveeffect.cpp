@@ -13,15 +13,8 @@ namespace geeL {
 		: PostProcessingEffectFS(vertexPath, fragmentPath) {}
 
 
-	void AdditiveEffect::setImage(const Texture& texture) {
-		std::cout << "Can't set main image buffer for additive effects\n";
-	}
+	void AdditiveEffect::setImage(const Texture& texture) {}
 
-	void AdditiveEffect::draw() {
-		std::cout << "Additive effect should be drawn with 'fill' method instead\n";
-
-		PostProcessingEffectFS::draw();
-	}
 
 	void AdditiveEffect::fill() {
 		BlendGuard blend;
@@ -29,8 +22,7 @@ namespace geeL {
 
 		if (parentBuffer != nullptr) {
 			parentBuffer->fill([this]() {
-				this->bindValues();
-				this->bindToScreen();
+				PostProcessingEffectFS::draw();
 			}, clearNothing);
 		}
 			

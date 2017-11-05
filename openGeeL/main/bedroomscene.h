@@ -74,6 +74,7 @@ public:
 
 			transObjects.clear();
 
+
 			ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
 			objectLister.add(camera);
 			gui.addElement(objectLister);

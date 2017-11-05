@@ -45,16 +45,12 @@ vec3 calculateIndirectSpecularSplitSum(vec3 position, vec3 normal, vec3 view, ve
 
 
 void main() {
-	//vec3 base = texture(image, textureCoordinates).rgb;
 	vec4 posRough = texture(gPositionRoughness, textureCoordinates);
 	vec3 fragPosition = posRough.rgb;
 	vec3 position = (inverseView * vec4(fragPosition, 1.f)).xyz;
 
 	//Discard pixel if it is not connected to any position in scene (Will be rendered black anyway)
-	if(length(fragPosition) <= 0.001f) {
-		//color = vec4(base, 1.f);
-		return;
-	}
+	if(length(fragPosition) <= 0.001f) return;
 
 	vec4 normMet  = texture(gNormalMet, textureCoordinates);
 

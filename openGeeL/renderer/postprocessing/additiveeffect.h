@@ -14,7 +14,7 @@ namespace geeL {
 
 		virtual void setImage(const Texture& texture);
 
-		virtual void draw();
+		//Draw effect with additive blending
 		virtual void fill();
 
 	};

@@ -13,12 +13,12 @@ using namespace std;
 namespace geeL {
 
 	VolumetricLight::VolumetricLight(SpotLight& light, float density, float minDistance, unsigned int samples, bool useCookie)
-		: PostProcessingEffectFS("renderer/postprocessing/volumetriclight.frag"), 
+		: AdditiveEffect("renderer/postprocessing/volumetriclight.frag"),
 			light(light), density(density), minDistance(minDistance), samples(samples), useCookie(useCookie) {}
 
 
 	void VolumetricLight::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffectFS::init(screen, buffer, resolution);
+		AdditiveEffect::init(screen, buffer, resolution);
 
 		const ShadowMap* map = light.getShadowMap();
 

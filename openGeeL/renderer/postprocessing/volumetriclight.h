@@ -2,6 +2,7 @@
 #define VOLUMETRIC_H
 
 #include "postprocessing.h"
+#include "additiveeffect.h"
 #include "utility/worldinformation.h"
 
 namespace geeL {
@@ -9,7 +10,7 @@ namespace geeL {
 	class RenderScene;
 	class SpotLight;
 
-	class VolumetricLight : public PostProcessingEffectFS, public WorldMapRequester, public CameraRequester {
+	class VolumetricLight : public AdditiveEffect, public WorldMapRequester, public CameraRequester {
 
 	public:
 		VolumetricLight(SpotLight& light,  float density = 1.f, float minDistance = 1.f, 
