@@ -7,6 +7,7 @@
 #include "sceneobject.h"
 #include "materials/material.h"
 #include "utility/glguards.h"
+#include "utility/masking.h"
 
 namespace geeL {
 
@@ -50,6 +51,9 @@ namespace geeL {
 		virtual void drawGeometry(const RenderShader& shader) const;
 
 
+		void setRenderMask(RenderMask mask);
+		void setRenderMask(RenderMask mask, const Mesh& mesh);
+
 		//Customize material of given mesh (If it is actually part of this mesh renderer)
 		void changeMaterial(Material& material, const Mesh& mesh);
 
@@ -71,15 +75,13 @@ namespace geeL {
 		bool containsShader(SceneShader& shader) const;
 
 	protected:
+		RenderMask mask;
 		const CullingMode faceCulling;
-
-		//Init materials with data from the meshes material containers
-		void initMaterials(SceneShader& shader);
-
 
 		struct MaterialMapping {
 			const Mesh* mesh;
 			Material material;
+			RenderMask mask;
 
 			MaterialMapping(const Mesh& mesh, Material material) 
 				: mesh(&mesh), material(std::move(material)) {}
@@ -92,8 +94,15 @@ namespace geeL {
 		std::map<SceneShader*, std::list<MaterialMapping>> materials;
 		std::list<std::function<void(MeshRenderer&, Material, Material)>> materialListeners;
 
+		//Init materials with data from the meshes material containers
+		void initMaterials(SceneShader& shader);
+
+		RenderMask getMask(const MaterialMapping& mapping) const;
+
 	private:
 		Model* model;
+
+		MaterialMapping* getMapping(const Mesh& mesh);
 
 	};
 }

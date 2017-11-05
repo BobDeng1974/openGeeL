@@ -5,7 +5,6 @@
 #include "materials/material.h"
 #include "transformation/transform.h"
 #include "shader/sceneshader.h"
-#include "utility/masking.h"
 #include "mesh.h"
 #include "model.h"
 #include "meshrenderer.h"
@@ -23,6 +22,7 @@ namespace geeL{
 
 	void MeshRenderer::draw(SceneShader& shader) const {
 		CullingGuard culling(faceCulling);
+		StencilGuard stencil;
 
 		auto it = materials.find(&shader);
 		if (it != materials.end()) {
@@ -39,6 +39,8 @@ namespace geeL{
 				//Draw individual material
 				const Material& mat = container.material;
 				mat.bind();
+
+				Masking::drawMask(getMask(container));
 
 				//Draw mesh
 				const Mesh& mesh = *container.mesh;
@@ -76,6 +78,17 @@ namespace geeL{
 		shader.bind<glm::mat4>("model", transform.getMatrix());
 
 		model->draw();
+	}
+
+	void MeshRenderer::setRenderMask(RenderMask mask) {
+		this->mask = mask;
+	}
+
+	void MeshRenderer::setRenderMask(RenderMask mask, const Mesh& mesh) {
+		MaterialMapping* mapping = getMapping(mesh);
+
+		if (mapping != nullptr)
+			mapping->mask = mask;
 	}
 	
 
@@ -146,6 +159,28 @@ namespace geeL{
 			materials[&shader].push_back(MaterialMapping(mesh, material));
 		});
 	}
+
+	RenderMask MeshRenderer::getMask(const MaterialMapping& mapping) const {
+		//Mask of mesh renderer overrides mask of single mesh.
+		//Therefore, it is only returned if no base mask exists
+		return (mask == RenderMask::None) ? mapping.mask : mask;
+	}
+
+	MeshRenderer::MaterialMapping * MeshRenderer::getMapping(const Mesh& mesh) {
+		for (auto it = materials.begin(); it != materials.end(); it++) {
+			std::list<MaterialMapping>* elements = &it->second;
+			for (auto et = elements->begin(); et != elements->end(); et++) {
+				MaterialMapping& container = *et;
+
+				if (container.mesh == &mesh)
+					return &container;
+			}
+		}
+
+		return nullptr;
+	}
+
+	
 
 
 	void MeshRenderer::iterate(std::function<void(const Mesh&, const Material&)> function) const {

@@ -65,15 +65,14 @@ public:
 				const Mesh& mesh = *it->first;
 				const Material& material = *it->second;
 
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
-				bedroom.changeMaterial(ss, mesh);
-
 				MaterialContainer& container = material.getMaterialContainer();
 				container.setFloatValue("Transparency", 0.2f);
+
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
+				bedroom.changeMaterial(ss, mesh);
 			}
 
 			transObjects.clear();
-
 
 			ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
 			objectLister.add(camera);
