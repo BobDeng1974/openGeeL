@@ -44,7 +44,7 @@ namespace geeL {
 		virtual void drawForward(const Camera& camera);
 
 		//Add new post processing effect to renderer. 
-		virtual void addEffect(PostProcessingEffect& effect);
+		virtual void addEffect(PostProcessingEffect& effect, DrawTime time);
 		virtual void addEffect(PostProcessingEffect& effect, RenderTexture& texture);
 		void addEffect(SSAO& ssao);
 
@@ -90,7 +90,7 @@ namespace geeL {
 
 		void lightingPass();
 
-		void linkImageBuffer(PostProcessingEffect& effect, RenderTexture* texture = nullptr);
+		void linkImageBuffer(PostProcessingEffect& effect);
 		void handleInput(int key, int scancode, int action, int mode);
 
 		//Toggle through all framebuffers for screen display 

@@ -74,6 +74,20 @@ namespace geeL {
 	}
 
 
+	DepthGuard::DepthGuard(bool inverse) : inverse(inverse) {
+		if(inverse)
+			glDisable(GL_DEPTH_TEST);
+		else
+			glEnable(GL_DEPTH_TEST);
+	}
+
+	DepthGuard::~DepthGuard() {
+		if (inverse)
+			glEnable(GL_DEPTH_TEST);
+		else
+			glDisable(GL_DEPTH_TEST); 
+	}
+
 
 	StencilGuard::StencilGuard(bool guardStencil) : guard(guardStencil) {
 #if ENABLE_STENCIL
@@ -86,5 +100,7 @@ namespace geeL {
 		if(guard) glDisable(GL_STENCIL_TEST);
 #endif
 	}
+
+	
 
 }

@@ -51,6 +51,18 @@ namespace geeL {
 	};
 
 
+	class DepthGuard {
+
+	public:
+		DepthGuard(bool inverse = false);
+		~DepthGuard();
+
+	private:
+		bool inverse;
+
+	};
+
+
 	class StencilGuard {
 
 	public:

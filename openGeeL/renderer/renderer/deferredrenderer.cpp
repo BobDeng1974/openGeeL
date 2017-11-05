@@ -26,6 +26,7 @@
 #include "guirenderer.h"
 #include "lighting/deferredlighting.h"
 #include "utility/viewport.h"
+#include "utility/glguards.h"
 #include "application.h"
 #include "deferredrenderer.h"
 
@@ -108,8 +109,11 @@ namespace geeL {
 
 		//SSAO pass
 		if (ssao != nullptr) {
+			DepthGuard guard(true);
+
 			stackBuffer.push(*ssaoTexture);
 			stackBuffer.fill(*ssao);
+
 		}
 
 		//Lighting pass
@@ -123,8 +127,6 @@ namespace geeL {
 				scene->drawTransparentOD();
 			});
 		}
-
-
 
 		glDisable(GL_DEPTH_TEST);
 
@@ -241,7 +243,7 @@ namespace geeL {
 		ssao.init(ScreenQuad::get(), stackBuffer, ssaoRes);
 	}
 
-	void DeferredRenderer::addEffect(PostProcessingEffect& effect) {
+	void DeferredRenderer::addEffect(PostProcessingEffect& effect, DrawTime time) {
 		SSAO* ssao = dynamic_cast<SSAO*>(&effect);
 		if (ssao != nullptr) {
 			addEffect(*ssao);
@@ -252,7 +254,8 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect, RenderTexture& texture) {
-		linkImageBuffer(effect, &texture);
+		externalEffects.push_back(PostEffectRender(&texture, &effect));
+		effect.init(ScreenQuad::get(), stackBuffer, window->resolution);
 	}
 
 
@@ -309,44 +312,41 @@ namespace geeL {
 	}
 
 
-	void DeferredRenderer::linkImageBuffer(PostProcessingEffect& effect, RenderTexture* texture) {
-		if (texture != nullptr)
-			externalEffects.push_back(PostEffectRender(texture, &effect));
-		else {
-			//Filter out additive effects and resuse previous texture target
-			AdditiveEffect* add = dynamic_cast<AdditiveEffect*>(&effect);
-			if (add != nullptr) {
-				RenderTexture* target = nullptr;
+	void DeferredRenderer::linkImageBuffer(PostProcessingEffect& effect) {
 
-				if (effects.size() <= 1)
-					target = texture1;
-				else {
-					PostEffectRender& previous = effects.back();
-					target = previous.first;
-				}
+		//Filter out additive effects and resuse previous texture target
+		AdditiveEffect* add = dynamic_cast<AdditiveEffect*>(&effect);
+		if (add != nullptr) {
+			RenderTexture* target = nullptr;
 
-				effects.push_back(PostEffectRender(target, &effect));
-			}
-			//Init all normal post processing effects with two alternating textures
-			//Current effect will then always read from one and write to the other
+			if (effects.size() <= 1)
+				target = texture1;
 			else {
-				const Texture* source = nullptr;
-				RenderTexture* target = nullptr;
-
-				if (effects.size() <= 1) {
-					source = texture1;
-					target = texture2;
-				}
-				else {
-					PostEffectRender& previous = effects.back();
-
-					source = (previous.first == texture2) ? texture2 : texture1;
-					target = (previous.first == texture2) ? texture1 : texture2;
-				}
-
-				effects.push_back(PostEffectRender(target, &effect));
-				effect.setImage(*source);
+				PostEffectRender& previous = effects.back();
+				target = previous.first;
 			}
+
+			effects.push_back(PostEffectRender(target, &effect));
+		}
+		//Init all normal post processing effects with two alternating textures
+		//Current effect will then always read from one and write to the other
+		else {
+			const Texture* source = nullptr;
+			RenderTexture* target = nullptr;
+
+			if (effects.size() <= 1) {
+				source = texture1;
+				target = texture2;
+			}
+			else {
+				PostEffectRender& previous = effects.back();
+
+				source = (previous.first == texture2) ? texture2 : texture1;
+				target = (previous.first == texture2) ? texture1 : texture2;
+			}
+
+			effects.push_back(PostEffectRender(target, &effect));
+			effect.setImage(*source);
 		}
 		
 		effect.init(ScreenQuad::get(), stackBuffer, window->resolution);

@@ -36,6 +36,7 @@ namespace geeL {
 
 	};
 
+	const Clearer clearColor(ClearingMethod::Color);
 	const Clearer clearNormal(ClearingMethod::Color, ClearingMethod::Depth);
 	const Clearer clearAll(ClearingMethod::Color, ClearingMethod::Depth, ClearingMethod::Stencil);
 	const Clearer clearNothing;
