@@ -236,6 +236,20 @@ namespace geeL{
 		return *model;
 	}
 
+	const Mesh* MeshRenderer::getMesh(const std::string& name) const {
+		for (auto it = materials.begin(); it != materials.end(); it++) {
+			const std::list<MaterialMapping>* elements = &it->second;
+			for (auto et = elements->begin(); et != elements->end(); et++) {
+				const Mesh& mesh = *et->mesh;
+
+				if (mesh.getName() == name)
+					return &mesh;
+			}
+		}
+
+		return nullptr;
+	}
+
 	RenderMode MeshRenderer::getRenderMode() const {
 		return RenderMode::Static;
 	}

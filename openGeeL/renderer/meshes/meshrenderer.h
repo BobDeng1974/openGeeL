@@ -70,6 +70,7 @@ namespace geeL {
 		void iterateShaders(std::function<void(SceneShader&)> function);
 
 		const Model& getModel() const;
+		const Mesh* getMesh(const std::string& name) const;
 		virtual RenderMode getRenderMode() const;
 
 		bool containsShader(SceneShader& shader) const;
