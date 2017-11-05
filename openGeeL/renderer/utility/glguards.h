@@ -1,6 +1,8 @@
 #ifndef GLGUARDS_H
 #define GLGUARDS_H
 
+
+
 namespace geeL {
 
 	class BlendGuard {

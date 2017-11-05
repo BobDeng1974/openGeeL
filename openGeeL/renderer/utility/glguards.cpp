@@ -1,6 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include <iostream>
+#include "renderer/rendercontext.h"
 #include "glguards.h"
 
 namespace geeL {
@@ -76,11 +76,15 @@ namespace geeL {
 
 
 	StencilGuard::StencilGuard(bool guardStencil) : guard(guardStencil) {
+#if ENABLE_STENCIL
 		if(guard) glEnable(GL_STENCIL_TEST);
+#endif
 	}
 
 	StencilGuard::~StencilGuard() {
+#if ENABLE_STENCIL
 		if(guard) glDisable(GL_STENCIL_TEST);
+#endif
 	}
 
 }
