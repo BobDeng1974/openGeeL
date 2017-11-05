@@ -264,16 +264,10 @@ namespace geeL {
 
 
 	void DeferredRenderer::forwardPass() {
-		glClear(GL_DEPTH_BUFFER_BIT);
-		//Copy depth buffer from gBuffer to draw forward 
+		//Copy depth and stencil buffer from gBuffer to draw forward 
 		//rendered objects 'into' the scene instead of 'on top'
-		stackBuffer.copyDepth(gBuffer);
+		stackBuffer.copyRBO(gBuffer);
 
-		glStencilMask(0xFF);
-		glClear(GL_STENCIL_BUFFER_BIT);
-		stackBuffer.copyStencil(gBuffer);
-
-		//Generic pass
 		scene->drawGeneric();
 		scene->drawSkybox();
 	}

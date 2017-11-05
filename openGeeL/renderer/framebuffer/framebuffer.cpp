@@ -44,9 +44,22 @@ namespace geeL {
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, buffer.rbo);
 	}
 
+	void FrameBuffer::copyRBO(FrameBuffer& buffer) {
+		const Resolution& res = getResolution();
+
+		glStencilMask(0xFF);
+		glClear(GL_STENCIL_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, buffer.getFBO());
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo.token);
+		glBlitFramebuffer(0, 0, res.getWidth(), res.getHeight(), 0, 0,
+			res.getWidth(), res.getHeight(), GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+	}
+
 	void FrameBuffer::copyDepth(const FrameBuffer& buffer) const {
 		const Resolution& res = getResolution();
 
+		glClear(GL_DEPTH_BUFFER_BIT);
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, buffer.getFBO());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo.token);
 		glBlitFramebuffer(0, 0, res.getWidth(), res.getHeight(), 0, 0,
@@ -56,6 +69,8 @@ namespace geeL {
 	void FrameBuffer::copyStencil(const FrameBuffer & buffer) const {
 		const Resolution& res = getResolution();
 
+		glStencilMask(0xFF);
+		glClear(GL_STENCIL_BUFFER_BIT);
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, buffer.getFBO());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo.token);
 		glBlitFramebuffer(0, 0, res.getWidth(), res.getHeight(), 0, 0,

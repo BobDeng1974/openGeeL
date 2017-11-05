@@ -59,6 +59,9 @@ namespace geeL {
 		//Therefore, their behaviour will affect each other
 		void referenceRBO(FrameBuffer& buffer);
 
+		//Copy contents of buffers RBO into this buffers RBO
+		void copyRBO(FrameBuffer& buffer);
+
 		virtual void copyDepth(const FrameBuffer& buffer) const;
 		virtual void copyStencil(const FrameBuffer& buffer) const;
 		
