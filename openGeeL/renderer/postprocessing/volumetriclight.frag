@@ -42,12 +42,7 @@ vec3 convertToViewSpace();
 float calculateSpotLightShadows(vec3 coords);
 
 void main() {
-	vec3 result = step(effectOnly, 0.f) * texture(image, TexCoords).rgb;
-
-	if(!lightActive) {
-		color = vec4(result, 1.f);
-		return;
-	}
+	if(!lightActive) return;
 
 	vec3 fragPos = texture(gPositionDepth, TexCoords).xyz;
 	float depth = length(fragPos);
@@ -90,7 +85,6 @@ void main() {
 	}
 
 	volume *= (1.f / stepi);
-	//color = vec4(result + volume, 1.0f);
 	color = vec4(volume, 1.f);
 }
 
