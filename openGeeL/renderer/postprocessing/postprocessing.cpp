@@ -73,32 +73,24 @@ namespace geeL {
 	}
 
 	void PostProcessingEffectFS::bindToScreen() {
-		if (mask != RenderMask::None) {
-			StencilGuard stencil;
-			Masking::readMask(mask);
+		bool masked = mask != RenderMask::None;
+		StencilGuard stencil(masked);
 
-			shader.bindParameters();
-			shader.loadMaps();
-			screen->draw();
+		if(masked) Masking::readMask(mask);
 
-		}
-		else {
-			shader.bindParameters();
-			shader.loadMaps();
-			screen->draw();
-		}
+		shader.bindParameters();
+		shader.loadMaps();
+		screen->draw();
 	}
 
 	Shader& PostProcessingEffectFS::getShader() {
 		return shader;
 	}
 
-
-
-
 	string PostProcessingEffectFS::toString() const {
 		return "Post effect with shader: " + shader.name;
 	}
+
 
 
 

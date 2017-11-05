@@ -19,7 +19,7 @@ namespace geeL {
 		virtual ~TransparentOIDBuffer();
 
 		void init(RenderTexture& colorTexture);
-		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearAll);
+		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNothing);
 		void composite();
 
 		virtual std::string toString() const;

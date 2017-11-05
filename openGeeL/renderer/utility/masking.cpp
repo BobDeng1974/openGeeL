@@ -17,4 +17,9 @@ namespace geeL {
 
 	}
 
+	void Masking::passthrough() {
+		glStencilMask(0x00);
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	}
+
 }

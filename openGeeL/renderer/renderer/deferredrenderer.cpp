@@ -75,6 +75,8 @@ namespace geeL {
 		scene->updateProbes(); //Draw reflection probes once at beginning
 		initDefaultEffect();
 
+		
+
 	}
 
 	void DeferredRenderer::run() {

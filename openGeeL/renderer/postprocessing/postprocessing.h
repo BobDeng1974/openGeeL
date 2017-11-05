@@ -69,7 +69,10 @@ namespace geeL {
 		virtual const Texture& getImage() const;
 		virtual void setImage(const Texture& texture);
 		virtual void addTextureSampler(const Texture& texture, const std::string& name);
-		void setRenderMask(RenderMask mask);
+
+		//Add a render mask to this effect. The effect will then only 
+		//be drawn in regions that have been marked with given mask
+		virtual void setRenderMask(RenderMask mask);
 
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 		virtual void draw();

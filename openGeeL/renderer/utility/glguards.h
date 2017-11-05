@@ -52,8 +52,11 @@ namespace geeL {
 	class StencilGuard {
 
 	public:
-		StencilGuard();
+		StencilGuard(bool guardStencil = true);
 		~StencilGuard();
+
+	private:
+		bool guard;
 
 	};
 

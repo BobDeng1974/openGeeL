@@ -18,7 +18,11 @@ namespace geeL {
 		virtual void setImage(const Texture& texture);
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 
-		virtual void draw();
+		//Add a render mask to this effect. The effect will then only 
+		//be drawn in regions that have been marked with given mask
+		//Note: The underlying effect and blur won't be affected by the
+		//mask and setting their masks manually won't work either.
+		virtual void setRenderMask(RenderMask mask);
 
 		void resizeEffectResolution(ResolutionScale effectResolution);
 

@@ -20,8 +20,8 @@ namespace geeL {
 
 		void initResolution(const Resolution& resolution);
 
-		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearAll);
-		virtual void fill(Drawer& drawer, Clearer clearer = clearAll);
+		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNormal);
+		virtual void fill(Drawer& drawer, Clearer clearer = clearNormal);
 
 		virtual const RenderTexture* const getTexture() const;
 		virtual const Resolution& getResolution() const;

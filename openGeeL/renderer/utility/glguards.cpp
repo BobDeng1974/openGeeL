@@ -75,12 +75,12 @@ namespace geeL {
 
 
 
-	StencilGuard::StencilGuard() {
-		glEnable(GL_STENCIL_TEST);
+	StencilGuard::StencilGuard(bool guardStencil) : guard(guardStencil) {
+		if(guard) glEnable(GL_STENCIL_TEST);
 	}
 
 	StencilGuard::~StencilGuard() {
-		glDisable(GL_STENCIL_TEST);
+		if(guard) glDisable(GL_STENCIL_TEST);
 	}
 
 }

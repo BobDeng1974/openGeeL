@@ -39,9 +39,13 @@ namespace geeL {
 	}
 
 	void FrameBuffer::referenceRBO(FrameBuffer& buffer) {
-		rbo = buffer.rbo;
+		referenceRBO(buffer.rbo);
+	}
+
+	void FrameBuffer::referenceRBO(const RenderBufferToken & rbo) {
+		this->rbo = rbo;
 		bind();
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, buffer.rbo);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	}
 
 	void FrameBuffer::copyRBO(FrameBuffer& buffer) {

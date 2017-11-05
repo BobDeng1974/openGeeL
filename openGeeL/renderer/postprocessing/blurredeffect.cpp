@@ -58,10 +58,19 @@ namespace geeL {
 
 	}
 
-	void BlurredPostEffect::draw() {
-		bindValues();
 
-		bindToScreen();
+	void BlurredPostEffect::setRenderMask(RenderMask mask) {
+		PostProcessingEffectFS::setRenderMask(mask);
+
+		effect.setRenderMask(RenderMask::None);
+		blur.setRenderMask(RenderMask::None);
+
+		//Implementation note:
+		//Masking underlying effect doesn't currently work.
+		//For that, a new RBO with effect resolution ought to be created and 
+		//content of parent buffers stencil buffer linearly copied into it. 
+		//This RBO then would then be bound to parent buffer for every effect
+		//draw, and the original RBO rebound afterwards.
 	}
 
 	void BlurredPostEffect::resizeEffectResolution(ResolutionScale effectResolution) {

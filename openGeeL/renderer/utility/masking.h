@@ -5,7 +5,10 @@ namespace geeL {
 
 	enum class RenderMask {
 		None = 0,
-		Character = 1
+		Generic = 1,
+		Forward = 2,
+		Transparent = 3,
+		Skin = 4
 
 	};
 
@@ -14,6 +17,7 @@ namespace geeL {
 	public:
 		static void drawMask(RenderMask mask);
 		static void readMask(RenderMask mask);
+		static void passthrough();
 
 	};
 

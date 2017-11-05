@@ -20,8 +20,8 @@ namespace geeL {
 	public:
 		virtual void add(RenderTexture& texture) {}
 
-		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearAll) = 0;
-		virtual void fill(Drawer& drawer, Clearer clearer = clearAll) = 0;
+		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNormal) = 0;
+		virtual void fill(Drawer& drawer, Clearer clearer = clearNormal) = 0;
 
 		virtual void bind() const = 0;
 
@@ -47,8 +47,8 @@ namespace geeL {
 		FrameBuffer() {}
 		virtual ~FrameBuffer() {}
 
-		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearAll) = 0;
-		virtual void fill(Drawer& drawer, Clearer clearer = clearAll);
+		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNormal) = 0;
+		virtual void fill(Drawer& drawer, Clearer clearer = clearNormal);
 
 		virtual void bind() const;
 		static void bind(unsigned int fbo);
@@ -58,6 +58,7 @@ namespace geeL {
 		//Note: RBO will be referenced and not copied. 
 		//Therefore, their behaviour will affect each other
 		void referenceRBO(FrameBuffer& buffer);
+		void referenceRBO(const RenderBufferToken& rbo);
 
 		//Copy contents of buffers RBO into this buffers RBO
 		void copyRBO(FrameBuffer& buffer);
