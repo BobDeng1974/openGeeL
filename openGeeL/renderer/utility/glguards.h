@@ -48,6 +48,16 @@ namespace geeL {
 
 	};
 
+
+	class StencilGuard {
+
+	public:
+		StencilGuard();
+		~StencilGuard();
+
+	};
+
+
 }
 
 #endif

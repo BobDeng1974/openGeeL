@@ -273,6 +273,7 @@
     <ClCompile Include="renderer\utility\glguards.cpp" />
     <ClCompile Include="renderer\utility\gvector.cpp" />
     <ClCompile Include="renderer\utility\linearkernel.cpp" />
+    <ClCompile Include="renderer\utility\masking.cpp" />
     <ClCompile Include="renderer\utility\rendertime.cpp" />
     <ClCompile Include="renderer\utility\stb_image_importer.cpp" />
     <ClCompile Include="renderer\utility\viewport.cpp" />
@@ -425,6 +426,7 @@
     <ClInclude Include="renderer\utility\glguards.h" />
     <ClInclude Include="renderer\utility\gvector.h" />
     <ClInclude Include="renderer\utility\linearkernel.h" />
+    <ClInclude Include="renderer\utility\masking.h" />
     <ClInclude Include="renderer\utility\matrixextension.h" />
     <ClInclude Include="renderer\utility\properties.h" />
     <ClInclude Include="renderer\utility\property.h" />

@@ -4,6 +4,7 @@
 #include "shader/rendershader.h"
 #include "primitives/screenquad.h"
 #include "framebuffer/colorbuffer.h"
+#include "utility/glguards.h"
 #include "postprocessing.h"
 
 using namespace std;
@@ -49,6 +50,10 @@ namespace geeL {
 		shader.addMap(texture, name);
 	}
 
+	void PostProcessingEffectFS::setRenderMask(RenderMask mask) {
+		this->mask = mask;
+	}
+
 
 	void PostProcessingEffectFS::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
 		this->screen = &screen;
@@ -68,9 +73,20 @@ namespace geeL {
 	}
 
 	void PostProcessingEffectFS::bindToScreen() {
-		shader.bindParameters();
-		shader.loadMaps();
-		screen->draw();
+		if (mask != RenderMask::None) {
+			StencilGuard stencil;
+			Masking::readMask(mask);
+
+			shader.bindParameters();
+			shader.loadMaps();
+			screen->draw();
+
+		}
+		else {
+			shader.bindParameters();
+			shader.loadMaps();
+			screen->draw();
+		}
 	}
 
 	Shader& PostProcessingEffectFS::getShader() {

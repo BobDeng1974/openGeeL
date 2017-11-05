@@ -7,6 +7,7 @@
 #include "shader/rendershader.h"
 #include "shader/computeshader.h"
 #include "utility/resolution.h"
+#include "utility/masking.h"
 
 typedef unsigned int GLuint;
 
@@ -68,6 +69,7 @@ namespace geeL {
 		virtual const Texture& getImage() const;
 		virtual void setImage(const Texture& texture);
 		virtual void addTextureSampler(const Texture& texture, const std::string& name);
+		void setRenderMask(RenderMask mask);
 
 		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
 		virtual void draw();
@@ -78,6 +80,7 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	protected:
+		RenderMask mask = RenderMask::None;
 		RenderShader shader;
 		ScreenQuad* screen;
 

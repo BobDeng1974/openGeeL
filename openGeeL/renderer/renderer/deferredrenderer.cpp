@@ -269,6 +269,10 @@ namespace geeL {
 		//rendered objects 'into' the scene instead of 'on top'
 		stackBuffer.copyDepth(gBuffer);
 
+		glStencilMask(0xFF);
+		glClear(GL_STENCIL_BUFFER_BIT);
+		stackBuffer.copyStencil(gBuffer);
+
 		//Generic pass
 		scene->drawGeneric();
 		scene->drawSkybox();

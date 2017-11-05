@@ -5,6 +5,7 @@
 #include "materials/material.h"
 #include "transformation/transform.h"
 #include "shader/sceneshader.h"
+#include "utility/masking.h"
 #include "mesh.h"
 #include "model.h"
 #include "meshrenderer.h"

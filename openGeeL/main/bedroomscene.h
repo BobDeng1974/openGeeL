@@ -34,7 +34,7 @@ public:
 			Skybox& skybox = Skybox(envCubeMap);
 			scene.setSkybox(skybox);
 			lightManager.addReflectionProbe(probe);
-
+			true;
 
 			float lightIntensity = 50.f;
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(0.01f, 9.4f, -0.1f), vec3(-180.0f, 0, -50), vec3(1.f), true);
