@@ -32,11 +32,10 @@ namespace geeL {
 		initTextures(resolution);
 
 		//Create a renderbuffer object for depth and stencil attachment
-		unsigned int rbo;
-		glGenRenderbuffers(1, &rbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, resolution.getWidth(), resolution.getHeight());
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, resolution.getWidth(), resolution.getHeight());
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
 		unbind();
 	}
@@ -156,11 +155,10 @@ namespace geeL {
 		glDrawBuffers(4, attachments);
 
 		//Create a renderbuffer object for depth and stencil attachment
-		unsigned int rbo;
-		glGenRenderbuffers(1, &rbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, resolution.getWidth(), resolution.getHeight());
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, resolution.getWidth(), resolution.getHeight());
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
 		unbind();
 	}

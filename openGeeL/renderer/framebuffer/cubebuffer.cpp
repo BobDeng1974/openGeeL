@@ -9,7 +9,6 @@ namespace geeL {
 
 	CubeBuffer::CubeBuffer() : texture(nullptr) {
 		glGenFramebuffers(1, &fbo.token);
-		glGenRenderbuffers(1, &rbo);
 	}
 
 

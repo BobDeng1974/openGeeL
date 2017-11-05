@@ -10,11 +10,7 @@ using namespace std;
 
 namespace geeL {
 
-	FrameBufferToken::~FrameBufferToken() {
-		if (token != 0)
-			glDeleteFramebuffers(1, &token);
-	}
-
+	
 
 	void FrameBuffer::fill(Drawer& drawer, Clearer clearer) {
 		fill([&drawer]() {

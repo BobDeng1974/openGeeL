@@ -189,6 +189,7 @@
     <ClCompile Include="renderer\framebuffer\bufferutil.cpp" />
     <ClCompile Include="renderer\framebuffer\colorbuffer.cpp" />
     <ClCompile Include="renderer\framebuffer\cubebuffer.cpp" />
+    <ClCompile Include="renderer\framebuffer\fbotoken.cpp" />
     <ClCompile Include="renderer\framebuffer\framebuffer.cpp" />
     <ClCompile Include="renderer\framebuffer\gbuffer.cpp" />
     <ClCompile Include="renderer\framebuffer\pingpong.cpp" />

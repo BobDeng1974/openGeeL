@@ -23,7 +23,6 @@ namespace geeL {
 
 	private:
 		const TextureCube* texture;
-		unsigned int rbo;
 
 		CubeBuffer(const CubeBuffer& other) = delete;
 		CubeBuffer& operator= (const CubeBuffer& other) = delete;

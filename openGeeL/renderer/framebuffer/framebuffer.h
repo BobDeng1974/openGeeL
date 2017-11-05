@@ -65,6 +65,7 @@ namespace geeL {
 		virtual std::string toString() const = 0;
 
 	protected:
+		RenderBufferToken rbo;
 		FrameBufferToken fbo;
 		Resolution resolution;
 

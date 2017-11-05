@@ -40,7 +40,6 @@ namespace geeL {
 		RenderTexture* current;
 		RenderTexture* first;
 		RenderTexture* second;
-		unsigned int rbo;
 		bool external;
 
 		void swap();

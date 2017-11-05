@@ -117,7 +117,6 @@ namespace geeL {
 		}
 
 		bind();
-		glGenRenderbuffers(1, &rbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, getResolution().getWidth(), getResolution().getHeight());
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);

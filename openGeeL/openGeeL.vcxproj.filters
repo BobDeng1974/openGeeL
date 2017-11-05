@@ -465,6 +465,9 @@
     <ClCompile Include="renderer\utility\clearing.cpp">
       <Filter>renderer\utility</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\framebuffer\fbotoken.cpp">
+      <Filter>renderer\framebuffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">

@@ -32,7 +32,6 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	private:
-		unsigned int rbo;
 		std::stack<RenderTexture*> stackBuffer;
 
 		void init();

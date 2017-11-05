@@ -44,7 +44,6 @@ namespace geeL {
 		this->resolution = resolution;
 
 		bind();
-		glGenRenderbuffers(1, &rbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, resolution.getWidth(), resolution.getHeight());
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
