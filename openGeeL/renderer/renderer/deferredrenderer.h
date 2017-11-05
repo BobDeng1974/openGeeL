@@ -79,8 +79,8 @@ namespace geeL {
 		RenderTexture* ssaoTexture = nullptr;
 		PostProcessingEffect* isolatedEffect = nullptr;
 
-		std::function<void()> geometryPassFunc;
-		std::function<void()> lightingPassFunc;
+		std::function<void()> geometryPassFunction;
+		std::function<void()> lightingPassFunction;
 
 		DeferredRenderer(const DeferredRenderer& other) = delete;
 		DeferredRenderer& operator= (const DeferredRenderer& other) = delete;
@@ -88,10 +88,7 @@ namespace geeL {
 		void init();
 		void initDefaultEffect();
 
-		void geometryPass();
 		void lightingPass();
-		void lightingPass(const Camera& camera);
-		void forwardPass();
 
 		void linkImageBuffer(PostProcessingEffect& effect, RenderTexture* texture = nullptr);
 		void handleInput(int key, int scancode, int action, int mode);

@@ -54,8 +54,8 @@ namespace geeL {
 
 		input.addCallback(func);
 
-		geometryPassFunc = [this]() { this->geometryPass(); };
-		lightingPassFunc = [this]() { this->lightingPass(); this->forwardPass(); };
+		geometryPassFunction = [this] () { this->scene->drawDefault(); };
+		lightingPassFunction = [this] () { this->lightingPass(); };
 
 		texture1 = new RenderTexture(window->resolution, ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::None);
 		texture2 = new RenderTexture(window->resolution, ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::None);
@@ -78,7 +78,11 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::run() {
-		//window->makeCurrent();
+		draw();
+		window->swapBuffer();
+	}
+
+	void DeferredRenderer::draw() {
 		glEnable(GL_DEPTH_TEST);
 
 		Viewport::setForced(0, 0, window->resolution.getWidth(), window->resolution.getHeight());
@@ -90,8 +94,11 @@ namespace geeL {
 			texture.update([this](const Camera& camera) { drawForward(camera); });
 		}
 
+		scene->updateCamera();
+		scene->getLightmanager().update(*scene, &scene->getCamera());
+
 		//Geometry pass
-		gBuffer.fill(geometryPassFunc);
+		gBuffer.fill(geometryPassFunction);
 
 		//Hacky: Read camera depth from geometry pass and write it into the scene
 		scene->forwardScreenInfo(gBuffer.screenInfo);
@@ -100,39 +107,22 @@ namespace geeL {
 		if (ssao != nullptr) {
 			stackBuffer.push(*ssaoTexture);
 			stackBuffer.fill(*ssao);
-			FrameBuffer::resetSize(window->resolution);
 		}
 
-		scene->getLightmanager().update(*scene, &scene->getCamera());
-
-		//Lighting & generic pass
+		//Lighting pass
 		stackBuffer.push(*texture1);
-		stackBuffer.fill(lightingPassFunc);
+		stackBuffer.fill(lightingPassFunction);
 
 		//Forward pass
-		if (fBuffer != nullptr && scene->count(ShadingMethod::Forward) > 0) {
+		if (fBuffer != nullptr && scene->count(ShadingMethod::Forward, ShadingMethod::TransparentOD) > 0) {
 			fBuffer->fill([this]() {
 				scene->drawForward();
-			});
-		}
-
-		//Transparent pass
-		if (fBuffer != nullptr && scene->count(ShadingMethod::TransparentOD) > 0) {
-			fBuffer->fill([this]() {
 				scene->drawTransparentOD();
 			});
 		}
 
-		//Order-independent Transparent pass
-		if (tBuffer != nullptr && scene->count(ShadingMethod::TransparentOID) > 0) {
-			tBuffer->fill([this]() {
-				scene->drawTransparentOID();
-			});
 
-			tBuffer->composite();
-		}
 
-		
 		glDisable(GL_DEPTH_TEST);
 
 		//Post processing
@@ -159,7 +149,7 @@ namespace geeL {
 
 			stackBuffer.push(*texture2);
 			isolatedEffect->fill();
-				
+
 			def->draw();
 
 			//Restore render settings
@@ -187,35 +177,8 @@ namespace geeL {
 		//Render GUI overlay on top of final image
 		if (gui != nullptr) gui->draw();
 
-
-		window->swapBuffer();
 	}
 
-	void DeferredRenderer::draw() {
-		glEnable(GL_DEPTH_TEST);
-
-		//Geometry pass
-		gBuffer.fill(geometryPassFunc);
-
-		scene->getLightmanager().update(*scene, &scene->getCamera());
-
-		//SSAO pass
-		if (ssao != nullptr) {
-			stackBuffer.push(*ssaoTexture);
-			stackBuffer.fill(*ssao);
-			FrameBuffer::resetSize(window->resolution);
-		}
-
-		const IFrameBuffer* parent = getParentBuffer();
-		if (parent != nullptr)
-			parent->bind();
-		else
-			throw "No parent for deferred renderer set\n";
-
-		getParentBuffer()->bind();
-		lightingPass();
-		scene->drawSkybox();
-	}
 
 	void DeferredRenderer::draw(const Camera& camera, const FrameBuffer& buffer) {
 		glEnable(GL_DEPTH_TEST);
@@ -237,33 +200,24 @@ namespace geeL {
 		buffer.bind();
 
 		//Draw lighting pass and skybox directly into given framebuffer
-		lightingPass(camera);
+		//Set custom camera for deferred lighting
+		lighting.setCamera(camera);
+		lighting.draw();
+		lighting.setCamera(scene->getCamera());
+
 		scene->drawSkybox(camera);
 	}
 
 	void DeferredRenderer::drawForward(const Camera& camera) {
 		glEnable(GL_DEPTH_TEST);
 		scene->drawGenericForced(camera, true);
+		scene->drawSkybox(camera);
 	}
 
-	
-	void DeferredRenderer::geometryPass() {
-		scene->updateCamera();
-		scene->drawDefault();
-	}
 
 	void DeferredRenderer::lightingPass() {
 		lighting.draw();
-	}
 
-	void DeferredRenderer::lightingPass(const Camera& camera) {
-		lighting.setCamera(camera);
-		lighting.draw();
-		lighting.updateCamera(scene->getCamera());
-	}
-
-
-	void DeferredRenderer::forwardPass() {
 		//Copy depth and stencil buffer from gBuffer to draw forward 
 		//rendered objects 'into' the scene instead of 'on top'
 		stackBuffer.copyRBO(gBuffer);
@@ -271,6 +225,8 @@ namespace geeL {
 		scene->drawGeneric();
 		scene->drawSkybox();
 	}
+
+
 
 	void DeferredRenderer::addEffect(SSAO& ssao) {
 		this->ssao = &ssao;
@@ -315,6 +271,8 @@ namespace geeL {
 			req->addWorldInformation(worldMaps);
 		}
 	}
+
+
 
 	map<WorldMaps, const Texture*> DeferredRenderer::getMaps() const {
 		map<WorldMaps, const Texture*> worldMaps;
@@ -372,6 +330,8 @@ namespace geeL {
 		def.setImage(buffer);
 		def.init(ScreenQuad::get(), stackBuffer, window->resolution);
 	}
+
+
 
 
 	void DeferredRenderer::handleInput(int key, int scancode, int action, int mode) {

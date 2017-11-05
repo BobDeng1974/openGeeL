@@ -36,8 +36,8 @@ namespace geeL {
 		ForwardBuffer& fBuffer = ForwardBuffer(gBuffer);
 		renderer.addFBuffer(fBuffer);
 
-		TransparentOIDBuffer& tBuffer = TransparentOIDBuffer(gBuffer, renderer.getStackbuffer());
-		renderer.addTBuffer(tBuffer);
+		//TransparentOIDBuffer& tBuffer = TransparentOIDBuffer(gBuffer, renderer.getStackbuffer());
+		//renderer.addTBuffer(tBuffer);
 
 		ContinuousSingleThread renderThread(renderer);
 		Application& app = ApplicationManager::createApplication(window, manager, renderer, renderThread);
