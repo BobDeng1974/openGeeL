@@ -69,8 +69,7 @@ public:
 				const Mesh& mesh = *it->first;
 				const Material& material = *it->second;
 
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
-				science.changeMaterial(ss, mesh);
+				
 
 				MaterialContainer& container = material.getMaterialContainer();
 
@@ -84,6 +83,9 @@ public:
 
 					container.setVectorValue("Color", glm::vec3(0.3f));
 				}
+
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
+				science.changeMaterial(ss, mesh);
 			}
 
 			transObjects.clear();
@@ -92,7 +94,7 @@ public:
 			objectLister.add(camera);
 			//gui.addElement(objectLister);
 			PostProcessingEffectLister& postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
-			//gui.addElement(postLister);
+			gui.addElement(postLister);
 			SystemInformation& sysInfo = SystemInformation(window, 0.01f, 0.74f, 0.17f, 0.075f);
 			//gui.addElement(sysInfo);
 
@@ -124,8 +126,8 @@ public:
 			renderer.addEffect(ssrr, ssrr);
 			scene.addRequester(ssrr);
 
-			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.3f);
-			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 5.f, 100.f, 0.3f);
+			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.3f, 5.f);
+			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 15.f, 100.f, 0.5f);
 			renderer.addEffect(dof, dof);
 			postLister.add(dof);
 

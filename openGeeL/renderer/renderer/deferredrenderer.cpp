@@ -314,11 +314,22 @@ namespace geeL {
 		else {
 			//Init all post processing effects with two alternating textures
 			//Current effect will then always read from one and write to the other
-			const Texture& source = (effects.size() % 2 == 0) ? *texture2 : *texture1;
-			RenderTexture& target = (effects.size() % 2 == 0) ? *texture1 : *texture2;
+			const Texture* source = nullptr;
+			RenderTexture* target = nullptr;
 
-			effects.push_back(PostEffectRender(&target, &effect));
-			effect.setImage(source);
+			if (effects.size() <= 1) {
+				source = texture1;
+				target = texture2;
+			}
+			else {
+				PostEffectRender& previous = effects.back();
+
+				source = (previous.first == texture2) ? texture2 : texture1;
+				target = (previous.first == texture2) ? texture1 : texture2;
+			}
+
+			effects.push_back(PostEffectRender(target, &effect));
+			effect.setImage(*source);
 		}
 		
 		effect.init(ScreenQuad::get(), stackBuffer, window->resolution);
@@ -326,10 +337,16 @@ namespace geeL {
 
 	void DeferredRenderer::initDefaultEffect() {
 		//Link framebuffer of last added post processing effect to default effect
-		const Texture& buffer = (effects.size() % 2 == 0) ? *texture2 : *texture1;
+		const Texture* buffer = nullptr;
+		if (effects.size() <= 1)
+			buffer = texture1;
+		else {
+			PostEffectRender& previous = effects.back();
+			buffer = (previous.first == texture2) ? texture2 : texture1;
+		}
 
 		PostProcessingEffect& def = *effects.front().second;
-		def.setImage(buffer);
+		def.setImage(*buffer);
 		def.init(ScreenQuad::get(), stackBuffer, window->resolution);
 	}
 

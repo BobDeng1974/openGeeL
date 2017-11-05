@@ -100,7 +100,7 @@ public:
 			gui.addElement(sysInfo);
 
 
-			def.setExposure(5.f);
+			def.setExposure(2.5f);
 			postLister.add(def);
 
 			BilateralFilter& blur = BilateralFilter(1.8f, 0.7f);
