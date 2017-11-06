@@ -115,7 +115,7 @@ public:
 			postLister.add(volSmooth, lightSnippet, snip);
 
 			FXAA& fxaa = FXAA();
-			renderer.addEffect(fxaa);
+			renderer.addEffect(fxaa, DrawTime::Late);
 			postLister.add(fxaa);
 			
 

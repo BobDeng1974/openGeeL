@@ -197,16 +197,16 @@ public:
 
 			MotionBlur& motionBlur = MotionBlur(0.3f, 20);
 			MotionBlurSnippet& mSnippet = MotionBlurSnippet(motionBlur);
-			renderer.addEffect(motionBlur);
+			renderer.addEffect(motionBlur, DrawTime::Late);
 			scene.addRequester(motionBlur);
 			postLister.add(mSnippet);
 
 			ColorCorrection& colorCorrect = ColorCorrection();
-			renderer.addEffect(colorCorrect);
+			renderer.addEffect(colorCorrect, DrawTime::Late);
 			postLister.add(colorCorrect);
 
 			FXAA& fxaa = FXAA();
-			renderer.addEffect(fxaa);
+			renderer.addEffect(fxaa, DrawTime::Late);
 
 
 			app.run();

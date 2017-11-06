@@ -70,7 +70,7 @@ public:
 			renderer.addEffect(dof, dof);
 
 			FXAA& fxaa = FXAA(0.f, 0.f);
-			renderer.addEffect(fxaa);
+			renderer.addEffect(fxaa, DrawTime::Late);
 
 
 			app.run();

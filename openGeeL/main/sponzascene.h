@@ -118,12 +118,12 @@ public:
 			GodRay& ray = GodRay(vec3(-2.4f, 45.6f, -4.6f), 20);
 			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
 			GodRaySnippet& godRaySnippet = GodRaySnippet(ray);
-			renderer.addEffect(raySmooth);
+			renderer.addEffect(raySmooth, DrawTime::Late);
 			scene.addRequester(ray);
 			postLister.add(raySmooth, godRaySnippet);
 
 			FXAA& fxaa = FXAA();
-			renderer.addEffect(fxaa);
+			renderer.addEffect(fxaa, DrawTime::Late);
 			postLister.add(fxaa);
 
 

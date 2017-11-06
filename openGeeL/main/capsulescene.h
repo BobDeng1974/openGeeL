@@ -116,14 +116,14 @@ public:
 			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 100);
 			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
 			GodRaySnippet& godRaySnippet = GodRaySnippet(ray);
-			renderer.addEffect(raySmooth);
+			renderer.addEffect(raySmooth, DrawTime::Late);
 			scene.addRequester(ray);
 			postLister.add(raySmooth, godRaySnippet);
 
 
 			MotionBlur& motionBlur = MotionBlur(0.3f, 20);
 			MotionBlurSnippet& mSnippet = MotionBlurSnippet(motionBlur);
-			renderer.addEffect(motionBlur);
+			renderer.addEffect(motionBlur, DrawTime::Late);
 			scene.addRequester(motionBlur);
 			postLister.add(mSnippet);
 
@@ -135,18 +135,18 @@ public:
 			BrightnessFilterCutoff& filter = BrightnessFilterCutoff(1.f);
 			GaussianBlur& bloomBlur = GaussianBlur(KernelSize::Large, 4.f);
 			Bloom& bloom = Bloom(filter, bloomBlur, 1.f, 0.7f);
-			renderer.addEffect(bloom);
+			renderer.addEffect(bloom, DrawTime::Late);
 			postLister.add(bloom);
 
 			GaussianBlurSnippet snipsnip(bloomBlur);
 			postLister.add(snipsnip);
 
 			ColorCorrection& colorCorrect = ColorCorrection();
-			renderer.addEffect(colorCorrect);
+			renderer.addEffect(colorCorrect, DrawTime::Late);
 			postLister.add(colorCorrect);
 
 			FXAA& fxaa = FXAA(0.001f, 0.f);
-			renderer.addEffect(fxaa);
+			renderer.addEffect(fxaa, DrawTime::Late);
 			postLister.add(fxaa);
 
 

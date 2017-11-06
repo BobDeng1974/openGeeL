@@ -132,7 +132,7 @@ public:
 			postLister.add(dof);
 
 			FXAA& fxaa = FXAA();
-			renderer.addEffect(fxaa);
+			renderer.addEffect(fxaa, DrawTime::Late);
 
 			app.run();
 		};
