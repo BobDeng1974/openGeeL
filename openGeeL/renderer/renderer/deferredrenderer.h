@@ -80,6 +80,7 @@ namespace geeL {
 		SSAO* ssao;
 		RenderTexture* ssaoTexture = nullptr;
 		PostProcessingEffectFS fallbackEffect;
+		DefaultPostProcess& defaultEffect;
 
 		std::function<void()> geometryPassFunction;
 		std::function<void()> lightingPassFunction;
@@ -88,11 +89,13 @@ namespace geeL {
 		DeferredRenderer& operator= (const DeferredRenderer& other) = delete;
 
 		void init();
+		void indexEffects();
+		RenderTexture* indexEffectList(std::vector<PostEffectRender>& effects, RenderTexture* firstTexture);
+		void indexEffect(PostEffectRender& current, PostEffectRender* previous, RenderTexture* firstTexture);
 		void initDefaultEffect();
 
 		void lightingPass();
 
-		void linkImageBuffer(PostProcessingEffect& effect);
 		void handleInput(int key, int scancode, int action, int mode);
 
 		//Toggle through all framebuffers for screen display 

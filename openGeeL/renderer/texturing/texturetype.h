@@ -6,6 +6,7 @@
 #define GL_TEXTURE_CUBE_MAP 0x8513
 
 #define GL_SRGB_ALPHA 0x8C42
+#define GL_ALPHA 0x1906
 #define GL_RED 0x1903
 #define GL_R16 0x822A
 #define GL_RGB 0x1907
