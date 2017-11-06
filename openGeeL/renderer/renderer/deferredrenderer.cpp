@@ -70,12 +70,12 @@ namespace geeL {
 	
 	void DeferredRenderer::runStart() {
 		window->makeCurrent();
-		
-		lighting.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, window->resolution));
-		scene->updateProbes(); //Draw reflection probes once at beginning
 
+		defaultEffect.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, window->resolution, &fallbackEffect));
+		lighting.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, window->resolution));
+
+		scene->updateProbes(); //Draw reflection probes once at beginning
 		indexEffects();
-		initDefaultEffect();
 	}
 
 	void DeferredRenderer::run() {
@@ -129,22 +129,10 @@ namespace geeL {
 
 		//Post processing
 		//Draw external post processing effects first.
-		for (auto it = externalEffects.begin(); it != externalEffects.end(); it++) {
-			PostProcessingEffect& effect = *it->second;
-			RenderTexture& texture = *it->first;
+		drawEffects(externalEffects);
 
-			stackBuffer.push(texture);
-			effect.fill();
-		}
-
-		//Draw all the post processing effects on top of each other. (Skip default effect)
-		for (auto it = effects.begin(); it != effects.end(); it++) {
-			PostProcessingEffect& effect = *it->second;
-			RenderTexture& texture = *it->first;
-
-			stackBuffer.push(texture);
-			effect.fill();
-		}
+		//Draw all the post processing effects on top of each other.
+		drawEffects(effects);
 
 		//Draw the last (default) effect to screen.
 		defaultEffect.draw();
@@ -290,9 +278,9 @@ namespace geeL {
 
 
 	void DeferredRenderer::indexEffects() {
-		indexEffectList(effects, texture1);
+		RenderTexture* lastImage = indexEffectList(effects, texture1);
 
-
+		defaultEffect.setImage(*lastImage);
 	}
 
 	RenderTexture* DeferredRenderer::indexEffectList(std::vector<PostEffectRender>& effects, RenderTexture* firstTexture) {
@@ -313,6 +301,19 @@ namespace geeL {
 		}
 
 		return last;
+	}
+
+	RenderTexture* DeferredRenderer::drawEffects(std::vector<PostEffectRender>& effects) {
+		for (auto it(effects.begin()); it != effects.end(); it++) {
+			PostProcessingEffect& effect = *it->second;
+			RenderTexture& texture = *it->first;
+
+			stackBuffer.push(texture);
+			effect.fill();
+		}
+
+		PostEffectRender& last = effects.back();
+		return last.first;
 	}
 
 	void DeferredRenderer::indexEffect(PostEffectRender& current, PostEffectRender* previous, RenderTexture* firstTexture) {
@@ -348,24 +349,6 @@ namespace geeL {
 			current.first = target;
 			effect.setImage(*source);
 		}
-
-	}
-
-
-
-	void DeferredRenderer::initDefaultEffect() {
-		//Link framebuffer of last added post processing effect to default effect
-		const Texture* buffer = nullptr;
-		if (effects.size() == 0)
-			buffer = texture1;
-		else {
-			PostEffectRender& previous = effects.back();
-			buffer = (previous.first == texture2) ? texture2 : texture1;
-		}
-
-		defaultEffect.setImage(*buffer);
-		defaultEffect.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer,
-			window->resolution, &fallbackEffect));
 
 	}
 

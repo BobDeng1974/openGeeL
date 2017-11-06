@@ -90,9 +90,10 @@ namespace geeL {
 
 		void init();
 		void indexEffects();
-		RenderTexture* indexEffectList(std::vector<PostEffectRender>& effects, RenderTexture* firstTexture);
 		void indexEffect(PostEffectRender& current, PostEffectRender* previous, RenderTexture* firstTexture);
-		void initDefaultEffect();
+
+		RenderTexture* indexEffectList(std::vector<PostEffectRender>& effects, RenderTexture* firstTexture);
+		RenderTexture* drawEffects(std::vector<PostEffectRender>& effects);
 
 		void lightingPass();
 
@@ -102,6 +103,8 @@ namespace geeL {
 		void toggleBuffer(bool next);
 
 	};
+
+
 
 }
 
