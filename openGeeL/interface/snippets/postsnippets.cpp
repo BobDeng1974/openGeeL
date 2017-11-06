@@ -19,6 +19,16 @@ namespace geeL {
 
 	PostEffectSnippet::PostEffectSnippet(PostProcessingEffect& baseEffect) : baseEffect(baseEffect) {}
 
+	void PostEffectSnippet::draw(GUIContext* context) {
+
+		int active = !baseEffect.isActive();
+		nk_layout_row_dynamic(context, 30, 2);
+		nk_checkbox_label(context, "Active", &active);
+		baseEffect.setActive(!active);
+
+		drawSimple(context);
+	}
+
 	PostProcessingEffect& PostEffectSnippet::getEffect() {
 		return baseEffect;
 	}
@@ -45,8 +55,7 @@ namespace geeL {
 		});
 	}
 
-	void GenericPostSnippet::draw(GUIContext * context) {
-
+	void GenericPostSnippet::drawSimple(GUIContext * context) {
 		float border = 200.f;
 		for (auto it(floatBindings.begin()); it != floatBindings.end(); it++) {
 			const FloatBinding& binding = **it;
@@ -87,7 +96,7 @@ namespace geeL {
 		: PostEffectSnippet(snippets.front()->getEffect()), snippets(snippets) {}
 
 
-	void PostGroupSnippet::draw(GUIContext * context) {
+	void PostGroupSnippet::drawSimple(GUIContext * context) {
 		for (auto it = next(snippets.begin()); it != snippets.end(); it++) {
 			PostEffectSnippet& snippet = **it;
 
@@ -101,7 +110,7 @@ namespace geeL {
 
 	DefaultSnippet::DefaultSnippet(DefaultPostProcess& def) : PostEffectSnippet(def), def(def) {}
 
-	void DefaultSnippet::draw(GUIContext* context) {
+	void DefaultSnippet::drawSimple(GUIContext* context) {
 		float defExposure = def.getExposure();
 		float exposure = GUISnippets::drawBarFloatLogarithmic(context, defExposure, 0.f, 100.f, 0.1f, "Exposure");
 		if (exposure != defExposure)
@@ -110,11 +119,10 @@ namespace geeL {
 
 
 
-	BlurredEffectSnippet::BlurredEffectSnippet(BlurredPostEffect& effect, GUISnippet& effectSnippet)
+	BlurredEffectSnippet::BlurredEffectSnippet(BlurredPostEffect& effect, PostEffectSnippet& effectSnippet)
 		: PostEffectSnippet(effect), effect(effect), effectSnippet(effectSnippet), blurSnippet(nullptr) {}
 
-	void BlurredEffectSnippet::draw(GUIContext* context) {
-		
+	void BlurredEffectSnippet::drawSimple(GUIContext* context) {
 		const ResolutionScale& oldResolution = effect.getEffectResolution();
 		float effectResolution = GUISnippets::drawBarFloat(context, 
 			oldResolution.get(), 0.f, 1.f, 0.001f, "Resolution");
@@ -122,7 +130,7 @@ namespace geeL {
 		if (effectResolution != oldResolution.get())
 			effect.resizeEffectResolution(effectResolution);
 
-		effectSnippet.draw(context);
+		effectSnippet.drawSimple(context);
 
 		if (blurSnippet != nullptr) {
 			GUISnippets::drawTreeNode(context, "Blur (" + blurSnippet->toString() + ")", true, 
@@ -141,8 +149,7 @@ namespace geeL {
 
 	ColorCorrectionSnippet::ColorCorrectionSnippet(ColorCorrection& color) : PostEffectSnippet(color), color(color) {}
 
-	void ColorCorrectionSnippet::draw(GUIContext* context) {
-
+	void ColorCorrectionSnippet::drawSimple(GUIContext* context) {
 		float r = GUISnippets::drawBarFloat(context, color.getRed(), 0.f, 1.f, 0.001f, "Red");
 		color.setRed(r);
 
@@ -184,7 +191,7 @@ namespace geeL {
 
 	BloomSnippet::BloomSnippet(Bloom& bloom) : PostEffectSnippet(bloom), bloom(bloom) {}
 
-	void BloomSnippet::draw(GUIContext* context) {
+	void BloomSnippet::drawSimple(GUIContext* context) {
 		const ResolutionScale& oldResolution = bloom.getEffectResolution();
 		float effectResolution = GUISnippets::drawBarFloat(context,
 			oldResolution.get(), 0.f, 1.f, 0.001f, "Resolution");
@@ -200,7 +207,7 @@ namespace geeL {
 
 	BrightnessFilterSnippet::BrightnessFilterSnippet(BrightnessFilterSmooth & filter) : PostEffectSnippet(filter), filter(filter) {}
 
-	void BrightnessFilterSnippet::draw(GUIContext* context) {
+	void BrightnessFilterSnippet::drawSimple(GUIContext* context) {
 		float bias = GUISnippets::drawBarFloat(context, filter.getBias(), 0.f, 3.f, 0.0001f, "Bias");
 		filter.setBias(bias);
 
@@ -212,7 +219,7 @@ namespace geeL {
 
 	DepthOfFieldBlurredSnippet::DepthOfFieldBlurredSnippet(DepthOfFieldBlurred& dof) : PostEffectSnippet(dof), dof(dof) {}
 
-	void DepthOfFieldBlurredSnippet::draw(GUIContext* context) {
+	void DepthOfFieldBlurredSnippet::drawSimple(GUIContext* context) {
 		const ResolutionScale& oldResolution = dof.getBlurResolution();
 		float blurResolution = GUISnippets::drawBarFloat(context,
 			oldResolution.get(), 0.f, 1.f, 0.001f, "Resolution");
@@ -238,7 +245,7 @@ namespace geeL {
 
 	FXAASnippet::FXAASnippet(FXAA& fxaa) : PostEffectSnippet(fxaa), fxaa(fxaa) {}
 
-	void FXAASnippet::draw(GUIContext* context) {
+	void FXAASnippet::drawSimple(GUIContext* context) {
 		float blurMin = GUISnippets::drawBarFloat(context, fxaa.getBlurMin(), 0.f, 0.1f, 0.0001f, "Blur Min");
 		fxaa.setBlurMin(blurMin);
 
@@ -256,7 +263,7 @@ namespace geeL {
 
 	GodRaySnippet::GodRaySnippet(GodRay& ray) : PostEffectSnippet(ray), ray(ray) {}
 
-	void GodRaySnippet::draw(GUIContext* context) {
+	void GodRaySnippet::drawSimple(GUIContext* context) {
 		glm::vec3 position = GUISnippets::drawVector(context, ray.getLightPosition(), "", 100, 0.1f);
 		ray.setLightPosition(position);
 
@@ -268,7 +275,7 @@ namespace geeL {
 
 	LensFlareSnippet::LensFlareSnippet(LensFlare& flare) : PostEffectSnippet(flare), flare(flare) {}
 
-	void LensFlareSnippet::draw(GUIContext * context) {
+	void LensFlareSnippet::drawSimple(GUIContext * context) {
 		float strength = GUISnippets::drawBarFloat(context, flare.getStrength(), 0.1f, 50.f, 0.001f, "Strength");
 		flare.setStrength(strength);
 
@@ -294,7 +301,7 @@ namespace geeL {
 
 	VolumetricLightSnippet::VolumetricLightSnippet(VolumetricLight& light) : PostEffectSnippet(light), light(light) {}
 
-	void VolumetricLightSnippet::draw(GUIContext* context) {
+	void VolumetricLightSnippet::drawSimple(GUIContext* context) {
 		int samples = GUISnippets::drawBarInteger(context, light.getSampleCount(), 0, 500, 1, "Samples");
 		light.setSampleCount(samples);
 
@@ -309,7 +316,7 @@ namespace geeL {
 
 	SSAOSnippet::SSAOSnippet(SSAO& ssao) : PostEffectSnippet(ssao), ssao(ssao) {}
 
-	void SSAOSnippet::draw(GUIContext* context) {
+	void SSAOSnippet::drawSimple(GUIContext* context) {
 		float radius = GUISnippets::drawBarFloat(context, ssao.getRadius(), 0.5f, 100.f, 0.1f, "Radius");
 		ssao.setRadius(radius);
 	}
@@ -318,8 +325,7 @@ namespace geeL {
 
 	SSRRSnippet::SSRRSnippet(SSRR& ssrr) : PostEffectSnippet(ssrr), ssrr(ssrr) {}
 
-	void SSRRSnippet::draw(GUIContext* context) {
-		
+	void SSRRSnippet::drawSimple(GUIContext* context) {
 		//Lazy quick fix to allow fussy SSRR in GUI
 		MultisampledSSRR* fussy = dynamic_cast<MultisampledSSRR*>(&ssrr);
 		if (fussy != nullptr) {
@@ -341,7 +347,7 @@ namespace geeL {
 
 	ConeTracerSnippet::ConeTracerSnippet(VoxelConeTracer& tracer) : PostEffectSnippet(tracer), tracer(tracer) {}
 
-	void ConeTracerSnippet::draw(GUIContext* context) {
+	void ConeTracerSnippet::drawSimple(GUIContext* context) {
 		unsigned int specLOD = GUISnippets::drawBarInteger(context, tracer.getSpecularLOD(), 1, 10, 1, "Specular LOD");
 		tracer.setSpecularLOD(specLOD);
 

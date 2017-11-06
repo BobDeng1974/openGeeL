@@ -46,7 +46,7 @@ namespace geeL {
 		noiseTexture = new ImageTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::None);
 	}
 
-	SSAO::SSAO(const SSAO & other) : PostProcessingEffectFS(other), radius(other.radius), blur(other.blur), 
+	SSAO::SSAO(const SSAO& other) : PostProcessingEffectFS(other), radius(other.radius), blur(other.blur), 
 		noise(other.noise), resolution(other.resolution) {
 		
 		noiseTexture = new ImageTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::None);
@@ -68,8 +68,10 @@ namespace geeL {
 		return *this;
 	}
 
-	void SSAO::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffectFS::init(screen, buffer, resolution);
+	void SSAO::init(const PostProcessingParameter& parameter) {
+		PostProcessingEffectFS::init(parameter);
+
+		const Resolution& resolution = parameter.resolution;
 
 		shader.bind<float>("screenWidth", float(resolution.getWidth()));
 		shader.bind<float>("screenHeight", float(resolution.getHeight()));
@@ -80,13 +82,15 @@ namespace geeL {
 		
 		tempTexture = new RenderTexture(resolution, ColorType::Single, WrapMode::Repeat, FilterMode::None);
 
-		blur.init(screen, buffer, resolution);
+		blur.init(PostProcessingParameter(parameter, resolution));
 		blur.setImage(*tempTexture);
 
 		projectionLocation = shader.getLocation("projection");
 	}
 
 	void SSAO::draw() {
+		if (!active) return;
+
 		parentBuffer->add(*tempTexture);
 		parentBuffer->fill([this]() {
 			bindValues();

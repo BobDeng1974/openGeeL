@@ -57,12 +57,12 @@ namespace geeL {
 		snippets.push_back(std::pair<bool, PostEffectSnippet*>(true, snippet));
 	}
 
-	void PostProcessingEffectLister::add(BlurredPostEffect& effect, GUISnippet& effectSnippet) {
+	void PostProcessingEffectLister::add(BlurredPostEffect& effect, PostEffectSnippet& effectSnippet) {
 		BlurredEffectSnippet* snippet = new BlurredEffectSnippet(effect, effectSnippet);
 		snippets.push_back(std::pair<bool, PostEffectSnippet*>(true, snippet));
 	}
 
-	void PostProcessingEffectLister::add(BlurredPostEffect& effect, GUISnippet& effectSnippet, GUISnippet& blurSnippet) {
+	void PostProcessingEffectLister::add(BlurredPostEffect& effect, PostEffectSnippet& effectSnippet, PostEffectSnippet& blurSnippet) {
 		BlurredEffectSnippet* snippet = new BlurredEffectSnippet(effect, effectSnippet);
 		snippet->setBlurSnippet(blurSnippet);
 

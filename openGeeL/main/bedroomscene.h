@@ -66,7 +66,7 @@ public:
 				const Material& material = *it->second;
 
 				MaterialContainer& container = material.getMaterialContainer();
-				//container.setFloatValue("Transparency", 0.2f);
+				container.setFloatValue("Transparency", 0.2f);
 
 				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
 				bedroom.changeMaterial(ss, mesh);
@@ -93,7 +93,9 @@ public:
 			scene.addRequester(ssao);
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
+			GenericPostSnippet& iblSnippet = GenericPostSnippet(ibl);
 			renderer.addEffect(ibl, ibl);
+			postLister.add(iblSnippet);
 
 			SSAOSnippet& ssaoSnippet = SSAOSnippet(ssao);
 			BilateralFilterSnippet& ssaoBlurSnippet = BilateralFilterSnippet(blur);

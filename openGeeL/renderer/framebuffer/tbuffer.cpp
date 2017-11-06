@@ -27,7 +27,7 @@ namespace geeL {
 	void TransparentOIDBuffer::init(RenderTexture& colorTexture) {
 		compositionTexture = &colorTexture;
 
-		tComp.init(ScreenQuad::get(), compBuffer, resolution);
+		tComp.init(PostProcessingParameter(ScreenQuad::get(), compBuffer, resolution));
 		tComp.addTextureSampler(*accumulationTexture, "accumulation");
 		tComp.addTextureSampler(*revealageTexture, "revealage");
 

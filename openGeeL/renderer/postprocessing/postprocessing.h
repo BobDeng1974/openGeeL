@@ -15,10 +15,24 @@ namespace geeL {
 
 	class ColorBuffer;
 	class DynamicBuffer;
+	class PostProcessingEffect;
 	class RenderShader;
 	class ScreenQuad;
 	class Texture;
 
+
+	struct PostProcessingParameter {
+		ScreenQuad& screen;
+		DynamicBuffer& buffer;
+		Resolution resolution;
+		PostProcessingEffect* fallbackEffect;
+
+		PostProcessingParameter(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution, 
+			PostProcessingEffect* fallbackEffect = nullptr);
+
+		PostProcessingParameter(const PostProcessingParameter& other, const Resolution& resolution);
+
+	};
 
 	//Interface for all post processing effects (or rendering passes) that can enhance an existing image
 	class PostProcessingEffect : public Drawer {
@@ -33,7 +47,7 @@ namespace geeL {
 		virtual void setImage(const Texture& texture) = 0;
 		virtual void addTextureSampler(const Texture& texture, const std::string& name) = 0;
 
-		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) = 0;
+		virtual void init(const PostProcessingParameter& parameter) = 0;
 		virtual void draw() = 0;
 		virtual void fill() = 0;
 
@@ -49,11 +63,15 @@ namespace geeL {
 		const Resolution& getResolution() const;
 		void setResolution(const Resolution& value);
 
+		bool isActive() const;
+		virtual void setActive(bool value);
+
 		virtual Shader& getShader() = 0;
 
 	protected:
 		Resolution resolution;
 		bool onlyEffect = false;
+		bool active = true;
 
 	};
 
@@ -74,7 +92,7 @@ namespace geeL {
 		//be drawn in regions that have been marked with given mask
 		virtual void setRenderMask(RenderMask mask);
 
-		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void init(const PostProcessingParameter& parameter);
 		virtual void draw();
 		virtual void fill();
 
@@ -86,6 +104,7 @@ namespace geeL {
 		RenderMask mask = RenderMask::None;
 		RenderShader shader;
 		ScreenQuad* screen;
+		PostProcessingEffect* fallbackEffect = nullptr;
 
 		virtual void bindValues() {}
 		virtual void bindToScreen();
@@ -104,7 +123,7 @@ namespace geeL {
 		virtual void addTextureSampler(const Texture& texture, const std::string& name);
 		virtual void addImageTexture(const Texture& texture, unsigned int bindingPosition);
 
-		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void init(const PostProcessingParameter& parameter);
 		virtual void draw();
 		virtual void fill();
 
@@ -130,6 +149,17 @@ namespace geeL {
 			: PostProcessingEffectFS("renderer/postprocessing/passthrough.frag") {}
 
 	};
+
+
+
+	inline PostProcessingParameter::PostProcessingParameter(ScreenQuad& screen, 
+		DynamicBuffer& buffer, const Resolution& resolution, PostProcessingEffect* fallbackEffect)
+			: screen(screen), buffer(buffer), resolution(resolution), fallbackEffect(fallbackEffect) {}
+
+	inline PostProcessingParameter::PostProcessingParameter(const PostProcessingParameter& other, 
+		const Resolution & resolution) : screen(other.screen), buffer(other.buffer), resolution(resolution), 
+		fallbackEffect(other.fallbackEffect) {}
+
 
 }
 

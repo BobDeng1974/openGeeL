@@ -15,8 +15,8 @@ namespace geeL {
 		: PostProcessingEffectFS(shaderPath), strength(strength), LOD(LOD) {}
 
 
-	void MotionBlur::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffectFS::init(screen, buffer, resolution);
+	void MotionBlur::init(const PostProcessingParameter& parameter) {
+		PostProcessingEffectFS::init(parameter);
 
 		samplesLocation = shader.getLocation("maxSamples");
 		strengthLocation = shader.getLocation("strength");
@@ -84,15 +84,15 @@ namespace geeL {
 	}
 
 
-	void MotionBlurPerPixel::init(ScreenQuad & screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		MotionBlur::init(screen, buffer, resolution);
+	void MotionBlurPerPixel::init(const PostProcessingParameter& parameter) {
+		MotionBlur::init(parameter);
 
 		float res = 1.f;
 		Resolution velocityRes = Resolution(parentBuffer->getResolution(), 1.f);
 		velocityTexture = new RenderTexture(velocityRes,
 			ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::Linear);
 
-		velocity.init(screen, buffer, velocityRes);
+		velocity.init(PostProcessingParameter(parameter, velocityRes));
 
 		addTextureSampler(*velocityTexture, "velocity");
 	}
@@ -114,14 +114,14 @@ namespace geeL {
 	}
 
 
-	void VelocityBuffer::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffectFS::init(screen, buffer, resolution);
+	void VelocityBuffer::init(const PostProcessingParameter& parameter) {
+		PostProcessingEffectFS::init(parameter);
 
 		Resolution positionRes = Resolution(parentBuffer->getResolution(), 1.f);
 		positionTexture = new RenderTexture(positionRes, ColorType::RGBA16, 
 			WrapMode::ClampEdge, FilterMode::Linear);
 
-		prevPositionEffect.init(screen, buffer, positionRes);
+		prevPositionEffect.init(PostProcessingParameter(parameter, positionRes));
 
 		addTextureSampler(*positionTexture, "previousPosition");
 	}

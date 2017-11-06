@@ -17,7 +17,7 @@ namespace geeL {
 	public:
 		GaussianBlurSnippet(GaussianBlurBase& blur);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		GaussianBlurBase& blur;
@@ -30,7 +30,7 @@ namespace geeL {
 	public:
 		BilateralFilterSnippet(BilateralFilter& blur);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		BilateralFilter& blur;
@@ -43,7 +43,7 @@ namespace geeL {
 	public:
 		SobelBlurSnippet(SobelBlur& blur);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		SobelBlur& blur;
@@ -56,7 +56,7 @@ namespace geeL {
 	public:
 		MotionBlurSnippet(MotionBlur& blur);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		MotionBlur& blur;

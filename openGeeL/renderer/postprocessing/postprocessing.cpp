@@ -5,6 +5,7 @@
 #include "primitives/screenquad.h"
 #include "framebuffer/colorbuffer.h"
 #include "utility/glguards.h"
+#include "utility/defaults.h"
 #include "postprocessing.h"
 
 using namespace std;
@@ -26,6 +27,14 @@ namespace geeL {
 
 	void PostProcessingEffect::setResolution(const Resolution& value) {
 		resolution = value;
+	}
+
+	bool PostProcessingEffect::isActive() const {
+		return active;
+	}
+
+	void PostProcessingEffect::setActive(bool value) {
+		active = value;
 	}
 
 	
@@ -55,16 +64,28 @@ namespace geeL {
 	}
 
 
-	void PostProcessingEffectFS::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		this->screen = &screen;
-		this->resolution = resolution;
+	void PostProcessingEffectFS::init(const PostProcessingParameter& parameter) {
+		this->screen = &parameter.screen;
+		this->resolution = parameter.resolution;
+		this->fallbackEffect = parameter.fallbackEffect;
 
-		setParent(buffer);
+		setParent(parameter.buffer);
 	}
 
 	void PostProcessingEffectFS::draw() {
-		bindValues();
-		bindToScreen();
+		if (active) {
+			bindValues();
+			bindToScreen();
+
+		}
+		else if(fallbackEffect != nullptr) {
+			fallbackEffect->init(PostProcessingParameter(ScreenQuad::get(), 
+				static_cast<DynamicBuffer&>(*parentBuffer), resolution));
+
+			fallbackEffect->setImage(getImage());
+			fallbackEffect->draw();
+		}
+		
 	}
 
 	void PostProcessingEffectFS::fill() {
@@ -115,10 +136,10 @@ namespace geeL {
 		shader.addImage(texture, bindingPosition);
 	}
 
-	void PostProcessingEffectCS::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		this->resolution = resolution;
+	void PostProcessingEffectCS::init(const PostProcessingParameter& parameter) {
+		this->resolution = parameter.resolution;
 
-		this->buffer = &buffer;
+		this->buffer = &parameter.buffer;
 	}
 
 	void PostProcessingEffectCS::draw() {
@@ -156,6 +177,5 @@ namespace geeL {
 	std::string PostProcessingEffectCS::toString() const {
 		return "Post effect with shader: " + shader.name;
 	}
-
 
 }

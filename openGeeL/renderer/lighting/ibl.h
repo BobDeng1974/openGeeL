@@ -13,9 +13,11 @@ namespace geeL {
 	public:
 		ImageBasedLighting(RenderScene& scene);
 
-		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void init(const PostProcessingParameter& parameter);
 		virtual void draw();
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
+
+		virtual std::string toString() const;
 
 	protected:
 		virtual void bindValues();
@@ -25,6 +27,12 @@ namespace geeL {
 		ShaderLocation originLocation;
 
 	};
+
+
+	inline std::string ImageBasedLighting::toString() const {
+		return "IBL";
+	}
+
 
 }
 

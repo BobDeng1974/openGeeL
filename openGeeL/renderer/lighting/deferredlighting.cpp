@@ -12,8 +12,8 @@ namespace geeL {
 			"renderer/lighting/deferredlighting.frag") {}
 
 
-	void DeferredLighting::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffectFS::init(screen, buffer, resolution);
+	void DeferredLighting::init(const PostProcessingParameter& parameter) {
+		PostProcessingEffectFS::init(parameter);
 
 		scene.init();
 
@@ -59,8 +59,8 @@ namespace geeL {
 		: SceneRender(scene), PostProcessingEffectCS("renderer/lighting/tileddeferred.com.glsl", Resolution(16, 16)) {}
 
 
-	void TiledDeferredLighting::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffectCS::init(screen, buffer, resolution);
+	void TiledDeferredLighting::init(const PostProcessingParameter& parameter) {
+		PostProcessingEffectCS::init(parameter);
 
 		scene.init();
 

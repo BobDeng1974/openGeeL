@@ -31,8 +31,8 @@ namespace geeL {
 
 		void add(PostEffectSnippet& snippet);
 		void add(DefaultPostProcess& def);
-		void add(BlurredPostEffect& effect, GUISnippet& effectSnippet);
-		void add(BlurredPostEffect& effect, GUISnippet& effectSnippet, GUISnippet& blurSnippet);
+		void add(BlurredPostEffect& effect, PostEffectSnippet& effectSnippet);
+		void add(BlurredPostEffect& effect, PostEffectSnippet& effectSnippet, PostEffectSnippet& blurSnippet);
 		void add(Bloom& bloom);
 		void add(ColorCorrection& color);
 		void add(DepthOfFieldBlurred& dof);

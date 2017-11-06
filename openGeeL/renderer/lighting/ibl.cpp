@@ -12,8 +12,8 @@ namespace geeL {
 			"renderer/lighting/ibl.frag") {}
 
 
-	void ImageBasedLighting::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffectFS::init(screen, buffer, resolution);
+	void ImageBasedLighting::init(const PostProcessingParameter& parameter) {
+		PostProcessingEffectFS::init(parameter);
 
 		scene.getLightmanager().addReflectionProbes(shader);
 		invViewLocation = shader.getLocation("inverseView");

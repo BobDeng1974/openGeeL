@@ -16,7 +16,7 @@ namespace geeL {
 		virtual ~BlurredPostEffect();
 
 		virtual void setImage(const Texture& texture);
-		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void init(const PostProcessingParameter& parameter);
 
 		//Add a render mask to this effect. The effect will then only 
 		//be drawn in regions that have been marked with given mask

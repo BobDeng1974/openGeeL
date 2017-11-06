@@ -12,7 +12,7 @@ namespace geeL {
 	public:
 		SSRR(unsigned int stepCount = 60, float stepSize = 0.2f, float stepSizeGain = 1.02f);
 
-		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void init(const PostProcessingParameter& parameter);
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 		unsigned int getStepCount() const;
@@ -47,7 +47,7 @@ namespace geeL {
 		MultisampledSSRR(unsigned int sampleCount = 25, unsigned int stepCount = 30, 
 			float stepSize = 0.2f, float stepSizeGain = 1.04f);
 
-		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void init(const PostProcessingParameter& parameter);
 
 		unsigned int getSampleCount() const;
 		void setSampleCount(unsigned int steps);

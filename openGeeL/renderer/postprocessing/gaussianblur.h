@@ -28,7 +28,7 @@ namespace geeL {
 		virtual ~GaussianBlurBase();
 
 		virtual void setImage(const Texture& texture);
-		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void init(const PostProcessingParameter& parameter);
 
 		std::vector<float> computeKernel(float sigma) const;
 
@@ -73,7 +73,7 @@ namespace geeL {
 	public:
 		BilateralFilter(float sigma = 1.3f, float factor = 0.5f);
 
-		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void init(const PostProcessingParameter& parameter);
 
 		float getSigma() const;
 		void  setSigma(float value);
@@ -108,7 +108,7 @@ namespace geeL {
 		virtual ~SobelBlur();
 
 		virtual void setImage(const Texture& texture);
-		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void init(const PostProcessingParameter& parameter);
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 

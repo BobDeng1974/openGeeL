@@ -10,7 +10,7 @@ namespace geeL {
 	class WorldMapRequester;
 
 
-	//Specified a time to be drawn during rendering process
+	//Specifies a time to be drawn during rendering process
 	//Early: Directly after geometry pass
 	//Intermediate: After transparency pass (Default)
 	//Late: After generic pass

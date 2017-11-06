@@ -13,7 +13,7 @@ namespace geeL {
 		ColorCorrection(float red = 1.f, float green = 1.f, float blue = 1.f, 
 			float hue = 1.f, float saturation = 1.f, float brightness = 1.f);
 
-		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void init(const PostProcessingParameter& parameter);
 
 		float getRed() const;
 		float getGreen() const;

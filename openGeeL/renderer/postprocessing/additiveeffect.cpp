@@ -22,10 +22,11 @@ namespace geeL {
 
 		if (parentBuffer != nullptr) {
 			parentBuffer->fill([this]() {
-				PostProcessingEffectFS::draw();
+				if(active) PostProcessingEffectFS::draw();
 			}, clearNothing);
 		}
 			
 	}
+
 
 }

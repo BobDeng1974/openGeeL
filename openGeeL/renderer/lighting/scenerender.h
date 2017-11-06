@@ -13,7 +13,7 @@ namespace geeL {
 	class SceneRender : public WorldMapRequester, public CameraRequester {
 
 	public:
-		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) = 0;
+		virtual void init(const PostProcessingParameter& parameter) = 0;
 		virtual void draw() = 0;
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps) {}

@@ -4,6 +4,7 @@
 #include <list>
 #include <vector>
 #include "framebuffer/stackbuffer.h"
+#include "postprocessing/postprocessing.h"
 #include "utility/worldinformation.h"
 #include "utility/rendertime.h"
 #include "postrenderer.h"
@@ -48,6 +49,7 @@ namespace geeL {
 		virtual void addEffect(PostProcessingEffect& effect, RenderTexture& texture);
 		void addEffect(SSAO& ssao);
 
+
 		virtual void addRequester(WorldMapRequester& requester);
 		virtual void addRenderTexture(DynamicRenderTexture& texture);
 
@@ -78,6 +80,7 @@ namespace geeL {
 		SSAO* ssao;
 		RenderTexture* ssaoTexture = nullptr;
 		PostProcessingEffect* isolatedEffect = nullptr;
+		PostProcessingEffectFS fallbackEffect;
 
 		std::function<void()> geometryPassFunction;
 		std::function<void()> lightingPassFunction;

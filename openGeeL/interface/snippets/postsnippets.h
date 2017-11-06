@@ -29,7 +29,9 @@ namespace geeL {
 	public:
 		PostEffectSnippet(PostProcessingEffect& baseEffect);
 
-		virtual void draw(GUIContext* context) = 0;
+		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context) = 0;
+
 		PostProcessingEffect& getEffect();
 
 		std::string toString() const;
@@ -47,7 +49,7 @@ namespace geeL {
 	public:
 		GenericPostSnippet(PostProcessingEffect& effect);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		Shader& shader;
@@ -63,7 +65,7 @@ namespace geeL {
 	public:
 		PostGroupSnippet(std::list<PostEffectSnippet*>& snippets);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		std::list<PostEffectSnippet*> snippets;
@@ -76,7 +78,7 @@ namespace geeL {
 	public:
 		DefaultSnippet(DefaultPostProcess& def);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		DefaultPostProcess& def;
@@ -87,15 +89,15 @@ namespace geeL {
 	class BlurredEffectSnippet : public PostEffectSnippet {
 
 	public:
-		BlurredEffectSnippet(BlurredPostEffect& effect, GUISnippet& effectSnippet);
+		BlurredEffectSnippet(BlurredPostEffect& effect, PostEffectSnippet& effectSnippet);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 		void setBlurSnippet(GUISnippet& blurSnippet);
 
 	private:
 		BlurredPostEffect& effect;
-		GUISnippet& effectSnippet;
+		PostEffectSnippet& effectSnippet;
 		GUISnippet* blurSnippet;
 
 	};
@@ -106,7 +108,7 @@ namespace geeL {
 	public:
 		BloomSnippet(Bloom& bloom);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		Bloom& bloom;
@@ -119,7 +121,7 @@ namespace geeL {
 	public:
 		BrightnessFilterSnippet(BrightnessFilterSmooth& filter);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		BrightnessFilterSmooth& filter;
@@ -132,7 +134,7 @@ namespace geeL {
 	public:
 		ColorCorrectionSnippet(ColorCorrection& color);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		ColorCorrection& color;
@@ -145,7 +147,7 @@ namespace geeL {
 	public:
 		DepthOfFieldBlurredSnippet(DepthOfFieldBlurred& dof);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		DepthOfFieldBlurred& dof;
@@ -157,7 +159,7 @@ namespace geeL {
 	public:
 		FXAASnippet(FXAA& fxaa);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		FXAA& fxaa;
@@ -170,7 +172,7 @@ namespace geeL {
 	public:
 		GodRaySnippet(GodRay& ray);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		GodRay& ray;
@@ -183,7 +185,7 @@ namespace geeL {
 	public:
 		LensFlareSnippet(LensFlare& flare);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		LensFlare& flare;
@@ -196,7 +198,7 @@ namespace geeL {
 	public:
 		VolumetricLightSnippet(VolumetricLight& light);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		VolumetricLight& light;
@@ -209,7 +211,7 @@ namespace geeL {
 	public:
 		SSAOSnippet(SSAO& ssao);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		SSAO& ssao;
@@ -221,7 +223,7 @@ namespace geeL {
 	public:
 		SSRRSnippet(SSRR& ssrr);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		SSRR& ssrr;
@@ -233,7 +235,7 @@ namespace geeL {
 	public:
 		ConeTracerSnippet(VoxelConeTracer& tracer);
 
-		virtual void draw(GUIContext* context);
+		virtual void drawSimple(GUIContext* context);
 
 	private:
 		VoxelConeTracer& tracer;

@@ -19,8 +19,8 @@ namespace geeL {
 	}
 
 
-	void GodRay::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffectFS::init(screen, buffer, resolution);
+	void GodRay::init(const PostProcessingParameter& parameter) {
+		PostProcessingEffectFS::init(parameter);
 
 		shader.bind<int>("raysOnly", onlyEffect);
 		lightLocation = shader.getLocation("lightPosition");

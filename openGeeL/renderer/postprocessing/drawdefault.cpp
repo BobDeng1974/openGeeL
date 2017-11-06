@@ -37,8 +37,8 @@ namespace geeL {
 	}
 
 
-	void DefaultPostProcess::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffectFS::init(screen, buffer, resolution);
+	void DefaultPostProcess::init(const PostProcessingParameter& parameter) {
+		PostProcessingEffectFS::init(parameter);
 
 		shader.addMap(*noise, "noiseMap");
 		shader.bind<glm::vec3>("noiseScale",

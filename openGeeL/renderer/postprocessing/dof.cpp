@@ -65,8 +65,8 @@ namespace geeL {
 		blur.setImage(texture);
 	}
 
-	void DepthOfFieldBlurred::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffectFS::init(screen, buffer, resolution);
+	void DepthOfFieldBlurred::init(const PostProcessingParameter& parameter) {
+		PostProcessingEffectFS::init(parameter);
 
 		shader.bind<float>("farDistance", farDistance);
 		shader.bind<float>("aperture", aperture);
@@ -81,7 +81,7 @@ namespace geeL {
 		blurTexture = new RenderTexture(blurRes, ColorType::RGB16, 
 			WrapMode::ClampEdge, FilterMode::Linear);
 
-		blur.init(screen, buffer, blurRes);
+		blur.init(PostProcessingParameter(parameter, blurRes));
 		addTextureSampler(*blurTexture, "blurredImage");
 	}
 

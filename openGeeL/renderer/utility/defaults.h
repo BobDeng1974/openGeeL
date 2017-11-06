@@ -5,12 +5,14 @@
 
 namespace geeL {
 
+
 	//Provides default values for common shader parameters
 	class DefaultValues {
 
 	public:
 		template<class T>
 		static const T& get();
+
 
 	private:
 		static const float& get(float i);

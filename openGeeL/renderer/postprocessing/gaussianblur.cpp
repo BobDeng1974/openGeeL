@@ -34,8 +34,8 @@ namespace geeL {
 		mainBuffer = &texture;
 	}
 
-	void GaussianBlurBase::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffectFS::init(screen, buffer, resolution);
+	void GaussianBlurBase::init(const PostProcessingParameter& parameter) {
+		PostProcessingEffectFS::init(parameter);
 
 		tempTexture = new RenderTexture(resolution, ColorType::RGB16, 
 			WrapMode::ClampEdge, FilterMode::Linear);
@@ -138,8 +138,8 @@ namespace geeL {
 		: GaussianBlurBase(shaderPath, sigma), sigma2(factor) {}
 
 
-	void BilateralFilter::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		GaussianBlurBase::init(screen, buffer, resolution);
+	void BilateralFilter::init(const PostProcessingParameter& parameter) {
+		GaussianBlurBase::init(parameter);
 
 		shader.bind<float>("sigma", sigma2);
 	}
@@ -195,11 +195,11 @@ namespace geeL {
 		}
 	}
 
-	void SobelBlur::init(ScreenQuad & screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		GaussianBlurBase::init(screen, buffer, resolution);
+	void SobelBlur::init(const PostProcessingParameter& parameter) {
+		GaussianBlurBase::init(parameter);
 
 		sobelTexture = new RenderTexture(resolution, ColorType::RGB16, WrapMode::ClampEdge, FilterMode::None);
-		sobel.init(screen, buffer, resolution);
+		sobel.init(parameter);
 
 		addTextureSampler(*sobelTexture, "sobel");
 	}

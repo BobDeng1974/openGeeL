@@ -26,8 +26,8 @@ namespace geeL {
 		filter.setImage(texture);
 	}
 
-	void LensFlare::init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution) {
-		PostProcessingEffectFS::init(screen, buffer, resolution);
+	void LensFlare::init(const PostProcessingParameter& parameter) {
+		PostProcessingEffectFS::init(parameter);
 
 		shader.bind<float>("scale", scale);
 		shader.bind<float>("samples", samples);
@@ -37,7 +37,7 @@ namespace geeL {
 		filterTexture = new RenderTexture(filterRes, ColorType::RGB16, 
 			WrapMode::Repeat, FilterMode::Linear);
 
-		filter.init(screen, buffer, filterRes);
+		filter.init(PostProcessingParameter(parameter, filterRes));
 
 		addTextureSampler(*filterTexture, "brightnessFilter");
 	}

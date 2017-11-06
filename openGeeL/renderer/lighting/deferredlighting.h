@@ -13,7 +13,7 @@ namespace geeL {
 		DeferredLighting(RenderScene& scene);
 
 		virtual void setBuffer(unsigned int buffer) {}
-		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void init(const PostProcessingParameter& parameter);
 		virtual void draw();
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
@@ -35,7 +35,7 @@ namespace geeL {
 		TiledDeferredLighting(RenderScene& scene);
 
 		virtual void setBuffer(unsigned int buffer) {}
-		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void init(const PostProcessingParameter& parameter);
 		virtual void draw();
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);

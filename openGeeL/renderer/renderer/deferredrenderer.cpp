@@ -19,7 +19,6 @@
 #include "framebuffer/tbuffer.h"
 #include "postprocessing/drawdefault.h"
 #include "postprocessing/ssao.h"
-#include "postprocessing/postprocessing.h"
 #include "postprocessing/additiveeffect.h"
 #include "cameras/camera.h"
 #include "lights/lightmanager.h"
@@ -36,8 +35,8 @@ namespace geeL {
 
 	DeferredRenderer::DeferredRenderer(RenderWindow& window, Input& inputManager, SceneRender& lighting,
 		RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer)
-			: Renderer(window, inputManager, context), gBuffer(gBuffer),
-				ssao(nullptr), lighting(lighting), toggle(0) {
+			: Renderer(window, inputManager, context), gBuffer(gBuffer), ssao(nullptr), 
+				lighting(lighting), toggle(0), fallbackEffect("renderer/shaders/screen.frag") {
 
 		effects.push_back(PostEffectRender(nullptr, &def));
 		init();
@@ -73,7 +72,7 @@ namespace geeL {
 	void DeferredRenderer::runStart() {
 		window->makeCurrent();
 
-		lighting.init(ScreenQuad::get(), stackBuffer, window->resolution);
+		lighting.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, window->resolution));
 		scene->updateProbes(); //Draw reflection probes once at beginning
 		initDefaultEffect();
 
@@ -220,6 +219,7 @@ namespace geeL {
 	}
 
 
+
 	void DeferredRenderer::lightingPass() {
 		lighting.draw();
 
@@ -240,7 +240,7 @@ namespace geeL {
 		Resolution ssaoRes = Resolution(window->resolution, ssao.getResolution());
 		ssaoTexture = new RenderTexture(ssaoRes, ColorType::Single, WrapMode::ClampEdge, FilterMode::None);
 
-		ssao.init(ScreenQuad::get(), stackBuffer, ssaoRes);
+		ssao.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, ssaoRes, &fallbackEffect));
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect, DrawTime time) {
@@ -255,7 +255,7 @@ namespace geeL {
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect, RenderTexture& texture) {
 		externalEffects.push_back(PostEffectRender(&texture, &effect));
-		effect.init(ScreenQuad::get(), stackBuffer, window->resolution);
+		effect.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, window->resolution, &fallbackEffect));
 	}
 
 
@@ -349,7 +349,7 @@ namespace geeL {
 			effect.setImage(*source);
 		}
 		
-		effect.init(ScreenQuad::get(), stackBuffer, window->resolution);
+		effect.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, window->resolution, &fallbackEffect));
 	}
 
 	void DeferredRenderer::initDefaultEffect() {
@@ -364,7 +364,7 @@ namespace geeL {
 
 		PostProcessingEffect& def = *effects.front().second;
 		def.setImage(*buffer);
-		def.init(ScreenQuad::get(), stackBuffer, window->resolution);
+		def.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, window->resolution, &fallbackEffect));
 	}
 
 

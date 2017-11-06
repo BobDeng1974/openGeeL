@@ -10,7 +10,7 @@ namespace geeL {
 	public:
 		RayMarcher(RenderScene& scene);
 
-		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void init(const PostProcessingParameter& parameter);
 		virtual void draw();
 
 	protected:

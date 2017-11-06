@@ -20,7 +20,7 @@ namespace geeL {
 		virtual ~LensFlare();
 
 		virtual void setImage(const Texture& texture);
-		virtual void init(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution);
+		virtual void init(const PostProcessingParameter& parameter);
 
 		float getStrength() const;
 		float getScale() const;
