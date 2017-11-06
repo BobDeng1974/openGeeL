@@ -67,9 +67,8 @@ namespace geeL {
 		std::vector<PostEffectRender> earlyEffects;
 		std::vector<PostEffectRender> intermediateEffects;
 		std::vector<PostEffectRender> lateEffects;
-
-
 		std::vector<PostEffectRender> externalEffects;
+
 		std::list<DynamicRenderTexture*> renderTextures;
 		std::list<WorldMapRequester*> requester;
 
@@ -107,8 +106,6 @@ namespace geeL {
 		void toggleBuffer(bool next);
 
 	};
-
-
 
 }
 

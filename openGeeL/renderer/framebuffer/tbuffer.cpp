@@ -77,8 +77,7 @@ namespace geeL {
 	}
 
 	void TransparentOIDBuffer::composite() {
-		glDisable(GL_DEPTH_TEST);
-
+		DepthGuard depth(false);
 		BlendGuard blend;
 		blend.blendAlpha();
 
@@ -87,7 +86,6 @@ namespace geeL {
 			tComp.draw();
 		}, clearNothing);
 
-		glEnable(GL_DEPTH_TEST);
 	}
 
 

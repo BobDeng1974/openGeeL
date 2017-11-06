@@ -6,6 +6,7 @@
 #include "cameras/camera.h"
 #include "shader/sceneshader.h"
 #include "utility/viewport.h"
+#include "utility/glguards.h"
 #include "renderscene.h"
 #include "voxeltexture.h"
 
@@ -31,10 +32,10 @@ namespace geeL {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Viewport::set(0, 0, dimensions, dimensions);
+		DepthGuard depthGuard(true);
 
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		glDisable(GL_CULL_FACE);
-		glDisable(GL_DEPTH_TEST);	
 
 		voxelShader->bind<glm::vec2>("resolution", glm::vec2(float(dimensions)));
 
@@ -51,7 +52,6 @@ namespace geeL {
 		texture->mipmap();
 
 		glEnable(GL_CULL_FACE);
-		glEnable(GL_DEPTH_TEST);
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	}
 

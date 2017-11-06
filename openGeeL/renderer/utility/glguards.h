@@ -57,6 +57,9 @@ namespace geeL {
 		DepthGuard(bool inverse = false);
 		~DepthGuard();
 
+		static void enable(bool value = true);
+		static void enableForced(bool value = true);
+
 	private:
 		bool inverse;
 

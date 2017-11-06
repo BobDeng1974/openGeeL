@@ -10,6 +10,7 @@
 #include "splitrenderer.h"
 #include "window.h"
 #include "utility/viewport.h"
+#include "utility/glguards.h"
 #include "inputmanager.h"
 
 
@@ -24,7 +25,7 @@ namespace geeL {
 		}
 
 		Viewport::set(0, 0, window.getWidth(), window.getHeight());
-		glEnable(GL_DEPTH_TEST);
+		DepthGuard::enable(true);
 	}
 
 

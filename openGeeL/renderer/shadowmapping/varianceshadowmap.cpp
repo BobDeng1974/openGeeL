@@ -1,6 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "primitives/screenquad.h"
+#include "utility/glguards.h"
 #include "varianceshadowmap.h"
 
 namespace geeL {
@@ -46,12 +47,13 @@ namespace geeL {
 		SimpleSpotLightMap::draw(camera, renderCall, shader);
 
 		//Blur shadow map
-		glDisable(GL_DEPTH_TEST);
+		DepthGuard depthGuard(true);
+
 		glCullFace(GL_FRONT);
 		buffer.push(texture);
 		blur.fill();
 		glCullFace(GL_BACK);
-		glEnable(GL_DEPTH_TEST);
+
 	}
 
 

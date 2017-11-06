@@ -9,6 +9,7 @@
 #include "renderscene.h"
 #include "lights/lightmanager.h"
 #include "utility/viewport.h"
+#include "utility/glguards.h"
 #include "voxelizer.h"
 
 using namespace glm;
@@ -78,10 +79,10 @@ namespace geeL {
 	void Voxelizer::voxelizeScene(bool drawVoxel) const {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Viewport::set(0, 0, dimensions, dimensions);
+		DepthGuard depthGuard(true);
 
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		glDisable(GL_CULL_FACE);
-		glDisable(GL_DEPTH_TEST);
 
 		voxelShader->bind<int>("drawVoxel", (int)drawVoxel);
 
@@ -97,7 +98,6 @@ namespace geeL {
 		scene.drawObjects(*voxelShader);
 		
 		glEnable(GL_CULL_FACE);
-		glEnable(GL_DEPTH_TEST);
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	}
 

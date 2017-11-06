@@ -84,7 +84,7 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::draw() {
-		glEnable(GL_DEPTH_TEST);
+		DepthGuard::enable(true);
 
 		Viewport::setForced(0, 0, window->resolution.getWidth(), window->resolution.getHeight());
 		scene->lock();
@@ -117,13 +117,13 @@ namespace geeL {
 		stackBuffer.push(*texture1);
 		stackBuffer.fill(lightingPassFunction);
 
-		glDisable(GL_DEPTH_TEST);
+		DepthGuard::enable(false);
 		drawEffects(externalEffects);
 		drawEffects(earlyEffects);
 
 		//Forward pass
 		if (fBuffer != nullptr && scene->count(ShadingMethod::Forward, ShadingMethod::TransparentOD) > 0) {
-			glEnable(GL_DEPTH_TEST);
+			DepthGuard::enable(true);
 
 			fBuffer->fill([this]() {
 				scene->drawForward();
@@ -131,12 +131,12 @@ namespace geeL {
 			});
 		}
 
-		glDisable(GL_DEPTH_TEST);
+		DepthGuard::enable(false);
 		RenderTexture* last = drawEffects(intermediateEffects);
 
 		//Generic pass
 		if (scene->count(ShadingMethod::Generic) > 0) {
-			glEnable(GL_DEPTH_TEST);
+			DepthGuard::enable(true);
 
 			stackBuffer.push(*last);
 			stackBuffer.fill([this]() {
@@ -145,7 +145,7 @@ namespace geeL {
 
 		}
 
-		glDisable(GL_DEPTH_TEST);
+		DepthGuard::enable(false);
 		drawEffects(lateEffects);
 
 		//Draw the last (default) effect to screen.
@@ -160,7 +160,7 @@ namespace geeL {
 
 
 	void DeferredRenderer::draw(const Camera& camera, const FrameBuffer& buffer) {
-		glEnable(GL_DEPTH_TEST);
+		DepthGuard::enable(true);
 
 		//Geometry pass
 		gBuffer.fill([this, &camera] () { scene->drawDefault(camera); });
@@ -188,7 +188,7 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::drawForward(const Camera& camera) {
-		glEnable(GL_DEPTH_TEST);
+		DepthGuard::enable(true);
 		scene->drawGenericForced(camera, true);
 		scene->drawSkybox(camera);
 	}

@@ -73,19 +73,33 @@ namespace geeL {
 		}
 	}
 
-
+	bool depthEnabled = false;
 	DepthGuard::DepthGuard(bool inverse) : inverse(inverse) {
-		if(inverse)
-			glDisable(GL_DEPTH_TEST);
-		else
-			glEnable(GL_DEPTH_TEST);
+		enable(!inverse);
 	}
 
 	DepthGuard::~DepthGuard() {
-		if (inverse)
+		enable(inverse);
+	}
+
+
+	
+	void DepthGuard::enable(bool value) {
+		if(depthEnabled && !value)
+			glDisable(GL_DEPTH_TEST);
+		else if(!depthEnabled && value)
 			glEnable(GL_DEPTH_TEST);
-		else
-			glDisable(GL_DEPTH_TEST); 
+
+		depthEnabled = value;
+	}
+
+	void DepthGuard::enableForced(bool value) {
+		if (!value)
+			glDisable(GL_DEPTH_TEST);
+		else if (value)
+			glEnable(GL_DEPTH_TEST);
+
+		depthEnabled = value;
 	}
 
 
