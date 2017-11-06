@@ -77,7 +77,7 @@ namespace geeL {
 	}
 
 	void TransparentOIDBuffer::composite() {
-		DepthGuard depth(false);
+		DepthGuard depth(true);
 		BlendGuard blend;
 		blend.blendAlpha();
 
