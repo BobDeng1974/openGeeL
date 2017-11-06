@@ -139,42 +139,18 @@ namespace geeL {
 			effect.fill();
 		}
 
-		//Draw single effect to screen (if wanted)
-		if (isolatedEffect != nullptr) {
-			PostProcessingEffect* def = effects.front().second;
+		//Draw all the post processing effects on top of each other. (Skip default effect)
+		for (auto it = next(effects.begin()); it != effects.end(); it++) {
+			PostProcessingEffect& effect = *it->second;
+			RenderTexture& texture = *it->first;
 
-			//Save regular rendering settings
-			bool onlyEffect = isolatedEffect->getEffectOnly();
-			const Texture& buffer = isolatedEffect->getImage();
-
-			//Draw isolated effect
-			isolatedEffect->effectOnly(true);
-			isolatedEffect->setImage(*texture1);
-
-			stackBuffer.push(*texture2);
-			isolatedEffect->fill();
-
-			def->draw();
-
-			//Restore render settings
-			isolatedEffect->effectOnly(onlyEffect);
-			isolatedEffect->setImage(buffer);
+			stackBuffer.push(texture);
+			effect.fill();
 		}
-		//Draw all included post effects to screen
-		else {
-			//Draw all the post processing effects on top of each other. (Skip default effect)
-			for (auto it = next(effects.begin()); it != effects.end(); it++) {
-				PostProcessingEffect& effect = *it->second;
-				RenderTexture& texture = *it->first;
 
-				stackBuffer.push(texture);
-				effect.fill();
-			}
-
-			//Draw the last (default) effect to screen.
-			PostProcessingEffect& def = *effects.front().second;
-			def.draw();
-		}
+		//Draw the last (default) effect to screen.
+		PostProcessingEffect& def = *effects.front().second;
+		def.draw();
 
 		scene->unlock();
 
@@ -390,25 +366,17 @@ namespace geeL {
 		if (ssao != nullptr)
 			buffers.push_back(ssaoTexture);
 
-		int max = int(buffers.size() + effects.size());
+		buffers.push_back(texture1);
+		buffers.push_back(texture2);
+
+		int max = int(buffers.size());
 		int i = next ? 1 : -1;
 		toggle = abs((toggle + i) % max);
 
 		const Texture* currBuffer = buffers[0];
-		if (toggle < buffers.size()) {
-			currBuffer = buffers[toggle];
-
-			isolatedEffect = nullptr;
-		}
-		else {
-			currBuffer = texture2;
-
-			int index = toggle - buffers.size();
-			isolatedEffect = effects[index].second;
-		}
+		currBuffer = buffers[toggle];
 
 		def.setImage(*currBuffer);
-		
 	}
 
 }

@@ -79,7 +79,6 @@ namespace geeL {
 		SceneRender& lighting;
 		SSAO* ssao;
 		RenderTexture* ssaoTexture = nullptr;
-		PostProcessingEffect* isolatedEffect = nullptr;
 		PostProcessingEffectFS fallbackEffect;
 
 		std::function<void()> geometryPassFunction;
