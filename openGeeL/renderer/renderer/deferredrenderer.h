@@ -64,7 +64,11 @@ namespace geeL {
 	private:
 		int toggle;
 		
-		std::vector<PostEffectRender> effects;
+		std::vector<PostEffectRender> earlyEffects;
+		std::vector<PostEffectRender> intermediateEffects;
+		std::vector<PostEffectRender> lateEffects;
+
+
 		std::vector<PostEffectRender> externalEffects;
 		std::list<DynamicRenderTexture*> renderTextures;
 		std::list<WorldMapRequester*> requester;

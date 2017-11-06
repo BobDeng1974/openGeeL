@@ -137,9 +137,11 @@ namespace geeL {
 
 	ForwardBuffer::ForwardBuffer(GBuffer& gBuffer) : gBuffer(gBuffer) {
 		this->resolution = gBuffer.getResolution();
+
+		init();
 	}
 
-	void ForwardBuffer::init(RenderTexture& colorTexture) {
+	void ForwardBuffer::init() {
 		glGenFramebuffers(1, &fbo.token);
 		bind();
 
@@ -147,8 +149,6 @@ namespace geeL {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gBuffer.getPositionRoughness().getID(), 0);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gBuffer.getNormalMetallic().getID(), 0);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gBuffer.getDiffuse().getID(), 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, colorTexture.getID(), 0);
-
 		//TODO: add emissivity texture
 
 		unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
@@ -157,6 +157,14 @@ namespace geeL {
 		referenceRBO(gBuffer);
 
 		unbind();
+	}
+
+	void ForwardBuffer::setColorTexture(RenderTexture& colorTexture) {
+		bind();
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, colorTexture.getID(), 0);
+
+		unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
+		glDrawBuffers(4, attachments);
 	}
 
 	void ForwardBuffer::fill(std::function<void()> drawCall, Clearer clearer) {

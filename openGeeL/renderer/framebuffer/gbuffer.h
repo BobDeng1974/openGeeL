@@ -57,14 +57,16 @@ namespace geeL {
 
 	public:
 		ForwardBuffer(GBuffer& gBuffer);
-
-		void init(RenderTexture& colorTexture);
+		
+		void setColorTexture(RenderTexture& colorTexture);
 		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNothing);
 
 		virtual std::string toString() const;
 
 	private:
 		GBuffer& gBuffer;
+
+		void init();
 
 	};
 

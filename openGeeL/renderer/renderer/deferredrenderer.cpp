@@ -117,8 +117,14 @@ namespace geeL {
 		stackBuffer.push(*texture1);
 		stackBuffer.fill(lightingPassFunction);
 
+		glDisable(GL_DEPTH_TEST);
+		drawEffects(externalEffects);
+		drawEffects(earlyEffects);
+
 		//Forward pass
 		if (fBuffer != nullptr && scene->count(ShadingMethod::Forward, ShadingMethod::TransparentOD) > 0) {
+			glEnable(GL_DEPTH_TEST);
+
 			fBuffer->fill([this]() {
 				scene->drawForward();
 				scene->drawTransparentOD();
@@ -126,13 +132,21 @@ namespace geeL {
 		}
 
 		glDisable(GL_DEPTH_TEST);
+		RenderTexture* last = drawEffects(intermediateEffects);
 
-		//Post processing
-		//Draw external post processing effects first.
-		drawEffects(externalEffects);
+		//Generic pass
+		if (scene->count(ShadingMethod::Generic) > 0) {
+			glEnable(GL_DEPTH_TEST);
 
-		//Draw all the post processing effects on top of each other.
-		drawEffects(effects);
+			stackBuffer.push(*last);
+			stackBuffer.fill([this]() {
+				scene->drawGeneric();
+			}, clearNothing);
+
+		}
+
+		glDisable(GL_DEPTH_TEST);
+		drawEffects(lateEffects);
 
 		//Draw the last (default) effect to screen.
 		defaultEffect.draw();
@@ -188,7 +202,6 @@ namespace geeL {
 		//rendered objects 'into' the scene instead of 'on top'
 		stackBuffer.copyRBO(gBuffer);
 
-		scene->drawGeneric();
 		scene->drawSkybox();
 	}
 
@@ -214,7 +227,18 @@ namespace geeL {
 		effect.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer,
 			window->resolution, &fallbackEffect));
 
-		effects.push_back(PostEffectRender(nullptr, &effect));
+
+		switch (time) {
+			case DrawTime::Early:
+				earlyEffects.push_back(PostEffectRender(nullptr, &effect));
+				break;
+			case DrawTime::Intermediate:
+				intermediateEffects.push_back(PostEffectRender(nullptr, &effect));
+				break;
+			case DrawTime::Late:
+				lateEffects.push_back(PostEffectRender(nullptr, &effect));
+				break;
+		}
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect, RenderTexture& texture) {
@@ -263,7 +287,6 @@ namespace geeL {
 
 	void DeferredRenderer::addFBuffer(ForwardBuffer& buffer) {
 		fBuffer = &buffer;
-		fBuffer->init(*texture1);
 	}
 
 	void DeferredRenderer::addTBuffer(TransparentOIDBuffer& buffer) {
@@ -278,7 +301,11 @@ namespace geeL {
 
 
 	void DeferredRenderer::indexEffects() {
-		RenderTexture* lastImage = indexEffectList(effects, texture1);
+		RenderTexture* lastImage = indexEffectList(earlyEffects, texture1);
+		fBuffer->setColorTexture(*lastImage);
+
+		lastImage = indexEffectList(intermediateEffects, lastImage);
+		lastImage = indexEffectList(lateEffects, lastImage);
 
 		defaultEffect.setImage(*lastImage);
 	}
