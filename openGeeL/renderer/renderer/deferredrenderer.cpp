@@ -110,7 +110,6 @@ namespace geeL {
 
 			stackBuffer.push(*ssaoTexture);
 			stackBuffer.fill(*ssao);
-
 		}
 
 		//Lighting pass
@@ -118,8 +117,8 @@ namespace geeL {
 		stackBuffer.fill(lightingPassFunction);
 
 		DepthGuard::enable(false);
-		drawEffects(externalEffects);
-		drawEffects(earlyEffects);
+		RenderTexture* last = drawEffects(externalEffects, texture1);
+		last = drawEffects(earlyEffects, last);
 
 		//Forward pass
 		if (fBuffer != nullptr && scene->count(ShadingMethod::Forward, ShadingMethod::TransparentOD) > 0) {
@@ -131,8 +130,10 @@ namespace geeL {
 			});
 		}
 
+		stackBuffer.copyStencil(gBuffer); //Quick fix: Instead, need to reference gBuffer RBO permanently
+
 		DepthGuard::enable(false);
-		RenderTexture* last = drawEffects(intermediateEffects);
+		last = drawEffects(intermediateEffects, last);
 
 		//Generic pass
 		if (scene->count(ShadingMethod::Generic) > 0) {
@@ -146,7 +147,7 @@ namespace geeL {
 		}
 
 		DepthGuard::enable(false);
-		drawEffects(lateEffects);
+		drawEffects(lateEffects, last);
 
 		//Draw the last (default) effect to screen.
 		defaultEffect.draw();
@@ -330,7 +331,7 @@ namespace geeL {
 		return last;
 	}
 
-	RenderTexture* DeferredRenderer::drawEffects(std::vector<PostEffectRender>& effects) {
+	RenderTexture* DeferredRenderer::drawEffects(std::vector<PostEffectRender>& effects, RenderTexture* lastTexture) {
 		for (auto it(effects.begin()); it != effects.end(); it++) {
 			PostProcessingEffect& effect = *it->second;
 			RenderTexture& texture = *it->first;
@@ -339,8 +340,13 @@ namespace geeL {
 			effect.fill();
 		}
 
-		PostEffectRender& last = effects.back();
-		return last.first;
+		if (effects.size() > 0) {
+			PostEffectRender& last = effects.back();
+			return last.first;
+
+		}
+		
+		return lastTexture;
 	}
 
 	void DeferredRenderer::indexEffect(PostEffectRender& current, PostEffectRender* previous, RenderTexture* firstTexture) {

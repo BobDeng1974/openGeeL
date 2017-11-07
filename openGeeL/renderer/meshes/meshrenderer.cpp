@@ -114,7 +114,7 @@ namespace geeL{
 
 				//Add moved 'copy' of new material
 				SceneShader& shader = material.getShader();
-				materials[&shader].push_back(MaterialMapping(mesh, material));
+				materials[&shader].push_back(MaterialMapping(mesh, material, toRemove->mask));
 
 				//Inform material change listeners
 				for (auto it(materialListeners.begin()); it != materialListeners.end(); it++)

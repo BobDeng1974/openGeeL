@@ -58,6 +58,7 @@ public:
 			bedroom.iterate([&](const Mesh& mesh, const Material& material) {
 				if (mesh.getName() == "Soda_Bottle") {
 					transObjects[&mesh] = &material;
+					bedroom.setRenderMask(RenderMask::Transparent, mesh);
 				}
 			});
 
@@ -68,7 +69,7 @@ public:
 				MaterialContainer& container = material.getMaterialContainer();
 				container.setFloatValue("Transparency", 0.2f);
 
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Forward);
 				bedroom.changeMaterial(ss, mesh);
 			}
 
@@ -94,8 +95,12 @@ public:
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
 			GenericPostSnippet& iblSnippet = GenericPostSnippet(ibl);
-			renderer.addEffect(ibl, ibl);
+			renderer.addEffect(ibl, DrawTime::Early, ibl);
 			postLister.add(iblSnippet);
+
+			ImageBasedLighting& forwardIBL = ImageBasedLighting(scene);
+			renderer.addEffect(forwardIBL, DrawTime::Intermediate, forwardIBL);
+			forwardIBL.setRenderMask(RenderMask::Transparent);
 
 			SSAOSnippet& ssaoSnippet = SSAOSnippet(ssao);
 			BilateralFilterSnippet& ssaoBlurSnippet = BilateralFilterSnippet(blur);

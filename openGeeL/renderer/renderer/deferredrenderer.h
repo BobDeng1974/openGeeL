@@ -96,7 +96,7 @@ namespace geeL {
 		void indexEffect(PostEffectRender& current, PostEffectRender* previous, RenderTexture* firstTexture);
 
 		RenderTexture* indexEffectList(std::vector<PostEffectRender>& effects, RenderTexture* firstTexture);
-		RenderTexture* drawEffects(std::vector<PostEffectRender>& effects);
+		RenderTexture* drawEffects(std::vector<PostEffectRender>& effects, RenderTexture* lastTexture);
 
 		void lightingPass();
 
