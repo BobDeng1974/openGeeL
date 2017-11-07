@@ -59,6 +59,7 @@ namespace geeL {
 		texture2 = new RenderTexture(window->resolution, ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::None);
 
 		stackBuffer.initResolution(window->resolution);
+		stackBuffer.referenceRBO(gBuffer);
 
 		addRequester(lighting);
 		ScreenQuad& defQuad = ScreenQuad::get();
@@ -110,25 +111,25 @@ namespace geeL {
 			ssao->fill();
 		}
 
+		DepthGuard::enable(false);
+
 		//Lighting pass
 		stackBuffer.push(*texture1);
-		stackBuffer.fill(lightingPassFunction);
-
-		DepthGuard::enable(false);
+		stackBuffer.fill(lightingPassFunction, clearColor);
+		
 		RenderTexture* last = drawEffects(externalEffects, texture1);
 		last = drawEffects(earlyEffects, last);
 
 		//Forward pass
-		if (fBuffer != nullptr && scene->count(ShadingMethod::Forward, ShadingMethod::TransparentOD) > 0) {
+		if (hasForwardPass()) {
 			DepthGuard::enable(true);
 
 			fBuffer->fill([this]() {
 				scene->drawForward();
 				scene->drawTransparentOD();
+				scene->drawSkybox();
 			});
 		}
-
-		stackBuffer.copyStencil(gBuffer); //Quick fix: Instead, need to reference gBuffer RBO permanently
 
 		DepthGuard::enable(false);
 		last = drawEffects(intermediateEffects, last);
@@ -141,7 +142,6 @@ namespace geeL {
 			stackBuffer.fill([this]() {
 				scene->drawGeneric();
 			}, clearNothing);
-
 		}
 
 		DepthGuard::enable(false);
@@ -197,11 +197,16 @@ namespace geeL {
 	void DeferredRenderer::lightingPass() {
 		lighting.draw();
 
-		//Copy depth and stencil buffer from gBuffer to draw forward 
-		//rendered objects 'into' the scene instead of 'on top'
-		stackBuffer.copyRBO(gBuffer);
+		//Draw skybox directly alongside the lighting
+		//if forward rendering is deactivated
+		if (!hasForwardPass()) {
+			DepthGuard depth;
+			scene->drawSkybox();
+		}
+	}
 
-		scene->drawSkybox();
+	bool DeferredRenderer::hasForwardPass() const {
+		return fBuffer != nullptr && scene->contains(ShadingMethod::Forward, ShadingMethod::TransparentOD);
 	}
 
 

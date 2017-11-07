@@ -73,6 +73,13 @@ namespace geeL {
 		template<typename... ShadingMethods>
 		size_t count(ShadingMethod shadingMethod, ShadingMethods ...other) const;
 
+		//States if scene containes objects that are drawn by given shading method
+		bool contains(ShadingMethod shadingMethod) const;
+
+		//States if scene containes objects that are drawn by given shading methods
+		template<typename... ShadingMethods>
+		bool contains(ShadingMethod shadingMethod, ShadingMethods ...other) const;
+
 	protected:
 		LightManager& lightManager;
 		SceneCamera* camera;
@@ -196,6 +203,11 @@ namespace geeL {
 	template<typename ...ShadingMethods>
 	inline size_t Scene::count(ShadingMethod shadingMethod, ShadingMethods ...other) const {
 		return count(shadingMethod) + count(other...);
+	}
+
+	template<typename ...ShadingMethods>
+	inline bool Scene::contains(ShadingMethod shadingMethod, ShadingMethods ...other) const {
+		return contains(shadingMethod) || contains(other...);
 	}
 
 }

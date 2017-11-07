@@ -179,6 +179,15 @@ namespace geeL {
 		return 0;
 	}
 
+	bool Scene::contains(ShadingMethod shadingMethod) const {
+		auto itMethod = renderObjects.find(shadingMethod);
+		if (itMethod != renderObjects.end()) {
+			const ShaderMapping& shaders = itMethod->second;
+			return shaders.size() > 0;
+		}
+
+		return false;
+	}
 
 
 

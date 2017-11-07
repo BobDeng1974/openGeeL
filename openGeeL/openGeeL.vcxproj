@@ -495,7 +495,6 @@
     <None Include="renderer\postprocessing\tonemapping.frag" />
     <None Include="renderer\postprocessing\velocity.frag" />
     <None Include="renderer\postprocessing\volumetriclight.frag" />
-    <None Include="renderer\shaders\blend.frag" />
     <None Include="renderer\shaders\computeshared.com.glsl" />
     <None Include="renderer\shaders\computetest.com.glsl" />
     <None Include="renderer\shaders\empty.frag" />

@@ -81,7 +81,6 @@ namespace geeL {
 
 		SceneRender& lighting;
 		SSAO* ssao;
-		//RenderTexture* ssaoTexture = nullptr;
 		PostProcessingEffectFS fallbackEffect;
 		DefaultPostProcess& defaultEffect;
 
@@ -99,6 +98,7 @@ namespace geeL {
 		RenderTexture* drawEffects(std::vector<PostEffectRender>& effects, RenderTexture* lastTexture);
 
 		void lightingPass();
+		bool hasForwardPass() const;
 
 		void handleInput(int key, int scancode, int action, int mode);
 

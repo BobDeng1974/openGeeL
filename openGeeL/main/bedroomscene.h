@@ -58,7 +58,6 @@ public:
 			bedroom.iterate([&](const Mesh& mesh, const Material& material) {
 				if (mesh.getName() == "Soda_Bottle") {
 					transObjects[&mesh] = &material;
-				//	bedroom.setRenderMask(RenderMask::Transparent, mesh);
 				}
 			});
 

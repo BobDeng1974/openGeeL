@@ -1216,8 +1216,5 @@
     <None Include="renderer\shaders\transparentlighting.frag">
       <Filter>renderer\shaders</Filter>
     </None>
-    <None Include="renderer\shaders\blend.frag">
-      <Filter>renderer\shaders</Filter>
-    </None>
   </ItemGroup>
 </Project>

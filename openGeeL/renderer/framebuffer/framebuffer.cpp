@@ -49,6 +49,8 @@ namespace geeL {
 	}
 
 	void FrameBuffer::copyRBO(FrameBuffer& buffer) {
+		if (rbo == buffer.rbo) return;
+
 		const Resolution& res = getResolution();
 
 		glStencilMask(0xFF);
@@ -61,6 +63,8 @@ namespace geeL {
 	}
 
 	void FrameBuffer::copyDepth(const FrameBuffer& buffer) const {
+		if (rbo == buffer.rbo) return;
+
 		const Resolution& res = getResolution();
 
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -71,6 +75,8 @@ namespace geeL {
 	}
 
 	void FrameBuffer::copyStencil(const FrameBuffer & buffer) const {
+		if (rbo == buffer.rbo) return;
+
 		const Resolution& res = getResolution();
 
 		glStencilMask(0xFF);
