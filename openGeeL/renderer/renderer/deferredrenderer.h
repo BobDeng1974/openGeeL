@@ -32,7 +32,7 @@ namespace geeL {
 	class DeferredRenderer : public Renderer, public WorldMapProvider, public PostEffectDrawer {
 
 	public:
-		DeferredRenderer(RenderWindow& window, Input& inputManager, SceneRender& lighting,
+		DeferredRenderer(RenderWindow& window, SceneRender& lighting,
 			RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer);
 		virtual ~DeferredRenderer();
 
@@ -49,7 +49,6 @@ namespace geeL {
 		virtual void addEffect(PostProcessingEffect& effect, RenderTexture& texture);
 		void addEffect(SSAO& ssao);
 
-
 		virtual void addRequester(WorldMapRequester& requester);
 		virtual void addRenderTexture(DynamicRenderTexture& texture);
 
@@ -58,6 +57,15 @@ namespace geeL {
 
 		void addFBuffer(ForwardBuffer& buffer);
 		void addTBuffer(TransparentOIDBuffer& buffer);
+
+		//Set image that gets drawn to screen. Picks default 
+		//image if given texture is NULL
+		void setScreenImage(const Texture* const texture = nullptr);
+
+		//Returns all available drawing buffers.
+		//This included buffers for final image, albedo, normals,
+		//positions, occlusion and emission
+		std::vector<const Texture*> getBuffers();
 
 		StackBuffer& getStackbuffer();
 
@@ -74,6 +82,8 @@ namespace geeL {
 
 		RenderTexture* texture1;
 		RenderTexture* texture2;
+		Texture* defTexture;
+
 		GBuffer& gBuffer;
 		ForwardBuffer* fBuffer;
 		TransparentOIDBuffer* tBuffer;
@@ -100,10 +110,6 @@ namespace geeL {
 		void lightingPass();
 		bool hasForwardPass() const;
 
-		void handleInput(int key, int scancode, int action, int mode);
-
-		//Toggle through all framebuffers for screen display 
-		void toggleBuffer(bool next);
 
 	};
 

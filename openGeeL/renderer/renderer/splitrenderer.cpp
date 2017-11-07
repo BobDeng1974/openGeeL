@@ -16,8 +16,8 @@
 
 namespace geeL {
 
-	SplitRenderer::SplitRenderer(RenderWindow& window, Input& inputManager, RenderContext& context)
-		: Renderer(window, inputManager, context) {
+	SplitRenderer::SplitRenderer(RenderWindow& window, RenderContext& context)
+		: Renderer(window, context) {
 	
 		glewExperimental = GL_TRUE;
 		if (glewInit() != GLEW_OK) {
@@ -34,8 +34,6 @@ namespace geeL {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		draw();
 		window->swapBuffer();
-
-		handleInput();
 	}
 
 	void SplitRenderer::draw() {
@@ -47,27 +45,6 @@ namespace geeL {
 			Viewport::set(view.x * window->getWidth(), view.y * window->getHeight(),
 				view.width * window->getWidth(), view.height * window->getHeight());
 			renderer->draw();
-		}
-	}
-
-	void SplitRenderer::handleInput() {
-		float mouseX = input.getMouseXNorm();
-		float mouseY = input.getMouseYNorm();
-		
-		for (size_t i = renderers.size(); i > 0 ; i--) {
-			pair<Renderer*, RenderViewport>pair = renderers[i - 1];
-			RenderViewport view = pair.second;
-			
-			float minX = view.x;
-			float maxX = (view.x + view.width);
-			float maxY = -view.y + 1.f;
-			float minY = -(view.y + view.height) + 1.f;
-
-			if (minX <= mouseX && maxX >= mouseX && minY <= mouseY && maxY >= mouseY) {
-				Renderer* renderer = pair.first;
-				renderer->handleInput();
-				break;
-			}
 		}
 	}
 

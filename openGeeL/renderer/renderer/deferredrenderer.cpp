@@ -33,10 +33,10 @@ using namespace std;
 
 namespace geeL {
 
-	DeferredRenderer::DeferredRenderer(RenderWindow& window, Input& inputManager, SceneRender& lighting,
+	DeferredRenderer::DeferredRenderer(RenderWindow& window, SceneRender& lighting,
 		RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer)
-			: Renderer(window, inputManager, context), gBuffer(gBuffer), ssao(nullptr), 
-				lighting(lighting), toggle(0), defaultEffect(def), fallbackEffect("renderer/shaders/screen.frag") {
+			: Renderer(window, context), gBuffer(gBuffer), ssao(nullptr), lighting(lighting), 
+				toggle(0), defaultEffect(def), fallbackEffect("renderer/shaders/screen.frag") {
 
 		init();
 	}
@@ -47,16 +47,12 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::init() {
-		auto func = [this](int key, int scancode, int action, int mode) 
-			{ this->handleInput(key, scancode, action, mode); };
-
-		input.addCallback(func);
-
 		geometryPassFunction = [this] () { this->scene->drawDefault(); };
 		lightingPassFunction = [this] () { this->lightingPass(); };
 
 		texture1 = new RenderTexture(window->resolution, ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::None);
 		texture2 = new RenderTexture(window->resolution, ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::None);
+		defTexture = texture1;
 
 		stackBuffer.initResolution(window->resolution);
 		stackBuffer.referenceRBO(gBuffer);
@@ -299,6 +295,36 @@ namespace geeL {
 		tBuffer->init(*texture1);
 	}
 
+	void DeferredRenderer::setScreenImage(const Texture* const texture) {
+		defaultEffect.setImage((texture != nullptr) ? *texture : *defTexture);
+	}
+
+	std::vector<const Texture*> DeferredRenderer::getBuffers() {
+		const RenderTexture* emisTex = gBuffer.getEmissivity();
+		const RenderTexture* occTex = gBuffer.getOcclusion();
+
+		size_t bufferSize = 4;
+		bufferSize += int(emisTex != nullptr);
+		bufferSize += int(occTex  != nullptr);
+
+		std::vector<const Texture*> buffers;
+		buffers.reserve(bufferSize);
+
+		buffers.push_back(&gBuffer.getDiffuse());
+		buffers.push_back(&gBuffer.getNormalMetallic());
+
+		if (emisTex != nullptr)
+			buffers.push_back(emisTex);
+		
+		if (occTex != nullptr)
+			buffers.push_back(occTex);
+
+		buffers.push_back(texture1);
+		buffers.push_back(texture2);
+
+		return buffers;
+	}
+
 	StackBuffer& DeferredRenderer::getStackbuffer() {
 		return stackBuffer;
 	}
@@ -312,7 +338,8 @@ namespace geeL {
 		lastImage = indexEffectList(intermediateEffects, lastImage);
 		lastImage = indexEffectList(lateEffects, lastImage);
 
-		defaultEffect.setImage(*lastImage);
+		defTexture = lastImage;
+		defaultEffect.setImage(*defTexture);
 	}
 
 	RenderTexture* DeferredRenderer::indexEffectList(std::vector<PostEffectRender>& effects, RenderTexture* firstTexture) {
@@ -387,43 +414,6 @@ namespace geeL {
 			effect.setImage(*source);
 		}
 
-	}
-
-
-
-
-	void DeferredRenderer::handleInput(int key, int scancode, int action, int mode) {
-		if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
-			toggleBuffer(false);
-		
-		else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
-			toggleBuffer(true);
-
-	}
-
-	void DeferredRenderer::toggleBuffer(bool next) {
-		std::vector<const Texture*> buffers = { &defaultEffect.getImage(), 
-			&gBuffer.getDiffuse(), &gBuffer.getNormalMetallic() };
-
-		const RenderTexture* emisTex = gBuffer.getEmissivity();
-		if (emisTex != nullptr)
-			buffers.push_back(emisTex);
-
-		const RenderTexture* occTex = gBuffer.getOcclusion();
-		if (occTex != nullptr)
-			buffers.push_back(occTex);
-
-		buffers.push_back(texture1);
-		buffers.push_back(texture2);
-
-		int max = int(buffers.size());
-		int i = next ? 1 : -1;
-		toggle = abs((toggle + i) % max);
-
-		const Texture* currBuffer = buffers[0];
-		currBuffer = buffers[toggle];
-
-		defaultEffect.setImage(*currBuffer);
 	}
 
 }

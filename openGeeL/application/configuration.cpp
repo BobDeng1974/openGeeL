@@ -30,7 +30,7 @@ namespace geeL {
 		DefaultPostProcess& def = DefaultPostProcess();
 		RenderContext& context = RenderContext();
 		SceneRender& lighting = DeferredLighting(scene);
-		DeferredRenderer& renderer = DeferredRenderer(window, manager, lighting, context, def, gBuffer);
+		DeferredRenderer& renderer = DeferredRenderer(window, lighting, context, def, gBuffer);
 		renderer.setScene(scene);
 
 		ForwardBuffer& fBuffer = ForwardBuffer(gBuffer);
@@ -50,7 +50,7 @@ namespace geeL {
 		BRDFIntegrationMap brdfInt;
 		CubeMapFactory& cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
 
-		GUIRenderer& gui = GUIRenderer(window, context);
+		GUIRenderer& gui = GUIRenderer(window, context, renderer);
 		renderer.addGUIRenderer(&gui);
 
 		Physics* physics;

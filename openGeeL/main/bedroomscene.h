@@ -80,9 +80,7 @@ public:
 			gui.addElement(objectLister);
 			PostProcessingEffectLister& postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
 			gui.addElement(postLister);
-			SystemInformation& sysInfo = SystemInformation(window, 0.01f, 0.74f, 0.17f, 0.075f);
-			gui.addElement(sysInfo);
-
+			gui.addSystemInformation(0.01f, 0.74f, 0.17f, 0.145f);
 
 			def.setExposure(15.f);
 			postLister.add(def);

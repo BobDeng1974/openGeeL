@@ -1,7 +1,6 @@
 #include "renderer.h"
 #include "scene.h"
 #include "window.h"
-#include "inputmanager.h"
 #include "cameras/camera.h"
 #include "renderer/rendercontext.h"
 #include "framebuffer/framebuffer.h"
@@ -21,8 +20,8 @@ namespace geeL{
 	}
 
 
-	Renderer::Renderer(RenderWindow& window, Input& inputManager, RenderContext& context)
-		: ThreadedObject(100L), window(&window), input(inputManager), context(&context), gui(nullptr) {}
+	Renderer::Renderer(RenderWindow& window, RenderContext& context)
+		: ThreadedObject(100L), window(&window), context(&context), gui(nullptr) {}
 
 
 	void Renderer::addGUIRenderer(GUIRenderer* renderer) {

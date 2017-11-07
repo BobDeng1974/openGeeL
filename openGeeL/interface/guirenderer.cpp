@@ -30,15 +30,24 @@
 #define MAX_ELEMENT_BUFFER 128 * 1024
 
 #include "renderer/rendercontext.h"
+#include "renderer/deferredrenderer.h"
 #include "window.h"
+#include "elements/systeminformation.h"
 #include "guielement.h"
 #include "guirenderer.h"
 
 
 namespace geeL {
 
-	GUIRenderer::GUIRenderer(const RenderWindow& window, RenderContext& context) : renderContext(&context) {
+	GUIRenderer::GUIRenderer(RenderWindow& window, RenderContext& context, DeferredRenderer& renderer) 
+		: renderContext(&context), renderer(renderer), window(window) {
+		
 		init(window);
+	}
+
+	GUIRenderer::~GUIRenderer() {
+		for (auto element(elements.begin()); element != elements.end(); element++)
+			if(element->first) delete element->second;
 	}
 
 
@@ -57,14 +66,22 @@ namespace geeL {
 
 		nk_glfw3_new_frame();
 
-		for (auto element = elements.begin(); element != elements.end(); element++)
-			(*element)->draw(guiContext);
+		for (auto element(elements.begin()); element != elements.end(); element++) {
+			GUIElement& e = *element->second;
+			e.draw(guiContext);
+		}
 
 		nk_glfw3_render(NK_ANTI_ALIASING_ON, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER);
 		renderContext->reset();
 	}
 
 	void GUIRenderer::addElement(GUIElement& element) {
-		elements.push_back(&element);
+		elements.push_back(std::pair<bool, GUIElement*>(false, &element));
 	}
+	void GUIRenderer::addSystemInformation(float x, float y, float width, float height) {
+		elements.push_back(std::pair<bool, GUIElement*>(true, 
+			new SystemInformation(window, renderer, x, y, width, height)));
+
+	}
+
 }
