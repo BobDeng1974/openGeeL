@@ -58,7 +58,7 @@ public:
 			bedroom.iterate([&](const Mesh& mesh, const Material& material) {
 				if (mesh.getName() == "Soda_Bottle") {
 					transObjects[&mesh] = &material;
-					bedroom.setRenderMask(RenderMask::Transparent, mesh);
+				//	bedroom.setRenderMask(RenderMask::Transparent, mesh);
 				}
 			});
 
@@ -69,7 +69,7 @@ public:
 				MaterialContainer& container = material.getMaterialContainer();
 				container.setFloatValue("Transparency", 0.2f);
 
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Forward);
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
 				bedroom.changeMaterial(ss, mesh);
 			}
 

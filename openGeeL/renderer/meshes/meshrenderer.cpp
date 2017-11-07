@@ -161,9 +161,13 @@ namespace geeL{
 	}
 
 	RenderMask MeshRenderer::getMask(const MaterialMapping& mapping) const {
+		const SceneShader& shader = mapping.material.getShader();
+		RenderMask shaderMask = Masking::getShadingMask(shader.getMethod());
+
 		//Mask of mesh renderer overrides mask of single mesh.
 		//Therefore, it is only returned if no base mask exists
-		return (mask == RenderMask::None) ? mapping.mask : mask;
+		return (shaderMask != RenderMask::None) ? shaderMask : 
+			(mask == RenderMask::None) ? mapping.mask : mask;
 	}
 
 	MeshRenderer::MaterialMapping * MeshRenderer::getMapping(const Mesh& mesh) {

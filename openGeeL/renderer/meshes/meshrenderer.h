@@ -50,8 +50,12 @@ namespace geeL {
 		//Draw only the meshes without material properties with given shader
 		virtual void drawGeometry(const RenderShader& shader) const;
 
-
+		//Add render mask to whole mesh renderer. Priority order of masks: 
+		//Special rendering method (e.g. transparency) -> mesh renderer -> mesh
 		void setRenderMask(RenderMask mask);
+
+		//Add render mask to a single contained mesh. Priority order of masks: 
+		//Special rendering method (e.g. transparency) -> mesh renderer -> mesh
 		void setRenderMask(RenderMask mask, const Mesh& mesh);
 
 		//Customize material of given mesh (If it is actually part of this mesh renderer)

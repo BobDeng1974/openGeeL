@@ -27,4 +27,18 @@ namespace geeL {
 #endif
 	}
 
+	RenderMask Masking::getShadingMask(ShadingMethod method) {
+
+		switch (method) {
+			case ShadingMethod::Forward:
+				return RenderMask::Forward;
+			case ShadingMethod::TransparentOD:
+				return RenderMask::Transparent;
+			case ShadingMethod::Generic:
+				return RenderMask::Generic;
+		}
+
+		return RenderMask::None;
+	}
+
 }
