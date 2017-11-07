@@ -79,9 +79,7 @@ namespace geeL {
 
 		}
 		else if(fallbackEffect != nullptr) {
-			fallbackEffect->init(PostProcessingParameter(ScreenQuad::get(), 
-				static_cast<DynamicBuffer&>(*parentBuffer), resolution));
-
+			fallbackEffect->init(PostProcessingParameter(ScreenQuad::get(), *parentBuffer, resolution));
 			fallbackEffect->setImage(getImage());
 			fallbackEffect->draw();
 		}

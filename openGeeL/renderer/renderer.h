@@ -6,9 +6,8 @@
 
 namespace geeL {
 
-	class ColorBuffer;
-	class FrameBuffer;
 	class IFrameBuffer;
+	class DynamicBuffer;
 	class RenderContext;
 	class RenderWindow;
 	class RenderScene;
@@ -25,12 +24,12 @@ namespace geeL {
 	public:
 		virtual void draw() = 0;
 
-		void setParent(IFrameBuffer& buffer);
-		const IFrameBuffer* const getParentBuffer() const;
-		IFrameBuffer* const getParentBuffer();
+		void setParent(DynamicBuffer& buffer);
+		const DynamicBuffer* const getParentBuffer() const;
+		DynamicBuffer* const getParentBuffer();
 
 	protected:
-		IFrameBuffer* parentBuffer = nullptr;
+		DynamicBuffer* parentBuffer = nullptr;
 
 	};
 

@@ -348,7 +348,6 @@ namespace geeL {
 		for (auto it(effects.begin()); it != effects.end(); it++) {
 			PostEffectRender& current = *it;
 
-			//First element
 			if (it == effects.begin())
 				indexEffect(current, nullptr, firstTexture);
 			else {

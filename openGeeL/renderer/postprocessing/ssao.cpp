@@ -80,8 +80,7 @@ namespace geeL {
 				blurTexture = new RenderTexture(resolution, ColorType::Single, WrapMode::Repeat, FilterMode::None);
 			if (blendEffect == nullptr) {
 				blendEffect = new PostProcessingEffectFS("renderer/shaders/screen.frag");
-				blendEffect->init(PostProcessingParameter(ScreenQuad::get(),
-					static_cast<DynamicBuffer&>(*parentBuffer), resolution));
+				blendEffect->init(PostProcessingParameter(ScreenQuad::get(), *parentBuffer, resolution));
 			}
 			
 			blendEffect->setImage(*blurTexture);
