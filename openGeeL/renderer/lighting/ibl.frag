@@ -1,5 +1,7 @@
 #version 430
 
+#define OCCLUSION_MIN (1.f / 256.f)
+
 #include <renderer/shaders/helperfunctions.glsl>
 #include <renderer/shaders/samplingvector.glsl>
 #include <renderer/lighting/cooktorrance.glsl>
@@ -60,6 +62,7 @@ void main() {
 	float roughness	  = posRough.a;
 	float metallic    = normMet.a;
 	float occlusion   = (useSSAO == 1) ? texture(ssao, textureCoordinates).r : 1.f;
+	occlusion = (occlusion == 0.f) ? 1.f : clamp(occlusion + OCCLUSION_MIN, 0.f, 1.f);
 
 	vec3  viewDirection = normalize(-fragPosition);
 
@@ -69,7 +72,7 @@ void main() {
 
 	vec3 ambienceDiffuse = calculateIndirectDiffuse(position, normal, kd, albedo, occlusion); 
 	//vec3 ambienceSpecular = calculateIndirectSpecular(position, normal, viewDirection, albedo, roughness, metallic);
-	vec3 ambienceSpecular = calculateIndirectSpecularSplitSum(position, normal, viewDirection, albedo, roughness, metallic);
+	vec3 ambienceSpecular = occlusion * calculateIndirectSpecularSplitSum(position, normal, viewDirection, albedo, roughness, metallic);
 
 	color = vec4(ambienceDiffuse + ambienceSpecular, 1.f);
 }

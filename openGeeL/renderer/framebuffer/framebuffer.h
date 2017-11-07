@@ -24,6 +24,7 @@ namespace geeL {
 		virtual void fill(Drawer& drawer, Clearer clearer = clearNormal) = 0;
 
 		virtual void bind() const = 0;
+		static void unbind();
 
 		virtual void resetSize() const = 0;
 		virtual const Resolution& getResolution() const = 0;
@@ -52,7 +53,6 @@ namespace geeL {
 
 		virtual void bind() const;
 		static void bind(unsigned int fbo);
-		static void unbind();
 
 		//Use RBO of given framebuffer
 		//Note: RBO will be referenced and not copied. 

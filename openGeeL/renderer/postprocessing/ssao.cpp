@@ -5,6 +5,7 @@
 #include <glm.hpp>
 #include "primitives/screenquad.h"
 #include "texturing/rendertexture.h"
+#include "utility/glguards.h"
 #include "gaussianblur.h"
 #include "ssao.h"
 
@@ -15,7 +16,7 @@ using namespace std;
 namespace geeL {
 
 	SSAO::SSAO(PostProcessingEffectFS& blur, float radius, ResolutionScale resolution)
-		: PostProcessingEffectFS("renderer/postprocessing/ssao.frag"), blur(blur), radius(radius), resolution(resolution) {
+		: PostProcessingEffectFS("renderer/postprocessing/ssao.frag"), blur(blur), radius(radius), scale(resolution) {
 	
 		uniform_real_distribution<GLfloat> random(0.f, 1.f);
 		default_random_engine generator;
@@ -47,7 +48,7 @@ namespace geeL {
 	}
 
 	SSAO::SSAO(const SSAO& other) : PostProcessingEffectFS(other), radius(other.radius), blur(other.blur), 
-		noise(other.noise), resolution(other.resolution) {
+		noise(other.noise), scale(other.scale) {
 		
 		noiseTexture = new ImageTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::None);
 	}
@@ -55,7 +56,9 @@ namespace geeL {
 	SSAO::~SSAO() {
 		delete noiseTexture;
 
-		if (tempTexture != nullptr) delete tempTexture;
+		if (ssaoTexture != nullptr) delete ssaoTexture;
+		if (blurTexture != nullptr) delete blurTexture;
+		if (blendEffect != nullptr) delete blendEffect;
 	}
 
 	
@@ -66,6 +69,28 @@ namespace geeL {
 		}
 
 		return *this;
+	}
+
+	void SSAO::setTargetTexture(const Texture& texture) {
+		blend = texture.isAssigned();
+
+		if (blend) {
+			//Instanciate blending structures if needed
+			if(blurTexture == nullptr)
+				blurTexture = new RenderTexture(resolution, ColorType::Single, WrapMode::Repeat, FilterMode::None);
+			if (blendEffect == nullptr) {
+				blendEffect = new PostProcessingEffectFS("renderer/shaders/screen.frag");
+				blendEffect->init(PostProcessingParameter(ScreenQuad::get(),
+					static_cast<DynamicBuffer&>(*parentBuffer), resolution));
+			}
+			
+			blendEffect->setImage(*blurTexture);
+		}
+		else {
+			if (blurTexture != nullptr) delete blurTexture;
+			if (blendEffect != nullptr) delete blendEffect;
+		}
+
 	}
 
 	void SSAO::init(const PostProcessingParameter& parameter) {
@@ -80,10 +105,10 @@ namespace geeL {
 		for (unsigned int i = 0; i < sampleCount; i++)
 			shader.bind<glm::vec3>("samples[" + to_string(i) + "]", kernel[i]);
 		
-		tempTexture = new RenderTexture(resolution, ColorType::Single, WrapMode::Repeat, FilterMode::None);
+		ssaoTexture = new RenderTexture(resolution, ColorType::Single, WrapMode::Repeat, FilterMode::None);
 
 		blur.init(PostProcessingParameter(parameter, resolution));
-		blur.setImage(*tempTexture);
+		blur.setImage(*ssaoTexture);
 
 		projectionLocation = shader.getLocation("projection");
 	}
@@ -91,13 +116,33 @@ namespace geeL {
 	void SSAO::draw() {
 		if (!active) return;
 
-		parentBuffer->add(*tempTexture);
+		parentBuffer->add(*ssaoTexture);
 		parentBuffer->fill([this]() {
 			bindValues();
 			bindToScreen();
 		}, clearColor);
 
-		blur.draw();
+		//Draw blurred SSAO in separate texture and
+		//then blend it with original texture
+		if (blend) {
+			parentBuffer->add(*blurTexture);
+			parentBuffer->fill([this]() {
+				blur.draw();
+			}, clearColor);
+
+			BlendGuard blendGuard;
+			glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_DST_COLOR);
+
+			blendEffect->draw();
+		}
+		//Otherwise, write blurred SSAO directly to target
+		else
+			blur.draw();
+	}
+
+	void SSAO::fill() {
+		if (parentBuffer != nullptr)
+			parentBuffer->fill(*this, blend ? clearNothing : clearColor);
 	}
 
 	void SSAO::bindValues() {
@@ -123,7 +168,7 @@ namespace geeL {
 	}
 	
 	const ResolutionScale& SSAO::getResolution() const {
-		return resolution;
+		return scale;
 	}
 }
 

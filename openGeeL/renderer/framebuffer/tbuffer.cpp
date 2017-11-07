@@ -35,12 +35,12 @@ namespace geeL {
 		bind();
 
 		//Create attachements for all color buffers
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gBuffer.getPositionRoughness().getID(), 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gBuffer.getNormalMetallic().getID(), 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gBuffer.getDiffuse().getID(), 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, accumulationTexture->getID(), 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, revealageTexture->getID(), 0);
+		gBuffer.getPositionRoughness().assignToo(*this, 0);
+		gBuffer.getNormalMetallic().assignToo(*this, 1);
+		gBuffer.getDiffuse().assignToo(*this, 2);
 
+		accumulationTexture->assignTo(*this, 3);
+		revealageTexture->assignTo(*this, 4);
 
 		unsigned int attachments[5] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
 			GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 };

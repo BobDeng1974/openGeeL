@@ -33,7 +33,7 @@ namespace geeL {
 		}
 	}
 
-	void FrameBuffer::unbind() {
+	void IFrameBuffer::unbind() {
 		currentFBO = 0;
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}

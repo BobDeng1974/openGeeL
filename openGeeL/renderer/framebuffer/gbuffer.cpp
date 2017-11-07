@@ -10,7 +10,9 @@
 
 namespace geeL {
 
-	GBuffer::GBuffer(Resolution resolution, GBufferContent content) : content(content) {
+	GBuffer::GBuffer(Resolution resolution, GBufferContent content) 
+		: content(content), emissivity(nullptr), occlusion(nullptr) {
+		
 		init(resolution);
 	}
 
@@ -18,7 +20,9 @@ namespace geeL {
 		delete positionRough;
 		delete normalMet;
 		delete diffuse;
-		delete emissivity;
+		
+		if (emissivity != nullptr) delete emissivity;
+		if (occlusion != nullptr) delete occlusion;
 	}
 
 
@@ -87,8 +91,19 @@ namespace geeL {
 		return *normalMet;
 	}
 
-	const RenderTexture& GBuffer::getEmissivity() const {
-		return *emissivity;
+	const RenderTexture* GBuffer::getEmissivity() const {
+		return emissivity;
+	}
+
+	const RenderTexture* GBuffer::getOcclusion() const {
+		return occlusion;
+	}
+
+	RenderTexture& GBuffer::requestOcclusion(const ResolutionScale& scale) {
+		if(occlusion == nullptr)
+			occlusion = new RenderTexture(Resolution(resolution, scale), ColorType::Single, WrapMode::ClampEdge, FilterMode::None);
+
+		return *occlusion;
 	}
 
 	std::string GBuffer::getFragmentPath() const {
@@ -112,22 +127,25 @@ namespace geeL {
 		normalMet = new RenderTexture(resolution, ColorType::RGBA16);
 		diffuse = new RenderTexture(resolution, ColorType::RGBA);
 		
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, positionRough->getID(), 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, normalMet->getID(), 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, diffuse->getID(), 0);
+		positionRough->assignTo(*this, 0);
+		normalMet->assignTo(*this, 1);
+		diffuse->assignTo(*this, 2);
 		
 		switch (content) {
 			case GBufferContent::DefaultEmissive: {
 				emissivity = new RenderTexture(resolution, ColorType::RGB);
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, emissivity->getID(), 0);
+				occlusion = new RenderTexture(resolution, ColorType::Single, WrapMode::ClampEdge, FilterMode::None);
 
-				unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
-				glDrawBuffers(4, attachments);
+				emissivity->assignTo(*this, 3);
+				occlusion->assignTo(*this, 4);
+
+				unsigned int attachments[5] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, 
+					GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 };
+
+				glDrawBuffers(5, attachments);
 				break;
 			}
 			default: {
-				emissivity = new RenderTexture();
-
 				unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
 				glDrawBuffers(3, attachments);
 				break;
@@ -146,9 +164,9 @@ namespace geeL {
 		bind();
 
 		//Create attachements for all color buffers
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gBuffer.getPositionRoughness().getID(), 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gBuffer.getNormalMetallic().getID(), 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gBuffer.getDiffuse().getID(), 0);
+		gBuffer.getPositionRoughness().assignToo(*this, 0);
+		gBuffer.getNormalMetallic().assignToo(*this, 1);
+		gBuffer.getDiffuse().assignToo(*this, 2);
 		//TODO: add emissivity texture
 
 		unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
@@ -161,7 +179,7 @@ namespace geeL {
 
 	void ForwardBuffer::setColorTexture(RenderTexture& colorTexture) {
 		bind();
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, colorTexture.getID(), 0);
+		colorTexture.assignTo(*this, 3);
 
 		unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 		glDrawBuffers(4, attachments);

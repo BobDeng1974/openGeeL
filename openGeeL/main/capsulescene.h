@@ -57,20 +57,22 @@ public:
 				meshTransform22, CullingMode::cullFront, "Girl");
 			scene.addMeshRenderer(girl);
 
-			/*
+			
 			girl.iterateMeshes([&](const Mesh& mesh) {
-				if (mesh.getName() == "g eyelash" || mesh.getName() == "g hair_outer" 
-					|| mesh.getName() == "g hair_inner" || mesh.getName() == "g fur") {
+				if (mesh.getName() == "g eyelash" || mesh.getName() == "g fur" 
+					/*|| mesh.getName() == "g hair_outer" || mesh.getName() == "g hair_inner"*/) {
 					
 					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Forward);
 					girl.changeMaterial(ss, mesh);
 				}
 			});
-			*/
+			
 
 			girl.iterateMaterials([&](MaterialContainer& container) {
-				if (container.name == "fur")
-					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/fur_alpha_02.jpg"));
+				if (container.name == "fur") {
+					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/fur_alpha_01.jpg"));
+					container.setFloatValue("Transparency", 0.3f);
+				}
 				else if (container.name == "eyelash")
 					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/eyelash_alpha_01.jpg"));
 				else if (container.name == "hair_inner")
@@ -79,14 +81,17 @@ public:
 					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/hair_outer_alpha_01.jpg"));
 				else if (container.name == "cloth") {
 					container.addTexture("emission", materialFactory.CreateTexture("resources/girl/cloth_spec_01.jpg", ColorType::GammaSpace));
+					container.addTexture("occlusion", materialFactory.CreateTexture("resources/girl/cloth_ao_01.jpg"));
 					container.setVectorValue("Emissivity", vec3(50.f));
 					container.setFloatValue("Roughness", 0.5f);
 					container.setFloatValue("Metallic", 1.f);
 				}
 				else if (container.name == "light")
 					container.setVectorValue("Emissivity", vec3(100.f));
-				else if (container.name == "body")
+				else if (container.name == "body") {
+					container.addTexture("occlusion", materialFactory.CreateTexture("resources/girl/body_ao_01.jpg"));
 					container.setFloatValue("Roughness", 0.7f);
+				}
 
 			});
 
@@ -106,11 +111,13 @@ public:
 			BilateralFilter& blur = BilateralFilter(1.8f, 0.7f);
 			SSAO& ssao = SSAO(blur, 0.5f);
 			//renderer.addEffect(ssao);
-			scene.addRequester(ssao);
-			postLister.add(ssao);
+			//scene.addRequester(ssao);
+			//postLister.add(ssao);
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
-			renderer.addEffect(ibl, ibl);
+			GenericPostSnippet& iblSnippet = GenericPostSnippet(ibl);
+			renderer.addEffect(ibl, DrawTime::Early, ibl);
+			postLister.add(iblSnippet);
 
 			BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 100);
@@ -133,7 +140,7 @@ public:
 			//postLister.add(dof);
 
 			BrightnessFilterCutoff& filter = BrightnessFilterCutoff(1.f);
-			GaussianBlur& bloomBlur = GaussianBlur(KernelSize::Large, 4.f);
+			GaussianBlur& bloomBlur = GaussianBlur(KernelSize::Large, 3.f);
 			Bloom& bloom = Bloom(filter, bloomBlur, 1.f, 0.7f);
 			renderer.addEffect(bloom, DrawTime::Late);
 			postLister.add(bloom);

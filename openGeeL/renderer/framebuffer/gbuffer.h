@@ -30,7 +30,13 @@ namespace geeL {
 		const RenderTexture& getDiffuse() const;
 		const RenderTexture& getPositionRoughness() const;
 		const RenderTexture& getNormalMetallic() const;
-		const RenderTexture& getEmissivity() const;
+
+		const RenderTexture* getEmissivity() const;
+		const RenderTexture* getOcclusion() const;
+
+		//Request occlusion texture of this buffer. Creates a 
+		//new one with given scale, if it doesn't exist yet
+		RenderTexture& requestOcclusion(const ResolutionScale& scale = 1.f);
 
 		std::string getFragmentPath() const;
 		virtual std::string toString() const;
@@ -40,6 +46,7 @@ namespace geeL {
 		RenderTexture* positionRough;
 		RenderTexture* normalMet;
 		RenderTexture* emissivity;
+		RenderTexture* occlusion;
 		GBufferContent content;
 		float depthPos;
 

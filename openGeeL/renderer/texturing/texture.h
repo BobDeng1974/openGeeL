@@ -7,6 +7,7 @@
 
 namespace geeL {
 
+	class IFrameBuffer;
 	class RenderShader;
 
 	
@@ -24,6 +25,13 @@ namespace geeL {
 		virtual void bind() const;
 		void unbind() const;
 
+		//Assing this texture to given framebuffer
+		virtual void assignTo(const IFrameBuffer& buffer, unsigned int position, bool bindFB = false);
+
+		//Assign this texture to given framebuffer besides an already assigned main buffer. 
+		//Note: This function will only work if texture has been assigned to a main buffer beforehand
+		virtual bool assignToo(const IFrameBuffer& buffer, unsigned int position, bool bindFB = false) const;
+
 		//Bind texture as image texture
 		void bindImage(unsigned int position = 0, AccessType access = AccessType::All) const;
 
@@ -32,8 +40,8 @@ namespace geeL {
 
 		virtual void clear();
 		virtual bool isEmpty() const;
+		bool isAssigned() const;
 
-		
 		virtual void initFilterMode(FilterMode mode);
 		virtual void initWrapMode(WrapMode mode);
 		virtual void initAnisotropyFilter(AnisotropicFilter filter);
@@ -48,8 +56,9 @@ namespace geeL {
 		TextureToken id;
 		ColorType colorType;
 		static AnisotropicFilter maxAnisotropy;
+		const IFrameBuffer* parent;
 
-		Texture(ColorType colorType) : colorType(colorType) {}
+		Texture(ColorType colorType) : colorType(colorType), parent(nullptr) {}
 
 	};
 	
@@ -60,7 +69,10 @@ namespace geeL {
 		virtual ~Texture2D() {}
 
 		void mipmap() const;
-		
+
+		virtual void assignTo(const IFrameBuffer& buffer, unsigned int position, bool bindFB = false);
+		virtual bool assignToo(const IFrameBuffer& buffer, unsigned int position, bool bindFB = false) const;
+
 		virtual void initStorage(unsigned char* image);
 		virtual void reserveStorage(unsigned int levels = 1);
 
@@ -142,6 +154,10 @@ namespace geeL {
 
 	inline bool Texture::isEmpty() const {
 		return getID() == 0;
+	}
+
+	inline bool Texture::isAssigned() const {
+		return parent != nullptr;
 	}
 
 	inline bool Texture::operator== (const Texture& rhs) const {

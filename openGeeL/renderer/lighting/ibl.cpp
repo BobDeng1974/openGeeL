@@ -35,7 +35,7 @@ namespace geeL {
 		addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
 		addTextureSampler(*maps[WorldMaps::NormalMetallic], "gNormalMet");
 
-		auto ssao = maps.find(WorldMaps::SSAO);
+		auto ssao = maps.find(WorldMaps::Occlusion);
 		if (ssao != maps.end()) {
 			const Texture& texture = *ssao->second;
 

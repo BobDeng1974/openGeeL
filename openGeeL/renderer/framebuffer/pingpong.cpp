@@ -24,8 +24,8 @@ namespace geeL {
 		first = &texture1;
 		second = &texture2;
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, first->getID(), 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, second->getID(), 0);
+		first->assignTo(*this, 0);
+		second->assignTo(*this, 1);
 
 		reset();
 
@@ -45,8 +45,8 @@ namespace geeL {
 		first = new RenderTexture(resolution, colorType, wrapMode, filterMode);
 		second = new RenderTexture(resolution, colorType, wrapMode, filterMode);
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, first->getID(), 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, second->getID(), 0);
+		first->assignTo(*this, 0);
+		second->assignTo(*this, 1);
 
 		reset();
 

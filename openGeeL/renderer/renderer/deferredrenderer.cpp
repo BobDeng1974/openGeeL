@@ -42,8 +42,6 @@ namespace geeL {
 	}
 
 	DeferredRenderer::~DeferredRenderer() {
-		if(ssaoTexture != nullptr) delete ssaoTexture;
-
 		delete texture1;
 		delete texture2;
 	}
@@ -104,12 +102,12 @@ namespace geeL {
 		//Hacky: Read camera depth from geometry pass and write it into the scene
 		scene->forwardScreenInfo(gBuffer.screenInfo);
 
-		//SSAO pass
+		//Occlusion pass
 		if (ssao != nullptr) {
 			DepthGuard guard(true);
 
-			stackBuffer.push(*ssaoTexture);
-			stackBuffer.fill(*ssao);
+			stackBuffer.push(gBuffer.requestOcclusion());
+			ssao->fill();
 		}
 
 		//Lighting pass
@@ -168,10 +166,10 @@ namespace geeL {
 
 		scene->getLightmanager().update(*scene, nullptr);
 
-		//SSAO pass
+		//Occlusion pass
 		if (ssao != nullptr) {
 			ssao->setCamera(camera);
-			stackBuffer.push(*ssaoTexture);
+			stackBuffer.push(gBuffer.requestOcclusion());
 			stackBuffer.fill(*ssao);
 			ssao->updateCamera(scene->getCamera());
 		}
@@ -213,9 +211,9 @@ namespace geeL {
 		addRequester(*this->ssao);
 
 		Resolution ssaoRes = Resolution(window->resolution, ssao.getResolution());
-		ssaoTexture = new RenderTexture(ssaoRes, ColorType::Single, WrapMode::ClampEdge, FilterMode::None);
-
+		gBuffer.requestOcclusion(ssao.getResolution()); //Ensure that occlusion map gets created
 		ssao.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, ssaoRes, &fallbackEffect));
+		ssao.setTargetTexture(*gBuffer.getOcclusion());
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect, DrawTime time) {
@@ -276,12 +274,13 @@ namespace geeL {
 		worldMaps[WorldMaps::PositionRoughness] = &gBuffer.getPositionRoughness();
 		worldMaps[WorldMaps::NormalMetallic] = &gBuffer.getNormalMetallic();
 
-		const RenderTexture* emissivity = &gBuffer.getEmissivity();
-		if (!emissivity->isEmpty())
+		const RenderTexture* emissivity = gBuffer.getEmissivity();
+		if (emissivity != nullptr)
 			worldMaps[WorldMaps::Emissivity] = emissivity;
 
-		if (ssao != nullptr)
-			worldMaps[WorldMaps::SSAO] = ssaoTexture;
+		const RenderTexture* occlusion = gBuffer.getOcclusion();
+		if (occlusion != nullptr)
+			worldMaps[WorldMaps::Occlusion] = occlusion;
 
 		return worldMaps;
 	}
@@ -401,11 +400,13 @@ namespace geeL {
 		std::vector<const Texture*> buffers = { &defaultEffect.getImage(), 
 			&gBuffer.getDiffuse(), &gBuffer.getNormalMetallic() };
 
-		const RenderTexture& emisTex = gBuffer.getEmissivity();
-		if (!emisTex.isEmpty())
-			buffers.push_back(&emisTex);
-		if (ssao != nullptr)
-			buffers.push_back(ssaoTexture);
+		const RenderTexture* emisTex = gBuffer.getEmissivity();
+		if (emisTex != nullptr)
+			buffers.push_back(emisTex);
+
+		const RenderTexture* occTex = gBuffer.getOcclusion();
+		if (occTex != nullptr)
+			buffers.push_back(occTex);
 
 		buffers.push_back(texture1);
 		buffers.push_back(texture2);

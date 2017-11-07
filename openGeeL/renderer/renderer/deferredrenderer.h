@@ -81,7 +81,7 @@ namespace geeL {
 
 		SceneRender& lighting;
 		SSAO* ssao;
-		RenderTexture* ssaoTexture = nullptr;
+		//RenderTexture* ssaoTexture = nullptr;
 		PostProcessingEffectFS fallbackEffect;
 		DefaultPostProcess& defaultEffect;
 

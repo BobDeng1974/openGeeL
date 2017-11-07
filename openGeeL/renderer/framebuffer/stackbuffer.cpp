@@ -25,7 +25,7 @@ namespace geeL {
 		if (!stackBuffer.empty()) {
 			RenderTexture* previous = stackBuffer.top();
 			bind();
-			bindTexture(*previous);
+			previous->assignTo(*this, 0);
 			previous->setRenderResolution();
 		}
 	}
@@ -54,7 +54,7 @@ namespace geeL {
 		RenderTexture* current = stackBuffer.top();
 		
 		bind();
-		bindTexture(*current);
+		current->assignTo(*this, 0);
 		current->setRenderResolution();
 		clearer.clear();
 
@@ -68,7 +68,7 @@ namespace geeL {
 		RenderTexture* current = stackBuffer.top();
 
 		bind();
-		bindTexture(*current);
+		current->assignTo(*this, 0);
 		current->setRenderResolution();
 		clearer.clear();
 
@@ -78,10 +78,6 @@ namespace geeL {
 		pop();
 	}
 
-
-	void StackBuffer::bindTexture(const Texture& texture, unsigned int position) {
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, GL_TEXTURE_2D, texture.getID(), 0);
-	}
 
 	const RenderTexture* const StackBuffer::getTexture() const {
 		if (!stackBuffer.empty())

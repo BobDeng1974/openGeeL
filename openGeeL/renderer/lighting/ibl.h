@@ -11,6 +11,8 @@ namespace geeL {
 	class ImageBasedLighting : public SceneRender, public AdditiveEffect {
 
 	public:
+		bool useSSAO = true;
+
 		ImageBasedLighting(RenderScene& scene);
 
 		virtual void init(const PostProcessingParameter& parameter);

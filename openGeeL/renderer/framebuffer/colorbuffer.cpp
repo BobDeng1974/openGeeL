@@ -39,7 +39,7 @@ namespace geeL {
 		// Create color attachment textures
 		for (int i = 0; i < amount; i++) {
 			RenderTexture& tex = *buffers[i].second;
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, tex.getID(), 0);
+			tex.assignTo(*this, i);
 		}
 
 		switch (amount) {
@@ -72,7 +72,7 @@ namespace geeL {
 		glGenFramebuffers(1, &fbo.token);
 		bind();
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getID(), 0);
+		texture.assignTo(*this, 0);
 		unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
 		glDrawBuffers(1, attachments);
 
@@ -92,7 +92,7 @@ namespace geeL {
 
 		// Create color attachment textures
 		RenderTexture* texture = new RenderTexture(resolution, colorType, wrapMode, filterMode);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getID(), 0);
+		texture->assignTo(*this, 0);
 		unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
 		glDrawBuffers(1, attachments);
 		buffers.push_back(pair<bool, RenderTexture*>(true, texture));

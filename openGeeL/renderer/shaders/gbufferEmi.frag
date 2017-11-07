@@ -1,11 +1,14 @@
 #version 430 core
 
+#define OCCLUSION_MIN (1.f / 256.f)
+
 #include <renderer/shaders/material.glsl>
 
 layout (location = 0) out vec4 gPositionRough;
 layout (location = 1) out vec4 gNormalMet;
 layout (location = 2) out vec4 gDiffuse;
 layout (location = 3) out vec3 gEmissivity;
+layout (location = 4) out float gOcclusion;
 
 in vec3 normal;
 in vec3 fragPosition;
@@ -24,6 +27,7 @@ void main() {
 	float metaFlag = mod(material.mapFlags / 1000, 10);
 	float alphaFlag = mod(material.mapFlags / 10000, 10);
 	float emisFlag = mod(material.mapFlags / 100000, 10);
+	float occFlag = mod(material.mapFlags / 1000000, 10);
 
 	vec4 diffuse = (diffFlag == 1) ? texture(material.diffuse, textureCoordinates) * material.color : material.color;
 
@@ -54,4 +58,6 @@ void main() {
 	gDiffuse = diffuse;
 
 	gEmissivity.rgb = (emisFlag == 1) ? texture(material.emission, textureCoordinates).rgb * material.emissivity : material.emissivity;
+	gOcclusion = (occFlag == 1) ? texture(material.occlusion, textureCoordinates).r + OCCLUSION_MIN : 0.f;
+
 } 

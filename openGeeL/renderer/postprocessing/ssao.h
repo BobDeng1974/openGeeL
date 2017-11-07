@@ -23,11 +23,17 @@ namespace geeL {
 
 		SSAO& operator= (const SSAO& other);
 
-		//Empty setter since base image isn't needed for SSAO
-
+		//Empty setter since base image isn't needed for Occlusion
 		virtual void setBuffer(unsigned int buffer) {}
+
+		//Tell SSAO in which texture it will get drawn into. The effect
+		//will try to blend content if given texture has already been 
+		//filled with occlusion data
+		void setTargetTexture(const Texture& texture);
+
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void draw();
+		virtual void fill();
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
@@ -44,7 +50,7 @@ namespace geeL {
 	private:
 		float radius;
 		unsigned int sampleCount = 32;
-		ResolutionScale resolution;
+		ResolutionScale scale;
 
 		ImageTexture* noiseTexture;
 		std::vector<glm::vec3> kernel;
@@ -52,7 +58,13 @@ namespace geeL {
 		PostProcessingEffectFS& blur;
 
 		ShaderLocation projectionLocation;
-		RenderTexture* tempTexture = nullptr;
+		RenderTexture* ssaoTexture = nullptr;
+
+		//These objects are used if SSAO needs to be blended into an existing occlusion texture
+
+		bool blend = false;
+		RenderTexture* blurTexture = nullptr;
+		PostProcessingEffectFS* blendEffect = nullptr;
 		
 	};
 

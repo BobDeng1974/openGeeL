@@ -40,6 +40,10 @@ namespace geeL {
 		blend(GL_ONE, GL_ONE);
 	}
 
+	void BlendGuard::blendAddAlpha() const {
+		blend(GL_SRC_ALPHA, GL_ONE);
+	}
+
 	void BlendGuard::blend(unsigned int source, unsigned int destination) const {
 		if (i < 0) {
 			glBlendFunc(source, destination);

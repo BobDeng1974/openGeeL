@@ -12,7 +12,8 @@ namespace geeL {
 		Normal,
 		Metallic,
 		Alpha,
-		Emission
+		Emission,
+		Occlusion
 
 	};
 
@@ -38,6 +39,8 @@ namespace geeL {
 				return "alpha";
 			case MapType::Emission:
 				return "emission";
+			case MapType::Occlusion:
+				return "occlusion";
 		}
 
 		return "";
@@ -52,6 +55,7 @@ namespace geeL {
 		if (type == "normal") return MapType::Normal;
 		if (type == "alpha") return MapType::Alpha;
 		if (type == "emission") return MapType::Emission;
+		if (type == "occlusion") return MapType::Occlusion;
 
 		throw "Given name can't be converted into a map type\n";
 	}

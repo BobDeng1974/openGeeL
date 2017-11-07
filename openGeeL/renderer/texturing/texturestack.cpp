@@ -74,6 +74,9 @@ namespace geeL {
 			case MapType::Emission:
 				mapFlags += 100000;
 				break;
+			case MapType::Occlusion:
+				mapFlags += 1000000;
+				break;
 		}
 	}
 

@@ -24,6 +24,9 @@ namespace geeL {
 		//Blend with GL_ONE and GL_ONE
 		void blendAdd() const;
 
+		//Blend with GL_SRC_ALPHA and GL_ONE
+		void blendAddAlpha() const;
+
 	private:
 		int i;
 
