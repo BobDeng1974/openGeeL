@@ -393,6 +393,7 @@ namespace geeL {
 				target = previous->first;
 
 			current.first = target;
+			effect.setImage(*target);
 		}
 		//Init all normal post processing effects with two alternating textures
 		//Current effect will then always read from one and write to the other

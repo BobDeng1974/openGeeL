@@ -5,6 +5,13 @@
 
 namespace geeL {
 
+	enum class BlendMode {
+		Add,
+		Override
+
+	};
+
+
 	class BlendGuard {
 
 	public:

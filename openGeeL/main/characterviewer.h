@@ -23,7 +23,7 @@ public:
 			camera.addComponent<MovableCamera>(MovableCamera(5.f, 0.45f));
 			scene.setCamera(camera);
 
-			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/Arches_E_PineTree_3k.hdr");
+			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/03-Ueno-Shrine_3k.hdr");
 			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeMapFactory.getBuffer(), 1024);
 			IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
@@ -52,15 +52,19 @@ public:
 				if (mesh.getName() == "eyelash" || mesh.getName() == "fur"
 					/*|| mesh.getName() == "g hair_outer" || mesh.getName() == "g hair_inner"*/) {
 
-					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Forward);
+					girl.setRenderMask(RenderMask::Empty, mesh);
+
+					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
 					girl.changeMaterial(ss, mesh);
 				}
+				else if (mesh.getName() == "body")
+					girl.setRenderMask(RenderMask::Skin, mesh);
 			});
 
 			girl.iterateMaterials([&](MaterialContainer& container) {
 				if (container.name == "fur") {
 					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/fur_alpha_01.jpg"));
-					container.setFloatValue("Transparency", 0.4f);
+					container.setFloatValue("Transparency", 0.35f);
 				}
 				else if (container.name == "eyelash")
 					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/eyelash_alpha_01.jpg"));
@@ -127,6 +131,14 @@ public:
 
 			GaussianBlurSnippet snipsnip(bloomBlur);
 			postLister.add(snipsnip);
+
+			ColorCorrection& colorCorrect = ColorCorrection();
+			colorCorrect.setDistortionDirection(glm::vec2(1.f, 0.f));
+			colorCorrect.setChromaticDistortion(glm::vec3(0.0002f, -0.0002f, 0.f));
+			AdditiveWrapper& additiveColor = AdditiveWrapper(colorCorrect);
+			renderer.addEffect(additiveColor, DrawTime::Late);
+			postLister.add(colorCorrect);
+			additiveColor.setRenderMask(RenderMask::Skin);
 
 			FXAA& fxaa = FXAA(0.001f, 0.f);
 			renderer.addEffect(fxaa, DrawTime::Late);
