@@ -132,7 +132,10 @@ namespace geeL {
 
 
 	BilateralFilter::BilateralFilter(float sigma, float factor)
-		: GaussianBlurBase("renderer/postprocessing/bilateral.frag", sigma), sigma2(factor) {}
+		: GaussianBlurBase("renderer/postprocessing/bilateral.frag", sigma), sigma2(factor) {
+	
+		setKernelsize(7);
+	}
 
 	BilateralFilter::BilateralFilter(string shaderPath, float sigma, float factor)
 		: GaussianBlurBase(shaderPath, sigma), sigma2(factor) {}

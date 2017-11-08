@@ -114,7 +114,7 @@ namespace geeL {
 		}
 	}
 
-	void ColorCorrection::setChromaticDistortion(const glm::vec3 & value) {
+	void ColorCorrection::setChromaticDistortion(const glm::vec3& value) {
 		if (distortion != value) {
 			distortion = value;
 
