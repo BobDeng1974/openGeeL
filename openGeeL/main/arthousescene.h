@@ -69,7 +69,7 @@ public:
 			def.setExposure(2.f);
 			postLister.add(def);
 
-			BilateralFilter& blur = BilateralFilter(1.5f, 0.7f);
+			BilateralFilter& blur = BilateralFilter(3.084f, 0.403f);
 			SSAO& ssao = SSAO(blur, 1.f);
 			renderer.addEffect(ssao);
 			scene.addRequester(ssao);
@@ -77,6 +77,12 @@ public:
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
 			renderer.addEffect(ibl, ibl);
+
+			SSAOSnippet& ssaoSnippet = SSAOSnippet(ssao);
+			BilateralFilterSnippet& ssaoBlurSnippet = BilateralFilterSnippet(blur);
+			std::list<PostEffectSnippet*> snips = { &ssaoSnippet, &ssaoBlurSnippet };
+			PostGroupSnippet& groupSnippet = PostGroupSnippet(snips);
+			postLister.add(groupSnippet);
 
 			GaussianBlur& blur4 = GaussianBlur();
 			SSRR& ssrr = SSRR();

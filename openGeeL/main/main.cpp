@@ -1,5 +1,6 @@
 #include "arthousescene.h"
 #include "bedroomscene.h"
+#include "characterviewer.h"
 #include "deerscene.h"
 #include "giscene.h"
 #include "raymarchscene.h"
@@ -10,12 +11,13 @@
 
 
 int main() {
-	BedroomScene::draw();
+	//BedroomScene::draw();
 	//DeerScene::draw();
 	//ArthouseScene::draw();
 	//SponzaScene::draw();
 	//SponzaGIScene::draw();
 	//ScienceScene::draw();
+	CharacterViewer::draw();
 	//CapsuleScene::draw();
 
 	//TestScene::draw();

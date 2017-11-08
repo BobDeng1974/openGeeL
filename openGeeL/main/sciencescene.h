@@ -94,13 +94,13 @@ public:
 			objectLister.add(camera);
 			//gui.addElement(objectLister);
 			PostProcessingEffectLister& postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
-			//gui.addElement(postLister);
-			//gui.addSystemInformation(0.01f, 0.74f, 0.17f, 0.145f);
+			gui.addElement(postLister);
+			gui.addSystemInformation(0.01f, 0.74f, 0.17f, 0.145f);
 
 			def.setExposure(2.f);
 			postLister.add(def);
 
-			BilateralFilter& blur = BilateralFilter(1, 0.7f);
+			BilateralFilter& blur = BilateralFilter(5.424, 0.323f);
 			SSAO& ssao = SSAO(blur, 3.f);
 			renderer.addEffect(ssao);
 			scene.addRequester(ssao);

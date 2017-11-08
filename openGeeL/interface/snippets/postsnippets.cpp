@@ -317,7 +317,7 @@ namespace geeL {
 	SSAOSnippet::SSAOSnippet(SSAO& ssao) : PostEffectSnippet(ssao), ssao(ssao) {}
 
 	void SSAOSnippet::drawSimple(GUIContext* context) {
-		float radius = GUISnippets::drawBarFloat(context, ssao.getRadius(), 0.5f, 100.f, 0.1f, "Radius");
+		float radius = GUISnippets::drawBarFloat(context, ssao.getRadius(), 0.1f, 100.f, 0.1f, "Radius");
 		ssao.setRadius(radius);
 	}
 

@@ -85,7 +85,7 @@ public:
 			def.setExposure(15.f);
 			postLister.add(def);
 
-			BilateralFilter& blur = BilateralFilter(2.26f, 0.7f);
+			BilateralFilter& blur = BilateralFilter(4.257f, 0.323f);
 			SSAO& ssao = SSAO(blur, 4.f);
 			renderer.addEffect(ssao);
 			scene.addRequester(ssao);
@@ -105,14 +105,11 @@ public:
 			PostGroupSnippet& groupSnippet = PostGroupSnippet(snips);
 			postLister.add(groupSnippet);
 
-			GaussianBlur& ayy = GaussianBlur();
 			SobelFilter& sobel = SobelFilter(5.f);
 			SobelBlur& sobelBlur = SobelBlur(sobel, 15.f);
-
 			VolumetricLight& vol = VolumetricLight(spotLight, 0.7f, 14.f, 250);
 			BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.25f, 0.2f);
 			VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
-			GaussianBlurSnippet& blurSnippet = GaussianBlurSnippet(ayy);
 			SobelBlurSnippet& snip = SobelBlurSnippet(sobelBlur);
 			renderer.addEffect(volSmooth, vol, sobelBlur);
 			scene.addRequester(vol);

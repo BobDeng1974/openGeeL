@@ -303,6 +303,7 @@
     <ClInclude Include="interface\snippets\postsnippets.h" />
     <ClInclude Include="main\arthousescene.h" />
     <ClInclude Include="main\bedroomscene.h" />
+    <ClInclude Include="main\characterviewer.h" />
     <ClInclude Include="main\deerscene.h" />
     <ClInclude Include="main\giscene.h" />
     <ClInclude Include="main\raymarchscene.h" />

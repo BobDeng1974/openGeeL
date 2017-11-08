@@ -956,6 +956,9 @@
     <ClInclude Include="renderer\postprocessing\additiveeffect.h">
       <Filter>renderer\postprocessing</Filter>
     </ClInclude>
+    <ClInclude Include="main\characterviewer.h">
+      <Filter>main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\lighting.vert">
