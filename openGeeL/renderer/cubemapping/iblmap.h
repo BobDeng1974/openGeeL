@@ -21,6 +21,8 @@ namespace geeL {
 		virtual void add(RenderShader& shader, std::string name) const;
 		virtual void draw();
 
+		const IrradianceMap& getIrradianceMap() const;
+
 	private:
 		BRDFIntegrationMap& brdfIntMap;
 		IrradianceMap& irrMap;
@@ -43,6 +45,7 @@ namespace geeL {
 		virtual void add(RenderShader& shader, std::string name) const;
 		virtual void draw();
 
+		const IrradianceMap& getIrradianceMap() const;
 		const CubeMap& getEnvironmentMap() const;
 
 	private:

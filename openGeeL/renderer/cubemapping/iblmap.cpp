@@ -32,6 +32,10 @@ namespace geeL {
 		preEnvMap.draw();
 	}
 
+	const IrradianceMap& IBLMap::getIrradianceMap() const {
+		return irrMap;
+	}
+
 
 	DynamicIBLMap::DynamicIBLMap(DynamicCubeMap& environmentMap, BRDFIntegrationMap& brdfIntMap, 
 		IrradianceMap& irrMap, PrefilteredEnvironmentMap& preEnvMap)
@@ -64,6 +68,10 @@ namespace geeL {
 		baseMap.draw();
 		irrMap.draw();
 		preEnvMap.draw();
+	}
+
+	const IrradianceMap& DynamicIBLMap::getIrradianceMap() const {
+		return irrMap;
 	}
 
 	const CubeMap& DynamicIBLMap::getEnvironmentMap() const {
