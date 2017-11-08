@@ -58,10 +58,7 @@ public:
 			bedroom.iterate([&](const Mesh& mesh, const Material& material) {
 				if (mesh.getName() == "Soda_Bottle") {
 					transObjects[&mesh] = &material;
-					bedroom.setRenderMask(RenderMask::Generic, mesh);
 				}
-				else if (mesh.getName() == "BackWall.001")
-					bedroom.setRenderMask(RenderMask::Generic, mesh);
 
 			});
 
@@ -96,12 +93,12 @@ public:
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
 			GenericPostSnippet& iblSnippet = GenericPostSnippet(ibl);
-			//renderer.addEffect(ibl, DrawTime::Early, ibl);
+			renderer.addEffect(ibl, DrawTime::Early, ibl);
 			postLister.add(iblSnippet);
 
 			ImageBasedLighting& forwardIBL = ImageBasedLighting(scene);
 			renderer.addEffect(forwardIBL, DrawTime::Intermediate, forwardIBL);
-			forwardIBL.setRenderMask(RenderMask::Generic);
+			forwardIBL.setRenderMask(RenderMask::Transparent);
 
 			SSAOSnippet& ssaoSnippet = SSAOSnippet(ssao);
 			BilateralFilterSnippet& ssaoBlurSnippet = BilateralFilterSnippet(blur);
