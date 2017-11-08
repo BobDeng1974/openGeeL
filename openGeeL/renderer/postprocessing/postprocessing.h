@@ -90,6 +90,7 @@ namespace geeL {
 
 		//Add a render mask to this effect. The effect will then only 
 		//be drawn in regions that have been marked with given mask
+		//Note: Only works with singular masks
 		virtual void setRenderMask(RenderMask mask);
 
 		virtual void init(const PostProcessingParameter& parameter);

@@ -16,7 +16,7 @@ namespace geeL {
 	void Masking::readMask(RenderMask mask) {
 #if ENABLE_STENCIL
 		glStencilMask(0x00);
-		glStencilFunc(GL_EQUAL, (int)mask, 0xFF);
+		glStencilFunc(GL_EQUAL, (int)mask, (int)mask);
 #endif
 	}
 
@@ -26,6 +26,7 @@ namespace geeL {
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 #endif
 	}
+
 
 	RenderMask Masking::getShadingMask(ShadingMethod method) {
 

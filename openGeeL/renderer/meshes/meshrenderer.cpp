@@ -14,7 +14,7 @@ using namespace std;
 namespace geeL{
 
 	MeshRenderer::MeshRenderer(Transform& transform, SceneShader& shader, Model& model, CullingMode faceCulling, const std::string& name)
-		: SceneObject(transform, name), model(&model), faceCulling(faceCulling) {
+		: SceneObject(transform, name), model(&model), faceCulling(faceCulling), mask(RenderMask::None) {
 	
 		initMaterials(shader);
 	}
@@ -40,7 +40,7 @@ namespace geeL{
 				const Material& mat = container.material;
 				mat.bind();
 
-				Masking::drawMask(getMask(container));
+				drawMask(container);
 
 				//Draw mesh
 				const Mesh& mesh = *container.mesh;
@@ -160,14 +160,15 @@ namespace geeL{
 		});
 	}
 
-	RenderMask MeshRenderer::getMask(const MaterialMapping& mapping) const {
+	void MeshRenderer::drawMask(const MaterialMapping& mapping) const {
 		const SceneShader& shader = mapping.material.getShader();
 		RenderMask shaderMask = Masking::getShadingMask(shader.getMethod());
+		RenderMask activeMask = shaderMask | mapping.mask | mask;
 
-		//Mask of mesh renderer overrides mask of single mesh.
-		//Therefore, it is only returned if no base mask exists
-		return (shaderMask != RenderMask::None) ? shaderMask : 
-			(mask == RenderMask::None) ? mapping.mask : mask;
+		if((activeMask & RenderMask::Empty) != RenderMask::Empty)
+			Masking::drawMask(activeMask);
+		else
+			Masking::passthrough();
 	}
 
 	MeshRenderer::MaterialMapping * MeshRenderer::getMapping(const Mesh& mesh) {

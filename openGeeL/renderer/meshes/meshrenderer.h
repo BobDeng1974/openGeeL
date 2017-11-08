@@ -50,12 +50,11 @@ namespace geeL {
 		//Draw only the meshes without material properties with given shader
 		virtual void drawGeometry(const RenderShader& shader) const;
 
-		//Add render mask to whole mesh renderer. Priority order of masks: 
-		//Special rendering method (e.g. transparency) -> mesh renderer -> mesh
+		//Add render mask to whole mesh renderer.
 		void setRenderMask(RenderMask mask);
 
-		//Add render mask to a single contained mesh. Priority order of masks: 
-		//Special rendering method (e.g. transparency) -> mesh renderer -> mesh
+		//Add render mask to a single contained mesh. 
+		//Note: Mesh will also use mask of whole mesh renderer (If set)
 		void setRenderMask(RenderMask mask, const Mesh& mesh);
 
 		//Customize material of given mesh (If it is actually part of this mesh renderer)
@@ -89,7 +88,7 @@ namespace geeL {
 			RenderMask mask;
 
 			MaterialMapping(const Mesh& mesh, Material material) 
-				: mesh(&mesh), material(std::move(material)) {}
+				: mesh(&mesh), material(std::move(material)), mask(RenderMask::None) {}
 
 			MaterialMapping(const Mesh& mesh, Material material, RenderMask mask)
 				: mesh(&mesh), material(std::move(material)), mask(mask) {}
@@ -105,7 +104,7 @@ namespace geeL {
 		//Init materials with data from the meshes material containers
 		void initMaterials(SceneShader& shader);
 
-		RenderMask getMask(const MaterialMapping& mapping) const;
+		void drawMask(const MaterialMapping& mapping) const;
 
 	private:
 		Model* model;
