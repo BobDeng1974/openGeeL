@@ -121,9 +121,9 @@ namespace geeL {
 			DepthGuard::enable(true);
 
 			fBuffer->fill([this]() {
+				scene->drawSkybox();
 				scene->drawForward();
 				scene->drawTransparentOD();
-				scene->drawSkybox();
 			});
 		}
 
