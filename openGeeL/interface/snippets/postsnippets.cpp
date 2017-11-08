@@ -171,13 +171,13 @@ namespace geeL {
 
 		GUISnippets::drawTreeNode(context, "Chromatic Aberration", true, [this](GUIContext* context) {
 			const glm::vec2& direction = color.getDistortionDirection();
-			const glm::vec3& distortion = color.getChromaticDistortion();
+			const glm::vec3& distortion = color.getChromaticDistortion() * 1000.f;
 
-			float dr = GUISnippets::drawBarFloat(context, distortion.r, 0.f, 0.01f, 0.0001f, "Red");
-			float dg = GUISnippets::drawBarFloat(context, distortion.g, 0.f, 0.01f, 0.0001f, "Green");
-			float db = GUISnippets::drawBarFloat(context, distortion.b, 0.f, 0.01f, 0.0001f, "Blue");
+			float dr = GUISnippets::drawBarFloat(context, distortion.r, -1.f, 1.f, 0.0001f, "Red");
+			float dg = GUISnippets::drawBarFloat(context, distortion.g, -1.f, 1.f, 0.0001f, "Green");
+			float db = GUISnippets::drawBarFloat(context, distortion.b, -1.f, 1.f, 0.0001f, "Blue");
 
-			color.setChromaticDistortion(glm::vec3(dr, dg, db));
+			color.setChromaticDistortion(glm::vec3(dr, dg, db) * 0.001f);
 
 			float dx = GUISnippets::drawBarFloat(context, direction.x, -1.f, 1.f, 0.001f, "X");
 			float dy = GUISnippets::drawBarFloat(context, direction.y, -1.f, 1.f, 0.001f, "Y");
