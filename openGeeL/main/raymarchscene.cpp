@@ -17,6 +17,7 @@
 #include "renderer/rendercontext.h"
 #include "pipeline.h"
 #include "application.h"
+#include "appmanager.h"
 #include "raymarchscene.h"
 
 using namespace geeL;
@@ -45,7 +46,7 @@ void RaymarchTest::draw() {
 	renderer.setScene(scene);
 
 	ContinuousSingleThread renderThread(renderer);
-	Application& app = Application(window, manager, renderer, renderThread);
+	Application& app = ApplicationManager::createApplication(window, manager, renderer, renderThread);
 
 	ContinuousSingleThread scriptingThread(scene);
 	app.addThread(scriptingThread);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "shader/sceneshader.h"
 #include "../application/configuration.h"
 
 using namespace geeL;
@@ -41,6 +42,33 @@ public:
 			Transform& lightTransform21 = transformFactory.CreateTransform(vec3(-5.2f, -0.2f, 7.5f), vec3(-180.0f, 0, -50), vec3(1.f), true);
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Huge, 6.f, 15U, 150.f, 1.f);
 			lightManager.addPointLight(lightTransform21, glm::vec3(lightIntensity * 3.f, lightIntensity * 59.f, lightIntensity * 43.f), config2);
+
+			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(20.f, 0.2f, 20.f));
+			MeshRenderer& plane = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/plane.obj"),
+				meshTransform2, CullingMode::cullFront, "Floor");
+
+			scene.addMeshRenderer(plane);
+
+			plane.iterateMeshes([&](const Mesh& mesh) {
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
+				plane.changeMaterial(ss, mesh);
+			});
+
+			plane.iterateMaterials([&](MaterialContainer& container) {
+				container.setFloatValue("Roughness", 0.25f);
+				container.setFloatValue("Metallic", 0.f);
+				container.setFloatValue("Transparency", 0.5f);
+			});
+
+
+			{
+				SceneShader& forwardShader = materialFactory.getDefaultShader(ShadingMethod::Forward);
+				SceneShader& transparentShader = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
+				
+				forwardShader.bind<float>("fogFalloff", 9.f);
+				transparentShader.bind<float>("fogFalloff", 9.f);
+			}
+			
 
 			Transform& meshTransform22 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 5.9f), vec3(0.f, 0.f, 0.f), vec3(0.12f));
 			MeshRenderer& girl = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/girl/girl_nofloor.obj"),

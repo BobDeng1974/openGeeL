@@ -1,5 +1,7 @@
 #version 430
 
+#define FOG 1
+
 #include <renderer/shaders/helperfunctions.glsl>
 #include <renderer/shaders/material.glsl>
 
@@ -32,6 +34,8 @@ uniform mat4 projection;
 uniform mat4 inverseView;
 uniform vec3 origin;
 
+uniform float fogFalloff = 100.f;
+
 
 #include <renderer/shaders/materialproperties.glsl>
 #include <renderer/shadowmapping/shadowsView.glsl>
@@ -59,6 +63,14 @@ void main() {
 	gPositionRough = vec4(fragPosition.xyz, roughness);
 	gNormalMet = vec4(norm, metallic);
 	gDiffuse = albedo;
-	color = vec4(irradiance, albedo.a);
+
+#if (FOG == 1)
+	float fogFactor = 1.f - clamp(abs(fragPosition.z) / fogFalloff, 0.f, 1.f);
+	color = vec4(irradiance , albedo.a) * fogFactor;
+#else
+	color = vec4(irradiance , albedo.a);
+#endif
+
+
 }
 
