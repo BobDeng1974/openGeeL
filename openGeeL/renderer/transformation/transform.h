@@ -13,6 +13,8 @@ using glm::mat4;
 
 namespace geeL {
 
+	class Shader;
+
 	enum class TransformUpdateStatus {
 		None,
 		NeedsUpdate,
@@ -39,29 +41,23 @@ namespace geeL {
 		virtual glm::vec3 getForwardDirection() const;
 		virtual glm::vec3 getRightDirection() const;
 		virtual glm::vec3 getUpDirection() const;
-
-		virtual const glm::vec3& getPosition();
-		virtual const glm::quat& getRotation();
-		virtual const glm::vec3& getScaling();
-		virtual const glm::vec3& getForwardDirection();
-		virtual const glm::vec3& getRightDirection();
-		virtual const glm::vec3& getUpDirection();
-		virtual const glm::mat4& getMatrix();
+		virtual glm::mat4 getMatrix() const;
 
 		virtual void setPosition(const vec3& position);
 		virtual void setRotation(const glm::quat& quaternion);
 		virtual void setForward(const vec3& value);
 		virtual void setScaling(const vec3& scaling);
 		virtual void setMatrix(const mat4& matrix);
+		virtual void setMatrix(const mat4&& matrix);
 
-		virtual vec3 getEulerAngles();
+		virtual vec3 getEulerAngles() const;
 		virtual void setEulerAngles(const vec3& eulerAngles);
 
 		virtual void translate(const vec3& translation);
 		virtual void rotate(const vec3& axis, float angle);
 		virtual void scale(const vec3& scalar);
 
-		virtual mat4 lookAt();
+		virtual mat4 lookAt() const;
 
 		virtual void iterateChildren(std::function<void(Transform&)> function);
 
@@ -78,25 +74,26 @@ namespace geeL {
 		//be taken care off and needs to be managed by caller
 		virtual void RemoveChild(Transform& child);
 
-		virtual Transform* GetParent();
+		virtual Transform* GetParent() const;
 		virtual void ChangeParent(Transform& newParent);
 
 		//Updates transformation matrix with recent changes to position, rotation and scale.
 		//Needs therefore only to be called when actual changes were made.
 		virtual void update();
+		virtual void bind(const Shader& shader, const std::string& name) const;
 
-		virtual bool operator==(const Transform& b);
-		virtual bool operator!=(const Transform& b);
+		virtual bool operator==(const Transform& b) const;
+		virtual bool operator!=(const Transform& b) const;
 		virtual Transform& operator= (const Transform& other);
 
-		unsigned int getID() const;
+		virtual unsigned int getID() const;
 
 		virtual void addChangeListener(std::function<void(const Transform&)> listener);
 
-		virtual const std::string& getName();
+		virtual const std::string& getName() const;
 		virtual void setName(const std::string& name);
 
-		virtual std::string toString();
+		virtual std::string toString() const;
 
 	protected:
 		glm::quat rotation;

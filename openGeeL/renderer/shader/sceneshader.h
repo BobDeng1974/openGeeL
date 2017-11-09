@@ -40,13 +40,10 @@ namespace geeL {
 		bool SceneShader::getUseSkybox() const;
 
 		void setViewMatrix(const glm::mat4& view);
-		void setModelMatrix(const glm::mat4& model);
 
+		//Bind model and view matrices into shader (if view has been set beforehand)
+		void bindMatrices(const glm::mat4& model) const;
 		void bindViewMatrix() const;
-		void bindModel() const;
-
-		//Bind model and view matrices into shader (if they were set beforehand)
-		void bindMatrices() const;
 
 		ShaderTransformSpace getSpace() const;
 		ShadingMethod getMethod() const;
@@ -58,7 +55,7 @@ namespace geeL {
 		std::string vertexPath;
 
 		const glm::mat4* view;
-		const glm::mat4* model;
+		glm::mat4 model;
 
 		ShaderLocation viewLocation;
 		ShaderLocation modelLocation;

@@ -4,6 +4,7 @@
 #include <gtx/quaternion.hpp>
 #include <iostream>
 #include <glm.hpp>
+#include "shader/shader.h"
 #include "utility/vectorextension.h"
 #include "transform.h"
 
@@ -100,36 +101,12 @@ namespace geeL {
 		return up;
 	}
 
-	const glm::vec3& Transform::getPosition() {
-		return position;
-	}
-
-	const glm::quat& Transform::getRotation() {
-		return rotation;
-	}
-
-	const glm::vec3& Transform::getScaling() {
-		return scaling;
-	}
-
-	const glm::vec3& Transform::getForwardDirection() {
-		return forward;
-	}
-
-	const glm::vec3& Transform::getRightDirection() {
-		return right;
-	}
-
-	const glm::vec3& Transform::getUpDirection() {
-		return up;
-	}
-
-	const glm::mat4& Transform::getMatrix() {
+	glm::mat4 Transform::getMatrix() const {
 		return matrix;
 	}
 
 	
-	vec3 Transform::getEulerAngles() {
+	vec3 Transform::getEulerAngles() const {
 		return glm::eulerAngles(rotation);
 	}
 
@@ -179,6 +156,48 @@ namespace geeL {
 	}
 
 	void Transform::setMatrix(const mat4& matrix) {
+		if (isStatic) return;
+
+		//Extract position from matrix
+		position.x = matrix[3][0];
+		position.y = matrix[3][1];
+		position.z = matrix[3][2];
+
+		mat3 m = mat3(matrix);
+
+		//Extract scale and normalize span vectors
+		vec3 r = vec3(m[0][0], m[0][1], m[0][2]);
+		vec3 f = vec3(m[1][0], m[1][1], m[1][2]);
+		vec3 u = vec3(m[2][0], m[2][1], m[2][2]);
+
+		scaling.x = glm::length(r);
+		scaling.y = glm::length(f);
+		scaling.z = glm::length(u);
+
+		m[0][0] /= scaling.x;
+		m[0][1] /= scaling.x;
+		m[0][2] /= scaling.x;
+
+		m[1][0] /= scaling.y;
+		m[1][1] /= scaling.y;
+		m[1][2] /= scaling.y;
+
+		m[2][0] /= scaling.z;
+		m[2][1] /= scaling.z;
+		m[2][2] /= scaling.z;
+
+		//Convert remaining rotation matrix to quaternion
+		rotation = glm::quat_cast(m);
+
+		translationMatrix = glm::translate(glm::mat4(1.f), position);
+		rotationMatrix = glm::toMat4(this->rotation); //Maybe use m here directly
+		scaleMatrix = glm::scale(glm::mat4(1.f), scaling);
+		updateDirections();
+
+		status = TransformUpdateStatus::NeedsUpdate;
+	}
+
+	void Transform::setMatrix(const mat4&& matrix) {
 		if (isStatic) return;
 
 		//Extract position from matrix
@@ -295,7 +314,7 @@ namespace geeL {
 		status = TransformUpdateStatus::NeedsUpdate;
 	}
 
-	mat4 Transform::lookAt() {
+	mat4 Transform::lookAt() const {
 		return glm::lookAt(position, position + forward, up);
 	}
 
@@ -335,15 +354,19 @@ namespace geeL {
 		}
 	}
 
+	void Transform::bind(const Shader& shader, const std::string& name) const {
+		shader.bind<glm::mat4>(name, matrix);
+	}
+
 	bool Transform::hasUpdated() const {
 		return status == TransformUpdateStatus::HasUpdated;
 	}
 
-	bool Transform::operator==(const Transform& b) {
+	bool Transform::operator==(const Transform& b) const {
 		return this == &b;
 	}
 
-	bool Transform::operator!=(const Transform& b) {
+	bool Transform::operator!=(const Transform& b) const {
 		return this != &b;
 	}
 
@@ -370,7 +393,7 @@ namespace geeL {
 		}
 	}
 
-	Transform* Transform::GetParent() {
+	Transform* Transform::GetParent() const {
 		return parent;
 	}
 
@@ -409,7 +432,7 @@ namespace geeL {
 	}
 
 
-	const string& Transform::getName() {
+	const string& Transform::getName() const {
 		return name;
 	}
 
@@ -418,7 +441,7 @@ namespace geeL {
 	}
 
 
-	std::string Transform::toString() {
+	std::string Transform::toString() const {
 		return "Transform " + name + ": " + std::to_string(id) + "\n"
 			+ "--Position: " + VectorExtension::vectorString(position) + "\n"
 			+ "--Rotation: " + VectorExtension::vectorString(glm::eulerAngles(rotation)) + "\n"

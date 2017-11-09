@@ -20,7 +20,7 @@ namespace geeL {
 
 
 
-	const glm::vec3& ThreadedTransform::getPosition() {
+	glm::vec3 ThreadedTransform::getPosition() const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
@@ -28,7 +28,7 @@ namespace geeL {
 		return Transform::getPosition();
 	}
 
-	const glm::quat& ThreadedTransform::getRotation() {
+	glm::quat ThreadedTransform::getRotation() const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
@@ -36,7 +36,7 @@ namespace geeL {
 		return Transform::getRotation();
 	}
 
-	const glm::vec3& ThreadedTransform::getScaling() {
+	glm::vec3 ThreadedTransform::getScaling() const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
@@ -44,7 +44,7 @@ namespace geeL {
 		return Transform::getScaling();
 	}
 
-	const glm::vec3& ThreadedTransform::getForwardDirection() {
+	glm::vec3 ThreadedTransform::getForwardDirection() const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
@@ -52,7 +52,7 @@ namespace geeL {
 		return Transform::getForwardDirection();
 	}
 
-	const glm::vec3& ThreadedTransform::getRightDirection() {
+	glm::vec3 ThreadedTransform::getRightDirection() const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
@@ -60,7 +60,7 @@ namespace geeL {
 		return Transform::getRightDirection();
 	}
 
-	const glm::vec3& ThreadedTransform::getUpDirection() {
+	glm::vec3 ThreadedTransform::getUpDirection() const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
@@ -68,7 +68,7 @@ namespace geeL {
 		return Transform::getUpDirection();
 	}
 
-	const glm::mat4& ThreadedTransform::getMatrix() {
+	glm::mat4 ThreadedTransform::getMatrix() const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
@@ -117,8 +117,16 @@ namespace geeL {
 		Transform::setMatrix(matrix);
 	}
 
+	void ThreadedTransform::setMatrix(const mat4&& matrix) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
 
-	vec3 ThreadedTransform::getEulerAngles() {
+		Transform::setMatrix(std::move(matrix));
+	}
+
+
+	vec3 ThreadedTransform::getEulerAngles() const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
@@ -160,7 +168,7 @@ namespace geeL {
 	}
 
 
-	mat4 ThreadedTransform::lookAt() {
+	mat4 ThreadedTransform::lookAt() const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
@@ -208,7 +216,7 @@ namespace geeL {
 	}
 
 
-	Transform* ThreadedTransform::GetParent() {
+	Transform* ThreadedTransform::GetParent() const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
@@ -233,6 +241,14 @@ namespace geeL {
 		Transform::update();
 	}
 
+	void ThreadedTransform::bind(const Shader& shader, const std::string& name) const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform::bind(shader, name);
+	}
+
 	void ThreadedTransform::addChangeListener(std::function<void(const Transform&)> listener) {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
@@ -241,7 +257,7 @@ namespace geeL {
 		Transform::addChangeListener(listener);
 	}
 
-	bool ThreadedTransform::operator==(const Transform& b) {
+	bool ThreadedTransform::operator==(const Transform& b) const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
@@ -249,7 +265,7 @@ namespace geeL {
 		return Transform::operator==(b);
 	}
 
-	bool ThreadedTransform::operator!=(const Transform& b) {
+	bool ThreadedTransform::operator!=(const Transform& b) const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
@@ -265,9 +281,17 @@ namespace geeL {
 		return Transform::operator=(other);
 	}
 
+	unsigned int ThreadedTransform::getID() const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		return Transform::getID();
+	}
+
 
 	
-	const std::string& ThreadedTransform::getName() {
+	const std::string& ThreadedTransform::getName() const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
@@ -283,7 +307,7 @@ namespace geeL {
 		Transform::setName(name);
 	}
 
-	std::string ThreadedTransform::toString() {
+	std::string ThreadedTransform::toString() const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif

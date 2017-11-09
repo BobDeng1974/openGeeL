@@ -13,13 +13,12 @@ out vec2 texCoords;
 out mat3 TBN;
 
 uniform mat4 model;
-uniform mat4 modelView;
-uniform mat3 transInvModelView;
+uniform mat4 view;
 uniform mat4 projection;
 
 
 void main() {
-	vec4 localPosition = modelView * vec4(position, 1.f);
+	vec4 localPosition = view * model * vec4(position, 1.f);
 	normal = norm;
 	fragPosition = (model * vec4(position, 1.f)).xyz;
 	texCoords = texCoordss;

@@ -66,7 +66,8 @@ namespace geeL {
 
 	void SkinnedMeshRenderer::drawGeometry(const RenderShader& shader) const {
 		//TODO: Load relevant bone transforms into materials
-		shader.bind<glm::mat4>("model", transform.getMatrix());
+		transform.bind(shader, "model");
+
 
 		skinnedModel->draw();
 	}
