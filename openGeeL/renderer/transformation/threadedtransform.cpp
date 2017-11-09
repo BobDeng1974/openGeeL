@@ -1,6 +1,9 @@
 #include <iostream>
 #include <gtc/matrix_transform.hpp>
+#include "appglobals.h"
 #include "threadedtransform.h"
+
+#define transformLock() std::lock_guard<std::recursive_mutex> guard(mutex);
 
 namespace geeL {
 
@@ -18,108 +21,150 @@ namespace geeL {
 
 
 	const glm::vec3& ThreadedTransform::getPosition() {
-		return mutexWrapRef<glm::vec3>([](Transform& transform) -> const glm::vec3& {
-			return transform.Transform::getPosition();
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		return Transform::getPosition();
 	}
 
 	const glm::quat& ThreadedTransform::getRotation() {
-		return mutexWrapRef<glm::quat>([](Transform& transform) -> const glm::quat& {
-			return transform.Transform::getRotation();
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		return Transform::getRotation();
 	}
 
 	const glm::vec3& ThreadedTransform::getScaling() {
-		return mutexWrapRef<glm::vec3>([](Transform& transform) -> const glm::vec3& {
-			return transform.Transform::getScaling();
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		return Transform::getScaling();
 	}
 
 	const glm::vec3& ThreadedTransform::getForwardDirection() {
-		return mutexWrapRef<glm::vec3>([](Transform& transform) -> const glm::vec3& {
-			return transform.Transform::getForwardDirection();
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		return Transform::getForwardDirection();
 	}
 
 	const glm::vec3& ThreadedTransform::getRightDirection() {
-		return mutexWrapRef<glm::vec3>([](Transform& transform) -> const glm::vec3& {
-			return transform.Transform::getRightDirection();
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		return Transform::getRightDirection();
 	}
 
 	const glm::vec3& ThreadedTransform::getUpDirection() {
-		return mutexWrapRef<glm::vec3>([](Transform& transform) -> const glm::vec3& {
-			return transform.Transform::getUpDirection();
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		return Transform::getUpDirection();
 	}
 
 	const glm::mat4& ThreadedTransform::getMatrix() {
-		return mutexWrapRef<glm::mat4>([](Transform& transform) -> const glm::mat4& {
-			return transform.Transform::getMatrix();
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		return Transform::getMatrix();
 	}
 
 
 	void ThreadedTransform::setPosition(const vec3& position) {
-		mutexWrap([&position](Transform& transform) {
-			transform.Transform::setPosition(position);
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform::setPosition(position);
 	}
 
 	void ThreadedTransform::setRotation(const glm::quat& quaternion) {
-		mutexWrap([&quaternion](Transform& transform) {
-			transform.Transform::setRotation(quaternion);
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform::setRotation(quaternion);
+	}
+
+	void ThreadedTransform::setForward(const vec3& value) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform::setForward(value);
 	}
 
 	void ThreadedTransform::setScaling(const vec3& scaling) {
-		mutexWrap([&scaling](Transform& transform) {
-			transform.Transform::setScaling(scaling);
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform::setScaling(scaling);
 	}
 
 	void ThreadedTransform::setMatrix(const mat4& matrix) {
-		mutexWrap([&matrix](Transform& transform) {
-			transform.Transform::setMatrix(matrix);
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform::setMatrix(matrix);
 	}
 
 
 	vec3 ThreadedTransform::getEulerAngles() {
-		return mutexWrap<glm::vec3>([](Transform& transform) -> glm::vec3 {
-			return transform.Transform::getEulerAngles();
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		return Transform::getEulerAngles();
 	}
 
 	void ThreadedTransform::setEulerAngles(const vec3& eulerAngles) {
-		mutexWrap([&eulerAngles](Transform& transform) {
-			transform.Transform::setEulerAngles(eulerAngles);
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform::setEulerAngles(eulerAngles);
 	}
 
 
 	void ThreadedTransform::translate(const vec3& translation) {
-		mutexWrap([&translation](Transform& transform) {
-			transform.Transform::translate(translation);
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform::translate(translation);
 	}
 
 	void ThreadedTransform::rotate(const vec3& axis, float angle) {
-		mutexWrap([&axis, &angle](Transform& transform) {
-			transform.Transform::rotate(axis, angle);
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform::rotate(axis, angle);
 	}
 
 	void ThreadedTransform::scale(const vec3& scalar) {
-		mutexWrap([&scalar](Transform& transform) {
-			transform.Transform::scale(scalar);
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform::scale(scalar);
 	}
 
 
 	mat4 ThreadedTransform::lookAt() {
-		std::lock_guard<std::recursive_mutex> guard(mutex);
-		
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		vec3 p = position;
 		vec3 f = forward;
 		vec3 u = up;
@@ -129,9 +174,11 @@ namespace geeL {
 
 
 	void ThreadedTransform::iterateChildren(std::function<void(Transform&)> function) {
-		mutexWrap([&function](Transform& transform) {
-			transform.Transform::iterateChildren(function);
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform::iterateChildren(function);
 	}
 
 	Transform & ThreadedTransform::AddChild(const Transform & child) {
@@ -140,66 +187,109 @@ namespace geeL {
 
 
 	Transform& ThreadedTransform::AddChild(Transform* child) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		ThreadedTransform* t = dynamic_cast<ThreadedTransform*>(child);
 		if (t == nullptr)
 			std::cout << "Warning: Adding non-threaded transform isn't " 
 				<< "thread safe and may cause data races\n";
-
-		std::lock_guard<std::recursive_mutex> guard(mutex);
+		
 		return Transform::AddChild(child);
 	}
 
 	void ThreadedTransform::RemoveChild(Transform& child) {
-		mutexWrap([&child](Transform& transform) {
-			transform.Transform::RemoveChild(child);
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform::RemoveChild(child);
 	}
 
 
 	Transform* ThreadedTransform::GetParent() {
-		std::lock_guard<std::recursive_mutex> guard(mutex);
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		return Transform::GetParent();
 	}
 
 	void ThreadedTransform::ChangeParent(Transform& newParent) {
-		mutexWrap([&newParent](Transform& transform) {
-			transform.Transform::ChangeParent(newParent);
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform::ChangeParent(newParent);
 	}
 
 
 	void ThreadedTransform::update() {
-		mutexWrap([](Transform& transform) {
-			transform.Transform::update();
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform::update();
 	}
 
 	void ThreadedTransform::addChangeListener(std::function<void(const Transform&)> listener) {
-		mutexWrap([&listener](Transform& transform) {
-			transform.Transform::addChangeListener(listener);
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform::addChangeListener(listener);
+	}
+
+	bool ThreadedTransform::operator==(const Transform& b) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		return Transform::operator==(b);
+	}
+
+	bool ThreadedTransform::operator!=(const Transform& b) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		return Transform::operator!=(b);
+	}
+
+	Transform& ThreadedTransform::operator=(const Transform& other) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		return Transform::operator=(other);
 	}
 
 
 	
 	const std::string& ThreadedTransform::getName() {
-		return mutexWrapRef<std::string>([](Transform& transform) -> const std::string& {
-			return transform.Transform::getName();
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		return Transform::getName();
 	}
 
 	void ThreadedTransform::setName(std::string& name) {
-		mutexWrap([&name](Transform& transform) {
-			transform.Transform::setName(name);
-		});
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform::setName(name);
+	}
+
+	std::string ThreadedTransform::toString() {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		return Transform::toString();
 	}
 	
-
-	void ThreadedTransform::mutexWrap(std::function<void(Transform&)> function) {
-		mutex.lock();
-		function(*this);
-		mutex.unlock();
-	}
-
 
 }

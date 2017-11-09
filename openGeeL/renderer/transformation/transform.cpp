@@ -339,11 +339,11 @@ namespace geeL {
 		return status == TransformUpdateStatus::HasUpdated;
 	}
 
-	bool Transform::operator==(const Transform& b) const {
+	bool Transform::operator==(const Transform& b) {
 		return this == &b;
 	}
 
-	bool Transform::operator!=(const Transform& b) const {
+	bool Transform::operator!=(const Transform& b) {
 		return this != &b;
 	}
 
@@ -418,7 +418,7 @@ namespace geeL {
 	}
 
 
-	std::string Transform::toString() const {
+	std::string Transform::toString() {
 		return "Transform " + name + ": " + std::to_string(id) + "\n"
 			+ "--Position: " + VectorExtension::vectorString(position) + "\n"
 			+ "--Rotation: " + VectorExtension::vectorString(glm::eulerAngles(rotation)) + "\n"

@@ -85,9 +85,9 @@ namespace geeL {
 		//Needs therefore only to be called when actual changes were made.
 		virtual void update();
 
-		bool Transform::operator==(const Transform& b) const;
-		bool Transform::operator!=(const Transform& b) const;
-		Transform& operator= (const Transform& other);
+		virtual bool operator==(const Transform& b);
+		virtual bool operator!=(const Transform& b);
+		virtual Transform& operator= (const Transform& other);
 
 		unsigned int getID() const;
 
@@ -96,7 +96,7 @@ namespace geeL {
 		virtual const std::string& getName();
 		virtual void setName(const std::string& name);
 
-		virtual std::string toString() const;
+		virtual std::string toString();
 
 	protected:
 		glm::quat rotation;

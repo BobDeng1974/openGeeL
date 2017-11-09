@@ -959,6 +959,9 @@
     <ClInclude Include="main\characterviewer.h">
       <Filter>main</Filter>
     </ClInclude>
+    <ClInclude Include="application\appglobals.h">
+      <Filter>application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\lighting.vert">

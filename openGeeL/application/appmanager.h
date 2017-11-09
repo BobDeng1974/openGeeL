@@ -1,8 +1,8 @@
 #ifndef APPLICATIONMANAGER_H
 #define APPLICATIONMANAGER_H
-#define MULTI_APPLICATION_SUPPORT 0
 
 #include <list>
+#include "appglobals.h"
 
 namespace geeL {
 

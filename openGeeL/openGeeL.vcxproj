@@ -284,6 +284,7 @@
     <ClCompile Include="renderer\window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="application\appglobals.h" />
     <ClInclude Include="application\application.h" />
     <ClInclude Include="application\appmanager.h" />
     <ClInclude Include="application\configuration.h" />

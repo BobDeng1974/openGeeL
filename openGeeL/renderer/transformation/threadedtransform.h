@@ -1,6 +1,8 @@
 #ifndef THREADEDTRANSFORM_H
 #define THREADEDTRANSFORM_H
 
+
+
 #include <functional>
 #include <mutex>
 #include "transform.h"
@@ -26,6 +28,7 @@ namespace geeL {
 
 		virtual void setPosition(const vec3& position);
 		virtual void setRotation(const glm::quat& quaternion);
+		virtual void setForward(const vec3& value);
 		virtual void setScaling(const vec3& scaling);
 		virtual void setMatrix(const mat4& matrix);
 
@@ -49,37 +52,18 @@ namespace geeL {
 		virtual void update();
 		virtual void addChangeListener(std::function<void(const Transform&)> listener);
 
+		virtual bool operator==(const Transform& b);
+		virtual bool operator!=(const Transform& b);
+		virtual Transform& operator= (const Transform& other);
+
 		virtual const std::string& getName();
 		virtual void setName(std::string& name);
+		virtual std::string toString();
 
 	private:
 		std::recursive_mutex mutex;
 
-		void mutexWrap(std::function<void(Transform&)> function);
-
-		template<typename T>
-		T mutexWrap(std::function<T(Transform&)> function);
-
-		template<typename T>
-		const T& mutexWrapRef(std::function<const T&(Transform&)> function);
-
-
 	};
-
-
-	template<typename T>
-	inline T ThreadedTransform::mutexWrap(std::function<T(Transform&)> function) {
-		std::lock_guard<std::recursive_mutex> guard(mutex);
-
-		return function(*this);
-	}
-
-	template<typename T>
-	inline const T& ThreadedTransform::mutexWrapRef(std::function<const T&(Transform&)> function) {
-		std::lock_guard<std::recursive_mutex> guard(mutex);
-
-		return function(*this);
-	}
 
 
 }
