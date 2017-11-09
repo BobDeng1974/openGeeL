@@ -43,8 +43,9 @@ namespace geeL {
 		voxelStructure.bind(shader);
 
 		shader.bind<float>(farPlaneLocation, scene.getCamera().getFarPlane());
-		shader.bind<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());
 		shader.bind<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
+
+		camera->bindInverseViewMatrix(shader, invViewLocation);
 	}
 
 	void VoxelConeTracer::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {

@@ -27,7 +27,7 @@ namespace geeL {
 	}
 
 	void SSRR::bindValues() {
-		shader.bind<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
+		camera->bindProjectionMatrix(shader, projectionLocation);
 	}
 
 	void SSRR::addWorldInformation(map<WorldMaps, const Texture*> maps) {

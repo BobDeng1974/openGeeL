@@ -7,6 +7,7 @@
 #include <vec3.hpp>
 #include <mat4x4.hpp>
 #include "utility/screeninfo.h"
+#include "objectwrapper.h"
 #include "sceneobject.h"
 
 
@@ -16,6 +17,10 @@ namespace geeL {
 	class Transform;
 	class RenderShader;
 	class SceneShader;
+	class Shader;
+
+	typedef int ShaderLocation;
+
 
 
 	//Base class for all camera objects that contains only transformational information
@@ -26,9 +31,16 @@ namespace geeL {
 		ScreenInfo info;
 		glm::vec3 center;
 
-		const glm::mat4& getViewMatrix() const;
-		const glm::mat4& getInverseViewMatrix() const;
-		const glm::mat4& getProjectionMatrix() const;
+		glm::mat4 getViewMatrix() const;
+		glm::mat4 getInverseViewMatrix() const;
+		glm::mat4 getProjectionMatrix() const;
+
+		void bindViewMatrix(const Shader& shader, ShaderLocation location) const;
+		void bindViewMatrix(const Shader& shader, const std::string& name) const;
+		void bindInverseViewMatrix(const Shader& shader, ShaderLocation location) const;
+		void bindInverseViewMatrix(const Shader& shader, const std::string& name) const;
+		void bindProjectionMatrix(const Shader& shader, ShaderLocation location) const;
+		void bindProjectionMatrix(const Shader& shader, const std::string& name) const;
 
 		void bind(const SceneShader& shader) const;
 		void bindPosition(const RenderShader& shader, std::string name = "cameraPosition") const;
@@ -45,9 +57,15 @@ namespace geeL {
 
 		const glm::vec3& GetOriginInViewSpace() const;
 
+		void setViewMatrix(const glm::mat4& view);
+		void setProjectionMatrix(const glm::mat4& projection);
+
 	protected:
+		mutable std::mutex cameraMutex;
+
 		Camera(Transform& transform, const std::string& name = "Camera");
 
+	private:
 		glm::vec3 originViewSpace;
 		glm::mat4 viewMatrix;
 		glm::mat4 inverseView;
@@ -62,9 +80,6 @@ namespace geeL {
 	public:
 		SimpleCamera(Transform& transform, const std::string&name = "Camera");
 
-		void setViewMatrix(const glm::mat4& view);
-		void setProjectionMatrix(const glm::mat4& projection);
-
 	};
 
 
@@ -75,15 +90,11 @@ namespace geeL {
 		//Defines a movable camera
 		SceneCamera(Transform& transform, float nearClip, float farClip, const std::string& name = "Camera");
 
-
 		//Update view and projection matrices
 		virtual void lateUpdate();
 
 		//Update position and depth of center pixel of camera view
 		void updateDepth(const ScreenInfo& info);
-
-		const glm::vec3& getPosition() const;
-		const glm::vec3& getDirection() const;
 
 		const float getNearPlane() const;
 		const float getFarPlane() const;
@@ -91,22 +102,25 @@ namespace geeL {
 		void setNearPlane(float near);
 		void setFarPlane(float far);
 
-		void addViewingPlaneChangeListener(std::function<void(float, float)> listener);
-		void removeViewingPlaneChangeListener(std::function<void(float, float)> listener);
+		//Add change listener that will be called when properties (no transformation)
+		//of this camera change
+		void addChangeListener(std::function<void(const SceneCamera&)> listener);
 
 		//Returns view borders for given frustum 
 		virtual std::vector<glm::vec3> getViewBorders(float near, float far) const = 0;
 
 	protected:
-		float nearClip, farClip;
-		std::list<std::function<void(float, float)>> callbacks;
+		AtomicWrapper<float> nearClip, farClip;
+		std::list<std::function<void(const SceneCamera&)>> callbacks;
 
-		glm::mat4 computeViewMatrix() const;
-		virtual glm::mat4 computeProjectionMatrix() const = 0;
+		void computeViewMatrix();
+		virtual void computeProjectionMatrix() = 0;
 
 		void onViewingPlaneChange();
 
 	};
+
+
 }
 
 #endif

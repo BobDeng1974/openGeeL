@@ -145,7 +145,7 @@ namespace geeL {
 	}
 
 	void SSAO::bindValues() {
-		shader.bind<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
+		camera->bindProjectionMatrix(shader, projectionLocation);
 	}
 
 	void SSAO::addWorldInformation(map<WorldMaps, const Texture*> maps) {

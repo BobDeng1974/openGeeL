@@ -43,8 +43,8 @@ namespace geeL {
 	}
 
 	void VolumetricLight::bindValues() {
-		shader.bind<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());
-		shader.bind<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
+		camera->bindProjectionMatrix(shader, projectionLocation);
+		camera->bindInverseViewMatrix(shader, invViewLocation);
 
 		light.bind(shader, "light.", ShaderTransformSpace::View, camera);
 		shader.bind<int>("lightActive", light.isActive());

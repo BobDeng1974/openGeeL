@@ -26,7 +26,8 @@ namespace geeL {
 
 	void ImageBasedLighting::bindValues() {
 		scene.getLightmanager().bindReflectionProbes(*camera, shader, ShaderTransformSpace::View);
-		shader.bind<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());
+		camera->bindInverseViewMatrix(shader, invViewLocation);
+
 		shader.bind<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
 	}
 

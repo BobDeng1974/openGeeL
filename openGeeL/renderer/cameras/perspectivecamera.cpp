@@ -14,12 +14,12 @@ namespace geeL {
 		float nearClip, float farClip, std::string name) : SceneCamera(transform, nearClip, farClip, name), FOV(fov), 
 			currentFOV(fov), width(float(width)), height(float(height)), aspectRatio(float(width) / float(height)) {
 	
-		projectionMatrix = std::move(computeProjectionMatrix());
+		computeProjectionMatrix();
 	}
 
 
-	mat4 PerspectiveCamera::computeProjectionMatrix() const {
-		return perspective(currentFOV, aspectRatio, nearClip, farClip);
+	void PerspectiveCamera::computeProjectionMatrix()  {
+		setProjectionMatrix(perspective(currentFOV(), aspectRatio(), nearClip(), farClip()));
 	}
 
 	
@@ -31,7 +31,7 @@ namespace geeL {
 	void PerspectiveCamera::setFieldOfView(float fov) {
 		if (fov > 1.f && fov < 170.f) {
 			currentFOV = fov;
-			projectionMatrix = std::move(computeProjectionMatrix());
+			computeProjectionMatrix();
 		}
 			
 	}

@@ -20,8 +20,8 @@ namespace geeL {
 
 		mat4 view = mat4(mat3(camera.getViewMatrix()));
 		shader.bind<glm::mat4>("view", view);
-		shader.bind<glm::mat4>("projection", camera.getProjectionMatrix());
-		
+		camera.bindProjectionMatrix(shader, "projection");
+
 		cubeMap.bindMap(shader, "skybox");
 
 		SCREENCUBE.drawComplete();

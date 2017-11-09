@@ -145,8 +145,9 @@ namespace geeL {
 		prevPosition = currPosition;
 
 		shader.bind<glm::vec3>("defaultOffset", offset);
-		shader.bind<glm::mat4>("projection", camera->getProjectionMatrix());
 		shader.bind<glm::vec3>("origin", camera->GetOriginInViewSpace());
+
+		camera->bindProjectionMatrix(shader, "projection");
 	}
 
 	void VelocityBuffer::draw() {

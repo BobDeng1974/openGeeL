@@ -267,7 +267,7 @@ namespace geeL {
 
 		if (forceGamma) shader.bind<int>("gammaCorrection", true);
 
-		shader.bind<glm::mat4>("projection", camera.getProjectionMatrix());
+		camera.bindProjectionMatrix(shader, "projection");
 		shader.bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
 
 		drawObjects(shader, &camera);
@@ -281,7 +281,7 @@ namespace geeL {
 
 		iterRenderObjects(shadingMethod, [this, &camera, &currentShader](const MeshRenderer& object, SceneShader& shader) {
 			if (currentShader != &shader) {
-				shader.bind<glm::mat4>("projection", camera.getProjectionMatrix());
+				camera.bindProjectionMatrix(shader, "projection");
 				shader.bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
 
 				pipeline.dynamicBind(lightManager, shader, camera);
@@ -310,8 +310,8 @@ namespace geeL {
 
 		iterRenderObjects(shadingMethod, [this, &camera, &currentShader](const MeshRenderer& object, SceneShader& shader) {
 			if (currentShader != &shader) {
-				shader.bind<glm::mat4>("projection", camera.getProjectionMatrix());
-				shader.bind<glm::mat4>("inverseView", camera.getInverseViewMatrix());
+				camera.bindProjectionMatrix(shader, "projection");
+				camera.bindInverseViewMatrix(shader, "inverseView");
 				shader.bind<glm::vec3>("origin", camera.GetOriginInViewSpace());
 
 				pipeline.dynamicBind(lightManager, shader, camera);
@@ -364,8 +364,8 @@ namespace geeL {
 			SceneShader& shader = *it->second;
 
 			if (currentShader != &shader) {
-				shader.bind<glm::mat4>("projection", camera.getProjectionMatrix());
-				shader.bind<glm::mat4>("inverseView", camera.getInverseViewMatrix());
+				camera.bindProjectionMatrix(shader, "projection");
+				camera.bindInverseViewMatrix(shader, "inverseView");
 				shader.bind<glm::vec3>("origin", camera.GetOriginInViewSpace());
 
 				pipeline.dynamicBind(lightManager, shader, camera);

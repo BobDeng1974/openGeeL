@@ -32,8 +32,9 @@ namespace geeL {
 	void DeferredLighting::bindValues() {
 		scene.getLightmanager().bind(shader, ShaderTransformSpace::View, camera);
 
-		shader.bind<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
-		shader.bind<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());
+		camera->bindProjectionMatrix(shader, projectionLocation);
+		camera->bindInverseViewMatrix(shader, invViewLocation);
+
 		shader.bind<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
 	}
 
@@ -79,8 +80,9 @@ namespace geeL {
 	void TiledDeferredLighting::bindValues() {
 		scene.getLightmanager().bind(shader, ShaderTransformSpace::View, camera);
 
-		shader.bind<glm::mat4>(projectionLocation, camera->getProjectionMatrix());
-		shader.bind<glm::mat4>(invViewLocation, camera->getInverseViewMatrix());
+		camera->bindProjectionMatrix(shader, projectionLocation);
+		camera->bindInverseViewMatrix(shader, invViewLocation);
+
 		shader.bind<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
 	}
 
