@@ -156,6 +156,28 @@ namespace geeL {
 		}
 	}
 
+	void Transform::setForward(const vec3& value) {
+		forward = value;
+		right = glm::cross(up, value);
+		up = glm::cross(value, right);
+
+		rotationMatrix[0][0] = right.x;
+		rotationMatrix[0][1] = right.y;
+		rotationMatrix[0][2] = right.z;
+
+		rotationMatrix[1][0] = forward.x;
+		rotationMatrix[1][1] = forward.y;
+		rotationMatrix[1][2] = forward.z;
+
+		rotationMatrix[2][0] = up.x;
+		rotationMatrix[2][1] = up.y;
+		rotationMatrix[2][2] = up.z;
+
+		rotation = glm::toQuat(rotationMatrix);
+
+		status = TransformUpdateStatus::NeedsUpdate;
+	}
+
 	void Transform::setMatrix(const mat4& matrix) {
 		if (isStatic) return;
 
@@ -198,6 +220,7 @@ namespace geeL {
 		status = TransformUpdateStatus::NeedsUpdate;
 	}
 
+	
 	void Transform::setEulerAnglesInternal(const vec3& eulerAngles) {
 		rotation = glm::quat(vec3(glm::radians(eulerAngles.x),
 			glm::radians(eulerAngles.y),

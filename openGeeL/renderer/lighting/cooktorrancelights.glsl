@@ -26,11 +26,14 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal,
 	float travel = 0.f;
 	float shadow = 1.f - light.shadowIntensity * calculatePointLightShadows(index, normal, fragPosition, travel);
 
-	//vec3 sss = subsurfaceScatteringBack(fragPosition, normal, viewDirection, albedo, 
-	//	light.position, light.diffuse, roughness, metallic, travel);
+#if (SUBSURFACE_SCATTERING == 1)
+	vec3 sss = subsurfaceScatteringBack(fragPosition, normal, viewDirection, albedo, 
+		light.position, light.diffuse, roughness, metallic, travel);
 
-	 //return shadow * reflectance + sss;
+	return shadow * reflectance + sss;
+#else
 	 return shadow * reflectance;
+#endif
 }
 
 vec3 calculateSpotLight(int index, SpotLight light, vec3 normal, 

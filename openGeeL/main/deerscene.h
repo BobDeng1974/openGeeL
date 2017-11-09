@@ -48,7 +48,7 @@ public:
 				container.setFloatValue("Metallic", 0.2f);
 			});
 
-
+			
 			BilateralFilter& blur = BilateralFilter(4.f, 0.291f);
 			SSAO& ssao = SSAO(blur, 0.5f);
 			renderer.addEffect(ssao);
@@ -60,8 +60,8 @@ public:
 			renderer.addEffect(ibl, ibl);
 
 			GaussianBlur& blur4 = GaussianBlur();
-			SSRR& ssrr = SSRR();
-			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.8f, 0.8f);
+			SSRR& ssrr = SSRR(75, 0.01f);
+			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.6f, 0.6f);
 			renderer.addEffect(ssrrSmooth, ssrr);
 			scene.addRequester(ssrr);
 
@@ -71,7 +71,6 @@ public:
 
 			FXAA& fxaa = FXAA(0.f, 0.f);
 			renderer.addEffect(fxaa, DrawTime::Late);
-
 
 			app.run();
 		};

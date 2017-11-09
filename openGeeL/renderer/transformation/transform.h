@@ -50,6 +50,7 @@ namespace geeL {
 
 		virtual void setPosition(const vec3& position);
 		virtual void setRotation(const glm::quat& quaternion);
+		virtual void setForward(const vec3& value);
 		virtual void setScaling(const vec3& scaling);
 		virtual void setMatrix(const mat4& matrix);
 

@@ -19,12 +19,13 @@ public:
 			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
 
 
-			Transform& cameraTransform = transformFactory.CreateTransform(vec3(-0.98f, -3.16f, 4.3f), vec3(71.8f, -27.7f, 178.f), vec3(1.f));
+			Transform& cameraTransform = transformFactory.CreateTransform(vec3(1.3f, -3.58f, 4.11f), vec3(78.13f, 44.83f, -174.44f), vec3(1.f));
 			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 80.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
 			camera.addComponent<MovableCamera>(MovableCamera(5.f, 0.45f));
 			scene.setCamera(camera);
 
-			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/03-Ueno-Shrine_3k.hdr");
+			//EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/03-Ueno-Shrine_3k.hdr");
+			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/TropicalRuins_3k.hdr");
 			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeMapFactory.getBuffer(), 1024);
 			IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
@@ -33,7 +34,7 @@ public:
 			lightManager.addReflectionProbe(iblMap);
 
 
-			float lightIntensity = 40.f;
+			float lightIntensity = 27.f;
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-0.5f, -2.9f, 3), vec3(-180.0f, 0, -50), vec3(1.f), true);
 			ShadowMapConfiguration config = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Huge, 6.f, 15U, 150.f);
 			lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config);
@@ -43,7 +44,7 @@ public:
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Huge, 6.f, 15U, 150.f, 1.f);
 			lightManager.addPointLight(lightTransform21, glm::vec3(lightIntensity * 3.f, lightIntensity * 59.f, lightIntensity * 43.f), config2);
 
-			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(20.f, 0.2f, 20.f));
+			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(100.f, 0.2f, 100.f));
 			MeshRenderer& plane = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/plane.obj"),
 				meshTransform2, CullingMode::cullFront, "Floor");
 
@@ -57,7 +58,7 @@ public:
 			plane.iterateMaterials([&](MaterialContainer& container) {
 				container.setFloatValue("Roughness", 0.25f);
 				container.setFloatValue("Metallic", 0.f);
-				container.setFloatValue("Transparency", 0.5f);
+				container.setFloatValue("Transparency", 0.65f);
 			});
 
 
@@ -65,8 +66,8 @@ public:
 				SceneShader& forwardShader = materialFactory.getDefaultShader(ShadingMethod::Forward);
 				SceneShader& transparentShader = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
 				
-				forwardShader.bind<float>("fogFalloff", 9.f);
-				transparentShader.bind<float>("fogFalloff", 9.f);
+				forwardShader.bind<float>("fogFalloff", 15.f);
+				transparentShader.bind<float>("fogFalloff", 15.f);
 			}
 			
 
@@ -77,8 +78,7 @@ public:
 
 
 			girl.iterateMeshes([&](const Mesh& mesh) {
-				if (mesh.getName() == "eyelash" || mesh.getName() == "fur"
-					/*|| mesh.getName() == "g hair_outer" || mesh.getName() == "g hair_inner"*/) {
+				if (mesh.getName() == "eyelash" || mesh.getName() == "fur") {
 
 					girl.setRenderMask(RenderMask::Empty, mesh);
 
@@ -92,7 +92,7 @@ public:
 			girl.iterateMaterials([&](MaterialContainer& container) {
 				if (container.name == "fur") {
 					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/fur_alpha_01.jpg"));
-					container.setFloatValue("Transparency", 0.35f);
+					container.setFloatValue("Transparency", 0.5f);
 				}
 				else if (container.name == "eyelash")
 					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/eyelash_alpha_01.jpg"));
@@ -102,7 +102,7 @@ public:
 					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/hair_outer_alpha_01.jpg"));
 				else if (container.name == "cloth") {
 					container.addTexture("emission", materialFactory.CreateTexture("resources/girl/cloth_spec_01.jpg", ColorType::GammaSpace));
-					container.addTexture("occlusion", materialFactory.CreateTexture("resources/girl/cloth_ao_01.jpg"));
+					container.addTexture("occlusion", materialFactory.CreateTexture("resources/girl/cloth_ao_01.jpg", ColorType::GammaSpace));
 					container.setVectorValue("Emissivity", vec3(50.f));
 					container.setFloatValue("Roughness", 0.5f);
 					container.setFloatValue("Metallic", 1.f);
@@ -110,8 +110,8 @@ public:
 				else if (container.name == "light")
 					container.setVectorValue("Emissivity", vec3(100.f));
 				else if (container.name == "body") {
-					container.addTexture("occlusion", materialFactory.CreateTexture("resources/girl/body_ao_01.jpg"));
-					container.setFloatValue("Roughness", 0.7f);
+					container.addTexture("occlusion", materialFactory.CreateTexture("resources/girl/body_ao_01.jpg", ColorType::GammaSpace));
+					container.setFloatValue("Roughness", 0.55f);
 				}
 			});
 
@@ -124,7 +124,7 @@ public:
 			gui.addSystemInformation(0.01f, 0.74f, 0.17f, 0.145f);
 
 
-			def.setExposure(2.f);
+			def.setExposure(1.5f);
 			postLister.add(def);
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
@@ -132,8 +132,17 @@ public:
 			renderer.addEffect(ibl, DrawTime::Early, ibl);
 			postLister.add(iblSnippet);
 
+			BrightnessFilterCutoff& filter = BrightnessFilterCutoff(1.f);
+			GaussianBlur& bloomBlur = GaussianBlur(KernelSize::Large, 3.f);
+			Bloom& bloom = Bloom(filter, bloomBlur, 0.5f, 0.5f);
+			renderer.addEffect(bloom, DrawTime::Late);
+			postLister.add(bloom);
+
+			GaussianBlurSnippet snipsnip(bloomBlur);
+			postLister.add(snipsnip);
+
 			BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
-			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 100);
+			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 20);
 			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
 			GodRaySnippet& godRaySnippet = GodRaySnippet(ray);
 			renderer.addEffect(raySmooth, DrawTime::Late);
@@ -142,31 +151,18 @@ public:
 
 			MotionBlur& motionBlur = MotionBlur(0.3f, 20);
 			MotionBlurSnippet& mSnippet = MotionBlurSnippet(motionBlur);
-			renderer.addEffect(motionBlur, DrawTime::Late);
+			//renderer.addEffect(motionBlur, DrawTime::Late);
 			scene.addRequester(motionBlur);
 			postLister.add(mSnippet);
 
-			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.4f, 155.f);
-			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 25.f, camera.getFarPlane(), 1.f);
-			//renderer.addEffect(dof, dof);
-			//postLister.add(dof);
+			//Fake subsurface scattering with bilateral filter
+			BilateralFilter& sss = BilateralFilter(2.f, 0.1f);
+			BilateralFilterSnippet sssSnippet(sss);
+			AdditiveWrapper& additiveSSS = AdditiveWrapper(sss);
+			renderer.addEffect(additiveSSS);
+			postLister.add(sssSnippet);
+			additiveSSS.setRenderMask(RenderMask::Skin);
 
-			BrightnessFilterCutoff& filter = BrightnessFilterCutoff(1.f);
-			GaussianBlur& bloomBlur = GaussianBlur(KernelSize::Large, 3.f);
-			Bloom& bloom = Bloom(filter, bloomBlur, 1.f, 0.7f);
-			renderer.addEffect(bloom, DrawTime::Late);
-			postLister.add(bloom);
-
-			GaussianBlurSnippet snipsnip(bloomBlur);
-			postLister.add(snipsnip);
-
-			ColorCorrection& colorCorrect = ColorCorrection();
-			colorCorrect.setDistortionDirection(glm::vec2(1.f, 0.f));
-			colorCorrect.setChromaticDistortion(glm::vec3(0.0002f, -0.0002f, 0.f));
-			AdditiveWrapper& additiveColor = AdditiveWrapper(colorCorrect);
-			renderer.addEffect(additiveColor, DrawTime::Late);
-			postLister.add(colorCorrect);
-			additiveColor.setRenderMask(RenderMask::Skin);
 
 			FXAA& fxaa = FXAA(0.001f, 0.f);
 			renderer.addEffect(fxaa, DrawTime::Late);
