@@ -34,8 +34,11 @@ namespace geeL {
 		shader.bind<float>("strength", strength);
 
 		Resolution filterRes = Resolution(parentBuffer->getResolution(), filterResolution);
-		filterTexture = new RenderTexture(filterRes, ColorType::RGB16, 
-			WrapMode::Repeat, FilterMode::Linear);
+		if (filterTexture == nullptr)
+			filterTexture = new RenderTexture(filterRes, ColorType::RGB16,
+				WrapMode::Repeat, FilterMode::Linear);
+		else
+			filterTexture->resize(filterRes);
 
 		filter.init(PostProcessingParameter(parameter, filterRes));
 

@@ -78,8 +78,11 @@ namespace geeL {
 		blur.bindDoFData(dist, aperture, farDistance);
 
 		Resolution blurRes = Resolution(parentBuffer->getResolution(), blurResolution);
-		blurTexture = new RenderTexture(blurRes, ColorType::RGB16, 
-			WrapMode::ClampEdge, FilterMode::Linear);
+		if (blurTexture == nullptr)
+			blurTexture = new RenderTexture(blurRes, ColorType::RGB16,
+				WrapMode::ClampEdge, FilterMode::Linear);
+		else
+			blurTexture->resize(blurRes);
 
 		blur.init(PostProcessingParameter(parameter, blurRes));
 		addTextureSampler(*blurTexture, "blurredImage");

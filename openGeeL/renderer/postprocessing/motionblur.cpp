@@ -89,8 +89,11 @@ namespace geeL {
 
 		float res = 1.f;
 		Resolution velocityRes = Resolution(parentBuffer->getResolution(), 1.f);
-		velocityTexture = new RenderTexture(velocityRes,
-			ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::Linear);
+		if (velocityTexture == nullptr)
+			velocityTexture = new RenderTexture(velocityRes,
+				ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::Linear);
+		else
+			velocityTexture->resize(velocityRes);
 
 		velocity.init(PostProcessingParameter(parameter, velocityRes));
 
@@ -118,8 +121,11 @@ namespace geeL {
 		PostProcessingEffectFS::init(parameter);
 
 		Resolution positionRes = Resolution(parentBuffer->getResolution(), 1.f);
-		positionTexture = new RenderTexture(positionRes, ColorType::RGBA16, 
-			WrapMode::ClampEdge, FilterMode::Linear);
+		if (positionTexture == nullptr)
+			positionTexture = new RenderTexture(positionRes, ColorType::RGBA16,
+				WrapMode::ClampEdge, FilterMode::Linear);
+		else
+			positionTexture->resize(positionRes);
 
 		prevPositionEffect.init(PostProcessingParameter(parameter, positionRes));
 

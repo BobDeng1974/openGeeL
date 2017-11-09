@@ -35,8 +35,8 @@ namespace geeL {
 
 	DeferredRenderer::DeferredRenderer(RenderWindow& window, SceneRender& lighting,
 		RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer)
-			: Renderer(window, context), gBuffer(gBuffer), ssao(nullptr), lighting(lighting), 
-				toggle(0), defaultEffect(def), fallbackEffect("renderer/shaders/screen.frag") {
+			: Renderer(window, context), gBuffer(gBuffer), ssao(nullptr), fBuffer(nullptr), tBuffer(nullptr), 
+				lighting(lighting), toggle(0), defaultEffect(def), fallbackEffect("renderer/shaders/screen.frag") {
 
 		init();
 	}
@@ -333,7 +333,9 @@ namespace geeL {
 
 	void DeferredRenderer::indexEffects() {
 		RenderTexture* lastImage = indexEffectList(earlyEffects, texture1);
-		fBuffer->setColorTexture(*lastImage);
+
+		if(fBuffer != nullptr)
+			fBuffer->setColorTexture(*lastImage);
 
 		lastImage = indexEffectList(intermediateEffects, lastImage);
 		lastImage = indexEffectList(lateEffects, lastImage);

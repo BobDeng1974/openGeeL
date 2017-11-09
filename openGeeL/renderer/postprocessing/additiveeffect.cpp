@@ -65,8 +65,11 @@ namespace geeL {
 
 		effect.init(PostProcessingParameter(parameter, parameter.resolution));
 
-		tempTexture = new RenderTexture(parameter.resolution, ColorType::RGB16,
-			WrapMode::ClampEdge, FilterMode::Linear);
+		if (tempTexture == nullptr)
+			tempTexture = new RenderTexture(parameter.resolution, ColorType::RGB16,
+				WrapMode::ClampEdge, FilterMode::Linear);
+		else
+			tempTexture->resize(parameter.resolution);
 
 		PostProcessingEffectFS::setImage(*tempTexture);
 	}
