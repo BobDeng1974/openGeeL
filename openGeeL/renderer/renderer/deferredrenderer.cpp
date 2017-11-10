@@ -80,10 +80,11 @@ namespace geeL {
 
 	void DeferredRenderer::draw() {
 		DepthGuard::enable(true);
-
 		Viewport::setForced(0, 0, window->resolution.getWidth(), window->resolution.getHeight());
-		scene->lock();
 
+		//Update scene and forward information into objects and effects
+		
+		scene->lock();
 
 		for (auto it(renderTextures.begin()); it != renderTextures.end(); it++) {
 			DynamicRenderTexture& texture = **it;
@@ -92,6 +93,12 @@ namespace geeL {
 
 		scene->updateCamera();
 		scene->getLightmanager().update(*scene, &scene->getCamera());
+		scene->updateBindings();
+		updateEffectBindings();
+
+		scene->unlock();
+
+		//Draw all objects and effects
 
 		//Geometry pass
 		gBuffer.fill(geometryPassFunction);
@@ -146,10 +153,13 @@ namespace geeL {
 		//Draw the last (default) effect to screen.
 		defaultEffect.draw();
 
-		scene->unlock();
 
 		//Render GUI overlay on top of final image
-		if (gui != nullptr) gui->draw();
+		if (gui != nullptr) {
+			scene->lock();
+			gui->draw();
+			scene->unlock();
+		}
 
 	}
 
@@ -192,7 +202,7 @@ namespace geeL {
 
 
 	void DeferredRenderer::lightingPass() {
-		lighting.bindValues();
+		//lighting.bindValues();
 		lighting.draw();
 
 		//Draw skybox directly alongside the lighting
@@ -371,7 +381,7 @@ namespace geeL {
 			RenderTexture& texture = *it->first;
 
 			stackBuffer.push(texture);
-			effect.bindValues();
+			//effect.bindValues();
 			effect.fill();
 		}
 
@@ -382,6 +392,32 @@ namespace geeL {
 		}
 		
 		return lastTexture;
+	}
+
+	void DeferredRenderer::updateEffectBindings() {
+		lighting.bindValues();
+		defaultEffect.bindValues();
+
+		for (auto it(externalEffects.begin()); it != externalEffects.end(); it++) {
+			PostProcessingEffect& effect = *it->second;
+			effect.bindValues();
+		}
+
+		for (auto it(earlyEffects.begin()); it != earlyEffects.end(); it++) {
+			PostProcessingEffect& effect = *it->second;
+			effect.bindValues();
+		}
+
+		for (auto it(intermediateEffects.begin()); it != intermediateEffects.end(); it++) {
+			PostProcessingEffect& effect = *it->second;
+			effect.bindValues();
+		}
+
+		for (auto it(lateEffects.begin()); it != lateEffects.end(); it++) {
+			PostProcessingEffect& effect = *it->second;
+			effect.bindValues();
+		}
+
 	}
 
 	void DeferredRenderer::indexEffect(PostEffectRender& current, PostEffectRender* previous, RenderTexture* firstTexture) {

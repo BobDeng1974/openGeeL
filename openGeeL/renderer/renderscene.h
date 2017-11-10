@@ -64,6 +64,7 @@ namespace geeL {
 		void iterRenderObjects(SceneShader& shader, std::function<void(const MeshRenderer&)> function) const;
 		void iterRenderObjects(ShadingMethod shadingMethod, 
 			std::function<void(const MeshRenderer&, SceneShader&)> function) const;
+		void iterShaders(std::function<void(SceneShader&)> function);
 
 
 		//Returns amount of contained objects that are drawn by given shading method
@@ -121,8 +122,11 @@ namespace geeL {
 		//Tick function that updates scene information of current frame
 		virtual void run();
 		
+		//Update bindings of all contained shaders
+		void updateBindings();
+
 		//Draw all objects whose materials have given shading method
-		void draw(ShadingMethod shadingMethod, const Camera& camera) const;
+		void draw(ShadingMethod shadingMethod, const Camera& camera, bool updateBindings = false) const;
 
 		//Draw all those objects with default material (Deferred shading)
 		void drawDefault() const;
@@ -192,7 +196,8 @@ namespace geeL {
 		const MaterialFactory& materialFactory;
 		std::mutex mutex;
 
-		void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera) const;
+		void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera, 
+			bool updateBindings = false) const;
 
 	};
 

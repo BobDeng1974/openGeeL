@@ -106,10 +106,12 @@ namespace geeL {
 
 		RenderTexture* indexEffectList(std::vector<PostEffectRender>& effects, RenderTexture* firstTexture);
 		RenderTexture* drawEffects(std::vector<PostEffectRender>& effects, RenderTexture* lastTexture);
+		
+		//Update shader bindings of all contained post effects
+		void updateEffectBindings();
 
 		void lightingPass();
 		bool hasForwardPass() const;
-
 
 	};
 

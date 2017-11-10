@@ -239,13 +239,21 @@ namespace geeL {
 		unlock();
 	}
 
+	void RenderScene::updateBindings() {
+		iterShaders([this](SceneShader& shader) {
+			pipeline.dynamicBind(lightManager, shader, *camera);
+		});
+	}
+
 	
-	void RenderScene::draw(ShadingMethod shadingMethod, const Camera& camera) const {
+	void RenderScene::draw(ShadingMethod shadingMethod, const Camera& camera, bool updateBinding) const {
 		SceneShader* currentShader = nullptr;
 
-		iterRenderObjects(shadingMethod, [this, &camera, &currentShader](const MeshRenderer& object, SceneShader& shader) {
+		iterRenderObjects(shadingMethod, [this, &camera, &currentShader, &updateBinding]
+			(const MeshRenderer& object, SceneShader& shader) {
+
 			if (currentShader != &shader) {
-				pipeline.dynamicBind(lightManager, shader, camera);
+				if(updateBinding) pipeline.dynamicBind(lightManager, shader, camera);
 				pipeline.drawingBind(shader);
 				currentShader = &shader;
 			}
@@ -261,11 +269,11 @@ namespace geeL {
 
 	void RenderScene::drawDefault(const Camera& camera) const {
 		//Only bind camera if it is external since the scene 
-		//camera was already bound during update process 
-		if (&camera != this->camera)
-			pipeline.bindCamera(camera);
+		//camera was already bound during update process
+		bool externalCamera = &camera != this->camera;
+		if (externalCamera) pipeline.bindCamera(camera);
 
-		draw(ShadingMethod::Deferred, camera);
+		draw(ShadingMethod::Deferred, camera, externalCamera);
 	}
 
 	void RenderScene::drawGenericForced(const Camera& camera, bool forceGamma) const {
@@ -284,10 +292,12 @@ namespace geeL {
 	}
 
 	void RenderScene::drawGeneric(const Camera& camera) const {
+		bool externalCamera = &camera != this->camera;
+
 		BlendGuard blend;
 		blend.blendAlpha();
 
-		draw(ShadingMethod::Generic, camera);
+		draw(ShadingMethod::Generic, camera, externalCamera);
 	}
 
 	void RenderScene::drawForward() const {
@@ -295,11 +305,13 @@ namespace geeL {
 	}
 
 	void RenderScene::drawForward(const Camera & camera) const {
-		draw(ShadingMethod::Forward, camera);
+		bool externalCamera = &camera != this->camera;
+
+		draw(ShadingMethod::Forward, camera, externalCamera);
 	}
 
 
-	void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera) const {
+	void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera, bool updateBindings) const {
 		using MSPair = pair<const MeshRenderer*, SceneShader*>;
 
 		SceneShader* currentShader = nullptr;
@@ -330,7 +342,7 @@ namespace geeL {
 			SceneShader& shader = *it->second;
 
 			if (currentShader != &shader) {
-				pipeline.dynamicBind(lightManager, shader, camera);
+				if(updateBindings) pipeline.dynamicBind(lightManager, shader, camera);
 				pipeline.drawingBind(shader);
 				currentShader = &shader;
 			}
@@ -355,7 +367,9 @@ namespace geeL {
 	}
 
 	void RenderScene::drawTransparentOID(const Camera & camera) const {
-		draw(ShadingMethod::TransparentOID, camera);
+		bool externalCamera = &camera != this->camera;
+
+		draw(ShadingMethod::TransparentOID, camera, externalCamera);
 	}
 
 
@@ -476,6 +490,17 @@ namespace geeL {
 					const MeshRenderer& object = *ut->second;
 					function(object, shader);
 				}
+			}
+		}
+	}
+
+	void Scene::iterShaders(std::function<void(SceneShader&)> function) {
+		for (auto itMethod(renderObjects.begin()); itMethod != renderObjects.end(); itMethod++) {
+			const ShaderMapping& shaders = itMethod->second;
+			
+			for (auto itShader(shaders.begin()); itShader != shaders.end(); itShader++) {
+				SceneShader& shader = *itShader->first;
+				function(shader);
 			}
 		}
 	}
