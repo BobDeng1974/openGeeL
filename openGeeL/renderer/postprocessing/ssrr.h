@@ -13,6 +13,8 @@ namespace geeL {
 		SSRR(unsigned int stepCount = 60, float stepSize = 0.2f, float stepSizeGain = 1.02f);
 
 		virtual void init(const PostProcessingParameter& parameter);
+		virtual void bindValues();
+
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 		unsigned int getStepCount() const;
@@ -28,9 +30,7 @@ namespace geeL {
 
 	protected:
 		SSRR(std::string fragmentPath, int sampleCount = 60, float sampleSize = 0.2f, float sampleSizeGain = 1.02f);
-
-		virtual void bindValues();
-
+		
 	private:
 		unsigned int steps;
 		float stepSize, stepGain;

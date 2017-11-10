@@ -32,6 +32,7 @@ namespace geeL {
 		void setTargetTexture(const Texture& texture);
 
 		virtual void init(const PostProcessingParameter& parameter);
+		virtual void bindValues();
 		virtual void draw();
 		virtual void fill();
 
@@ -43,9 +44,6 @@ namespace geeL {
 		const ResolutionScale& getResolution() const;
 
 		virtual std::string toString() const;
-
-	protected:
-		virtual void bindValues();
 
 	private:
 		float radius;

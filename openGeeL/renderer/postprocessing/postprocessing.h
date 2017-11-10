@@ -94,6 +94,7 @@ namespace geeL {
 		virtual void setRenderMask(RenderMask mask);
 
 		virtual void init(const PostProcessingParameter& parameter);
+		virtual void bindValues() {}
 		virtual void draw();
 		virtual void fill();
 
@@ -106,8 +107,7 @@ namespace geeL {
 		RenderShader shader;
 		ScreenQuad* screen;
 		PostProcessingEffect* fallbackEffect = nullptr;
-
-		virtual void bindValues() {}
+		
 		virtual void drawSubImages() {}
 		virtual void bindToScreen();
 	};
@@ -126,6 +126,7 @@ namespace geeL {
 		virtual void addImageTexture(const Texture& texture, unsigned int bindingPosition);
 
 		virtual void init(const PostProcessingParameter& parameter);
+		virtual void bindValues() {}
 		virtual void draw();
 		virtual void fill();
 
@@ -137,8 +138,6 @@ namespace geeL {
 		DynamicBuffer* buffer = nullptr;
 		ComputeShader shader;
 		Resolution groupSize;
-
-		virtual void bindValues() {}
 
 	};
 

@@ -17,6 +17,7 @@ namespace geeL {
 			unsigned int samples = 30, bool useCookie = false);
 
 		virtual void init(const PostProcessingParameter& parameter);
+		virtual void bindValues();
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
@@ -30,9 +31,6 @@ namespace geeL {
 		void setMinDistance(float distance);
 
 		virtual std::string toString() const;
-
-	protected:
-		virtual void bindValues();
 
 	private:
 		unsigned int samples;

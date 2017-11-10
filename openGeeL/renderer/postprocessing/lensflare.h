@@ -21,6 +21,7 @@ namespace geeL {
 
 		virtual void setImage(const Texture& texture);
 		virtual void init(const PostProcessingParameter& parameter);
+		virtual void bindValues();
 
 		float getStrength() const;
 		float getScale() const;
@@ -38,7 +39,6 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	protected:
-		virtual void bindValues();
 		virtual void drawSubImages();
 
 	private:

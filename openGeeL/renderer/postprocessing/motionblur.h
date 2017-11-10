@@ -20,7 +20,8 @@ namespace geeL {
 		MotionBlur(float strength = 0.5f, unsigned int LOD = 15);
 		
 		virtual void init(const PostProcessingParameter& parameter);
-		
+		virtual void bindValues();
+
 		float getStrength() const;
 		void  setStrength(float value);
 
@@ -35,7 +36,6 @@ namespace geeL {
 		ShaderLocation offsetLocation;
 
 		MotionBlur(const std::string& shaderPath, float strength = 0.5f, unsigned int LOD = 15);
-		virtual void bindValues();
 
 	private:
 		float strength;
@@ -52,12 +52,10 @@ namespace geeL {
 		virtual ~VelocityBuffer();
 
 		virtual void init(const PostProcessingParameter& parameter);
+		virtual void bindValues();
 		virtual void draw();
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
-
-	protected:
-		virtual void bindValues();
 
 	private:
 		glm::vec3 prevPosition;
@@ -74,9 +72,9 @@ namespace geeL {
 		virtual ~MotionBlurPerPixel();
 
 		virtual void init(const PostProcessingParameter& parameter);
+		virtual void bindValues();
 
 	protected:
-		virtual void bindValues();
 		virtual void bindSubImages();
 
 	private:

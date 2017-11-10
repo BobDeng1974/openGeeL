@@ -14,12 +14,10 @@ namespace geeL {
 
 		virtual void setBuffer(unsigned int buffer) {}
 		virtual void init(const PostProcessingParameter& parameter);
+		virtual void bindValues();
 		virtual void draw();
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
-
-	protected:
-		virtual void bindValues();
 
 	private:
 		ShaderLocation projectionLocation;
@@ -36,12 +34,10 @@ namespace geeL {
 
 		virtual void setBuffer(unsigned int buffer) {}
 		virtual void init(const PostProcessingParameter& parameter);
+		virtual void bindValues();
 		virtual void draw();
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
-
-	protected:
-		virtual void bindValues();
 
 	private:
 		ShaderLocation projectionLocation;

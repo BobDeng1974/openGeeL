@@ -16,6 +16,8 @@ namespace geeL {
 	public:
 		DepthOfFieldBlur(float threshold = 0.1f, float sigma = 2.f);
 
+		virtual void bindValues();
+
 		void bindDoFData(float focalLength, float aperture, float farDistance);
 
 		float getThreshold() const;
@@ -23,9 +25,6 @@ namespace geeL {
 
 		void setFocalLength(float value);
 		void setAperture(float value);
-
-	protected:
-		virtual void bindValues();
 
 	private:
 		float threshold;
@@ -44,6 +43,7 @@ namespace geeL {
 
 		virtual void setImage(const Texture& texture);
 		virtual void init(const PostProcessingParameter& parameter);
+		virtual void bindValues();
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
@@ -57,8 +57,6 @@ namespace geeL {
 
 		virtual std::string toString() const;
 
-	protected:
-		virtual void bindValues();
 		virtual void drawSubImages();
 
 	private:

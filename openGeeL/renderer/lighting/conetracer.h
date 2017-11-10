@@ -18,6 +18,7 @@ namespace geeL {
 		VoxelConeTracer(RenderScene& scene, VoxelTexture& texture, int maxStepSpecular = 20, int maxStepDiffuse = 10);
 
 		virtual void init(const PostProcessingParameter& parameter);
+		virtual void bindValues();
 		virtual void draw();
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
@@ -32,9 +33,6 @@ namespace geeL {
 		void setDiffuseLOD(unsigned int level);
 
 		virtual std::string toString() const;
-
-	protected:
-		virtual void bindValues();
 
 	private:
 		unsigned int maxStepSpecular, maxStepDiffuse;

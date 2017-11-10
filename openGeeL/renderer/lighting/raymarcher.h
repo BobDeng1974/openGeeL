@@ -11,10 +11,8 @@ namespace geeL {
 		RayMarcher(RenderScene& scene);
 
 		virtual void init(const PostProcessingParameter& parameter);
-		virtual void draw();
-
-	protected:
 		virtual void bindValues();
+		virtual void draw();
 
 	};
 

@@ -19,6 +19,7 @@ namespace geeL {
 		GodRay(glm::vec3 lightPosition, unsigned int samples = 20.f);
 
 		virtual void init(const PostProcessingParameter& parameter);
+		virtual void bindValues();
 
 		glm::vec3 getLightPosition() const;
 		void setLightPosition(glm::vec3 position);
@@ -27,9 +28,6 @@ namespace geeL {
 		void setSampleCount(unsigned int samples);
 
 		virtual std::string toString() const;
-
-	protected:
-		virtual void bindValues();
 
 	private:
 		glm::vec3 lightPosition;
