@@ -192,8 +192,6 @@ namespace geeL {
 		const MaterialFactory& materialFactory;
 		std::mutex mutex;
 
-		void RenderScene::drawGeneric(ShadingMethod shadingMethod, const Camera& camera) const;
-		void RenderScene::drawForward(ShadingMethod shadingMethod, const Camera& camera) const;
 		void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera) const;
 
 	};

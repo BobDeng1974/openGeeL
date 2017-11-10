@@ -20,7 +20,7 @@ namespace geeL {
 			ShaderTransformSpace::View, ShadingMethod::Forward)),
 		deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", FragmentShader(buffer.getFragmentPath(), false), 
 			ShaderTransformSpace::View, ShadingMethod::Deferred)),
-		deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", FragmentShader(buffer.getFragmentPath()),
+		deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", FragmentShader(buffer.getFragmentPath(), false),
 			ShaderTransformSpace::View, ShadingMethod::Deferred)),
 		transparentODShader(new SceneShader("renderer/shaders/forwardlighting.vert", FragmentShader("renderer/shaders/forwardlighting.frag"),
 			ShaderTransformSpace::View, ShadingMethod::TransparentOD)), 

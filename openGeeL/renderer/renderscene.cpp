@@ -241,8 +241,14 @@ namespace geeL {
 
 	
 	void RenderScene::draw(ShadingMethod shadingMethod, const Camera& camera) const {
-		iterRenderObjects(shadingMethod, [this, &camera](const MeshRenderer& object, SceneShader& shader) {
-			pipeline.dynamicBind(lightManager, shader, camera);
+		SceneShader* currentShader = nullptr;
+
+		iterRenderObjects(shadingMethod, [this, &camera, &currentShader](const MeshRenderer& object, SceneShader& shader) {
+			if (currentShader != &shader) {
+				pipeline.dynamicBind(lightManager, shader, camera);
+				pipeline.drawingBind(shader);
+				currentShader = &shader;
+			}
 
 			if (object.isActive())
 				object.draw(shader);
@@ -267,31 +273,11 @@ namespace geeL {
 
 		if (forceGamma) shader.bind<int>("gammaCorrection", true);
 
-		camera.bindProjectionMatrix(shader, "projection");
-		shader.bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
-
 		drawObjects(shader, &camera);
 
 		if (forceGamma) shader.bind<int>("gammaCorrection", false);
 	}
 
-
-	void RenderScene::drawGeneric(ShadingMethod shadingMethod, const Camera& camera) const {
-		SceneShader* currentShader = nullptr;
-
-		iterRenderObjects(shadingMethod, [this, &camera, &currentShader](const MeshRenderer& object, SceneShader& shader) {
-			if (currentShader != &shader) {
-				camera.bindProjectionMatrix(shader, "projection");
-				shader.bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
-
-				pipeline.dynamicBind(lightManager, shader, camera);
-				currentShader = &shader;
-			}
-
-			if (object.isActive())
-				object.draw(shader);
-		});
-	}
 
 	void RenderScene::drawGeneric() const {
 		drawGeneric(*camera);
@@ -301,27 +287,7 @@ namespace geeL {
 		BlendGuard blend;
 		blend.blendAlpha();
 
-		drawGeneric(ShadingMethod::Generic, camera);
-	}
-
-
-	void RenderScene::drawForward(ShadingMethod shadingMethod, const Camera & camera) const {
-		SceneShader* currentShader = nullptr;
-
-		iterRenderObjects(shadingMethod, [this, &camera, &currentShader](const MeshRenderer& object, SceneShader& shader) {
-			if (currentShader != &shader) {
-				camera.bindProjectionMatrix(shader, "projection");
-				camera.bindInverseViewMatrix(shader, "inverseView");
-				shader.bind<glm::vec3>("origin", camera.GetOriginInViewSpace());
-
-				pipeline.dynamicBind(lightManager, shader, camera);
-				currentShader = &shader;
-			}
-
-			if (object.isActive())
-				object.draw(shader);
-		});
-
+		draw(ShadingMethod::Generic, camera);
 	}
 
 	void RenderScene::drawForward() const {
@@ -329,7 +295,7 @@ namespace geeL {
 	}
 
 	void RenderScene::drawForward(const Camera & camera) const {
-		drawForward(ShadingMethod::Forward, camera);
+		draw(ShadingMethod::Forward, camera);
 	}
 
 
@@ -364,11 +330,8 @@ namespace geeL {
 			SceneShader& shader = *it->second;
 
 			if (currentShader != &shader) {
-				camera.bindProjectionMatrix(shader, "projection");
-				camera.bindInverseViewMatrix(shader, "inverseView");
-				shader.bind<glm::vec3>("origin", camera.GetOriginInViewSpace());
-
 				pipeline.dynamicBind(lightManager, shader, camera);
+				pipeline.drawingBind(shader);
 				currentShader = &shader;
 			}
 
@@ -392,7 +355,7 @@ namespace geeL {
 	}
 
 	void RenderScene::drawTransparentOID(const Camera & camera) const {
-		drawForward(ShadingMethod::TransparentOID, camera);
+		draw(ShadingMethod::TransparentOID, camera);
 	}
 
 
@@ -401,6 +364,8 @@ namespace geeL {
 			pipeline.dynamicBind(lightManager, shader, *camera);
 		else
 			pipeline.dynamicBind(lightManager, shader);
+
+		pipeline.drawingBind(shader);
 
 		iterRenderObjects([&shader](const MeshRenderer& object) {
 			if (object.isActive())

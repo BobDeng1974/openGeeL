@@ -28,6 +28,9 @@ namespace geeL {
 		//Dynamically bind scene information into shader during runtime
 		void dynamicBind(const LightManager& lightManager, SceneShader& shader, const Camera& camera) const;
 
+		//Binding method that should be called before drawing with given shader
+		void drawingBind(SceneShader& shader);
+
 		//Dynamically bind scene information into shader during runtime.
 		//Note: Make sure that given scene shader doesn't operate in screen space 
 		//(No camera attached in this overload)

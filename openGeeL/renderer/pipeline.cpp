@@ -5,6 +5,7 @@
 #include "cameras/camera.h"
 #include "lights/lightmanager.h"
 #include "materials/materialfactory.h"
+#include "transformation/transform.h"
 #include "scene.h"
 #include "pipeline.h"
 
@@ -27,10 +28,29 @@ namespace geeL {
 	}
 
 	void RenderPipeline::dynamicBind(const LightManager& lightManager, SceneShader& shader, const Camera& camera) const {
-		shader.loadMaps();
-		
+
 		if (shader.getUseLight()) lightManager.bind(shader, &camera);
-		if (shader.getUseCamera()) shader.setViewMatrix(camera.getViewMatrix());
+		if (shader.getUseCamera()) {
+			shader.setViewMatrix(camera.getViewMatrix());
+
+			switch (shader.getMethod()) {
+				case ShadingMethod::Forward:
+				case ShadingMethod::TransparentOD:
+				case ShadingMethod::TransparentOID:
+					camera.bindProjectionMatrix(shader, "projection");
+					camera.bindInverseViewMatrix(shader, "inverseView");
+					shader.bind<glm::vec3>("origin", camera.GetOriginInViewSpace());
+					break;
+				case ShadingMethod::Generic:
+					camera.bindProjectionMatrix(shader, "projection");
+					shader.bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
+					break;
+			}
+		}
+	}
+
+	void RenderPipeline::drawingBind(SceneShader& shader) {
+		shader.loadMaps();
 	}
 
 	void RenderPipeline::dynamicBind(const LightManager& lightManager, SceneShader & shader) const {
