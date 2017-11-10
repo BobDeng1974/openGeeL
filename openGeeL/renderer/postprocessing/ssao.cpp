@@ -146,6 +146,8 @@ namespace geeL {
 
 	void SSAO::bindValues() {
 		camera->bindProjectionMatrix(shader, projectionLocation);
+
+		blur.bindValues();
 	}
 
 	void SSAO::addWorldInformation(map<WorldMaps, const Texture*> maps) {

@@ -74,6 +74,10 @@ namespace geeL {
 		PostProcessingEffectFS::setImage(*tempTexture);
 	}
 
+	void AdditiveWrapper::bindValues() {
+		effect.bindValues();
+	}
+
 	void AdditiveWrapper::fill() {
 
 		if (active && parentBuffer != nullptr) {

@@ -74,7 +74,6 @@ namespace geeL {
 
 	void PostProcessingEffectFS::draw() {
 		if (active) {
-			bindValues();
 			drawSubImages();
 			bindToScreen();
 		}
@@ -141,7 +140,6 @@ namespace geeL {
 	}
 
 	void PostProcessingEffectCS::draw() {
-		bindValues();
 		shader.bindParameters();
 		
 		//Read target texture from parent buffer and bind it

@@ -129,6 +129,8 @@ namespace geeL {
 		);
 
 		shader.bind<glm::mat3>("starTransform", transform2 * rotation * transform1);
+
+		filter.bindValues();
 	}
 
 	void LensFlare::drawSubImages() {

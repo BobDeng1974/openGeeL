@@ -48,6 +48,7 @@ namespace geeL {
 		virtual void addTextureSampler(const Texture& texture, const std::string& name) = 0;
 
 		virtual void init(const PostProcessingParameter& parameter) = 0;
+		virtual void bindValues() = 0;
 		virtual void draw() = 0;
 		virtual void fill() = 0;
 

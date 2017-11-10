@@ -38,6 +38,7 @@ namespace geeL {
 		virtual void addTextureSampler(const Texture& texture, const std::string& name);
 
 		virtual void init(const PostProcessingParameter& parameter);
+		virtual void bindValues();
 		virtual void fill();
 
 		virtual std::string toString() const;

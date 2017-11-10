@@ -94,7 +94,7 @@ namespace geeL {
 		shader.bind<float>(focalLocation, dist);
 
 		blur.setFocalLength(dist);
-
+		blur.bindValues();
 	}
 
 	void DepthOfFieldBlurred::drawSubImages() {

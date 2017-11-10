@@ -17,6 +17,7 @@ namespace geeL {
 
 		virtual void setImage(const Texture& texture);
 		virtual void init(const PostProcessingParameter& parameter);
+		virtual void bindValues();
 
 		//Add a render mask to this effect. The effect will then only 
 		//be drawn in regions that have been marked with given mask

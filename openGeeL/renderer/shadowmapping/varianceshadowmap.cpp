@@ -51,6 +51,7 @@ namespace geeL {
 
 		glCullFace(GL_FRONT);
 		buffer.push(texture);
+		blur.bindValues();
 		blur.fill();
 		glCullFace(GL_BACK);
 

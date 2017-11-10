@@ -176,6 +176,7 @@ namespace geeL {
 		//Draw lighting pass and skybox directly into given framebuffer
 		//Set custom camera for deferred lighting
 		lighting.setCamera(camera);
+		lighting.bindValues();
 		lighting.draw();
 		lighting.setCamera(scene->getCamera());
 
@@ -191,6 +192,7 @@ namespace geeL {
 
 
 	void DeferredRenderer::lightingPass() {
+		lighting.bindValues();
 		lighting.draw();
 
 		//Draw skybox directly alongside the lighting
@@ -369,6 +371,7 @@ namespace geeL {
 			RenderTexture& texture = *it->first;
 
 			stackBuffer.push(texture);
+			effect.bindValues();
 			effect.fill();
 		}
 

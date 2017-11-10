@@ -14,6 +14,7 @@ namespace geeL {
 
 	public:
 		virtual void init(const PostProcessingParameter& parameter) = 0;
+		virtual void bindValues() = 0;
 		virtual void draw() = 0;
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps) {}

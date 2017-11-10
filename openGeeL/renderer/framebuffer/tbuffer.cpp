@@ -83,6 +83,7 @@ namespace geeL {
 
 		compBuffer.push(*compositionTexture);
 		compBuffer.fill([this]() {
+			tComp.bindValues();
 			tComp.draw();
 		}, clearNothing);
 

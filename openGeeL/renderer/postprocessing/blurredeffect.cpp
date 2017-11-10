@@ -54,6 +54,11 @@ namespace geeL {
 		addTextureSampler(*blurTexture, "image2");
 	}
 
+	void BlurredPostEffect::bindValues() {
+		effect.bindValues();
+		blur.bindValues();
+	}
+
 
 	void BlurredPostEffect::drawSubImages() {
 		if (effect.isActive()) {
