@@ -32,7 +32,7 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	protected:
-		virtual void bindValues();
+		virtual void drawSubImages();
 
 	private:
 		ResolutionScale effectResolution, blurResolution;

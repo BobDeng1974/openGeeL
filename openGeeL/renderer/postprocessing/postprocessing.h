@@ -108,6 +108,7 @@ namespace geeL {
 		PostProcessingEffect* fallbackEffect = nullptr;
 
 		virtual void bindValues() {}
+		virtual void drawSubImages() {}
 		virtual void bindToScreen();
 	};
 

@@ -28,8 +28,6 @@ namespace geeL {
 	}
 
 	void GodRay::bindValues() {
-		PostProcessingEffectFS::bindValues();
-
 		glm::vec3 screenPos = camera->TranslateToScreenSpace(lightPosition);
 		shader.bind<glm::vec3>(lightLocation, screenPos);
 

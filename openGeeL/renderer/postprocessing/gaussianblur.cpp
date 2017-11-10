@@ -44,6 +44,26 @@ namespace geeL {
 		horLocation = shader.getLocation("horizontal");
 	}
 
+	void GaussianBlurBase::drawSubImages() {
+		//1. Fill the temporary buffer with the result of the horizontal blurring
+		shader.bind<int>(horLocation, true);
+
+		if (mainBuffer != nullptr)
+			addTextureSampler(*mainBuffer, "image");
+		else
+			std::cout << "Buffer for gaussian blur was never set\n";
+
+		parentBuffer->add(*tempTexture);
+		parentBuffer->fill([this]() {
+			bindToScreen();
+		}, clearColor);
+
+		//2. Draw final image via vertical blurring of the previous (horizontally) blurred image
+		shader.bind<int>(horLocation, false);
+		addTextureSampler(*tempTexture, "image");
+
+	}
+
 	std::vector<float> GaussianBlurBase::computeKernel(float sigma) const {
 		std::vector<float> kernel = std::vector<float>(kernelSize);
 
@@ -71,26 +91,6 @@ namespace geeL {
 			
 			bindKernel();
 		}
-	}
-
-	void GaussianBlurBase::bindValues() {
-		
-		//1. Fill the temporary buffer with the result of the horizontal blurring
-		shader.bind<int>(horLocation, true);
-
-		if (mainBuffer != nullptr)
-			addTextureSampler(*mainBuffer, "image");
-		else
-			std::cout << "Buffer for gaussian blur was never set\n";
-		
-		parentBuffer->add(*tempTexture);
-		parentBuffer->fill([this]() {
-			bindToScreen();
-		}, clearColor);
-
-		//2. Draw final image via vertical blurring of the previous (horizontally) blurred image
-		shader.bind<int>(horLocation, false);
-		addTextureSampler(*tempTexture, "image");
 	}
 
 	void GaussianBlurBase::setKernelsize(unsigned int size) {
@@ -207,11 +207,9 @@ namespace geeL {
 		addTextureSampler(*sobelTexture, "sobel");
 	}
 
-	void SobelBlur::bindValues() {
+	void SobelBlur::drawSubImages() {
 		parentBuffer->add(*sobelTexture);
 		parentBuffer->fill(sobel, clearColor);
-
-		GaussianBlurBase::bindValues();
 	}
 
 	void SobelBlur::addWorldInformation(map<WorldMaps, const Texture*> maps) {

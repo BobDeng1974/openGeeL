@@ -55,7 +55,7 @@ namespace geeL {
 	}
 
 
-	void BlurredPostEffect::bindValues() {
+	void BlurredPostEffect::drawSubImages() {
 		if (effect.isActive()) {
 			parentBuffer->add(*effectTexture);
 			parentBuffer->fill(effect, clearColor);

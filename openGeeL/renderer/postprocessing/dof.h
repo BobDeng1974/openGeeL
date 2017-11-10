@@ -59,6 +59,7 @@ namespace geeL {
 
 	protected:
 		virtual void bindValues();
+		virtual void drawSubImages();
 
 	private:
 		const float& focalLength;

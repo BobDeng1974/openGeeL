@@ -39,6 +39,7 @@ namespace geeL {
 
 	protected:
 		virtual void bindValues();
+		virtual void drawSubImages();
 
 	private:
 		glm::vec3 distortion;

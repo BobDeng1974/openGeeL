@@ -75,8 +75,8 @@ namespace geeL {
 	void PostProcessingEffectFS::draw() {
 		if (active) {
 			bindValues();
+			drawSubImages();
 			bindToScreen();
-
 		}
 		else if(fallbackEffect != nullptr) {
 			fallbackEffect->init(PostProcessingParameter(ScreenQuad::get(), *parentBuffer, resolution));

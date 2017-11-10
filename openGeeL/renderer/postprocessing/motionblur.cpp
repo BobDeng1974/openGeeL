@@ -101,10 +101,12 @@ namespace geeL {
 	}
 
 	void MotionBlurPerPixel::bindValues() {
+		shader.bind<float>(strengthLocation, getStrength());
+	}
+
+	void MotionBlurPerPixel::bindSubImages() {
 		parentBuffer->add(*velocityTexture);
 		parentBuffer->fill(velocity, clearColor);
-
-		shader.bind<float>(strengthLocation, getStrength());
 	}
 
 

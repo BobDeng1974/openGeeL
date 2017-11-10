@@ -41,7 +41,7 @@ namespace geeL {
 		GaussianBlurBase(float sigma = 1.3f);
 		GaussianBlurBase(std::string shaderPath, float sigma = 1.3f);
 
-		virtual void bindValues();
+		virtual void drawSubImages();
 		void setKernelsize(unsigned int size);
 
 	private:
@@ -118,7 +118,7 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	protected:
-		virtual void bindValues();
+		virtual void drawSubImages();
 
 	private:
 		bool depth;

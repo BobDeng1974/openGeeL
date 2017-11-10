@@ -90,13 +90,16 @@ namespace geeL {
 
 	void DepthOfFieldBlurred::bindValues() {
 		//Clamp focal length with reasonable values
-		float dist = (focalLength < 0.f || focalLength > 30.f) ? 30.f : focalLength;
+		float dist = (focalLength < 0.f || focalLength > 50.f) ? 50.f : focalLength;
 		shader.bind<float>(focalLocation, dist);
 
 		blur.setFocalLength(dist);
+
+	}
+
+	void DepthOfFieldBlurred::drawSubImages() {
 		parentBuffer->add(*blurTexture);
 		parentBuffer->fill(blur, clearColor);
-
 	}
 
 	void DepthOfFieldBlurred::addWorldInformation(map<WorldMaps, const Texture*> maps) {

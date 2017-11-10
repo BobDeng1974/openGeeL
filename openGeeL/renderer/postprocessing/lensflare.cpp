@@ -117,9 +117,6 @@ namespace geeL {
 	);
 
 	void LensFlare::bindValues() {
-		parentBuffer->add(*filterTexture);
-		parentBuffer->fill(filter, clearColor);
-
 		Transform& transform = camera->transform;
 		vec3 camX = transform.getRightDirection(); 
 		vec3 camZ = transform.getForwardDirection();
@@ -132,6 +129,11 @@ namespace geeL {
 		);
 
 		shader.bind<glm::mat3>("starTransform", transform2 * rotation * transform1);
+	}
+
+	void LensFlare::drawSubImages() {
+		parentBuffer->add(*filterTexture);
+		parentBuffer->fill(filter, clearColor);
 	}
 
 
