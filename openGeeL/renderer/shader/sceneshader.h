@@ -7,6 +7,7 @@
 
 namespace geeL {
 
+	class Transform;
 
 	struct FragmentShader {
 		const std::string path;
@@ -42,7 +43,7 @@ namespace geeL {
 		void setViewMatrix(const glm::mat4& view);
 
 		//Bind model and view matrices into shader (if view has been set beforehand)
-		void bindMatrices(const glm::mat4& model) const;
+		void bindMatrices(const Transform& model) const;
 		void bindViewMatrix() const;
 
 		ShaderTransformSpace getSpace() const;
@@ -54,8 +55,7 @@ namespace geeL {
 		ShadingMethod shadingMethod;
 		std::string vertexPath;
 
-		const glm::mat4* view;
-		glm::mat4 model;
+		glm::mat4 view;
 
 		ShaderLocation viewLocation;
 		ShaderLocation modelLocation;
