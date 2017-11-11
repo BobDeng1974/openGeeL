@@ -12,7 +12,9 @@ namespace geeL {
 
 		initFilterMode(filterMode);
 		initWrapMode(wrapMode);
-		initAnisotropyFilter(aFilter);
+
+		if(aFilter != AnisotropicFilter::None)
+			initAnisotropyFilter(aFilter);
 	}
 
 	TextureParameters::TextureParameters(TextureParameters&& other) 
@@ -44,7 +46,12 @@ namespace geeL {
 		glBindSampler(layer, id);
 	}
 
+	void TextureParameters::unbind(unsigned int layer) {
+		glBindSampler(layer, 0);
+	}
+
 	void TextureParameters::initFilterMode(FilterMode mode) {
+
 		switch (mode) {
 			case FilterMode::None:
 				glSamplerParameteri(id, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

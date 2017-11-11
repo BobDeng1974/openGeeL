@@ -15,6 +15,8 @@ namespace geeL {
 
 		static void bindTexturesSimple(const Shader& shader, unsigned int offset);
 		static void bindTexturesDynamic(const Shader& shader, unsigned int offset);
+		static void bindSingleTexture(unsigned int ID, const Shader& shader, unsigned int offset, 
+			const std::string& name, TextureType type);
 
 	private:
 		static void clearUnits(unsigned int start = 0, unsigned int end = MAX_TEXTURE_BINDINGS);

@@ -8,13 +8,15 @@ namespace geeL {
 	class TextureParameters {
 
 	public:
-		TextureParameters(FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter);
+		TextureParameters(FilterMode filterMode = FilterMode::None, WrapMode wrapMode = WrapMode::Repeat, 
+			AnisotropicFilter aFilter = AnisotropicFilter::None);
 		TextureParameters(TextureParameters&& other);
 		~TextureParameters();
 
 		TextureParameters& operator=(TextureParameters&& other);
 
 		void bind(unsigned int layer) const;
+		static void unbind(unsigned int layer);
 
 	private:
 		unsigned int id;

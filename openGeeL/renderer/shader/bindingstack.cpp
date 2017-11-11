@@ -1,6 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <vector>
+#include "texturing/textureparams.h"
 #include "texturing/texture.h"
 #include "shader.h"
 #include "bindingstack.h"
@@ -12,22 +13,20 @@ namespace geeL {
 
 
 	void TextureBindingStack::bindTexturesSimple(const Shader& shader, unsigned int offset) {
-		int layer = GL_TEXTURE0;
-		shader.iterateTextures([&layer, &offset, &shader](const TextureBinding& binding) {
-			binding.texture->bind(layer + offset + binding.offset);
+		shader.iterateTextures([&offset, &shader](const TextureBinding& binding) {
+			binding.texture->bind(offset + binding.offset);
 		});
 	}
 
-	void TextureBindingStack::bindTexturesDynamic(const Shader & shader, unsigned int offset) {
+	void TextureBindingStack::bindTexturesDynamic(const Shader& shader, unsigned int offset) {
 		std::vector<const TextureBinding*> tempBindings(TextureBindingStack::MAX_TEXTURE_BINDINGS, nullptr);
 
-		int layer = GL_TEXTURE0;
 		unsigned int maxPos = 0;
-		shader.iterateTextures([&layer, &maxPos, &offset, &shader, &tempBindings](const TextureBinding& binding) {
+		shader.iterateTextures([&maxPos, &offset, &shader, &tempBindings](const TextureBinding& binding) {
 			unsigned int o = offset + binding.offset;
 
 			if (bindings[o] == nullptr || *bindings[o] != binding) {
-				binding.texture->bind(layer + o);
+				binding.texture->bind(o);
 
 			}
 
@@ -40,6 +39,17 @@ namespace geeL {
 
 		bindings.clear();
 		bindings = tempBindings;
+	}
+
+	void TextureBindingStack::bindSingleTexture(unsigned int ID, const Shader& shader, 
+		unsigned int offset, const std::string& name, TextureType type) {
+
+		glActiveTexture(GL_TEXTURE0 + offset);
+
+		TextureParameters::unbind(offset);
+		shader.bind<int>(name, offset);
+		glBindTexture((int) type, ID);
+
 	}
 
 	void TextureBindingStack::clearUnits(unsigned int start, unsigned int end) {

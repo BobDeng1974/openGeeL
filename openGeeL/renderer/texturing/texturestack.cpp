@@ -32,11 +32,9 @@ namespace geeL {
 	}
 
 	void TextureStack::draw(const RenderShader& shader) const {
-		int layer = GL_TEXTURE0;
-
 		int counter = 0;
-		iterTextures([&layer, &counter, &shader](const std::string& name, const Texture2D& texture) {
-			texture.bind(layer + counter + shader.mapBindingPos);
+		iterTextures([&counter, &shader](const std::string& name, const Texture2D& texture) {
+			texture.bind(counter + shader.mapBindingPos);
 			counter++;
 		});
 	}

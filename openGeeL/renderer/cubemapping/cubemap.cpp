@@ -2,6 +2,7 @@
 #include <glew.h>
 #include "texturing/texture.h"
 #include "shader/rendershader.h"
+#include "shader/bindingstack.h"
 #include "cubemap.h"
 
 #define GL_TEXTURE_CUBE_MAP 0x8513
@@ -9,9 +10,7 @@
 namespace geeL {
 
 	void CubeMap::bindMap(const RenderShader& shader, std::string name) const {
-		glActiveTexture(GL_TEXTURE1);
-		shader.bind<int>(name, 1);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, getID());
+		TextureBindingStack::bindSingleTexture(getID(), shader, 1, name, TextureType::TextureCube);
 	}
 
 

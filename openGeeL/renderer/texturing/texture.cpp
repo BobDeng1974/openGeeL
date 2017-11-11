@@ -24,10 +24,12 @@ namespace geeL {
 	}
 
 	void Texture::bind(unsigned int layer) const {
-		glActiveTexture(layer);
+		glActiveTexture(GL_TEXTURE0 + layer);
 
 		if (parameters != nullptr)
 			parameters->bind(layer);
+		else 
+			TextureParameters::unbind(layer);
 
 		bind();
 	}
