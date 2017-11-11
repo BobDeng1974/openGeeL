@@ -9,6 +9,7 @@ namespace geeL {
 
 	class IFrameBuffer;
 	class RenderShader;
+	class TextureParameters;
 
 	
 	class Texture {
@@ -24,6 +25,9 @@ namespace geeL {
 		//Bind texture as texture sampler
 		virtual void bind() const;
 		void unbind() const;
+
+		//Bind texture to given texture layer
+		void bind(unsigned int layer);
 
 		//Assing this texture to given framebuffer
 		virtual void assignTo(const IFrameBuffer& buffer, unsigned int position, bool bindFB = false);
@@ -49,6 +53,10 @@ namespace geeL {
 		static void clear(ColorType type, unsigned int id);
 		static void mipmap(TextureType type, unsigned int id);
 		static void setMaxAnisotropyAmount(AnisotropicFilter value);
+		static AnisotropicFilter getMaxAnisotropyAmount();
+
+		void attachParameters(const TextureParameters& parameters);
+		void detachParameters();
 
 		bool operator== (const Texture& rhs) const;
 
@@ -56,9 +64,11 @@ namespace geeL {
 		TextureToken id;
 		ColorType colorType;
 		static AnisotropicFilter maxAnisotropy;
+		const TextureParameters* parameters;
 		const IFrameBuffer* parent;
 
-		Texture(ColorType colorType) : colorType(colorType), parent(nullptr) {}
+		Texture(ColorType colorType) : colorType(colorType), 
+			parent(nullptr), parameters(nullptr) {}
 
 	};
 	

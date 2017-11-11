@@ -94,6 +94,10 @@ namespace geeL {
 		effectTexture->resize(newRes);
 	}
 
+	void BlurredPostEffect::resizeEffectResolution(RenderResolution effectResolution) {
+		resizeEffectResolution(getResolutionScale(effectResolution));
+	}
+
 	const ResolutionScale& BlurredPostEffect::getEffectResolution() const {
 		return effectResolution;
 	}

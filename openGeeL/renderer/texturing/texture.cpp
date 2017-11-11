@@ -5,6 +5,7 @@
 #include <limits.h>
 #include "framebuffer/framebuffer.h"
 #include "utility/viewport.h"
+#include "textureparams.h"
 #include "texture.h"
 
 using namespace std;
@@ -20,6 +21,15 @@ namespace geeL {
 
 	void Texture::unbind() const {
 		glBindTexture((int)getTextureType(), 0);
+	}
+
+	void Texture::bind(unsigned int layer) {
+		glActiveTexture(layer);
+
+		if (parameters != nullptr)
+			parameters->bind(layer);
+
+		bind();
 	}
 
 	void Texture::assignTo(const IFrameBuffer& buffer, unsigned int position, bool bindFB) {
@@ -166,6 +176,18 @@ namespace geeL {
 
 	void Texture::setMaxAnisotropyAmount(AnisotropicFilter value) {
 		maxAnisotropy = value;
+	}
+
+	AnisotropicFilter Texture::getMaxAnisotropyAmount() {
+		return maxAnisotropy;
+	}
+
+	void Texture::attachParameters(const TextureParameters& parameters) {
+		this->parameters = &parameters;
+	}
+
+	void Texture::detachParameters() {
+		this->parameters = nullptr;
 	}
 
 

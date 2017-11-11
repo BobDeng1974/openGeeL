@@ -26,6 +26,7 @@ namespace geeL {
 		virtual void setRenderMask(RenderMask mask);
 
 		void resizeEffectResolution(ResolutionScale effectResolution);
+		void resizeEffectResolution(RenderResolution effectResolution);
 
 		const ResolutionScale& getEffectResolution() const;
 		const ResolutionScale& getBlurResolution() const;
