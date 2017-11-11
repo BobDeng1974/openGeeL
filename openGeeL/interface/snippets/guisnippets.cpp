@@ -4,6 +4,7 @@
 #include "materials/genericmaterial.h"
 #include "lights/light.h"
 #include "transformation/transform.h"
+#include "utility/resolution.h"
 #include "guiwrapper.h"
 #include "guisnippets.h"
 
@@ -183,6 +184,15 @@ namespace geeL {
 			function(context);
 			nk_tree_pop(context);
 		}
+	}
+
+
+	RenderResolution GUISnippets::drawResolution(GUIContext* context, RenderResolution current) {
+		int oldIndex = getRenderResolutionIndex(current);
+		int newIndex = GUISnippets::drawBarInteger(context, oldIndex, 0, 
+			getRenderResolutionCount() - 1, 1, "Resolution");
+
+		return getRenderResolution(newIndex);
 	}
 
 }

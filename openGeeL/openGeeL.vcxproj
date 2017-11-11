@@ -276,6 +276,7 @@
     <ClCompile Include="renderer\utility\linearkernel.cpp" />
     <ClCompile Include="renderer\utility\masking.cpp" />
     <ClCompile Include="renderer\utility\rendertime.cpp" />
+    <ClCompile Include="renderer\utility\resolution.cpp" />
     <ClCompile Include="renderer\utility\stb_image_importer.cpp" />
     <ClCompile Include="renderer\utility\viewport.cpp" />
     <ClCompile Include="renderer\voxelization\voxelizer.cpp" />

@@ -474,6 +474,9 @@
     <ClCompile Include="renderer\postprocessing\additiveeffect.cpp">
       <Filter>renderer\postprocessing</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\utility\resolution.cpp">
+      <Filter>renderer\utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">

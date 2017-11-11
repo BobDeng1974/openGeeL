@@ -20,6 +20,8 @@ namespace geeL {
 	class GenericMaterialContainer;
 	class DefaultMaterialContainer;
 
+	enum class RenderResolution;
+
 
 	class GUISnippet {
 
@@ -50,6 +52,8 @@ namespace geeL {
 		static void drawMaterial(GUIContext* context, DefaultMaterialContainer* material);
 
 		static void drawTreeNode(GUIContext* context, const std::string& name, bool minimized, std::function<void(GUIContext*)> function);
+
+		static RenderResolution drawResolution(GUIContext* context, RenderResolution current);
 
 	};
 }

@@ -7,22 +7,26 @@
 
 namespace geeL {
 
-	//Defines a rendering resolution scale in normalized coordinates (Between 0 and 1)
-	struct ResolutionScale {
+	struct ResolutionScale;
 
-	public:
-		ResolutionScale(float scale);
 
-		float get() const;
-		void  set(float value);
-
-		template<class T>
-		float operator*(T o) const;
-
-	private:
-		float scale;
-
+	enum class RenderResolution {
+		ONEHUNDRED = 100,
+		NINETY = 90,
+		EIGHTY = 80,
+		SEVENTYFIVE = 75,
+		TWOTHIRDS = 66,
+		FIFTY = 50,
+		ONETHIRD = 33,
+		TWENTYFIVE = 25,
+		TEN = 10
 	};
+
+	ResolutionScale getResolutionScale(RenderResolution resolution);
+	RenderResolution getRenderResolution(size_t index);
+	size_t getRenderResolutionCount();
+	size_t getRenderResolutionIndex(RenderResolution resolution);
+	
 
 
 	//Defines a rendering resolution in absolute pixel size
@@ -33,6 +37,7 @@ namespace geeL {
 		Resolution(unsigned int resolution);
 		Resolution(unsigned int width, unsigned int height);
 		Resolution(const Resolution& resolution, const ResolutionScale& scale);
+		Resolution(const Resolution& resolution, const RenderResolution& scale);
 
 		unsigned int getWidth() const;
 		unsigned int getHeight() const;
@@ -53,6 +58,29 @@ namespace geeL {
 		unsigned int width, height, baseWidth, baseHeight;
 
 	};
+
+
+
+	//Defines a rendering resolution scale in normalized coordinates (Between 0 and 1)
+	struct ResolutionScale {
+
+	public:
+		ResolutionScale(float scale);
+		ResolutionScale(RenderResolution resolution);
+
+		float get() const;
+		void  set(float value);
+
+		template<class T>
+		float operator*(T o) const;
+
+	private:
+		float scale;
+
+	};
+
+
+	
 
 
 	inline Resolution::Resolution() {}
@@ -113,6 +141,10 @@ namespace geeL {
 		set(scale);
 	}
 
+	inline ResolutionScale::ResolutionScale(RenderResolution resolution) {
+		set(getResolutionScale(resolution).get());
+	}
+
 	inline float ResolutionScale::get() const {
 		return scale;
 	}
@@ -135,6 +167,10 @@ namespace geeL {
 	inline Resolution::Resolution(const Resolution& resolution, const ResolutionScale& scale)
 		: width(unsigned int(resolution.getWidth() * scale)), height(unsigned int(resolution.getHeight() * scale)), 
 			baseWidth(resolution.getWidth()), baseHeight(resolution.getHeight()) {}
+
+	inline Resolution::Resolution(const Resolution& resolution, const RenderResolution& scale)
+		: Resolution(resolution, getResolutionScale(scale)) {}
+
 
 	inline void Resolution::resize(ResolutionScale& scale) {
 		width = unsigned int(baseWidth * scale);

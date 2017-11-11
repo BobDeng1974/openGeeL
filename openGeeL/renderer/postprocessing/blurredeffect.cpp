@@ -33,14 +33,14 @@ namespace geeL {
 
 		shader.bind<int>("effectOnly", onlyEffect);
 
-		Resolution effectRes = Resolution(resolution, effectResolution);
+		Resolution effectRes(resolution, effectResolution);
 		if (effectTexture == nullptr)
 			effectTexture = new RenderTexture(effectRes, ColorType::RGB16,
 				WrapMode::ClampEdge, FilterMode::Linear);
 		else
 			effectTexture->resize(effectRes);
 
-		Resolution blurRes = Resolution(resolution, blurResolution);
+		Resolution blurRes(resolution, blurResolution);
 		if (blurTexture == nullptr)
 			blurTexture = new RenderTexture(blurRes, ColorType::RGB16,
 				WrapMode::ClampEdge, FilterMode::Linear);
