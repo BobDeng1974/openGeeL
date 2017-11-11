@@ -23,7 +23,7 @@ namespace geeL {
 		glBindTexture((int)getTextureType(), 0);
 	}
 
-	void Texture::bind(unsigned int layer) {
+	void Texture::bind(unsigned int layer) const {
 		glActiveTexture(layer);
 
 		if (parameters != nullptr)

@@ -27,7 +27,7 @@ namespace geeL {
 		void unbind() const;
 
 		//Bind texture to given texture layer
-		void bind(unsigned int layer);
+		void bind(unsigned int layer) const;
 
 		//Assing this texture to given framebuffer
 		virtual void assignTo(const IFrameBuffer& buffer, unsigned int position, bool bindFB = false);

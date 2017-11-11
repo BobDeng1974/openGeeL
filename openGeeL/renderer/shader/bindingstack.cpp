@@ -14,8 +14,7 @@ namespace geeL {
 	void TextureBindingStack::bindTexturesSimple(const Shader& shader, unsigned int offset) {
 		int layer = GL_TEXTURE0;
 		shader.iterateTextures([&layer, &offset, &shader](const TextureBinding& binding) {
-			glActiveTexture(layer + offset + binding.offset);
-			binding.texture->bind();
+			binding.texture->bind(layer + offset + binding.offset);
 		});
 	}
 
@@ -28,8 +27,7 @@ namespace geeL {
 			unsigned int o = offset + binding.offset;
 
 			if (bindings[o] == nullptr || *bindings[o] != binding) {
-				glActiveTexture(layer + o);
-				binding.texture->bind();
+				binding.texture->bind(layer + o);
 
 			}
 

@@ -36,8 +36,7 @@ namespace geeL {
 
 		int counter = 0;
 		iterTextures([&layer, &counter, &shader](const std::string& name, const Texture2D& texture) {
-			glActiveTexture(layer + counter + shader.mapBindingPos);
-			texture.bind();
+			texture.bind(layer + counter + shader.mapBindingPos);
 			counter++;
 		});
 	}
