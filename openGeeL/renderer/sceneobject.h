@@ -39,7 +39,7 @@ namespace geeL {
 		template<class T, typename ...Args>
 		T& addComponent(const Args& ...args);
 
-		bool isActive() const;
+		virtual bool isActive() const;
 		virtual void setActive(bool active);
 		void addStatusListener(std::function<void(SceneObject&, bool status)> listener);
 

@@ -11,6 +11,7 @@
 
 namespace geeL {
 
+	class Camera;
 	class DefaultMaterialContainer;
 	class Material;
 	class MaterialContainer;
@@ -76,6 +77,14 @@ namespace geeL {
 		const Mesh* getMesh(const std::string& name) const;
 		virtual RenderMode getRenderMode() const;
 
+		//Specify, whether this object should be able to be 
+		//filtered out / not drawn if it isn't actually visible
+		void setAutomaticFiltering(bool value);
+
+		//States if currently visible (from given camera POV)
+		//Note: Will always return true if automatic filtering
+		//is disabled (Disabled by default)
+		bool isVisible(const Camera& camera) const;
 		bool containsShader(SceneShader& shader) const;
 
 	protected:
@@ -107,6 +116,7 @@ namespace geeL {
 		void drawMask(const MaterialMapping& mapping) const;
 
 	private:
+		bool autoFilter = false;
 		Model* model;
 
 		MaterialMapping* getMapping(const Mesh& mesh);

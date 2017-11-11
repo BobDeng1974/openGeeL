@@ -57,6 +57,9 @@ namespace geeL {
 
 		const glm::vec3& GetOriginInViewSpace() const;
 
+		bool inView(const glm::vec3& position) const;
+		bool isBehind(const glm::vec3& position) const;
+
 		void setViewMatrix(const glm::mat4& view);
 		void setProjectionMatrix(const glm::mat4& projection);
 

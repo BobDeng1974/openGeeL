@@ -1,6 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <glfw3.h>
+#include "cameras/camera.h"
 #include "materials/defaultmaterial.h"
 #include "materials/material.h"
 #include "transformation/transform.h"
@@ -250,6 +251,14 @@ namespace geeL{
 
 	RenderMode MeshRenderer::getRenderMode() const {
 		return RenderMode::Static;
+	}
+
+	void MeshRenderer::setAutomaticFiltering(bool value) {
+		autoFilter = value;
+	}
+
+	bool MeshRenderer::isVisible(const Camera& camera) const {
+		return !autoFilter || !camera.isBehind(transform.getPosition());
 	}
 
 	bool MeshRenderer::containsShader(SceneShader& shader) const {

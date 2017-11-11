@@ -258,7 +258,7 @@ namespace geeL {
 				currentShader = &shader;
 			}
 
-			if (object.isActive())
+			if (object.isActive()/* && object.isVisible(camera)*/)
 				object.draw(shader);
 		});
 	}
@@ -347,7 +347,7 @@ namespace geeL {
 				currentShader = &shader;
 			}
 
-			if (object.isActive())
+			if (object.isActive()/* && object.isVisible(camera)*/)
 				object.draw(shader);
 		}
 
