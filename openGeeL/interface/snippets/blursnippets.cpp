@@ -14,6 +14,21 @@ namespace geeL {
 	}
 
 
+	SeparatedGaussianSnippet::SeparatedGaussianSnippet(SeparatedGaussian& blur) 
+		: GaussianBlurSnippet(blur), blur(blur){}
+
+	void SeparatedGaussianSnippet::drawSimple(GUIContext * context) {
+		float sigma = GUISnippets::drawBarFloat(context, blur.getSigmaR(), 0.0f, 25.f, 0.001f, "R");
+		blur.setSigmaR(sigma);
+
+		sigma = GUISnippets::drawBarFloat(context, blur.getSigmaG(), 0.0f, 25.f, 0.001f, "G");
+		blur.setSigmaG(sigma);
+
+		sigma = GUISnippets::drawBarFloat(context, blur.getSigmaB(), 0.0f, 25.f, 0.001f, "B");
+		blur.setSigmaB(sigma);
+	}
+
+
 
 	BilateralFilterSnippet::BilateralFilterSnippet(BilateralFilter& blur) 
 		: GaussianBlurSnippet(blur), blur(blur) {}

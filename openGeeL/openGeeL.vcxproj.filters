@@ -1222,5 +1222,8 @@
     <None Include="renderer\shaders\transparentlighting.frag">
       <Filter>renderer\shaders</Filter>
     </None>
+    <None Include="renderer\postprocessing\gaussianseparated.frag">
+      <Filter>renderer\postprocessing</Filter>
+    </None>
   </ItemGroup>
 </Project>

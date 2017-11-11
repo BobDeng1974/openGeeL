@@ -481,6 +481,7 @@
     <None Include="renderer\postprocessing\gaussianblur3.frag" />
     <None Include="renderer\postprocessing\gaussianblur4.frag" />
     <None Include="renderer\postprocessing\gaussianblur5.frag" />
+    <None Include="renderer\postprocessing\gaussianseparated.frag" />
     <None Include="renderer\postprocessing\godray.frag" />
     <None Include="renderer\postprocessing\kernelprocessing.frag" />
     <None Include="renderer\postprocessing\lensflare.frag" />

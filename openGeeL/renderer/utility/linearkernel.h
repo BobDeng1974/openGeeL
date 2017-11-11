@@ -15,8 +15,9 @@ namespace geeL {
 		std::vector<float> weights;
 		std::vector<float> offsets;
 
-		void convert(std::vector<float> kernel);
-		void bind(const Shader& shader) const;
+		void convert(const std::vector<float>& kernel);
+		void bind(const Shader& shader, const std::string& weightsName = "weights", 
+			const std::string& offsetsName = "offsets") const;
 
 	};
 }

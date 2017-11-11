@@ -33,7 +33,7 @@ namespace geeL {
 		std::vector<float> computeKernel(float sigma) const;
 
 		float getSigma() const;
-		void  setSigma(float value);
+		virtual void setSigma(float value);
 
 		virtual std::string toString() const;
 
@@ -53,7 +53,6 @@ namespace geeL {
 		RenderTexture* tempTexture = nullptr;
 		ShaderLocation horLocation;
 
-		void bindKernel() const;
 		void updateKernel();
 
 	};
@@ -63,6 +62,29 @@ namespace geeL {
 
 	public:
 		GaussianBlur(KernelSize kernelSize = KernelSize::Small, float sigma = 1.3f);
+
+	};
+
+
+	class SeparatedGaussian : public GaussianBlurBase {
+
+	public:
+		SeparatedGaussian(float sigma = 1.3f);
+
+		float getSigmaR() const;
+		float getSigmaG() const ;
+		float getSigmaB() const;
+
+		virtual void setSigma(float value);
+		void setSigmaR(float value);
+		void setSigmaG(float value);
+		void setSigmaB(float value);
+
+		virtual std::string toString() const;
+
+	private:
+		float sigmaR, sigmaG, sigmaB;
+		LinearKernel kernelR, kernelG, kernelB;
 
 	};
 
@@ -130,6 +152,10 @@ namespace geeL {
 
 	inline std::string GaussianBlurBase::toString() const {
 		return "Gaussian Blur";
+	}
+
+	inline std::string SeparatedGaussian::toString() const {
+		return "Separated Gaussian Blur";
 	}
 
 	inline std::string BilateralFilter::toString() const {

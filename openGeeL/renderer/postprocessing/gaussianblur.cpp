@@ -40,7 +40,6 @@ namespace geeL {
 		tempTexture = new RenderTexture(resolution, ColorType::RGB16, 
 			WrapMode::ClampEdge, FilterMode::Linear);
 
-		bindKernel();
 		horLocation = shader.getLocation("horizontal");
 	}
 
@@ -89,7 +88,6 @@ namespace geeL {
 			sigma = value;
 			updateKernel();
 			
-			bindKernel();
 		}
 	}
 
@@ -98,12 +96,10 @@ namespace geeL {
 		updateKernel();
 	}
 
-	void GaussianBlurBase::bindKernel() const {
-		linearKernel.bind(shader);
-	}
 
 	void GaussianBlurBase::updateKernel() {
 		linearKernel.convert(computeKernel(sigma));
+		linearKernel.bind(shader);
 	}
 
 
@@ -128,6 +124,66 @@ namespace geeL {
 		}
 
 		setKernelsize(size);
+	}
+
+
+
+
+	SeparatedGaussian::SeparatedGaussian(float sigma) 
+		: GaussianBlurBase("renderer/postprocessing/gaussianseparated.frag", sigma) {
+
+		setKernelsize(7);
+		setSigma(sigma);
+	}
+
+	float SeparatedGaussian::getSigmaR() const {
+		return sigmaR;
+	}
+
+	float SeparatedGaussian::getSigmaG() const {
+		return sigmaG;
+	}
+
+	float SeparatedGaussian::getSigmaB() const {
+		return sigmaB;
+	}
+
+	void SeparatedGaussian::setSigma(float value) {
+		GaussianBlurBase::setSigma(value);
+
+		setSigmaR(value);
+		setSigmaG(value);
+		setSigmaB(value);
+	}
+
+	void SeparatedGaussian::setSigmaR(float value) {
+		if (sigmaR != value && value > 0.f) {
+			sigmaR = value;
+			
+			kernelR.convert(computeKernel(sigmaR));
+			kernelR.bind(shader, "weightsR", "offsetsR");
+
+		}
+	}
+
+	void SeparatedGaussian::setSigmaG(float value) {
+		if (sigmaG != value && value > 0.f) {
+			sigmaG = value;
+
+			kernelG.convert(computeKernel(sigmaG));
+			kernelG.bind(shader, "weightsG", "offsetsG");
+
+		}
+	}
+
+	void SeparatedGaussian::setSigmaB(float value) {
+		if (sigmaB != value && value > 0.f) {
+			sigmaB = value;
+
+			kernelB.convert(computeKernel(sigmaB));
+			kernelB.bind(shader, "weightsB", "offsetsB");
+
+		}
 	}
 
 
@@ -224,5 +280,5 @@ namespace geeL {
 		sobel.setScale(value);
 	}
 
-	
+
 }

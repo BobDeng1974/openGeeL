@@ -21,7 +21,7 @@ public:
 
 			Transform& cameraTransform = transformFactory.CreateTransform(vec3(1.3f, -3.58f, 4.11f), vec3(78.13f, 44.83f, -174.44f), vec3(1.f));
 			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 80.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
-			camera.addComponent<MovableCamera>(MovableCamera(5.f, 0.45f));
+			camera.addComponent<MovableCamera>(MovableCamera(3.f, 0.45f));
 			scene.setCamera(camera);
 
 			//EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/03-Ueno-Shrine_3k.hdr");
@@ -98,6 +98,8 @@ public:
 					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/eyelash_alpha_01.jpg"));
 				else if (container.name == "hair_inner")
 					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/hair_inner_alpha_01.jpg"));
+				else if (container.name == "eyes_outer")
+					container.setFloatValue("Roughness", 0.01f);
 				else if (container.name == "hair_outer")
 					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/hair_outer_alpha_01.jpg"));
 				else if (container.name == "cloth") {
@@ -156,12 +158,22 @@ public:
 			postLister.add(mSnippet);
 
 			//Fake subsurface scattering with bilateral filter
+			
 			BilateralFilter& sss = BilateralFilter(2.f, 0.1f);
 			BilateralFilterSnippet sssSnippet(sss);
 			AdditiveWrapper& additiveSSS = AdditiveWrapper(sss);
 			renderer.addEffect(additiveSSS);
 			postLister.add(sssSnippet);
 			additiveSSS.setRenderMask(RenderMask::Skin);
+			
+			/*
+			SeparatedGaussian& s4 = SeparatedGaussian();
+			SeparatedGaussianSnippet& s4snip = SeparatedGaussianSnippet(s4);
+			AdditiveWrapper& additiveS4 = AdditiveWrapper(s4);
+			renderer.addEffect(additiveS4);
+			postLister.add(s4snip);
+			additiveS4.setRenderMask(RenderMask::Skin);
+			*/
 
 
 			FXAA& fxaa = FXAA(0.001f, 0.f);

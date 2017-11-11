@@ -6,7 +6,7 @@ using namespace std;
 
 namespace geeL {
 	
-	void LinearKernel::convert(std::vector<float> kernel) {
+	void LinearKernel::convert(const std::vector<float>& kernel) {
 		if (kernel.size() % 2 == 0)
 			throw "Size of kernel has to be odd\n";
 
@@ -26,12 +26,12 @@ namespace geeL {
 		}
 	}
 
-	void LinearKernel::bind(const Shader& shader) const {
+	void LinearKernel::bind(const Shader& shader, const string& weightsName, const string& offsetsName) const {
 		for (size_t i = 0; i < weights.size(); i++) {
 			string index = std::to_string(i) + "]";
 
-			shader.bind<float>("weights[" + index, weights[i]);
-			shader.bind<float>("offsets[" + index, offsets[i]);
+			shader.bind<float>(weightsName + "[" + index, weights[i]);
+			shader.bind<float>(offsetsName + "[" + index, offsets[i]);
 		}
 	}
 
