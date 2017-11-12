@@ -16,7 +16,10 @@ using namespace std;
 namespace geeL {
 
 	SSAO::SSAO(PostProcessingEffectFS& blur, float radius, const ResolutionPreset& resolution)
-		: PostProcessingEffectFS("renderer/postprocessing/ssao.frag"), blur(blur), radius(radius), scale(resolution) {
+		: PostProcessingEffectFS("renderer/postprocessing/ssao.frag")
+		, blur(blur)
+		, radius(radius)
+		, scale(resolution) {
 	
 		uniform_real_distribution<GLfloat> random(0.f, 1.f);
 		default_random_engine generator;

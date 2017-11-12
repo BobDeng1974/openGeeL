@@ -16,8 +16,11 @@ namespace geeL {
 	class LensFlare : public PostProcessingEffectFS, public CameraRequester {
 
 	public:
-		LensFlare(BlurredPostEffect& filter, float scale = 0.5f, float samples = 4.f, 
+		LensFlare(BlurredPostEffect& filter, 
+			float scale = 0.5f, 
+			float samples = 4.f, 
 			const ResolutionPreset& resolution = ResolutionPreset::FULLSCREEN);
+
 		virtual ~LensFlare();
 
 		virtual void setImage(const Texture& texture);

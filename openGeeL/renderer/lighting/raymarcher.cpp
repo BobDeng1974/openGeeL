@@ -6,7 +6,8 @@
 namespace geeL {
 
 	RayMarcher::RayMarcher(RenderScene& scene) 
-		: SceneRender(scene), PostProcessingEffectFS("renderer/lighting/raymarch.frag") {}
+		: SceneRender(scene)
+		, PostProcessingEffectFS("renderer/lighting/raymarch.frag") {}
 
 	void RayMarcher::init(const PostProcessingParameter& parameter) {
 		PostProcessingEffectFS::init(parameter);

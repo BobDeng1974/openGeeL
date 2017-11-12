@@ -39,8 +39,12 @@
 
 namespace geeL {
 
-	GUIRenderer::GUIRenderer(RenderWindow& window, RenderContext& context, DeferredRenderer& renderer) 
-		: renderContext(&context), renderer(renderer), window(window) {
+	GUIRenderer::GUIRenderer(RenderWindow& window, 
+		RenderContext& context, 
+		DeferredRenderer& renderer) 
+			: renderContext(&context)
+			, renderer(renderer)
+			, window(window) {
 		
 		init(window);
 	}

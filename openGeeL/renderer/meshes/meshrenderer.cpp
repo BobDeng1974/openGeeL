@@ -14,8 +14,15 @@ using namespace std;
 
 namespace geeL{
 
-	MeshRenderer::MeshRenderer(Transform& transform, SceneShader& shader, Model& model, CullingMode faceCulling, const std::string& name)
-		: SceneObject(transform, name), model(&model), faceCulling(faceCulling), mask(RenderMask::None) {
+	MeshRenderer::MeshRenderer(Transform& transform, 
+		SceneShader& shader, 
+		Model& model, 
+		CullingMode faceCulling, 
+		const std::string& name)
+			: SceneObject(transform, name)
+			, model(&model)
+			, faceCulling(faceCulling)
+			, mask(RenderMask::None) {
 	
 		initMaterials(shader);
 	}

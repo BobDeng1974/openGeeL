@@ -16,28 +16,6 @@ namespace geeL {
 
 	class RenderWindow;
 
-	/*
-	template<class T>
-	class CallbackDelegate {
-
-	public:
-		typedef void(T::*Callback)(GLFWwindow*, int, int, int, int);
-
-		CallbackDelegate(T& obj, Callback callback) 
-			: obj(obj), callback(callback) {}
-
-
-		void Run(GLFWwindow* window, int key, int scancode, int action, int mode) {
-			obj.*callback(window, key, scancode, action, mode);
-		}
-
-	private:
-		CallbackDelegate();
-
-		T& obj;
-		Callback callback;
-	};
-	*/
 
 	//Interface for all input managers
 	class Input {
@@ -75,8 +53,6 @@ namespace geeL {
 
 	public:
 		typedef bool (InputManager::*KeyAction)(int) const;
-
-		InputManager() {}
 
 		//Forwards the input manager (as user pointer) and the callbacks to GLFW 
 		void init(const RenderWindow* renderWindow);

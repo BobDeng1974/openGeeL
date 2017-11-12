@@ -17,8 +17,15 @@ using namespace glm;
 
 namespace geeL {
 
-	SpotLight::SpotLight(Transform& transform, vec3 diffuse, float angle, float outerAngle, const string& name)
-			: Light(transform, diffuse, name), angle(angle), outerAngle(outerAngle), lightCookie(nullptr) {}
+	SpotLight::SpotLight(Transform& transform, 
+		vec3 diffuse, 
+		float angle, 
+		float outerAngle, 
+		const string& name)
+			: Light(transform, diffuse, name)
+			, angle(angle)
+			, outerAngle(outerAngle)
+			, lightCookie(nullptr) {}
 
 
 	void SpotLight::bind(const Shader& shader, const string& name, ShaderTransformSpace space, const Camera* const camera) const {

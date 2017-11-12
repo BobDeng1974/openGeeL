@@ -108,6 +108,7 @@ namespace geeL {
 	}
 
 	void TextureProvider::textureCallback(RenderTexture& texture, ResolutionPreset resolution) {
+		//TODO: maybe detach parameters here
 		textures[resolution][texture.getColorType()].push(&texture);
 	}
 

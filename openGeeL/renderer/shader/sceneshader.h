@@ -16,8 +16,15 @@ namespace geeL {
 		const bool useSkybox;
 
 
-		FragmentShader(std::string path, bool useLight = true, bool useCamera = true, bool useSkybox = true)
-			: path(path), useLight(useLight), useCamera(useCamera), useSkybox(useSkybox) {}
+		FragmentShader(std::string path, 
+			bool useLight = true, 
+			bool useCamera = true,
+			bool useSkybox = true)
+				: path(path)
+				, useLight(useLight)
+				, useCamera(useCamera)
+				, useSkybox(useSkybox) {}
+
 	};
 
 
@@ -29,11 +36,18 @@ namespace geeL {
 	public:
 		SceneShader();
 
-		SceneShader(const std::string& vertexPath, const FragmentShader& fragmentPath, ShaderTransformSpace space, 
-			ShadingMethod shadingMethod, ShaderProvider* const provider = nullptr);
+		SceneShader(const std::string& vertexPath, 
+			const FragmentShader& fragmentPath, 
+			ShaderTransformSpace space, 
+			ShadingMethod shadingMethod, 
+			ShaderProvider* const provider = nullptr);
 
-		SceneShader(const std::string& vertexPath, const std::string& geometryPath, const FragmentShader& fragmentPath, 
-			ShaderTransformSpace space, ShadingMethod shadingMethod, ShaderProvider* const provider = nullptr);
+		SceneShader(const std::string& vertexPath, 
+			const std::string& geometryPath, 
+			const FragmentShader& fragmentPath, 
+			ShaderTransformSpace space, 
+			ShadingMethod shadingMethod, 
+			ShaderProvider* const provider = nullptr);
 
 
 		bool SceneShader::getUseLight() const;

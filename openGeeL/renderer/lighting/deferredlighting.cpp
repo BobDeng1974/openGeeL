@@ -8,7 +8,8 @@
 namespace geeL {
 
 	DeferredLighting::DeferredLighting(RenderScene& scene) 
-		: SceneRender(scene), PostProcessingEffectFS( "renderer/lighting/deferredlighting.vert",
+		: SceneRender(scene)
+		, PostProcessingEffectFS( "renderer/lighting/deferredlighting.vert",
 			"renderer/lighting/deferredlighting.frag") {}
 
 

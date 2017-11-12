@@ -17,8 +17,10 @@ namespace geeL {
 	class SSAO : public PostProcessingEffectFS, public WorldMapRequester, public CameraRequester {
 
 	public:
-		SSAO(PostProcessingEffectFS& blur, float radius = 5.f, 
+		SSAO(PostProcessingEffectFS& blur, 
+			float radius = 5.f, 
 			const ResolutionPreset& resolution = ResolutionPreset::HALFSCREEN);
+
 		SSAO(const SSAO& other);
 		virtual ~SSAO();
 

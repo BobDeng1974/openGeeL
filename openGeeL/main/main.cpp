@@ -20,8 +20,6 @@ int main() {
 	CharacterViewer::draw();
 	//CapsuleScene::draw();
 
-	getchar();
-
 	//TestScene::draw();
 	//RaymarchTest::draw();
 

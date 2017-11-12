@@ -36,8 +36,11 @@ namespace geeL {
 
 	public:
 		//Constructor for mesh renderer with an unique assigned model
-		MeshRenderer(Transform& transform, SceneShader& shader, Model& model,
-			CullingMode faceCulling = CullingMode::cullFront, const std::string& name = "MeshRenderer");
+		MeshRenderer(Transform& transform, 
+			SceneShader& shader, 
+			Model& model,
+			CullingMode faceCulling = CullingMode::cullFront, 
+			const std::string& name = "MeshRenderer");
 		virtual ~MeshRenderer() {}
 
 

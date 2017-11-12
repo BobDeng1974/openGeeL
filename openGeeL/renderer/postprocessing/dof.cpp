@@ -10,7 +10,8 @@ using namespace std;
 namespace geeL {
 
 	DepthOfFieldBlur::DepthOfFieldBlur(float threshold, float sigma)
-		: GaussianBlurBase("renderer/postprocessing/dofblur.frag", sigma), threshold(threshold) {
+		: GaussianBlurBase("renderer/postprocessing/dofblur.frag", sigma)
+		, threshold(threshold) {
 
 		setKernelsize(9);
 	}
@@ -49,10 +50,16 @@ namespace geeL {
 
 
 	DepthOfFieldBlurred::DepthOfFieldBlurred(DepthOfFieldBlur& blur,
-		const float& focalLength, float aperture, float farDistance, const ResolutionPreset& blurResolution)
-			: PostProcessingEffectFS("renderer/postprocessing/dof.frag"), 
-				blur(blur), focalLength(focalLength), aperture(aperture), 
-				farDistance(farDistance), blurResolution(blurResolution) {}
+		const float& focalLength, 
+		float aperture, 
+		float farDistance, 
+		const ResolutionPreset& blurResolution)
+			: PostProcessingEffectFS("renderer/postprocessing/dof.frag")
+			, blur(blur)
+			, focalLength(focalLength)
+			, aperture(aperture)
+			, farDistance(farDistance)
+			, blurResolution(blurResolution) {}
 
 	DepthOfFieldBlurred::~DepthOfFieldBlurred() {
 		if (blurTexture != nullptr) delete blurTexture;

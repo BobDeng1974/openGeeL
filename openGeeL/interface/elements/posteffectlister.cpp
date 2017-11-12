@@ -7,7 +7,10 @@
 namespace geeL {
 
 	PostProcessingEffectLister::PostProcessingEffectLister(RenderWindow& window, 
-		float x, float y, float width, float height)
+		float x, 
+		float y, 
+		float width, 
+		float height)
 			: GUIElement(window, x, y, width, height) {}
 
 	PostProcessingEffectLister::~PostProcessingEffectLister() {

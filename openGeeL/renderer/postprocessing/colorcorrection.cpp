@@ -6,9 +6,11 @@
 
 namespace geeL {
 
-	ColorCorrection::ColorCorrection(float red, float green, float blue, float hue, float saturation, float brightness)
-		: PostProcessingEffectFS("renderer/postprocessing/colorcorrection.frag"), 
-		r(red), g(green), b(blue), h(hue), s(saturation), v(brightness) {}
+	ColorCorrection::ColorCorrection(float red, float green, float blue,
+		float hue, float saturation, float brightness)
+			: PostProcessingEffectFS("renderer/postprocessing/colorcorrection.frag")
+			, r(red), g(green), b(blue)
+			, h(hue), s(saturation), v(brightness) {}
 
 
 	void ColorCorrection::init(const PostProcessingParameter& parameter) {

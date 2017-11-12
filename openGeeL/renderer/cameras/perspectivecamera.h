@@ -11,8 +11,13 @@ namespace geeL {
 	class PerspectiveCamera : public SceneCamera {
 
 	public:		
-		PerspectiveCamera(Transform& transform, float fov, unsigned int width, unsigned int height, 
-			float nearClip, float farClip, std::string name = "PerspectiveCamera");
+		PerspectiveCamera(Transform& transform, 
+			float fov, 
+			unsigned int width, 
+			unsigned int height, 
+			float nearClip, 
+			float farClip, 
+			std::string name = "PerspectiveCamera");
 
 		float getFieldOfView() const;
 		void setFieldOfView(float fov);

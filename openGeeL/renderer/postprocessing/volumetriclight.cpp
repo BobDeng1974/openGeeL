@@ -12,9 +12,17 @@ using namespace std;
 
 namespace geeL {
 
-	VolumetricLight::VolumetricLight(SpotLight& light, float density, float minDistance, unsigned int samples, bool useCookie)
-		: AdditiveEffect("renderer/postprocessing/volumetriclight.frag"),
-			light(light), density(density), minDistance(minDistance), samples(samples), useCookie(useCookie) {}
+	VolumetricLight::VolumetricLight(SpotLight& light, 
+		float density, 
+		float minDistance, 
+		unsigned int samples, 
+		bool useCookie)
+			: AdditiveEffect("renderer/postprocessing/volumetriclight.frag")
+			, light(light)
+			, density(density)
+			, minDistance(minDistance)
+			, samples(samples)
+			, useCookie(useCookie) {}
 
 
 	void VolumetricLight::init(const PostProcessingParameter& parameter) {

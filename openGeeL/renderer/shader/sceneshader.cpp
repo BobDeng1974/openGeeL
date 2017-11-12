@@ -10,10 +10,15 @@ namespace geeL {
 	SceneShader::SceneShader() : RenderShader(), shader(""), 
 		space(ShaderTransformSpace::View) {}
 
-	SceneShader::SceneShader(const std::string& vertexPath, const FragmentShader& fragmentPath, 
-		ShaderTransformSpace space, ShadingMethod shadingMethod, ShaderProvider* const provider)
-			: RenderShader(vertexPath.c_str(), fragmentPath.path.c_str(), provider), shader(fragmentPath), space(space), 
-				shadingMethod(shadingMethod) {
+	SceneShader::SceneShader(const std::string& vertexPath, 
+		const FragmentShader& fragmentPath, 
+		ShaderTransformSpace space, 
+		ShadingMethod shadingMethod, 
+		ShaderProvider* const provider)
+			: RenderShader(vertexPath.c_str(), fragmentPath.path.c_str(), provider)
+			, shader(fragmentPath)
+			, space(space)
+			, shadingMethod(shadingMethod) {
 
 		viewLocation = getLocation("view");
 		modelLocation = getLocation("model");
@@ -21,10 +26,16 @@ namespace geeL {
 		transInvModelViewLocation = getLocation("transInvModelView");
 	}
 
-	SceneShader::SceneShader(const std::string& vertexPath, const std::string& geometryPath, const FragmentShader& fragmentPath, 
-		ShaderTransformSpace space, ShadingMethod shadingMethod, ShaderProvider* const provider)
-			: RenderShader(vertexPath.c_str(), geometryPath.c_str(), fragmentPath.path.c_str(), provider), shader(fragmentPath), 
-				space(space), shadingMethod(shadingMethod) {
+	SceneShader::SceneShader(const std::string& vertexPath, 
+		const std::string& geometryPath, 
+		const FragmentShader& fragmentPath, 
+		ShaderTransformSpace space, 
+		ShadingMethod shadingMethod, 
+		ShaderProvider* const provider)
+			: RenderShader(vertexPath.c_str(), geometryPath.c_str(), fragmentPath.path.c_str(), provider)
+			, shader(fragmentPath)
+			, space(space)
+			, shadingMethod(shadingMethod) {
 
 		viewLocation = getLocation("view");
 		modelLocation = getLocation("model");

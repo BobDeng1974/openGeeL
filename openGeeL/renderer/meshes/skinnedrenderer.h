@@ -9,8 +9,11 @@ namespace geeL {
 	class SkinnedMeshRenderer : public MeshRenderer {
 
 	public:
-		SkinnedMeshRenderer(Transform& transform, SceneShader& shader, SkinnedModel& model,
-			CullingMode faceCulling = CullingMode::cullFront, const std::string& name = "SkinnedMeshRenderer");
+		SkinnedMeshRenderer(Transform& transform, 
+			SceneShader& shader, 
+			SkinnedModel& model,
+			CullingMode faceCulling = CullingMode::cullFront, 
+			const std::string& name = "SkinnedMeshRenderer");
 
 		virtual ~SkinnedMeshRenderer();
 

@@ -13,10 +13,14 @@ using namespace glm;
 
 namespace geeL {
 
-	PrefilteredEnvironmentMap::PrefilteredEnvironmentMap(const CubeMap& environmentMap, CubeBuffer& frameBuffer, unsigned int resolution)
-		: DynamicCubeMap(new RenderTextureCube(resolution, WrapMode::ClampEdge, FilterMode::Trilinear)), environmentMap(environmentMap), 
-			frameBuffer(frameBuffer), conversionShader(new RenderShader("renderer/cubemapping/envconvert.vert",
-			"renderer/cubemapping/prefilterEnvmap.frag")) {
+	PrefilteredEnvironmentMap::PrefilteredEnvironmentMap(const CubeMap& environmentMap, 
+		CubeBuffer& frameBuffer, 
+		unsigned int resolution)
+			: DynamicCubeMap(new RenderTextureCube(resolution, WrapMode::ClampEdge, FilterMode::Trilinear))
+			, environmentMap(environmentMap)
+			, frameBuffer(frameBuffer)
+			, conversionShader(new RenderShader("renderer/cubemapping/envconvert.vert",
+				"renderer/cubemapping/prefilterEnvmap.frag")) {
 
 		texture->mipmap();
 

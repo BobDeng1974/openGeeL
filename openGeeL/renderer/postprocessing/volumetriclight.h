@@ -13,8 +13,11 @@ namespace geeL {
 	class VolumetricLight : public AdditiveEffect, public WorldMapRequester, public CameraRequester {
 
 	public:
-		VolumetricLight(SpotLight& light,  float density = 1.f, float minDistance = 1.f, 
-			unsigned int samples = 30, bool useCookie = false);
+		VolumetricLight(SpotLight& light,  
+			float density = 1.f, 
+			float minDistance = 1.f, 
+			unsigned int samples = 30, 
+			bool useCookie = false);
 
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues();

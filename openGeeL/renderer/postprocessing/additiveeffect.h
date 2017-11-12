@@ -13,7 +13,8 @@ namespace geeL {
 
 	public:
 		AdditiveEffect(const std::string& fragmentPath, BlendMode mode = BlendMode::Add);
-		AdditiveEffect(const std::string& vertexPath, const std::string& fragmentPath, BlendMode mode = BlendMode::Add);
+		AdditiveEffect(const std::string& vertexPath, const std::string& fragmentPath, 
+			BlendMode mode = BlendMode::Add);
 
 		virtual void setImage(const Texture& texture);
 

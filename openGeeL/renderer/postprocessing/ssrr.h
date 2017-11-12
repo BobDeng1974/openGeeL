@@ -29,7 +29,8 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	protected:
-		SSRR(std::string fragmentPath, int sampleCount = 60, float sampleSize = 0.2f, float sampleSizeGain = 1.02f);
+		SSRR(std::string fragmentPath, int sampleCount = 60, float sampleSize = 0.2f, 
+			float sampleSizeGain = 1.02f);
 		
 	private:
 		unsigned int steps;

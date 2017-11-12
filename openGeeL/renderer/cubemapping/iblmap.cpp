@@ -6,8 +6,13 @@
 
 namespace geeL {
 
-	IBLMap::IBLMap(BRDFIntegrationMap& brdfIntMap, IrradianceMap& irrMap, PrefilteredEnvironmentMap& preEnvMap)
-		: DynamicCubeMap(&irrMap.getTexture()), brdfIntMap(brdfIntMap), irrMap(irrMap), preEnvMap(preEnvMap) {
+	IBLMap::IBLMap(BRDFIntegrationMap& brdfIntMap, 
+		IrradianceMap& irrMap, 
+		PrefilteredEnvironmentMap& preEnvMap)
+			: DynamicCubeMap(&irrMap.getTexture())
+			, brdfIntMap(brdfIntMap)
+			, irrMap(irrMap)
+			, preEnvMap(preEnvMap) {
 	
 		draw();
 	}

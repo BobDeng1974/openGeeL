@@ -128,8 +128,10 @@ namespace geeL {
 	class Configuration {
 
 	public:
-		Configuration(RenderWindow& window, SceneInitialization initFunction,
-			GBufferContent content = GBufferContent::Default, PhysicsType physicsType = PhysicsType::None);
+		Configuration(RenderWindow& window, 
+			SceneInitialization initFunction,
+			GBufferContent content = GBufferContent::Default, 
+			PhysicsType physicsType = PhysicsType::None);
 
 		void run();
 

@@ -7,12 +7,17 @@
 namespace geeL {
 
 	Configuration::Configuration(RenderWindow& window, 
-		SceneInitialization initFunction, GBufferContent content, PhysicsType physicsType)
-			: window(window), initFunction(initFunction), content(content), physicsType(physicsType) {}
+		SceneInitialization initFunction, 
+		GBufferContent content, 
+		PhysicsType physicsType)
+			: window(window)
+			, initFunction(initFunction)
+			, content(content)
+			, physicsType(physicsType) {}
 
 
 	void Configuration::run() {
-		InputManager& manager = InputManager();
+		InputManager manager;
 
 		geeL::Transform& world = ThreadedTransform(glm::vec3(0.f), vec3(0.f), vec3(1.f));
 		TransformFactory& transFactory = TransformFactory(world);
@@ -51,12 +56,6 @@ namespace geeL {
 
 		GUIRenderer& gui = GUIRenderer(window, context, renderer);
 		renderer.addGUIRenderer(&gui);
-
-		{
-			TextureParameters param;
-			TextureWrapper wrap = textureProvider.requestTexture(ResolutionPreset::HALFSCREEN, ColorType::RGB, param);
-		}
-		
 
 		Physics* physics;
 		ContinuousSingleThread* physicsThread = nullptr;

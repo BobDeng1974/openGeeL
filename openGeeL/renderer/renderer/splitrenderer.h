@@ -14,7 +14,9 @@ namespace geeL {
 		float width;
 		float height;
 
-		RenderViewport(float x, float y, float width, float height) : x(x), y(y), width(width), height(height) {}
+		RenderViewport(float x, float y, float width, float height) 
+			: x(x), y(y), width(width), height(height) {}
+
 	};
 
 	class SplitRenderer : public Renderer {

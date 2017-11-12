@@ -17,7 +17,8 @@ namespace geeL {
 	class Bloom : public BlurredPostEffect {
 
 	public:
-		Bloom(BrightnessFilterCutoff& filter, GaussianBlurBase& blur, 
+		Bloom(BrightnessFilterCutoff& filter, 
+			GaussianBlurBase& blur, 
 			ResolutionPreset effectResolution = ResolutionPreset::FULLSCREEN, 
 			ResolutionPreset blurResolution = ResolutionPreset::FULLSCREEN);
 

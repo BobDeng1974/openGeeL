@@ -91,7 +91,10 @@ namespace geeL {
 
 	public:
 		//Defines a movable camera
-		SceneCamera(Transform& transform, float nearClip, float farClip, const std::string& name = "Camera");
+		SceneCamera(Transform& transform, 
+			float nearClip, 
+			float farClip, 
+			const std::string& name = "Camera");
 
 		//Update view and projection matrices
 		virtual void lateUpdate();

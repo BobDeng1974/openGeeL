@@ -11,9 +11,16 @@ using namespace glm;
 
 namespace geeL {
 
-	LensFlare::LensFlare(BlurredPostEffect& filter, float scale, float samples, const ResolutionPreset& resolution)
-		: PostProcessingEffectFS("renderer/postprocessing/lensflare.frag"),
-			filter(filter), filterResolution(resolution), strength(1.f), scale(scale), samples(samples) {}
+	LensFlare::LensFlare(BlurredPostEffect& filter, 
+		float scale, 
+		float samples, 
+		const ResolutionPreset& resolution)
+			: PostProcessingEffectFS("renderer/postprocessing/lensflare.frag")
+			, filter(filter)
+			, filterResolution(resolution)
+			, strength(1.f)
+			, scale(scale)
+			, samples(samples) {}
 
 	LensFlare::~LensFlare() {
 		if (filterTexture != nullptr) delete filterTexture;

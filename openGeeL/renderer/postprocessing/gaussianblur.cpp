@@ -19,7 +19,9 @@ namespace geeL {
 		: GaussianBlurBase("renderer/postprocessing/gaussianblur1.frag", sigma) {}
 
 	GaussianBlurBase::GaussianBlurBase(string shaderPath, float sigma)
-		: PostProcessingEffectFS(shaderPath), mainBuffer(nullptr), sigma(sigma) {
+		: PostProcessingEffectFS(shaderPath)
+		, mainBuffer(nullptr)
+		, sigma(sigma) {
 
 		updateKernel();
 	}
@@ -104,7 +106,8 @@ namespace geeL {
 
 
 	GaussianBlur::GaussianBlur(KernelSize kernelSize, float sigma)
-		: GaussianBlurBase("renderer/postprocessing/gaussianblur" + std::to_string((int)kernelSize) + ".frag", sigma) {
+		: GaussianBlurBase("renderer/postprocessing/gaussianblur" 
+			+ std::to_string((int)kernelSize) + ".frag", sigma) {
 		
 		int size;
 		switch (kernelSize) {
@@ -188,7 +191,8 @@ namespace geeL {
 
 
 	BilateralFilter::BilateralFilter(float sigma, float factor)
-		: GaussianBlurBase("renderer/postprocessing/bilateral.frag", sigma), sigma2(factor) {
+		: GaussianBlurBase("renderer/postprocessing/bilateral.frag", sigma)
+		, sigma2(factor) {
 	
 		setKernelsize(7);
 	}
@@ -226,7 +230,9 @@ namespace geeL {
 
 
 	SobelBlur::SobelBlur(SobelFilter& sobel, float sigma, bool depth)
-		: GaussianBlurBase("renderer/postprocessing/sobelblur.frag", sigma), sobel(sobel), depth(depth) {
+		: GaussianBlurBase("renderer/postprocessing/sobelblur.frag", sigma)
+		, sobel(sobel)
+		, depth(depth) {
 	
 		setKernelsize(7);
 	}

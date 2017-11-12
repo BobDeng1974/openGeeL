@@ -16,10 +16,21 @@ using namespace glm;
 
 namespace geeL {
 
-	ReflectionProbe::ReflectionProbe(CubeBuffer& frameBuffer, std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall,
-		Transform& transform, unsigned int resolution, float width, float height, float depth, std::string name)
-			: DynamicCubeMap(new RenderTextureCube(resolution)), SceneObject(transform, name), 
-				frameBuffer(frameBuffer), width(width), height(height), depth(depth), renderCall(renderCall) {}
+	ReflectionProbe::ReflectionProbe(CubeBuffer& frameBuffer, 
+		std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall,
+		Transform& transform, 
+		unsigned int resolution, 
+		float width, 
+		float height, 
+		float depth, 
+		std::string name)
+			: DynamicCubeMap(new RenderTextureCube(resolution))
+			, SceneObject(transform, name)
+			, frameBuffer(frameBuffer)
+			, width(width)
+			, height(height)
+			, depth(depth)
+			, renderCall(renderCall) {}
 
 
 	ReflectionProbe::~ReflectionProbe() {

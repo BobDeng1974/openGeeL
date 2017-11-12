@@ -13,19 +13,32 @@ using namespace std;
 
 namespace geeL {
 
-	MaterialFactory::MaterialFactory(const GBuffer& buffer, ShaderProvider* const provider) :
-		genericShader(new SceneShader("renderer/shaders/lighting.vert", FragmentShader("renderer/shaders/lighting.frag"),
-			ShaderTransformSpace::World, ShadingMethod::Generic)),
-		forwardShader(new SceneShader("renderer/shaders/forwardlighting.vert", FragmentShader("renderer/shaders/forwardlighting.frag"), 
-			ShaderTransformSpace::View, ShadingMethod::Forward)),
-		deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", FragmentShader(buffer.getFragmentPath(), false), 
-			ShaderTransformSpace::View, ShadingMethod::Deferred)),
-		deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", FragmentShader(buffer.getFragmentPath(), false),
-			ShaderTransformSpace::View, ShadingMethod::Deferred)),
-		transparentODShader(new SceneShader("renderer/shaders/forwardlighting.vert", FragmentShader("renderer/shaders/forwardlighting.frag"),
-			ShaderTransformSpace::View, ShadingMethod::TransparentOD)), 
-		transparentOIDShader(new SceneShader("renderer/shaders/forwardlighting.vert", FragmentShader("renderer/shaders/transparentlighting.frag"),
-			ShaderTransformSpace::View, ShadingMethod::TransparentOID)), provider(provider) {
+	MaterialFactory::MaterialFactory(const GBuffer& buffer, ShaderProvider* const provider) 
+		: genericShader(new SceneShader("renderer/shaders/lighting.vert", 
+			FragmentShader("renderer/shaders/lighting.frag"),
+			ShaderTransformSpace::World, 
+			ShadingMethod::Generic))
+		, forwardShader(new SceneShader("renderer/shaders/forwardlighting.vert", 
+			FragmentShader("renderer/shaders/forwardlighting.frag"), 
+			ShaderTransformSpace::View, 
+			ShadingMethod::Forward))
+		, deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", 
+			FragmentShader(buffer.getFragmentPath(), false), 
+			ShaderTransformSpace::View, 
+			ShadingMethod::Deferred))
+		, deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", 
+			FragmentShader(buffer.getFragmentPath(), false),
+			ShaderTransformSpace::View, 
+			ShadingMethod::Deferred))
+		, transparentODShader(new SceneShader("renderer/shaders/forwardlighting.vert", 
+			FragmentShader("renderer/shaders/forwardlighting.frag"),
+			ShaderTransformSpace::View, 
+			ShadingMethod::TransparentOD))
+		, transparentOIDShader(new SceneShader("renderer/shaders/forwardlighting.vert", 
+			FragmentShader("renderer/shaders/transparentlighting.frag"),
+			ShaderTransformSpace::View, 
+			ShadingMethod::TransparentOID))
+		, provider(provider) {
 
 		genericShader->mapOffset = 1;
 		forwardShader->mapOffset = 1;

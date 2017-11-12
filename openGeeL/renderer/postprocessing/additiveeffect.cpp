@@ -10,10 +10,14 @@
 namespace geeL {
 
 	AdditiveEffect::AdditiveEffect(const std::string& fragmentPath, BlendMode mode)
-		: PostProcessingEffectFS(fragmentPath), mode(mode) {}
+		: PostProcessingEffectFS(fragmentPath)
+		, mode(mode) {}
 
-	AdditiveEffect::AdditiveEffect(const std::string& vertexPath, const std::string& fragmentPath, BlendMode mode)
-		: PostProcessingEffectFS(vertexPath, fragmentPath), mode(mode) {}
+	AdditiveEffect::AdditiveEffect(const std::string& vertexPath, 
+		const std::string& fragmentPath, 
+		BlendMode mode)
+			: PostProcessingEffectFS(vertexPath, fragmentPath)
+			, mode(mode) {}
 
 
 	void AdditiveEffect::setImage(const Texture& texture) {}

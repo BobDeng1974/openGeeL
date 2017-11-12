@@ -11,7 +11,7 @@ using namespace std;
 
 namespace geeL {
 
-	ComputeShader::ComputeShader(const char * shaderPath, ShaderProvider* const provider) {
+	ComputeShader::ComputeShader(const char* shaderPath, ShaderProvider* const provider) {
 		name = shaderPath;
 
 		string computeCode = ShaderFileReader::readShaderFile(shaderPath);

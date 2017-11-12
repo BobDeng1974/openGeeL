@@ -12,8 +12,8 @@
 namespace geeL {
 
 	GodRay::GodRay(glm::vec3 lightPosition, unsigned int samples) 
-		: PostProcessingEffectFS("renderer/postprocessing/godray.frag"), 
-			lightPosition(lightPosition) {
+		: PostProcessingEffectFS("renderer/postprocessing/godray.frag")
+		, lightPosition(lightPosition) {
 	
 		shader.setValue("samples", samples, Range<int>(0, 200));
 	}

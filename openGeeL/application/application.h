@@ -20,7 +20,10 @@ namespace geeL {
 	class Application {
 
 	public:
-		Application(RenderWindow& window, InputManager& inputManager, Renderer& renderer, ContinuousThread& mainThread);
+		Application(RenderWindow& window, 
+			InputManager& inputManager,
+			Renderer& renderer, 
+			ContinuousThread& mainThread);
 
 		void run();
 		void addThread(ContinuousThread& thread);

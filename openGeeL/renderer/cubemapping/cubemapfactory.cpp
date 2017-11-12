@@ -6,8 +6,12 @@
 
 namespace geeL {
 
-	CubeMapFactory::CubeMapFactory(CubeBuffer& buffer, ReflectionProbeRender renderCall, BRDFIntegrationMap& integrationMap)
-		: buffer(buffer), renderCall(renderCall), integrationMap(integrationMap) {}
+	CubeMapFactory::CubeMapFactory(CubeBuffer& buffer, 
+		ReflectionProbeRender renderCall, 
+		BRDFIntegrationMap& integrationMap)
+			: buffer(buffer)
+			, renderCall(renderCall)
+			, integrationMap(integrationMap) {}
 
 
 	CubeMapFactory::~CubeMapFactory() {

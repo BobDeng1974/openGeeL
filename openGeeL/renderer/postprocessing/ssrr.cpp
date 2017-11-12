@@ -7,12 +7,15 @@ using namespace std;
 namespace geeL {
 
 	SSRR::SSRR(unsigned int stepCount, float stepSize, float stepSizeGain) 
-		: PostProcessingEffectFS("renderer/postprocessing/ssrr.frag"), 
-			steps(stepCount), stepSize(stepSize), stepGain(stepSizeGain) {}
+		: PostProcessingEffectFS("renderer/postprocessing/ssrr.frag")
+		, steps(stepCount)
+		, stepSize(stepSize)
+		, stepGain(stepSizeGain) {}
 
 	SSRR::SSRR(string fragmentPath, int stepCount, float stepSize, float stepSizeGain)
-		: PostProcessingEffectFS(fragmentPath), steps(stepCount),
-			stepSize(stepSize), stepGain(stepSizeGain) {}
+		: PostProcessingEffectFS(fragmentPath), steps(stepCount)
+		, stepSize(stepSize)
+		, stepGain(stepSizeGain) {}
 
 
 	void SSRR::init(const PostProcessingParameter& parameter) {
@@ -73,8 +76,12 @@ namespace geeL {
 	}
 
 
-	MultisampledSSRR::MultisampledSSRR(unsigned int sampleCount, unsigned int stepCount, float stepSize, float stepSizeGain)
-		: SSRR("renderer/postprocessing/ssrr2.frag", stepCount, stepSize, stepSizeGain), samples(sampleCount) {}
+	MultisampledSSRR::MultisampledSSRR(unsigned int sampleCount, 
+		unsigned int stepCount, 
+		float stepSize, 
+		float stepSizeGain)
+			: SSRR("renderer/postprocessing/ssrr2.frag", stepCount, stepSize, stepSizeGain)
+			, samples(sampleCount) {}
 
 
 	void MultisampledSSRR::init(const PostProcessingParameter& parameter) {

@@ -2,9 +2,15 @@
 
 namespace geeL {
 
-	FXAA::FXAA(float minColorDiff, float fxaaMul, float fxaaMin, float fxaaClamp)
-		: PostProcessingEffectFS("renderer/postprocessing/fxaa.frag"), 
-			blurMin(minColorDiff), fxaaMul(fxaaMul), fxaaMin(fxaaMin), fxaaClamp(fxaaClamp) {}
+	FXAA::FXAA(float minColorDiff, 
+		float fxaaMul, 
+		float fxaaMin, 
+		float fxaaClamp)
+			: PostProcessingEffectFS("renderer/postprocessing/fxaa.frag")
+			, blurMin(minColorDiff)
+			, fxaaMul(fxaaMul)
+			, fxaaMin(fxaaMin)
+			, fxaaClamp(fxaaClamp) {}
 
 
 	void FXAA::init(const PostProcessingParameter& parameter) {

@@ -16,8 +16,13 @@ namespace geeL {
 	class ReflectionProbe : public DynamicCubeMap, public SceneObject {
 
 	public:
-		ReflectionProbe(CubeBuffer& frameBuffer, std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall,
-			Transform& transform, unsigned int resolution, float width = 50.f, float height = 50.f, float depth = 50.f, 
+		ReflectionProbe(CubeBuffer& frameBuffer, 
+			std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall,
+			Transform& transform, 
+			unsigned int resolution, 
+			float width = 50.f, 
+			float height = 50.f, 
+			float depth = 50.f, 
 			std::string name = "ReflectionProbe");
 
 		virtual ~ReflectionProbe();

@@ -12,8 +12,11 @@ namespace geeL {
 	class SpotLight : public Light {
 
 	public:
-		SpotLight(Transform& transform, vec3 diffuse, float angle = 30.f, 
-			float outerAngle = 5.f, const std::string& name = "SpotLight");
+		SpotLight(Transform& transform, 
+			vec3 diffuse, 
+			float angle = 30.f, 
+			float outerAngle = 5.f, 
+			const std::string& name = "SpotLight");
 
 		virtual void bind(const Shader& shader,
 			const std::string& name, ShaderTransformSpace space, const Camera* const camera = nullptr) const;

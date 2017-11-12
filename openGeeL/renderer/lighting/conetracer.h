@@ -14,8 +14,10 @@ namespace geeL {
 	class VoxelConeTracer : public SceneRender, public PostProcessingEffectFS {
 
 	public:
-		VoxelConeTracer(RenderScene& scene, VoxelOctree& octree, int maxStep = 5);
-		VoxelConeTracer(RenderScene& scene, VoxelTexture& texture, int maxStepSpecular = 20, int maxStepDiffuse = 10);
+		VoxelConeTracer(RenderScene& scene, VoxelOctree& octree, 
+			int maxStep = 5);
+		VoxelConeTracer(RenderScene& scene, VoxelTexture& texture, 
+			int maxStepSpecular = 20, int maxStepDiffuse = 10);
 
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues();

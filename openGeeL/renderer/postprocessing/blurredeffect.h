@@ -11,8 +11,11 @@ namespace geeL {
 	class BlurredPostEffect : public PostProcessingEffectFS {
 
 	public:
-		BlurredPostEffect(PostProcessingEffectFS& effect, PostProcessingEffectFS& blur, 
-			ResolutionPreset effectResolution = ResolutionPreset::FULLSCREEN, ResolutionPreset blurResolution = ResolutionPreset::FULLSCREEN);
+		BlurredPostEffect(PostProcessingEffectFS& effect, 
+			PostProcessingEffectFS& blur, 
+			ResolutionPreset effectResolution = ResolutionPreset::FULLSCREEN, 
+			ResolutionPreset blurResolution = ResolutionPreset::FULLSCREEN);
+
 		virtual ~BlurredPostEffect();
 
 		virtual void setImage(const Texture& texture);

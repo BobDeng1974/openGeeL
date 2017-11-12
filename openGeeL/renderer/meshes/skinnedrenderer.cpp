@@ -8,10 +8,14 @@
 
 namespace geeL {
 
-	SkinnedMeshRenderer::SkinnedMeshRenderer(Transform& transform, SceneShader& shader, SkinnedModel& model,
-		CullingMode faceCulling, const std::string& name)
-			: MeshRenderer(transform, shader, model, faceCulling, name), 
-				skinnedModel(&model), skeleton(new Skeleton(model.getSkeleton())) {
+	SkinnedMeshRenderer::SkinnedMeshRenderer(Transform& transform, 
+		SceneShader& shader, 
+		SkinnedModel& model,
+		CullingMode faceCulling, 
+		const std::string& name)
+			: MeshRenderer(transform, shader, model, faceCulling, name)
+			, skinnedModel(&model)
+			, skeleton(new Skeleton(model.getSkeleton())) {
 	
 		//Add transform of skeleton to the transform of the actual model
 		//and therefore into the whole scene structure. Thus, updating 

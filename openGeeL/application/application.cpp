@@ -16,9 +16,15 @@ using namespace std;
 
 namespace geeL {
 
-	Application::Application(RenderWindow& window, InputManager& inputManager, Renderer& renderer, ContinuousThread& mainThread)
-		: window(window), inputManager(inputManager), renderer(renderer) {
+	Application::Application(RenderWindow& window, 
+		InputManager& inputManager, 
+		Renderer& renderer, 
+		ContinuousThread& mainThread)
+			: window(window)
+			, inputManager(inputManager)
+			, renderer(renderer) {
 	
+
 		auto exit = [&window](int key, int scancode, int action, int mode) {
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 				glfwSetWindowShouldClose(window.glWindow, GL_TRUE);

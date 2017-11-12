@@ -37,8 +37,12 @@ namespace geeL {
 	class DepthOfFieldBlurred : public PostProcessingEffectFS, public WorldMapRequester {
 
 	public:
-		DepthOfFieldBlurred(DepthOfFieldBlur& blur, const float& focalLength, float aperture = 10.f, 
-			float farDistance = 100.f, const ResolutionPreset& resolution = ResolutionPreset::FULLSCREEN);
+		DepthOfFieldBlurred(DepthOfFieldBlur& blur, 
+			const float& focalLength, 
+			float aperture = 10.f, 
+			float farDistance = 100.f, 
+			const ResolutionPreset& resolution = ResolutionPreset::FULLSCREEN);
+
 		virtual ~DepthOfFieldBlurred();
 
 		virtual void setImage(const Texture& texture);

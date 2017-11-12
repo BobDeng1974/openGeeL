@@ -16,9 +16,14 @@
 
 namespace geeL {
 
-	ObjectLister::ObjectLister(Scene& scene, RenderWindow& window, 
-		float x, float y, float width, float height) 
-			: GUIElement(window, x, y, width, height), scene(scene) {
+	ObjectLister::ObjectLister(Scene& scene, 
+		RenderWindow& window, 
+		float x, 
+		float y, 
+		float width, 
+		float height) 
+			: GUIElement(window, x, y, width, height)
+			, scene(scene) {
 	
 		scene.iterRenderObjects([&](MeshRenderer& renderer) {
 			add(renderer);

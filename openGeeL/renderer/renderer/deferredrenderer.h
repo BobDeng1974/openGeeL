@@ -33,8 +33,13 @@ namespace geeL {
 	class DeferredRenderer : public Renderer, public WorldMapProvider, public PostEffectDrawer {
 
 	public:
-		DeferredRenderer(RenderWindow& window, TextureProvider& provider, SceneRender& lighting,
-			RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer);
+		DeferredRenderer(RenderWindow& window, 
+			TextureProvider& provider, 
+			SceneRender& lighting,
+			RenderContext& context, 
+			DefaultPostProcess& def, 
+			GBuffer& gBuffer);
+
 		virtual ~DeferredRenderer();
 
 		virtual void runStart();

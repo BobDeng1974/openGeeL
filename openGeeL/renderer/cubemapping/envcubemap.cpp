@@ -15,9 +15,14 @@ using namespace glm;
 
 namespace geeL {
 
-	EnvironmentCubeMap::EnvironmentCubeMap(const EnvironmentMap& map, CubeBuffer& frameBuffer, unsigned int resolution)
-		: CubeMap(new RenderTextureCube(resolution, WrapMode::ClampEdge, FilterMode::Trilinear)), map(map), frameBuffer(frameBuffer),
-			conversionShader(new RenderShader("renderer/cubemapping/envconvert.vert", "renderer/cubemapping/envconvert.frag")) {
+	EnvironmentCubeMap::EnvironmentCubeMap(const EnvironmentMap& map, 
+		CubeBuffer& frameBuffer, 
+		unsigned int resolution)
+			: CubeMap(new RenderTextureCube(resolution, WrapMode::ClampEdge, FilterMode::Trilinear))
+			, map(map)
+			, frameBuffer(frameBuffer)
+			, conversionShader(new RenderShader("renderer/cubemapping/envconvert.vert", 
+				"renderer/cubemapping/envconvert.frag")) {
 
 		conversionShader->mapOffset = 1;
 		conversionShader->addMap(map, "environmentMap");

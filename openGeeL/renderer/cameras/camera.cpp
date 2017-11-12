@@ -196,8 +196,13 @@ namespace geeL {
 	SimpleCamera::SimpleCamera(Transform& transform, const std::string& name) : Camera(transform, name) {}
 
 
-	SceneCamera::SceneCamera(Transform& transform, float nearClip, float farClip, const std::string& name)
-		: Camera(transform, name), nearClip(nearClip), farClip(farClip) {}
+	SceneCamera::SceneCamera(Transform& transform, 
+		float nearClip, 
+		float farClip, const 
+		std::string& name)
+			: Camera(transform, name)
+			, nearClip(nearClip)
+			, farClip(farClip) {}
 
 
 	void SceneCamera::lateUpdate() {

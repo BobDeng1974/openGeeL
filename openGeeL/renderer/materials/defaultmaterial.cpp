@@ -12,7 +12,8 @@ using namespace std;
 namespace geeL {
 
 	DefaultMaterialContainer::DefaultMaterialContainer() 
-		: MaterialContainer("material"), transparency(1.f) {}
+		: MaterialContainer("material")
+		, transparency(1.f) {}
 
 
 	void DefaultMaterialContainer::addTexture(const std::string& name, Texture2D& texture) {

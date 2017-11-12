@@ -64,7 +64,8 @@ namespace geeL {
 
 	public:
 		Mesh() {}
-		Mesh(const std::string& name, MaterialContainer& material) : name(name), material(&material) {}
+		Mesh(const std::string& name, MaterialContainer& material) 
+			: name(name), material(&material) {}
 
 		virtual void draw() const = 0;
 
@@ -90,7 +91,9 @@ namespace geeL {
 
 	public:
 		StaticMesh() : Mesh() {}
-		StaticMesh(const std::string& name, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, 
+		StaticMesh(const std::string& name, 
+			std::vector<Vertex>& vertices, 
+			std::vector<unsigned int>& indices, 
 			MaterialContainer& material);
 
 		virtual void draw() const;
@@ -116,8 +119,11 @@ namespace geeL {
 	class SkinnedMesh : public Mesh {
 
 	public:
-		SkinnedMesh(const std::string& name, std::vector<SkinnedVertex>& vertices, std::vector<unsigned int>& indices,
-			std::map<std::string, MeshBoneData>& bones, MaterialContainer& material);
+		SkinnedMesh(const std::string& name, 
+			std::vector<SkinnedVertex>& vertices, 
+			std::vector<unsigned int>& indices,
+			std::map<std::string, MeshBoneData>& bones, 
+			MaterialContainer& material);
 
 		virtual void draw() const;
 

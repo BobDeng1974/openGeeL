@@ -14,9 +14,14 @@ namespace geeL {
 	}
 
 
-	SystemInformation::SystemInformation(RenderWindow& window, DeferredRenderer& renderer,
-		float x, float y, float width, float height) 
-			: GUIElement(window, x, y, width, height), renderer(renderer) {}
+	SystemInformation::SystemInformation(RenderWindow& window, 
+		DeferredRenderer& renderer,
+		float x, 
+		float y, 
+		float width, 
+		float height) 
+			: GUIElement(window, x, y, width, height)
+			, renderer(renderer) {}
 
 
 	void SystemInformation::draw(GUIContext* context) {

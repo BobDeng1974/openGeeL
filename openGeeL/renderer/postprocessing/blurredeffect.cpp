@@ -9,9 +9,14 @@ using namespace std;
 namespace geeL {
 
 	BlurredPostEffect::BlurredPostEffect(PostProcessingEffectFS& effect, 
-		PostProcessingEffectFS& blur, ResolutionPreset effectResolution, ResolutionPreset blurResolution)
-			: PostProcessingEffectFS("renderer/postprocessing/combine.frag"),
-				effect(effect), blur(blur), effectResolution(effectResolution), blurResolution(blurResolution){
+		PostProcessingEffectFS& blur, 
+		ResolutionPreset effectResolution, 
+		ResolutionPreset blurResolution)
+			: PostProcessingEffectFS("renderer/postprocessing/combine.frag")
+			, effect(effect)
+			, blur(blur)
+			, effectResolution(effectResolution)
+			, blurResolution(blurResolution) {
 
 		effect.effectOnly(true);
 	}
