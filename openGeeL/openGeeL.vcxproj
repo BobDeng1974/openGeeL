@@ -259,6 +259,7 @@
     <ClCompile Include="renderer\texturing\envmap.cpp" />
     <ClCompile Include="renderer\texturing\imagetexturecube.cpp" />
     <ClCompile Include="renderer\texturing\textureparams.cpp" />
+    <ClCompile Include="renderer\texturing\textureprovider.cpp" />
     <ClCompile Include="renderer\texturing\texturestack.cpp" />
     <ClCompile Include="renderer\texturing\imagetexture.cpp" />
     <ClCompile Include="renderer\texturing\rendertexture.cpp" />
@@ -415,6 +416,7 @@
     <ClInclude Include="renderer\texturing\envmap.h" />
     <ClInclude Include="renderer\texturing\imagetexturecube.h" />
     <ClInclude Include="renderer\texturing\textureparams.h" />
+    <ClInclude Include="renderer\texturing\textureprovider.h" />
     <ClInclude Include="renderer\texturing\texturestack.h" />
     <ClInclude Include="renderer\texturing\imagetexture.h" />
     <ClInclude Include="renderer\texturing\maptype.h" />

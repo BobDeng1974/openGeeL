@@ -24,6 +24,7 @@ namespace geeL {
 	class SSAO;
 	class PostProcessingEffect;
 	class Texture;
+	class TextureProvider;
 	class TransparentOIDBuffer;
 
 	using PostEffectRender = std::pair<RenderTexture*, PostProcessingEffect*>;
@@ -32,7 +33,7 @@ namespace geeL {
 	class DeferredRenderer : public Renderer, public WorldMapProvider, public PostEffectDrawer {
 
 	public:
-		DeferredRenderer(RenderWindow& window, SceneRender& lighting,
+		DeferredRenderer(RenderWindow& window, TextureProvider& provider, SceneRender& lighting,
 			RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer);
 		virtual ~DeferredRenderer();
 
@@ -70,8 +71,6 @@ namespace geeL {
 		StackBuffer& getStackbuffer();
 
 	private:
-		int toggle;
-		
 		std::vector<PostEffectRender> earlyEffects;
 		std::vector<PostEffectRender> intermediateEffects;
 		std::vector<PostEffectRender> lateEffects;
@@ -84,6 +83,7 @@ namespace geeL {
 		RenderTexture* texture2;
 		Texture* defTexture;
 
+		TextureProvider& provider;
 		GBuffer& gBuffer;
 		ForwardBuffer* fBuffer;
 		TransparentOIDBuffer* tBuffer;
@@ -101,8 +101,11 @@ namespace geeL {
 		DeferredRenderer& operator= (const DeferredRenderer& other) = delete;
 
 		void init();
+		void initEffects();
 		void indexEffects();
 		void indexEffect(PostEffectRender& current, PostEffectRender* previous, RenderTexture* firstTexture);
+		
+		void iterEffects(std::vector<PostEffectRender>& effects, std::function<void(PostProcessingEffect&)> function);
 
 		RenderTexture* indexEffectList(std::vector<PostEffectRender>& effects, RenderTexture* firstTexture);
 		RenderTexture* drawEffects(std::vector<PostEffectRender>& effects, RenderTexture* lastTexture);

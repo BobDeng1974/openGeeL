@@ -1,10 +1,12 @@
 #include "framebuffer/tbuffer.h"
+#include "texturing/textureparams.h"
+#include "texturing/textureprovider.h"
 #include "appmanager.h"
 #include "configuration.h"
 
 namespace geeL {
 
-	Configuration::Configuration(RenderWindow& window,
+	Configuration::Configuration(RenderWindow& window, 
 		SceneInitialization initFunction, GBufferContent content, PhysicsType physicsType)
 			: window(window), initFunction(initFunction), content(content), physicsType(physicsType) {}
 
@@ -24,20 +26,18 @@ namespace geeL {
 		LightManager& lightManager = LightManager();
 		RenderPipeline& pipeline = RenderPipeline(materialFactory);
 		RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, defaultCamera, materialFactory, manager);
+		
 		Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
-
+		TextureProvider textureProvider(window);
 
 		DefaultPostProcess& def = DefaultPostProcess();
 		RenderContext& context = RenderContext();
 		SceneRender& lighting = DeferredLighting(scene);
-		DeferredRenderer& renderer = DeferredRenderer(window, lighting, context, def, gBuffer);
+		DeferredRenderer& renderer = DeferredRenderer(window, textureProvider, lighting, context, def, gBuffer);
 		renderer.setScene(scene);
 
 		ForwardBuffer& fBuffer = ForwardBuffer(gBuffer);
 		renderer.addFBuffer(fBuffer);
-
-		//TransparentOIDBuffer& tBuffer = TransparentOIDBuffer(gBuffer, renderer.getStackbuffer());
-		//renderer.addTBuffer(tBuffer);
 
 		ContinuousSingleThread renderThread(renderer);
 		Application& app = ApplicationManager::createApplication(window, manager, renderer, renderThread);
@@ -45,13 +45,18 @@ namespace geeL {
 		std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 			[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
 
-
 		CubeBuffer cubeBuffer;
 		BRDFIntegrationMap brdfInt;
 		CubeMapFactory& cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
 
 		GUIRenderer& gui = GUIRenderer(window, context, renderer);
 		renderer.addGUIRenderer(&gui);
+
+		{
+			TextureParameters param;
+			TextureWrapper wrap = textureProvider.requestTexture(ResolutionPreset::HALFSCREEN, ColorType::RGB, param);
+		}
+		
 
 		Physics* physics;
 		ContinuousSingleThread* physicsThread = nullptr;

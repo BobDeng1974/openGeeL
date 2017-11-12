@@ -36,6 +36,7 @@ namespace geeL {
 
 		unsigned int getWidth() const;
 		unsigned int getHeight() const;
+		const Resolution& getResolution() const;
 
 	private:
 		Debugger* debugger;
@@ -52,6 +53,10 @@ namespace geeL {
 
 	inline unsigned int RenderWindow::getHeight() const {
 		return resolution.getHeight();
+	}
+
+	inline const Resolution& RenderWindow::getResolution() const {
+		return resolution;
 	}
 
 

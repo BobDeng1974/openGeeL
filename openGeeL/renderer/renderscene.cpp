@@ -366,7 +366,7 @@ namespace geeL {
 		drawTransparentOID(*camera);
 	}
 
-	void RenderScene::drawTransparentOID(const Camera & camera) const {
+	void RenderScene::drawTransparentOID(const Camera& camera) const {
 		bool externalCamera = &camera != this->camera;
 
 		draw(ShadingMethod::TransparentOID, camera, externalCamera);

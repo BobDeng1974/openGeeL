@@ -13,6 +13,14 @@ using namespace std;
 namespace geeL {
 
 
+	void PostProcessingEffect::init(const PostProcessingParameter& parameter) {
+		this->resolution = parameter.resolution;
+		this->provider = parameter.provider;
+
+		setParent(parameter.buffer);
+	}
+
+
 	void PostProcessingEffect::effectOnly(bool only) {
 		onlyEffect = only;
 	}
@@ -65,11 +73,10 @@ namespace geeL {
 
 
 	void PostProcessingEffectFS::init(const PostProcessingParameter& parameter) {
-		this->screen = &parameter.screen;
-		this->resolution = parameter.resolution;
-		this->fallbackEffect = parameter.fallbackEffect;
+		PostProcessingEffect::init(parameter);
 
-		setParent(parameter.buffer);
+		this->screen = &parameter.screen;
+		this->fallbackEffect = parameter.fallbackEffect;
 	}
 
 	void PostProcessingEffectFS::draw() {
@@ -134,16 +141,14 @@ namespace geeL {
 	}
 
 	void PostProcessingEffectCS::init(const PostProcessingParameter& parameter) {
-		this->resolution = parameter.resolution;
-
-		this->buffer = &parameter.buffer;
+		PostProcessingEffect::init(parameter);
 	}
 
 	void PostProcessingEffectCS::draw() {
 		shader.bindParameters();
 		
 		//Read target texture from parent buffer and bind it
-		const RenderTexture* target = buffer->getTexture();
+		const RenderTexture* target = parentBuffer->getTexture();
 		target->bindImage(0, AccessType::Write);
 		shader.bind<glm::vec2>("resolution", target->getResolution());
 
@@ -158,7 +163,7 @@ namespace geeL {
 		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 		//glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_SHADER_STORAGE_BARRIER_BIT);
 		
-		buffer->pop();
+		parentBuffer->pop();
 	}
 
 	void PostProcessingEffectCS::fill() {
@@ -174,4 +179,5 @@ namespace geeL {
 		return "Post effect with shader: " + shader.name;
 	}
 
+	
 }

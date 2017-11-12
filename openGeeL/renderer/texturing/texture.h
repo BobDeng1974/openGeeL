@@ -83,9 +83,6 @@ namespace geeL {
 		virtual void assignTo(const IFrameBuffer& buffer, unsigned int position, bool bindFB = false);
 		virtual bool assignToo(const IFrameBuffer& buffer, unsigned int position, bool bindFB = false) const;
 
-		virtual void initStorage(unsigned char* image);
-		virtual void reserveStorage(unsigned int levels = 1);
-
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
 
@@ -101,6 +98,9 @@ namespace geeL {
 		Texture2D(ColorType colorType) : Texture(colorType) {}
 		Texture2D(ColorType colorType, Resolution resolution) 
 			: Texture(colorType), resolution(resolution) {}
+
+		virtual void initStorage(unsigned char* image);
+		virtual void reserveStorage(unsigned int levels = 1);
 
 		void setResolution(const Resolution& resolution);
 		void setResolution(unsigned int width, unsigned int height);

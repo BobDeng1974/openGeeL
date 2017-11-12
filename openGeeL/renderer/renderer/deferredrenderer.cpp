@@ -12,6 +12,7 @@
 #include "shader/sceneshader.h"
 #include "primitives/screenquad.h"
 #include "texturing/texture.h"
+#include "texturing/textureprovider.h"
 #include "texturing/rendertexture.h"
 #include "texturing/dynamictexture.h"
 #include "texturing/imagetexture.h"
@@ -33,10 +34,22 @@ using namespace std;
 
 namespace geeL {
 
-	DeferredRenderer::DeferredRenderer(RenderWindow& window, SceneRender& lighting,
-		RenderContext& context, DefaultPostProcess& def, GBuffer& gBuffer)
-			: Renderer(window, context), gBuffer(gBuffer), ssao(nullptr), fBuffer(nullptr), tBuffer(nullptr), 
-				lighting(lighting), toggle(0), defaultEffect(def), fallbackEffect("renderer/shaders/screen.frag") {
+	DeferredRenderer::DeferredRenderer(
+		RenderWindow& window, 
+		TextureProvider& provider, 
+		SceneRender& lighting,
+		RenderContext& context, 
+		DefaultPostProcess& def, 
+		GBuffer& gBuffer)
+			: Renderer(window, context)
+			, provider(provider)
+			, gBuffer(gBuffer)
+			, ssao(nullptr)
+			, fBuffer(nullptr)
+			, tBuffer(nullptr)
+			, lighting(lighting)
+			, defaultEffect(def)
+			, fallbackEffect("renderer/shaders/screen.frag") {
 
 		init();
 	}
@@ -65,16 +78,16 @@ namespace geeL {
 	
 	void DeferredRenderer::runStart() {
 		window->makeCurrent();
-
-		defaultEffect.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, window->resolution, &fallbackEffect));
-		lighting.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, window->resolution));
-
+		
+		initEffects();
 		scene->updateProbes(); //Draw reflection probes once at beginning
 		indexEffects();
 	}
 
 	void DeferredRenderer::run() {
 		draw();
+
+		provider.cleanupCache();
 		window->swapBuffer();
 	}
 
@@ -202,7 +215,6 @@ namespace geeL {
 
 
 	void DeferredRenderer::lightingPass() {
-		//lighting.bindValues();
 		lighting.draw();
 
 		//Draw skybox directly alongside the lighting
@@ -225,7 +237,8 @@ namespace geeL {
 
 		Resolution ssaoRes = Resolution(window->resolution, ssao.getResolution());
 		gBuffer.requestOcclusion(ssao.getResolution()); //Ensure that occlusion map gets created
-		ssao.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, ssaoRes, &fallbackEffect));
+		ssao.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, 
+			ssaoRes, &provider, &fallbackEffect));
 		ssao.setTargetTexture(*gBuffer.getOcclusion());
 	}
 
@@ -235,10 +248,6 @@ namespace geeL {
 			addEffect(*ssao);
 			return;
 		}
-
-		effect.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer,
-			window->resolution, &fallbackEffect));
-
 
 		switch (time) {
 			case DrawTime::Early:
@@ -255,7 +264,6 @@ namespace geeL {
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect, RenderTexture& texture) {
 		externalEffects.push_back(PostEffectRender(&texture, &effect));
-		effect.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, window->resolution, &fallbackEffect));
 	}
 
 
@@ -343,6 +351,32 @@ namespace geeL {
 
 
 
+
+	void DeferredRenderer::initEffects() {
+		defaultEffect.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer,
+			window->resolution, &provider, &fallbackEffect));
+		lighting.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer,
+			window->resolution, &provider));
+
+		iterEffects(externalEffects, [this](PostProcessingEffect& effect) { 
+			effect.init(PostProcessingParameter(ScreenQuad::get(), 
+			stackBuffer, window->resolution, &provider, &fallbackEffect)); });
+
+		iterEffects(earlyEffects, [this](PostProcessingEffect& effect) {
+			effect.init(PostProcessingParameter(ScreenQuad::get(),
+				stackBuffer, window->resolution, &provider, &fallbackEffect)); });
+
+		iterEffects(intermediateEffects, [this](PostProcessingEffect& effect) {
+			effect.init(PostProcessingParameter(ScreenQuad::get(),
+				stackBuffer, window->resolution, &provider, &fallbackEffect)); });
+
+		iterEffects(lateEffects, [this](PostProcessingEffect& effect) {
+			effect.init(PostProcessingParameter(ScreenQuad::get(),
+				stackBuffer, window->resolution, &provider, &fallbackEffect)); });
+	}
+
+
+
 	void DeferredRenderer::indexEffects() {
 		RenderTexture* lastImage = indexEffectList(earlyEffects, texture1);
 
@@ -398,26 +432,10 @@ namespace geeL {
 		lighting.bindValues();
 		defaultEffect.bindValues();
 
-		for (auto it(externalEffects.begin()); it != externalEffects.end(); it++) {
-			PostProcessingEffect& effect = *it->second;
-			effect.bindValues();
-		}
-
-		for (auto it(earlyEffects.begin()); it != earlyEffects.end(); it++) {
-			PostProcessingEffect& effect = *it->second;
-			effect.bindValues();
-		}
-
-		for (auto it(intermediateEffects.begin()); it != intermediateEffects.end(); it++) {
-			PostProcessingEffect& effect = *it->second;
-			effect.bindValues();
-		}
-
-		for (auto it(lateEffects.begin()); it != lateEffects.end(); it++) {
-			PostProcessingEffect& effect = *it->second;
-			effect.bindValues();
-		}
-
+		iterEffects(externalEffects, [](PostProcessingEffect& effect) { effect.bindValues(); });
+		iterEffects(earlyEffects, [](PostProcessingEffect& effect) { effect.bindValues(); });
+		iterEffects(intermediateEffects, [](PostProcessingEffect& effect) { effect.bindValues(); });
+		iterEffects(lateEffects, [](PostProcessingEffect& effect) { effect.bindValues(); });
 	}
 
 	void DeferredRenderer::indexEffect(PostEffectRender& current, PostEffectRender* previous, RenderTexture* firstTexture) {
@@ -455,6 +473,13 @@ namespace geeL {
 			effect.setImage(*source);
 		}
 
+	}
+
+	void DeferredRenderer::iterEffects(std::vector<PostEffectRender>& effects, 
+		std::function<void(PostProcessingEffect&)> function) {
+		
+		for (auto it(effects.begin()); it != effects.end(); it++)
+			function(*it->second);
 	}
 
 }

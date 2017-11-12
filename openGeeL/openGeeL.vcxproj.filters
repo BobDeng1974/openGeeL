@@ -480,6 +480,9 @@
     <ClCompile Include="renderer\texturing\textureparams.cpp">
       <Filter>renderer\texturing</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\texturing\textureprovider.cpp">
+      <Filter>renderer\texturing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -969,6 +972,9 @@
       <Filter>application</Filter>
     </ClInclude>
     <ClInclude Include="renderer\texturing\textureparams.h">
+      <Filter>renderer\texturing</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\texturing\textureprovider.h">
       <Filter>renderer\texturing</Filter>
     </ClInclude>
   </ItemGroup>

@@ -15,6 +15,7 @@
 #include "lighting/raymarcher.h"
 #include "postprocessing/drawdefault.h"
 #include "renderer/rendercontext.h"
+#include "texturing/textureprovider.h"
 #include "pipeline.h"
 #include "application.h"
 #include "appmanager.h"
@@ -24,6 +25,7 @@ using namespace geeL;
 
 void RaymarchTest::draw() {
 	RenderWindow& window = RenderWindow("Raymarch", Resolution(1920, 1080), WindowMode::Windowed);
+	TextureProvider textureProvider(window);
 	InputManager manager;
 
 	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
@@ -42,7 +44,7 @@ void RaymarchTest::draw() {
 	DefaultPostProcess& def = DefaultPostProcess(2.f);
 	RenderContext& context = RenderContext();
 	RayMarcher& raymarch = RayMarcher(scene);
-	DeferredRenderer& renderer = DeferredRenderer(window, raymarch, context, def, gBuffer);
+	DeferredRenderer& renderer = DeferredRenderer(window, textureProvider, raymarch, context, def, gBuffer);
 	renderer.setScene(scene);
 
 	ContinuousSingleThread renderThread(renderer);

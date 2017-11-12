@@ -9,8 +9,6 @@
 #include "utility/resolution.h"
 #include "utility/masking.h"
 
-typedef unsigned int GLuint;
-
 namespace geeL {
 
 	class ColorBuffer;
@@ -19,6 +17,7 @@ namespace geeL {
 	class RenderShader;
 	class ScreenQuad;
 	class Texture;
+	class ITextureProvider;
 
 
 	struct PostProcessingParameter {
@@ -26,13 +25,18 @@ namespace geeL {
 		DynamicBuffer& buffer;
 		Resolution resolution;
 		PostProcessingEffect* fallbackEffect;
+		ITextureProvider* provider;
 
-		PostProcessingParameter(ScreenQuad& screen, DynamicBuffer& buffer, const Resolution& resolution, 
-			PostProcessingEffect* fallbackEffect = nullptr);
+		PostProcessingParameter(ScreenQuad& screen, 
+			DynamicBuffer& buffer, 
+			const Resolution& resolution, 
+			ITextureProvider* const provider = nullptr,
+			PostProcessingEffect* const fallbackEffect = nullptr);
 
 		PostProcessingParameter(const PostProcessingParameter& other, const Resolution& resolution);
 
 	};
+
 
 	//Interface for all post processing effects (or rendering passes) that can enhance an existing image
 	class PostProcessingEffect : public Drawer {
@@ -47,7 +51,7 @@ namespace geeL {
 		virtual void setImage(const Texture& texture) = 0;
 		virtual void addTextureSampler(const Texture& texture, const std::string& name) = 0;
 
-		virtual void init(const PostProcessingParameter& parameter) = 0;
+		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues() = 0;
 		virtual void draw() = 0;
 		virtual void fill() = 0;
@@ -70,6 +74,7 @@ namespace geeL {
 		virtual Shader& getShader() = 0;
 
 	protected:
+		ITextureProvider* provider = nullptr;
 		Resolution resolution;
 		bool onlyEffect = false;
 		bool active = true;
@@ -136,7 +141,6 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	protected:
-		DynamicBuffer* buffer = nullptr;
 		ComputeShader shader;
 		Resolution groupSize;
 
@@ -155,12 +159,23 @@ namespace geeL {
 
 
 	inline PostProcessingParameter::PostProcessingParameter(ScreenQuad& screen, 
-		DynamicBuffer& buffer, const Resolution& resolution, PostProcessingEffect* fallbackEffect)
-			: screen(screen), buffer(buffer), resolution(resolution), fallbackEffect(fallbackEffect) {}
+		DynamicBuffer& buffer, 
+		const Resolution& resolution, 
+		ITextureProvider* const provider,
+		PostProcessingEffect* const fallbackEffect)
+			: screen(screen)
+			, buffer(buffer)
+			, resolution(resolution)
+			, fallbackEffect(fallbackEffect)
+			, provider(provider) {}
 
 	inline PostProcessingParameter::PostProcessingParameter(const PostProcessingParameter& other, 
-		const Resolution & resolution) : screen(other.screen), buffer(other.buffer), resolution(resolution), 
-		fallbackEffect(other.fallbackEffect) {}
+		const Resolution& resolution) 
+			: screen(other.screen)
+			, buffer(other.buffer)
+			, resolution(resolution)
+			, fallbackEffect(other.fallbackEffect)
+			, provider(other.provider) {}
 
 
 }
