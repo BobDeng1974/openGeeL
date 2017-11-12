@@ -16,7 +16,8 @@ namespace geeL {
 	class LensFlare : public PostProcessingEffectFS, public CameraRequester {
 
 	public:
-		LensFlare(BlurredPostEffect& filter, float scale = 0.5f, float samples = 4.f, float resolution = 1.f);
+		LensFlare(BlurredPostEffect& filter, float scale = 0.5f, float samples = 4.f, 
+			const RenderResolution& resolution = RenderResolution::FULLSCREEN);
 		virtual ~LensFlare();
 
 		virtual void setImage(const Texture& texture);
@@ -43,7 +44,8 @@ namespace geeL {
 
 	private:
 		glm::vec3 distortion;
-		float strength, scale, samples, filterResolution;
+		float strength, scale, samples;
+		RenderResolution filterResolution;
 
 		BlurredPostEffect& filter;
 		RenderTexture* filterTexture = nullptr;

@@ -86,7 +86,8 @@ public:
 
 			GaussianBlur& blur4 = GaussianBlur();
 			SSRR& ssrr = SSRR();
-			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.6f, 0.6f);
+			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 
+				RenderResolution::TWOTHIRDS, RenderResolution::TWOTHIRDS);
 			renderer.addEffect(ssrrSmooth, ssrr);
 			scene.addRequester(ssrr);
 			SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
@@ -95,7 +96,7 @@ public:
 
 			BrightnessFilterCutoff& bFilter = BrightnessFilterCutoff(0.7f);
 			GaussianBlur& bBlur = GaussianBlur(KernelSize::Huge, 10.1f);
-			BlurredPostEffect& bBlurred = BlurredPostEffect(bFilter, bBlur, 0.5f, 0.6f);
+			BlurredPostEffect& bBlurred = BlurredPostEffect(bFilter, bBlur, RenderResolution::HALFSCREEN, RenderResolution::TWOTHIRDS);
 			bBlurred.effectOnly(true);
 			LensFlare& lensFlare = LensFlare(bBlurred, 0.35f, 6.f);
 			lensFlare.setDistortion(glm::vec3(0.04f, 0.03f, 0.02f));
@@ -112,7 +113,7 @@ public:
 			SobelFilter& sobel = SobelFilter(5.f);
 			SobelBlur& sobelBlur = SobelBlur(sobel, 15.f);
 			VolumetricLight& vol = VolumetricLight(spotLight, 0.02f, 1.f, 150);
-			BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.5f);
+			BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, RenderResolution::FORTY, RenderResolution::HALFSCREEN);
 			VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 			SobelBlurSnippet& snip = SobelBlurSnippet(sobelBlur);
 			scene.addRequester(vol);

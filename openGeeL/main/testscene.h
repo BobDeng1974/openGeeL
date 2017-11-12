@@ -173,7 +173,7 @@ public:
 
 			BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 25);
-			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, 0.2f, 0.2f);
+			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, RenderResolution::TWENTY, RenderResolution::TWENTY);
 			GodRaySnippet& godRaySnippet = GodRaySnippet(ray);
 			renderer.addEffect(raySmooth);
 			scene.addRequester(ray);
@@ -182,7 +182,7 @@ public:
 			SobelFilter& sobel = SobelFilter(15);
 			SobelBlur& sobelBlur = SobelBlur(sobel);
 			VolumetricLight& vol = VolumetricLight(spotLight, 0.1f, 1.f, 160);
-			BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.4f, 0.4f);
+			BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, RenderResolution::FORTY, RenderResolution::FORTY);
 			//VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
 			//renderer.addEffect(volSmooth, { &vol, &sobelBlur });
 			//scene.addRequester(vol);
@@ -190,7 +190,7 @@ public:
 
 			GaussianBlur& blur4 = GaussianBlur();
 			SSRR& ssrr = SSRR();
-			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.3f, 0.3f);
+			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, RenderResolution::ONETHIRD, RenderResolution::ONETHIRD);
 			renderer.addEffect(ssrrSmooth, ssrr);
 			scene.addRequester(ssrr);
 

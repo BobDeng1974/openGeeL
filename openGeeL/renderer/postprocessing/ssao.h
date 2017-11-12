@@ -17,7 +17,8 @@ namespace geeL {
 	class SSAO : public PostProcessingEffectFS, public WorldMapRequester, public CameraRequester {
 
 	public:
-		SSAO(PostProcessingEffectFS& blur, float radius = 5.f, ResolutionScale resolution = HALFSCREEN);
+		SSAO(PostProcessingEffectFS& blur, float radius = 5.f, 
+			const RenderResolution& resolution = RenderResolution::HALFSCREEN);
 		SSAO(const SSAO& other);
 		virtual ~SSAO();
 
@@ -41,14 +42,14 @@ namespace geeL {
 		float getRadius() const;
 		void setRadius(float radius);
 
-		const ResolutionScale& getResolution() const;
+		const RenderResolution& getResolution() const;
 
 		virtual std::string toString() const;
 
 	private:
 		float radius;
 		unsigned int sampleCount = 32;
-		ResolutionScale scale;
+		RenderResolution scale;
 
 		ImageTexture* noiseTexture;
 		std::vector<glm::vec3> kernel;

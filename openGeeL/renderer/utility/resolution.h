@@ -11,14 +11,16 @@ namespace geeL {
 
 
 	enum class RenderResolution {
-		ONEHUNDRED = 100,
+		FULLSCREEN = 100,
 		NINETY = 90,
 		EIGHTY = 80,
 		SEVENTYFIVE = 75,
 		TWOTHIRDS = 66,
-		FIFTY = 50,
+		HALFSCREEN = 50,
+		FORTY = 40,
 		ONETHIRD = 33,
 		TWENTYFIVE = 25,
+		TWENTY = 20,
 		TEN = 10
 	};
 
@@ -131,10 +133,6 @@ namespace geeL {
 	inline bool Resolution::operator!= (const Resolution& o) const {
 		return (width != o.width) || (height != o.height);
 	}
-
-
-	const ResolutionScale HALFSCREEN = ResolutionScale(0.5f);
-	const ResolutionScale FULLSCREEN = ResolutionScale(1.f);
 
 
 	inline ResolutionScale::ResolutionScale(float scale) {

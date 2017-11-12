@@ -7,7 +7,7 @@
 
 namespace geeL {
 
-	Bloom::Bloom(BrightnessFilterCutoff& filter, GaussianBlurBase& blur, ResolutionScale filterResolution, ResolutionScale blurResolution)
+	Bloom::Bloom(BrightnessFilterCutoff& filter, GaussianBlurBase& blur, RenderResolution filterResolution, RenderResolution blurResolution)
 		: BlurredPostEffect(filter, blur, filterResolution, blurResolution), filter(filter) {}
 
 	void Bloom::setScatter(float scatter) {

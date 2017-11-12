@@ -109,7 +109,7 @@ public:
 			SobelFilter& sobel = SobelFilter(5.f);
 			SobelBlur& sobelBlur = SobelBlur(sobel, 15.f);
 			VolumetricLight& vol = VolumetricLight(spotLight, 0.7f, 14.f, 250);
-			BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, 0.25f, 0.2f);
+			BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, RenderResolution::TWENTYFIVE, RenderResolution::TWENTY);
 			VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 			SobelBlurSnippet& snip = SobelBlurSnippet(sobelBlur);
 			renderer.addEffect(volSmooth, vol, sobelBlur);
@@ -119,16 +119,11 @@ public:
 			GaussianBlur& blur4 = GaussianBlur();
 			SSRR& ssrr = SSRR();
 			//MultisampledSSRR& ssrr = MultisampledSSRR();
-			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.5f, 0.5f);
+			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, RenderResolution::HALFSCREEN, RenderResolution::HALFSCREEN);
 			renderer.addEffect(ssrrSmooth, ssrr);
 			scene.addRequester(ssrr);
 			SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
 			postLister.add(ssrrSmooth, ssrrSnippet);
-
-			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.3f);
-			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 4.f, 100.f, 0.3f);
-			//renderer.addEffect(dof, dof);
-			//postLister.add(dof);
 
 			FXAA& fxaa = FXAA(0.f, 0.f);
 			renderer.addEffect(fxaa, DrawTime::Late);

@@ -61,12 +61,12 @@ public:
 
 			GaussianBlur& blur4 = GaussianBlur();
 			SSRR& ssrr = SSRR(75, 0.01f);
-			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.6f, 0.6f);
+			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, RenderResolution::TWOTHIRDS, RenderResolution::TWOTHIRDS);
 			renderer.addEffect(ssrrSmooth, ssrr);
 			scene.addRequester(ssrr);
 
 			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.3f, 10.f);
-			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 60.f, 100.f, 0.4f);
+			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 60.f, 100.f, RenderResolution::FORTY);
 			renderer.addEffect(dof, dof);
 
 			FXAA& fxaa = FXAA(0.f, 0.f);

@@ -9,7 +9,7 @@ using namespace std;
 namespace geeL {
 
 	BlurredPostEffect::BlurredPostEffect(PostProcessingEffectFS& effect, 
-		PostProcessingEffectFS& blur, ResolutionScale effectResolution, ResolutionScale blurResolution)
+		PostProcessingEffectFS& blur, RenderResolution effectResolution, RenderResolution blurResolution)
 			: PostProcessingEffectFS("renderer/postprocessing/combine.frag"),
 				effect(effect), blur(blur), effectResolution(effectResolution), blurResolution(blurResolution){
 
@@ -86,7 +86,8 @@ namespace geeL {
 		//draw, and the original RBO rebound afterwards.
 	}
 
-	void BlurredPostEffect::resizeEffectResolution(ResolutionScale effectResolution) {
+
+	void BlurredPostEffect::resizeEffectResolution(RenderResolution effectResolution) {
 		this->effectResolution = effectResolution;
 
 		Resolution newRes = Resolution(resolution, effectResolution);
@@ -94,15 +95,11 @@ namespace geeL {
 		effectTexture->resize(newRes);
 	}
 
-	void BlurredPostEffect::resizeEffectResolution(RenderResolution effectResolution) {
-		resizeEffectResolution(getResolutionScale(effectResolution));
-	}
-
-	const ResolutionScale& BlurredPostEffect::getEffectResolution() const {
+	const RenderResolution& BlurredPostEffect::getEffectResolution() const {
 		return effectResolution;
 	}
 
-	const ResolutionScale& BlurredPostEffect::getBlurResolution() const {
+	const RenderResolution& BlurredPostEffect::getBlurResolution() const {
 		return blurResolution;
 	}
 }

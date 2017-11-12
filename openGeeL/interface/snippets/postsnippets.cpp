@@ -123,12 +123,11 @@ namespace geeL {
 		: PostEffectSnippet(effect), effect(effect), effectSnippet(effectSnippet), blurSnippet(nullptr) {}
 
 	void BlurredEffectSnippet::drawSimple(GUIContext* context) {
-		const ResolutionScale& oldResolution = effect.getEffectResolution();
-		float effectResolution = GUISnippets::drawBarFloat(context, 
-			oldResolution.get(), 0.f, 1.f, 0.001f, "Resolution");
+		const RenderResolution& oldResolution = effect.getEffectResolution();
+		RenderResolution newResolution(GUISnippets::drawResolution(context, oldResolution));
 
-		if (effectResolution != oldResolution.get())
-			effect.resizeEffectResolution(effectResolution);
+		if (newResolution != oldResolution)
+			effect.resizeEffectResolution(newResolution);
 
 		effectSnippet.drawSimple(context);
 
@@ -192,12 +191,11 @@ namespace geeL {
 	BloomSnippet::BloomSnippet(Bloom& bloom) : PostEffectSnippet(bloom), bloom(bloom) {}
 
 	void BloomSnippet::drawSimple(GUIContext* context) {
-		const ResolutionScale& oldResolution = bloom.getEffectResolution();
-		float effectResolution = GUISnippets::drawBarFloat(context,
-			oldResolution.get(), 0.f, 1.f, 0.001f, "Resolution");
+		const RenderResolution& oldResolution = bloom.getEffectResolution();
+		RenderResolution newResolution(GUISnippets::drawResolution(context, oldResolution));
 
-		if (effectResolution != oldResolution.get())
-			bloom.resizeEffectResolution(effectResolution);
+		if (newResolution != oldResolution)
+			bloom.resizeEffectResolution(newResolution);
 
 		float scatter = GUISnippets::drawBarFloat(context, bloom.getScatter(), 0.f, 1.f, 0.005f, "Scatter");
 		bloom.setScatter(scatter);
@@ -220,12 +218,11 @@ namespace geeL {
 	DepthOfFieldBlurredSnippet::DepthOfFieldBlurredSnippet(DepthOfFieldBlurred& dof) : PostEffectSnippet(dof), dof(dof) {}
 
 	void DepthOfFieldBlurredSnippet::drawSimple(GUIContext* context) {
-		const ResolutionScale& oldResolution = dof.getBlurResolution();
-		float blurResolution = GUISnippets::drawBarFloat(context,
-			oldResolution.get(), 0.f, 1.f, 0.001f, "Resolution");
+		const RenderResolution& oldResolution = dof.getBlurResolution();
+		RenderResolution newResolution(GUISnippets::drawResolution(context, oldResolution));
 
-		if (blurResolution != oldResolution.get())
-			dof.resizeBlurResolution(blurResolution);
+		if (newResolution != oldResolution)
+			dof.resizeBlurResolution(newResolution);
 
 		float aperture = GUISnippets::drawBarFloatLogarithmic(context, dof.getAperture(), 0.f, 1000.f, 0.1f, "Aperture");
 		dof.setAperture(aperture);

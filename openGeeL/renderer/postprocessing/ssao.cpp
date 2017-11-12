@@ -15,7 +15,7 @@ using namespace std;
 
 namespace geeL {
 
-	SSAO::SSAO(PostProcessingEffectFS& blur, float radius, ResolutionScale resolution)
+	SSAO::SSAO(PostProcessingEffectFS& blur, float radius, const RenderResolution& resolution)
 		: PostProcessingEffectFS("renderer/postprocessing/ssao.frag"), blur(blur), radius(radius), scale(resolution) {
 	
 		uniform_real_distribution<GLfloat> random(0.f, 1.f);
@@ -168,7 +168,7 @@ namespace geeL {
 		}
 	}
 	
-	const ResolutionScale& SSAO::getResolution() const {
+	const RenderResolution& SSAO::getResolution() const {
 		return scale;
 	}
 }

@@ -18,7 +18,8 @@ namespace geeL {
 
 	public:
 		Bloom(BrightnessFilterCutoff& filter, GaussianBlurBase& blur, 
-			ResolutionScale effectResolution = FULLSCREEN, ResolutionScale blurResolution = FULLSCREEN);
+			RenderResolution effectResolution = RenderResolution::FULLSCREEN, 
+			RenderResolution blurResolution = RenderResolution::FULLSCREEN);
 
 		void setScatter(float scatter);
 		float getScatter() const;

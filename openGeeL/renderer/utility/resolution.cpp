@@ -5,14 +5,16 @@ namespace geeL {
 
 	std::vector<RenderResolution> scales = {
 		RenderResolution::TEN, 
+		RenderResolution::TWENTY,
 		RenderResolution::TWENTYFIVE, 
 		RenderResolution::ONETHIRD, 
-		RenderResolution::FIFTY,
+		RenderResolution::FORTY,
+		RenderResolution::HALFSCREEN,
 		RenderResolution::TWOTHIRDS,
 		RenderResolution::SEVENTYFIVE,
 		RenderResolution::EIGHTY,
 		RenderResolution::NINETY,
-		RenderResolution::ONEHUNDRED 
+		RenderResolution::FULLSCREEN 
 	};
 
 
@@ -26,7 +28,7 @@ namespace geeL {
 				return ResolutionScale(1.f / 3.f);
 		}
 
-		return ResolutionScale(100.f / (float)resolution);
+		return ResolutionScale((float)resolution / 100.f);
 	}
 
 	size_t getRenderResolutionCount() {
@@ -44,7 +46,7 @@ namespace geeL {
 
 	RenderResolution getRenderResolution(size_t index) {
 		if (index >= scales.size())
-			return RenderResolution::ONEHUNDRED;
+			return RenderResolution::FULLSCREEN;
 
 		return scales[index];
 	}

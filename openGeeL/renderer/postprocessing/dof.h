@@ -38,7 +38,7 @@ namespace geeL {
 
 	public:
 		DepthOfFieldBlurred(DepthOfFieldBlur& blur, const float& focalLength, float aperture = 10.f, 
-			float farDistance = 100.f, ResolutionScale blurResolution = FULLSCREEN);
+			float farDistance = 100.f, const RenderResolution& resolution = RenderResolution::FULLSCREEN);
 		virtual ~DepthOfFieldBlurred();
 
 		virtual void setImage(const Texture& texture);
@@ -47,8 +47,8 @@ namespace geeL {
 
 		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
-		void resizeBlurResolution(ResolutionScale blurResolution);
-		const ResolutionScale& getBlurResolution() const;
+		void resizeBlurResolution(const RenderResolution& blurResolution);
+		const RenderResolution& getBlurResolution() const;
 
 		float getAperture() const;
 		void setAperture(float aperture);
@@ -63,7 +63,7 @@ namespace geeL {
 		const float& focalLength;
 		float aperture;
 		float farDistance;
-		ResolutionScale blurResolution;
+		RenderResolution blurResolution;
 
 		ShaderLocation focalLocation;
 
