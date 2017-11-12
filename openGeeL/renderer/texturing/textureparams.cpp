@@ -5,6 +5,8 @@
 
 namespace geeL {
 
+	TextureParameters::TextureParameters() : id(0) {}
+
 	TextureParameters::TextureParameters(FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter)
 		: id(0), filterMode(filterMode), wrapMode(wrapMode), aFilter(aFilter) {
 
@@ -39,7 +41,7 @@ namespace geeL {
 			aFilter = other.aFilter;
 		}
 
-		*this;
+		return *this;
 	}
 
 	void TextureParameters::bind(unsigned int layer) const {

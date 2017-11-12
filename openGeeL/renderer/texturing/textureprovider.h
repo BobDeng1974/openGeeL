@@ -20,8 +20,11 @@ namespace geeL {
 	class ITextureProvider {
 
 	public:
-		virtual TextureWrapper requestTexture(ResolutionPreset resolution, ColorType colorType,
-			const TextureParameters& parameters) = 0;
+		virtual TextureWrapper requestTexture(ResolutionPreset resolution,
+			ColorType colorType = ColorType::RGB,
+			FilterMode filterMode = FilterMode::None,
+			WrapMode wrapMode = WrapMode::Repeat,
+			AnisotropicFilter aFilter = AnisotropicFilter::None) = 0;
 
 	};
 
@@ -34,8 +37,7 @@ namespace geeL {
 		~TextureProvider();
 
 		virtual TextureWrapper requestTexture(ResolutionPreset resolution, ColorType colorType,
-			const TextureParameters& parameters);
-
+			FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter);
 
 		void cleanupCache();
 
@@ -65,9 +67,12 @@ namespace geeL {
 
 		const RenderWindow& window;
 		std::function<void(RenderTexture&, ResolutionPreset)> callback;
+
 		std::map<ResolutionPreset, std::map<ColorType, MonitoredList>> textures;
+		std::map<FilterMode, std::map<WrapMode, std::map<AnisotropicFilter, TextureParameters>>> parameters;
 
 
+		TextureParameters& getParameters(FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter);
 		void textureCallback(RenderTexture& texture, ResolutionPreset resolution);
 
 	};

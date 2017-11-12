@@ -8,7 +8,8 @@ namespace geeL {
 	class TextureParameters {
 
 	public:
-		TextureParameters(FilterMode filterMode = FilterMode::None, WrapMode wrapMode = WrapMode::Repeat, 
+		TextureParameters();
+		TextureParameters(FilterMode filterMode, WrapMode wrapMode = WrapMode::Repeat, 
 			AnisotropicFilter aFilter = AnisotropicFilter::None);
 		TextureParameters(TextureParameters&& other);
 		~TextureParameters();

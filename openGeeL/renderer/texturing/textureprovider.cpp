@@ -59,7 +59,7 @@ namespace geeL {
 	}
 
 	TextureWrapper TextureProvider::requestTexture(ResolutionPreset resolution, ColorType colorType,
-		const TextureParameters& parameters) {
+		FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter) {
 
 		auto resolutionIt(textures.find(resolution));
 		if (resolutionIt != textures.end()) {
@@ -71,7 +71,7 @@ namespace geeL {
 				auto& tex = colorsIt->second;
 				if (!tex.isEmpty()) {
 					RenderTexture* texture = tex.pop();
-					texture->attachParameters(parameters);
+					texture->attachParameters(getParameters(filterMode, wrapMode, aFilter));
 
 
 					return TextureWrapper(*texture, resolution, callback);
@@ -80,7 +80,7 @@ namespace geeL {
 		}
 
 		RenderTexture* newTexture = new RenderTexture(Resolution(window.getResolution(), resolution), colorType);
-		newTexture->attachParameters(parameters);
+		newTexture->attachParameters(getParameters(filterMode, wrapMode, aFilter));
 
 		return TextureWrapper(*newTexture, resolution, callback);
 	}
@@ -96,7 +96,7 @@ namespace geeL {
 				auto& tex = colorsIt->second;
 
 				//TODO: Fine-tune this heuristic later
-				unsigned int deleteHeuristic = fmaxf(0.f, 
+				unsigned int deleteHeuristic = fmax(0, 
 					tex.elementCount() - tex.accessCount());
 
 				for (unsigned int i = 0; i < deleteHeuristic; i++) {
@@ -105,6 +105,28 @@ namespace geeL {
 				}
 			}
 		}
+	}
+
+	
+	TextureParameters& TextureProvider::getParameters(FilterMode filterMode, 
+		WrapMode wrapMode, AnisotropicFilter aFilter) {
+
+		auto filterIt(parameters.find(filterMode));
+		if (filterIt != parameters.end()) {
+			auto& filterObjects = filterIt->second;
+
+			auto wrapIt(filterObjects.find(wrapMode));
+			if (wrapIt != filterObjects.end()) {
+				auto& wrapObjects = wrapIt->second;
+
+				auto anIt(wrapObjects.find(aFilter));
+				if (anIt != wrapObjects.end())
+					return anIt->second;
+			}
+		}
+
+		parameters[filterMode][wrapMode][aFilter] = TextureParameters(filterMode, wrapMode, aFilter);
+		return parameters[filterMode][wrapMode][aFilter];
 	}
 
 	void TextureProvider::textureCallback(RenderTexture& texture, ResolutionPreset resolution) {
