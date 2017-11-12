@@ -6,7 +6,6 @@
 #include <functional>
 #include <iostream>
 #include "utility/rendertime.h"
-#include "renderer.h"
 #include "window.h"
 #include "inputmanager.h"
 #include "threading.h"
@@ -18,11 +17,9 @@ namespace geeL {
 
 	Application::Application(RenderWindow& window, 
 		InputManager& inputManager, 
-		Renderer& renderer, 
 		ContinuousThread& mainThread)
 			: window(window)
-			, inputManager(inputManager)
-			, renderer(renderer) {
+			, inputManager(inputManager) {
 	
 
 		auto exit = [&window](int key, int scancode, int action, int mode) {
@@ -38,7 +35,6 @@ namespace geeL {
 
 
 	void Application::run() {
-		renderer.linkInformation();
 		glfwMakeContextCurrent(0);
 		
 		initThreads();

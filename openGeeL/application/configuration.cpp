@@ -33,7 +33,7 @@ namespace geeL {
 		RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, defaultCamera, materialFactory, manager);
 		
 		Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
-		TextureProvider textureProvider(window);
+		TextureProvider textureProvider(window, gBuffer);
 
 		DefaultPostProcess& def = DefaultPostProcess();
 		RenderContext& context = RenderContext();
@@ -45,7 +45,7 @@ namespace geeL {
 		renderer.addFBuffer(fBuffer);
 
 		ContinuousSingleThread renderThread(renderer);
-		Application& app = ApplicationManager::createApplication(window, manager, renderer, renderThread);
+		Application& app = ApplicationManager::createApplication(window, manager, renderThread);
 
 		std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 			[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };

@@ -1,6 +1,8 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "texturing/texture.h"
+#include "texturing/rendertexture.h"
+#include "texturing/textureprovider.h"
 #include "shader/rendershader.h"
 #include "primitives/screenquad.h"
 #include "framebuffer/framebuffer.h"
@@ -204,6 +206,9 @@ namespace geeL {
 	void BilateralFilter::init(const PostProcessingParameter& parameter) {
 		GaussianBlurBase::init(parameter);
 
+		assert(provider != nullptr);
+		addTextureSampler(provider->requestPositionRoughness(), "gPositionDepth");
+
 		shader.bind<float>("sigma", sigma2);
 	}
 
@@ -222,10 +227,6 @@ namespace geeL {
 
 	BilateralDepthFilter::BilateralDepthFilter(float sigma, float factor)
 		: BilateralFilter("renderer/postprocessing/bilateraldepth.frag", sigma, factor) {}
-
-	void BilateralDepthFilter::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
-	}
 
 
 
@@ -263,6 +264,9 @@ namespace geeL {
 	void SobelBlur::init(const PostProcessingParameter& parameter) {
 		GaussianBlurBase::init(parameter);
 
+		assert(provider != nullptr);
+		sobel.setImage(provider->requestPositionRoughness());
+
 		sobelTexture = new RenderTexture(resolution, ColorType::RGB16, WrapMode::ClampEdge, FilterMode::None);
 		sobel.init(parameter);
 
@@ -274,9 +278,6 @@ namespace geeL {
 		parentBuffer->fill(sobel, clearColor);
 	}
 
-	void SobelBlur::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		sobel.setImage(*maps[WorldMaps::PositionRoughness]);
-	}
 	
 	float SobelBlur::getScale() const {
 		return sobel.getScale();

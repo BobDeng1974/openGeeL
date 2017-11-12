@@ -93,11 +93,11 @@ public:
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
 			GenericPostSnippet& iblSnippet = GenericPostSnippet(ibl);
-			renderer.addEffect(ibl, DrawTime::Early, ibl);
+			renderer.addEffect(ibl, DrawTime::Early);
 			postLister.add(iblSnippet);
 
 			ImageBasedLighting& forwardIBL = ImageBasedLighting(scene);
-			renderer.addEffect(forwardIBL, DrawTime::Intermediate, forwardIBL);
+			renderer.addEffect(forwardIBL, DrawTime::Intermediate);
 			forwardIBL.setRenderMask(RenderMask::Transparent);
 
 			SSAOSnippet& ssaoSnippet = SSAOSnippet(ssao);
@@ -112,7 +112,7 @@ public:
 			BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, ResolutionPreset::TWENTYFIVE, ResolutionPreset::TWENTY);
 			VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 			SobelBlurSnippet& snip = SobelBlurSnippet(sobelBlur);
-			renderer.addEffect(volSmooth, vol, sobelBlur);
+			renderer.addEffect(volSmooth);
 			scene.addRequester(vol);
 			postLister.add(volSmooth, lightSnippet, snip);
 
@@ -120,7 +120,7 @@ public:
 			SSRR& ssrr = SSRR();
 			//MultisampledSSRR& ssrr = MultisampledSSRR();
 			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, ResolutionPreset::HALFSCREEN, ResolutionPreset::HALFSCREEN);
-			renderer.addEffect(ssrrSmooth, ssrr);
+			renderer.addEffect(ssrrSmooth);
 			scene.addRequester(ssrr);
 			SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
 			postLister.add(ssrrSmooth, ssrrSnippet);

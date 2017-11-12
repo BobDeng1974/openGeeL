@@ -10,7 +10,7 @@ namespace geeL {
 	class RenderScene;
 	class SpotLight;
 
-	class VolumetricLight : public AdditiveEffect, public WorldMapRequester, public CameraRequester {
+	class VolumetricLight : public AdditiveEffect, public CameraRequester {
 
 	public:
 		VolumetricLight(SpotLight& light,  
@@ -21,8 +21,6 @@ namespace geeL {
 
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues();
-
-		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 		unsigned int getSampleCount() const;
 		void setSampleCount(unsigned int samples);

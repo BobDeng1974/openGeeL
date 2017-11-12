@@ -1,3 +1,5 @@
+#include "texturing/rendertexture.h"
+#include "texturing/textureprovider.h"
 #include "voxelization/voxelizer.h"
 #include "voxelization/voxeloctree.h"
 #include "voxelization/voxeltexture.h"
@@ -37,6 +39,11 @@ namespace geeL {
 	void VoxelConeTracer::init(const PostProcessingParameter& parameter) {
 		PostProcessingEffectFS::init(parameter);
 
+		assert(provider != nullptr);
+		addTextureSampler(provider->requestDiffuse(), "gDiffuse");
+		addTextureSampler(provider->requestPositionRoughness(), "gPositionRoughness");
+		addTextureSampler(provider->requestNormalMetallic(), "gNormalMet");
+
 		shader.bind<int>("maxStepSpecular", maxStepSpecular);
 		shader.bind<int>("maxStepDiffuse", maxStepDiffuse);
 		shader.bind<float>("specularLOD", specularLOD);
@@ -61,12 +68,6 @@ namespace geeL {
 		shader.bind<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
 
 		camera->bindInverseViewMatrix(shader, invViewLocation);
-	}
-
-	void VoxelConeTracer::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
-		addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
-		addTextureSampler(*maps[WorldMaps::NormalMetallic], "gNormalMet");
-		addTextureSampler(*maps[WorldMaps::Diffuse], "gDiffuse");
 	}
 
 	unsigned int VoxelConeTracer::getSpecularSampleSize() const {

@@ -1,6 +1,8 @@
 #include <iostream>
 #include "primitives/screenquad.h"
 #include "framebuffer/framebuffer.h"
+#include "texturing/rendertexture.h"
+#include "texturing/textureprovider.h"
 #include "transformation/transform.h"
 #include "gaussianblur.h"
 #include "motionblur.h"
@@ -123,6 +125,11 @@ namespace geeL {
 	void VelocityBuffer::init(const PostProcessingParameter& parameter) {
 		PostProcessingEffectFS::init(parameter);
 
+		assert(provider != nullptr);
+		prevPositionEffect.setImage(provider->requestPositionRoughness());
+		addTextureSampler(provider->requestPositionRoughness(), "currentPosition");
+
+
 		Resolution positionRes = Resolution(parentBuffer->getResolution(), 1.f);
 		if (positionTexture == nullptr)
 			positionTexture = new RenderTexture(positionRes, ColorType::RGBA16,
@@ -159,11 +166,6 @@ namespace geeL {
 		parentBuffer->add(*positionTexture);
 		parentBuffer->fill(prevPositionEffect, clearColor);
 
-	}
-
-	void VelocityBuffer::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
-		prevPositionEffect.setImage(*maps[WorldMaps::PositionRoughness]);
-		addTextureSampler(*maps[WorldMaps::PositionRoughness], "currentPosition");
 	}
 
 }

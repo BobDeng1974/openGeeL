@@ -22,7 +22,6 @@ namespace geeL {
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues();
 		virtual void draw();
-		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 		unsigned int getSpecularSampleSize() const;
 		unsigned int getDiffuseSampleSize() const;

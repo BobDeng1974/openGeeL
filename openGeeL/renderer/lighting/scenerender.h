@@ -10,14 +10,12 @@ namespace geeL {
 	class RenderScene;
 
 	//Post effect for drawing entire scene content. E.g. for deferred lighting
-	class SceneRender : public WorldMapRequester, public CameraRequester {
+	class SceneRender : public CameraRequester {
 
 	public:
 		virtual void init(const PostProcessingParameter& parameter) = 0;
 		virtual void bindValues() = 0;
 		virtual void draw() = 0;
-
-		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps) {}
 
 	protected:
 		SceneRender(RenderScene& scene);

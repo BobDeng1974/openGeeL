@@ -1,5 +1,7 @@
 #include "cameras/camera.h"
 #include "framebuffer/framebuffer.h"
+#include "texturing/rendertexture.h"
+#include "texturing/textureprovider.h"
 #include "ssrr.h"
 
 using namespace std;
@@ -21,6 +23,10 @@ namespace geeL {
 	void SSRR::init(const PostProcessingParameter& parameter) {
 		PostProcessingEffectFS::init(parameter);
 
+		assert(provider != nullptr);
+		addTextureSampler(provider->requestPositionRoughness(), "gPositionRoughness");
+		addTextureSampler(provider->requestNormalMetallic(), "gNormalMet");
+
 		shader.bind<int>("stepCount", steps);
 		shader.bind<float>("stepSize", stepSize);
 		shader.bind<float>("stepGain", stepGain);
@@ -32,12 +38,6 @@ namespace geeL {
 	void SSRR::bindValues() {
 		camera->bindProjectionMatrix(shader, projectionLocation);
 	}
-
-	void SSRR::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
-		addTextureSampler(*maps[WorldMaps::NormalMetallic], "gNormalMet");
-	}
-
 
 	unsigned int SSRR::getStepCount() const {
 		return steps;

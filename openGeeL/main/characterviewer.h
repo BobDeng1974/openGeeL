@@ -131,7 +131,7 @@ public:
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
 			GenericPostSnippet& iblSnippet = GenericPostSnippet(ibl);
-			renderer.addEffect(ibl, DrawTime::Early, ibl);
+			renderer.addEffect(ibl, DrawTime::Early);
 			postLister.add(iblSnippet);
 
 			BrightnessFilterCutoff& filter = BrightnessFilterCutoff(1.f);

@@ -34,7 +34,7 @@ namespace geeL {
 
 	//Depth of field post effect that uses image blurring to achieve effect.
 	//Cheap but not realistic since circe of confusion is neglected
-	class DepthOfFieldBlurred : public PostProcessingEffectFS, public WorldMapRequester {
+	class DepthOfFieldBlurred : public PostProcessingEffectFS {
 
 	public:
 		DepthOfFieldBlurred(DepthOfFieldBlur& blur, 
@@ -48,8 +48,6 @@ namespace geeL {
 		virtual void setImage(const Texture& texture);
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues();
-
-		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 		void resizeBlurResolution(const ResolutionPreset& blurResolution);
 		const ResolutionPreset& getBlurResolution() const;

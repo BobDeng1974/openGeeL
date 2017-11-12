@@ -76,7 +76,7 @@ public:
 			postLister.add(ssao);
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
-			renderer.addEffect(ibl, ibl);
+			renderer.addEffect(ibl);
 
 			SSAOSnippet& ssaoSnippet = SSAOSnippet(ssao);
 			BilateralFilterSnippet& ssaoBlurSnippet = BilateralFilterSnippet(blur);
@@ -88,7 +88,7 @@ public:
 			SSRR& ssrr = SSRR();
 			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 
 				ResolutionPreset::TWOTHIRDS, ResolutionPreset::TWOTHIRDS);
-			renderer.addEffect(ssrrSmooth, ssrr);
+			renderer.addEffect(ssrrSmooth);
 			scene.addRequester(ssrr);
 			SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
 			GaussianBlurSnippet& blurSnippet = GaussianBlurSnippet(blur4);
@@ -117,7 +117,7 @@ public:
 			VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 			SobelBlurSnippet& snip = SobelBlurSnippet(sobelBlur);
 			scene.addRequester(vol);
-			renderer.addEffect(volSmooth, vol, sobelBlur);
+			renderer.addEffect(volSmooth);
 			postLister.add(volSmooth, lightSnippet, snip);
 
 			FXAA& fxaa = FXAA();

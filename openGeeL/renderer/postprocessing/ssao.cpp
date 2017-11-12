@@ -5,6 +5,7 @@
 #include <glm.hpp>
 #include "primitives/screenquad.h"
 #include "texturing/rendertexture.h"
+#include "texturing/textureprovider.h"
 #include "utility/glguards.h"
 #include "gaussianblur.h"
 #include "ssao.h"
@@ -98,6 +99,11 @@ namespace geeL {
 	void SSAO::init(const PostProcessingParameter& parameter) {
 		PostProcessingEffectFS::init(parameter);
 
+		assert(provider != nullptr);
+		addTextureSampler(provider->requestPositionRoughness(), "gPositionDepth");
+		addTextureSampler(provider->requestNormalMetallic(), "gNormalMet");
+		addTextureSampler(*noiseTexture, "noiseTexture");
+
 		const Resolution& resolution = parameter.resolution;
 
 		shader.bind<float>("screenWidth", float(resolution.getWidth()));
@@ -151,12 +157,6 @@ namespace geeL {
 		camera->bindProjectionMatrix(shader, projectionLocation);
 
 		blur.bindValues();
-	}
-
-	void SSAO::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
-		addTextureSampler(*maps[WorldMaps::NormalMetallic], "gNormalMet");
-		addTextureSampler(*noiseTexture, "noiseTexture");
 	}
 
 	float SSAO::getRadius() const {

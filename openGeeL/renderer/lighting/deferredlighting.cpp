@@ -2,6 +2,8 @@
 #include "shader/rendershader.h"
 #include "shader/sceneshader.h"
 #include "lights/lightmanager.h"
+#include "texturing/rendertexture.h"
+#include "texturing/textureprovider.h"
 #include "renderscene.h"
 #include "deferredlighting.h"
 
@@ -15,8 +17,19 @@ namespace geeL {
 
 	void DeferredLighting::init(const PostProcessingParameter& parameter) {
 		PostProcessingEffectFS::init(parameter);
-
+		
 		scene.init();
+
+		assert(provider != nullptr);
+		addTextureSampler(provider->requestDiffuse(), "gDiffuse");
+		addTextureSampler(provider->requestPositionRoughness(), "gPositionRoughness");
+		addTextureSampler(provider->requestNormalMetallic(), "gNormalMet");
+
+		const Texture* emissivity = provider->requestEmissivity();
+		if (emissivity != nullptr) {
+			addTextureSampler(*emissivity, "gEmissivity");
+			shader.bind<int>("useEmissivity", 1);
+		}
 
 		LightManager& manager = scene.getLightmanager();
 		manager.addShaderListener(shader);
@@ -38,22 +51,6 @@ namespace geeL {
 
 		shader.bind<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
 	}
-
-
-	void DeferredLighting::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
-		addTextureSampler(*maps[WorldMaps::Diffuse], "gDiffuse");
-		addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
-		addTextureSampler(*maps[WorldMaps::NormalMetallic], "gNormalMet");
-
-		auto emissivity = maps.find(WorldMaps::Emissivity);
-		if (emissivity != maps.end()) {
-			const Texture& texture = *emissivity->second;
-
-			addTextureSampler(texture, "gEmissivity");
-			shader.bind<int>("useEmissivity", 1);
-		}
-	}
-
 
 
 
@@ -85,21 +82,6 @@ namespace geeL {
 		camera->bindInverseViewMatrix(shader, invViewLocation);
 
 		shader.bind<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
-	}
-
-
-	void TiledDeferredLighting::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
-		addTextureSampler(*maps[WorldMaps::Diffuse], "gDiffuse");
-		addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
-		addTextureSampler(*maps[WorldMaps::NormalMetallic], "gNormalMet");
-
-		auto emissivity = maps.find(WorldMaps::Emissivity);
-		if (emissivity != maps.end()) {
-			const Texture& texture = *emissivity->second;
-
-			addTextureSampler(texture, "gEmissivity");
-			shader.bind<int>("useEmissivity", 1);
-		}
 	}
 
 

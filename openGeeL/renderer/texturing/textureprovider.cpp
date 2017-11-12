@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cassert>
+#include "framebuffer/gbuffer.h"
 #include "utility/resolution.h"
 #include "window.h"
 #include "rendertexture.h"
@@ -36,7 +37,10 @@ namespace geeL {
 
 
 
-	TextureProvider::TextureProvider(const RenderWindow& window) : window(window) {
+	TextureProvider::TextureProvider(const RenderWindow& window, GBuffer& gBuffer) 
+		: window(window)
+		, gBuffer(gBuffer) {
+
 		callback = [this](RenderTexture& texture, ResolutionPreset preset) { 
 			textureCallback(texture, preset); };
 
@@ -57,6 +61,27 @@ namespace geeL {
 		}
 
 	}
+
+	const RenderTexture& TextureProvider::requestDiffuse() const {
+		return gBuffer.getDiffuse();
+	}
+
+	const RenderTexture& TextureProvider::requestPositionRoughness() const {
+		return gBuffer.getPositionRoughness();
+	}
+
+	const RenderTexture& TextureProvider::requestNormalMetallic() const {
+		return gBuffer.getNormalMetallic();
+	}
+
+	const RenderTexture* TextureProvider::requestEmissivity() const {
+		return gBuffer.getEmissivity();
+	}
+
+	const RenderTexture* TextureProvider::requestOcclusion() const {
+		return gBuffer.getOcclusion();
+	}
+
 
 	TextureWrapper TextureProvider::requestTexture(ResolutionPreset resolution, ColorType colorType,
 		FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter) {

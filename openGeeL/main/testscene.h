@@ -169,7 +169,7 @@ public:
 			postLister.add(ssao);
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
-			renderer.addEffect(ibl, ibl);
+			renderer.addEffect(ibl);
 
 			BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 25);
@@ -191,7 +191,7 @@ public:
 			GaussianBlur& blur4 = GaussianBlur();
 			SSRR& ssrr = SSRR();
 			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, ResolutionPreset::ONETHIRD, ResolutionPreset::ONETHIRD);
-			renderer.addEffect(ssrrSmooth, ssrr);
+			renderer.addEffect(ssrrSmooth);
 			scene.addRequester(ssrr);
 
 			MotionBlur& motionBlur = MotionBlur(0.3f, 20);

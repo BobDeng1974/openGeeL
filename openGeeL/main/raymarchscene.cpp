@@ -25,7 +25,6 @@ using namespace geeL;
 
 void RaymarchTest::draw() {
 	RenderWindow& window = RenderWindow("Raymarch", Resolution(1920, 1080), WindowMode::Windowed);
-	TextureProvider textureProvider(window);
 	InputManager manager;
 
 	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
@@ -36,6 +35,7 @@ void RaymarchTest::draw() {
 	camera.addComponent<MovableCamera>(MovableCamera(5.f, 0.45f));
 
 	GBuffer& gBuffer = GBuffer(window.resolution);
+	TextureProvider textureProvider(window, gBuffer);
 	MaterialFactory &materialFactory = MaterialFactory(gBuffer);
 	LightManager& lightManager = LightManager();
 	RenderPipeline& pipeline = RenderPipeline(materialFactory);
@@ -48,7 +48,7 @@ void RaymarchTest::draw() {
 	renderer.setScene(scene);
 
 	ContinuousSingleThread renderThread(renderer);
-	Application& app = ApplicationManager::createApplication(window, manager, renderer, renderThread);
+	Application& app = ApplicationManager::createApplication(window, manager, renderThread);
 
 	ContinuousSingleThread scriptingThread(scene);
 	app.addThread(scriptingThread);

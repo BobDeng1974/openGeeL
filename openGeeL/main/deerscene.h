@@ -57,17 +57,17 @@ public:
 			def.setExposure(1.f);
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
-			renderer.addEffect(ibl, ibl);
+			renderer.addEffect(ibl);
 
 			GaussianBlur& blur4 = GaussianBlur();
 			SSRR& ssrr = SSRR(75, 0.01f);
 			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, ResolutionPreset::TWOTHIRDS, ResolutionPreset::TWOTHIRDS);
-			renderer.addEffect(ssrrSmooth, ssrr);
+			renderer.addEffect(ssrrSmooth);
 			scene.addRequester(ssrr);
 
 			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.3f, 10.f);
 			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 60.f, 100.f, ResolutionPreset::FORTY);
-			renderer.addEffect(dof, dof);
+			renderer.addEffect(dof);
 
 			FXAA& fxaa = FXAA(0.f, 0.f);
 			renderer.addEffect(fxaa, DrawTime::Late);

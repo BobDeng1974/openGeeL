@@ -112,18 +112,16 @@ namespace geeL {
 
 
 	//Two pass gaussian blur that blurs depending on depth differences and scaled with given factor
-	class BilateralDepthFilter : public BilateralFilter, public WorldMapRequester {
+	class BilateralDepthFilter : public BilateralFilter {
 
 	public:
 		BilateralDepthFilter(float sigma = 1.3f, float factor = 0.5f);
-
-		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 	};
 
 
 	//Two pass gaussian blur that blurs depending sobel edge detection
-	class SobelBlur : public GaussianBlurBase, public WorldMapRequester {
+	class SobelBlur : public GaussianBlurBase {
 
 	public:
 		SobelBlur(SobelFilter& sobel, float sigma = 1.5f, bool depth = true);
@@ -131,8 +129,6 @@ namespace geeL {
 
 		virtual void setImage(const Texture& texture);
 		virtual void init(const PostProcessingParameter& parameter);
-
-		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 		float getScale() const;
 		void  setScale(float value);

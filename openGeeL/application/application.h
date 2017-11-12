@@ -11,7 +11,6 @@ namespace geeL {
 
 	using ThreadID = std::thread::id;
 
-	class Renderer;
 	class RenderWindow;
 	class InputManager;
 	class ContinuousThread;
@@ -22,7 +21,6 @@ namespace geeL {
 	public:
 		Application(RenderWindow& window, 
 			InputManager& inputManager,
-			Renderer& renderer, 
 			ContinuousThread& mainThread);
 
 		void run();
@@ -36,7 +34,6 @@ namespace geeL {
 	private:
 		RenderWindow& window;
 		InputManager& inputManager;
-		Renderer& renderer;
 
 		AtomicWrapper<bool> close;
 		std::mutex inputLock;

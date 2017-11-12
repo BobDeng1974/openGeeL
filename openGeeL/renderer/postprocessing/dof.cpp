@@ -1,6 +1,7 @@
 #include "gaussianblur.h"
 #include "texturing/texture.h"
 #include "texturing/rendertexture.h"
+#include "texturing/textureprovider.h"
 #include "framebuffer/framebuffer.h"
 #include "primitives/screenquad.h"
 #include "dof.h"
@@ -75,6 +76,10 @@ namespace geeL {
 	void DepthOfFieldBlurred::init(const PostProcessingParameter& parameter) {
 		PostProcessingEffectFS::init(parameter);
 
+		assert(provider != nullptr);
+		addTextureSampler(provider->requestPositionRoughness(), "gPositionDepth");
+		blur.addTextureSampler(provider->requestPositionRoughness(), "gPositionDepth");
+
 		shader.bind<float>("farDistance", farDistance);
 		shader.bind<float>("aperture", aperture);
 
@@ -109,10 +114,6 @@ namespace geeL {
 		parentBuffer->fill(blur, clearColor);
 	}
 
-	void DepthOfFieldBlurred::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
-		blur.addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
-	}
 
 	void DepthOfFieldBlurred::resizeBlurResolution(const ResolutionPreset& blurResolution) {
 		this->blurResolution = blurResolution;

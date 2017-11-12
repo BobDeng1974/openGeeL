@@ -1,6 +1,8 @@
 #include "cameras/camera.h"
 #include "shader/rendershader.h"
 #include "shader/sceneshader.h"
+#include "texturing/rendertexture.h"
+#include "texturing/textureprovider.h"
 #include "lights/lightmanager.h"
 #include "renderscene.h"
 #include "ibl.h"
@@ -15,6 +17,17 @@ namespace geeL {
 
 	void ImageBasedLighting::init(const PostProcessingParameter& parameter) {
 		PostProcessingEffectFS::init(parameter);
+
+		assert(provider != nullptr);
+		addTextureSampler(provider->requestDiffuse(), "gDiffuse");
+		addTextureSampler(provider->requestPositionRoughness(), "gPositionRoughness");
+		addTextureSampler(provider->requestNormalMetallic(), "gNormalMet");
+
+		const Texture* occlusion = provider->requestOcclusion();
+		if (occlusion != nullptr) {
+			addTextureSampler(*occlusion, "ssao");
+			shader.bind<int>("useSSAO", 1);
+		}
 
 		scene.getLightmanager().addReflectionProbes(shader);
 		invViewLocation = shader.getLocation("inverseView");
@@ -32,17 +45,4 @@ namespace geeL {
 		shader.bind<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
 	}
 
-	void ImageBasedLighting::addWorldInformation(std::map<WorldMaps, const Texture*> maps) {
-		addTextureSampler(*maps[WorldMaps::Diffuse], "gDiffuse");
-		addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionRoughness");
-		addTextureSampler(*maps[WorldMaps::NormalMetallic], "gNormalMet");
-
-		auto ssao = maps.find(WorldMaps::Occlusion);
-		if (ssao != maps.end()) {
-			const Texture& texture = *ssao->second;
-
-			addTextureSampler(texture, "ssao");
-			shader.bind<int>("useSSAO", 1);
-		}
-	}
 }

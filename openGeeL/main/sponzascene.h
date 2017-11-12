@@ -102,12 +102,12 @@ public:
 			postLister.add(ssao);
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
-			renderer.addEffect(ibl, ibl);
+			renderer.addEffect(ibl);
 
 			GaussianBlur& blur4 = GaussianBlur();
 			SSRR& ssrr = SSRR();
 			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, ResolutionPreset::EIGHTY, ResolutionPreset::EIGHTY);
-			renderer.addEffect(ssrrSmooth, ssrr);
+			renderer.addEffect(ssrrSmooth);
 			scene.addRequester(ssrr);
 			SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
 			GaussianBlurSnippet& gaussSnip = GaussianBlurSnippet(blur4);

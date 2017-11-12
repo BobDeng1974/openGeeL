@@ -45,7 +45,7 @@ namespace geeL {
 	};
 
 
-	class VelocityBuffer : public PostProcessingEffectFS, public WorldMapRequester, public CameraRequester {
+	class VelocityBuffer : public PostProcessingEffectFS, public CameraRequester {
 
 	public:
 		VelocityBuffer();
@@ -54,8 +54,6 @@ namespace geeL {
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues();
 		virtual void draw();
-
-		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 	private:
 		glm::vec3 prevPosition;

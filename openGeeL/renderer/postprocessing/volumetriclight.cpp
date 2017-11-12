@@ -1,5 +1,7 @@
 #include <iostream>
 #include "transformation/transform.h"
+#include "texturing/rendertexture.h"
+#include "texturing/textureprovider.h"
 #include "lights/spotlight.h"
 #include "volumetriclight.h"
 #include "renderscene.h"
@@ -28,8 +30,10 @@ namespace geeL {
 	void VolumetricLight::init(const PostProcessingParameter& parameter) {
 		AdditiveEffect::init(parameter);
 
-		const ShadowMap* map = light.getShadowMap();
+		assert(provider != nullptr);
+		addTextureSampler(provider->requestPositionRoughness(), "gPositionRoughness");
 
+		const ShadowMap* map = light.getShadowMap();
 		if (map != nullptr)
 			addTextureSampler(*map, "shadowMap");
 		else
@@ -58,10 +62,6 @@ namespace geeL {
 		shader.bind<int>("lightActive", light.isActive());
 	}
 
-
-	void VolumetricLight::addWorldInformation(map<WorldMaps, const Texture*> maps) {
-		addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
-	}
 
 	unsigned int VolumetricLight::getSampleCount() const {
 		return samples;

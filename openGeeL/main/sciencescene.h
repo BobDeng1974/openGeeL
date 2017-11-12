@@ -105,14 +105,14 @@ public:
 			postLister.add(ssao);
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
-			renderer.addEffect(ibl, ibl);
+			renderer.addEffect(ibl);
 
 			SobelFilter& sobel = SobelFilter(15);
 			SobelBlur& sobelBlur = SobelBlur(sobel);
 			VolumetricLight& vol = VolumetricLight(spotLight, 0.05f, 6.f, 100);
 			BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, ResolutionPreset::ONETHIRD, ResolutionPreset::ONETHIRD);
 			VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
-			renderer.addEffect(volSmooth, vol, sobelBlur);
+			renderer.addEffect(volSmooth);
 			scene.addRequester(vol);
 			postLister.add(volSmooth, lightSnippet);
 
@@ -120,12 +120,12 @@ public:
 			SSRR& ssrr = SSRR();
 			ssrr.effectOnly(false);
 			//BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.5f, 0.9f);
-			renderer.addEffect(ssrr, ssrr);
+			renderer.addEffect(ssrr);
 			scene.addRequester(ssrr);
 
 			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.3f, 5.f);
 			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 15.f, 100.f, ResolutionPreset::HALFSCREEN);
-			renderer.addEffect(dof, dof);
+			renderer.addEffect(dof);
 			postLister.add(dof);
 
 			FXAA& fxaa = FXAA();

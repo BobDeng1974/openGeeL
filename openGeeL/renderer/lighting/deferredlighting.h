@@ -17,8 +17,6 @@ namespace geeL {
 		virtual void bindValues();
 		virtual void draw();
 
-		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
-
 	private:
 		ShaderLocation projectionLocation;
 		ShaderLocation invViewLocation;
@@ -36,8 +34,6 @@ namespace geeL {
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues();
 		virtual void draw();
-
-		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 	private:
 		ShaderLocation projectionLocation;

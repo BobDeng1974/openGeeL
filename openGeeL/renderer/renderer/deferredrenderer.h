@@ -30,7 +30,7 @@ namespace geeL {
 	using PostEffectRender = std::pair<RenderTexture*, PostProcessingEffect*>;
 
 
-	class DeferredRenderer : public Renderer, public WorldMapProvider, public PostEffectDrawer {
+	class DeferredRenderer : public Renderer, public PostEffectDrawer {
 
 	public:
 		DeferredRenderer(RenderWindow& window, 
@@ -55,11 +55,7 @@ namespace geeL {
 		virtual void addEffect(PostProcessingEffect& effect, RenderTexture& texture);
 		void addEffect(SSAO& ssao);
 
-		virtual void addRequester(WorldMapRequester& requester);
 		virtual void addRenderTexture(DynamicRenderTexture& texture);
-
-		virtual void linkInformation() const;
-		virtual std::map<WorldMaps, const Texture*> getMaps() const;
 
 		void addFBuffer(ForwardBuffer& buffer);
 		void addTBuffer(TransparentOIDBuffer& buffer);
@@ -82,7 +78,6 @@ namespace geeL {
 		std::vector<PostEffectRender> externalEffects;
 
 		std::list<DynamicRenderTexture*> renderTextures;
-		std::list<WorldMapRequester*> requester;
 
 		RenderTexture* texture1;
 		RenderTexture* texture2;

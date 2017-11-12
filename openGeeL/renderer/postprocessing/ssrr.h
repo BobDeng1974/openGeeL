@@ -7,15 +7,13 @@
 namespace geeL {
 
 	//Screen Space Raycasted Reflections post effect
-	class SSRR : public PostProcessingEffectFS, public WorldMapRequester, public CameraRequester {
+	class SSRR : public PostProcessingEffectFS, public CameraRequester {
 
 	public:
 		SSRR(unsigned int stepCount = 60, float stepSize = 0.2f, float stepSizeGain = 1.02f);
 
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues();
-
-		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 		unsigned int getStepCount() const;
 		void setStepCount(unsigned int steps);

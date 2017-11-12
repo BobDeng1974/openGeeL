@@ -85,7 +85,7 @@ public:
 			VoxelTexture& tex = VoxelTexture(scene);
 			VoxelConeTracer& tracer = VoxelConeTracer(scene, tex);
 
-			renderer.addEffect(tracer, tracer);
+			renderer.addEffect(tracer);
 			postLister.add(tracer);
 			//lightManager.addVoxelStructure(tex);
 
@@ -93,7 +93,7 @@ public:
 			GaussianBlurBase& blur4 = GaussianBlurBase(0.5f);
 			MultisampledSSRR& ssrr = MultisampledSSRR(25, 35, 1.f);
 			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.5f, 0.5f);
-			renderer.addEffect(ssrrSmooth, ssrr);
+			renderer.addEffect(ssrrSmooth);
 			scene.addRequester(ssrr);
 			SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
 			GaussianBlurSnippet& gaussSnippet = GaussianBlurSnippet(blur4);
@@ -103,7 +103,7 @@ public:
 			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.4f);
 			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 35.f, 
 				camera.getFarPlane(), ResolutionPreset::FULLSCREEN);
-			//renderer.addEffect(dof, dof);
+			//renderer.addEffect(dof);
 			//postLister.add(dof);
 
 			FXAA& fxaa = FXAA();

@@ -76,7 +76,7 @@ public:
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
 			GenericPostSnippet& iblSnippet = GenericPostSnippet(ibl);
-			renderer.addEffect(ibl, ibl);
+			renderer.addEffect(ibl);
 			postLister.add(iblSnippet);
 
 			BilateralFilter& blur2 = BilateralFilter(1, 0.1f);

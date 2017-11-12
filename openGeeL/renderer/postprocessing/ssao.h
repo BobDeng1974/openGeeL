@@ -14,7 +14,7 @@ namespace geeL {
 	class RenderTexture;
 
 	//Screen Space Ambient Occlusion Post Effect
-	class SSAO : public PostProcessingEffectFS, public WorldMapRequester, public CameraRequester {
+	class SSAO : public PostProcessingEffectFS, public CameraRequester {
 
 	public:
 		SSAO(PostProcessingEffectFS& blur, 
@@ -38,8 +38,6 @@ namespace geeL {
 		virtual void bindValues();
 		virtual void draw();
 		virtual void fill();
-
-		virtual void addWorldInformation(std::map<WorldMaps, const Texture*> maps);
 
 		float getRadius() const;
 		void setRadius(float radius);

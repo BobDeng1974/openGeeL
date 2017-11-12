@@ -10,6 +10,7 @@
 namespace geeL {
 
 	enum class ResolutionPreset;
+	class GBuffer;
 	class RenderTexture;
 	class RenderWindow;
 	class TextureParameters;
@@ -20,6 +21,14 @@ namespace geeL {
 	class ITextureProvider {
 
 	public:
+
+		virtual const RenderTexture& requestDiffuse() const = 0;
+		virtual const RenderTexture& requestPositionRoughness() const = 0;
+		virtual const RenderTexture& requestNormalMetallic() const = 0;
+		virtual const RenderTexture* requestEmissivity() const = 0;
+		virtual const RenderTexture* requestOcclusion() const = 0;
+
+
 		virtual TextureWrapper requestTexture(ResolutionPreset resolution,
 			ColorType colorType = ColorType::RGB,
 			FilterMode filterMode = FilterMode::None,
@@ -33,8 +42,15 @@ namespace geeL {
 	class TextureProvider : public ITextureProvider {
 
 	public:
-		TextureProvider(const RenderWindow& window);
+		TextureProvider(const RenderWindow& window, GBuffer& gBuffer);
 		~TextureProvider();
+
+
+		virtual const RenderTexture& requestDiffuse() const;
+		virtual const RenderTexture& requestPositionRoughness() const;
+		virtual const RenderTexture& requestNormalMetallic() const;
+		virtual const RenderTexture* requestEmissivity() const;
+		virtual const RenderTexture* requestOcclusion() const;
 
 		virtual TextureWrapper requestTexture(ResolutionPreset resolution, ColorType colorType,
 			FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter);
@@ -66,6 +82,7 @@ namespace geeL {
 		unsigned int currentRate = 0;
 
 		const RenderWindow& window;
+		GBuffer& gBuffer;
 		std::function<void(RenderTexture&, ResolutionPreset)> callback;
 
 		std::map<ResolutionPreset, std::map<ColorType, MonitoredList>> textures;

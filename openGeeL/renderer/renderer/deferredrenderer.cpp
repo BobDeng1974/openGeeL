@@ -70,7 +70,6 @@ namespace geeL {
 		stackBuffer.initResolution(window->resolution);
 		stackBuffer.referenceRBO(gBuffer);
 
-		addRequester(lighting);
 		ScreenQuad& defQuad = ScreenQuad::get();
 		defQuad.init();
 	}
@@ -233,7 +232,6 @@ namespace geeL {
 
 	void DeferredRenderer::addEffect(SSAO& ssao) {
 		this->ssao = &ssao;
-		addRequester(*this->ssao);
 
 		Resolution ssaoRes = Resolution(window->resolution, ssao.getResolution());
 		gBuffer.requestOcclusion(ssao.getResolution()); //Ensure that occlusion map gets created
@@ -269,41 +267,6 @@ namespace geeL {
 
 	void DeferredRenderer::addRenderTexture(DynamicRenderTexture& texture) {
 		renderTextures.push_back(&texture);
-	}
-
-	void DeferredRenderer::addRequester(WorldMapRequester& requester) {
-		this->requester.push_back(&requester);
-	}
-
-
-	void DeferredRenderer::linkInformation() const {
-		//Link world maps to requesting post effects
-		map<WorldMaps, const Texture*> worldMaps = std::move(getMaps());
-
-		for (auto it = requester.begin(); it != requester.end(); it++) {
-			WorldMapRequester* req = *it;
-			req->addWorldInformation(worldMaps);
-		}
-	}
-
-
-
-	map<WorldMaps, const Texture*> DeferredRenderer::getMaps() const {
-		map<WorldMaps, const Texture*> worldMaps;
-		worldMaps[WorldMaps::Image] = texture1;
-		worldMaps[WorldMaps::Diffuse] = &gBuffer.getDiffuse();
-		worldMaps[WorldMaps::PositionRoughness] = &gBuffer.getPositionRoughness();
-		worldMaps[WorldMaps::NormalMetallic] = &gBuffer.getNormalMetallic();
-
-		const RenderTexture* emissivity = gBuffer.getEmissivity();
-		if (emissivity != nullptr)
-			worldMaps[WorldMaps::Emissivity] = emissivity;
-
-		const RenderTexture* occlusion = gBuffer.getOcclusion();
-		if (occlusion != nullptr)
-			worldMaps[WorldMaps::Occlusion] = occlusion;
-
-		return worldMaps;
 	}
 
 	void DeferredRenderer::addFBuffer(ForwardBuffer& buffer) {
