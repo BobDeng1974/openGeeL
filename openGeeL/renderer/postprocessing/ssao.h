@@ -18,7 +18,7 @@ namespace geeL {
 
 	public:
 		SSAO(PostProcessingEffectFS& blur, float radius = 5.f, 
-			const RenderResolution& resolution = RenderResolution::HALFSCREEN);
+			const ResolutionPreset& resolution = ResolutionPreset::HALFSCREEN);
 		SSAO(const SSAO& other);
 		virtual ~SSAO();
 
@@ -42,14 +42,14 @@ namespace geeL {
 		float getRadius() const;
 		void setRadius(float radius);
 
-		const RenderResolution& getResolution() const;
+		const ResolutionPreset& getResolution() const;
 
 		virtual std::string toString() const;
 
 	private:
 		float radius;
 		unsigned int sampleCount = 32;
-		RenderResolution scale;
+		ResolutionPreset scale;
 
 		ImageTexture* noiseTexture;
 		std::vector<glm::vec3> kernel;

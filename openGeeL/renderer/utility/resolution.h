@@ -10,7 +10,7 @@ namespace geeL {
 	struct ResolutionScale;
 
 
-	enum class RenderResolution {
+	enum class ResolutionPreset {
 		FULLSCREEN = 100,
 		NINETY = 90,
 		EIGHTY = 80,
@@ -24,10 +24,10 @@ namespace geeL {
 		TEN = 10
 	};
 
-	ResolutionScale getResolutionScale(RenderResolution resolution);
-	RenderResolution getRenderResolution(size_t index);
+	ResolutionScale getResolutionScale(ResolutionPreset resolution);
+	ResolutionPreset getRenderResolution(size_t index);
 	size_t getRenderResolutionCount();
-	size_t getRenderResolutionIndex(RenderResolution resolution);
+	size_t getRenderResolutionIndex(ResolutionPreset resolution);
 	
 
 
@@ -39,7 +39,7 @@ namespace geeL {
 		Resolution(unsigned int resolution);
 		Resolution(unsigned int width, unsigned int height);
 		Resolution(const Resolution& resolution, const ResolutionScale& scale);
-		Resolution(const Resolution& resolution, const RenderResolution& scale);
+		Resolution(const Resolution& resolution, const ResolutionPreset& scale);
 
 		unsigned int getWidth() const;
 		unsigned int getHeight() const;
@@ -68,7 +68,7 @@ namespace geeL {
 
 	public:
 		ResolutionScale(float scale);
-		ResolutionScale(RenderResolution resolution);
+		ResolutionScale(ResolutionPreset resolution);
 
 		float get() const;
 		void  set(float value);
@@ -139,7 +139,7 @@ namespace geeL {
 		set(scale);
 	}
 
-	inline ResolutionScale::ResolutionScale(RenderResolution resolution) {
+	inline ResolutionScale::ResolutionScale(ResolutionPreset resolution) {
 		set(getResolutionScale(resolution).get());
 	}
 
@@ -166,7 +166,7 @@ namespace geeL {
 		: width(unsigned int(resolution.getWidth() * scale)), height(unsigned int(resolution.getHeight() * scale)), 
 			baseWidth(resolution.getWidth()), baseHeight(resolution.getHeight()) {}
 
-	inline Resolution::Resolution(const Resolution& resolution, const RenderResolution& scale)
+	inline Resolution::Resolution(const Resolution& resolution, const ResolutionPreset& scale)
 		: Resolution(resolution, getResolutionScale(scale)) {}
 
 

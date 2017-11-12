@@ -136,7 +136,7 @@ public:
 
 			BrightnessFilterCutoff& filter = BrightnessFilterCutoff(1.f);
 			GaussianBlur& bloomBlur = GaussianBlur(KernelSize::Large, 3.f);
-			Bloom& bloom = Bloom(filter, bloomBlur, RenderResolution::HALFSCREEN, RenderResolution::HALFSCREEN);
+			Bloom& bloom = Bloom(filter, bloomBlur, ResolutionPreset::HALFSCREEN, ResolutionPreset::HALFSCREEN);
 			renderer.addEffect(bloom, DrawTime::Late);
 			postLister.add(bloom);
 
@@ -145,7 +145,7 @@ public:
 
 			BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 20);
-			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, RenderResolution::TWENTYFIVE, RenderResolution::TWENTYFIVE);
+			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, ResolutionPreset::TWENTYFIVE, ResolutionPreset::TWENTYFIVE);
 			GodRaySnippet& godRaySnippet = GodRaySnippet(ray);
 			renderer.addEffect(raySmooth, DrawTime::Late);
 			scene.addRequester(ray);

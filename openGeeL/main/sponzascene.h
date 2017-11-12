@@ -106,7 +106,7 @@ public:
 
 			GaussianBlur& blur4 = GaussianBlur();
 			SSRR& ssrr = SSRR();
-			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, RenderResolution::EIGHTY, RenderResolution::EIGHTY);
+			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, ResolutionPreset::EIGHTY, ResolutionPreset::EIGHTY);
 			renderer.addEffect(ssrrSmooth, ssrr);
 			scene.addRequester(ssrr);
 			SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
@@ -115,7 +115,7 @@ public:
 
 			BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 			GodRay& ray = GodRay(vec3(-2.4f, 45.6f, -4.6f), 20);
-			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, RenderResolution::TWENTY, RenderResolution::TWENTY);
+			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, ResolutionPreset::TWENTY, ResolutionPreset::TWENTY);
 			GodRaySnippet& godRaySnippet = GodRaySnippet(ray);
 			renderer.addEffect(raySmooth, DrawTime::Late);
 			scene.addRequester(ray);

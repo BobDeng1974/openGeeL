@@ -49,7 +49,7 @@ namespace geeL {
 
 
 	DepthOfFieldBlurred::DepthOfFieldBlurred(DepthOfFieldBlur& blur,
-		const float& focalLength, float aperture, float farDistance, const RenderResolution& blurResolution)
+		const float& focalLength, float aperture, float farDistance, const ResolutionPreset& blurResolution)
 			: PostProcessingEffectFS("renderer/postprocessing/dof.frag"), 
 				blur(blur), focalLength(focalLength), aperture(aperture), 
 				farDistance(farDistance), blurResolution(blurResolution) {}
@@ -107,7 +107,7 @@ namespace geeL {
 		blur.addTextureSampler(*maps[WorldMaps::PositionRoughness], "gPositionDepth");
 	}
 
-	void DepthOfFieldBlurred::resizeBlurResolution(const RenderResolution& blurResolution) {
+	void DepthOfFieldBlurred::resizeBlurResolution(const ResolutionPreset& blurResolution) {
 		this->blurResolution = blurResolution;
 
 		Resolution newRes = Resolution(resolution, blurResolution);
@@ -115,7 +115,7 @@ namespace geeL {
 		blurTexture->resize(newRes);
 	}
 
-	const RenderResolution& DepthOfFieldBlurred::getBlurResolution() const {
+	const ResolutionPreset& DepthOfFieldBlurred::getBlurResolution() const {
 		return blurResolution;
 	}
 

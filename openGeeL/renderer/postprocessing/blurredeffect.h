@@ -12,7 +12,7 @@ namespace geeL {
 
 	public:
 		BlurredPostEffect(PostProcessingEffectFS& effect, PostProcessingEffectFS& blur, 
-			RenderResolution effectResolution = RenderResolution::FULLSCREEN, RenderResolution blurResolution = RenderResolution::FULLSCREEN);
+			ResolutionPreset effectResolution = ResolutionPreset::FULLSCREEN, ResolutionPreset blurResolution = ResolutionPreset::FULLSCREEN);
 		virtual ~BlurredPostEffect();
 
 		virtual void setImage(const Texture& texture);
@@ -25,10 +25,10 @@ namespace geeL {
 		//mask and setting their masks manually won't work either.
 		virtual void setRenderMask(RenderMask mask);
 
-		void resizeEffectResolution(RenderResolution effectResolution);
+		void resizeEffectResolution(ResolutionPreset effectResolution);
 
-		const RenderResolution& getEffectResolution() const;
-		const RenderResolution& getBlurResolution() const;
+		const ResolutionPreset& getEffectResolution() const;
+		const ResolutionPreset& getBlurResolution() const;
 
 		virtual std::string toString() const;
 
@@ -36,7 +36,7 @@ namespace geeL {
 		virtual void drawSubImages();
 
 	private:
-		RenderResolution effectResolution, blurResolution;
+		ResolutionPreset effectResolution, blurResolution;
 		PostProcessingEffectFS& effect;
 		PostProcessingEffectFS& blur;
 

@@ -109,7 +109,7 @@ public:
 			SobelFilter& sobel = SobelFilter(5.f);
 			SobelBlur& sobelBlur = SobelBlur(sobel, 15.f);
 			VolumetricLight& vol = VolumetricLight(spotLight, 0.7f, 14.f, 250);
-			BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, RenderResolution::TWENTYFIVE, RenderResolution::TWENTY);
+			BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, ResolutionPreset::TWENTYFIVE, ResolutionPreset::TWENTY);
 			VolumetricLightSnippet& lightSnippet = VolumetricLightSnippet(vol);
 			SobelBlurSnippet& snip = SobelBlurSnippet(sobelBlur);
 			renderer.addEffect(volSmooth, vol, sobelBlur);
@@ -119,7 +119,7 @@ public:
 			GaussianBlur& blur4 = GaussianBlur();
 			SSRR& ssrr = SSRR();
 			//MultisampledSSRR& ssrr = MultisampledSSRR();
-			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, RenderResolution::HALFSCREEN, RenderResolution::HALFSCREEN);
+			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, ResolutionPreset::HALFSCREEN, ResolutionPreset::HALFSCREEN);
 			renderer.addEffect(ssrrSmooth, ssrr);
 			scene.addRequester(ssrr);
 			SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);

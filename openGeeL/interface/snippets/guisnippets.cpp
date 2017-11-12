@@ -187,14 +187,14 @@ namespace geeL {
 	}
 
 
-	RenderResolution GUISnippets::drawResolution(GUIContext* context, RenderResolution current) {
+	ResolutionPreset GUISnippets::drawResolution(GUIContext* context, ResolutionPreset current) {
 		int newIndex = getRenderResolutionIndex(current);
 
 		nk_layout_row_dynamic(context, 30, 3);
 		nk_label(context, "Resolution", NK_TEXT_CENTERED);
 		nk_slider_int(context, 0, &newIndex, getRenderResolutionCount() - 1, 1);
 
-		RenderResolution newResolution(getRenderResolution(newIndex));
+		ResolutionPreset newResolution(getRenderResolution(newIndex));
 
 		std::string valName = std::to_string((int)newResolution) + "%";
 		nk_label(context, valName.c_str(), NK_TEXT_CENTERED);

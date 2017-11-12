@@ -9,7 +9,7 @@ using namespace std;
 namespace geeL {
 
 	BlurredPostEffect::BlurredPostEffect(PostProcessingEffectFS& effect, 
-		PostProcessingEffectFS& blur, RenderResolution effectResolution, RenderResolution blurResolution)
+		PostProcessingEffectFS& blur, ResolutionPreset effectResolution, ResolutionPreset blurResolution)
 			: PostProcessingEffectFS("renderer/postprocessing/combine.frag"),
 				effect(effect), blur(blur), effectResolution(effectResolution), blurResolution(blurResolution){
 
@@ -87,7 +87,7 @@ namespace geeL {
 	}
 
 
-	void BlurredPostEffect::resizeEffectResolution(RenderResolution effectResolution) {
+	void BlurredPostEffect::resizeEffectResolution(ResolutionPreset effectResolution) {
 		this->effectResolution = effectResolution;
 
 		Resolution newRes = Resolution(resolution, effectResolution);
@@ -95,11 +95,11 @@ namespace geeL {
 		effectTexture->resize(newRes);
 	}
 
-	const RenderResolution& BlurredPostEffect::getEffectResolution() const {
+	const ResolutionPreset& BlurredPostEffect::getEffectResolution() const {
 		return effectResolution;
 	}
 
-	const RenderResolution& BlurredPostEffect::getBlurResolution() const {
+	const ResolutionPreset& BlurredPostEffect::getBlurResolution() const {
 		return blurResolution;
 	}
 }

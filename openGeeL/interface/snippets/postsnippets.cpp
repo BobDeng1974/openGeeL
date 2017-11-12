@@ -123,8 +123,8 @@ namespace geeL {
 		: PostEffectSnippet(effect), effect(effect), effectSnippet(effectSnippet), blurSnippet(nullptr) {}
 
 	void BlurredEffectSnippet::drawSimple(GUIContext* context) {
-		const RenderResolution& oldResolution = effect.getEffectResolution();
-		RenderResolution newResolution(GUISnippets::drawResolution(context, oldResolution));
+		const ResolutionPreset& oldResolution = effect.getEffectResolution();
+		ResolutionPreset newResolution(GUISnippets::drawResolution(context, oldResolution));
 
 		if (newResolution != oldResolution)
 			effect.resizeEffectResolution(newResolution);
@@ -191,8 +191,8 @@ namespace geeL {
 	BloomSnippet::BloomSnippet(Bloom& bloom) : PostEffectSnippet(bloom), bloom(bloom) {}
 
 	void BloomSnippet::drawSimple(GUIContext* context) {
-		const RenderResolution& oldResolution = bloom.getEffectResolution();
-		RenderResolution newResolution(GUISnippets::drawResolution(context, oldResolution));
+		const ResolutionPreset& oldResolution = bloom.getEffectResolution();
+		ResolutionPreset newResolution(GUISnippets::drawResolution(context, oldResolution));
 
 		if (newResolution != oldResolution)
 			bloom.resizeEffectResolution(newResolution);
@@ -218,8 +218,8 @@ namespace geeL {
 	DepthOfFieldBlurredSnippet::DepthOfFieldBlurredSnippet(DepthOfFieldBlurred& dof) : PostEffectSnippet(dof), dof(dof) {}
 
 	void DepthOfFieldBlurredSnippet::drawSimple(GUIContext* context) {
-		const RenderResolution& oldResolution = dof.getBlurResolution();
-		RenderResolution newResolution(GUISnippets::drawResolution(context, oldResolution));
+		const ResolutionPreset& oldResolution = dof.getBlurResolution();
+		ResolutionPreset newResolution(GUISnippets::drawResolution(context, oldResolution));
 
 		if (newResolution != oldResolution)
 			dof.resizeBlurResolution(newResolution);

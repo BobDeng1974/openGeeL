@@ -81,7 +81,7 @@ public:
 
 			BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
 			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 100);
-			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, RenderResolution::TWENTY, RenderResolution::TWENTY);
+			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, ResolutionPreset::TWENTY, ResolutionPreset::TWENTY);
 			GodRaySnippet& godRaySnippet = GodRaySnippet(ray);
 			renderer.addEffect(raySmooth, DrawTime::Late);
 			scene.addRequester(ray);
@@ -90,7 +90,7 @@ public:
 
 			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.4f, 155.f);
 			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 25.f, 
-				camera.getFarPlane(), RenderResolution::FULLSCREEN);
+				camera.getFarPlane(), ResolutionPreset::FULLSCREEN);
 			//renderer.addEffect(dof, dof);
 			//postLister.add(dof);
 
