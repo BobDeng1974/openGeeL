@@ -61,6 +61,10 @@ namespace geeL {
 		PostProcessingEffectFS::draw();
 	}
 
+	void VoxelConeTracer::fill() {
+		PostProcessingEffectFS::fill();
+	}
+
 	void VoxelConeTracer::bindValues() {
 		voxelStructure.bind(shader);
 

@@ -40,8 +40,6 @@ namespace geeL {
 			DefaultPostProcess& def, 
 			GBuffer& gBuffer);
 
-		virtual ~DeferredRenderer();
-
 		virtual void runStart();
 		virtual void run();
 		virtual void draw();
@@ -56,9 +54,7 @@ namespace geeL {
 		void addEffect(SSAO& ssao);
 
 		virtual void addRenderTexture(DynamicRenderTexture& texture);
-
 		void addFBuffer(ForwardBuffer& buffer);
-		void addTBuffer(TransparentOIDBuffer& buffer);
 
 		//Set image that gets drawn to screen. Picks default 
 		//image if given texture is NULL
@@ -79,10 +75,6 @@ namespace geeL {
 
 		std::list<DynamicRenderTexture*> renderTextures;
 
-		RenderTexture* texture1;
-		RenderTexture* texture2;
-		Texture* defTexture;
-
 		TextureProvider& provider;
 		GBuffer& gBuffer;
 		ForwardBuffer* fBuffer;
@@ -102,13 +94,9 @@ namespace geeL {
 
 		void init();
 		void initEffects();
-		void indexEffects();
-		void indexEffect(PostEffectRender& current, PostEffectRender* previous, RenderTexture* firstTexture);
 		
 		void iterEffects(std::vector<PostEffectRender>& effects, std::function<void(PostProcessingEffect&)> function);
-
-		RenderTexture* indexEffectList(std::vector<PostEffectRender>& effects, RenderTexture* firstTexture);
-		RenderTexture* drawEffects(std::vector<PostEffectRender>& effects, RenderTexture* lastTexture);
+		void drawEffects(std::vector<PostEffectRender>& effects);
 		
 		//Update shader bindings of all contained post effects
 		void updateEffectBindings();

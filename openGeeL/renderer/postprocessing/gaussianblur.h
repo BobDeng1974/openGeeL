@@ -97,8 +97,8 @@ namespace geeL {
 
 		virtual void init(const PostProcessingParameter& parameter);
 
-		float getSigma() const;
-		void  setSigma(float value);
+		float getFactor() const;
+		void  setFactor(float value);
 
 		virtual std::string toString() const;
 

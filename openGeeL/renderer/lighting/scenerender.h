@@ -16,6 +16,7 @@ namespace geeL {
 		virtual void init(const PostProcessingParameter& parameter) = 0;
 		virtual void bindValues() = 0;
 		virtual void draw() = 0;
+		virtual void fill() = 0;
 
 	protected:
 		SceneRender(RenderScene& scene);

@@ -4,6 +4,7 @@
 #include "shader/rendershader.h"
 #include "primitives/screenquad.h"
 #include "framebuffer/colorbuffer.h"
+#include "texturing/textureprovider.h"
 #include "utility/glguards.h"
 #include "utility/defaults.h"
 #include "postprocessing.h"
@@ -93,8 +94,18 @@ namespace geeL {
 	}
 
 	void PostProcessingEffectFS::fill() {
-		if (parentBuffer != nullptr)
+		if (parentBuffer != nullptr) {
+			RenderTexture& source = provider->requestCurrentImage();
+			RenderTexture& target = provider->requestDefaultTexture();
+
+			setImage(source);
+
+			parentBuffer->add(target);
 			parentBuffer->fill(*this, clearColor);
+
+			provider->updateCurrentImage(target);
+		}
+			
 	}
 
 	void PostProcessingEffectFS::bindToScreen() {

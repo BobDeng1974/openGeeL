@@ -3,6 +3,7 @@
 #include <iostream>
 #include "framebuffer/framebuffer.h"
 #include "shader/shader.h"
+#include "texturing/textureprovider.h"
 #include "utility/glguards.h"
 #include "utility/clearing.h"
 #include "additiveeffect.h"
@@ -36,6 +37,7 @@ namespace geeL {
 		}
 
 		if (parentBuffer != nullptr) {
+			parentBuffer->add(provider->requestCurrentImage());
 			parentBuffer->fill([this]() {
 				if(active) PostProcessingEffectFS::draw();
 			}, clearNothing);
@@ -85,6 +87,8 @@ namespace geeL {
 	void AdditiveWrapper::fill() {
 
 		if (active && parentBuffer != nullptr) {
+			effect.setImage(provider->requestCurrentImage());
+
 			parentBuffer->push(*tempTexture);
 			parentBuffer->fill([this]() {
 				effect.draw();

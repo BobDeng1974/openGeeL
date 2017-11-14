@@ -33,8 +33,6 @@ namespace geeL {
 	}
 
 
-
-
 	TextureProvider::TextureProvider(const RenderWindow& window, GBuffer& gBuffer) 
 		: window(window)
 		, gBuffer(gBuffer)
@@ -45,6 +43,8 @@ namespace geeL {
 	}
 
 	TextureProvider::~TextureProvider() {
+		if (diffuse != nullptr) delete diffuse;
+
 		for (auto resolutionIt(textures.begin()); resolutionIt != textures.end(); resolutionIt++) {
 			auto& colors = resolutionIt->second;
 
@@ -57,7 +57,6 @@ namespace geeL {
 				}
 			}
 		}
-
 	}
 
 	const RenderTexture& TextureProvider::requestAlbedo() const {

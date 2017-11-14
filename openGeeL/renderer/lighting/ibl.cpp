@@ -35,8 +35,13 @@ namespace geeL {
 	}
 
 	void ImageBasedLighting::draw() {
-		PostProcessingEffectFS::draw();
+		AdditiveEffect::draw();
 	}
+
+	void ImageBasedLighting::fill() {
+		AdditiveEffect::fill();
+	}
+
 
 	void ImageBasedLighting::bindValues() {
 		scene.getLightmanager().bindReflectionProbes(*camera, shader, ShaderTransformSpace::View);

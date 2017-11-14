@@ -212,11 +212,11 @@ namespace geeL {
 		shader.bind<float>("sigma", sigma2);
 	}
 
-	float BilateralFilter::getSigma() const {
+	float BilateralFilter::getFactor() const {
 		return sigma2;
 	}
 
-	void BilateralFilter::setSigma(float value) {
+	void BilateralFilter::setFactor(float value) {
 		if (sigma2 != value && value >= 0.f && value <= 1.f) {
 			sigma2 = value;
 

@@ -36,8 +36,8 @@ namespace geeL {
 	void BilateralFilterSnippet::drawSimple(GUIContext* context) {
 		GaussianBlurSnippet::drawSimple(context);
 
-		float sigma = GUISnippets::drawBarFloat(context, blur.getSigma(), 0.0f, 1.f, 0.001f, "Factor");
-		blur.setSigma(sigma);
+		float sigma2 = GUISnippets::drawBarFloat(context, blur.getFactor(), 0.0f, 1.f, 0.001f, "Factor");
+		blur.setFactor(sigma2);
 	}
 
 

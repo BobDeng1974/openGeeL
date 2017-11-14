@@ -17,6 +17,10 @@ namespace geeL {
 		PostProcessingEffectFS::draw();
 	}
 
+	void RayMarcher::fill() {
+		PostProcessingEffectFS::fill();
+	}
+
 
 	void RayMarcher::bindValues() {
 		Transform& transform = camera->transform;

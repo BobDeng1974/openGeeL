@@ -36,7 +36,9 @@ namespace geeL {
 		//'updateCurrentImage' should be called afterwards
 		virtual RenderTexture& requestCurrentImage() = 0;
 
-		//Set current iteration of final rendererd image to given one
+		//Set current iteration of final rendererd image to given one.
+		//Important: Current image texture will be reclaimed automatically
+		//and doesn't need to be returned
 		virtual void updateCurrentImage(RenderTexture& texture) = 0;
 
 		virtual TextureWrapper requestTexture(ResolutionPreset resolution,

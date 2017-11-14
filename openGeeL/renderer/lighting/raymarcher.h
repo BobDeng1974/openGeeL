@@ -13,6 +13,7 @@ namespace geeL {
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues();
 		virtual void draw();
+		virtual void fill();
 
 	};
 

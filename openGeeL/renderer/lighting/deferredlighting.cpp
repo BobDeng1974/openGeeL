@@ -43,6 +43,11 @@ namespace geeL {
 		PostProcessingEffectFS::draw();
 	}
 
+	void DeferredLighting::fill() {
+		PostProcessingEffectFS::fill();
+	}
+
+
 	void DeferredLighting::bindValues() {
 		scene.getLightmanager().bind(shader, ShaderTransformSpace::View, camera);
 
@@ -73,6 +78,10 @@ namespace geeL {
 
 	void TiledDeferredLighting::draw() {
 		PostProcessingEffectCS::draw();
+	}
+
+	void TiledDeferredLighting::fill() {
+		PostProcessingEffectCS::fill();
 	}
 
 	void TiledDeferredLighting::bindValues() {
