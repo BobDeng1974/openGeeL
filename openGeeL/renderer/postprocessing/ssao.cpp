@@ -149,8 +149,10 @@ namespace geeL {
 	}
 
 	void SSAO::fill() {
-		if (parentBuffer != nullptr)
+		if (parentBuffer != nullptr) {
+			parentBuffer->add(*provider->requestOcclusion());
 			parentBuffer->fill(*this, blend ? clearNothing : clearColor);
+		}
 	}
 
 	void SSAO::bindValues() {

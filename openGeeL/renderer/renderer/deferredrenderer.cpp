@@ -46,7 +46,6 @@ namespace geeL {
 			, gBuffer(gBuffer)
 			, ssao(nullptr)
 			, fBuffer(nullptr)
-			, tBuffer(nullptr)
 			, lighting(lighting)
 			, defaultEffect(def)
 			, fallbackEffect("renderer/shaders/screen.frag") {
@@ -112,8 +111,6 @@ namespace geeL {
 		//Occlusion pass
 		if (ssao != nullptr) {
 			DepthGuard guard(true);
-
-			stackBuffer.push(gBuffer.requestOcclusion());
 			ssao->fill();
 		}
 
@@ -142,7 +139,7 @@ namespace geeL {
 		drawEffects(intermediateEffects);
 
 		//Generic pass
-		if (scene->count(ShadingMethod::Generic) > 0) {
+		if (scene->contains(ShadingMethod::Generic)) {
 			DepthGuard::enable(true);
 
 			stackBuffer.push(provider.requestCurrentImage());
@@ -179,8 +176,7 @@ namespace geeL {
 		//Occlusion pass
 		if (ssao != nullptr) {
 			ssao->setCamera(camera);
-			stackBuffer.push(gBuffer.requestOcclusion());
-			stackBuffer.fill(*ssao);
+			ssao->fill();
 			ssao->updateCamera(scene->getCamera());
 		}
 
@@ -199,6 +195,7 @@ namespace geeL {
 
 	void DeferredRenderer::drawForward(const Camera& camera) {
 		DepthGuard::enable(true);
+		
 		scene->drawGenericForced(camera, true);
 		scene->drawSkybox(camera);
 	}
@@ -227,6 +224,7 @@ namespace geeL {
 
 		Resolution ssaoRes = Resolution(window->resolution, ssao.getResolution());
 		gBuffer.requestOcclusion(ssao.getResolution()); //Ensure that occlusion map gets created
+
 		ssao.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, 
 			ssaoRes, &provider, &fallbackEffect));
 		ssao.setTargetTexture(*gBuffer.getOcclusion());

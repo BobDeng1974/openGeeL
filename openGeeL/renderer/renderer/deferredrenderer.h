@@ -25,7 +25,6 @@ namespace geeL {
 	class PostProcessingEffect;
 	class Texture;
 	class TextureProvider;
-	class TransparentOIDBuffer;
 
 	using PostEffectRender = std::pair<RenderTexture*, PostProcessingEffect*>;
 
@@ -78,7 +77,6 @@ namespace geeL {
 		TextureProvider& provider;
 		GBuffer& gBuffer;
 		ForwardBuffer* fBuffer;
-		TransparentOIDBuffer* tBuffer;
 		StackBuffer stackBuffer;
 
 		SceneRender& lighting;

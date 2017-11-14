@@ -79,6 +79,10 @@ namespace geeL {
 		return gBuffer.getOcclusion();
 	}
 
+	RenderTexture* TextureProvider::requestOcclusion() {
+		return &gBuffer.requestOcclusion();
+	}
+
 	RenderTexture& TextureProvider::requestDefaultTexture() {
 		return requestTextureManual(ResolutionPreset::FULLSCREEN, ColorType::RGBA16, 
 			FilterMode::None, WrapMode::ClampEdge, AnisotropicFilter::None);

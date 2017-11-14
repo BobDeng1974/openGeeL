@@ -27,6 +27,7 @@ namespace geeL {
 		virtual const RenderTexture& requestNormalMetallic() const = 0;
 		virtual const RenderTexture* requestEmissivity() const = 0;
 		virtual const RenderTexture* requestOcclusion() const = 0;
+		virtual RenderTexture* requestOcclusion() = 0;
 
 		//Request texture with default properties (Properties of final screen texture)
 		virtual RenderTexture& requestDefaultTexture() = 0;
@@ -70,6 +71,7 @@ namespace geeL {
 		virtual const RenderTexture& requestNormalMetallic() const;
 		virtual const RenderTexture* requestEmissivity() const;
 		virtual const RenderTexture* requestOcclusion() const;
+		virtual RenderTexture* requestOcclusion();
 
 		virtual RenderTexture& requestDefaultTexture();
 		virtual RenderTexture& requestCurrentImage();
