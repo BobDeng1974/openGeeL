@@ -37,7 +37,8 @@ namespace geeL {
 
 	TextureProvider::TextureProvider(const RenderWindow& window, GBuffer& gBuffer) 
 		: window(window)
-		, gBuffer(gBuffer) {
+		, gBuffer(gBuffer)
+		, diffuse(nullptr) {
 
 		callback = [this](RenderTexture& texture) { returnTexture(texture); };
 
@@ -77,6 +78,28 @@ namespace geeL {
 
 	const RenderTexture* TextureProvider::requestOcclusion() const {
 		return gBuffer.getOcclusion();
+	}
+
+	RenderTexture& TextureProvider::requestDefaultTexture() {
+		return requestTextureManual(ResolutionPreset::FULLSCREEN, ColorType::RGBA16, 
+			FilterMode::None, WrapMode::ClampEdge, AnisotropicFilter::None);
+	}
+
+	RenderTexture& TextureProvider::requestCurrentImage() {
+		if (diffuse == nullptr)
+			diffuse = &requestDefaultTexture();
+
+		return *diffuse;
+	}
+
+	void TextureProvider::updateCurrentImage(RenderTexture& texture) {
+		if (diffuse != &texture) {
+			//Assing diffuse to new texture and throw 
+			//old texture back into texture pool
+			if(diffuse != nullptr) returnTexture(*diffuse);
+			diffuse = &texture;
+		}
+
 	}
 
 

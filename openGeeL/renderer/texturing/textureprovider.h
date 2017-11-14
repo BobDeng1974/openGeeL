@@ -28,6 +28,16 @@ namespace geeL {
 		virtual const RenderTexture* requestEmissivity() const = 0;
 		virtual const RenderTexture* requestOcclusion() const = 0;
 
+		//Request texture with default properties (Properties of final screen texture)
+		virtual RenderTexture& requestDefaultTexture() = 0;
+
+		//Returns the current iteration of the final renderered image for 
+		//rendering purposes. If requester updates said image, the method 
+		//'updateCurrentImage' should be called afterwards
+		virtual RenderTexture& requestCurrentImage() = 0;
+
+		//Set current iteration of final rendererd image to given one
+		virtual void updateCurrentImage(RenderTexture& texture) = 0;
 
 		virtual TextureWrapper requestTexture(ResolutionPreset resolution,
 			ColorType colorType = ColorType::RGB,
@@ -53,12 +63,15 @@ namespace geeL {
 		TextureProvider(const RenderWindow& window, GBuffer& gBuffer);
 		~TextureProvider();
 
-
 		virtual const RenderTexture& requestAlbedo() const;
 		virtual const RenderTexture& requestPositionRoughness() const;
 		virtual const RenderTexture& requestNormalMetallic() const;
 		virtual const RenderTexture* requestEmissivity() const;
 		virtual const RenderTexture* requestOcclusion() const;
+
+		virtual RenderTexture& requestDefaultTexture();
+		virtual RenderTexture& requestCurrentImage();
+		virtual void updateCurrentImage(RenderTexture& texture);
 
 		virtual TextureWrapper requestTexture(ResolutionPreset resolution, ColorType colorType,
 			FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter);
@@ -97,6 +110,7 @@ namespace geeL {
 
 		const RenderWindow& window;
 		GBuffer& gBuffer;
+		RenderTexture* diffuse;
 		std::function<void(RenderTexture&)> callback;
 
 		std::map<ResolutionScale, std::map<ColorType, MonitoredList>> textures;
