@@ -17,6 +17,7 @@ namespace geeL {
 			, preset(preset)
 			, onDestroy(onDestroy) {}
 
+
 	TextureWrapper::TextureWrapper(TextureWrapper&& other) : texture(other.texture), 
 		preset(other.preset), onDestroy(other.onDestroy) {
 
@@ -62,7 +63,7 @@ namespace geeL {
 
 	}
 
-	const RenderTexture& TextureProvider::requestDiffuse() const {
+	const RenderTexture& TextureProvider::requestAlbedo() const {
 		return gBuffer.getDiffuse();
 	}
 
@@ -120,10 +121,13 @@ namespace geeL {
 			for (auto colorsIt(colors.begin()); colorsIt != colors.end(); colorsIt++) {
 				auto& tex = colorsIt->second;
 
-				//TODO: Fine-tune this heuristic later
-				unsigned int deleteHeuristic = fmax(0, 
-					tex.elementCount() - tex.accessCount());
+				unsigned int elCount = tex.elementCount();
+				unsigned int acCount = tex.accessCount();
 
+				if (acCount > elCount) continue;
+
+				//TODO: Fine-tune this heuristic later
+				unsigned int deleteHeuristic = tex.elementCount() - tex.accessCount();
 				for (unsigned int i = 0; i < deleteHeuristic; i++) {
 					RenderTexture* texture = tex.pop();
 					delete texture;

@@ -22,7 +22,7 @@ namespace geeL {
 
 	public:
 
-		virtual const RenderTexture& requestDiffuse() const = 0;
+		virtual const RenderTexture& requestAlbedo() const = 0;
 		virtual const RenderTexture& requestPositionRoughness() const = 0;
 		virtual const RenderTexture& requestNormalMetallic() const = 0;
 		virtual const RenderTexture* requestEmissivity() const = 0;
@@ -46,7 +46,7 @@ namespace geeL {
 		~TextureProvider();
 
 
-		virtual const RenderTexture& requestDiffuse() const;
+		virtual const RenderTexture& requestAlbedo() const;
 		virtual const RenderTexture& requestPositionRoughness() const;
 		virtual const RenderTexture& requestNormalMetallic() const;
 		virtual const RenderTexture* requestEmissivity() const;

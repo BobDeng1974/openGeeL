@@ -29,12 +29,6 @@ namespace geeL {
 
 
 	void Shader::addMap(const Texture& texture, const std::string& name) {
-		if (maps.size() >= TextureBindingStack::MAX_TEXTURE_BINDINGS) {
-			std::cout << "Can't add more than " << TextureBindingStack::MAX_TEXTURE_BINDINGS 
-				<< "texture to shader\n";
-			return;
-		}
-
 		auto it = maps.find(name);
 		//Update texture ID if a binding with same name already exists
 		if (it != maps.end()) {
@@ -43,6 +37,13 @@ namespace geeL {
 		}
 		//Add new texture binding otherwise
 		else {
+			if (maps.size() >= TextureBindingStack::MAX_TEXTURE_BINDINGS) {
+				std::cout << "Can't add more than " << TextureBindingStack::MAX_TEXTURE_BINDINGS
+					<< "texture to shader\n";
+
+				return;
+			}
+
 			use();
 			unsigned int offset = maps.size();
 			bind<int>(name, mapOffset + offset);

@@ -21,7 +21,7 @@ namespace geeL {
 		scene.init();
 
 		assert(provider != nullptr);
-		addTextureSampler(provider->requestDiffuse(), "gDiffuse");
+		addTextureSampler(provider->requestAlbedo(), "gDiffuse");
 		addTextureSampler(provider->requestPositionRoughness(), "gPositionRoughness");
 		addTextureSampler(provider->requestNormalMetallic(), "gNormalMet");
 

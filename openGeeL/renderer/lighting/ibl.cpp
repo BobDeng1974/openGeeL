@@ -19,7 +19,7 @@ namespace geeL {
 		PostProcessingEffectFS::init(parameter);
 
 		assert(provider != nullptr);
-		addTextureSampler(provider->requestDiffuse(), "gDiffuse");
+		addTextureSampler(provider->requestAlbedo(), "gDiffuse");
 		addTextureSampler(provider->requestPositionRoughness(), "gPositionRoughness");
 		addTextureSampler(provider->requestNormalMetallic(), "gNormalMet");
 

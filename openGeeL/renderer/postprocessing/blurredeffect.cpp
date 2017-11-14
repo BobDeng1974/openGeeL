@@ -1,5 +1,6 @@
 #include "primitives/screenquad.h"
 #include "texturing/rendertexture.h"
+#include "texturing/textureprovider.h"
 #include "framebuffer/framebuffer.h"
 #include "gaussianblur.h"
 #include "blurredeffect.h"
@@ -72,7 +73,6 @@ namespace geeL {
 
 			parentBuffer->add(*blurTexture);
 			parentBuffer->fill(blur, clearColor);
-
 		}
 	}
 
@@ -97,7 +97,7 @@ namespace geeL {
 
 		Resolution newRes = Resolution(resolution, effectResolution);
 		effect.setResolution(newRes);
-		effectTexture->resize(newRes);
+		//effectTexture->resize(newRes);
 	}
 
 	const ResolutionPreset& BlurredPostEffect::getEffectResolution() const {
