@@ -271,7 +271,7 @@ namespace geeL {
 		const RenderTexture* emisTex = gBuffer.getEmissivity();
 		const RenderTexture* occTex = gBuffer.getOcclusion();
 
-		size_t bufferSize = 4;
+		size_t bufferSize = 2;
 		bufferSize += int(emisTex != nullptr);
 		bufferSize += int(occTex  != nullptr);
 

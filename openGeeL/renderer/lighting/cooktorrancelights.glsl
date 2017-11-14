@@ -16,7 +16,6 @@ vec3 subsurfaceScatteringBack(vec3 fragPosition, vec3 normal, vec3 viewDirection
 }
 
 
-
 vec3 calculatePointLight(int index, PointLight light, vec3 normal, 
 	vec3 fragPosition, vec3 viewDirection, vec4 albedo, float roughness, float metallic) {
 
@@ -32,7 +31,7 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal,
 
 	return shadow * reflectance + sss;
 #else
-	 return shadow * reflectance;
+	return shadow * reflectance;
 #endif
 }
 
@@ -65,3 +64,75 @@ vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal,
 	
     return shadow * reflectance;
 }
+
+#if (DIFFUSE_SPECULAR_SEPARATION == 1)
+
+void calculatePointLight(int index, PointLight light, vec3 normal, 
+	vec3 fragPosition, vec3 viewDirection, vec4 albedo, float roughness, float metallic, 
+	out vec3 diffuse, out vec3 specular) {
+
+	vec3 tempDiff = vec3(0.f);
+	vec3 tempSpec = vec3(0.f);
+
+	calculateReflectance(fragPosition, normal, viewDirection, light.position, light.diffuse, 
+		albedo.rgb, roughness, metallic, tempDiff, tempSpec);
+
+	float travel = 0.f;
+	float shadow = 1.f - light.shadowIntensity * calculatePointLightShadows(index, normal, fragPosition, travel);
+
+#if (SUBSURFACE_SCATTERING == 1)
+	vec3 sss = subsurfaceScatteringBack(fragPosition, normal, viewDirection, albedo, 
+		light.position, light.diffuse, roughness, metallic, travel);
+
+	diffuse  += tempDiff * shadow + sss;
+	specular += tempSpec * shadow;
+#else
+	diffuse  += tempDiff * shadow;
+	specular += tempSpec * shadow;
+#endif
+}
+
+void calculateSpotLight(int index, SpotLight light, vec3 normal, 
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float roughness, float metallic, 
+	out vec3 diffuse, out vec3 specular) {
+	
+	vec3 lightDirection = normalize(light.position - fragPosition);
+
+	//Set intensity depending on if object is inside spotlights halo (or outer halo)
+	float theta = dot(lightDirection, normalize(-light.direction)); 
+    float epsilon = (light.angle - light.outerAngle);
+    float intensity = clamp((theta - light.outerAngle) / epsilon, 0.f, 1.f);
+
+	vec3 tempDiff = vec3(0.f);
+	vec3 tempSpec = vec3(0.f);
+
+	calculateReflectance(fragPosition, normal, viewDirection, light.position, light.diffuse, 
+		albedo, roughness, metallic, tempDiff, tempSpec);
+
+	vec3 coords = vec3(0.f);
+	float shadow = 1.f - light.shadowIntensity * calculateSpotLightShadows(index, normal, fragPosition, coords);
+	float cookie = light.useCookie ? texture(light.cookie, coords.xy).r : 1.f;
+
+	float fac = shadow * intensity * cookie;
+
+	diffuse  += tempDiff * fac;
+	specular += tempSpec * fac;
+}
+
+void calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, 
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float roughness, float metallic,
+	out vec3 diffuse, out vec3 specular) {
+	
+	vec3 tempDiff = vec3(0.f);
+	vec3 tempSpec = vec3(0.f);
+
+	calculateReflectanceDirectional(fragPosition, normal, viewDirection, light.direction, light.diffuse, 
+		albedo, roughness, metallic, tempDiff, tempSpec);
+	float shadow = 1.f - calculateDirectionalLightShadows(index, normal, fragPosition);
+
+	diffuse  += tempDiff * shadow;
+	specular += tempSpec * shadow;
+}
+
+
+#endif

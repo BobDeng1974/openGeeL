@@ -130,7 +130,6 @@ namespace geeL {
 					RenderTexture* texture = tex.pop();
 					texture->attachParameters(getParameters(filterMode, wrapMode, aFilter));
 
-
 					return *texture;
 				}
 			}
@@ -160,6 +159,8 @@ namespace geeL {
 
 				unsigned int elCount = tex.elementCount();
 				unsigned int acCount = tex.accessCount();
+
+				tex.flush();
 
 				if (acCount > elCount) continue;
 

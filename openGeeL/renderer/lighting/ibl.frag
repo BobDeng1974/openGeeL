@@ -20,7 +20,12 @@ struct ReflectionProbe {
 
 in vec2 textureCoordinates;
 
+#if (DIFFUSE_SPECULAR_SEPARATION == 0)
 layout (location = 0) out vec4 color;
+#else
+layout (location = 0) out vec4 diffuse;
+layout (location = 1) out vec4 specular;
+#endif
 
 uniform sampler2D image;  
 uniform sampler2D gPositionRoughness;
@@ -74,7 +79,13 @@ void main() {
 	//vec3 ambienceSpecular = calculateIndirectSpecular(position, normal, viewDirection, albedo, roughness, metallic);
 	vec3 ambienceSpecular = occlusion * calculateIndirectSpecularSplitSum(position, normal, viewDirection, albedo, roughness, metallic);
 
+#if (DIFFUSE_SPECULAR_SEPARATION == 0)
 	color = vec4(ambienceDiffuse + ambienceSpecular, 1.f);
+#else
+	diffuse  = vec4(ambienceDiffuse, 1.f);
+	specular = vec4(ambienceSpecular, 1.f); 
+#endif
+
 }
 
 //Lighting.....................................................................................................................................

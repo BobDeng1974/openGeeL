@@ -8,8 +8,14 @@
 
 in vec2 textureCoordinates;
 
+#if (DIFFUSE_SPECULAR_SEPARATION == 0)
 layout (location = 0) out vec4 color;
-  
+#else
+layout (location = 0) out vec4 diffuse;
+layout (location = 1) out vec4 specular;
+#endif
+
+
 uniform int plCount;
 uniform int dlCount;
 uniform int slCount;
@@ -56,20 +62,36 @@ void main() {
 
 
 	vec3 irradiance = albedo.rgb * emissivity;
-	for(int i = 0; i < plCount; i++) {
+
+#if (DIFFUSE_SPECULAR_SEPARATION == 0)
+	for(int i = 0; i < plCount; i++)
 		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
-		//irradiance += calculateVolumetricLightColor(fragPosition, pointLights[i].position, pointLights[i].diffuse, 0.001f);
-	}
        
-	for(int i = 0; i < dlCount; i++) {
+	for(int i = 0; i < dlCount; i++)
         irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo.rgb, roughness, metallic);
-		irradiance += calculateVolumetricLightColor(fragPosition, directionalLights[i].direction * -100.f, directionalLights[i].diffuse, 150.f);
-	}
 
 	for(int i = 0; i < slCount; i++)
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo.rgb, roughness, metallic);
 
 	color = vec4(irradiance, 1.f);
+#else
+	vec3 diff = vec3(0.f);
+	vec3 spec = vec3(0.f);
+
+	for(int i = 0; i < plCount; i++)
+		calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic, diff, spec);
+       
+	for(int i = 0; i < dlCount; i++)
+        calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo.rgb, roughness, metallic, diff, spec);
+
+	for(int i = 0; i < slCount; i++)
+		calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo.rgb, roughness, metallic, diff, spec);
+	
+	diffuse  = vec4(diff + irradiance, 1.f);
+	specular = vec4(spec, 1.f);
+#endif
+
+	
 }
 
 //Volumetric light......................................................................................................................
