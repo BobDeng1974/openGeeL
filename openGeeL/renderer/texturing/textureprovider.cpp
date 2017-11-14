@@ -9,24 +9,21 @@
 
 namespace geeL {
 
-	TextureWrapper::TextureWrapper(
-		RenderTexture& texture, 
-		ResolutionPreset preset, 
-		std::function<void(RenderTexture&, ResolutionPreset)>& onDestroy) 
+	TextureWrapper::TextureWrapper(RenderTexture& texture, 
+		std::function<void(RenderTexture&)>& onDestroy) 
 			: texture(&texture)
-			, preset(preset)
 			, onDestroy(onDestroy) {}
 
 
 	TextureWrapper::TextureWrapper(TextureWrapper&& other) : texture(other.texture), 
-		preset(other.preset), onDestroy(other.onDestroy) {
+		onDestroy(other.onDestroy) {
 
 		other.texture = nullptr;
 	}
 
 	TextureWrapper::~TextureWrapper() {
 		if(texture != nullptr)
-			onDestroy(*texture, preset);
+			onDestroy(*texture);
 	}
 
 	RenderTexture& TextureWrapper::getTexture() {
@@ -42,8 +39,7 @@ namespace geeL {
 		: window(window)
 		, gBuffer(gBuffer) {
 
-		callback = [this](RenderTexture& texture, ResolutionPreset preset) { 
-			textureCallback(texture, preset); };
+		callback = [this](RenderTexture& texture) { returnTexture(texture); };
 
 	}
 
@@ -87,6 +83,15 @@ namespace geeL {
 	TextureWrapper TextureProvider::requestTexture(ResolutionPreset resolution, ColorType colorType,
 		FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter) {
 
+		RenderTexture* texture = &requestTextureManual(resolution, colorType, 
+			filterMode, wrapMode, aFilter);
+
+		return TextureWrapper(*texture, callback);
+	}
+
+	RenderTexture& TextureProvider::requestTextureManual(ResolutionPreset resolution, ColorType colorType, 
+		FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter) {
+
 		auto resolutionIt(textures.find(resolution));
 		if (resolutionIt != textures.end()) {
 			auto& colors = resolutionIt->second;
@@ -100,7 +105,7 @@ namespace geeL {
 					texture->attachParameters(getParameters(filterMode, wrapMode, aFilter));
 
 
-					return TextureWrapper(*texture, resolution, callback);
+					return *texture;
 				}
 			}
 		}
@@ -108,7 +113,13 @@ namespace geeL {
 		RenderTexture* newTexture = new RenderTexture(Resolution(window.getResolution(), resolution), colorType);
 		newTexture->attachParameters(getParameters(filterMode, wrapMode, aFilter));
 
-		return TextureWrapper(*newTexture, resolution, callback);
+		return *newTexture;
+	}
+
+
+	void TextureProvider::returnTexture(RenderTexture& texture) {
+		//TODO: maybe detach parameters here
+		textures[texture.getScale()][texture.getColorType()].push(&texture);
 	}
 
 	void TextureProvider::cleanupCache() {
@@ -156,11 +167,6 @@ namespace geeL {
 
 		parameters[filterMode][wrapMode][aFilter] = TextureParameters(filterMode, wrapMode, aFilter);
 		return parameters[filterMode][wrapMode][aFilter];
-	}
-
-	void TextureProvider::textureCallback(RenderTexture& texture, ResolutionPreset resolution) {
-		//TODO: maybe detach parameters here
-		textures[resolution][texture.getColorType()].push(&texture);
 	}
 
 	

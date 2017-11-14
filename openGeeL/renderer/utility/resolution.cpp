@@ -51,5 +51,4 @@ namespace geeL {
 		return scales[index];
 	}
 
-
 }

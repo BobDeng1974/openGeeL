@@ -35,6 +35,14 @@ namespace geeL {
 			WrapMode wrapMode = WrapMode::Repeat,
 			AnisotropicFilter aFilter = AnisotropicFilter::None) = 0;
 
+		virtual RenderTexture& requestTextureManual(ResolutionPreset resolution, 
+			ColorType colorType = ColorType::RGB,
+			FilterMode filterMode = FilterMode::None,
+			WrapMode wrapMode = WrapMode::Repeat,
+			AnisotropicFilter aFilter = AnisotropicFilter::None) = 0;
+
+		virtual void returnTexture(RenderTexture& texture) = 0;
+
 	};
 
 
@@ -54,6 +62,12 @@ namespace geeL {
 
 		virtual TextureWrapper requestTexture(ResolutionPreset resolution, ColorType colorType,
 			FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter);
+
+		virtual RenderTexture& requestTextureManual(ResolutionPreset resolution, ColorType colorType,
+			FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter);
+
+		virtual void returnTexture(RenderTexture& texture);
+
 
 		void cleanupCache();
 
@@ -83,14 +97,13 @@ namespace geeL {
 
 		const RenderWindow& window;
 		GBuffer& gBuffer;
-		std::function<void(RenderTexture&, ResolutionPreset)> callback;
+		std::function<void(RenderTexture&)> callback;
 
-		std::map<ResolutionPreset, std::map<ColorType, MonitoredList>> textures;
+		std::map<ResolutionScale, std::map<ColorType, MonitoredList>> textures;
 		std::map<FilterMode, std::map<WrapMode, std::map<AnisotropicFilter, TextureParameters>>> parameters;
 
 
 		TextureParameters& getParameters(FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter);
-		void textureCallback(RenderTexture& texture, ResolutionPreset resolution);
 
 	};
 
@@ -99,11 +112,7 @@ namespace geeL {
 	class TextureWrapper {
 
 	public:
-		TextureWrapper(RenderTexture& texture,
-			ResolutionPreset preset,
-			std::function<void(RenderTexture&,
-				ResolutionPreset)>& onDestroy);
-
+		TextureWrapper(RenderTexture& texture, std::function<void(RenderTexture&)>& onDestroy);
 		TextureWrapper(TextureWrapper&& other);
 		~TextureWrapper();
 
@@ -111,8 +120,7 @@ namespace geeL {
 
 	private:
 		RenderTexture* texture;
-		ResolutionPreset preset;
-		std::function<void(RenderTexture&, ResolutionPreset)>& onDestroy;
+		std::function<void(RenderTexture&)>& onDestroy;
 
 		TextureWrapper() = delete;
 		TextureWrapper(const TextureWrapper& other) = delete;

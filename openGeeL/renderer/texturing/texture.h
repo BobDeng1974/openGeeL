@@ -89,6 +89,7 @@ namespace geeL {
 		//Set render view to resolution of this texture
 		void setRenderResolution() const;
 		const Resolution& getResolution() const;
+		ResolutionScale getScale() const;
 
 		static void unbind();
 
@@ -176,6 +177,10 @@ namespace geeL {
 
 	inline const Resolution& Texture2D::getResolution() const {
 		return resolution;
+	}
+
+	inline ResolutionScale Texture2D::getScale() const {
+		return resolution.getScale();
 	}
 
 	inline void Texture2D::setResolution(const Resolution& resolution) {

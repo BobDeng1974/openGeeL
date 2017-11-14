@@ -44,6 +44,8 @@ namespace geeL {
 		unsigned int getWidth() const;
 		unsigned int getHeight() const;
 
+		ResolutionScale getScale() const;
+
 		void resize(ResolutionScale& scale);
 		void setRenderResolution() const;
 
@@ -76,6 +78,9 @@ namespace geeL {
 		template<class T>
 		float operator*(T o) const;
 
+		bool operator== (const ResolutionScale& o) const;
+		bool operator!= (const ResolutionScale& o) const;
+
 	private:
 		float scale;
 
@@ -100,6 +105,10 @@ namespace geeL {
 
 	inline unsigned int Resolution::getHeight() const {
 		return height;
+	}
+
+	inline ResolutionScale Resolution::getScale() const {
+		return (float)width / (float)baseWidth;
 	}
 
 	inline void Resolution::setRenderResolution() const {
@@ -158,8 +167,20 @@ namespace geeL {
 	}
 
 	template<class T>
-	float operator*(T o, const ResolutionScale& scale) {
+	inline float operator*(T o, const ResolutionScale& scale) {
 		return scale * o;
+	}
+
+	inline bool ResolutionScale::operator== (const ResolutionScale& o) const {
+		return scale == o.scale;
+	}
+
+	inline bool ResolutionScale::operator!= (const ResolutionScale& o) const {
+		return scale != o.scale;
+	}
+
+	inline bool operator< (const ResolutionScale& lhs, const ResolutionScale& rhs) {
+		return lhs.get() < rhs.get();
 	}
 
 	inline Resolution::Resolution(const Resolution& resolution, const ResolutionScale& scale)

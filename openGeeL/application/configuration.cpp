@@ -57,6 +57,14 @@ namespace geeL {
 		GUIRenderer& gui = GUIRenderer(window, context, renderer);
 		renderer.addGUIRenderer(&gui);
 
+		{
+			TextureWrapper wrap = textureProvider.requestTexture(ResolutionPreset::ONETHIRD, ColorType::RGB, 
+				FilterMode::Nearest, WrapMode::Repeat, AnisotropicFilter::None);
+
+
+
+		}
+
 		Physics* physics;
 		ContinuousSingleThread* physicsThread = nullptr;
 		if (physicsType == PhysicsType::World) {
