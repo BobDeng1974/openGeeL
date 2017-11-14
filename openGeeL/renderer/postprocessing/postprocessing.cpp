@@ -164,7 +164,7 @@ namespace geeL {
 
 		//Read target texture from parent buffer and bind it
 		const RenderTexture& target = provider->requestCurrentImage();
-		target.bindImage(0, AccessType::Write);
+		target.bindImage(0, AccessType::All);
 		shader.bind<glm::vec2>("resolution", target.getResolution());
 
 		//Bind source textures from shader
