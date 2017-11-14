@@ -343,6 +343,7 @@
     <ClInclude Include="renderer\framebuffer\framebuffer.h" />
     <ClInclude Include="renderer\framebuffer\gbuffer.h" />
     <ClInclude Include="renderer\framebuffer\pingpong.h" />
+    <ClInclude Include="renderer\framebuffer\rendertarget.h" />
     <ClInclude Include="renderer\framebuffer\stackbuffer.h" />
     <ClInclude Include="renderer\framebuffer\tbuffer.h" />
     <ClInclude Include="renderer\lighting\conetracer.h" />

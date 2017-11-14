@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <iostream>
 #include <limits.h>
-#include "framebuffer/framebuffer.h"
 #include "utility/viewport.h"
 #include "textureparams.h"
 #include "texture.h"
@@ -32,15 +31,6 @@ namespace geeL {
 			TextureParameters::unbind(layer);
 
 		bind();
-	}
-
-	void Texture::assignTo(const IFrameBuffer& buffer, unsigned int position, bool bindFB) {
-		std::cout << "This texture type can't be attached to framebuffers.\n";
-	}
-
-	bool Texture::assignToo(const IFrameBuffer & buffer, unsigned int position, bool bindFB) const {
-		std::cout << "This texture type can't be attached to framebuffers.\n";
-		return false;
 	}
 
 	void Texture::bindImage(unsigned int position, AccessType access) const {
@@ -199,24 +189,7 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void Texture2D::assignTo(const IFrameBuffer& buffer, unsigned int position, bool bindFB) {
-		if (bindFB) buffer.bind();
-		parent = &buffer;
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, GL_TEXTURE_2D, getID(), 0);
-		if (bindFB) buffer.unbind();
-	}
-
-	bool Texture2D::assignToo(const IFrameBuffer & buffer, unsigned int position, bool bindFB) const {
-		if (parent != nullptr) {
-			if (bindFB) buffer.bind();
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, GL_TEXTURE_2D, getID(), 0);
-			if (bindFB) buffer.unbind();
-
-			return true;
-		}
-
-		return false;
-	}
+	
 
 	void Texture2D::setRenderResolution() const {
 		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());

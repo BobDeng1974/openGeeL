@@ -29,13 +29,6 @@ namespace geeL {
 		//Bind texture to given texture layer
 		void bind(unsigned int layer) const;
 
-		//Assing this texture to given framebuffer
-		virtual void assignTo(const IFrameBuffer& buffer, unsigned int position, bool bindFB = false);
-
-		//Assign this texture to given framebuffer besides an already assigned main buffer. 
-		//Note: This function will only work if texture has been assigned to a main buffer beforehand
-		virtual bool assignToo(const IFrameBuffer& buffer, unsigned int position, bool bindFB = false) const;
-
 		//Bind texture as image texture
 		void bindImage(unsigned int position = 0, AccessType access = AccessType::All) const;
 
@@ -80,15 +73,12 @@ namespace geeL {
 
 		void mipmap() const;
 
-		virtual void assignTo(const IFrameBuffer& buffer, unsigned int position, bool bindFB = false);
-		virtual bool assignToo(const IFrameBuffer& buffer, unsigned int position, bool bindFB = false) const;
-
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
 
 		//Set render view to resolution of this texture
-		void setRenderResolution() const;
-		const Resolution& getResolution() const;
+		virtual void setRenderResolution() const;
+		virtual const Resolution& getResolution() const;
 		ResolutionScale getScale() const;
 
 		static void unbind();

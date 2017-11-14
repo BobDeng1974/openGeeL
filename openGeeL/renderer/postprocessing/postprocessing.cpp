@@ -156,29 +156,27 @@ namespace geeL {
 	}
 
 	void PostProcessingEffectCS::draw() {
+		fill();
+	}
+
+	void PostProcessingEffectCS::fill() {
 		shader.bindParameters();
-		
+
 		//Read target texture from parent buffer and bind it
-		const RenderTexture* target = parentBuffer->getTexture();
-		target->bindImage(0, AccessType::Write);
-		shader.bind<glm::vec2>("resolution", target->getResolution());
+		const RenderTexture& target = provider->requestCurrentImage();
+		target.bindImage(0, AccessType::Write);
+		shader.bind<glm::vec2>("resolution", target.getResolution());
 
 		//Bind source textures from shader
 		shader.loadMaps();
 		shader.loadImages();
 
-		unsigned int width  = resolution.getWidth() / groupSize.getWidth();
+		unsigned int width = resolution.getWidth() / groupSize.getWidth();
 		unsigned int height = resolution.getHeight() / groupSize.getHeight();
-		
+
 		shader.invoke(width, height, 1);
 		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 		//glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_SHADER_STORAGE_BARRIER_BIT);
-		
-		parentBuffer->pop();
-	}
-
-	void PostProcessingEffectCS::fill() {
-		draw();
 	}
 
 	Shader& PostProcessingEffectCS::getShader() {

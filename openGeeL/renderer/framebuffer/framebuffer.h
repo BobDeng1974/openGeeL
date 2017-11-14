@@ -12,14 +12,13 @@
 namespace geeL {
 
 	class Drawer;
+	class RenderTarget;
 
 
 	//Interface for all framebuffer objects
 	class IFrameBuffer {
 
 	public:
-		virtual void add(RenderTexture& texture) {}
-
 		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNormal) = 0;
 		virtual void fill(Drawer& drawer, Clearer clearer = clearNormal) = 0;
 
@@ -91,13 +90,8 @@ namespace geeL {
 	class DynamicBuffer : public FrameBuffer {
 
 	public:
-		virtual void add(RenderTexture& texture);
-		virtual void push(RenderTexture& texture) = 0;
-		virtual void pop() = 0;
-
-		//Returns current render texture of this buffer or null pointer
-		//if no texture is attached
-		virtual const RenderTexture* const getTexture() const = 0;
+		virtual void add(RenderTarget& target);
+		virtual void push(RenderTarget& target) = 0;
 
 	};
 
@@ -107,10 +101,9 @@ namespace geeL {
 		return fbo != 0;
 	}
 
-	inline void DynamicBuffer::add(RenderTexture& texture) {
+	inline void DynamicBuffer::add(RenderTarget& texture) {
 		push(texture);
 	}
-
 
 }
 

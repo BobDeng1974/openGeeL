@@ -2,6 +2,7 @@
 #include <glew.h>
 #include <iostream>
 #include "renderer.h"
+#include "rendertarget.h"
 #include "stackbuffer.h"
 
 using namespace std;
@@ -13,7 +14,7 @@ namespace geeL {
 	}
 
 
-	void StackBuffer::push(RenderTexture& texture) {
+	void StackBuffer::push(RenderTarget& texture) {
 		stackBuffer.push(&texture);
 	}
 
@@ -23,7 +24,7 @@ namespace geeL {
 		//Restore render settings of previous element of stack (If it exists)
 		//This is necessary since drawcall of current element may has its own settings
 		if (!stackBuffer.empty()) {
-			RenderTexture* previous = stackBuffer.top();
+			RenderTarget* previous = stackBuffer.top();
 			bind();
 			previous->assignTo(*this, 0);
 			previous->setRenderResolution();
@@ -51,7 +52,7 @@ namespace geeL {
 	
 
 	void StackBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
-		RenderTexture* current = stackBuffer.top();
+		RenderTarget* current = stackBuffer.top();
 		
 		bind();
 		current->assignTo(*this, 0);
@@ -65,7 +66,7 @@ namespace geeL {
 	}
 
 	void StackBuffer::fill(Drawer& drawer, Clearer clearer) {
-		RenderTexture* current = stackBuffer.top();
+		RenderTarget* current = stackBuffer.top();
 
 		bind();
 		current->assignTo(*this, 0);
@@ -78,14 +79,14 @@ namespace geeL {
 		pop();
 	}
 
-
+/*
 	const RenderTexture* const StackBuffer::getTexture() const {
 		if (!stackBuffer.empty())
 			return stackBuffer.top();
 
 		return nullptr;
 	}
-
+	*/
 	const Resolution& StackBuffer::getResolution() const {
 		if (stackBuffer.empty())
 			return resolution;

@@ -15,7 +15,7 @@ namespace geeL {
 		//Adds a new render texture to the stack. The current texture (Top of stack)
 		//will always be used for the next draw/fill call and then removed from the stack.
 		//Note: Memory of render texture will not be managed by this buffer
-		virtual void push(RenderTexture& texture);
+		virtual void push(RenderTarget& target);
 		virtual void pop();
 
 		void initResolution(const Resolution& resolution);
@@ -23,7 +23,7 @@ namespace geeL {
 		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNormal);
 		virtual void fill(Drawer& drawer, Clearer clearer = clearNormal);
 
-		virtual const RenderTexture* const getTexture() const;
+		//virtual const RenderTexture* const getTexture() const;
 		virtual const Resolution& getResolution() const;
 		virtual void resetSize() const;
 		virtual void resize(ResolutionScale resolution);
@@ -32,7 +32,7 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	private:
-		std::stack<RenderTexture*> stackBuffer;
+		std::stack<RenderTarget*> stackBuffer;
 
 		void init();
 

@@ -977,6 +977,9 @@
     <ClInclude Include="renderer\texturing\textureprovider.h">
       <Filter>renderer\texturing</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\framebuffer\rendertarget.h">
+      <Filter>renderer\framebuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\lighting.vert">
