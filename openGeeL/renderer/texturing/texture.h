@@ -37,7 +37,6 @@ namespace geeL {
 
 		virtual void clear();
 		virtual bool isEmpty() const;
-		bool isAssigned() const;
 
 		virtual void initFilterMode(FilterMode mode);
 		virtual void initWrapMode(WrapMode mode);
@@ -58,10 +57,8 @@ namespace geeL {
 		ColorType colorType;
 		static AnisotropicFilter maxAnisotropy;
 		const TextureParameters* parameters;
-		const IFrameBuffer* parent;
-
-		Texture(ColorType colorType) : colorType(colorType), 
-			parent(nullptr), parameters(nullptr) {}
+		
+		Texture(ColorType colorType) : colorType(colorType), parameters(nullptr) {}
 
 	};
 	
@@ -155,10 +152,6 @@ namespace geeL {
 
 	inline bool Texture::isEmpty() const {
 		return getID() == 0;
-	}
-
-	inline bool Texture::isAssigned() const {
-		return parent != nullptr;
 	}
 
 	inline bool Texture::operator== (const Texture& rhs) const {

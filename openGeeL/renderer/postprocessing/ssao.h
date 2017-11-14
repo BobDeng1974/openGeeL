@@ -32,7 +32,7 @@ namespace geeL {
 		//Tell SSAO in which texture it will get drawn into. The effect
 		//will try to blend content if given texture has already been 
 		//filled with occlusion data
-		void setTargetTexture(const Texture& texture);
+		void setTargetTexture(const RenderTexture& texture);
 
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues();

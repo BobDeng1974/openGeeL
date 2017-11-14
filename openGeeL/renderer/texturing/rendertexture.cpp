@@ -24,27 +24,6 @@ namespace geeL {
 		id = other.getTextureToken();
 	}
 
-
-
-	void RenderTexture::assignTo(const IFrameBuffer& buffer, unsigned int position, bool bindFB) {
-		if (bindFB) buffer.bind();
-		parent = &buffer;
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, GL_TEXTURE_2D, getID(), 0);
-		if (bindFB) buffer.unbind();
-	}
-
-	bool RenderTexture::assignToo(const IFrameBuffer & buffer, unsigned int position, bool bindFB) const {
-		if (parent != nullptr) {
-			if (bindFB) buffer.bind();
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, GL_TEXTURE_2D, getID(), 0);
-			if (bindFB) buffer.unbind();
-
-			return true;
-		}
-
-		return false;
-	}
-
 	void RenderTexture::setRenderResolution() const {
 		Texture2D::setRenderResolution();
 	}
@@ -61,6 +40,10 @@ namespace geeL {
 		initStorage(0);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	void RenderTexture::assignInner(unsigned int position) const {
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, GL_TEXTURE_2D, getID(), 0);
 	}
 
 }

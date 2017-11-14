@@ -75,7 +75,7 @@ namespace geeL {
 		return *this;
 	}
 
-	void SSAO::setTargetTexture(const Texture& texture) {
+	void SSAO::setTargetTexture(const RenderTexture& texture) {
 		blend = texture.isAssigned();
 
 		if (blend) {

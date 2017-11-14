@@ -193,6 +193,7 @@
     <ClCompile Include="renderer\framebuffer\framebuffer.cpp" />
     <ClCompile Include="renderer\framebuffer\gbuffer.cpp" />
     <ClCompile Include="renderer\framebuffer\pingpong.cpp" />
+    <ClCompile Include="renderer\framebuffer\rendertarget.cpp" />
     <ClCompile Include="renderer\framebuffer\stackbuffer.cpp" />
     <ClCompile Include="renderer\framebuffer\tbuffer.cpp" />
     <ClCompile Include="renderer\lighting\conetracer.cpp" />

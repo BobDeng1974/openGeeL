@@ -483,6 +483,9 @@
     <ClCompile Include="renderer\texturing\textureprovider.cpp">
       <Filter>renderer\texturing</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\framebuffer\rendertarget.cpp">
+      <Filter>renderer\framebuffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
