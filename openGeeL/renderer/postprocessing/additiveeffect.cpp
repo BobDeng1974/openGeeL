@@ -21,10 +21,16 @@ namespace geeL {
 			, mode(mode) {}
 
 
-	void AdditiveEffect::setImage(const Texture& texture) {}
-
+	void AdditiveEffect::draw() {
+		if (active) {
+			drawSubImages();
+			bindToScreen();
+		}
+	}
 
 	void AdditiveEffect::fill() {
+		if (!active) return;
+
 		BlendGuard blend;
 
 		switch (mode) {
@@ -39,7 +45,7 @@ namespace geeL {
 		if (parentBuffer != nullptr) {
 			parentBuffer->add(provider->requestCurrentImage());
 			parentBuffer->fill([this]() {
-				if(active) PostProcessingEffectFS::draw();
+				draw();
 			}, clearNothing);
 		}
 			

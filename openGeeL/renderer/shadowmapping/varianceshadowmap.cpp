@@ -52,7 +52,7 @@ namespace geeL {
 		glCullFace(GL_FRONT);
 		buffer.push(texture);
 		blur.bindValues();
-		blur.fill();
+		buffer.fill(blur);
 		glCullFace(GL_BACK);
 
 	}
@@ -61,7 +61,6 @@ namespace geeL {
 
 	unsigned int VarianceSpotLightMap::getID() const {
 		return texture.getID();
-		//return id;
 	}
 
 	

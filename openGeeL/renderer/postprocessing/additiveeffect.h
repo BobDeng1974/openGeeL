@@ -16,9 +16,7 @@ namespace geeL {
 		AdditiveEffect(const std::string& vertexPath, const std::string& fragmentPath, 
 			BlendMode mode = BlendMode::Add);
 
-		virtual void setImage(const Texture& texture);
-
-		//Draw effect with additive blending
+		virtual void draw();
 		virtual void fill();
 
 	private:

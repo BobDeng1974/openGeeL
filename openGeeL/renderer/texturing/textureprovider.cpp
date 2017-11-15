@@ -36,7 +36,8 @@ namespace geeL {
 	TextureProvider::TextureProvider(const RenderWindow& window, GBuffer& gBuffer) 
 		: window(window)
 		, gBuffer(gBuffer)
-		, diffuse(nullptr) {
+		, diffuse(nullptr)
+		, specular(nullptr) {
 
 		callback = [this](RenderTexture& texture) { returnTexture(texture); };
 
@@ -44,6 +45,7 @@ namespace geeL {
 
 	TextureProvider::~TextureProvider() {
 		if (diffuse != nullptr) delete diffuse;
+		if (specular != nullptr) delete specular;
 
 		for (auto resolutionIt(textures.begin()); resolutionIt != textures.end(); resolutionIt++) {
 			auto& colors = resolutionIt->second;
@@ -95,6 +97,13 @@ namespace geeL {
 		return *diffuse;
 	}
 
+	RenderTexture& TextureProvider::requestCurrentSpecular() {
+		if (specular == nullptr)
+			specular = &requestDefaultTexture();
+
+		return *specular;
+	}
+
 	void TextureProvider::updateCurrentImage(RenderTexture& texture) {
 		if (diffuse != &texture) {
 			//Assing diffuse to new texture and throw 
@@ -102,7 +111,13 @@ namespace geeL {
 			if(diffuse != nullptr) returnTexture(*diffuse);
 			diffuse = &texture;
 		}
+	}
 
+	void TextureProvider::updateCurrentSpecular(RenderTexture& texture) {
+		if (specular != &texture) {
+			if (specular != nullptr) returnTexture(*specular);
+			specular = &texture;
+		}
 	}
 
 

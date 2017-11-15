@@ -22,6 +22,7 @@ namespace geeL {
 
 		virtual void setRenderResolution() const = 0;
 		virtual const Resolution& getResolution() const = 0;
+		virtual unsigned int getSize() const = 0;
 
 		bool isAssigned() const;
 
@@ -47,6 +48,7 @@ namespace geeL {
 
 		virtual void setRenderResolution() const;
 		virtual const Resolution& getResolution() const;
+		virtual unsigned int getSize() const;
 
 	protected:
 		virtual void assignInner(unsigned int position) const;

@@ -36,6 +36,8 @@ namespace geeL {
 
 		void init();
 
+		void quickFixCity(RenderTarget& target);
+
 		StackBuffer(const StackBuffer& other) = delete;
 		StackBuffer& operator= (const StackBuffer& other) = delete;
 

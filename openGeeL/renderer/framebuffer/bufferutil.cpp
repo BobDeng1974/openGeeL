@@ -62,4 +62,33 @@ namespace geeL {
 		generateTextureBuffer(size, format, buffer.texture, buffer.buffer);
 	}
 
+	void BufferUtility::drawBuffers(unsigned int size) {
+
+		switch (size) {
+			case 1: {
+				unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0  };
+				glDrawBuffers(1, attachments);
+			}
+			case 2: {
+				unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+				glDrawBuffers(2, attachments);
+			}
+			case 3: {
+				unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+				glDrawBuffers(3, attachments);
+			}
+			case 4: {
+				unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,
+					GL_COLOR_ATTACHMENT3 };
+				glDrawBuffers(4, attachments);
+			}
+			default: {
+				unsigned int attachments[5] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,
+					GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 };
+				glDrawBuffers(5, attachments);
+			}
+		}
+
+	}
+
 }

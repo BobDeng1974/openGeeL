@@ -27,6 +27,7 @@
 #include "lighting/deferredlighting.h"
 #include "utility/viewport.h"
 #include "utility/glguards.h"
+#include "appglobals.h"
 #include "application.h"
 #include "deferredrenderer.h"
 
@@ -48,7 +49,8 @@ namespace geeL {
 			, fBuffer(nullptr)
 			, lighting(lighting)
 			, defaultEffect(def)
-			, fallbackEffect("renderer/shaders/screen.frag") {
+			, fallbackEffect("renderer/shaders/screen.frag")
+			, combineEffect("renderer/shaders/screen.frag") {
 
 		init();
 	}
@@ -117,8 +119,13 @@ namespace geeL {
 		DepthGuard::enable(false);
 
 		//Lighting pass
+#if DIFFUSE_SPECULAR_SEPARATION
+		//TODO: draw skybox
+		lighting.fill();
+#else
 		stackBuffer.push(provider.requestCurrentImage());
 		stackBuffer.fill(lightingPassFunction, clearColor);
+#endif
 
 		drawEffects(externalEffects);
 		drawEffects(earlyEffects);
@@ -127,7 +134,15 @@ namespace geeL {
 		if (hasForwardPass()) {
 			DepthGuard::enable(true);
 
-			fBuffer->setColorTexture(provider.requestCurrentImage());
+#if DIFFUSE_SPECULAR_SEPARATION
+			RenderTexture& diffuse  = provider.requestCurrentImage();
+			RenderTexture& specular = provider.requestCurrentSpecular();
+			LayeredTarget combinedTarget(diffuse, specular);
+
+			fBuffer->setTarget(combinedTarget);
+#else
+			fBuffer->setTarget(provider.requestCurrentImage());
+#endif
 			fBuffer->fill([this]() {
 				scene->drawSkybox();
 				scene->drawForward();
@@ -137,6 +152,11 @@ namespace geeL {
 
 		DepthGuard::enable(false);
 		drawEffects(intermediateEffects);
+
+#if DIFFUSE_SPECULAR_SEPARATION
+		combineEffect.setImage(provider.requestCurrentSpecular());
+		combineEffect.fill();
+#endif
 
 		//Generic pass
 		if (scene->contains(ShadingMethod::Generic)) {
@@ -239,19 +259,19 @@ namespace geeL {
 
 		switch (time) {
 			case DrawTime::Early:
-				earlyEffects.push_back(PostEffectRender(nullptr, &effect));
+				earlyEffects.push_back(&effect);
 				break;
 			case DrawTime::Intermediate:
-				intermediateEffects.push_back(PostEffectRender(nullptr, &effect));
+				intermediateEffects.push_back(&effect);
 				break;
 			case DrawTime::Late:
-				lateEffects.push_back(PostEffectRender(nullptr, &effect));
+				lateEffects.push_back(&effect);
 				break;
 		}
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect, RenderTexture& texture) {
-		externalEffects.push_back(PostEffectRender(&texture, &effect));
+		externalEffects.push_back(&effect);
 	}
 
 
@@ -269,7 +289,7 @@ namespace geeL {
 
 	std::vector<const Texture*> DeferredRenderer::getBuffers() {
 		const RenderTexture* emisTex = gBuffer.getEmissivity();
-		const RenderTexture* occTex = gBuffer.getOcclusion();
+		const RenderTexture* occTex  = gBuffer.getOcclusion();
 
 		size_t bufferSize = 2;
 		bufferSize += int(emisTex != nullptr);
@@ -302,6 +322,8 @@ namespace geeL {
 			window->resolution, &provider, &fallbackEffect));
 		lighting.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer,
 			window->resolution, &provider));
+		combineEffect.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer,
+			window->resolution, &provider));
 
 		iterEffects(externalEffects, [this](PostProcessingEffect& effect) { 
 			effect.init(PostProcessingParameter(ScreenQuad::get(), 
@@ -322,11 +344,9 @@ namespace geeL {
 
 
 
-	void DeferredRenderer::drawEffects(std::vector<PostEffectRender>& effects) {
+	void DeferredRenderer::drawEffects(std::vector<PostProcessingEffect*>& effects) {
 		for (auto it(effects.begin()); it != effects.end(); it++) {
-			PostProcessingEffect& effect = *it->second;
-			RenderTexture& texture = *it->first;
-
+			PostProcessingEffect& effect = **it;
 			effect.fill();
 		}
 	}
@@ -342,11 +362,11 @@ namespace geeL {
 	}
 
 
-	void DeferredRenderer::iterEffects(std::vector<PostEffectRender>& effects, 
+	void DeferredRenderer::iterEffects(std::vector<PostProcessingEffect*>& effects,
 		std::function<void(PostProcessingEffect&)> function) {
 		
 		for (auto it(effects.begin()); it != effects.end(); it++)
-			function(*it->second);
+			function(**it);
 	}
 
 }

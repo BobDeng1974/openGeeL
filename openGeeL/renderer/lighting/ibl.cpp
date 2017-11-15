@@ -3,7 +3,9 @@
 #include "shader/sceneshader.h"
 #include "texturing/rendertexture.h"
 #include "texturing/textureprovider.h"
+#include "framebuffer/framebuffer.h"
 #include "lights/lightmanager.h"
+#include "appglobals.h"
 #include "renderscene.h"
 #include "ibl.h"
 
@@ -39,7 +41,21 @@ namespace geeL {
 	}
 
 	void ImageBasedLighting::fill() {
+#if DIFFUSE_SPECULAR_SEPARATION
+		BlendGuard blend;
+		blend.blendAdd();
+
+		if (parentBuffer != nullptr) {
+			RenderTexture& diffuse  = provider->requestCurrentImage();
+			RenderTexture& specular = provider->requestCurrentSpecular();
+			LayeredTarget combinedTarget(diffuse, specular);
+
+			parentBuffer->add(combinedTarget);
+			parentBuffer->fill(*this, clearNothing);
+		}
+#else
 		AdditiveEffect::fill();
+#endif 
 	}
 
 

@@ -27,6 +27,9 @@ namespace geeL {
 		static void generateTextureBuffer(int size, unsigned int format,
 			TextureBuffer&buffer);
 
+		//Calls 'glDrawBuffers' mit a maximum of 5 elements
+		static void drawBuffers(unsigned int size);
+
 
 	};
 }

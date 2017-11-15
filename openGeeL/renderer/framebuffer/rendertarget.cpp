@@ -1,5 +1,7 @@
+#include "bufferutil.h"
 #include "framebuffer.h"
 #include "rendertarget.h"
+#include <iostream>
 
 namespace geeL {
 
@@ -39,16 +41,19 @@ namespace geeL {
 		return targets.front()->getResolution();
 	}
 
+	unsigned int LayeredTarget::getSize() const {
+		return unsigned int(targets.size());
+	}
+
 	void LayeredTarget::assignInner(unsigned int position) const {
 
-		unsigned int pos = position;
+		unsigned int size = 0;
 		for (auto it(targets.begin()); it != targets.end(); it++) {
 			RenderTarget& current = **it;
-			current.assignInner(pos);
+			current.assignInner(position + size);
 
-			pos++;
+			size++;
 		}
-
 	}
 
 

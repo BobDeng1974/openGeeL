@@ -5,6 +5,7 @@
 #include <vector>
 #include "framebuffer/stackbuffer.h"
 #include "postprocessing/postprocessing.h"
+#include "postprocessing/additiveeffect.h"
 #include "utility/worldinformation.h"
 #include "utility/rendertime.h"
 #include "postrenderer.h"
@@ -25,8 +26,6 @@ namespace geeL {
 	class PostProcessingEffect;
 	class Texture;
 	class TextureProvider;
-
-	using PostEffectRender = std::pair<RenderTexture*, PostProcessingEffect*>;
 
 
 	class DeferredRenderer : public Renderer, public PostEffectDrawer {
@@ -67,10 +66,10 @@ namespace geeL {
 		StackBuffer& getStackbuffer();
 
 	private:
-		std::vector<PostEffectRender> earlyEffects;
-		std::vector<PostEffectRender> intermediateEffects;
-		std::vector<PostEffectRender> lateEffects;
-		std::vector<PostEffectRender> externalEffects;
+		std::vector<PostProcessingEffect*> earlyEffects;
+		std::vector<PostProcessingEffect*> intermediateEffects;
+		std::vector<PostProcessingEffect*> lateEffects;
+		std::vector<PostProcessingEffect*> externalEffects;
 
 		std::list<DynamicRenderTexture*> renderTextures;
 
@@ -83,6 +82,7 @@ namespace geeL {
 		SSAO* ssao;
 		PostProcessingEffectFS fallbackEffect;
 		DefaultPostProcess& defaultEffect;
+		AdditiveEffect combineEffect;
 
 		std::function<void()> geometryPassFunction;
 		std::function<void()> lightingPassFunction;
@@ -93,8 +93,8 @@ namespace geeL {
 		void init();
 		void initEffects();
 		
-		void iterEffects(std::vector<PostEffectRender>& effects, std::function<void(PostProcessingEffect&)> function);
-		void drawEffects(std::vector<PostEffectRender>& effects);
+		void iterEffects(std::vector<PostProcessingEffect*>& effects, std::function<void(PostProcessingEffect&)> function);
+		void drawEffects(std::vector<PostProcessingEffect*>& effects);
 		
 		//Update shader bindings of all contained post effects
 		void updateEffectBindings();

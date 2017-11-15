@@ -1,9 +1,13 @@
+#define GLEW_STATIC
+#include <glew.h>
 #include "cameras/camera.h"
+#include "framebuffer/framebuffer.h"
 #include "shader/rendershader.h"
 #include "shader/sceneshader.h"
 #include "lights/lightmanager.h"
 #include "texturing/rendertexture.h"
 #include "texturing/textureprovider.h"
+#include "appglobals.h"
 #include "renderscene.h"
 #include "deferredlighting.h"
 
@@ -44,7 +48,21 @@ namespace geeL {
 	}
 
 	void DeferredLighting::fill() {
+#if DIFFUSE_SPECULAR_SEPARATION
+		if (parentBuffer != nullptr) {
+			RenderTexture& diffuse  = provider->requestDefaultTexture();
+			RenderTexture& specular = provider->requestDefaultTexture();
+			LayeredTarget combinedTarget(diffuse, specular);
+
+			parentBuffer->add(combinedTarget);
+			parentBuffer->fill(*this, clearColor);
+
+			provider->updateCurrentImage(diffuse);
+			provider->updateCurrentSpecular(specular);
+		}
+#else
 		PostProcessingEffectFS::fill();
+#endif
 	}
 
 
@@ -60,7 +78,8 @@ namespace geeL {
 
 
 	TiledDeferredLighting::TiledDeferredLighting(RenderScene& scene)
-		: SceneRender(scene), PostProcessingEffectCS("renderer/lighting/tileddeferred.com.glsl", Resolution(16, 16)) {}
+		: PostProcessingEffectCS("renderer/lighting/tileddeferred.com.glsl", Resolution(16, 16)) 
+		, SceneRender(scene) {}
 
 
 	void TiledDeferredLighting::init(const PostProcessingParameter& parameter) {

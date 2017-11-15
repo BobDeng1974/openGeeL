@@ -17,6 +17,7 @@ namespace geeL {
 
 		virtual void setRenderResolution() const;
 		virtual const Resolution& getResolution() const;
+		virtual unsigned int getSize() const;
 
 		virtual void resize(Resolution resolution);
 

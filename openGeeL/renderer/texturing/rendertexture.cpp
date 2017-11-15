@@ -33,6 +33,10 @@ namespace geeL {
 	}
 
 
+	unsigned int RenderTexture::getSize() const {
+		return 1;
+	}
+
 	void RenderTexture::resize(Resolution resolution) {
 		glBindTexture(GL_TEXTURE_2D, id);
 

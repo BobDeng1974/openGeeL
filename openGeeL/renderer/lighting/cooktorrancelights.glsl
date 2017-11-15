@@ -69,7 +69,7 @@ vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal,
 
 void calculatePointLight(int index, PointLight light, vec3 normal, 
 	vec3 fragPosition, vec3 viewDirection, vec4 albedo, float roughness, float metallic, 
-	out vec3 diffuse, out vec3 specular) {
+	inout vec3 diffuse, inout vec3 specular) {
 
 	vec3 tempDiff = vec3(0.f);
 	vec3 tempSpec = vec3(0.f);
@@ -94,7 +94,7 @@ void calculatePointLight(int index, PointLight light, vec3 normal,
 
 void calculateSpotLight(int index, SpotLight light, vec3 normal, 
 	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float roughness, float metallic, 
-	out vec3 diffuse, out vec3 specular) {
+	inout vec3 diffuse, inout vec3 specular) {
 	
 	vec3 lightDirection = normalize(light.position - fragPosition);
 
@@ -121,7 +121,7 @@ void calculateSpotLight(int index, SpotLight light, vec3 normal,
 
 void calculateDirectionaLight(int index, DirectionalLight light, vec3 normal, 
 	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float roughness, float metallic,
-	out vec3 diffuse, out vec3 specular) {
+	inout vec3 diffuse, inout vec3 specular) {
 	
 	vec3 tempDiff = vec3(0.f);
 	vec3 tempSpec = vec3(0.f);

@@ -36,11 +36,13 @@ namespace geeL {
 		//rendering purposes. If requester updates said image, the method 
 		//'updateCurrentImage' should be called afterwards
 		virtual RenderTexture& requestCurrentImage() = 0;
+		virtual RenderTexture& requestCurrentSpecular() = 0;
 
 		//Set current iteration of final rendererd image to given one.
 		//Important: Current image texture will be reclaimed automatically
 		//and doesn't need to be returned
 		virtual void updateCurrentImage(RenderTexture& texture) = 0;
+		virtual void updateCurrentSpecular(RenderTexture& texture) = 0;
 
 		virtual TextureWrapper requestTexture(ResolutionPreset resolution,
 			ColorType colorType = ColorType::RGB,
@@ -75,7 +77,10 @@ namespace geeL {
 
 		virtual RenderTexture& requestDefaultTexture();
 		virtual RenderTexture& requestCurrentImage();
+		virtual RenderTexture& requestCurrentSpecular();
+
 		virtual void updateCurrentImage(RenderTexture& texture);
+		virtual void updateCurrentSpecular(RenderTexture& texture);
 
 		virtual TextureWrapper requestTexture(ResolutionPreset resolution, ColorType colorType,
 			FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter);
@@ -115,6 +120,7 @@ namespace geeL {
 		const RenderWindow& window;
 		GBuffer& gBuffer;
 		RenderTexture* diffuse;
+		RenderTexture* specular;
 		std::function<void(RenderTexture&)> callback;
 
 		std::map<ResolutionScale, std::map<ColorType, MonitoredList>> textures;

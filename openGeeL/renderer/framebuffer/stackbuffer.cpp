@@ -2,6 +2,7 @@
 #include <glew.h>
 #include <iostream>
 #include "renderer.h"
+#include "bufferutil.h"
 #include "rendertarget.h"
 #include "stackbuffer.h"
 
@@ -27,6 +28,7 @@ namespace geeL {
 			RenderTarget* previous = stackBuffer.top();
 			bind();
 			previous->assignTo(*this, 0);
+			quickFixCity(*previous);
 			previous->setRenderResolution();
 		}
 	}
@@ -38,6 +40,13 @@ namespace geeL {
 		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 		unbind();
+	}
+
+	void StackBuffer::quickFixCity(RenderTarget& target) {
+		BufferUtility::drawBuffers(target.getSize());
+
+		if(target.getSize() == 1)
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, 0, 0);
 	}
 
 	void StackBuffer::initResolution(const Resolution& resolution) {
@@ -56,6 +65,7 @@ namespace geeL {
 		
 		bind();
 		current->assignTo(*this, 0);
+		quickFixCity(*current);
 		current->setRenderResolution();
 		clearer.clear();
 
@@ -70,6 +80,7 @@ namespace geeL {
 
 		bind();
 		current->assignTo(*this, 0);
+		quickFixCity(*current);
 		current->setRenderResolution();
 		clearer.clear();
 
@@ -79,14 +90,6 @@ namespace geeL {
 		pop();
 	}
 
-/*
-	const RenderTexture* const StackBuffer::getTexture() const {
-		if (!stackBuffer.empty())
-			return stackBuffer.top();
-
-		return nullptr;
-	}
-	*/
 	const Resolution& StackBuffer::getResolution() const {
 		if (stackBuffer.empty())
 			return resolution;

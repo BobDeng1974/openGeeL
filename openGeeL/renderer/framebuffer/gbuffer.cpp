@@ -5,6 +5,8 @@
 #include "shader/rendershader.h"
 #include "utility/viewport.h"
 #include "utility/glguards.h"
+#include "appglobals.h"
+#include "bufferutil.h"
 #include "renderer.h"
 #include "gbuffer.h"
 
@@ -169,20 +171,20 @@ namespace geeL {
 		gBuffer.getDiffuse().assignToo(*this, 2);
 		//TODO: add emissivity texture
 
-		unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
-		glDrawBuffers(4, attachments);
+#if DIFFUSE_SPECULAR_SEPARATION
+		BufferUtility::drawBuffers(5);
+#else
+		BufferUtility::drawBuffers(4);
+#endif
 
 		referenceRBO(gBuffer);
 
 		unbind();
 	}
 
-	void ForwardBuffer::setColorTexture(RenderTexture& colorTexture) {
+	void ForwardBuffer::setTarget(RenderTarget& colorTexture) {
 		bind();
 		colorTexture.assignTo(*this, 3);
-
-		unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
-		glDrawBuffers(4, attachments);
 	}
 
 	void ForwardBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
@@ -191,6 +193,11 @@ namespace geeL {
 
 		BlendGuard blend(3);
 		blend.blendAlpha();
+
+#if DIFFUSE_SPECULAR_SEPARATION
+		BlendGuard blendSpecular(4);
+		blendSpecular.blendAlpha();
+#endif
 
 		drawCall();
 
