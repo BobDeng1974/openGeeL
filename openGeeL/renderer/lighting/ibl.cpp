@@ -34,6 +34,12 @@ namespace geeL {
 		scene.getLightmanager().addReflectionProbes(shader);
 		invViewLocation = shader.getLocation("inverseView");
 		originLocation = shader.getLocation("origin");
+
+#if DIFFUSE_SPECULAR_SEPARATION
+		assert(parameter.separatedBuffer != nullptr);
+		setParent(*parameter.separatedBuffer);
+#endif
+
 	}
 
 	void ImageBasedLighting::draw() {

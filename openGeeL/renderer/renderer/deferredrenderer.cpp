@@ -1,33 +1,20 @@
-#define GLEW_STATIC
-#include <glew.h>
 #include <glfw3.h>
-#include <thread>
-#include <chrono>
 #include <algorithm>
 #include <iostream>
-#include <map>
 #include "renderscene.h"
 #include "window.h"
-#include "inputmanager.h"
-#include "shader/sceneshader.h"
 #include "primitives/screenquad.h"
-#include "texturing/texture.h"
 #include "texturing/textureprovider.h"
-#include "texturing/rendertexture.h"
 #include "texturing/dynamictexture.h"
-#include "texturing/imagetexture.h"
 #include "framebuffer/gbuffer.h"
-#include "framebuffer/tbuffer.h"
 #include "postprocessing/drawdefault.h"
 #include "postprocessing/ssao.h"
-#include "postprocessing/additiveeffect.h"
 #include "cameras/camera.h"
 #include "lights/lightmanager.h"
 #include "guirenderer.h"
 #include "lighting/deferredlighting.h"
 #include "utility/viewport.h"
 #include "utility/glguards.h"
-#include "appglobals.h"
 #include "application.h"
 #include "deferredrenderer.h"
 
@@ -62,6 +49,12 @@ namespace geeL {
 
 		stackBuffer.initResolution(window->resolution);
 		stackBuffer.referenceRBO(gBuffer);
+
+#if DIFFUSE_SPECULAR_SEPARATION
+		separatedBuffer.initResolution(window->resolution);
+		separatedBuffer.referenceRBO(gBuffer);
+		separatedBuffer.setSize(2);
+#endif
 
 		ScreenQuad& defQuad = ScreenQuad::get();
 		defQuad.init();
@@ -318,28 +311,29 @@ namespace geeL {
 
 
 	void DeferredRenderer::initEffects() {
-		defaultEffect.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer,
-			window->resolution, &provider, &fallbackEffect));
-		lighting.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer,
-			window->resolution, &provider));
-		combineEffect.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer,
-			window->resolution, &provider));
+#if DIFFUSE_SPECULAR_SEPARATION
+		PostProcessingParameter parameter(ScreenQuad::get(), stackBuffer,
+			window->resolution, &provider, &fallbackEffect, &separatedBuffer);
+#else
+		PostProcessingParameter parameter(ScreenQuad::get(), stackBuffer,
+			window->resolution, &provider, &fallbackEffect);
+#endif
 
-		iterEffects(externalEffects, [this](PostProcessingEffect& effect) { 
-			effect.init(PostProcessingParameter(ScreenQuad::get(), 
-			stackBuffer, window->resolution, &provider, &fallbackEffect)); });
+		defaultEffect.init(parameter);
+		lighting.init(parameter);
+		combineEffect.init(parameter);
 
-		iterEffects(earlyEffects, [this](PostProcessingEffect& effect) {
-			effect.init(PostProcessingParameter(ScreenQuad::get(),
-				stackBuffer, window->resolution, &provider, &fallbackEffect)); });
+		iterEffects(externalEffects, [this, &parameter](PostProcessingEffect& effect) { 
+			effect.init(parameter); });
 
-		iterEffects(intermediateEffects, [this](PostProcessingEffect& effect) {
-			effect.init(PostProcessingParameter(ScreenQuad::get(),
-				stackBuffer, window->resolution, &provider, &fallbackEffect)); });
+		iterEffects(earlyEffects, [this, &parameter](PostProcessingEffect& effect) {
+			effect.init(parameter); });
 
-		iterEffects(lateEffects, [this](PostProcessingEffect& effect) {
-			effect.init(PostProcessingParameter(ScreenQuad::get(),
-				stackBuffer, window->resolution, &provider, &fallbackEffect)); });
+		iterEffects(intermediateEffects, [this, &parameter](PostProcessingEffect& effect) {
+			effect.init(parameter); });
+
+		iterEffects(lateEffects, [this, &parameter](PostProcessingEffect& effect) {
+			effect.init(parameter); });
 	}
 
 

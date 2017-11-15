@@ -99,7 +99,7 @@ public:
 				else if (container.name == "hair_inner")
 					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/hair_inner_alpha_01.jpg"));
 				else if (container.name == "eyes_outer")
-					container.setFloatValue("Roughness", 0.01f);
+					container.setFloatValue("Roughness", 0.33f);
 				else if (container.name == "hair_outer")
 					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/hair_outer_alpha_01.jpg"));
 				else if (container.name == "cloth") {
@@ -113,7 +113,7 @@ public:
 					container.setVectorValue("Emissivity", vec3(100.f));
 				else if (container.name == "body") {
 					container.addTexture("occlusion", materialFactory.CreateTexture("resources/girl/body_ao_01.jpg", ColorType::GammaSpace));
-					container.setFloatValue("Roughness", 0.55f);
+					container.setFloatValue("Roughness", 0.52f);
 				}
 			});
 
@@ -126,7 +126,7 @@ public:
 			gui.addSystemInformation(0.01f, 0.74f, 0.17f, 0.145f);
 
 
-			def.setExposure(1.5f);
+			def.setExposure(1.25f);
 			postLister.add(def);
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
@@ -154,27 +154,19 @@ public:
 			MotionBlur& motionBlur = MotionBlur(0.3f, 20);
 			MotionBlurSnippet& mSnippet = MotionBlurSnippet(motionBlur);
 			//renderer.addEffect(motionBlur, DrawTime::Late);
-			scene.addRequester(motionBlur);
-			postLister.add(mSnippet);
+			//scene.addRequester(motionBlur);
+			//postLister.add(mSnippet);
 
-			//Fake subsurface scattering with bilateral filter
-			
-			BilateralFilter& sss = BilateralFilter(2.f, 0.1f);
-			BilateralFilterSnippet sssSnippet(sss);
+			//Fake subsurface scattering with gaussian blur
+			SeparatedGaussian& sss = SeparatedGaussian();
+			sss.setSigmaR(2.2f);
+			sss.setSigmaG(1.1f);
+			sss.setSigmaB(3.f);
+			SeparatedGaussianSnippet& ssssnip = SeparatedGaussianSnippet(sss);
 			AdditiveWrapper& additiveSSS = AdditiveWrapper(sss);
 			renderer.addEffect(additiveSSS);
-			postLister.add(sssSnippet);
+			postLister.add(ssssnip);
 			additiveSSS.setRenderMask(RenderMask::Skin);
-			
-			/*
-			SeparatedGaussian& s4 = SeparatedGaussian();
-			SeparatedGaussianSnippet& s4snip = SeparatedGaussianSnippet(s4);
-			AdditiveWrapper& additiveS4 = AdditiveWrapper(s4);
-			renderer.addEffect(additiveS4);
-			postLister.add(s4snip);
-			additiveS4.setRenderMask(RenderMask::Skin);
-			*/
-
 
 			FXAA& fxaa = FXAA(0.001f, 0.f);
 			renderer.addEffect(fxaa, DrawTime::Late);

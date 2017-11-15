@@ -23,6 +23,7 @@ namespace geeL {
 	struct PostProcessingParameter {
 		ScreenQuad& screen;
 		DynamicBuffer& buffer;
+		DynamicBuffer* separatedBuffer;
 		Resolution resolution;
 		PostProcessingEffect* fallbackEffect;
 		ITextureProvider* provider;
@@ -31,7 +32,8 @@ namespace geeL {
 			DynamicBuffer& buffer, 
 			const Resolution& resolution, 
 			ITextureProvider* const provider = nullptr,
-			PostProcessingEffect* const fallbackEffect = nullptr);
+			PostProcessingEffect* const fallbackEffect = nullptr,
+			DynamicBuffer* separatedBuffer = nullptr);
 
 		PostProcessingParameter(const PostProcessingParameter& other, const Resolution& resolution);
 
@@ -162,9 +164,11 @@ namespace geeL {
 		DynamicBuffer& buffer, 
 		const Resolution& resolution, 
 		ITextureProvider* const provider,
-		PostProcessingEffect* const fallbackEffect)
+		PostProcessingEffect* const fallbackEffect,
+		DynamicBuffer* separatedBuffer)
 			: screen(screen)
 			, buffer(buffer)
+			, separatedBuffer(separatedBuffer)
 			, resolution(resolution)
 			, fallbackEffect(fallbackEffect)
 			, provider(provider) {}
@@ -173,6 +177,7 @@ namespace geeL {
 		const Resolution& resolution) 
 			: screen(other.screen)
 			, buffer(other.buffer)
+			, separatedBuffer(other.separatedBuffer)
 			, resolution(resolution)
 			, fallbackEffect(other.fallbackEffect)
 			, provider(other.provider) {}

@@ -8,6 +8,7 @@
 #include "postprocessing/additiveeffect.h"
 #include "utility/worldinformation.h"
 #include "utility/rendertime.h"
+#include "appglobals.h"
 #include "postrenderer.h"
 #include "renderer.h"
 
@@ -77,6 +78,9 @@ namespace geeL {
 		GBuffer& gBuffer;
 		ForwardBuffer* fBuffer;
 		StackBuffer stackBuffer;
+#if DIFFUSE_SPECULAR_SEPARATION
+		StackBuffer separatedBuffer;
+#endif
 
 		SceneRender& lighting;
 		SSAO* ssao;

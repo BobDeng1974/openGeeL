@@ -10,7 +10,7 @@ namespace geeL {
 	class StackBuffer : public DynamicBuffer {
 
 	public:
-		StackBuffer();
+		StackBuffer(unsigned int size = 1);
 
 		//Adds a new render texture to the stack. The current texture (Top of stack)
 		//will always be used for the next draw/fill call and then removed from the stack.
@@ -19,6 +19,7 @@ namespace geeL {
 		virtual void pop();
 
 		void initResolution(const Resolution& resolution);
+		void setSize(unsigned int size);
 
 		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNormal);
 		virtual void fill(Drawer& drawer, Clearer clearer = clearNormal);
@@ -28,25 +29,19 @@ namespace geeL {
 		virtual void resetSize() const;
 		virtual void resize(ResolutionScale resolution);
 
-		size_t size() const;
 		virtual std::string toString() const;
 
 	private:
+		unsigned int size;
 		std::stack<RenderTarget*> stackBuffer;
 
-		void init();
-
-		void quickFixCity(RenderTarget& target);
+		void init(unsigned int size);
 
 		StackBuffer(const StackBuffer& other) = delete;
 		StackBuffer& operator= (const StackBuffer& other) = delete;
 
 	};
 
-
-	inline size_t StackBuffer::size() const {
-		return stackBuffer.size();
-	}
 
 }
 

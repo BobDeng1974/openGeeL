@@ -10,13 +10,16 @@ using namespace std;
 
 namespace geeL {
 
-	StackBuffer::StackBuffer() {
-		init();
+	StackBuffer::StackBuffer(unsigned int size) 
+		: size(size) {
+		
+		init(size);
 	}
 
 
-	void StackBuffer::push(RenderTarget& texture) {
-		stackBuffer.push(&texture);
+	void StackBuffer::push(RenderTarget& target) {
+		assert(target.getSize() == size);
+		stackBuffer.push(&target);
 	}
 
 	void StackBuffer::pop() {
@@ -28,25 +31,14 @@ namespace geeL {
 			RenderTarget* previous = stackBuffer.top();
 			bind();
 			previous->assignTo(*this, 0);
-			quickFixCity(*previous);
 			previous->setRenderResolution();
 		}
 	}
 
 
-	void StackBuffer::init() {
+	void StackBuffer::init(unsigned int size) {
 		glGenFramebuffers(1, &fbo.token);
-		bind();
-		glDrawBuffer(GL_COLOR_ATTACHMENT0);
-
-		unbind();
-	}
-
-	void StackBuffer::quickFixCity(RenderTarget& target) {
-		BufferUtility::drawBuffers(target.getSize());
-
-		if(target.getSize() == 1)
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, 0, 0);
+		setSize(size);
 	}
 
 	void StackBuffer::initResolution(const Resolution& resolution) {
@@ -58,6 +50,15 @@ namespace geeL {
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	}
+
+	void StackBuffer::setSize(unsigned int size) {
+		if (size > 0 && size <= 5) {
+			bind();
+			BufferUtility::drawBuffers(size);
+			this->size = size;
+			unbind();
+		}
+	}
 	
 
 	void StackBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
@@ -65,7 +66,6 @@ namespace geeL {
 		
 		bind();
 		current->assignTo(*this, 0);
-		quickFixCity(*current);
 		current->setRenderResolution();
 		clearer.clear();
 
@@ -80,7 +80,6 @@ namespace geeL {
 
 		bind();
 		current->assignTo(*this, 0);
-		quickFixCity(*current);
 		current->setRenderResolution();
 		clearer.clear();
 

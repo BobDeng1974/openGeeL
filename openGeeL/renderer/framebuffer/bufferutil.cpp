@@ -66,8 +66,7 @@ namespace geeL {
 
 		switch (size) {
 			case 1: {
-				unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0  };
-				glDrawBuffers(1, attachments);
+				glDrawBuffer(GL_COLOR_ATTACHMENT0);
 			}
 			case 2: {
 				unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
