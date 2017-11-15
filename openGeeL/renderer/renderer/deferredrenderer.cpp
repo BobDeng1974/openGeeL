@@ -280,31 +280,8 @@ namespace geeL {
 		defaultEffect.setCustomImage(texture);
 	}
 
-	std::vector<const Texture*> DeferredRenderer::getBuffers() {
-		const RenderTexture* emisTex = gBuffer.getEmissivity();
-		const RenderTexture* occTex  = gBuffer.getOcclusion();
-
-		size_t bufferSize = 2;
-		bufferSize += int(emisTex != nullptr);
-		bufferSize += int(occTex  != nullptr);
-
-		std::vector<const Texture*> buffers;
-		buffers.reserve(bufferSize);
-
-		buffers.push_back(&gBuffer.getDiffuse());
-		buffers.push_back(&gBuffer.getNormalMetallic());
-
-		if (emisTex != nullptr)
-			buffers.push_back(emisTex);
-		
-		if (occTex != nullptr)
-			buffers.push_back(occTex);
-
-		return buffers;
-	}
-
-	StackBuffer& DeferredRenderer::getStackbuffer() {
-		return stackBuffer;
+	const TextureProvider& DeferredRenderer::getTextureProvider() const {
+		return provider;
 	}
 
 

@@ -2,6 +2,7 @@
 #include <iostream>
 #include "renderer/deferredrenderer.h"
 #include "texturing/texture.h"
+#include "texturing/textureprovider.h"
 #include "utility/rendertime.h"
 #include "guiwrapper.h"
 #include "systeminformation.h"
@@ -41,7 +42,7 @@ namespace geeL {
 			if (reset != 0)
 				renderer.setScreenImage();
 			else if (back != 0 || forward != 0) {
-				std::vector<const Texture*> textures(std::move(renderer.getBuffers()));
+				std::vector<const Texture*> textures(std::move(getBuffers()));
 				unsigned int size = unsigned int(textures.size());
 
 				if (size != 0) {
@@ -61,6 +62,31 @@ namespace geeL {
 
 		std::string t = std::to_string(RenderTime::deltaTime()) + " ms";
 		nk_label(context, t.c_str(), NK_TEXT_LEFT);
+	}
+
+	std::vector<const Texture*> SystemInformation::getBuffers() {
+		const TextureProvider& provider = renderer.getTextureProvider();
+
+		const RenderTexture* emisTex = provider.requestEmissivity();
+		const RenderTexture* occTex = provider.requestOcclusion();
+
+		size_t bufferSize = 2;
+		bufferSize += int(emisTex != nullptr);
+		bufferSize += int(occTex != nullptr);
+
+		std::vector<const Texture*> buffers;
+		buffers.reserve(bufferSize);
+
+		buffers.push_back(&provider.requestAlbedo());
+		buffers.push_back(&provider.requestNormalMetallic());
+
+		if (emisTex != nullptr)
+			buffers.push_back(emisTex);
+
+		if (occTex != nullptr)
+			buffers.push_back(occTex);
+
+		return buffers;
 	}
 
 }

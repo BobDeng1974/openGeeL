@@ -6,8 +6,6 @@
 #include "framebuffer/stackbuffer.h"
 #include "postprocessing/postprocessing.h"
 #include "postprocessing/additiveeffect.h"
-#include "utility/worldinformation.h"
-#include "utility/rendertime.h"
 #include "appglobals.h"
 #include "postrenderer.h"
 #include "renderer.h"
@@ -19,13 +17,10 @@ namespace geeL {
 	class DynamicRenderTexture;
 	class ForwardBuffer;
 	class GBuffer;
-	class MaterialFactory;
 	class RenderTexture;
 	class SceneRender;
-	class SceneCamera;
 	class SSAO;
 	class PostProcessingEffect;
-	class Texture;
 	class TextureProvider;
 
 
@@ -59,12 +54,7 @@ namespace geeL {
 		//image if given texture is NULL
 		void setScreenImage(const Texture* const texture = nullptr);
 
-		//Returns all available drawing buffers.
-		//This included buffers for final image, albedo, normals,
-		//positions, occlusion and emission
-		std::vector<const Texture*> getBuffers();
-
-		StackBuffer& getStackbuffer();
+		const TextureProvider& getTextureProvider() const;
 
 	private:
 		std::vector<PostProcessingEffect*> earlyEffects;
@@ -97,8 +87,9 @@ namespace geeL {
 		void init();
 		void initEffects();
 		
-		void iterEffects(std::vector<PostProcessingEffect*>& effects, std::function<void(PostProcessingEffect&)> function);
 		void drawEffects(std::vector<PostProcessingEffect*>& effects);
+		void iterEffects(std::vector<PostProcessingEffect*>& effects, 
+			std::function<void(PostProcessingEffect&)> function);
 		
 		//Update shader bindings of all contained post effects
 		void updateEffectBindings();

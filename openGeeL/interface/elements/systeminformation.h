@@ -2,6 +2,7 @@
 #define SYSTEMINFORMATION_H
 
 #include <string>
+#include <vector>
 #include "guielement.h"
 
 namespace geeL {
@@ -21,6 +22,7 @@ namespace geeL {
 		DeferredRenderer& renderer;
 
 		void drawTime(GUIContext* context, std::string name);
+		std::vector<const Texture*> getBuffers();
 
 	};
 }
