@@ -19,10 +19,10 @@ namespace geeL {
 	void Configuration::run() {
 		InputManager manager;
 
-		geeL::Transform& world = ThreadedTransform(glm::vec3(0.f), vec3(0.f), vec3(1.f));
+		geeL::Transform& world = Transform(glm::vec3(0.f), vec3(0.f), vec3(1.f));
 		TransformFactory& transFactory = TransformFactory(world);
 
-		Transform& cameraTransform = ThreadedTransform(vec3(0.f), vec3(0.f), vec3(1.f));
+		Transform& cameraTransform = Transform(vec3(0.f), vec3(0.f), vec3(1.f));
 		PerspectiveCamera& defaultCamera = PerspectiveCamera(cameraTransform, 60.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
 
 		GBuffer& gBuffer = GBuffer(window.resolution, content);

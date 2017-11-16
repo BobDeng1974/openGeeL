@@ -85,7 +85,6 @@
 #include "texturing/dynamictexture.h"
 
 #include "transformation/transform.h"
-#include "transformation/threadedtransform.h"
 #include "transformation/transformfactory.h"
 
 #include "voxelization/voxelizer.h"

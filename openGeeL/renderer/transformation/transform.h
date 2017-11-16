@@ -3,6 +3,7 @@
 
 #include <vec3.hpp>
 #include <mat4x4.hpp>
+#include <mutex>
 #include <gtc/quaternion.hpp>
 #include <functional>
 #include <list>
@@ -117,8 +118,9 @@ namespace geeL {
 		std::list<std::function<void(const Transform&)>> changeListener;
 		TransformUpdateStatus status;
 
-		void setEulerAnglesInternal(const vec3& eulerAngles);
+		mutable std::mutex mutex;
 
+		void setEulerAnglesInternal(const vec3& eulerAngles);
 		void resetMatrix();
 		void updateDirections();
 		void onChange();

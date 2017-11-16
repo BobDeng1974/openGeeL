@@ -268,7 +268,6 @@
     <ClCompile Include="renderer\texturing\rendertexturecube.cpp" />
     <ClCompile Include="renderer\texturing\texture.cpp" />
     <ClCompile Include="renderer\texturing\texturetoken.cpp" />
-    <ClCompile Include="renderer\transformation\threadedtransform.cpp" />
     <ClCompile Include="renderer\transformation\transform.cpp" />
     <ClCompile Include="renderer\transformation\transformfactory.cpp" />
     <ClCompile Include="renderer\utility\clearing.cpp" />
@@ -428,7 +427,6 @@
     <ClInclude Include="renderer\texturing\texture.h" />
     <ClInclude Include="renderer\texturing\texturetoken.h" />
     <ClInclude Include="renderer\texturing\texturetype.h" />
-    <ClInclude Include="renderer\transformation\threadedtransform.h" />
     <ClInclude Include="renderer\transformation\transform.h" />
     <ClInclude Include="renderer\transformation\transformfactory.h" />
     <ClInclude Include="renderer\utility\clearing.h" />

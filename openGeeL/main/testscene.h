@@ -139,16 +139,16 @@ public:
 			nano.addComponent<RotationComponent>();
 			scene.addMeshRenderer(nano);
 
-			/*
+			
 			float scale = 0.05f;
 			Transform& meshTransform7 = transformFactory.CreateTransform(vec3(2.f, -2.f, 4.0f), vec3(-90.f, 0.f, 0.f), vec3(scale, scale, scale));
 			SkinnedMeshRenderer& dude = meshFactory.CreateSkinnedMeshRenderer(meshFactory.CreateSkinnedModel("resources/guard/boblampclean.md5mesh"),
 			meshTransform7, CullingMode::cullFront, "Dude");
-			scene.AddMeshRenderer(dude);
+			scene.addMeshRenderer(dude);
 
 			SimpleAnimator& anim = dude.addComponent(SimpleAnimator(dude.getSkinnedModel(), dude.getSkeleton()));
 			anim.playAnimation(0);
-			*/
+			
 
 
 			ObjectLister& objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);

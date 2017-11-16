@@ -127,11 +127,14 @@ namespace geeL {
 	void MeshFactory::processStaticNode(StaticModel& model, string directory, aiNode* node, const aiScene* scene) {
 		string name = node->mName.C_Str();
 
+		//Traverse node tree
+		for (unsigned int i = 0; i < node->mNumChildren; i++)
+			processStaticNode(model, directory, node->mChildren[i], scene);
+
+
 		//Add mesh if current node contains one
 		for (unsigned int i = 0; i < node->mNumMeshes; i++) {
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-
-			
 
 			vector<Vertex> vertices;
 			vector<unsigned int> indices;
@@ -146,15 +149,9 @@ namespace geeL {
 			DefaultMaterialContainer& mat = factory.CreateMaterial();
 			processMaterial(mat, mesh, scene);
 			mat.addTextures(textures);
-			
 
 			model.addMesh(StaticMesh(name, vertices, indices, mat));
 		}
-
-		//Traverse node tree
-		for (unsigned int i = 0; i < node->mNumChildren; i++)
-			processStaticNode(model, directory, node->mChildren[i], scene);
-
 	}
 
 	void MeshFactory::fillSkinnedModel(SkinnedModel& model, std::string path) {
@@ -181,10 +178,22 @@ namespace geeL {
 		model.setSkeleton(skeleton);
 	}
 
-	void MeshFactory::processSkinnedNode(SkinnedModel& model, Transform& bone, 
+	void MeshFactory::processSkinnedNode(SkinnedModel& model, Transform& boneTransform, 
 		string directory, aiNode* node, const aiScene* scene) {
 
 		string name = node->mName.C_Str();
+
+		//Traverse node tree
+		for (unsigned int i = 0; i < node->mNumChildren; i++) {
+			aiNode* child = node->mChildren[i];
+			aiMatrix4x4& mat = child->mTransformation;
+			Transform* trans = new Transform(MatrixExtension::convertMatrix(mat));
+			trans->setName(string(child->mName.C_Str()));
+			boneTransform.AddChild(trans);
+
+			processSkinnedNode(model, *trans, directory, child, scene);
+		}
+
 
 		//Add mesh if current node contains one
 		for (unsigned int i = 0; i < node->mNumMeshes; i++) {
@@ -207,17 +216,6 @@ namespace geeL {
 			mat.addTextures(textures);
 
 			model.addMesh(SkinnedMesh(name, vertices, indices, bones, mat));
-		}
-
-		//Traverse node tree
-		for (unsigned int i = 0; i < node->mNumChildren; i++) {
-			aiNode* child = node->mChildren[i];
-			aiMatrix4x4& mat = child->mTransformation;
-			Transform* trans = new Transform(MatrixExtension::convertMatrix(mat));
-			trans->setName(string(child->mName.C_Str()));
-			bone.AddChild(trans);
-
-			processSkinnedNode(model, *trans, directory, child, scene);
 		}
 	}
 
@@ -301,17 +299,18 @@ namespace geeL {
 
 		for (unsigned int i = 0; i < mesh->mNumBones; i++) {
 			aiBone* bone = mesh->mBones[i];
-			string name = bone->mName.data;
+			const string& name = bone->mName.data;
 
 			aiMatrix4x4& mat = bone->mOffsetMatrix;
 			bones[name].offsetMatrix = MatrixExtension::convertMatrix(mat);
+			bones[name].id = i;
 
 			//Iterate over all vertices that are affected by this bone
 			for (unsigned int j = 0; j < bone->mNumWeights; j++) {
 				aiVertexWeight weight = bone->mWeights[j];
 
 				//Populate vertices with bone weights
-				vertices[j].addBone(j, weight.mWeight);
+				vertices[weight.mVertexId].addBone(i, weight.mWeight);
 			}
 		}
 	}

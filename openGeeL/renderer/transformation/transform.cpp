@@ -6,17 +6,25 @@
 #include <glm.hpp>
 #include "shader/shader.h"
 #include "utility/vectorextension.h"
+#include "appglobals.h"
 #include "transform.h"
 
 using namespace std;
-using glm::normalize;
 using namespace glm;
+using glm::normalize;
+
+#define transformLock() std::lock_guard<std::mutex> guard(mutex);
 
 namespace geeL {
 
 	unsigned int idCounter = 0;
 
-	Transform::Transform() : matrix(mat4()), isStatic(true), parent(nullptr), status(TransformUpdateStatus::None) {
+	Transform::Transform() 
+		: matrix(mat4())
+		, isStatic(true)
+		, parent(nullptr)
+		, status(TransformUpdateStatus::None) {
+
 		id = idCounter;
 		idCounter++;
 	}
@@ -29,8 +37,16 @@ namespace geeL {
 		idCounter++;
 	}
 
-	Transform::Transform(vec3 position, glm::quat rotation, vec3 scaling, bool isStatic)
-		: position(position), rotation(rotation), scaling(scaling), isStatic(isStatic), parent(nullptr), status(TransformUpdateStatus::None) {
+	Transform::Transform(vec3 position, 
+		glm::quat rotation, 
+		vec3 scaling, 
+		bool isStatic)
+			: position(position)
+			, rotation(rotation)
+			, scaling(scaling)
+			, isStatic(isStatic)
+			, parent(nullptr)
+			, status(TransformUpdateStatus::None) {
 
 		translationMatrix = glm::translate(glm::mat4(1.f), position);
 		rotationMatrix = glm::toMat4(this->rotation);
@@ -42,8 +58,15 @@ namespace geeL {
 		idCounter++;
 	}
 
-	Transform::Transform(vec3 position, vec3 rotation, vec3 scaling, bool isStatic)
-		: position(position), scaling(scaling), isStatic(isStatic), parent(nullptr), status(TransformUpdateStatus::None) {
+	Transform::Transform(vec3 position, 
+		vec3 rotation, 
+		vec3 scaling, 
+		bool isStatic)
+			: position(position)
+			, scaling(scaling)
+			, isStatic(isStatic)
+			, parent(nullptr)
+			, status(TransformUpdateStatus::None) {
 		
 		setEulerAnglesInternal(rotation);
 		translationMatrix = glm::translate(glm::mat4(1.f), position);
@@ -56,11 +79,20 @@ namespace geeL {
 		idCounter++;
 	}
 
-	Transform::Transform(const Transform& transform) : 
-		position(transform.position), rotation(transform.rotation), scaling(transform.scaling), 
-		forward(transform.forward), up(transform.up), right(transform.right),
-		translationMatrix(transform.translationMatrix), rotationMatrix(transform.rotationMatrix), scaleMatrix(transform.scaleMatrix), 
-		isStatic(transform.isStatic), parent(transform.parent), status(TransformUpdateStatus::None), name(transform.name) {
+	Transform::Transform(const Transform& transform) 
+		: position(transform.position)
+		, rotation(transform.rotation)
+		, scaling(transform.scaling)
+		, forward(transform.forward)
+		, up(transform.up)
+		, right(transform.right)
+		, translationMatrix(transform.translationMatrix)
+		, rotationMatrix(transform.rotationMatrix)
+		, scaleMatrix(transform.scaleMatrix)
+		, isStatic(transform.isStatic)
+		, parent(transform.parent)
+		, status(TransformUpdateStatus::None)
+		, name(transform.name) {
 
 		resetMatrix();
 
@@ -70,48 +102,84 @@ namespace geeL {
 
 
 	Transform::~Transform() {
-		for (auto it = children.begin(); it != children.end(); it++)
+		for (auto it(children.begin()); it != children.end(); it++)
 			delete *it;
 	}
 
 
 
 	glm::vec3 Transform::getPosition() const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		return position;
 	}
 
 	glm::quat Transform::getRotation() const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		return rotation;
 	}
 
 	glm::vec3 Transform::getScaling() const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		return scaling;
 	}
 
 
 	glm::vec3 Transform::getForwardDirection() const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		return forward;
 	}
 
 	glm::vec3 Transform::getRightDirection() const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		return right;
 	}
 
 	glm::vec3 Transform::getUpDirection() const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		return up;
 	}
 
 	glm::mat4 Transform::getMatrix() const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		return matrix;
 	}
 
 	
 	vec3 Transform::getEulerAngles() const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		return glm::eulerAngles(rotation);
 	}
 
 
 	void Transform::setPosition(const vec3& position) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		if (!isStatic && !VectorExtension::equals(this->position, position)) {
 			this->position = position;
 
@@ -124,6 +192,10 @@ namespace geeL {
 	}
 
 	void Transform::setRotation(const glm::quat& quaternion) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		if (!isStatic && !VectorExtension::equals(rotation, quaternion)) {
 			rotation = quaternion;
 			rotationMatrix = glm::toMat4(rotation);
@@ -134,6 +206,10 @@ namespace geeL {
 	}
 
 	void Transform::setForward(const vec3& value) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		forward = value;
 		right = glm::cross(up, value);
 		up = glm::cross(value, right);
@@ -156,6 +232,10 @@ namespace geeL {
 	}
 
 	void Transform::setMatrix(const mat4& matrix) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		if (isStatic) return;
 
 		//Extract position from matrix
@@ -198,6 +278,10 @@ namespace geeL {
 	}
 
 	void Transform::setMatrix(const mat4&& matrix) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		if (isStatic) return;
 
 		//Extract position from matrix
@@ -251,6 +335,10 @@ namespace geeL {
 	}
 
 	void Transform::setEulerAngles(const vec3& eulerAngles) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		if (!isStatic && !VectorExtension::equals(glm::eulerAngles(rotation), eulerAngles)) {
 			setEulerAnglesInternal(eulerAngles);
 			status = TransformUpdateStatus::NeedsUpdate;
@@ -258,6 +346,10 @@ namespace geeL {
 	}
 
 	void Transform::setScaling(const vec3& scaling) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		if (!isStatic && !VectorExtension::equals(this->scaling, scaling)) {
 			this->scaling = scaling;
 
@@ -271,6 +363,10 @@ namespace geeL {
 
 
 	void Transform::translate(const vec3& translation) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		if (isStatic) return;
 
 		position += translation;
@@ -283,6 +379,10 @@ namespace geeL {
 	}
 
 	void Transform::rotate(const vec3& axis, float angle) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		if (isStatic) return;
 
 		glm::quat localRotation;
@@ -303,6 +403,10 @@ namespace geeL {
 	}
 
 	void Transform::scale(const vec3& scalar) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		if (isStatic) return;
 
 		scaling += scalar;
@@ -315,6 +419,10 @@ namespace geeL {
 	}
 
 	mat4 Transform::lookAt() const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		return glm::lookAt(position, position + forward, up);
 	}
 
@@ -335,6 +443,10 @@ namespace geeL {
 	}
 
 	void Transform::update() {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		//Update transformation matrix if position, rotation or scale has
 		//been updated during the current cycle (since last 'update' call)
 		if (status == TransformUpdateStatus::NeedsUpdate 
@@ -355,6 +467,10 @@ namespace geeL {
 	}
 
 	void Transform::bind(const Shader& shader, const std::string& name) const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		shader.bind<glm::mat4>(name, matrix);
 	}
 
@@ -363,14 +479,26 @@ namespace geeL {
 	}
 
 	bool Transform::operator==(const Transform& b) const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		return this == &b;
 	}
 
 	bool Transform::operator!=(const Transform& b) const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		return this != &b;
 	}
 
 	Transform& Transform::operator=(const Transform& other) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		if (this != &other)
 			*this = std::move(Transform(other));
 
@@ -378,10 +506,18 @@ namespace geeL {
 	}
 
 	unsigned int Transform::getID() const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		return id;
 	}
 
 	void Transform::addChangeListener(function<void(const Transform&)> listener) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		changeListener.push_back(listener);
 	}
 
@@ -394,10 +530,18 @@ namespace geeL {
 	}
 
 	Transform* Transform::GetParent() const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		return parent;
 	}
 
 	void Transform::iterateChildren(std::function<void(Transform&)> function) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		for (auto it(children.begin()); it != children.end(); it++)
 			function(**it);
 	}
@@ -408,6 +552,10 @@ namespace geeL {
 	}
 
 	Transform& Transform::AddChild(Transform* child) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		children.push_back(child);
 		child->ChangeParent(*this);
 
@@ -415,10 +563,18 @@ namespace geeL {
 	}
 
 	void Transform::RemoveChild(Transform& child) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		children.remove(&child);
 	}
 
 	void Transform::ChangeParent(Transform& newParent) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		if (&newParent != parent) {
 			if (parent != nullptr)
 				parent->RemoveChild(*this);
@@ -433,15 +589,27 @@ namespace geeL {
 
 
 	const string& Transform::getName() const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		return name;
 	}
 
 	void Transform::setName(const string& name) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		this->name = name;
 	}
 
 
 	std::string Transform::toString() const {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
 		return "Transform " + name + ": " + std::to_string(id) + "\n"
 			+ "--Position: " + VectorExtension::vectorString(position) + "\n"
 			+ "--Rotation: " + VectorExtension::vectorString(glm::eulerAngles(rotation)) + "\n"

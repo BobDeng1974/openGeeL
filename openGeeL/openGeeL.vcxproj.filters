@@ -426,9 +426,6 @@
     <ClCompile Include="application\threading.cpp">
       <Filter>application</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\transformation\threadedtransform.cpp">
-      <Filter>renderer\transformation</Filter>
-    </ClCompile>
     <ClCompile Include="application\inputmanager.cpp">
       <Filter>application</Filter>
     </ClCompile>
@@ -910,9 +907,6 @@
     </ClInclude>
     <ClInclude Include="application\threading.h">
       <Filter>application</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\transformation\threadedtransform.h">
-      <Filter>renderer\transformation</Filter>
     </ClInclude>
     <ClInclude Include="application\inputmanager.h">
       <Filter>application</Filter>
