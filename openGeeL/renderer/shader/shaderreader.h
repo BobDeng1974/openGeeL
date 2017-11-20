@@ -8,11 +8,19 @@ namespace geeL {
 	class Shader;
 	class ShaderProvider;
 
+
+	class FileReader {
+
+	public:
+		//Read code from file
+		static std::string readFile(const char* path);
+
+	};
+
+
 	class ShaderFileReader {
 
 	public:
-		//Read shader code from file
-		static std::string readShaderFile(const char * shaderPath);
 
 		//Apply preprocessing to shader code. Specifically, include directives with the 
 		//form '#include <path/to/file.glsl'  will be replaced with content of actual file

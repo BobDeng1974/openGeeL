@@ -159,9 +159,9 @@ public:
 
 			//Fake subsurface scattering with gaussian blur
 			SeparatedGaussian& sss = SeparatedGaussian();
-			sss.setSigmaR(2.2f / 2.f);
-			sss.setSigmaG(1.1f / 2.f);
-			sss.setSigmaB(3.f / 2.f);
+			sss.setSigmaR(1.1f);
+			sss.setSigmaG(0.6f);
+			sss.setSigmaB(1.5f);
 			SeparatedGaussianSnippet& ssssnip = SeparatedGaussianSnippet(sss);
 			AdditiveWrapper& additiveSSS = AdditiveWrapper(sss);
 			renderer.addEffect(additiveSSS);

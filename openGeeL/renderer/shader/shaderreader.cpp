@@ -13,7 +13,7 @@ typedef pair<size_t, string> IndexedMatch;
 
 namespace geeL {
 
-	string ShaderFileReader::readShaderFile(const char * shaderPath) {
+	string FileReader::readFile(const char * shaderPath) {
 		string shaderCode;
 		ifstream shaderFile;
 		shaderFile.exceptions(ifstream::badbit);
@@ -67,7 +67,7 @@ namespace geeL {
 			else {
 				includedFiles.insert(filePath);
 
-				string includeCode = ShaderFileReader::readShaderFile(filePath.c_str());
+				string includeCode = FileReader::readFile(filePath.c_str());
 				preprocessIncludes(includeCode, includedFiles);
 				file.replace(file.find(current), current.length(), "\n" + includeCode + "\n\n");
 			}

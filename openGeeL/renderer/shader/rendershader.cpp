@@ -27,8 +27,8 @@ namespace geeL {
 
 
 	void RenderShader::init(const char* vertexPath, const char* fragmentPath, ShaderProvider* const provider) {
-		string vertexCode = ShaderFileReader::readShaderFile(vertexPath);
-		string fragmentCode = ShaderFileReader::readShaderFile(fragmentPath);
+		string vertexCode = FileReader::readFile(vertexPath);
+		string fragmentCode = FileReader::readFile(fragmentPath);
 
 		ShaderFileReader::preprocessShaderString(*this, vertexCode, vertexPath, provider);
 		ShaderFileReader::preprocessShaderString(*this, fragmentCode, fragmentPath, provider);
@@ -82,9 +82,9 @@ namespace geeL {
 	}
 
 	void RenderShader::init(const char* vertexPath, const char* geometryPath, const char* fragmentPath, ShaderProvider* const provider) {
-		string vertexCode = ShaderFileReader::readShaderFile(vertexPath);
-		string geometryCode = ShaderFileReader::readShaderFile(geometryPath);
-		string fragmentCode = ShaderFileReader::readShaderFile(fragmentPath);
+		string vertexCode = FileReader::readFile(vertexPath);
+		string geometryCode = FileReader::readFile(geometryPath);
+		string fragmentCode = FileReader::readFile(fragmentPath);
 
 		ShaderFileReader::preprocessShaderString(*this, vertexCode, vertexPath, provider);
 		ShaderFileReader::preprocessShaderString(*this, geometryCode, geometryPath, provider);
