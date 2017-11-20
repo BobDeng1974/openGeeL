@@ -72,7 +72,7 @@ namespace geeL {
 		unsigned int allocOffset = 1; //Offset in 1D data structure to free space (Where nodes of next level will be allocated)
 		unsigned int dataHeight;
 
-		for (int i = 0; i < maxLevel; i++) {
+		for (unsigned int i = 0; i < maxLevel; i++) {
 			//Determine whether nodes should have children or not
 			flagShader->bind<int>("numVoxels", voxelizer.getVoxelAmount());
 			flagShader->bind<int>("level", i);
@@ -171,7 +171,7 @@ namespace geeL {
 		maxNodes = 1;
 		unsigned int currLevel = 1;
 
-		for (int i = 0; i < maxLevel; i++) {
+		for (unsigned int i = 0; i < maxLevel; i++) {
 			currLevel *= 8;
 			maxNodes += currLevel;
 		}

@@ -1,4 +1,3 @@
-#include <iostream>
 #include "sol.hpp"
 #include "sceneobject.h"
 #include "luatypes.h"

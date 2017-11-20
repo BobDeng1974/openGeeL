@@ -61,7 +61,7 @@ namespace geeL {
 			float roughness = (float)mip / (float)(mipLevels - 1);
 			conversionShader->bind<float>("roughness", roughness);
 			
-			frameBuffer.resize(std::pow(0.5f, mip));
+			frameBuffer.resize(std::powf(0.5f, mip));
 			frameBuffer.fill([&](unsigned int side) {
 				conversionShader->bind<glm::mat4>("view", views[side]);
 				SCREENCUBE.drawComplete();

@@ -21,7 +21,7 @@ namespace geeL {
 	}
 
 	void ContinuousThread::setApplication(const Application& app) {
-		assert(this->app == nullptr, "Can't attach thread to multiple applications");
+		assert(this->app == nullptr && "Can't attach thread to multiple applications");
 
 		this->app = &app;
 	}

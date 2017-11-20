@@ -10,7 +10,7 @@
 #include "gaussianblur.h"
 #include <iostream>
 
-const double PI = 3.14159265359;
+const float PI = 3.141592653;
 
 using namespace glm;
 using namespace std;
@@ -72,12 +72,12 @@ namespace geeL {
 
 		float s = 2.f * sigma * sigma;
 		float sum = 0.f;
-		for (int x = 0; x < kernelSize; x++) {
+		for (int x = 0; x < int(kernelSize); x++) {
 			kernel[x] = (exp(-(x * x) / s)) / (PI * s);
 			sum += (x == 0) ? kernel[x] : 2.f * kernel[x];
 		}
 
-		for (int x = 0; x < kernelSize; x++)
+		for (unsigned int x = 0; x < kernelSize; x++)
 			kernel[x] /= sum;
 
 		return kernel;

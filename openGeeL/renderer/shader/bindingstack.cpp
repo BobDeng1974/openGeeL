@@ -55,7 +55,7 @@ namespace geeL {
 	void TextureBindingStack::clearUnits(unsigned int start, unsigned int end) {
 
 		int layer = GL_TEXTURE0;
-		for (int i = start; i <= end; i++) {
+		for (unsigned int i = start; i <= end; i++) {
 			const TextureBinding* binding = bindings[i];
 
 			if (binding != nullptr) {

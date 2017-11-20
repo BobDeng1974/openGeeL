@@ -20,7 +20,7 @@ namespace geeL {
 	RenderTexture::RenderTexture(const Texture& other, Resolution resolution) 
 		: Texture2D(other.getColorType(), resolution) {
 
-		assert(other.getTextureType() == TextureType::Texture2D, "Texture has to be a 2D texture");
+		assert(other.getTextureType() == TextureType::Texture2D && "Texture has to be a 2D texture");
 		id = other.getTextureToken();
 	}
 

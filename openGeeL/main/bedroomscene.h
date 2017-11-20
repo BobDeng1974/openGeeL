@@ -24,7 +24,7 @@ public:
 			scene.setCamera(camera);
 
 			Transform& probeTransform = transformFactory.CreateTransform(vec3(0.5f, 7.1f, 5.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-			unsigned int probeSize = 12;
+			float probeSize = 12.f;
 			DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024, probeSize, probeSize, probeSize);
 
 			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/Tropical_Beach_3k.hdr");

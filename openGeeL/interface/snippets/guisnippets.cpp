@@ -25,19 +25,19 @@ namespace geeL {
 	}
 
 	int GUISnippets::drawBarIntegerLogarithmic(GUIContext * context, int value, int min, int max, int step, std::string name) {
-		int val  = log(1 + value);
-		int maxi = log(max);
+		float val  = log(1 + value);
+		float maxi = log(max);
 
 		nk_layout_row_dynamic(context, 30, 3);
 		nk_label(context, name.c_str(), NK_TEXT_CENTERED);
-		nk_slider_int(context, min, &val, max, step);
+		nk_slider_float(context, min, &val, max, step);
 
 		val = exp(val) - 1;
 
 		std::string valName = std::to_string(val);
 		nk_label(context, valName.c_str(), NK_TEXT_CENTERED);
 
-		return val;
+		return int(val);
 	}
 
 	float GUISnippets::drawBarFloat(GUIContext* context, float value, float min, float max, float step, std::string name) {
@@ -141,7 +141,7 @@ namespace geeL {
 
 	void GUISnippets::drawColor(GUIContext* context, glm::vec3& color) {
 
-		nk_color c = nk_rgb(color.r * 256.f, color.g * 256.f, color.b * 256.f);
+		nk_color c = nk_rgb(int(color.r * 256.f), int(color.g * 256.f), int(color.b * 256.f));
 		if (nk_combo_begin_color(context, c, nk_vec2(nk_widget_width(context), 400))) {
 			nk_layout_row_dynamic(context, 120, 1);
 			c = nk_color_picker(context, c, NK_RGB);
@@ -192,7 +192,7 @@ namespace geeL {
 
 		nk_layout_row_dynamic(context, 30, 3);
 		nk_label(context, "Resolution", NK_TEXT_CENTERED);
-		nk_slider_int(context, 0, &newIndex, getRenderResolutionCount() - 1, 1);
+		nk_slider_int(context, 0, &newIndex, int(getRenderResolutionCount()) - 1, 1);
 
 		ResolutionPreset newResolution(getRenderResolution(newIndex));
 
