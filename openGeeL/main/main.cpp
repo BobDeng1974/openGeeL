@@ -9,15 +9,6 @@
 #include "testscene.h"
 #include "capsulescene.h"
 
-#include "lua.hpp"
-#include "sol.hpp"
-
-class vars {
-public:
-
-	int boop = 0;
-};
-
 int main() {
 	//BedroomScene::draw();
 	//DeerScene::draw();
@@ -26,17 +17,7 @@ int main() {
 	//SponzaGIScene::draw();
 	//ScienceScene::draw();
 	//CharacterViewer::draw();
-	//CapsuleScene::draw();
-
-	//lua_State* state = luaL_newstate();
-	//lua_close(state);
-
-	sol::state lua;
-	lua.new_usertype<vars>("vars", "boop", &vars::boop);
-	lua.script("beep = vars.new()\n"
-		"beep.boop = 1");
-
-	getchar();
+	CapsuleScene::draw();
 
 	//TestScene::draw();
 	//RaymarchTest::draw();
