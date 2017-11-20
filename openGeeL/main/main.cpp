@@ -9,6 +9,7 @@
 #include "testscene.h"
 #include "capsulescene.h"
 
+
 int main() {
 	//BedroomScene::draw();
 	//DeerScene::draw();
@@ -16,8 +17,9 @@ int main() {
 	//SponzaScene::draw();
 	//SponzaGIScene::draw();
 	//ScienceScene::draw();
-	//CharacterViewer::draw();
-	CapsuleScene::draw();
+	CharacterViewer::draw();
+	//CapsuleScene::draw();
+
 
 	//TestScene::draw();
 	//RaymarchTest::draw();

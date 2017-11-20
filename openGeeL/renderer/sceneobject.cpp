@@ -56,4 +56,8 @@ namespace geeL {
 		this->name = std::move(name);
 	}
 
+	Transform& SceneObject::getTransform() {
+		return transform;
+	}
+
 }

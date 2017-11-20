@@ -78,6 +78,8 @@
 #include "renderer/rendercontext.h"
 #include "renderer/deferredrenderer.h"
 
+#include "scripting/luacomp.h"
+
 #include "texturing/brdfIntMap.h"
 #include "texturing/envmap.h"
 #include "texturing/texture.h"

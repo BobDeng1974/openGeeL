@@ -483,6 +483,12 @@
     <ClCompile Include="renderer\framebuffer\rendertarget.cpp">
       <Filter>renderer\framebuffer</Filter>
     </ClCompile>
+    <ClCompile Include="application\scripting\luacomp.cpp">
+      <Filter>application\scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="application\scripting\luatypes.cpp">
+      <Filter>application\scripting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -976,6 +982,12 @@
     </ClInclude>
     <ClInclude Include="renderer\framebuffer\rendertarget.h">
       <Filter>renderer\framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="application\scripting\luacomp.h">
+      <Filter>application\scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="application\scripting\luatypes.h">
+      <Filter>application\scripting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

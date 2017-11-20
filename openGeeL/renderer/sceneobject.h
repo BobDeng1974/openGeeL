@@ -46,6 +46,8 @@ namespace geeL {
 		std::string getName() const;
 		void setName(const std::string& name);
 
+		Transform& getTransform();
+
 	protected:
 		Property<bool> active;
 		std::string name;

@@ -155,6 +155,8 @@
     <ClCompile Include="application\appmanager.cpp" />
     <ClCompile Include="application\configuration.cpp" />
     <ClCompile Include="application\inputmanager.cpp" />
+    <ClCompile Include="application\scripting\luacomp.cpp" />
+    <ClCompile Include="application\scripting\luatypes.cpp" />
     <ClCompile Include="application\threading.cpp" />
     <ClCompile Include="interface\elements\objectlister.cpp" />
     <ClCompile Include="interface\elements\posteffectlister.cpp" />
@@ -294,6 +296,8 @@
     <ClInclude Include="application\inputmanager.h" />
     <ClInclude Include="application\objectwrapper.h" />
     <ClInclude Include="application\scripting\component.h" />
+    <ClInclude Include="application\scripting\luacomp.h" />
+    <ClInclude Include="application\scripting\luatypes.h" />
     <ClInclude Include="application\threading.h" />
     <ClInclude Include="interface\elements\objectlister.h" />
     <ClInclude Include="interface\elements\posteffectlister.h" />
