@@ -82,6 +82,9 @@ namespace geeL {
 	void GUIRenderer::addElement(GUIElement& element) {
 		elements.push_back(std::pair<bool, GUIElement*>(false, &element));
 	}
+	
+	
+	
 	void GUIRenderer::addSystemInformation(float x, float y, float width, float height) {
 		elements.push_back(std::pair<bool, GUIElement*>(true, 
 			new SystemInformation(window, renderer, x, y, width, height)));

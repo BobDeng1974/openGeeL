@@ -27,17 +27,20 @@ namespace geeL {
 	struct ShadowMapConfiguration {
 
 	public:
-		const ShadowMapType type;
-		const float shadowBias;
-		const float farPlane;
-		const float softShadowScale;
-		const float intensity;
-		const unsigned int softShadowResolution;
-		const ShadowmapResolution resolution;
+		ShadowMapType type;
+		float shadowBias;
+		float farPlane;
+		float softShadowScale;
+		float intensity;
+		unsigned int softShadowResolution;
+		ShadowmapResolution resolution;
 
 		ShadowMapConfiguration();
+		ShadowMapConfiguration(const ShadowMapConfiguration& other);
 		ShadowMapConfiguration(float bias, ShadowMapType type, ShadowmapResolution resolution = ShadowmapResolution::Adaptive,
 			float softShadowScale = 1.f, unsigned int softShadowResolution = 8, float farPlane = 100, float intensity = 1.f);
+
+		ShadowMapConfiguration& operator=(const ShadowMapConfiguration& other);
 
 		bool useShadowMap() const;
 

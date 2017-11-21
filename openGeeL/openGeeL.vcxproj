@@ -155,6 +155,7 @@
     <ClCompile Include="application\appmanager.cpp" />
     <ClCompile Include="application\configuration.cpp" />
     <ClCompile Include="application\inputmanager.cpp" />
+    <ClCompile Include="application\luaconfig.cpp" />
     <ClCompile Include="application\scripting\luacomp.cpp" />
     <ClCompile Include="application\scripting\luatypes.cpp" />
     <ClCompile Include="application\threading.cpp" />
@@ -294,6 +295,7 @@
     <ClInclude Include="application\appmanager.h" />
     <ClInclude Include="application\configuration.h" />
     <ClInclude Include="application\inputmanager.h" />
+    <ClInclude Include="application\luaconfig.h" />
     <ClInclude Include="application\objectwrapper.h" />
     <ClInclude Include="application\scripting\component.h" />
     <ClInclude Include="application\scripting\luacomp.h" />

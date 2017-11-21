@@ -1,3 +1,4 @@
+#include "envcubemap.h"
 #include "irrmap.h"
 #include "reflectionprobe.h"
 #include "iblmap.h"
@@ -21,10 +22,19 @@ namespace geeL {
 		}
 	}
 
-	CubeBuffer & CubeMapFactory::getBuffer() {
+	CubeBuffer& CubeMapFactory::getBuffer() {
 		return buffer;
 	}
 
+
+	EnvironmentCubeMap& CubeMapFactory::createEnvironmentCubeMap(EnvironmentMap& environmentMap, 
+		unsigned int resolution) {
+
+		EnvironmentCubeMap* map = new EnvironmentCubeMap(environmentMap, getBuffer(), resolution);
+		cubeMaps.push_back(map);
+
+		return *map;
+	}
 
 	IrradianceMap& CubeMapFactory::createIrradianceMap(const CubeMap& environmentMap,
 		unsigned int resolution) {

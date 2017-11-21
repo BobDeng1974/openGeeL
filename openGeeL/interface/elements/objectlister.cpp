@@ -24,7 +24,7 @@ namespace geeL {
 		float height) 
 			: GUIElement(window, x, y, width, height)
 			, scene(scene) {
-	
+
 		scene.iterRenderObjects([&](MeshRenderer& renderer) {
 			add(renderer);
 		});

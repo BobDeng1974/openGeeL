@@ -1,3 +1,4 @@
+#include "luaconfig.h"
 #include "arthousescene.h"
 #include "bedroomscene.h"
 #include "characterviewer.h"
@@ -9,7 +10,6 @@
 #include "testscene.h"
 #include "capsulescene.h"
 
-
 int main() {
 	//BedroomScene::draw();
 	//DeerScene::draw();
@@ -19,7 +19,6 @@ int main() {
 	//ScienceScene::draw();
 	CharacterViewer::draw();
 	//CapsuleScene::draw();
-
 
 	//TestScene::draw();
 	//RaymarchTest::draw();

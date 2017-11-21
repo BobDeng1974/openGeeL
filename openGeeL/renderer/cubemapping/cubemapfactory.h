@@ -14,6 +14,8 @@ namespace geeL {
 	class BRDFIntegrationMap;
 	class DynamicCubeMap;
 	class DynamicIBLMap;
+	class EnvironmentMap;
+	class EnvironmentCubeMap;
 	class IBLMap;
 	class IrradianceMap;
 	class PrefilteredEnvironmentMap;
@@ -31,6 +33,7 @@ namespace geeL {
 
 		CubeBuffer& getBuffer();
 
+		EnvironmentCubeMap& createEnvironmentCubeMap(EnvironmentMap& environmentMap, unsigned int resolution = 512);
 		IrradianceMap& createIrradianceMap(const CubeMap& environmentMap, unsigned int resolution = 32);
 
 		PrefilteredEnvironmentMap& createPrefilteredEnvironmentMap(const CubeMap& environmentMap, 

@@ -1,0 +1,373 @@
+#include <list>
+#include <memory>
+#include "../application/configuration.h"
+#include "luaconfig.h"
+
+using namespace glm;
+using namespace std;
+
+namespace geeL {
+
+	LUAConfigurator::LUAConfigurator(const std::string& filePath) {
+		try {
+			state.script_file(filePath);
+		}
+		catch (sol::error e) {
+			throw e.what();
+		}
+
+	}
+
+	void LUAConfigurator::run() {
+
+		//Window initalization
+
+		unsigned int width  = state.get_or<unsigned int>("width", 1920);
+		unsigned int height = state.get_or<unsigned int>("height", 1080);
+		const string& name = state.get_or<string>("name", "geeL");
+
+		const string& modeName = state.get_or<string>("mode", "Windowed");
+		WindowMode mode = WindowMode::Windowed;
+		if (modeName == "Fullscreen")
+			mode = WindowMode::Fullscreen;
+		else if (modeName == "ResizableWindow")
+			mode = WindowMode::ResizableWindow;
+		else if (modeName == "BorderlessWindow")
+			mode = WindowMode::BorderlessWindow;
+
+		RenderWindow& window = RenderWindow(name.c_str(), Resolution(width, height), mode);
+
+
+		auto init = [&window, this](Application& app, PostEffectDrawer& renderer, GUIRenderer& gui, RenderScene& scene,
+			LightManager& lightManager, TransformFactory& transformFactory, MeshFactory& meshFactory, MaterialFactory& materialFactory,
+			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
+
+
+			//Camera initalization
+
+			PerspectiveCamera* camera = nullptr;
+			auto& cam = state["camera"];
+			if (cam.valid()) {
+
+				float x = cam["position"]["x"].get_or(0.f);
+				float y = cam["position"]["y"].get_or(0.f);
+				float z = cam["position"]["z"].get_or(0.f);
+				vec3 position(x, y, z);
+
+				x = cam["rotation"]["x"].get_or(0.f);
+				y = cam["rotation"]["y"].get_or(0.f);
+				z = cam["rotation"]["z"].get_or(0.f);
+				vec3 rotation(x, y, z);
+
+				float fov  = cam["fov"].get_or(60.f);
+				float far  = cam["far"].get_or(0.01f);
+				float near = cam["near"].get_or(100.f);
+				
+				Transform& cameraTransform = transformFactory.CreateTransform(position, rotation, vec3(1.f));
+				camera = new PerspectiveCamera(cameraTransform, fov, window.getWidth(), window.getHeight(), near, far);
+				scene.setCamera(*camera);
+				
+				bool movable = cam["movable"].get_or(false);
+				if (movable) {
+					float speed = cam["speed"].get_or(1.f);
+					float sensi = cam["sensitivity"].get_or(1.f);
+
+					camera->addComponent<MovableCamera>(MovableCamera(speed, sensi));
+				}
+			}
+
+
+			//Skybox initalization
+
+			Skybox* skybox = nullptr;
+			auto& sky = state["skybox"];
+			if (sky.valid()) {
+
+				auto& path = sky["path"];
+				assert(path.valid() && "No path specified for given skybox");
+
+				unsigned int resolution = sky["resolution"].get_or(512);
+				bool useIBL = sky["useIBL"].get_or(false);
+				bool drawIrradiance = sky["drawIrradiance"].get_or(false);
+
+				EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap(path);
+				EnvironmentCubeMap& envCubeMap = cubeMapFactory.createEnvironmentCubeMap(preEnvMap, resolution);
+
+				if (useIBL) {
+					IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
+
+					if (drawIrradiance)
+						skybox = new Skybox(iblMap.getIrradianceMap());
+					else
+						skybox = new Skybox(envCubeMap);
+
+					lightManager.addReflectionProbe(iblMap);
+				}
+				else
+					skybox = new Skybox(envCubeMap);
+
+				scene.setSkybox(*skybox);
+			}
+
+
+			//Reflection probes initalization
+
+			auto& probes = state["reflectionprobes"];
+			if (probes.valid()) {
+
+				int i = 1;
+				auto* pro = &probes[i];
+
+				while (pro->valid()) {
+					auto& p = *pro;
+
+					float x = p["position"]["x"].get_or(0.f);
+					float y = p["position"]["y"].get_or(0.f);
+					float z = p["position"]["z"].get_or(0.f);
+					vec3 position(x, y, z);
+
+					x = p["rotation"]["x"].get_or(0.f);
+					y = p["rotation"]["y"].get_or(0.f);
+					z = p["rotation"]["z"].get_or(0.f);
+					vec3 rotation(x, y, z);
+
+					unsigned int width  = p["dimensions"]["width"].get_or(10);
+					unsigned int height = p["dimensions"]["height"].get_or(10);
+					unsigned int depth  = p["dimensions"]["depth"].get_or(10);
+					unsigned int resolution = p["resolution"].get_or(512);
+
+					Transform& probeTransform = transformFactory.CreateTransform(position, rotation, vec3(1.f));
+					DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 
+						resolution, width, height, depth);
+
+					lightManager.addReflectionProbe(probe);
+
+					pro = &probes[i];
+					i++;
+				}
+			}
+
+
+			//Mesh renderer initalization
+
+			auto& meshes = state["meshes"];
+			if (meshes.valid()) {
+				
+				int i = 1;
+				auto* mesh = &meshes[i];
+
+				while (mesh->valid()) {
+					auto& m = *mesh;
+
+					float x = m["position"]["x"].get_or(0.f);
+					float y = m["position"]["y"].get_or(0.f);
+					float z = m["position"]["z"].get_or(0.f);
+					vec3 position(x, y, z);
+
+					x = m["rotation"]["x"].get_or(0.f);
+					y = m["rotation"]["y"].get_or(0.f);
+					z = m["rotation"]["z"].get_or(0.f);
+					vec3 rotation(x, y, z);
+
+					x = m["scale"]["x"].get_or(1.f);
+					y = m["scale"]["y"].get_or(1.f);
+					z = m["scale"]["z"].get_or(1.f);
+					vec3 scale(x, y, z);
+
+					Transform& meshTransform = transformFactory.CreateTransform(position, rotation, scale);
+
+					auto& path = m["path"];
+					assert(path.valid() && "No path specified for given mesh renderer");
+					const string& filePath = path;
+					const string& name = m["name"].get_or<string>("Mesh");
+
+					MeshRenderer& meshRenderer = meshFactory.CreateMeshRenderer(
+						meshFactory.CreateStaticModel(filePath),
+						meshTransform, CullingMode::cullFront, name);
+
+					scene.addMeshRenderer(meshRenderer);
+
+
+					mesh = &meshes[i];
+					i++;
+				}
+			}
+			
+
+			//Light initalization
+
+			auto& lights = state["lights"];
+			if (lights.valid()) {
+
+				int i = 1;
+				auto* light = &lights[i];
+
+				while (light->valid()) {
+					auto& l = *light;
+
+					float x = l["position"]["x"].get_or(0.f);
+					float y = l["position"]["y"].get_or(0.f);
+					float z = l["position"]["z"].get_or(0.f);
+					vec3 position(x, y, z);
+
+					x = l["rotation"]["x"].get_or(0.f);
+					y = l["rotation"]["y"].get_or(0.f);
+					z = l["rotation"]["z"].get_or(0.f);
+					vec3 rotation(x, y, z);
+
+					x = l["color"]["r"].get_or(0.f);
+					y = l["color"]["g"].get_or(0.f);
+					z = l["color"]["b"].get_or(0.f);
+					vec3 color(x, y, z);
+
+					float intensity = l["intensity"].get_or(1.f);
+					
+					ShadowMapConfiguration config = noShadowMapConfig;
+					bool useShadowmap = l["useShadowmap"].get_or(false);
+					if (useShadowmap) {
+						float shadowBias = l["shadowBias"].get_or(0.f);
+						float shadowRes  = l["softShadowResolution"].get_or(1.f);
+
+						const string& typeString = l["shadowmapType"].get_or<string>("Hard");
+						ShadowMapType type = (typeString == "Hard") ? ShadowMapType::Hard : ShadowMapType::Soft;
+
+						const string& resString = l["shadowResolution"].get_or<string>("Medium");
+						ShadowmapResolution resolution = ShadowmapResolution::Medium;
+
+						if (resString == "Adaptive")
+							resolution = ShadowmapResolution::Adaptive;
+						else if (resString == "Tiny")
+							resolution = ShadowmapResolution::Tiny;
+						else if (resString == "Small")
+							resolution = ShadowmapResolution::Small;
+						else if (resString == "High")
+							resolution = ShadowmapResolution::High;
+						else if (resString == "VeryHigh")
+							resolution = ShadowmapResolution::VeryHigh;
+						else if (resString == "Huge")
+							resolution = ShadowmapResolution::Huge;
+
+						config = ShadowMapConfiguration(shadowBias, type, resolution, 2.f, shadowRes);
+					}
+
+					Transform& lightTransform = transformFactory.CreateTransform(position, rotation, vec3(1.f));
+
+					auto& type = l["type"];
+					assert(type.valid() && "No type specified for given light");
+					const string& typeString = type;
+
+					if (typeString == "Spot") {
+						float angle = l["angle"].get_or(glm::cos(glm::radians(25.5f)));
+						float outerAngle = l["outerAngle"].get_or(glm::cos(glm::radians(27.5f)));
+
+						lightManager.addSpotlight(lightTransform, color * intensity, angle, outerAngle, config);
+					}
+					else if (typeString == "Directional")
+						lightManager.addDirectionalLight(*camera, lightTransform, color * intensity, config);
+					else if (typeString == "Point")
+						lightManager.addPointLight(lightTransform, color * intensity, config);
+					else
+						std::cout << "Valid light types : { Point, Spot, Directional }\n";
+
+					light = &lights[i];
+					i++;
+				}
+			}
+			
+
+			//GUI initialization
+			
+			auto& guiInit = state["gui"];
+			if (guiInit.valid()) {
+
+				bool showObjects = guiInit["showObjects"].get_or(false);
+				bool showEffects = guiInit["showEffects"].get_or(false);
+				bool showSystem  = guiInit["showSystem"].get_or(false);
+
+				if (showObjects) {
+					unique_ptr<ObjectLister> objectLister(new ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f));
+					objectLister->add(*camera);
+					gui.addElement<ObjectLister>(objectLister);
+				}
+				
+				if (showEffects) {
+					unique_ptr<PostProcessingEffectLister> postLister(new PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f));
+					gui.addElement(postLister);
+				}
+				
+				if(showSystem)
+					gui.addSystemInformation(0.01f, 0.74f, 0.17f, 0.145f);
+
+			}
+
+
+			//Post processing initialization
+
+			float exposure = state["exposure"].get_or(1.f);
+			def.setExposure(exposure);
+
+
+			list<PostProcessingEffect*> effects;
+
+
+			auto& ssaoInit = state["ssao"];
+			if (ssaoInit.valid()) {
+
+				float radius = state["radius"].get_or(1.f);
+				float blurSigma = state["blurSigma"].get_or(5.f);
+				float blurFactor = state["blurFactor"].get_or(5.f);
+
+				BilateralFilter* blur = new BilateralFilter(blurSigma, blurFactor);
+				SSAO* ssao = new SSAO(*blur, radius);
+				renderer.addEffect(*ssao);
+				scene.addRequester(*ssao);
+
+				effects.push_back(blur);
+				effects.push_back(ssao);
+			}
+
+			auto& iblInit = state["ibl"];
+			if (iblInit.valid()) {
+				ImageBasedLighting* ibl = new ImageBasedLighting(scene);
+				renderer.addEffect(*ibl);
+				effects.push_back(ibl);
+			}
+
+
+			auto& fxaaInit = state["fxaa"];
+			if (fxaaInit.valid()) {
+				float minColorDiff = fxaaInit["minColorDiff"].get_or(0.f);
+				float fxaaMul = fxaaInit["fxaaMul"].get_or(0.f);
+
+				FXAA* fxaa = new FXAA(minColorDiff, fxaaMul);
+				renderer.addEffect(*fxaa, DrawTime::Late);
+				effects.push_back(fxaa);
+			}
+
+			//Run application
+
+			app.run();
+
+
+			//Cleanup after exiting application
+
+			if (camera != nullptr) delete camera;
+			if (skybox != nullptr) delete skybox;
+
+			for (auto effect(effects.begin()); effect != effects.end(); effect++)
+				delete *effect;
+		};
+
+
+		bool usePhysics  = state.get_or<int>("usePhysics", false);
+		bool useEmissive = state.get_or<int>("useEmissive", false);
+
+		GBufferContent content = useEmissive ? GBufferContent::DefaultEmissive : GBufferContent::Default;
+		PhysicsType physicsType = usePhysics ? PhysicsType::World : PhysicsType::None;
+
+		Configuration config(window, init, content, physicsType);
+		config.run();
+	}
+
+
+}

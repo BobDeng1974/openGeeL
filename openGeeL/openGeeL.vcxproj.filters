@@ -489,6 +489,9 @@
     <ClCompile Include="application\scripting\luatypes.cpp">
       <Filter>application\scripting</Filter>
     </ClCompile>
+    <ClCompile Include="application\luaconfig.cpp">
+      <Filter>application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -988,6 +991,9 @@
     </ClInclude>
     <ClInclude Include="application\scripting\luatypes.h">
       <Filter>application\scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="application\luaconfig.h">
+      <Filter>application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
