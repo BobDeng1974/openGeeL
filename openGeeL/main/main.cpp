@@ -1,3 +1,4 @@
+#include <string>
 #include "luaconfig.h"
 #include "arthousescene.h"
 #include "bedroomscene.h"
@@ -10,7 +11,20 @@
 #include "testscene.h"
 #include "capsulescene.h"
 
-int main() {
+int main(int argc, char* argv[]) {
+	if (argc >= 2) {
+		 std::string argument = argv[1];
+
+		if (argument == "-h" || argument == "-help")
+			std::cout << "Pass path of lua config file as first argument to run given scene\n";
+		else {
+			LUAConfigurator config(argument);
+			config.run();
+		}
+
+		return 0;
+	}
+
 	//BedroomScene::draw();
 	//DeerScene::draw();
 	//ArthouseScene::draw();
