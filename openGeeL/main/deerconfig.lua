@@ -52,7 +52,8 @@ meshes = {
 		scale 	 = { x = 0.1, 	y =  0.1, z =  0.1 },
 
 		path = "resources/deer/scene2.obj",
-		name = "Deer"
+		name = "Deer",
+		separate = false
 	},
 
 }
@@ -84,8 +85,59 @@ ibl = {}
 ssao = {
 	radius = 0.5,
 	blurSigma = 4,
-	blurFactor = 0.291
+	blurFactor = 0.291,
+	resolution = 0.5
 }
+
+ssrr = {
+	
+	stepCount = 75,
+	stepSize = 0.01,
+	stepGain = 1.02,
+
+	blurSigma = 1.3,
+	resolution = 0.66
+}
+
+--[[
+dof = {
+	aperture = 60,
+	blurSigma = 10,
+	resolution = 0.4
+}
+
+colorcorrect = {
+	r = 0.5,
+	g = 0.3,
+	b = 0.9,
+
+	hue 	   = 1,
+	saturation = 1,
+	brightness = 1,
+
+	--Chromatic aberration
+	cr = 0.1,
+	cg = 0,
+	cb = 0
+}
+
+godray = {
+	position = { x = -40, y = 30, z = -50 },
+
+	sampleCount = 20,
+	blurSigma = 4,
+	blurFactor = 0.291,
+	resolution = 0.5
+
+}
+
+bloom = {
+	scatter = 0.5,
+	blurSigma = 3,
+	resolution = 0.5
+}
+
+--]]
 
 fxaa = {
 	minColorDiff = 0,

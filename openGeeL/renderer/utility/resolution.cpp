@@ -18,7 +18,6 @@ namespace geeL {
 	};
 
 
-
 	ResolutionScale getResolutionScale(ResolutionPreset resolution) {
 
 		switch (resolution) {
@@ -30,6 +29,7 @@ namespace geeL {
 
 		return ResolutionScale((float)resolution / 100.f);
 	}
+
 
 	size_t getRenderResolutionCount() {
 		return scales.size();
@@ -49,6 +49,19 @@ namespace geeL {
 			return ResolutionPreset::FULLSCREEN;
 
 		return scales[index];
+	}
+
+	ResolutionPreset getRenderResolution(ResolutionScale resolution) {
+		for (int i = 0; i < scales.size(); i++) {
+			ResolutionScale scale = getResolutionScale(scales[i]);
+
+			//Ceil value
+			//Note: Only works if scale vector is ordered
+			if (resolution.get() <= scale.get())
+				return scales[i];
+		}
+
+		return ResolutionPreset::FULLSCREEN;
 	}
 
 }

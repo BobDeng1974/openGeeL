@@ -26,6 +26,7 @@ namespace geeL {
 
 	ResolutionScale getResolutionScale(ResolutionPreset resolution);
 	ResolutionPreset getRenderResolution(size_t index);
+	ResolutionPreset getRenderResolution(ResolutionScale resolution);
 	size_t getRenderResolutionCount();
 	size_t getRenderResolutionIndex(ResolutionPreset resolution);
 	

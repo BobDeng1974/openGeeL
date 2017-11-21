@@ -181,12 +181,26 @@ namespace geeL {
 					const string& filePath = path;
 					const string& name = m["name"].get_or<string>("Mesh");
 
-					MeshRenderer& meshRenderer = meshFactory.CreateMeshRenderer(
-						meshFactory.CreateStaticModel(filePath),
-						meshTransform, CullingMode::cullFront, name);
+					bool separate = m["separate"].get_or(false);
 
-					scene.addMeshRenderer(meshRenderer);
+					if (separate) {
+						std::list<MeshRenderer*> renderers = std::move(meshFactory.CreateMeshRenderers(
+							meshFactory.CreateStaticModel(filePath), 
+							materialFactory.getDeferredShader(), 
+							meshTransform, CullingMode::cullFront));
 
+						for (auto it(renderers.begin()); it != renderers.end(); it++) {
+							MeshRenderer& renderer = **it;
+							scene.addMeshRenderer(renderer);
+						}
+					}
+					else {
+						MeshRenderer& meshRenderer = meshFactory.CreateMeshRenderer(
+							meshFactory.CreateStaticModel(filePath),
+							meshTransform, CullingMode::cullFront, name);
+
+						scene.addMeshRenderer(meshRenderer);
+					}
 
 					mesh = &meshes[i];
 					i++;
@@ -313,12 +327,13 @@ namespace geeL {
 			auto& ssaoInit = state["ssao"];
 			if (ssaoInit.valid()) {
 
-				float radius = state["radius"].get_or(1.f);
-				float blurSigma = state["blurSigma"].get_or(5.f);
-				float blurFactor = state["blurFactor"].get_or(5.f);
+				float radius = ssaoInit["radius"].get_or(1.f);
+				float blurSigma = ssaoInit["blurSigma"].get_or(5.f);
+				float blurFactor = ssaoInit["blurFactor"].get_or(5.f);
+				float resolution = ssaoInit["resolution"].get_or(1.f);
 
 				BilateralFilter* blur = new BilateralFilter(blurSigma, blurFactor);
-				SSAO* ssao = new SSAO(*blur, radius);
+				SSAO* ssao = new SSAO(*blur, radius, getRenderResolution(ResolutionScale(resolution)));
 				renderer.addEffect(*ssao);
 				scene.addRequester(*ssao);
 
@@ -326,11 +341,120 @@ namespace geeL {
 				effects.push_back(ssao);
 			}
 
+
 			auto& iblInit = state["ibl"];
 			if (iblInit.valid()) {
 				ImageBasedLighting* ibl = new ImageBasedLighting(scene);
 				renderer.addEffect(*ibl);
 				effects.push_back(ibl);
+			}
+
+			auto& bloomInit = state["bloom"];
+			if (bloomInit.valid()) {
+
+				float scatter = bloomInit["scatter"].get_or(1.f);
+				float blurSigma = bloomInit["blurSigma"].get_or(5.f);
+				float resolution = bloomInit["resolution"].get_or(1.f);
+				ResolutionPreset resPreset = getRenderResolution(ResolutionScale(resolution));
+
+				BrightnessFilterCutoff* filter = new BrightnessFilterCutoff(scatter);
+				GaussianBlur* blur = new GaussianBlur(KernelSize::Large, blurSigma);
+				Bloom* bloom = new Bloom(*filter, *blur, resPreset, resPreset);
+				renderer.addEffect(*bloom, DrawTime::Late);
+
+				effects.push_back(filter);
+				effects.push_back(blur);
+				effects.push_back(bloom);
+			}
+
+
+			auto& ssrrInit = state["ssrr"];
+			if (ssrrInit.valid()) {
+
+				unsigned int stepCount = ssrrInit["stepCount"].get_or(60);
+				float stepSize = ssrrInit["stepSize"].get_or(0.2f);
+				float stepGain = ssrrInit["stepGain"].get_or(1.02f);
+
+				float blurSigma = ssrrInit["blurSigma"].get_or(5.f);
+				float resolution = ssrrInit["resolution"].get_or(1.f);
+				ResolutionPreset resPreset = getRenderResolution(ResolutionScale(resolution));
+
+				GaussianBlur* blur = new GaussianBlur(KernelSize::Small, blurSigma);
+				SSRR* ssrr = new SSRR(stepCount, stepSize, stepGain);
+				BlurredPostEffect* ssrrSmooth = new BlurredPostEffect(*ssrr, *blur, resPreset, resPreset);
+
+				renderer.addEffect(*ssrrSmooth);
+				scene.addRequester(*ssrr);
+
+				effects.push_back(blur);
+				effects.push_back(ssrr);
+				effects.push_back(ssrrSmooth);
+			}
+
+
+			auto& dofInit = state["dof"];
+			if (dofInit.valid()) {
+
+				float aperture = dofInit["aperture"].get_or(10.f);
+				float blurSigma = dofInit["blurSigma"].get_or(2.f);
+				float resolution = dofInit["resolution"].get_or(0.5f);
+				ResolutionPreset resPreset = getRenderResolution(ResolutionScale(resolution));
+
+				DepthOfFieldBlur* blur = new DepthOfFieldBlur(0.1f, blurSigma);
+				DepthOfFieldBlurred* dof = new DepthOfFieldBlurred(*blur, camera->depth, aperture, 100.f, resPreset);
+				renderer.addEffect(*dof);
+
+				effects.push_back(blur);
+				effects.push_back(dof);
+			}
+
+
+			auto& godInit = state["godray"];
+			if (godInit.valid()) {
+
+				float x = godInit["position"]["x"].get_or(0.f);
+				float y = godInit["position"]["y"].get_or(0.f);
+				float z = godInit["position"]["z"].get_or(0.f);
+				vec3 position(x, y, z);
+
+				unsigned int sampleCount = godInit["sampleCount"].get_or(20);
+				float blurSigma = godInit["blurSigma"].get_or(5.f);
+				float blurFactor = godInit["blurFactor"].get_or(5.f);
+				float resolution = godInit["resolution"].get_or(1.f);
+				ResolutionPreset resPreset = getRenderResolution(ResolutionScale(resolution));
+
+				BilateralFilter* blur = new BilateralFilter(blurSigma, blurFactor);
+				GodRay* ray = new GodRay(position, sampleCount);
+				BlurredPostEffect* raySmooth = new BlurredPostEffect(*ray, *blur, resPreset, resPreset);
+				renderer.addEffect(*raySmooth, DrawTime::Late);
+				scene.addRequester(*ray);
+
+				effects.push_back(blur);
+				effects.push_back(ray);
+				effects.push_back(raySmooth);
+			}
+
+
+			auto& colorInit = state["colorcorrect"];
+			if (colorInit.valid()) {
+
+				float r = colorInit["r"].get_or(1.f);
+				float g = colorInit["g"].get_or(1.f);
+				float b = colorInit["b"].get_or(1.f);
+				float h = colorInit["hue"].get_or(1.f);
+				float s = colorInit["saturation"].get_or(1.f);
+				float v = colorInit["brightness"].get_or(1.f);
+
+				float cr = colorInit["cr"].get_or(0.f);
+				float cg = colorInit["cg"].get_or(0.f);
+				float cb = colorInit["cb"].get_or(0.f);
+
+				ColorCorrection* colorCorrect = new ColorCorrection(r, g, b, h, s, v);
+				colorCorrect->setDistortionDirection(glm::vec2(1.f, 0.f));
+				colorCorrect->setChromaticDistortion(glm::vec3(cr, cg, cb));
+				renderer.addEffect(*colorCorrect, DrawTime::Late);
+
+				effects.push_back(colorCorrect);
 			}
 
 
