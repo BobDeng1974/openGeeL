@@ -18,8 +18,11 @@ int main(int argc, char* argv[]) {
 		if (argument == "-h" || argument == "-help")
 			std::cout << "Pass path of lua config file as first argument to run given scene\n";
 		else {
-			LUAConfigurator config(argument);
-			config.run();
+			try {
+				LUAConfigurator config(argument);
+				config.run();
+			}
+			catch (exception e) {}
 		}
 
 		return 0;

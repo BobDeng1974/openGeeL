@@ -1,3 +1,4 @@
+#include <iostream>
 #include <list>
 #include <memory>
 #include "../application/configuration.h"
@@ -13,9 +14,9 @@ namespace geeL {
 			state.script_file(filePath);
 		}
 		catch (sol::error e) {
-			throw e.what();
+			std::cout << e.what() << "\n";
+			throw e;
 		}
-
 	}
 
 	void LUAConfigurator::run() {

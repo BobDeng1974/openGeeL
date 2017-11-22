@@ -1,3 +1,4 @@
+#include <iostream>
 #include "sol.hpp"
 #include "sceneobject.h"
 #include "luatypes.h"
@@ -14,7 +15,8 @@ namespace geeL {
 			state->script_file(scriptPath);
 		}
 		catch (sol::error e) {
-			throw e.what();
+			std::cout << e.what() << "\n";
+			throw e;
 		}
 
 		LUATypes::addInputType(*state);
