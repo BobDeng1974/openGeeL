@@ -28,7 +28,6 @@ skybox = {
 
 	useIBL = true,
 	drawIrradiance = false
-
 }
 
 reflectionprobes = {
@@ -47,13 +46,41 @@ reflectionprobes = {
 meshes = {
 	
 	{
-		position = { x = 0, 	y = 0, 	  z = 0 },
-		rotation = { x = 0,  	y =  0,   z = 0 },
-		scale 	 = { x = 0.1, 	y =  0.1, z =  0.1 },
+		position = { x = 0, 	y = 0, 	 z = 0   },
+		rotation = { x = 0,  	y = 0,   z = 0   },
+		scale 	 = { x = 0.1, 	y = 0.1, z = 0.1 },
 
 		path = "resources/deer/scene2.obj",
 		name = "Deer",
-		separate = false
+		separate = false,
+
+		allmaterials = {
+			--roughness = 0,
+			metallic = 0.2,
+			--transparency = 0,
+		},
+
+		materials = {
+
+			{
+				name = "Grass",
+				roughness = 0.2,
+
+				textures = {
+					--[[
+					{
+						type = "specular",
+						path = "resources/girl/cloth_spec_01.jpg"
+
+					}
+					--]]
+				}
+			}
+
+
+		}
+
+
 	},
 
 }
@@ -66,9 +93,9 @@ lights = {
 
 		position = { x = -0.29, y = 0.39, z = 1.8 },
 		rotation = { x = -180, 	y = 0, 	  z = -50},
-		color	 = { r = 1, 	g = 1, 	  b = 1},
+		color	 = { r = 0.996, g = 0.535,b = 0.379},
 
-		intensity = 10,
+		intensity = 7,
 
 		useShadowmap = true,
 		shadowBias = 0.00001,
@@ -99,12 +126,13 @@ ssrr = {
 	resolution = 0.66
 }
 
---[[
 dof = {
 	aperture = 60,
 	blurSigma = 10,
 	resolution = 0.4
 }
+
+--[[
 
 colorcorrect = {
 	r = 0.5,
@@ -142,14 +170,11 @@ bloom = {
 fxaa = {
 	minColorDiff = 0,
 	fxaaMul = 0
-
 }
 
 
 gui = {
-	
 	showObjects = true,
 	showEffects = true,
 	showSystem  = true
-
 }
