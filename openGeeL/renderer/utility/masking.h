@@ -1,6 +1,7 @@
 #ifndef MASKING_H
 #define MASKING_H
 
+#include <string>
 #include "shader/defshading.h"
 
 namespace geeL {
@@ -26,6 +27,7 @@ namespace geeL {
 		//Returns an equivalent render mask to given shading method 
 		//(If it exists, otherwise default mask)
 		static RenderMask getShadingMask(ShadingMethod method);
+		static RenderMask getShadingMask(const std::string& name);
 
 	};
 

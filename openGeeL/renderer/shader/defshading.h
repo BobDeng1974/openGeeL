@@ -1,6 +1,8 @@
 #ifndef DEFAULTSHADING_H
 #define DEFAULTSHADING_H
 
+#include <string>
+
 namespace geeL {
 
 	enum class ShaderTransformSpace {
@@ -17,6 +19,8 @@ namespace geeL {
 		Other
 
 	};
+
+	ShadingMethod getShadingMethod(const std::string& name);
 
 }
 

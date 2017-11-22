@@ -43,7 +43,7 @@ reflectionprobes = {
 }
 
 
-meshes = {
+objects = {
 	
 	{
 		position = { x = 0, 	y = 0, 	 z = 0   },
@@ -77,8 +77,17 @@ meshes = {
 				}
 			}
 
+		},
 
-		}
+		meshes = {
+			--[[
+			{
+				name   = "defaultobject",
+				mask   = "Skin",
+				method = "TransparentOD"
+			},
+			--]]
+		},
 
 
 	},

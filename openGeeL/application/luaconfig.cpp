@@ -157,7 +157,7 @@ namespace geeL {
 			//Mesh renderer initalization
 
 			{
-				auto& meshes = state["meshes"];
+				auto& meshes = state["objects"];
 				if (meshes.valid()) {
 
 					unsigned int i = 1;
@@ -190,7 +190,7 @@ namespace geeL {
 
 						bool separate = m["separate"].get_or(false);
 
-						//Build meshes
+						//Build meshe renderers
 
 						std::list<MeshRenderer*> meshRenderers;
 						if (separate) {
@@ -246,6 +246,7 @@ namespace geeL {
 							}
 						}
 
+
 						//Set material options for specific meshes
 						
 						auto& materialsInit2 = m["materials"];
@@ -264,10 +265,6 @@ namespace geeL {
 										assert(name.valid() && "Given material has no name");
 
 										if (name == container.name) {
-											
-											//container.addTexture("emission", materialFactory.CreateTexture("resources/girl/cloth_spec_01.jpg", ColorType::GammaSpace));
-											//container.addTexture("occlusion", materialFactory.CreateTexture("resources/girl/cloth_ao_01.jpg", ColorType::GammaSpace));
-											//container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/fur_alpha_01.jpg"));
 											auto& texturesInit = mat["textures"];
 											if (texturesInit.valid()) {
 
@@ -324,8 +321,70 @@ namespace geeL {
 										
 									}
 								});
+
 							}
 						}
+
+						//Iterate individual meshes
+
+						auto& meshesInit = m["meshes"];
+						if (meshesInit.valid()) {
+							for (auto it(meshRenderers.begin()); it != meshRenderers.end(); it++) {
+								MeshRenderer& renderer = **it;
+
+								//Look for mesh renderer mask
+
+								auto& maskInit = m["mask"];
+								if (maskInit.valid()) {
+									string maskName = maskInit;
+									RenderMask mask = Masking::getShadingMask(maskName);
+
+									renderer.setRenderMask(mask);
+								}
+
+
+								//Set material options for specific meshes
+
+								unsigned int j = 1;
+								auto* mesh2 = &meshesInit[j];
+								while (mesh2->valid()) {
+									auto& mm = *mesh2;
+
+									auto& name = mm["name"];
+									assert(name.valid() && "Given mesh has no name");
+
+									const Mesh* currentMesh = renderer.getMesh(name);
+									if (currentMesh != nullptr) {
+
+										auto& maskInit = mm["mask"];
+										if (maskInit.valid()) {
+											string maskName = maskInit;
+											RenderMask mask = Masking::getShadingMask(maskName);
+
+											renderer.setRenderMask(mask, *currentMesh);
+										}
+
+										auto& methodInit = mm["method"];
+										if (methodInit.valid()) {
+											string methodName = methodInit;
+											ShadingMethod method = getShadingMethod(methodName);
+
+											SceneShader& ss = materialFactory.getDefaultShader(method);
+											renderer.changeMaterial(ss, *currentMesh);
+										}
+									}
+
+									j++;
+									mesh2 = &meshesInit[j];
+
+								}
+
+							}
+						}
+
+
+
+
 
 						i++;
 						mesh = &meshes[i];

@@ -42,4 +42,19 @@ namespace geeL {
 		return RenderMask::None;
 	}
 
+	RenderMask Masking::getShadingMask(const std::string& name) {
+		if (name == "Empty")
+			return RenderMask::Empty;
+		else if (name == "Generic")
+			return RenderMask::Generic;
+		else if (name == "Forward")
+			return RenderMask::Forward;
+		else if (name == "Transparent")
+			return RenderMask::Transparent;
+		else if (name == "Skin")
+			return RenderMask::Skin;
+
+		return RenderMask::None;
+	}
+
 }

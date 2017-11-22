@@ -492,6 +492,9 @@
     <ClCompile Include="application\luaconfig.cpp">
       <Filter>application</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\shader\defshading.cpp">
+      <Filter>renderer\shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">

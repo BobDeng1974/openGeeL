@@ -248,6 +248,7 @@
     <ClCompile Include="renderer\sceneobject.cpp" />
     <ClCompile Include="renderer\shader\bindingstack.cpp" />
     <ClCompile Include="renderer\shader\computeshader.cpp" />
+    <ClCompile Include="renderer\shader\defshading.cpp" />
     <ClCompile Include="renderer\shader\sceneshader.cpp" />
     <ClCompile Include="renderer\shader\rendershader.cpp" />
     <ClCompile Include="renderer\shader\shader.cpp" />
