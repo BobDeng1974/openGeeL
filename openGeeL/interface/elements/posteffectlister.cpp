@@ -14,12 +14,16 @@ namespace geeL {
 			: GUIElement(window, x, y, width, height) {}
 
 	PostProcessingEffectLister::~PostProcessingEffectLister() {
-		for (auto it = snippets.begin(); it != snippets.end(); it++) {
+		for (auto it(snippets.begin()); it != snippets.end(); it++) {
 			auto pair = *it;
 
 			if(pair.first)
 				delete pair.second;
 		}
+
+		for (auto it(externalSnippets.begin()); it != externalSnippets.end(); it++)
+			delete *it;
+			
 	}
 
 
@@ -32,7 +36,7 @@ namespace geeL {
 			if (nk_tree_push(context, NK_TREE_NODE, "Effects", NK_MINIMIZED)) {
 
 				unsigned int counter = 1;
-				for (auto it = snippets.begin(); it != snippets.end(); it++) {
+				for (auto it(snippets.begin()); it != snippets.end(); it++) {
 					GUISnippet& snippet = *it->second;
 
 					std::string name = std::to_string(counter) + ". " + snippet.toString();
@@ -55,6 +59,12 @@ namespace geeL {
 		snippets.push_back(std::pair<bool, PostEffectSnippet*>(false, &snippet));
 	}
 
+	void PostProcessingEffectLister::add(std::unique_ptr<PostEffectSnippet>& snippet) {
+		PostEffectSnippet* s = snippet.release();
+		snippets.push_back(std::pair<bool, PostEffectSnippet*>(true, s));
+
+	}
+
 	void PostProcessingEffectLister::add(DefaultPostProcess& def) {
 		DefaultSnippet* snippet = new DefaultSnippet(def);
 		snippets.push_back(std::pair<bool, PostEffectSnippet*>(true, snippet));
@@ -68,6 +78,21 @@ namespace geeL {
 	void PostProcessingEffectLister::add(BlurredPostEffect& effect, PostEffectSnippet& effectSnippet, PostEffectSnippet& blurSnippet) {
 		BlurredEffectSnippet* snippet = new BlurredEffectSnippet(effect, effectSnippet);
 		snippet->setBlurSnippet(blurSnippet);
+
+		snippets.push_back(std::pair<bool, PostEffectSnippet*>(true, snippet));
+	}
+
+	void PostProcessingEffectLister::add(BlurredPostEffect& effect, std::unique_ptr<PostEffectSnippet> effectSnippet, 
+		std::unique_ptr<PostEffectSnippet> blurSnippet) {
+
+		PostEffectSnippet* es = effectSnippet.release();
+		PostEffectSnippet* bs = blurSnippet.release();
+
+		externalSnippets.push_back(es);
+		externalSnippets.push_back(bs);
+
+		BlurredEffectSnippet* snippet = new BlurredEffectSnippet(effect, *es);
+		snippet->setBlurSnippet(*bs);
 
 		snippets.push_back(std::pair<bool, PostEffectSnippet*>(true, snippet));
 	}
@@ -116,4 +141,9 @@ namespace geeL {
 		ConeTracerSnippet* snippet = new ConeTracerSnippet(tracer);
 		snippets.push_back(std::pair<bool, PostEffectSnippet*>(true, snippet));
 	}
+
+	void PostProcessingEffectLister::addExternal(std::unique_ptr<PostEffectSnippet>& snippet) {
+		externalSnippets.push_back(snippet.release());
+	}
+
 }

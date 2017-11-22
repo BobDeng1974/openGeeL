@@ -376,15 +376,9 @@ namespace geeL {
 
 									j++;
 									mesh2 = &meshesInit[j];
-
 								}
-
 							}
 						}
-
-
-
-
 
 						i++;
 						mesh = &meshes[i];
@@ -479,6 +473,7 @@ namespace geeL {
 			
 
 			//GUI initialization
+			PostProcessingEffectLister* postLister = nullptr;
 			
 			{
 				auto& guiInit = state["gui"];
@@ -492,13 +487,12 @@ namespace geeL {
 						unique_ptr<ObjectLister> objectLister(new ObjectLister(scene, window, 
 							0.01f, 0.01f, 0.17f, 0.35f));
 						objectLister->add(*camera);
-						gui.addElement<ObjectLister>(objectLister);
+						gui.addElement<ObjectLister>(std::move(objectLister));
 					}
 
 					if (showEffects) {
-						unique_ptr<PostProcessingEffectLister> postLister(new PostProcessingEffectLister(window, 
-							0.01f, 0.375f, 0.17f, 0.35f));
-						gui.addElement(postLister);
+						postLister = new PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
+						gui.addElement(*postLister);
 					}
 
 					if (showSystem)
@@ -515,6 +509,7 @@ namespace geeL {
 			{
 				float exposure = state["exposure"].get_or(1.f);
 				def.setExposure(exposure);
+				if (postLister) postLister->add(def);
 
 				auto& ssaoInit = state["ssao"];
 				if (ssaoInit.valid()) {
@@ -529,6 +524,14 @@ namespace geeL {
 					renderer.addEffect(*ssao);
 					scene.addRequester(*ssao);
 
+					if (postLister) {
+						unique_ptr<PostEffectSnippet> ssaoSnippet(new SSAOSnippet(*ssao));
+						unique_ptr<PostEffectSnippet> blurSnippet(new BilateralFilterSnippet(*blur));
+						unique_ptr<PostEffectSnippet> groupSnippet(new PostGroupSnippet(*ssaoSnippet.get(), *blurSnippet.get()));
+
+						postLister->add(std::move(groupSnippet), std::move(ssaoSnippet), std::move(blurSnippet));
+					}
+
 					effects.push_back(blur);
 					effects.push_back(ssao);
 				}
@@ -539,11 +542,15 @@ namespace geeL {
 					ImageBasedLighting* ibl = new ImageBasedLighting(scene);
 					renderer.addEffect(*ibl);
 					effects.push_back(ibl);
+
+					if (postLister) {
+						unique_ptr<PostEffectSnippet> snippet(new GenericPostSnippet(*ibl));
+						postLister->add(snippet);
+					}
 				}
 
 				auto& bloomInit = state["bloom"];
 				if (bloomInit.valid()) {
-
 					float scatter = bloomInit["scatter"].get_or(1.f);
 					float blurSigma = bloomInit["blurSigma"].get_or(5.f);
 					float resolution = bloomInit["resolution"].get_or(1.f);
@@ -553,6 +560,8 @@ namespace geeL {
 					GaussianBlur* blur = new GaussianBlur(KernelSize::Large, blurSigma);
 					Bloom* bloom = new Bloom(*filter, *blur, resPreset, resPreset);
 					renderer.addEffect(*bloom, DrawTime::Late);
+
+					if (postLister) postLister->add(*bloom);
 
 					effects.push_back(filter);
 					effects.push_back(blur);
@@ -578,6 +587,13 @@ namespace geeL {
 					renderer.addEffect(*ssrrSmooth);
 					scene.addRequester(*ssrr);
 
+					if (postLister) {
+						unique_ptr<PostEffectSnippet> ssrrSnippet(new SSRRSnippet(*ssrr));
+						unique_ptr<PostEffectSnippet> blurSnippet(new GaussianBlurSnippet(*blur));
+
+						postLister->add(*ssrrSmooth, std::move(ssrrSnippet), std::move(blurSnippet));
+					}
+
 					effects.push_back(blur);
 					effects.push_back(ssrr);
 					effects.push_back(ssrrSmooth);
@@ -595,6 +611,8 @@ namespace geeL {
 					DepthOfFieldBlur* blur = new DepthOfFieldBlur(0.1f, blurSigma);
 					DepthOfFieldBlurred* dof = new DepthOfFieldBlurred(*blur, camera->depth, aperture, 100.f, resPreset);
 					renderer.addEffect(*dof);
+
+					if (postLister) postLister->add(*dof);
 
 					effects.push_back(blur);
 					effects.push_back(dof);
@@ -621,6 +639,13 @@ namespace geeL {
 					renderer.addEffect(*raySmooth, DrawTime::Late);
 					scene.addRequester(*ray);
 
+					if (postLister) {
+						unique_ptr<PostEffectSnippet> raySnippet(new GodRaySnippet(*ray));
+						unique_ptr<PostEffectSnippet> blurSnippet(new BilateralFilterSnippet(*blur));
+
+						postLister->add(*raySmooth, std::move(raySnippet), std::move(blurSnippet));
+					}
+
 					effects.push_back(blur);
 					effects.push_back(ray);
 					effects.push_back(raySmooth);
@@ -646,6 +671,8 @@ namespace geeL {
 					colorCorrect->setChromaticDistortion(glm::vec3(cr, cg, cb));
 					renderer.addEffect(*colorCorrect, DrawTime::Late);
 
+					if(postLister) postLister->add(*colorCorrect);
+
 					effects.push_back(colorCorrect);
 				}
 
@@ -657,6 +684,8 @@ namespace geeL {
 
 					FXAA* fxaa = new FXAA(minColorDiff, fxaaMul);
 					renderer.addEffect(*fxaa, DrawTime::Late);
+
+					if (postLister) postLister->add(*fxaa);
 					effects.push_back(fxaa);
 				}
 
@@ -672,6 +701,7 @@ namespace geeL {
 
 			if (camera != nullptr) delete camera;
 			if (skybox != nullptr) delete skybox;
+			if (postLister != nullptr) delete postLister;
 
 			for (auto effect(effects.begin()); effect != effects.end(); effect++)
 				delete *effect;

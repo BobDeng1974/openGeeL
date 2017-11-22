@@ -19,7 +19,6 @@ camera = {
 	movable = true,
 	speed = 1,
 	sensitivity = 0.45
-
 }
 
 skybox = {
@@ -89,7 +88,6 @@ objects = {
 			--]]
 		},
 
-
 	},
 
 }
@@ -126,7 +124,6 @@ ssao = {
 }
 
 ssrr = {
-	
 	stepCount = 75,
 	stepSize = 0.01,
 	stepGain = 1.02,
@@ -165,7 +162,6 @@ godray = {
 	blurSigma = 4,
 	blurFactor = 0.291,
 	resolution = 0.5
-
 }
 
 bloom = {

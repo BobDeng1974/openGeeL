@@ -80,8 +80,7 @@ public:
 
 			SSAOSnippet& ssaoSnippet = SSAOSnippet(ssao);
 			BilateralFilterSnippet& ssaoBlurSnippet = BilateralFilterSnippet(blur);
-			std::list<PostEffectSnippet*> snips = { &ssaoSnippet, &ssaoBlurSnippet };
-			PostGroupSnippet& groupSnippet = PostGroupSnippet(snips);
+			PostGroupSnippet& groupSnippet = PostGroupSnippet(ssaoSnippet, ssaoBlurSnippet);
 			postLister.add(groupSnippet);
 
 			GaussianBlur& blur4 = GaussianBlur();

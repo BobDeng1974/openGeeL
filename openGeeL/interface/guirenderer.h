@@ -26,7 +26,7 @@ namespace geeL {
 		void addSystemInformation(float x, float y, float width, float height);
 
 		template<typename T>
-		void addElement(std::unique_ptr<T>& element);
+		void addElement(std::unique_ptr<T> element);
 
 	private:
 		std::list<std::pair<bool, GUIElement*>> elements;
@@ -41,7 +41,7 @@ namespace geeL {
 
 
 	template<typename T>
-	inline void GUIRenderer::addElement(std::unique_ptr<T>& element) {
+	inline void GUIRenderer::addElement(std::unique_ptr<T> element) {
 		GUIElement* e = element.release();
 		elements.push_back(std::pair<bool, GUIElement*>(true, e));
 	}

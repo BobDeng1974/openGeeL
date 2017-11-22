@@ -2,6 +2,7 @@
 #define POSTEFFECTLISTER_H
 
 #include <list>
+#include <memory>
 #include "guielement.h"
 
 namespace geeL {
@@ -30,9 +31,21 @@ namespace geeL {
 		virtual void draw(GUIContext* context);
 
 		void add(PostEffectSnippet& snippet);
+		void add(std::unique_ptr<PostEffectSnippet>& snippet);
+
+		template<typename... Snippets>
+		void add(PostEffectSnippet& snippet, Snippets& ...snippets);
+
+		//Add main snippet to post effect list. Memory of all given snippets will be managed
+		template<typename... Snippets>
+		void add(std::unique_ptr<PostEffectSnippet> snippet, Snippets ...snippets);
+
 		void add(DefaultPostProcess& def);
 		void add(BlurredPostEffect& effect, PostEffectSnippet& effectSnippet);
 		void add(BlurredPostEffect& effect, PostEffectSnippet& effectSnippet, PostEffectSnippet& blurSnippet);
+		void add(BlurredPostEffect& effect, std::unique_ptr<PostEffectSnippet> effectSnippet, 
+			std::unique_ptr<PostEffectSnippet> blurSnippet);
+
 		void add(Bloom& bloom);
 		void add(ColorCorrection& color);
 		void add(DepthOfFieldBlurred& dof);
@@ -45,8 +58,34 @@ namespace geeL {
 
 	private:
 		std::list<std::pair<bool, PostEffectSnippet*>> snippets;
+		std::list<PostEffectSnippet*> externalSnippets;
 		
+		template<typename... Snippets>
+		void addExternal(std::unique_ptr<PostEffectSnippet>& snippet, Snippets& ...snippets);
+		void addExternal(std::unique_ptr<PostEffectSnippet>& snippet);
+
 	};
+
+
+
+	template<typename ...Snippets>
+	inline void PostProcessingEffectLister::add(PostEffectSnippet& snippet, Snippets& ...snippets) {
+		add(snippet);
+		add(snippets...);
+	}
+
+	template<typename ...Snippets>
+	inline void PostProcessingEffectLister::add(std::unique_ptr<PostEffectSnippet> snippet, Snippets ...snippets) {
+		add(snippet);
+		addExternal(snippets...);
+	}
+
+	template<typename ...Snippets>
+	inline void PostProcessingEffectLister::addExternal(std::unique_ptr<PostEffectSnippet>& snippet, Snippets& ...snippets) {
+		addExternal(snippet);
+		addExternal(snippets...);
+	}
+
 }
 
 #endif

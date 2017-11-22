@@ -63,12 +63,21 @@ namespace geeL {
 	class PostGroupSnippet : public PostEffectSnippet {
 
 	public:
-		PostGroupSnippet(std::list<PostEffectSnippet*>& snippets);
+		PostGroupSnippet(PostEffectSnippet& snippet);
+
+		template<typename... Snippets>
+		PostGroupSnippet(PostEffectSnippet& snippet, Snippets& ...snippets);
+
 
 		virtual void drawSimple(GUIContext* context);
 
 	private:
+		PostEffectSnippet& base;
 		std::list<PostEffectSnippet*> snippets;
+
+		template<typename... Snippets>
+		void add(PostEffectSnippet& snippet, Snippets& ...snippets);
+		void add(PostEffectSnippet& snippet);
 
 	};
 	
@@ -242,6 +251,20 @@ namespace geeL {
 
 	};
 
+
+
+	template<typename ...Snippets>
+	inline PostGroupSnippet::PostGroupSnippet(PostEffectSnippet& snippet, Snippets& ...snippets) 
+		: PostEffectSnippet(snippet), base(snippet) {
+
+		add(snippets...);
+	}
+
+	template<typename ...Snippets>
+	inline void PostGroupSnippet::add(PostEffectSnippet& snippet, Snippets& ...snippets) {
+		add(snippet);
+		add(snippets...);
+	}
 
 }
 

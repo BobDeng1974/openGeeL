@@ -92,18 +92,24 @@ namespace geeL {
 
 
 
-	PostGroupSnippet::PostGroupSnippet(std::list<PostEffectSnippet*>& snippets) 
-		: PostEffectSnippet(snippets.front()->getEffect()), snippets(snippets) {}
+	PostGroupSnippet::PostGroupSnippet(PostEffectSnippet& snippet) 
+		: PostEffectSnippet(snippet), base(snippet) {}
 
 
-	void PostGroupSnippet::drawSimple(GUIContext * context) {
-		for (auto it = next(snippets.begin()); it != snippets.end(); it++) {
+	void PostGroupSnippet::drawSimple(GUIContext* context) {
+		base.drawSimple(context);
+
+		for (auto it = snippets.begin(); it != snippets.end(); it++) {
 			PostEffectSnippet& snippet = **it;
 
 			GUISnippets::drawTreeNode(context, snippet.toString(), false, [this, &snippet](GUIContext* context) {
 				snippet.draw(context);
 			});
 		}
+	}
+
+	void PostGroupSnippet::add(PostEffectSnippet& snippet) {
+		snippets.push_back(&snippet);
 	}
 
 
