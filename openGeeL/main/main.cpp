@@ -36,11 +36,8 @@ int main(int argc, char* argv[]) {
 	//SponzaScene::draw();
 	//SponzaGIScene::draw();
 	//ScienceScene::draw();
-	//CharacterViewer::draw();
+	CharacterViewer::draw();
 	//CapsuleScene::draw();
-
-	LUAConfigurator config("main/deerconfig.lua");
-	config.run();
 
 	//TestScene::draw();
 	//RaymarchTest::draw();

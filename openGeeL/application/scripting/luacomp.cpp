@@ -48,6 +48,11 @@ namespace geeL {
 		execute("lateUpdate");
 	}
 
+	void LUAComponent::injectParameters(std::function<void(sol::state&)> function) {
+		function(*state);
+	}
+
+
 	void LUAComponent::execute(const std::string & functionName) {
 		sol::function f = (*state)[functionName];
 		if (f.valid()) f();

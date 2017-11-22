@@ -1,6 +1,7 @@
 #include <iostream>
 #include <list>
 #include <memory>
+#include "../application/scripting/luacomp.h"
 #include "../application/configuration.h"
 #include "luaconfig.h"
 
@@ -92,7 +93,29 @@ namespace geeL {
 							string filePath = path;
 
 							try {
-								camera->addComponent<LUAComponent>(filePath);
+								LUAComponent& component = camera->addComponent<LUAComponent>(filePath);
+
+								auto& parameters = s["parameters"];
+								if (parameters.valid()) {
+									component.injectParameters([&parameters](sol::state& state) {
+
+										unsigned int h = 1;
+										auto* parameter = &parameters[h];
+										while (parameter->valid()) {
+											auto& p = *parameter;
+
+											auto& name = p["name"];
+											auto& val  = p["value"];
+											assert(name.valid() && "Given parameter has no name");
+											assert(val.valid()  && "Given parameter has no value");
+
+											state[name] = val;
+
+											h++;
+											parameter = &parameters[h];
+										}
+									});
+								}
 							}
 							catch (const exception& e) {
 								std::cout << "Script won't be added because it terminated with error:\n'"
@@ -103,7 +126,6 @@ namespace geeL {
 							script = &scriptsInit[j];
 						}
 					}
-
 				}
 			}
 
@@ -422,7 +444,29 @@ namespace geeL {
 									string filePath = path;
 
 									try {
-										renderer.addComponent<LUAComponent>(filePath);
+										LUAComponent& component = renderer.addComponent<LUAComponent>(filePath);
+
+										auto& parameters = s["parameters"];
+										if (parameters.valid()) {
+											component.injectParameters([&parameters](sol::state& state) {
+
+												unsigned int h = 1;
+												auto* parameter = &parameters[h];
+												while (parameter->valid()) {
+													auto& p = *parameter;
+
+													auto& name = p["name"];
+													auto& val  = p["value"];
+													assert(name.valid() && "Given parameter has no name");
+													assert(val.valid()  && "Given parameter has no value");
+
+													state[name] = val;
+
+													h++;
+													parameter = &parameters[h];
+												}
+											});
+										}
 									}
 									catch (const exception& e) {
 										std::cout << "Script won't be added because it terminated with error:\n'" 
@@ -535,7 +579,29 @@ namespace geeL {
 									string filePath = path;
 
 									try {
-										lightSource->addComponent<LUAComponent>(filePath);
+										LUAComponent& component = lightSource->addComponent<LUAComponent>(filePath);
+
+										auto& parameters = s["parameters"];
+										if (parameters.valid()) {
+											component.injectParameters([&parameters](sol::state& state) {
+
+												unsigned int h = 1;
+												auto* parameter = &parameters[h];
+												while (parameter->valid()) {
+													auto& p = *parameter;
+
+													auto& name = p["name"];
+													auto& val  = p["value"];
+													assert(name.valid() && "Given parameter has no name");
+													assert(val.valid()  && "Given parameter has no value");
+
+													state[name] = val;
+
+													h++;
+													parameter = &parameters[h];
+												}
+											});
+										}
 									}
 									catch (const exception& e) {
 										std::cout << "Script won't be added because it terminated with error:\n'"

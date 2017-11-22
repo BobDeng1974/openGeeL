@@ -1,12 +1,12 @@
 #ifndef LUACOMPONENT_H
 #define LUACOMPONENT_H
 
+#include <functional>
 #include <string>
 #include "component.h"
 
 namespace sol {
 	class state;
-
 }
 
 namespace geeL {
@@ -22,6 +22,8 @@ namespace geeL {
 		virtual void init();
 		virtual void update(Input& input);
 		virtual void lateUpdate();
+
+		void injectParameters(std::function<void(sol::state&)> function);
 
 	private:
 		sol::state* state;

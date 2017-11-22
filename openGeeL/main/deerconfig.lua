@@ -89,9 +89,16 @@ objects = {
 		},
 
 		scripts = {
-			--[[
+			--[[			
 			{
-				path = "main/deerconfig.lua"
+				path = "main/deerconfig.lua",
+				parameters = {
+
+					{
+						name  = "i",
+						value = 5
+					}
+				}
 			}
 			--]]
 		}
