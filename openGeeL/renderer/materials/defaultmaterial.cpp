@@ -33,8 +33,15 @@ namespace geeL {
 		}
 	}
 
-	void DefaultMaterialContainer::addTexture(const MapType& type, Texture2D & texture) {
-		textureStack.addTexture("material.", texture, type);
+	void DefaultMaterialContainer::addTexture(const MapType& type, Texture2D& texture) {
+		
+		//Interpret roughness map as inversed specular map	
+		if (type == MapType::Roughness) {
+			textureStack.addTexture("material.", texture, MapType::Specular);
+			inverseRoughness = true;
+		}
+		else
+			textureStack.addTexture("material.", texture, type);
 
 		//Reset corresponding property to default value 
 		//(e.g. roughness to 1 if specular map is added)

@@ -9,6 +9,7 @@ namespace geeL {
 	enum class MapType {
 		Diffuse,
 		Specular,
+		Roughness,
 		Normal,
 		Metallic,
 		Alpha,
@@ -33,6 +34,8 @@ namespace geeL {
 				return "diffuse";
 			case MapType::Specular:
 				return "specular";
+			case MapType::Roughness:
+				return "roughness";
 			case MapType::Normal:
 				return "normal";
 			case MapType::Alpha:
@@ -52,6 +55,7 @@ namespace geeL {
 
 		if (type == "diffuse") return MapType::Diffuse;
 		if (type == "specular") return MapType::Specular;
+		if (type == "roughness") return MapType::Roughness;
 		if (type == "normal") return MapType::Normal;
 		if (type == "alpha") return MapType::Alpha;
 		if (type == "emission") return MapType::Emission;

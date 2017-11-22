@@ -278,8 +278,6 @@ namespace geeL {
 													assert(path.valid() && "No path specified for given texture");
 													assert(type.valid() && "No type specified for given texture");
 
-													string ayy = path;
-													std::cout << ayy << "\n";
 													ImageTexture& image = materialFactory.CreateTexture(path, ColorType::GammaSpace);
 													container.addTexture(type, image);
 
@@ -318,10 +316,8 @@ namespace geeL {
 
 										j++;
 										material = &materialsInit2[j];
-										
 									}
 								});
-
 							}
 						}
 
