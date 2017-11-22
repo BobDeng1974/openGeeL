@@ -14,8 +14,7 @@ namespace geeL {
 		try {
 			state->script_file(scriptPath);
 		}
-		catch (sol::error e) {
-			std::cout << e.what() << "\n";
+		catch (const sol::error& e) {
 			throw e;
 		}
 

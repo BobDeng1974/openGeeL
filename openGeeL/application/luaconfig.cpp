@@ -13,8 +13,7 @@ namespace geeL {
 		try {
 			state.script_file(filePath);
 		}
-		catch (sol::error e) {
-			std::cout << e.what() << "\n";
+		catch (const sol::error& e) {
 			throw e;
 		}
 	}
@@ -69,6 +68,9 @@ namespace geeL {
 					camera = new PerspectiveCamera(cameraTransform, fov, window.getWidth(), window.getHeight(), near, far);
 					scene.setCamera(*camera);
 
+
+					//Add scripts as components
+
 					bool movable = cam["movable"].get_or(false);
 					if (movable) {
 						float speed = cam["speed"].get_or(1.f);
@@ -76,6 +78,32 @@ namespace geeL {
 
 						camera->addComponent<MovableCamera>(MovableCamera(speed, sensi));
 					}
+
+					auto& scriptsInit = cam["scripts"];
+					if (scriptsInit.valid()) {
+
+						unsigned int j = 1;
+						auto* script = &scriptsInit[j];
+						while (script->valid()) {
+							auto& s = *script;
+
+							auto& path = s["path"];
+							assert(path.valid() && "No path specified for given script");
+							string filePath = path;
+
+							try {
+								camera->addComponent<LUAComponent>(filePath);
+							}
+							catch (const exception& e) {
+								std::cout << "Script won't be added because it terminated with error:\n'"
+									<< e.what() << "'\n";
+							}
+
+							j++;
+							script = &scriptsInit[j];
+						}
+					}
+
 				}
 			}
 
@@ -377,6 +405,36 @@ namespace geeL {
 							}
 						}
 
+						//Add scripts as components
+
+						auto& scriptsInit = m["scripts"];
+						if (scriptsInit.valid()) {
+							for (auto it(meshRenderers.begin()); it != meshRenderers.end(); it++) {
+								MeshRenderer& renderer = **it;
+
+								unsigned int j = 1;
+								auto* script = &scriptsInit[j];
+								while (script->valid()) {
+									auto& s = *script;
+
+									auto& path = s["path"];
+									assert(path.valid() && "No path specified for given script");
+									string filePath = path;
+
+									try {
+										renderer.addComponent<LUAComponent>(filePath);
+									}
+									catch (const exception& e) {
+										std::cout << "Script won't be added because it terminated with error:\n'" 
+											<< e.what() << "'\n";
+									}
+
+									j++;
+									script = &scriptsInit[j];
+								}
+							}
+						}
+
 						i++;
 						mesh = &meshes[i];
 					}
@@ -447,18 +505,47 @@ namespace geeL {
 						assert(type.valid() && "No type specified for given light");
 						const string& typeString = type;
 
+						Light* lightSource = nullptr;
 						if (typeString == "Spot") {
 							float angle = l["angle"].get_or(glm::cos(glm::radians(25.5f)));
 							float outerAngle = l["outerAngle"].get_or(glm::cos(glm::radians(27.5f)));
 
-							lightManager.addSpotlight(lightTransform, color * intensity, angle, outerAngle, config);
+							lightSource = &lightManager.addSpotlight(lightTransform, color * intensity, angle, outerAngle, config);
 						}
 						else if (typeString == "Directional")
-							lightManager.addDirectionalLight(*camera, lightTransform, color * intensity, config);
+							lightSource = &lightManager.addDirectionalLight(*camera, lightTransform, color * intensity, config);
 						else if (typeString == "Point")
-							lightManager.addPointLight(lightTransform, color * intensity, config);
+							lightSource = &lightManager.addPointLight(lightTransform, color * intensity, config);
 						else
 							std::cout << "Valid light types : { Point, Spot, Directional }\n";
+
+
+						//Add scripts as components
+
+						auto& scriptsInit = l["scripts"];
+						if (scriptsInit.valid() && light != nullptr) {
+
+								unsigned int j = 1;
+								auto* script = &scriptsInit[j];
+								while (script->valid()) {
+									auto& s = *script;
+
+									auto& path = s["path"];
+									assert(path.valid() && "No path specified for given script");
+									string filePath = path;
+
+									try {
+										lightSource->addComponent<LUAComponent>(filePath);
+									}
+									catch (const exception& e) {
+										std::cout << "Script won't be added because it terminated with error:\n'"
+											<< e.what() << "'\n";
+									}
+
+									j++;
+									script = &scriptsInit[j];
+								}
+						}
 
 						i++;
 						light = &lights[i];

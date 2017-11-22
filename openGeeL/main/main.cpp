@@ -22,7 +22,9 @@ int main(int argc, char* argv[]) {
 				LUAConfigurator config(argument);
 				config.run();
 			}
-			catch (exception e) {}
+			catch (const exception& e) {
+				std::cout << e.what() << "\n";
+			}
 		}
 
 		return 0;
@@ -34,8 +36,11 @@ int main(int argc, char* argv[]) {
 	//SponzaScene::draw();
 	//SponzaGIScene::draw();
 	//ScienceScene::draw();
-	CharacterViewer::draw();
+	//CharacterViewer::draw();
 	//CapsuleScene::draw();
+
+	LUAConfigurator config("main/deerconfig.lua");
+	config.run();
 
 	//TestScene::draw();
 	//RaymarchTest::draw();
