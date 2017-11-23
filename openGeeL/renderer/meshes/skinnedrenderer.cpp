@@ -29,49 +29,6 @@ namespace geeL {
 	}
 
 
-	void SkinnedMeshRenderer::draw(SceneShader& shader) const {
-		CullingGuard culling(faceCulling);
-
-		//TODO: implement this
-		/*
-		for (auto it = materials->begin(); it != materials->end(); it++) {
-		Material& material = *it->second;
-		const RenderShader& shader = material.getShader();
-
-		//Load materials into shader
-		material.bindTextures();
-		material.bind();
-
-		unsigned int index = it->first;
-		const SkinnedMesh& mesh = skinnedModel->getSkinnedMesh(index);
-
-		//Bind bone transforms to indivdual meshes
-		for (auto et = mesh.bonesBeginConst(); et != mesh.bonesEndBegin(); et++) {
-		const MeshBoneData& data = et->second;
-		const glm::mat4& transform = data.transform;
-
-		shader.bind<glm::mat4>("bones[" + std::to_string(data.id) + "]", transform);
-		}
-
-		//Draw individual mesh
-		mesh.draw();
-		}
-		*/
-	}
-
-	void SkinnedMeshRenderer::drawExclusive(SceneShader& shader) const {
-		//TODO: implement this
-	}
-
-	void SkinnedMeshRenderer::drawGeometry(const RenderShader& shader) const {
-		//TODO: Load relevant bone transforms into materials
-		transform.bind(shader, "model");
-
-
-		skinnedModel->draw();
-	}
-
-
 	Skeleton& SkinnedMeshRenderer::getSkeleton() {
 		return *skeleton;
 	}

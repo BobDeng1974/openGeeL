@@ -48,7 +48,7 @@ namespace geeL{
 
 				//Draw mesh
 				const Mesh& mesh = *container.mesh;
-				mesh.draw();
+				mesh.draw(shader);
 			}
 		}
 	}
@@ -70,7 +70,7 @@ namespace geeL{
 
 				//Draw mesh
 				const Mesh& mesh = *mapping.mesh;
-				mesh.draw();
+				mesh.draw(shader);
 			}
 		}
 	}
@@ -78,7 +78,7 @@ namespace geeL{
 	void MeshRenderer::drawGeometry(const RenderShader& shader) const {
 		transform.bind(shader, "model");
 
-		model->draw();
+		model->draw(shader);
 	}
 
 	void MeshRenderer::setRenderMask(RenderMask mask) {

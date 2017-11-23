@@ -21,7 +21,7 @@ namespace geeL {
 		//Get animation at index. Index will get clamped if not present.
 		const Animation& getAnimation(size_t index) const;
 
-		const Skeleton& getSkeleton() const;
+		Skeleton& getSkeleton() const;
 
 		//Set skeleton for this animated object. It is assumed that the 
 		//skeleton is completely processed and ready to use

@@ -59,7 +59,7 @@ namespace geeL {
 		glBindVertexArray(0);
 	}
 
-	void StaticMesh::draw() const {
+	void StaticMesh::draw(const Shader& shader) const {
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, int(indices.size()), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
@@ -146,7 +146,7 @@ namespace geeL {
 		glBindVertexArray(0);
 	}
 
-	void SkinnedMesh::updateBones(const RenderShader& shader) {
+	void SkinnedMesh::updateBones(const Shader& shader) const {
 		for (auto it(bones.begin()); it != bones.end(); it++) {
 			const MeshBone& data = it->second;
 			Bone* bone = data.bone;
@@ -156,7 +156,9 @@ namespace geeL {
 		}
 	}
 
-	void SkinnedMesh::draw() const {
+	void SkinnedMesh::draw(const Shader& shader) const {
+		updateBones(shader);
+
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, int(indices.size()), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);

@@ -25,7 +25,7 @@ namespace geeL {
 		return *animations[i];
 	}
 
-	const Skeleton& AnimatedObject::getSkeleton() const {
+	Skeleton& AnimatedObject::getSkeleton() const {
 		return *skeleton;
 	}
 

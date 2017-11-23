@@ -23,7 +23,7 @@ namespace geeL {
 		Model() {}
 		Model(std::string path) : path(path) {}
 
-		virtual void draw() const = 0;
+		virtual void draw(const Shader& shader) const = 0;
 
 		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const = 0;
 
@@ -44,7 +44,7 @@ namespace geeL {
 		GenericModel(std::string path) : Model(path) {}
 
 		//Draw all meshes of models without materials
-		virtual void draw() const;
+		virtual void draw(const Shader& shader) const;
 
 		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const;
 		virtual void iterateMeshes(std::function<void(const MeshType&)> function) const;
@@ -85,9 +85,9 @@ namespace geeL {
 	}
 
 	template<typename MeshType>
-	inline void GenericModel<MeshType>::draw() const {
-		iterateMeshes([&](const MeshType& mesh) {
-			mesh.draw();
+	inline void GenericModel<MeshType>::draw(const Shader& shader) const {
+		iterateMeshes([&shader](const MeshType& mesh) {
+			mesh.draw(shader);
 		});
 	}
 

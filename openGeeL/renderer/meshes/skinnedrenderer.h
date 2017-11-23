@@ -17,10 +17,6 @@ namespace geeL {
 
 		virtual ~SkinnedMeshRenderer();
 
-		virtual void draw(SceneShader& shader) const;
-		virtual void drawExclusive(SceneShader& shader) const;
-		virtual void drawGeometry(const RenderShader& shader) const;
-
 		Skeleton& getSkeleton();
 		SkinnedModel& getSkinnedModel();
 

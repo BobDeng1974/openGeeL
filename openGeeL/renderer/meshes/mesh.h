@@ -15,6 +15,7 @@ namespace geeL {
 	class Bone;
 	class MaterialContainer;
 	class RenderShader;
+	class Shader;
 	class Skeleton;
 
 
@@ -71,7 +72,7 @@ namespace geeL {
 		Mesh(const std::string& name, MaterialContainer& material) 
 			: name(name), material(&material) {}
 
-		virtual void draw() const = 0;
+		virtual void draw(const Shader& shader) const = 0;
 
 		virtual size_t getIndicesCount() const = 0;
 		virtual size_t getVerticesCount() const = 0;
@@ -100,7 +101,7 @@ namespace geeL {
 			std::vector<unsigned int>& indices, 
 			MaterialContainer& material);
 
-		virtual void draw() const;
+		virtual void draw(const Shader& shader) const;
 
 		virtual size_t getIndicesCount() const;
 		virtual size_t getVerticesCount() const;
@@ -129,9 +130,8 @@ namespace geeL {
 			std::map<std::string, MeshBone>& bones,
 			MaterialContainer& material);
 
-		//Update mesh bone data into given shader
-		void updateBones(const RenderShader& shader);
-		virtual void draw() const;
+		
+		virtual void draw(const Shader& shader) const;
 
 		virtual size_t getIndicesCount() const;
 		virtual size_t getVerticesCount() const;
@@ -152,6 +152,9 @@ namespace geeL {
 		std::vector<SkinnedVertex> vertices;
 		std::vector<unsigned int> indices;
 		std::map<std::string, MeshBone> bones;
+
+		//Update mesh bone data into given shader
+		void updateBones(const Shader& shader) const;
 
 		void init();
 	};
