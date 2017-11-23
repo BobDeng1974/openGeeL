@@ -37,65 +37,71 @@ namespace geeL {
 		~Transform();
 		
 		
-		virtual glm::vec3 getPosition() const;
-		virtual glm::quat getRotation() const;
-		virtual glm::vec3 getScaling() const;
-		virtual glm::vec3 getForwardDirection() const;
-		virtual glm::vec3 getRightDirection() const;
-		virtual glm::vec3 getUpDirection() const;
-		virtual glm::mat4 getMatrix() const;
+		glm::vec3 getPosition() const;
+		glm::quat getRotation() const;
+		glm::vec3 getScaling() const;
+		glm::vec3 getForwardDirection() const;
+		glm::vec3 getRightDirection() const;
+		glm::vec3 getUpDirection() const;
+		glm::mat4 getMatrix() const;
 
-		virtual void setPosition(const vec3& position);
-		virtual void setRotation(const glm::quat& quaternion);
-		virtual void setForward(const vec3& value);
-		virtual void setScaling(const vec3& scaling);
-		virtual void setMatrix(const mat4& matrix);
-		virtual void setMatrix(const mat4&& matrix);
+		void setPosition(const vec3& position);
+		void setRotation(const glm::quat& quaternion);
+		void setForward(const vec3& value);
+		void setScaling(const vec3& scaling);
+		void setMatrix(const mat4& matrix);
+		void setMatrix(const mat4&& matrix);
 
-		virtual vec3 getEulerAngles() const;
-		virtual void setEulerAngles(const vec3& eulerAngles);
+		vec3 getEulerAngles() const;
+		void setEulerAngles(const vec3& eulerAngles);
 
-		virtual void translate(const vec3& translation);
-		virtual void rotate(const vec3& axis, float angle);
-		virtual void scale(const vec3& scalar);
+		void translate(const vec3& translation);
+		void rotate(const vec3& axis, float angle);
+		void scale(const vec3& scalar);
 
-		virtual mat4 lookAt() const;
+		mat4 lookAt() const;
 
-		virtual void iterateChildren(std::function<void(Transform&)> function);
-		virtual void iterateChildren(std::function<void(const Transform&)> function) const;
+		void iterateChildren(std::function<void(Transform&)> function);
+		void iterateChildren(std::function<void(const Transform&)> function) const;
+
+		//Returns first child (or child of children) of given name,
+		//or null pointer if it doesn't exist
+		Transform* find(const std::string& name);
 
 		//Adds a copy of the given transform
 		//as a child to this transform and 
 		//returns a reference to it
-		virtual Transform& addChild(const Transform& child);
+		Transform& addChild(const Transform& child);
 
 		//Add the child to this transform. Memory of child will be 
 		//managed by this transform.
-		virtual Transform& addChild(std::unique_ptr<Transform> child);
+		Transform& addChild(std::unique_ptr<Transform> child);
 
 		//Remove child from transform. Memory of child will no longer
 		//be taken care off and needs to be managed by caller
-		virtual void removeChild(Transform& child);
+		void removeChild(Transform& child);
 
-		virtual Transform* GetParent() const;
-		virtual void changeParent(Transform& newParent);
+		Transform* getParent() const;
+		void changeParent(Transform& newParent);
 
 		//Updates transformation matrix with recent changes to position, rotation and scale.
 		//Needs therefore only to be called when actual changes were made.
-		virtual void update();
-		virtual void bind(const Shader& shader, const std::string& name) const;
+		void update();
+		void bind(const Shader& shader, const std::string& name) const;
 
-		virtual bool operator==(const Transform& b) const;
-		virtual bool operator!=(const Transform& b) const;
-		virtual Transform& operator= (const Transform& other);
+		bool operator==(const Transform& b) const;
+		bool operator!=(const Transform& b) const;
+		Transform& operator= (const Transform& other);
 
-		virtual unsigned int getID() const;
+		unsigned int getID() const;
 
-		virtual void addChangeListener(std::function<void(const Transform&)> listener);
+		void addChangeListener(std::function<void(const Transform&)> listener);
 
-		virtual std::string toString() const;
-		virtual const std::string& getName() const;
-		virtual void setName(const std::string& name);
+		std::string toString() const;
+		std::string toStringRecursive() const;
+
+		const std::string& getName() const;
+		void setName(const std::string& name);
 
 	protected:
 		glm::quat rotation;
@@ -126,9 +132,15 @@ namespace geeL {
 		void updateDirections();
 		void onChange();
 
+		void changeParentInternal(Transform& newParent);
+		void removeChildInternal(Transform& child);
+
 		//Returns true if the transform has changed during the 
 		//current cycle (since last 'update' call)
 		virtual bool hasUpdated() const;
+
+		std::string toStringRecursive(const std::string& offset, unsigned int depth) const;
+
 	};
 
 

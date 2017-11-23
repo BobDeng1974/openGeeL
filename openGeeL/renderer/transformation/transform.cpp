@@ -533,7 +533,9 @@ namespace geeL {
 		}
 	}
 
-	Transform* Transform::GetParent() const {
+	
+
+	Transform* Transform::getParent() const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
@@ -559,6 +561,22 @@ namespace geeL {
 			function(**it);
 	}
 
+	Transform* Transform::find(const std::string& name) {
+		for (auto it(children.begin()); it != children.end(); it++) {
+			Transform& child = **it;
+
+			if (child.getName() == name)
+				return &child;
+			
+			Transform* childchild = child.find(name);
+			if (childchild != nullptr)
+				return childchild;
+
+		}
+
+		return nullptr;
+	}
+
 
 	Transform& Transform::addChild(const Transform& child) {
 		std::unique_ptr<Transform> newChild(new Transform(child));
@@ -573,7 +591,7 @@ namespace geeL {
 
 		Transform* c = child.release();
 		children.push_back(c);
-		c->changeParent(*this);
+		c->changeParentInternal(*this);
 
 		return *c;
 	}
@@ -583,17 +601,27 @@ namespace geeL {
 		transformLock();
 #endif
 
+		removeChildInternal(child);
+	}
+
+	void Transform::removeChildInternal(Transform & child) {
 		children.remove(&child);
 	}
+
+
 
 	void Transform::changeParent(Transform& newParent) {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
 
+		changeParentInternal(newParent);
+	}
+
+	void Transform::changeParentInternal(Transform& newParent) {
 		if (&newParent != parent) {
 			if (parent != nullptr)
-				parent->removeChild(*this);
+				parent->removeChildInternal(*this);
 
 			parent = &newParent;
 			status = TransformUpdateStatus::NeedsUpdate;
@@ -603,7 +631,7 @@ namespace geeL {
 		}
 	}
 
-
+	
 	const string& Transform::getName() const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
@@ -634,5 +662,32 @@ namespace geeL {
 			+ "--Up:       " + VectorExtension::vectorString(up) + "\n"
 			+ "--Right:    " + VectorExtension::vectorString(right) + "\n";
 	}
+
+	std::string Transform::toStringRecursive() const {
+		std::string s = name + "\n";
+
+		iterateChildren([&s](const Transform& child) {
+			s = s + child.toStringRecursive("  ", 0);
+		});
+
+		return s;
+	}
+
+
+	std::string Transform::toStringRecursive(const std::string& offset, unsigned int depth) const {
+		unsigned int newDepth = depth + 1;
+		std::string newOffset = "";
+		for (int i = 0; i < newDepth; i++)
+			newOffset += offset;
+
+		std::string s = newOffset + name + "\n";
+
+		iterateChildren([&s, &offset, &newDepth](const Transform& child) {
+			s = s + child.toStringRecursive(offset, newDepth);
+		});
+
+		return s;
+	}
+
 
 }
