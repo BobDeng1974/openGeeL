@@ -15,9 +15,10 @@ struct aiScene;
 
 namespace geeL {
 
-	enum class CullingMode;
-	enum class ShadingMethod;
 	enum class ColorType;
+	enum class CullingMode;
+	enum class MapType;
+	enum class ShadingMethod;
 
 	struct SkinnedVertex;
 	struct MeshBoneData;

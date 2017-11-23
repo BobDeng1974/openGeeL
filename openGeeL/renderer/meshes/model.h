@@ -1,6 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <algorithm>
 #include <functional>
 #include <string>
 #include <vector>
@@ -10,18 +11,10 @@
 
 namespace geeL {
 
-	enum class MapType;
-
-	class SceneCamera;
-	class LightManager;
-	class Material;
-	class MaterialFactory;
 	class Mesh;
 	class SkinnedMesh;
 	class StaticMesh;
-	class Texture;
-	class TextureMap;
-	class Transform;
+
 
 	//Class that represents a single 3D model in memory
 	class Model {
@@ -30,59 +23,58 @@ namespace geeL {
 		Model() {}
 		Model(std::string path) : path(path) {}
 
-		//Draw all meshes of models without materials
-		virtual void draw() const;
+		virtual void draw() const = 0;
 
 		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const = 0;
-		virtual unsigned int meshCount() const = 0;
-		virtual const Mesh& getMesh(unsigned int index) const = 0;
 
 		const std::string& getPath() const;
 
 	protected:
 		std::string path;
+
+	};
+
+
+
+	template<typename MeshType>
+	class GenericModel : public Model {
+
+	public:
+		GenericModel() {}
+		GenericModel(std::string path) : Model(path) {}
+
+		//Draw all meshes of models without materials
+		virtual void draw() const;
+
+		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const;
+		virtual void iterateMeshes(std::function<void(const MeshType&)> function) const;
+		virtual unsigned int meshCount() const;
+
+		MeshType& addMesh(MeshType&& mesh);
+		virtual const MeshType& getMesh(unsigned int index) const;
+
+	protected:
+		std::vector<MeshType> meshes;
+		
 	};
 
 
 	//Special model that is intended for static drawing
-	class StaticModel : public Model {
+	class StaticModel : public GenericModel<StaticMesh> {
 	
 	public:
-		StaticModel() : Model() {}
-		StaticModel(std::string path) : Model(path) {}
-
-		StaticMesh& addMesh(StaticMesh&& mesh);
-
-		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const;
-		void iterateMeshes(std::function<void(const StaticMesh&)> function) const;
-		
-		virtual unsigned int meshCount() const;
-		virtual const Mesh& getMesh(unsigned int index) const;
-
-	private:
-		std::vector<StaticMesh> meshes;
+		StaticModel() : GenericModel() {}
+		StaticModel(std::string path) : GenericModel(path) {}
 		
 	};
 
 
 	//Special model that is intented for animated drawing
-	class SkinnedModel : public Model, public AnimatedObject {
+	class SkinnedModel : public GenericModel<SkinnedMesh>, public AnimatedObject {
 
 	public:
-		SkinnedModel() : Model(), AnimatedObject() {}
-		SkinnedModel(std::string path) : Model(path), AnimatedObject() {}
-
-		SkinnedMesh& addMesh(SkinnedMesh&& mesh);
-
-		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const;
-		void iterateMeshes(std::function<void(const SkinnedMesh&)> function) const;
-
-		virtual unsigned int meshCount() const;
-		virtual const Mesh& getMesh(unsigned int index) const;
-		virtual const SkinnedMesh& getSkinnedMesh(unsigned int intex) const;
-
-	private:
-		std::vector<SkinnedMesh> meshes;
+		SkinnedModel() : GenericModel(), AnimatedObject() {}
+		SkinnedModel(std::string path) : GenericModel(path), AnimatedObject() {}
 
 	};
 
@@ -92,25 +84,38 @@ namespace geeL {
 		return path;
 	}
 
-	inline const Mesh& StaticModel::getMesh(unsigned int index) const {
+	template<typename MeshType>
+	inline void GenericModel<MeshType>::draw() const {
+		iterateMeshes([&](const MeshType& mesh) {
+			mesh.draw();
+		});
+	}
+
+	template<typename MeshType>
+	inline void GenericModel<MeshType>::iterateMeshes(std::function<void(const Mesh&)> function) const {
+		for_each(meshes.begin(), meshes.end(), function);
+	}
+
+	template<typename MeshType>
+	inline void GenericModel<MeshType>::iterateMeshes(std::function<void(const MeshType&)> function) const {
+		for_each(meshes.begin(), meshes.end(), function);
+	}
+
+	template<typename MeshType>
+	inline unsigned int GenericModel<MeshType>::meshCount() const {
+		return meshes.size();
+	}
+
+	template<typename MeshType>
+	inline MeshType& GenericModel<MeshType>::addMesh(MeshType&& mesh) {
+		meshes.push_back(std::move(mesh));
+
+		return meshes.back();
+	}
+
+	template<typename MeshType>
+	inline const MeshType& GenericModel<MeshType>::getMesh(unsigned int index) const {
 		return meshes[index];
-	}
-	
-
-	inline unsigned int StaticModel::meshCount() const {
-		return unsigned int(meshes.size());
-	}
-
-	inline const Mesh& SkinnedModel::getMesh(unsigned int index) const {
-		return meshes[index];
-	}
-
-	inline const SkinnedMesh& SkinnedModel::getSkinnedMesh(unsigned int index) const {
-		return meshes[index];
-	}
-
-	inline unsigned int SkinnedModel::meshCount() const {
-		return unsigned int(meshes.size());
 	}
 
 }
