@@ -495,6 +495,9 @@
     <ClCompile Include="renderer\shader\defshading.cpp">
       <Filter>renderer\shader</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\animation\bone.cpp">
+      <Filter>renderer\animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -997,6 +1000,9 @@
     </ClInclude>
     <ClInclude Include="application\luaconfig.h">
       <Filter>application</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\animation\bone.h">
+      <Filter>renderer\animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

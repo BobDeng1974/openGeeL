@@ -9,6 +9,7 @@
 #include "materials/materialfactory.h"
 #include "materials/defaultmaterial.h"
 #include "animation/skeleton.h"
+#include "animation/bone.h"
 #include "animation/animation.h"
 #include "utility/vectorextension.h"
 #include "utility/matrixextension.h"
@@ -62,7 +63,7 @@ namespace geeL {
 			StaticMesh newMesh(mesh);
 			staticModels[newName].addMesh(std::move(newMesh));
 
-			Transform& newTransform = transform.GetParent()->AddChild(transform);
+			Transform& newTransform = transform.GetParent()->addChild(transform);
 			MeshRenderer* renderer = new MeshRenderer(newTransform, shader, staticModels[newName], 
 				faceCulling, mesh.getName());
 
@@ -168,13 +169,13 @@ namespace geeL {
 		processAnimations(model, scene);
 
 		aiNode* node = scene->mRootNode;
-		Transform* rootBone = new Transform(MatrixExtension::convertMatrix(node->mTransformation));
+		Bone* rootBone = new Bone(MatrixExtension::convertMatrix(node->mTransformation));
 		rootBone->setName(string(node->mName.C_Str()));
 
 		string directory = path.substr(0, path.find_last_of('/'));
 		processSkinnedNode(model, *rootBone, directory, node, scene);
 
-		Skeleton* skeleton = new Skeleton(rootBone);
+		Skeleton* skeleton = new Skeleton(*rootBone);
 		model.setSkeleton(skeleton);
 	}
 
@@ -187,9 +188,10 @@ namespace geeL {
 		for (unsigned int i = 0; i < node->mNumChildren; i++) {
 			aiNode* child = node->mChildren[i];
 			aiMatrix4x4& mat = child->mTransformation;
-			Transform* trans = new Transform(MatrixExtension::convertMatrix(mat));
+
+			std::unique_ptr<Transform> trans(new Bone(MatrixExtension::convertMatrix(mat)));
 			trans->setName(string(child->mName.C_Str()));
-			boneTransform.AddChild(trans);
+			boneTransform.addChild(std::move(trans));
 
 			processSkinnedNode(model, *trans, directory, child, scene);
 		}

@@ -11,7 +11,9 @@ namespace geeL {
 	}
 
 	Transform& TransformFactory::CreateTransform(Transform& parent) {
-		return parent.AddChild(new Transform());
+		std::unique_ptr<Transform> child(new Transform());
+
+		return parent.addChild(std::move(child));
 	}
 
 	Transform& TransformFactory::CreateTransform(vec3 position, vec3 rotation, vec3 scaling, bool isStatic) {
@@ -19,8 +21,9 @@ namespace geeL {
 	}
 
 	Transform& TransformFactory::CreateTransform(Transform& parent, vec3 position, vec3 rotation, vec3 scaling, bool isStatic) {
-		//return parent.AddChild(new Transform(position, rotation, scaling, isStatic));
-		return parent.AddChild(new Transform(position, rotation, scaling, isStatic));
+		std::unique_ptr<Transform> child(new Transform(position, rotation, scaling, isStatic));
+
+		return parent.addChild(std::move(child));
 	}
 
 	Transform& TransformFactory::getWorldTransform() {

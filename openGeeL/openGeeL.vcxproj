@@ -177,6 +177,7 @@
     <ClCompile Include="renderer\animation\animatedobject.cpp" />
     <ClCompile Include="renderer\animation\animation.cpp" />
     <ClCompile Include="renderer\animation\animator.cpp" />
+    <ClCompile Include="renderer\animation\bone.cpp" />
     <ClCompile Include="renderer\animation\skeleton.cpp" />
     <ClCompile Include="renderer\cameras\camera.cpp" />
     <ClCompile Include="renderer\cameras\movablecamera.cpp" />
@@ -330,6 +331,7 @@
     <ClInclude Include="renderer\animation\animatedobject.h" />
     <ClInclude Include="renderer\animation\animation.h" />
     <ClInclude Include="renderer\animation\animator.h" />
+    <ClInclude Include="renderer\animation\bone.h" />
     <ClInclude Include="renderer\animation\skeleton.h" />
     <ClInclude Include="renderer\cameras\camera.h" />
     <ClInclude Include="renderer\cameras\movablecamera.h" />

@@ -2,16 +2,42 @@
 #include "skeleton.h"
 
 namespace geeL {
+	
+	Skeleton::Skeleton() : rootBone(nullptr) {}
 
-	Skeleton::Skeleton(Transform* const root) : rootBone(root) {
-		addBone(root);
+	Skeleton::Skeleton(Transform& root) : rootBone(&root) {
+		addBone(&root);
+	}
+
+	Skeleton::Skeleton(const Skeleton& other) 
+		: rootBone(new Transform(*other.rootBone)) {
+
+		addBone(rootBone);
+	}
+
+	Skeleton::Skeleton(Skeleton&& other) 
+		: rootBone(other.rootBone)
+		, bones(std::move(other.bones)) {
+
+		other.rootBone = nullptr;
 	}
 
 	Skeleton::~Skeleton() {
 		//Only delete rootBone if it isn't part of any transformation structure
 		//since it will then be deleted automatically
-		if(rootBone->GetParent() == nullptr)
+		if(rootBone != nullptr && rootBone->GetParent() == nullptr)
 			delete rootBone;
+	}
+
+	Skeleton& Skeleton::operator=(Skeleton&& other) {
+		if (this != &other) {
+			rootBone = other.rootBone;
+			bones = std::move(other.bones);
+
+			other.rootBone = nullptr;
+		}
+
+		return *this;
 	}
 
 
@@ -49,6 +75,10 @@ namespace geeL {
 			Transform* trans = it->second;
 			trans->setMatrix(transform.getMatrix());
 		}
+	}
+
+	void Skeleton::setParent(Transform& parent) {
+		parent.addChild(std::unique_ptr<Transform>(rootBone));
 	}
 
 	void Skeleton::addBone(Transform* transform) {

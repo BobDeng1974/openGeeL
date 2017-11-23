@@ -20,7 +20,7 @@ namespace geeL {
 		//Add transform of skeleton to the transform of the actual model
 		//and therefore into the whole scene structure. Thus, updating 
 		//transform information will be taken care off
-		transform.AddChild(skeleton->getRootBone());
+		skeleton->setParent(transform);
 	}
 
 	SkinnedMeshRenderer::~SkinnedMeshRenderer() {

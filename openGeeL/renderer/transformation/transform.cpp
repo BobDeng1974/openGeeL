@@ -98,6 +98,10 @@ namespace geeL {
 
 		id = idCounter;
 		idCounter++;
+
+		transform.iterateChildren([this](const Transform& child) {
+			this->addChild(child);
+		});
 	}
 
 
@@ -546,23 +550,35 @@ namespace geeL {
 			function(**it);
 	}
 
-
-	Transform& Transform::AddChild(const Transform& child) {
-		return AddChild(new Transform(child));
-	}
-
-	Transform& Transform::AddChild(Transform* child) {
+	void Transform::iterateChildren(std::function<void(const Transform&)> function) const {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
 
-		children.push_back(child);
-		child->ChangeParent(*this);
-
-		return *child;
+		for (auto it(children.begin()); it != children.end(); it++)
+			function(**it);
 	}
 
-	void Transform::RemoveChild(Transform& child) {
+
+	Transform& Transform::addChild(const Transform& child) {
+		std::unique_ptr<Transform> newChild(new Transform(child));
+
+		return addChild(std::move(newChild));
+	}
+
+	Transform& Transform::addChild(std::unique_ptr<Transform> child) {
+#if MULTI_THREADING_SUPPORT
+		transformLock();
+#endif
+
+		Transform* c = child.release();
+		children.push_back(c);
+		c->changeParent(*this);
+
+		return *c;
+	}
+
+	void Transform::removeChild(Transform& child) {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
@@ -570,14 +586,14 @@ namespace geeL {
 		children.remove(&child);
 	}
 
-	void Transform::ChangeParent(Transform& newParent) {
+	void Transform::changeParent(Transform& newParent) {
 #if MULTI_THREADING_SUPPORT
 		transformLock();
 #endif
 
 		if (&newParent != parent) {
 			if (parent != nullptr)
-				parent->RemoveChild(*this);
+				parent->removeChild(*this);
 
 			parent = &newParent;
 			status = TransformUpdateStatus::NeedsUpdate;

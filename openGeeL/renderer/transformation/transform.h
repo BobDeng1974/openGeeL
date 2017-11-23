@@ -7,6 +7,7 @@
 #include <gtc/quaternion.hpp>
 #include <functional>
 #include <list>
+#include <memory>
 #include <string>
 
 using glm::vec3;
@@ -61,22 +62,23 @@ namespace geeL {
 		virtual mat4 lookAt() const;
 
 		virtual void iterateChildren(std::function<void(Transform&)> function);
+		virtual void iterateChildren(std::function<void(const Transform&)> function) const;
 
 		//Adds a copy of the given transform
 		//as a child to this transform and 
 		//returns a reference to it
-		virtual Transform& AddChild(const Transform& child);
+		virtual Transform& addChild(const Transform& child);
 
 		//Add the child to this transform. Memory of child will be 
 		//managed by this transform.
-		virtual Transform& AddChild(Transform* child);
+		virtual Transform& addChild(std::unique_ptr<Transform> child);
 
 		//Remove child from transform. Memory of child will no longer
 		//be taken care off and needs to be managed by caller
-		virtual void RemoveChild(Transform& child);
+		virtual void removeChild(Transform& child);
 
 		virtual Transform* GetParent() const;
-		virtual void ChangeParent(Transform& newParent);
+		virtual void changeParent(Transform& newParent);
 
 		//Updates transformation matrix with recent changes to position, rotation and scale.
 		//Needs therefore only to be called when actual changes were made.
@@ -91,10 +93,9 @@ namespace geeL {
 
 		virtual void addChangeListener(std::function<void(const Transform&)> listener);
 
+		virtual std::string toString() const;
 		virtual const std::string& getName() const;
 		virtual void setName(const std::string& name);
-
-		virtual std::string toString() const;
 
 	protected:
 		glm::quat rotation;

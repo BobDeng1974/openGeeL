@@ -33,11 +33,11 @@ namespace geeL {
 		void add(PostEffectSnippet& snippet);
 		void add(std::unique_ptr<PostEffectSnippet>& snippet);
 
-		template<typename... Snippets>
+		template<typename ...Snippets>
 		void add(PostEffectSnippet& snippet, Snippets& ...snippets);
 
 		//Add main snippet to post effect list. Memory of all given snippets will be managed
-		template<typename... Snippets>
+		template<typename ...Snippets>
 		void add(std::unique_ptr<PostEffectSnippet> snippet, Snippets ...snippets);
 
 		void add(DefaultPostProcess& def);

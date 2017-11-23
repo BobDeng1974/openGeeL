@@ -12,11 +12,13 @@ namespace geeL {
 	class Skeleton {
 
 	public:
-		//Create new skeleton with given root bone. It is assumed
-		//that bone structure is already complete and no new bones
-		//will be added
-		Skeleton(Transform* const root);
+		Skeleton();
+		Skeleton(Transform& root);
+		Skeleton(const Skeleton& other);
+		Skeleton(Skeleton&& other);
 		~Skeleton();
+
+		Skeleton& operator=(Skeleton&& other);
 
 		unsigned int getBoneID(std::string name) const;
 
@@ -26,9 +28,14 @@ namespace geeL {
 
 		void setBone(std::string name, Transform& transform);
 
+		void setParent(Transform& parent);
+
+
 	private:
 		Transform* rootBone;
 		std::map<std::string, Transform*> bones;
+
+		Skeleton& operator=(const Skeleton& other) = delete;
 
 		void addBone(Transform* transform);
 
