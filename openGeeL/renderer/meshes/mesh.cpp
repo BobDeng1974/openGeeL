@@ -4,8 +4,9 @@
 #include "mesh.h"
 #include "materials/defaultmaterial.h"
 #include "materials/material.h"
+#include "animation/bone.h"
 #include "animation/skeleton.h"
-#include "transformation/transform.h"
+#include "shader/rendershader.h"
 
 using namespace std;
 
@@ -98,7 +99,7 @@ namespace geeL {
 	SkinnedMesh::SkinnedMesh(const std::string& name, 
 		vector<SkinnedVertex>& vertices, 
 		vector<unsigned int>& indices,
-		std::map<std::string, MeshBoneData>& bones, 
+		std::map<std::string, MeshBone>& bones,
 		MaterialContainer& material)
 			: Mesh(name, material)
 			, vertices(std::move(vertices))
@@ -145,24 +146,20 @@ namespace geeL {
 		glBindVertexArray(0);
 	}
 
+	void SkinnedMesh::updateBones(const RenderShader& shader) {
+		for (auto it(bones.begin()); it != bones.end(); it++) {
+			const MeshBone& data = it->second;
+			Bone* bone = data.bone;
+			mat4 finalTransform = bone->getMatrix() * data.offsetMatrix;
+
+			shader.bind<glm::mat4>("bones[" + std::to_string(data.id) + "]", finalTransform);
+		}
+	}
+
 	void SkinnedMesh::draw() const {
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, int(indices.size()), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
-	}
-
-	void SkinnedMesh::updateMeshBoneData(Skeleton& skeleton) {
-
-		for (auto it = bones.begin(); it != bones.end(); it++) {
-			const std::string& name = (*it).first;
-			MeshBoneData& data = (*it).second;
-			Transform* bone = skeleton.getBone(name);
-
-			if(bone != nullptr)
-				data.transform = bone->getMatrix() * data.offsetMatrix;
-			else
-				throw "Bone not present. Something went wrong during importing process";
-		}
 	}
 
 	size_t SkinnedMesh::getIndicesCount() const {
@@ -194,35 +191,19 @@ namespace geeL {
 		return vertices[i].position;
 	}
 
-	unsigned int SkinnedMesh::getBoneID(std::string name) const {
-		auto it = bones.find(name);
-		if (it != bones.end())
-			return it->second.id;
-
-		return 0;
-	}
-
-	void SkinnedMesh::setBoneID(std::string name, unsigned int id) {
-		auto it = bones.find(name);
-		if (it != bones.end()) {
-			MeshBoneData& data = it->second;
-			data.id = id;
-		}
-	}
-
-	std::map<std::string, MeshBoneData>::iterator  SkinnedMesh::bonesBegin() {
+	std::map<std::string, MeshBone>::iterator  SkinnedMesh::bonesBegin() {
 		return bones.begin();
 	}
 
-	std::map<std::string, MeshBoneData>::iterator  SkinnedMesh::bonesEnd() {
+	std::map<std::string, MeshBone>::iterator  SkinnedMesh::bonesEnd() {
 		return bones.end();
 	}
 
-	std::map<std::string, MeshBoneData>::const_iterator  SkinnedMesh::bonesBeginConst() const {
+	std::map<std::string, MeshBone>::const_iterator  SkinnedMesh::bonesBeginConst() const {
 		return bones.begin();
 	}
 
-	std::map<std::string, MeshBoneData>::const_iterator  SkinnedMesh::bonesEndBegin() const {
+	std::map<std::string, MeshBone>::const_iterator  SkinnedMesh::bonesEndBegin() const {
 		return bones.end();
 	}
 

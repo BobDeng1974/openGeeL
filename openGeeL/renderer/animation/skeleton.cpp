@@ -25,7 +25,7 @@ namespace geeL {
 	Skeleton::~Skeleton() {
 		//Only delete rootBone if it isn't part of any transformation structure
 		//since it will then be deleted automatically
-		if(rootBone != nullptr && rootBone->GetParent() == nullptr)
+		if(rootBone != nullptr && rootBone->getParent() == nullptr)
 			delete rootBone;
 	}
 

@@ -18,9 +18,6 @@ namespace geeL {
 		//Add animation. Memory will be managed by this model
 		virtual void addAnimation(Animation* animation);
 
-		//Update object data according to given animated skeleton
-		virtual void updateBones(Skeleton& skeleton) = 0;
-
 		//Get animation at index. Index will get clamped if not present.
 		const Animation& getAnimation(size_t index) const;
 

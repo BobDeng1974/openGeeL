@@ -17,9 +17,6 @@ namespace geeL {
 
 		virtual ~SkinnedMeshRenderer();
 
-		//Updates model with current transformational data of skeleton
-		virtual void lateUpdate();
-
 		virtual void draw(SceneShader& shader) const;
 		virtual void drawExclusive(SceneShader& shader) const;
 		virtual void drawGeometry(const RenderShader& shader) const;
@@ -33,7 +30,6 @@ namespace geeL {
 		Skeleton* skeleton;
 		SkinnedModel* skinnedModel;
 
-		void loadSkeleton(const RenderShader& shader) const;
 	};
 
 }

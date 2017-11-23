@@ -12,7 +12,9 @@
 
 namespace geeL {
 
+	class Bone;
 	class MaterialContainer;
+	class RenderShader;
 	class Skeleton;
 
 
@@ -50,10 +52,12 @@ namespace geeL {
 	};
 
 
-	//Single bone in meshes skeleton
-	struct MeshBoneData {
+	//Stores how single bone needs to be processed by mesh
+	struct MeshBone {
+		Bone* bone = nullptr;
 		unsigned int id;
 		glm::mat4 offsetMatrix;
+
 		glm::mat4 transform;
 
 	};
@@ -122,12 +126,12 @@ namespace geeL {
 		SkinnedMesh(const std::string& name, 
 			std::vector<SkinnedVertex>& vertices, 
 			std::vector<unsigned int>& indices,
-			std::map<std::string, MeshBoneData>& bones, 
+			std::map<std::string, MeshBone>& bones,
 			MaterialContainer& material);
 
+		//Update mesh bone data into given shader
+		void updateBones(const RenderShader& shader);
 		virtual void draw() const;
-
-		void updateMeshBoneData(Skeleton& skeleton);
 
 		virtual size_t getIndicesCount() const;
 		virtual size_t getVerticesCount() const;
@@ -137,20 +141,17 @@ namespace geeL {
 		virtual unsigned int getIndex(size_t i) const;
 		virtual const glm::vec3& getVertexPosition(size_t i) const;
 
-		unsigned int getBoneID(std::string name) const;
-		void setBoneID(std::string name, unsigned int id);
+		std::map<std::string, MeshBone>::iterator bonesBegin();
+		std::map<std::string, MeshBone>::iterator bonesEnd();
 
-		std::map<std::string, MeshBoneData>::iterator bonesBegin();
-		std::map<std::string, MeshBoneData>::iterator bonesEnd();
-
-		std::map<std::string, MeshBoneData>::const_iterator bonesBeginConst() const;
-		std::map<std::string, MeshBoneData>::const_iterator bonesEndBegin() const;
+		std::map<std::string, MeshBone>::const_iterator bonesBeginConst() const;
+		std::map<std::string, MeshBone>::const_iterator bonesEndBegin() const;
 
 	private:
 		unsigned int vao, vbo, ebo;
 		std::vector<SkinnedVertex> vertices;
 		std::vector<unsigned int> indices;
-		std::map<std::string, MeshBoneData> bones;
+		std::map<std::string, MeshBone> bones;
 
 		void init();
 	};

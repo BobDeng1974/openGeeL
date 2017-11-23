@@ -29,11 +29,6 @@ namespace geeL {
 	}
 
 
-	void SkinnedMeshRenderer::lateUpdate() {
-		skinnedModel->updateBones(*skeleton);
-	}
-
-
 	void SkinnedMeshRenderer::draw(SceneShader& shader) const {
 		CullingGuard culling(faceCulling);
 
@@ -83,17 +78,6 @@ namespace geeL {
 
 	SkinnedModel& SkinnedMeshRenderer::getSkinnedModel() {
 		return *skinnedModel;
-	}
-
-	void SkinnedMeshRenderer::loadSkeleton(const RenderShader& shader) const {
-		skinnedModel->iterateMeshes([&](const SkinnedMesh& mesh) {
-			for (auto et = mesh.bonesBeginConst(); et != mesh.bonesEndBegin(); et++) {
-				const MeshBoneData& data = et->second;
-				const glm::mat4& transform = data.transform;
-
-				shader.bind<glm::mat4>("bones[" + std::to_string(data.id) + "]", transform);
-			}
-		});
 	}
 
 	RenderMode SkinnedMeshRenderer::getRenderMode() const {

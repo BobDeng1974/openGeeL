@@ -11,6 +11,12 @@ namespace geeL {
 		template<typename ...TransformArgs>
 		Bone(TransformArgs&& ...args);
 
+		unsigned int getBoneID() const;
+		void setBoneID(unsigned int id);
+
+	private:
+		unsigned int boneID;
+
 	};
 
 

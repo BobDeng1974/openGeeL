@@ -63,7 +63,7 @@ namespace geeL {
 			StaticMesh newMesh(mesh);
 			staticModels[newName].addMesh(std::move(newMesh));
 
-			Transform& newTransform = transform.GetParent()->addChild(transform);
+			Transform& newTransform = transform.getParent()->addChild(transform);
 			MeshRenderer* renderer = new MeshRenderer(newTransform, shader, staticModels[newName], 
 				faceCulling, mesh.getName());
 
@@ -171,6 +171,7 @@ namespace geeL {
 		aiNode* node = scene->mRootNode;
 		Bone* rootBone = new Bone(MatrixExtension::convertMatrix(node->mTransformation));
 		rootBone->setName(string(node->mName.C_Str()));
+		processSkeleton(*rootBone, node);
 
 		string directory = path.substr(0, path.find_last_of('/'));
 		processSkinnedNode(model, *rootBone, directory, node, scene);
@@ -179,23 +180,14 @@ namespace geeL {
 		model.setSkeleton(skeleton);
 	}
 
-	void MeshFactory::processSkinnedNode(SkinnedModel& model, Transform& boneTransform, 
+	void MeshFactory::processSkinnedNode(SkinnedModel& model, Bone& bone,
 		string directory, aiNode* node, const aiScene* scene) {
 
 		string name = node->mName.C_Str();
 
 		//Traverse node tree
-		for (unsigned int i = 0; i < node->mNumChildren; i++) {
-			aiNode* child = node->mChildren[i];
-			aiMatrix4x4& mat = child->mTransformation;
-
-			std::unique_ptr<Transform> trans(new Bone(MatrixExtension::convertMatrix(mat)));
-			trans->setName(string(child->mName.C_Str()));
-			boneTransform.addChild(std::move(trans));
-
-			processSkinnedNode(model, *trans, directory, child, scene);
-		}
-
+		for (unsigned int i = 0; i < node->mNumChildren; i++)
+			processSkinnedNode(model, bone, directory, node->mChildren[i], scene);
 
 		//Add mesh if current node contains one
 		for (unsigned int i = 0; i < node->mNumMeshes; i++) {
@@ -203,14 +195,14 @@ namespace geeL {
 
 			vector<SkinnedVertex> vertices;
 			vector<unsigned int> indices;
-			map<string, MeshBoneData> bones;
+			map<string, MeshBone> bones;
 			vector<TextureMap*> textures;
 
 			vertices.reserve(mesh->mNumVertices);
 
 			processVertices(vertices, mesh);
 			processIndices(indices, mesh);
-			processBones(vertices, bones, mesh);
+			processBones(vertices, bones, mesh, bone);
 			processTextures(textures, directory, mesh, scene);
 
 			DefaultMaterialContainer& mat = factory.CreateMaterial();
@@ -297,15 +289,20 @@ namespace geeL {
 	}
 
 
-	void MeshFactory::processBones(vector<SkinnedVertex>& vertices, std::map<std::string, MeshBoneData>& bones, aiMesh* mesh) {
+	void MeshFactory::processBones(vector<SkinnedVertex>& vertices, 
+		std::map<std::string, MeshBone>& bones, aiMesh* mesh, Bone& parentBone) {
 
 		for (unsigned int i = 0; i < mesh->mNumBones; i++) {
 			aiBone* bone = mesh->mBones[i];
 			const string& name = bone->mName.data;
 
+			Bone* transformBone = static_cast<Bone*>(parentBone.find(name));
+			assert(transformBone != nullptr);
+
 			aiMatrix4x4& mat = bone->mOffsetMatrix;
 			bones[name].offsetMatrix = MatrixExtension::convertMatrix(mat);
 			bones[name].id = i;
+			bones[name].bone = transformBone;			
 
 			//Iterate over all vertices that are affected by this bone
 			for (unsigned int j = 0; j < bone->mNumWeights; j++) {
@@ -432,6 +429,20 @@ namespace geeL {
 			}
 
 			model.addAnimation(animation);
+		}
+	}
+
+	void MeshFactory::processSkeleton(Bone& bone, aiNode* node) {
+
+		for (unsigned int i = 0; i < node->mNumChildren; i++) {
+			aiNode* child = node->mChildren[i];
+			aiMatrix4x4& mat = child->mTransformation;
+
+			Bone* childBone = new Bone(MatrixExtension::convertMatrix(mat));
+			childBone->setName(string(child->mName.C_Str()));
+			bone.addChild(std::unique_ptr<Transform>(childBone));
+
+			processSkeleton(*childBone, child);
 		}
 	}
 

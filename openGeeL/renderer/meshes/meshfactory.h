@@ -23,6 +23,7 @@ namespace geeL {
 	struct MeshBoneData;
 
 	class Animation;
+	class Bone;
 	class MaterialFactory;
 	class MeshRenderer;
 	class Model;
@@ -78,17 +79,17 @@ namespace geeL {
 		void processStaticNode(StaticModel& model, std::string directory, aiNode* node, const aiScene* scene);
 
 		void fillSkinnedModel(SkinnedModel& model, std::string path);
-		void processSkinnedNode(SkinnedModel& model, Transform& bone, std::string directory, aiNode* node, const aiScene* scene);
+		void processSkinnedNode(SkinnedModel& model, Bone& bone, std::string directory, aiNode* node, const aiScene* scene);
 
 		template<class V>
 		void processVertices(std::vector<V>& vertices, aiMesh* mesh);
 		void processIndices(std::vector<unsigned int>& indices, aiMesh* mesh);
-		void processBones(std::vector<SkinnedVertex>& vertices, std::map<std::string, MeshBoneData>& bones, aiMesh* mesh);
+		void processBones(std::vector<SkinnedVertex>& vertices, std::map<std::string, MeshBone>& bones, aiMesh* mesh, Bone& bone);
 
 		void processMaterial(DefaultMaterialContainer& material, aiMesh* mesh, const aiScene* scene);
 		void processTextures(std::vector<TextureMap*>& textures, std::string directory, aiMesh* mesh, const aiScene* scene);
 		void processAnimations(SkinnedModel& model, const aiScene* scene);
-
+		void processSkeleton(Bone& bone, aiNode* node);
 
 		void loadMaterialTextures(std::vector<TextureMap*>& textures, aiMaterial* mat,
 			aiTextureType aiType, MapType type, std::string directory, ColorType colorType);

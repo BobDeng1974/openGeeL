@@ -32,29 +32,6 @@ namespace geeL {
 	}
 
 
-	void SkinnedModel::updateBones(Skeleton& skeleton) {
-		for (auto it = meshes.begin(); it != meshes.end(); it++) {
-			SkinnedMesh& mesh = *it;
-			mesh.updateMeshBoneData(skeleton);
-		}
-	}
-
-	void SkinnedModel::setSkeleton(Skeleton* const skeleton) {
-		AnimatedObject::setSkeleton(skeleton);
-
-		//Align bone IDs to those of the skeleton
-		for (auto it = meshes.begin(); it != meshes.end(); it++) {
-			SkinnedMesh& mesh = *it;
-
-			for (auto et = mesh.bonesBegin(); et != mesh.bonesEnd(); et++) {
-				const string& name = et->first;
-				MeshBoneData& data = et->second;
-
-				data.id = this->skeleton->getBoneID(name);
-			}
-		}
-	}
-
 	SkinnedMesh& SkinnedModel::addMesh(SkinnedMesh&& mesh) {
 		meshes.push_back(std::move(mesh));
 		return meshes.back();
