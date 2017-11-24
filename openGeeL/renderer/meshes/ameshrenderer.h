@@ -39,13 +39,13 @@ namespace geeL {
 
 		//Only draw those meshes whose materials
 		//are linked to given shader
-		virtual void draw(SceneShader& shader) const = 0;
+		virtual void draw(SceneShader& shader) const;
 
 		//Draw all meshes and materials exclusively with the given shader.
-		virtual void drawExclusive(SceneShader& shader) const = 0;
+		virtual void drawExclusive(SceneShader& shader) const;
 
 		//Draw only the meshes without material properties with given shader
-		virtual void drawGeometry(const RenderShader& shader) const = 0;
+		virtual void drawGeometry(const RenderShader& shader) const;
 
 		//Add render mask to whole mesh renderer.
 		void setRenderMask(RenderMask mask);
@@ -55,22 +55,21 @@ namespace geeL {
 		void setRenderMask(RenderMask mask, const Mesh& mesh);
 
 		//Customize material of given mesh (If it is actually part of this mesh renderer)
-		virtual void changeMaterial(Material& material, const Mesh& mesh) = 0;
+		virtual void changeMaterial(Material& material, const Mesh& mesh);
 
 		//Customize material of given mesh but keep original material container and 
 		//only change its shader (If it is actually part of this mesh renderer)
-		virtual void changeMaterial(SceneShader& material, const Mesh& mesh) = 0;
+		virtual void changeMaterial(SceneShader& material, const Mesh& mesh);
 
 		void addMaterialChangeListener(std::function<void(MeshRenderer&, Material, Material)> listener);
 
-		virtual void iterate(std::function<void(const Mesh&, const Material&)> function) const = 0;
-		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const = 0;
-		virtual void iterateMaterials(std::function<void(MaterialContainer&)> function) const = 0;
-		virtual void iterateShaders(std::function<void(const SceneShader&)> function) const = 0;
-		virtual void iterateShaders(std::function<void(SceneShader&)> function) = 0;
+		virtual void iterate(std::function<void(const Mesh&, const Material&)> function) const;
+		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const;
+		virtual void iterateMaterials(std::function<void(MaterialContainer&)> function) const;
+		virtual void iterateShaders(std::function<void(const SceneShader&)> function) const;
+		virtual void iterateShaders(std::function<void(SceneShader&)> function);
 
-		virtual const Model& getModel() const = 0;
-		virtual const Mesh* getMesh(const std::string& name) const = 0;
+		virtual const Mesh* getMesh(const std::string& name) const;
 		virtual RenderMode getRenderMode() const = 0;
 
 		//Specify, whether this object should be able to be 
@@ -81,15 +80,17 @@ namespace geeL {
 		//Note: Will always return true if automatic filtering
 		//is disabled (Disabled by default)
 		bool isVisible(const Camera& camera) const;
-		virtual bool containsShader(SceneShader& shader) const = 0;
+		virtual bool containsShader(SceneShader& shader) const;
 
 	protected:
 		RenderMask mask;
 		const CullingMode faceCulling;
 		std::list<std::function<void(MeshRenderer&, Material, Material)>> materialListeners;
+		std::map<SceneShader*, std::list<MaterialMapping>> materials;
+
 
 		void drawMask(const MaterialMapping& mapping) const;
-		virtual MaterialMapping* getMapping(const Mesh& mesh) = 0;
+		virtual MaterialMapping* getMapping(const Mesh& mesh);
 
 	private:
 		bool autoFilter = false;

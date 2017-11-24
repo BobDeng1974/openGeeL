@@ -369,7 +369,6 @@
     <ClInclude Include="renderer\materials\material.h" />
     <ClInclude Include="renderer\materials\materialfactory.h" />
     <ClInclude Include="renderer\meshes\ameshrenderer.h" />
-    <ClInclude Include="renderer\meshes\gmeshrenderer.h" />
     <ClInclude Include="renderer\meshes\materialmapping.h" />
     <ClInclude Include="renderer\meshes\mesh.h" />
     <ClInclude Include="renderer\meshes\meshfactory.h" />

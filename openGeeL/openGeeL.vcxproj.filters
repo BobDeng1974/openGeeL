@@ -998,9 +998,6 @@
     <ClInclude Include="renderer\meshes\ameshrenderer.h">
       <Filter>renderer\meshes</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\meshes\gmeshrenderer.h">
-      <Filter>renderer\meshes</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\meshes\materialmapping.h">
       <Filter>renderer\meshes</Filter>
     </ClInclude>

@@ -41,7 +41,7 @@ namespace geeL {
 		GenericModel(std::string path) : Model(path) {}
 
 		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const;
-		virtual void iterateMeshes(std::function<void(const MeshType&)> function) const;
+		virtual void iterateMeshesGeneric(std::function<void(const MeshType&)> function) const;
 		virtual size_t meshCount() const;
 
 		MeshType& addMesh(MeshType&& mesh);
@@ -84,7 +84,7 @@ namespace geeL {
 	}
 
 	template<typename MeshType>
-	inline void GenericModel<MeshType>::iterateMeshes(std::function<void(const MeshType&)> function) const {
+	inline void GenericModel<MeshType>::iterateMeshesGeneric(std::function<void(const MeshType&)> function) const {
 		for_each(meshes.begin(), meshes.end(), function);
 	}
 

@@ -1,12 +1,17 @@
 #ifndef MESHRENDERER_H
 #define MESHRENDERER_H
 
-#include "gmeshrenderer.h"
+#include "ameshrenderer.h"
 
 namespace geeL {
 
+	class StaticModel;
+	class SkinnedModel;
+	class Skeleton;
+
+
 	//Represents a drawn model in a render scene. Independent from actual model
-	class StaticMeshRenderer : public GenericMeshRenderer<StaticMesh> {
+	class StaticMeshRenderer : public MeshRenderer {
 
 	public:
 		//Constructor for mesh renderer with an unique assigned model
@@ -20,11 +25,14 @@ namespace geeL {
 
 		virtual RenderMode getRenderMode() const;
 
+	private:
+		void initMaterials(SceneShader& shader, StaticModel& model);
+
 	};
 
 
 	//Special mesh renderer that is intended for use with animated/skinned models
-	class SkinnedMeshRenderer : public GenericMeshRenderer<SkinnedMesh> {
+	class SkinnedMeshRenderer : public MeshRenderer {
 
 	public:
 		SkinnedMeshRenderer(Transform& transform,
@@ -43,6 +51,8 @@ namespace geeL {
 	private:
 		Skeleton* skeleton;
 		SkinnedModel& skinnedModel;
+
+		void initMaterials(SceneShader& shader);
 
 	};
 

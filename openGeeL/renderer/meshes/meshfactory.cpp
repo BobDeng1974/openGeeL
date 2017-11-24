@@ -53,7 +53,7 @@ namespace geeL {
 		string path = model.getPath();
 		
 		size_t counter = 1;
-		model.iterateMeshes([&](const StaticMesh& mesh) {
+		model.iterateMeshesGeneric([&](const StaticMesh& mesh) {
 			string newName = path + " " + mesh.getName() + std::to_string(counter++);
 
 			staticModels[newName] = StaticModel(path);
