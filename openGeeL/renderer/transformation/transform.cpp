@@ -13,7 +13,7 @@ using namespace std;
 using namespace glm;
 using glm::normalize;
 
-#define transformLock() std::lock_guard<std::recursive_mutex> guard(mutex);
+#define transformLock() std::lock_guard<std::mutex> guard(mutex);
 
 namespace geeL {
 
@@ -639,7 +639,7 @@ namespace geeL {
 	
 	const string& Transform::getName() const {
 #if MULTI_THREADING_SUPPORT
-		//transformLock();
+		transformLock();
 #endif
 
 		return name;

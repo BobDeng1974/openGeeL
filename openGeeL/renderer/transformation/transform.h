@@ -125,7 +125,7 @@ namespace geeL {
 		std::list<std::function<void(const Transform&)>> changeListener;
 		TransformUpdateStatus status;
 
-		mutable std::recursive_mutex mutex;
+		mutable std::mutex mutex;
 
 		void setEulerAnglesInternal(const vec3& eulerAngles);
 		void resetMatrix();
