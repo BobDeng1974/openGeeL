@@ -65,6 +65,7 @@ namespace geeL {
 
 		virtual void iterate(std::function<void(const Mesh&, const Material&)> function) const;
 		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const;
+		virtual void iterateMeshesSafe(std::function<void(const Mesh&)> function) const;
 		virtual void iterateMaterials(std::function<void(MaterialContainer&)> function) const;
 		virtual void iterateShaders(std::function<void(const SceneShader&)> function) const;
 		virtual void iterateShaders(std::function<void(SceneShader&)> function);

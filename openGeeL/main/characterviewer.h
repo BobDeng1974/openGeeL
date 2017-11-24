@@ -50,7 +50,7 @@ public:
 
 			scene.addMeshRenderer(plane);
 
-			plane.iterateMeshes([&](const Mesh& mesh) {
+			plane.iterateMeshesSafe([&](const Mesh& mesh) {
 				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
 				plane.changeMaterial(ss, mesh);
 			});
@@ -77,7 +77,7 @@ public:
 			scene.addMeshRenderer(girl);
 
 
-			girl.iterateMeshes([&](const Mesh& mesh) {
+			girl.iterateMeshesSafe([&](const Mesh& mesh) {
 				if (mesh.getName() == "eyelash" || mesh.getName() == "fur") {
 
 					girl.setRenderMask(RenderMask::Empty, mesh);
@@ -124,7 +124,6 @@ public:
 			PostProcessingEffectLister& postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
 			gui.addElement(postLister);
 			gui.addSystemInformation(0.01f, 0.74f, 0.17f, 0.145f);
-
 
 			def.setExposure(1.25f);
 			postLister.add(def);
