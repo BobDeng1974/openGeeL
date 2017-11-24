@@ -20,9 +20,8 @@ namespace geeL{
 		const std::string & name) 
 			: SceneObject(transform, name)
 			, faceCulling(faceCulling)
-			, mask(RenderMask::None) {
-			
-	}
+			, mask(RenderMask::None) {}
+
 
 	void MeshRenderer::setRenderMask(RenderMask mask) {
 		this->mask = mask;
@@ -72,6 +71,7 @@ namespace geeL{
 	}
 
 
+
 	SkinnedMeshRenderer::SkinnedMeshRenderer(Transform& transform,
 		SceneShader& shader,
 		SkinnedModel& model,
@@ -104,8 +104,5 @@ namespace geeL{
 	RenderMode SkinnedMeshRenderer::getRenderMode() const {
 		return RenderMode::Skinned;
 	}
-
-
-
 
 }

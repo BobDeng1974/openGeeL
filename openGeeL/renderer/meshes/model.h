@@ -23,10 +23,7 @@ namespace geeL {
 		Model() {}
 		Model(std::string path) : path(path) {}
 
-		virtual void draw(const Shader& shader) const = 0;
-
 		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const = 0;
-
 		const std::string& getPath() const;
 
 	protected:
@@ -43,12 +40,9 @@ namespace geeL {
 		GenericModel() {}
 		GenericModel(std::string path) : Model(path) {}
 
-		//Draw all meshes of models without materials
-		virtual void draw(const Shader& shader) const;
-
 		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const;
 		virtual void iterateMeshes(std::function<void(const MeshType&)> function) const;
-		virtual unsigned int meshCount() const;
+		virtual size_t meshCount() const;
 
 		MeshType& addMesh(MeshType&& mesh);
 		virtual const MeshType& getMesh(unsigned int index) const;
@@ -85,13 +79,6 @@ namespace geeL {
 	}
 
 	template<typename MeshType>
-	inline void GenericModel<MeshType>::draw(const Shader& shader) const {
-		iterateMeshes([&shader](const MeshType& mesh) {
-			mesh.draw(shader);
-		});
-	}
-
-	template<typename MeshType>
 	inline void GenericModel<MeshType>::iterateMeshes(std::function<void(const Mesh&)> function) const {
 		for_each(meshes.begin(), meshes.end(), function);
 	}
@@ -102,7 +89,7 @@ namespace geeL {
 	}
 
 	template<typename MeshType>
-	inline unsigned int GenericModel<MeshType>::meshCount() const {
+	inline size_t GenericModel<MeshType>::meshCount() const {
 		return meshes.size();
 	}
 

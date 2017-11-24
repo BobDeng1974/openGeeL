@@ -1,6 +1,7 @@
 #include "transformation/transform.h"
 #include "utility/rendertime.h"
 #include "animation.h"
+#include "bone.h"
 #include "skeleton.h"
 #include "animatedobject.h"
 #include "animator.h"
@@ -31,8 +32,9 @@ namespace geeL {
 			for (auto it = currentAnimation->bonesStart(); it != currentAnimation->bonesEnd(); it++) {
 				const std::string& name = (*it).first;
 
-				Transform& bone = *skeleton.getBone(name);
-				currentAnimation->updateBone(name, bone, currentTime);
+				Transform* bone = skeleton.getBone(name);
+				if (bone != nullptr)
+					currentAnimation->updateBone(name, *bone, currentTime);
 			}
 		}
 	}

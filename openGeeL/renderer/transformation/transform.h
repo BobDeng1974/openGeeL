@@ -34,8 +34,8 @@ namespace geeL {
 		Transform(vec3 position, glm::quat rotation, vec3 scaling, bool isStatic = false);
 		Transform(vec3 position, vec3 rotation, vec3 scaling, bool isStatic = false);
 		Transform(const Transform& transform);
+		Transform(const Transform& transform, bool copyChildren);
 		~Transform();
-		
 		
 		glm::vec3 getPosition() const;
 		glm::quat getRotation() const;
@@ -125,7 +125,7 @@ namespace geeL {
 		std::list<std::function<void(const Transform&)>> changeListener;
 		TransformUpdateStatus status;
 
-		mutable std::mutex mutex;
+		mutable std::recursive_mutex mutex;
 
 		void setEulerAnglesInternal(const vec3& eulerAngles);
 		void resetMatrix();

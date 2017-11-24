@@ -7,12 +7,12 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "animation/bone.h"
 
 #define BONECOUNT 3
 
 namespace geeL {
 
-	class Bone;
 	class MaterialContainer;
 	class RenderShader;
 	class Shader;
@@ -155,6 +155,7 @@ namespace geeL {
 
 		//Update mesh bone data into given shader
 		void updateBones(const Shader& shader) const;
+		void updateBones(const Shader& shader, const Skeleton& skeleton) const;
 
 		void init();
 	};

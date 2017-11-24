@@ -102,9 +102,6 @@
     <ClCompile Include="renderer\meshes\mesh.cpp">
       <Filter>renderer\meshes</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\meshes\model.cpp">
-      <Filter>renderer\meshes</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\materials\materialfactory.cpp">
       <Filter>renderer\materials</Filter>
     </ClCompile>

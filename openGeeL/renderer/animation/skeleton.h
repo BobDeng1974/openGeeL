@@ -4,6 +4,7 @@
 #include <list>
 #include <map>
 #include <string>
+#include "bone.h"
 
 namespace geeL {
 
@@ -13,31 +14,26 @@ namespace geeL {
 
 	public:
 		Skeleton();
-		Skeleton(Transform& root);
+		Skeleton(Bone& root);
 		Skeleton(const Skeleton& other);
 		Skeleton(Skeleton&& other);
 		~Skeleton();
 
 		Skeleton& operator=(Skeleton&& other);
 
-		unsigned int getBoneID(std::string name) const;
-
-		Transform* const getRootBone();
-		Transform* const getBone(std::string name);
-		const Transform* const getBone(std::string name) const;
-
-		void setBone(std::string name, Transform& transform);
+		Bone* const getRootBone();
+		Bone* const getBone(const std::string& name);
+		const Bone* const getBone(const std::string& name) const;
 
 		void setParent(Transform& parent);
 
-
 	private:
-		Transform* rootBone;
-		std::map<std::string, Transform*> bones;
+		Bone* rootBone;
+		std::map<std::string, Bone*> bones;
 
 		Skeleton& operator=(const Skeleton& other) = delete;
 
-		void addBone(Transform* transform);
+		void addBone(Bone* transform);
 
 	};
 }

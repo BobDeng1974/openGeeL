@@ -45,13 +45,11 @@ namespace geeL {
 		virtual bool containsShader(SceneShader& shader) const;
 
 	protected:
+		GenericModel<MeshType>* model;
 		std::map<SceneShader*, std::list<GenericMaterialMapping<MeshType>>> materials;
 
 		//Init materials with data from the meshes material containers
 		void initMaterials(SceneShader& shader);
-
-	private:
-		GenericModel<MeshType>* model;
 
 		virtual MaterialMapping* getMapping(const Mesh& mesh);
 
@@ -122,7 +120,10 @@ namespace geeL {
 	template<typename MeshType>
 	inline void GenericMeshRenderer<MeshType>::drawGeometry(const RenderShader& shader) const {
 		transform.bind(shader, "model");
-		model->draw(shader);
+
+		model->iterateMeshes([&shader](const MeshType& mesh) {
+			mesh.draw(shader);
+		});
 	}
 
 	template<typename MeshType>

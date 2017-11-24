@@ -156,8 +156,18 @@ namespace geeL {
 		}
 	}
 
+	void SkinnedMesh::updateBones(const Shader& shader, const Skeleton& skeleton) const {
+		for (auto it(bones.begin()); it != bones.end(); it++) {
+			const MeshBone& data = it->second;
+			const Bone* bone = skeleton.getBone(it->first);
+			mat4 finalTransform = bone->getMatrix() * data.offsetMatrix;
+
+			shader.bind<glm::mat4>("bones[" + std::to_string(data.id) + "]", finalTransform);
+		}
+	}
+
 	void SkinnedMesh::draw(const Shader& shader) const {
-		updateBones(shader);
+		updateBones(shader); //TODO: remove this later on
 
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, int(indices.size()), GL_UNSIGNED_INT, 0);

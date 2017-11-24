@@ -13,7 +13,7 @@ using namespace std;
 using namespace glm;
 using glm::normalize;
 
-#define transformLock() std::lock_guard<std::mutex> guard(mutex);
+#define transformLock() std::lock_guard<std::recursive_mutex> guard(mutex);
 
 namespace geeL {
 
@@ -80,6 +80,9 @@ namespace geeL {
 	}
 
 	Transform::Transform(const Transform& transform) 
+		: Transform(transform, true) {}
+
+	Transform::Transform(const Transform& transform, bool copyChildren)
 		: position(transform.position)
 		, rotation(transform.rotation)
 		, scaling(transform.scaling)
@@ -99,9 +102,11 @@ namespace geeL {
 		id = idCounter;
 		idCounter++;
 
-		transform.iterateChildren([this](const Transform& child) {
-			this->addChild(child);
-		});
+		if(copyChildren) {
+			transform.iterateChildren([this](const Transform& child) {
+				this->addChild(child);
+			});
+		}
 	}
 
 
@@ -634,7 +639,7 @@ namespace geeL {
 	
 	const string& Transform::getName() const {
 #if MULTI_THREADING_SUPPORT
-		transformLock();
+		//transformLock();
 #endif
 
 		return name;

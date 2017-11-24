@@ -1,5 +1,4 @@
 #include "utility/vectorextension.h"
-#include "transformation/transform.h"
 #include "animation.h"
 
 using namespace glm;

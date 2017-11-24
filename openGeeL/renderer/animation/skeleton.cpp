@@ -1,21 +1,23 @@
+#include <iostream>
 #include "transformation/transform.h"
+#include "bone.h"
 #include "skeleton.h"
 
 namespace geeL {
-	
+
 	Skeleton::Skeleton() : rootBone(nullptr) {}
 
-	Skeleton::Skeleton(Transform& root) : rootBone(&root) {
+	Skeleton::Skeleton(Bone& root) : rootBone(&root) {
 		addBone(&root);
 	}
 
-	Skeleton::Skeleton(const Skeleton& other) 
-		: rootBone(new Transform(*other.rootBone)) {
+	Skeleton::Skeleton(const Skeleton& other)
+		: rootBone(new Bone(*other.rootBone)) {
 
 		addBone(rootBone);
 	}
 
-	Skeleton::Skeleton(Skeleton&& other) 
+	Skeleton::Skeleton(Skeleton&& other)
 		: rootBone(other.rootBone)
 		, bones(std::move(other.bones)) {
 
@@ -25,9 +27,10 @@ namespace geeL {
 	Skeleton::~Skeleton() {
 		//Only delete rootBone if it isn't part of any transformation structure
 		//since it will then be deleted automatically
-		if(rootBone != nullptr && rootBone->getParent() == nullptr)
+		if (rootBone != nullptr && rootBone->getParent() == nullptr)
 			delete rootBone;
 	}
+
 
 	Skeleton& Skeleton::operator=(Skeleton&& other) {
 		if (this != &other) {
@@ -41,19 +44,11 @@ namespace geeL {
 	}
 
 
-	unsigned int Skeleton::getBoneID(std::string name) const {
-		auto it = bones.find(name);
-		if (it != bones.end())
-			return it->second->getID();
-
-		return 0;
-	}
-
-	Transform* const Skeleton::getRootBone() {
+	Bone* const Skeleton::getRootBone() {
 		return rootBone;
 	}
 
-	Transform* const Skeleton::getBone(std::string name) {
+	Bone* const Skeleton::getBone(const std::string& name) {
 		auto it = bones.find(name);
 		if (it != bones.end())
 			return it->second;
@@ -61,29 +56,21 @@ namespace geeL {
 		return nullptr;
 	}
 
-	const Transform* const Skeleton::getBone(std::string name) const {
+	const Bone* const Skeleton::getBone(const std::string& name) const {
 		auto it = bones.find(name);
 		if (it != bones.end())
 			return it->second;
 
 		return nullptr;
-	}
-
-	void Skeleton::setBone(std::string name, Transform& transform) {
-		auto it = bones.find(name);
-		if (it != bones.end()) {
-			Transform* trans = it->second;
-			trans->setMatrix(transform.getMatrix());
-		}
 	}
 
 	void Skeleton::setParent(Transform& parent) {
 		parent.addChild(std::unique_ptr<Transform>(rootBone));
 	}
 
-	void Skeleton::addBone(Transform* transform) {
+	void Skeleton::addBone(Bone* transform) {
 		bones[transform->getName()] = transform;
-
+		
 		transform->iterateChildren([this](Transform& child) {
 			addBone(&child);
 		});

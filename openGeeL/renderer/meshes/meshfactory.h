@@ -5,6 +5,7 @@
 #include <string>
 #include <list>
 #include <vector>
+#include "animation/bone.h"
 
 enum aiTextureType;
 
@@ -24,7 +25,6 @@ namespace geeL {
 	struct MeshBoneData;
 
 	class Animation;
-	class Bone;
 	class DefaultMaterialContainer;
 	class MaterialFactory;
 	class StaticMeshRenderer;
