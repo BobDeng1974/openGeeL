@@ -12,7 +12,7 @@ namespace geeL{
 		glm::vec3 value;
 		double time;
 
-		KeyFrame(const glm::vec3& value, double time) 
+		KeyFrame(const glm::vec3& value, double time)
 			: value(value), time(time) {}
 	};
 

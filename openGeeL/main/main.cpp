@@ -10,6 +10,7 @@
 #include "sponzascene.h"
 #include "testscene.h"
 #include "capsulescene.h"
+#include "meshes\gmeshrenderer.h"
 
 int main(int argc, char* argv[]) {
 	if (argc >= 2) {

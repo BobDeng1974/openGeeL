@@ -245,7 +245,7 @@ namespace geeL {
 
 						std::list<MeshRenderer*> meshRenderers;
 						if (separate) {
-							std::list<MeshRenderer*>& renderers = meshFactory.CreateMeshRenderers(
+							std::list<StaticMeshRenderer*>& renderers = meshFactory.CreateMeshRenderers(
 								meshFactory.CreateStaticModel(filePath),
 								materialFactory.getDeferredShader(),
 								meshTransform, CullingMode::cullFront);

@@ -246,9 +246,6 @@
     <ClCompile Include="renderer\shader\sceneshader.cpp">
       <Filter>renderer\shader</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\meshes\skinnedrenderer.cpp">
-      <Filter>renderer\meshes</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\animation\animatedobject.cpp">
       <Filter>renderer\animation</Filter>
     </ClCompile>
@@ -692,9 +689,6 @@
     <ClInclude Include="renderer\shader\defshading.h">
       <Filter>renderer\shader</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\meshes\skinnedrenderer.h">
-      <Filter>renderer\meshes</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\shadowmapping\shadowmap.h">
       <Filter>renderer\shadowmapping</Filter>
     </ClInclude>
@@ -1003,6 +997,15 @@
     </ClInclude>
     <ClInclude Include="renderer\animation\bone.h">
       <Filter>renderer\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\meshes\ameshrenderer.h">
+      <Filter>renderer\meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\meshes\gmeshrenderer.h">
+      <Filter>renderer\meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\meshes\materialmapping.h">
+      <Filter>renderer\meshes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

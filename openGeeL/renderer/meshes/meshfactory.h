@@ -25,8 +25,9 @@ namespace geeL {
 
 	class Animation;
 	class Bone;
+	class DefaultMaterialContainer;
 	class MaterialFactory;
-	class MeshRenderer;
+	class StaticMeshRenderer;
 	class Model;
 	class SceneShader;
 	class SkinnedMesh;
@@ -45,14 +46,14 @@ namespace geeL {
 		~MeshFactory();
 
 		//Create new mesh renderer with default shading
-		MeshRenderer& CreateMeshRenderer(StaticModel& model, Transform& transform,
+		StaticMeshRenderer& CreateMeshRenderer(StaticModel& model, Transform& transform,
 			CullingMode faceCulling, const std::string& name = "MeshRenderer");
 
-		MeshRenderer& CreateMeshRenderer(StaticModel& model, SceneShader& shader, Transform& transform,
+		StaticMeshRenderer& CreateMeshRenderer(StaticModel& model, SceneShader& shader, Transform& transform,
 			CullingMode faceCulling, const std::string& name = "MeshRenderer");
 
 		//Create separate mesh renderers for every mesh in given model
-		std::list<MeshRenderer*> CreateMeshRenderers(StaticModel& model, SceneShader& shader, Transform& transform,
+		std::list<StaticMeshRenderer*> CreateMeshRenderers(StaticModel& model, SceneShader& shader, Transform& transform,
 			CullingMode faceCulling);
 
 		//Create new skinned mesh renderer with default shading

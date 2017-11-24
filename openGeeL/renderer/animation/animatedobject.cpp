@@ -15,8 +15,8 @@ namespace geeL {
 	}
 
 
-	void AnimatedObject::addAnimation(Animation* animation) {
-		animations.push_back(animation);
+	void AnimatedObject::addAnimation(std::unique_ptr<Animation> animation) {
+		animations.push_back(animation.release());
 	}
 
 	const Animation& AnimatedObject::getAnimation(size_t index) const {
@@ -29,9 +29,9 @@ namespace geeL {
 		return *skeleton;
 	}
 
-	void AnimatedObject::setSkeleton(Skeleton* const skeleton) {
+	void AnimatedObject::setSkeleton(std::unique_ptr<Skeleton> skeleton) {
 		if (skeleton != nullptr)
-			this->skeleton = skeleton;
+			this->skeleton = skeleton.release();
 	}
 
 }

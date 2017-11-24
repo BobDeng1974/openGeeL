@@ -52,7 +52,6 @@
 #include "meshes/mesh.h"
 #include "meshes/model.h"
 #include "meshes/meshrenderer.h"
-#include "meshes/skinnedrenderer.h"
 #include "meshes/meshfactory.h"
 
 #include "postprocessing/postprocessing.h"

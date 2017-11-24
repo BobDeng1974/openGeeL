@@ -16,7 +16,6 @@
 #include "mesh.h"
 #include "model.h"
 #include "meshrenderer.h"
-#include "skinnedrenderer.h"
 #include "meshfactory.h"
 
 using namespace std;
@@ -31,26 +30,26 @@ namespace geeL {
 	}
 
 
-	MeshRenderer& MeshFactory::CreateMeshRenderer(StaticModel& model, 
+	StaticMeshRenderer& MeshFactory::CreateMeshRenderer(StaticModel& model, 
 		Transform& transform, CullingMode faceCulling, const string& name) {
 		
 		return CreateMeshRenderer(model, factory.getDefaultShader(ShadingMethod::Deferred), 
 			transform, faceCulling, name);
 	}
 
-	MeshRenderer& MeshFactory::CreateMeshRenderer(StaticModel& model, SceneShader& shader, Transform& transform,
+	StaticMeshRenderer& MeshFactory::CreateMeshRenderer(StaticModel& model, SceneShader& shader, Transform& transform,
 		CullingMode faceCulling, const string& name) {
 
-		MeshRenderer* renderer = new MeshRenderer(transform, shader, model, faceCulling, name);
+		StaticMeshRenderer* renderer = new StaticMeshRenderer(transform, shader, model, faceCulling, name);
 
 		meshRenderer.push_back(renderer);
 		return *renderer;
 	}
 
-	list<MeshRenderer*> MeshFactory::CreateMeshRenderers(StaticModel& model, SceneShader& shader, 
+	list<StaticMeshRenderer*> MeshFactory::CreateMeshRenderers(StaticModel& model, SceneShader& shader, 
 		Transform& transform, CullingMode faceCulling) {
 
-		list<MeshRenderer*> renderers;
+		list<StaticMeshRenderer*> renderers;
 		string path = model.getPath();
 		
 		size_t counter = 1;
@@ -64,7 +63,7 @@ namespace geeL {
 			staticModels[newName].addMesh(std::move(newMesh));
 
 			Transform& newTransform = transform.getParent()->addChild(transform);
-			MeshRenderer* renderer = new MeshRenderer(newTransform, shader, staticModels[newName], 
+			StaticMeshRenderer* renderer = new StaticMeshRenderer(newTransform, shader, staticModels[newName], 
 				faceCulling, mesh.getName());
 
 			meshRenderer.push_back(renderer);
@@ -176,8 +175,8 @@ namespace geeL {
 		string directory = path.substr(0, path.find_last_of('/'));
 		processSkinnedNode(model, *rootBone, directory, node, scene);
 
-		Skeleton* skeleton = new Skeleton(*rootBone);
-		model.setSkeleton(skeleton);
+		std::unique_ptr<Skeleton> skeleton(new Skeleton(*rootBone));
+		model.setSkeleton(std::move(skeleton));
 	}
 
 	void MeshFactory::processSkinnedNode(SkinnedModel& model, Bone& bone,
@@ -428,7 +427,7 @@ namespace geeL {
 				animation->addBoneData(name, data);
 			}
 
-			model.addAnimation(animation);
+			model.addAnimation(std::unique_ptr<Animation>(animation));
 		}
 	}
 

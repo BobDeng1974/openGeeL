@@ -112,7 +112,6 @@ namespace geeL {
 		RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline, SceneCamera& camera, 
 			const MaterialFactory& materialFactory, Input& input);
 
-
 		void init();
 		void updateProbes();
 
@@ -134,7 +133,6 @@ namespace geeL {
 		//Draw all objects with default material from given camera's perspective
 		//(Deferred shading)
 		void drawDefault(const Camera& camera) const;
-
 
 		void drawGeneric() const;
 

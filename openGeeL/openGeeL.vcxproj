@@ -217,7 +217,6 @@
     <ClCompile Include="renderer\meshes\meshfactory.cpp" />
     <ClCompile Include="renderer\meshes\meshrenderer.cpp" />
     <ClCompile Include="renderer\meshes\model.cpp" />
-    <ClCompile Include="renderer\meshes\skinnedrenderer.cpp" />
     <ClCompile Include="renderer\pipeline.cpp" />
     <ClCompile Include="renderer\postprocessing\additiveeffect.cpp" />
     <ClCompile Include="renderer\postprocessing\bloom.cpp" />
@@ -370,11 +369,13 @@
     <ClInclude Include="renderer\materials\genericmaterial.h" />
     <ClInclude Include="renderer\materials\material.h" />
     <ClInclude Include="renderer\materials\materialfactory.h" />
+    <ClInclude Include="renderer\meshes\ameshrenderer.h" />
+    <ClInclude Include="renderer\meshes\gmeshrenderer.h" />
+    <ClInclude Include="renderer\meshes\materialmapping.h" />
     <ClInclude Include="renderer\meshes\mesh.h" />
     <ClInclude Include="renderer\meshes\meshfactory.h" />
     <ClInclude Include="renderer\meshes\meshrenderer.h" />
     <ClInclude Include="renderer\meshes\model.h" />
-    <ClInclude Include="renderer\meshes\skinnedrenderer.h" />
     <ClInclude Include="renderer\pipeline.h" />
     <ClInclude Include="renderer\postprocessing\additiveeffect.h" />
     <ClInclude Include="renderer\postprocessing\bloom.h" />

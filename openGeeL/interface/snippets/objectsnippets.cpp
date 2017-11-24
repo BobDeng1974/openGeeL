@@ -35,7 +35,8 @@ namespace geeL {
 	}
 
 
-	MeshRendererSnippet::MeshRendererSnippet(MeshRenderer& mesh) : SceneObjectSnippet(mesh), mesh(mesh) {}
+	MeshRendererSnippet::MeshRendererSnippet(MeshRenderer& mesh) 
+		: SceneObjectSnippet(mesh), mesh(mesh) {}
 
 	void MeshRendererSnippet::draw(GUIContext* context) {
 
