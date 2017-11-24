@@ -318,6 +318,9 @@ namespace geeL{
 	}
 
 	SkinnedMeshRenderer::~SkinnedMeshRenderer() {
+		for (auto it(meshes.begin()); it != meshes.end(); it++)
+			delete *it;
+
 		if (skeleton != nullptr)
 			delete skeleton;
 	}
