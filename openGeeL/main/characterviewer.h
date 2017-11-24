@@ -50,7 +50,7 @@ public:
 
 			scene.addMeshRenderer(plane);
 
-			plane.iterateMeshesSafe([&](const InstancedMesh& mesh) {
+			plane.iterateMeshesSafe([&](const MeshInstance& mesh) {
 				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
 				plane.changeMaterial(ss, mesh);
 			});
@@ -77,7 +77,7 @@ public:
 			scene.addMeshRenderer(girl);
 
 
-			girl.iterateMeshesSafe([&](const InstancedMesh& mesh) {
+			girl.iterateMeshesSafe([&](const MeshInstance& mesh) {
 				if (mesh.getName() == "eyelash" || mesh.getName() == "fur") {
 
 					girl.setRenderMask(RenderMask::Empty, mesh);

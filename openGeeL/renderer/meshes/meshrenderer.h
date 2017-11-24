@@ -27,7 +27,7 @@ namespace geeL {
 		virtual RenderMode getRenderMode() const;
 
 	private:
-		std::list<InstancedMesh*> meshes;
+		std::list<MeshInstance*> meshes;
 
 		void initMaterials(SceneShader& shader, StaticModel& model);
 
@@ -52,7 +52,7 @@ namespace geeL {
 		virtual RenderMode getRenderMode() const;
 
 	private:
-		std::list<InstancedMesh*> meshes;
+		std::list<MeshInstance*> meshes;
 		Skeleton* skeleton;
 		SkinnedModel& skinnedModel;
 

@@ -92,7 +92,7 @@ public:
 				container.setFloatValue("Metallic", 0.5f);
 			});
 
-			sphere1.iterateMeshesSafe([&](const InstancedMesh& mesh) {
+			sphere1.iterateMeshesSafe([&](const MeshInstance& mesh) {
 				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
 				sphere1.changeMaterial(ss, mesh);
 			});
@@ -110,7 +110,7 @@ public:
 				container.setFloatValue("Metallic", 0.5f);
 			});
 
-			sphere12.iterateMeshesSafe([&](const InstancedMesh& mesh) {
+			sphere12.iterateMeshesSafe([&](const MeshInstance& mesh) {
 				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
 				sphere12.changeMaterial(ss, mesh);
 			});

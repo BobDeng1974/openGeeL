@@ -6,19 +6,19 @@
 
 namespace geeL {
 
-	class InstancedMesh;
+	class MeshInstance;
 
 	struct MaterialMapping {
-		const InstancedMesh& mesh;
+		const MeshInstance& mesh;
 		Material material;
 		RenderMask mask;
 
-		MaterialMapping(const InstancedMesh& mesh, Material material)
+		MaterialMapping(const MeshInstance& mesh, Material material)
 			: mesh(mesh)
 			, material(std::move(material))
 			, mask(RenderMask::None) {}
 
-		MaterialMapping(const InstancedMesh& mesh, Material material, RenderMask mask)
+		MaterialMapping(const MeshInstance& mesh, Material material, RenderMask mask)
 			: mesh(mesh)
 			, material(std::move(material))
 			, mask(mask) {}

@@ -3,40 +3,40 @@
 
 namespace geeL {
 
-	InstancedMesh::InstancedMesh(const Mesh& mesh)
+	MeshInstance::MeshInstance(const Mesh& mesh)
 		: mesh(mesh) {}
 
-	bool InstancedMesh::operator==(const Mesh& mesh) const {
+	bool MeshInstance::operator==(const Mesh& mesh) const {
 		return &this->mesh == &mesh;
 	}
 
-	bool InstancedMesh::operator==(const InstancedMesh& mesh) const {
+	bool MeshInstance::operator==(const MeshInstance& mesh) const {
 		return &this->mesh == &mesh.mesh;
 	}
 
-	MaterialContainer& InstancedMesh::getMaterialContainer() const {
+	MaterialContainer& MeshInstance::getMaterialContainer() const {
 		return mesh.getMaterialContainer();
 	}
 
-	const std::string& InstancedMesh::getName() const {
+	const std::string& MeshInstance::getName() const {
 		return mesh.getName();
 	}
 
 
-	InstancedStaticMesh::InstancedStaticMesh(const StaticMesh & mesh)
-		: InstancedMesh(mesh) {}
+	StaticMeshInstance::StaticMeshInstance(const StaticMesh & mesh)
+		: MeshInstance(mesh) {}
 
-	void InstancedStaticMesh::draw(const Shader& shader) const {
+	void StaticMeshInstance::draw(const Shader& shader) const {
 		mesh.draw(shader);
 	}
 
 
-	InstancedSkinnedMesh::InstancedSkinnedMesh(const SkinnedMesh& mesh, const Skeleton& skeleton)
-		: InstancedMesh(mesh)
+	SkinnedMeshInstance::SkinnedMeshInstance(const SkinnedMesh& mesh, const Skeleton& skeleton)
+		: MeshInstance(mesh)
 		, skinnedMesh(mesh)
 		, skeleton(skeleton) {}
 
-	void InstancedSkinnedMesh::draw(const Shader& shader) const {
+	void SkinnedMeshInstance::draw(const Shader& shader) const {
 		skinnedMesh.updateBones(shader, skeleton);
 		mesh.draw(shader);
 	}

@@ -49,7 +49,7 @@ namespace geeL {
 			if (nk_tree_push(context, NK_TREE_NODE, materials.c_str(), NK_MINIMIZED)) {
 				
 				unsigned int counter = 0;
-				mesh.iterate([&](const InstancedMesh& mesh, const Material& material) {
+				mesh.iterate([&](const MeshInstance& mesh, const Material& material) {
 					MaterialContainer& container = material.getMaterialContainer();
 
 					std::string name = "Material " + std::to_string(counter) + ": " + container.name + " (" + mesh.getName() + ")";

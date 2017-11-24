@@ -52,25 +52,25 @@ namespace geeL {
 
 		//Add render mask to a single contained mesh. 
 		//Note: Mesh will also use mask of whole mesh renderer (If set)
-		void setRenderMask(RenderMask mask, const InstancedMesh& mesh);
+		void setRenderMask(RenderMask mask, const MeshInstance& mesh);
 
 		//Customize material of given mesh (If it is actually part of this mesh renderer)
-		virtual void changeMaterial(Material& material, const InstancedMesh& mesh);
+		virtual void changeMaterial(Material& material, const MeshInstance& mesh);
 
 		//Customize material of given mesh but keep original material container and 
 		//only change its shader (If it is actually part of this mesh renderer)
-		virtual void changeMaterial(SceneShader& material, const InstancedMesh& mesh);
+		virtual void changeMaterial(SceneShader& material, const MeshInstance& mesh);
 
 		void addMaterialChangeListener(std::function<void(MeshRenderer&, Material, Material)> listener);
 
-		virtual void iterate(std::function<void(const InstancedMesh&, const Material&)> function) const;
-		virtual void iterateMeshes(std::function<void(const InstancedMesh&)> function) const;
-		virtual void iterateMeshesSafe(std::function<void(const InstancedMesh&)> function) const;
+		virtual void iterate(std::function<void(const MeshInstance&, const Material&)> function) const;
+		virtual void iterateMeshes(std::function<void(const MeshInstance&)> function) const;
+		virtual void iterateMeshesSafe(std::function<void(const MeshInstance&)> function) const;
 		virtual void iterateMaterials(std::function<void(MaterialContainer&)> function) const;
 		virtual void iterateShaders(std::function<void(const SceneShader&)> function) const;
 		virtual void iterateShaders(std::function<void(SceneShader&)> function);
 
-		virtual const InstancedMesh* getMesh(const std::string& name) const;
+		virtual const MeshInstance* getMesh(const std::string& name) const;
 		virtual RenderMode getRenderMode() const = 0;
 
 		//Specify, whether this object should be able to be 
@@ -91,7 +91,7 @@ namespace geeL {
 
 
 		void drawMask(const MaterialMapping& mapping) const;
-		virtual MaterialMapping* getMapping(const InstancedMesh& mesh);
+		virtual MaterialMapping* getMapping(const MeshInstance& mesh);
 
 	private:
 		bool autoFilter = false;

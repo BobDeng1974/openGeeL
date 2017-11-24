@@ -13,15 +13,15 @@ namespace geeL {
 	class StaticMesh;
 
 
-	class InstancedMesh {
+	class MeshInstance {
 
 	public:
-		InstancedMesh(const Mesh& mesh);
+		MeshInstance(const Mesh& mesh);
 
 		virtual void draw(const Shader& shader) const = 0;
 
 		bool operator==(const Mesh& mesh) const;
-		bool operator==(const InstancedMesh& mesh) const;
+		bool operator==(const MeshInstance& mesh) const;
 
 		MaterialContainer& getMaterialContainer() const;
 		const std::string& getName() const;
@@ -32,20 +32,20 @@ namespace geeL {
 	};
 
 
-	class InstancedStaticMesh : public InstancedMesh {
+	class StaticMeshInstance : public MeshInstance {
 
 	public:
-		InstancedStaticMesh(const StaticMesh& mesh);
+		StaticMeshInstance(const StaticMesh& mesh);
 
 		virtual void draw(const Shader& shader) const;
 
 	};
 	
 
-	class InstancedSkinnedMesh : public InstancedMesh {
+	class SkinnedMeshInstance : public MeshInstance {
 
 	public:
-		InstancedSkinnedMesh(const SkinnedMesh& mesh, const Skeleton& skeleton);
+		SkinnedMeshInstance(const SkinnedMesh& mesh, const Skeleton& skeleton);
 
 		virtual void draw(const Shader& shader) const;
 		

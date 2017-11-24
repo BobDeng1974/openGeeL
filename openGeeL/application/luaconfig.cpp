@@ -400,7 +400,7 @@ namespace geeL {
 									auto& name = mm["name"];
 									assert(name.valid() && "Given mesh has no name");
 
-									const InstancedMesh* currentMesh = renderer.getMesh(name);
+									const MeshInstance* currentMesh = renderer.getMesh(name);
 									if (currentMesh != nullptr) {
 
 										auto& maskInit = mm["mask"];
