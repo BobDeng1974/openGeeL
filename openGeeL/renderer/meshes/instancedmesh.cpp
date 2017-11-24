@@ -6,6 +6,18 @@ namespace geeL {
 	InstancedMesh::InstancedMesh(const Mesh& mesh)
 		: mesh(mesh) {}
 
+	bool InstancedMesh::operator==(const Mesh& mesh) const {
+		return &this->mesh == &mesh;
+	}
+
+	bool InstancedMesh::operator==(const InstancedMesh& mesh) const {
+		return &this->mesh == &mesh.mesh;
+	}
+
+	MaterialContainer& InstancedMesh::getMaterialContainer() const {
+		return mesh.getMaterialContainer();
+	}
+
 	const std::string& InstancedMesh::getName() const {
 		return mesh.getName();
 	}

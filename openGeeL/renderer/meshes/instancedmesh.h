@@ -5,8 +5,10 @@
 
 namespace geeL {
 
+	class MaterialContainer;
 	class Mesh;
 	class Shader;
+	class Skeleton;
 	class SkinnedMesh;
 	class StaticMesh;
 
@@ -18,7 +20,10 @@ namespace geeL {
 
 		virtual void draw(const Shader& shader) const = 0;
 
+		bool operator==(const Mesh& mesh) const;
+		bool operator==(const InstancedMesh& mesh) const;
 
+		MaterialContainer& getMaterialContainer() const;
 		const std::string& getName() const;
 
 	protected:

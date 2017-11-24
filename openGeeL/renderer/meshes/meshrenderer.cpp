@@ -6,6 +6,7 @@
 #include "shader/sceneshader.h"
 #include "mesh.h"
 #include "model.h"
+#include "instancedmesh.h"
 #include "meshrenderer.h"
 
 using namespace std;
@@ -24,7 +25,7 @@ namespace geeL{
 		this->mask = mask;
 	}
 
-	void MeshRenderer::setRenderMask(RenderMask mask, const Mesh& mesh) {
+	void MeshRenderer::setRenderMask(RenderMask mask, const InstancedMesh& mesh) {
 		MaterialMapping* mapping = getMapping(mesh);
 
 		if (mapping != nullptr)
@@ -74,7 +75,7 @@ namespace geeL{
 				drawMask(container);
 
 				//Draw mesh
-				const Mesh& mesh = container.mesh;
+				const InstancedMesh& mesh = container.mesh;
 				mesh.draw(shader);
 			}
 		}
@@ -95,7 +96,7 @@ namespace geeL{
 				container.bind(shader);
 
 				//Draw mesh
-				const Mesh& mesh = mapping.mesh;
+				const InstancedMesh& mesh = mapping.mesh;
 				mesh.draw(shader);
 			}
 		}
@@ -104,12 +105,12 @@ namespace geeL{
 	void MeshRenderer::drawGeometry(const RenderShader& shader) const {
 		transform.bind(shader, "model");
 
-		iterateMeshes([&shader](const Mesh& mesh) {
+		iterateMeshes([&shader](const InstancedMesh& mesh) {
 			mesh.draw(shader);
 		});
 	}
 
-	void MeshRenderer::changeMaterial(Material& material, const Mesh& mesh) {
+	void MeshRenderer::changeMaterial(Material& material, const InstancedMesh& mesh) {
 		//Remove old element from materials since new material probably uses a different shader
 		std::list<MaterialMapping>* elements;
 		MaterialMapping* toRemove = nullptr;
@@ -118,7 +119,7 @@ namespace geeL{
 			for (auto et = elements->begin(); et != elements->end(); et++) {
 				MaterialMapping& container = *et;
 
-				if (&container.mesh == &mesh) {
+				if (container.mesh == mesh) {
 					toRemove = &container;
 					break;
 				}
@@ -145,7 +146,7 @@ namespace geeL{
 		}
 	}
 
-	void MeshRenderer::changeMaterial(SceneShader& shader, const Mesh& mesh) {
+	void MeshRenderer::changeMaterial(SceneShader& shader, const InstancedMesh& mesh) {
 		//Find mesh in this mesh renderer
 		for (auto it = materials.begin(); it != materials.end(); it++) {
 			std::list<MaterialMapping>* elements = &it->second;
@@ -153,7 +154,7 @@ namespace geeL{
 			for (auto et = elements->begin(); et != elements->end(); et++) {
 				MaterialMapping& container = *et;
 
-				if (&container.mesh == &mesh) {
+				if (container.mesh == mesh) {
 					//Create new material with given shader and old container
 					Material material(container.material, shader);
 					changeMaterial(material, mesh);
@@ -164,20 +165,20 @@ namespace geeL{
 		}
 	}
 
-	void MeshRenderer::iterate(std::function<void(const Mesh&, const Material&)> function) const {
+	void MeshRenderer::iterate(std::function<void(const InstancedMesh&, const Material&)> function) const {
 		for (auto it = materials.begin(); it != materials.end(); it++) {
 			const std::list<MaterialMapping>& elements = it->second;
 
 			for (auto et = elements.begin(); et != elements.end(); et++) {
 				const Material& mat = et->material;
-				const Mesh& mesh = et->mesh;
+				const InstancedMesh& mesh = et->mesh;
 
 				function(mesh, mat);
 			}
 		}
 	}
 
-	void MeshRenderer::iterateMeshes(std::function<void(const Mesh&)> function) const {
+	void MeshRenderer::iterateMeshes(std::function<void(const InstancedMesh&)> function) const {
 		for (auto it = materials.begin(); it != materials.end(); it++) {
 			const std::list<MaterialMapping>& elements = it->second;
 
@@ -186,8 +187,8 @@ namespace geeL{
 		}
 	}
 
-	void MeshRenderer::iterateMeshesSafe(std::function<void(const Mesh&)> function) const {
-		std::list<const Mesh*> tempMeshes;
+	void MeshRenderer::iterateMeshesSafe(std::function<void(const InstancedMesh&)> function) const {
+		std::list<const InstancedMesh*> tempMeshes;
 
 		for (auto it(materials.begin()); it != materials.end(); it++) {
 			const std::list<MaterialMapping>& elements = it->second;
@@ -226,11 +227,11 @@ namespace geeL{
 		}
 	}
 
-	const Mesh* MeshRenderer::getMesh(const std::string& name) const {
+	const InstancedMesh* MeshRenderer::getMesh(const std::string& name) const {
 		for (auto it = materials.begin(); it != materials.end(); it++) {
 			const std::list<MaterialMapping>* elements = &it->second;
 			for (auto et = elements->begin(); et != elements->end(); et++) {
-				const Mesh& mesh = et->mesh;
+				const InstancedMesh& mesh = et->mesh;
 
 				if (mesh.getName() == name)
 					return &mesh;
@@ -246,13 +247,13 @@ namespace geeL{
 
 	
 
-	MaterialMapping* MeshRenderer::getMapping(const Mesh& mesh) {
+	MaterialMapping* MeshRenderer::getMapping(const InstancedMesh& mesh) {
 		for (auto it = materials.begin(); it != materials.end(); it++) {
 			std::list<MaterialMapping>* elements = &it->second;
 			for (auto et = elements->begin(); et != elements->end(); et++) {
 				MaterialMapping& container = *et;
 
-				if (&container.mesh == &mesh)
+				if (container.mesh == mesh)
 					return &container;
 			}
 		}
@@ -272,17 +273,29 @@ namespace geeL{
 		initMaterials(shader, model);
 	}
 
+	StaticMeshRenderer::~StaticMeshRenderer() {
+		for (auto it(meshes.begin()); it != meshes.end(); it++)
+			delete *it;
+	}
+
+
 	RenderMode StaticMeshRenderer::getRenderMode() const {
 		return RenderMode::Static;
 	}
 
 	void StaticMeshRenderer::initMaterials(SceneShader& shader, StaticModel& model) {
-		model.iterateMeshes([&](const Mesh& mesh) {
+		model.iterateMeshesGeneric([&](const StaticMesh& mesh) {
+			meshes.push_back(new InstancedStaticMesh(mesh));
+		});
+
+		for (auto it(meshes.begin()); it != meshes.end(); it++) {
+			InstancedMesh& mesh = **it;
+
 			MaterialContainer& container = mesh.getMaterialContainer();
 			Material& material = Material(shader, container);
 
 			materials[&shader].push_back(MaterialMapping(mesh, material));
-		});
+		}
 	}
 
 
@@ -322,13 +335,19 @@ namespace geeL{
 		return RenderMode::Skinned;
 	}
 
-	void SkinnedMeshRenderer::initMaterials(SceneShader & shader) {
-		skinnedModel.iterateMeshes([&](const Mesh& mesh) {
+	void SkinnedMeshRenderer::initMaterials(SceneShader& shader) {
+		skinnedModel.iterateMeshesGeneric([&](const SkinnedMesh& mesh) {
+			meshes.push_back(new InstancedSkinnedMesh(mesh, *skeleton));
+		});
+
+		for (auto it(meshes.begin()); it != meshes.end(); it++) {
+			InstancedMesh& mesh = **it;
+
 			MaterialContainer& container = mesh.getMaterialContainer();
 			Material& material = Material(shader, container);
 
 			materials[&shader].push_back(MaterialMapping(mesh, material));
-		});
+		}
 	}
 
 }

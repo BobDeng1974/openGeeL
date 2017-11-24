@@ -54,8 +54,8 @@ public:
 				meshTransform2, CullingMode::cullFront, "Bedroom");
 			scene.addMeshRenderer(bedroom);
 
-			std::map<const Mesh*, const Material*> transObjects;
-			bedroom.iterate([&](const Mesh& mesh, const Material& material) {
+			std::map<const InstancedMesh*, const Material*> transObjects;
+			bedroom.iterate([&](const InstancedMesh& mesh, const Material& material) {
 				if (mesh.getName() == "Soda_Bottle") {
 					transObjects[&mesh] = &material;
 				}
@@ -63,7 +63,7 @@ public:
 			});
 
 			for (auto it(transObjects.begin()); it != transObjects.end(); it++) {
-				const Mesh& mesh = *it->first;
+				const InstancedMesh& mesh = *it->first;
 				const Material& material = *it->second;
 
 				MaterialContainer& container = material.getMaterialContainer();

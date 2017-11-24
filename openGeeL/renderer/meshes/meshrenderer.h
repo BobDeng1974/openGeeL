@@ -1,6 +1,7 @@
 #ifndef MESHRENDERER_H
 #define MESHRENDERER_H
 
+#include "instancedmesh.h"
 #include "ameshrenderer.h"
 
 namespace geeL {
@@ -21,11 +22,13 @@ namespace geeL {
 			CullingMode faceCulling = CullingMode::cullFront, 
 			const std::string& name = "MeshRenderer");
 
-		virtual ~StaticMeshRenderer() {}
+		virtual ~StaticMeshRenderer();
 
 		virtual RenderMode getRenderMode() const;
 
 	private:
+		std::list<InstancedMesh*> meshes;
+
 		void initMaterials(SceneShader& shader, StaticModel& model);
 
 	};
@@ -49,6 +52,7 @@ namespace geeL {
 		virtual RenderMode getRenderMode() const;
 
 	private:
+		std::list<InstancedMesh*> meshes;
 		Skeleton* skeleton;
 		SkinnedModel& skinnedModel;
 

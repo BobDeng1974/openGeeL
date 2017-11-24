@@ -50,8 +50,8 @@ public:
 				meshTransform2, CullingMode::cullFront, "Science");
 			scene.addMeshRenderer(science);
 
-			std::map<const Mesh*, const Material*> transObjects;
-			science.iterate([&](const Mesh& mesh, const Material& material) {
+			std::map<const InstancedMesh*, const Material*> transObjects;
+			science.iterate([&](const InstancedMesh& mesh, const Material& material) {
 				if (mesh.getName() == "GRP_Models_MDL_Glass_GRP_Glass_Triangle" ||
 					mesh.getName() == "GRP_Models_GRP_Stack_GRP__MDL_Goggles_Object02" ||
 					mesh.getName() == "GRP_Models_GRP_LargeTallBeaker_MDL_Glass1" ||
@@ -66,7 +66,7 @@ public:
 			});
 
 			for (auto it(transObjects.begin()); it != transObjects.end(); it++) {
-				const Mesh& mesh = *it->first;
+				const InstancedMesh& mesh = *it->first;
 				const Material& material = *it->second;
 
 				MaterialContainer& container = material.getMaterialContainer();
