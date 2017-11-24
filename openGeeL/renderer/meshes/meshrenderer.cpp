@@ -1,6 +1,3 @@
-#define GLEW_STATIC
-#include <glew.h>
-#include <glfw3.h>
 #include "cameras/camera.h"
 #include "animation/skeleton.h"
 #include "materials/defaultmaterial.h"
@@ -187,6 +184,21 @@ namespace geeL{
 			for (auto et = elements.begin(); et != elements.end(); et++)
 				function(et->mesh);
 		}
+	}
+
+	void MeshRenderer::iterateMeshesSafe(std::function<void(const Mesh&)> function) const {
+		std::list<const Mesh*> tempMeshes;
+
+		for (auto it(materials.begin()); it != materials.end(); it++) {
+			const std::list<MaterialMapping>& elements = it->second;
+
+			for (auto et = elements.begin(); et != elements.end(); et++)
+				tempMeshes.push_back(&et->mesh);
+		}
+
+		for (auto it(tempMeshes.begin()); it != tempMeshes.end(); it++)
+			function(**it);
+
 	}
 
 	void MeshRenderer::iterateMaterials(std::function<void(MaterialContainer&)> function) const {

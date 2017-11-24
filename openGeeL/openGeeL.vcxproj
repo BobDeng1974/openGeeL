@@ -213,6 +213,7 @@
     <ClCompile Include="renderer\materials\genericmaterial.cpp" />
     <ClCompile Include="renderer\materials\material.cpp" />
     <ClCompile Include="renderer\materials\materialfactory.cpp" />
+    <ClCompile Include="renderer\meshes\instancedmesh.cpp" />
     <ClCompile Include="renderer\meshes\mesh.cpp" />
     <ClCompile Include="renderer\meshes\meshfactory.cpp" />
     <ClCompile Include="renderer\meshes\meshrenderer.cpp" />
@@ -369,6 +370,7 @@
     <ClInclude Include="renderer\materials\material.h" />
     <ClInclude Include="renderer\materials\materialfactory.h" />
     <ClInclude Include="renderer\meshes\ameshrenderer.h" />
+    <ClInclude Include="renderer\meshes\instancedmesh.h" />
     <ClInclude Include="renderer\meshes\materialmapping.h" />
     <ClInclude Include="renderer\meshes\mesh.h" />
     <ClInclude Include="renderer\meshes\meshfactory.h" />

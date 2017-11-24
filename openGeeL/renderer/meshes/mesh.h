@@ -130,6 +130,9 @@ namespace geeL {
 			std::map<std::string, MeshBone>& bones,
 			MaterialContainer& material);
 
+		//Update mesh bone data into given shader
+		void updateBones(const Shader& shader) const;
+		void updateBones(const Shader& shader, const Skeleton& skeleton) const;
 		
 		virtual void draw(const Shader& shader) const;
 
@@ -152,10 +155,6 @@ namespace geeL {
 		std::vector<SkinnedVertex> vertices;
 		std::vector<unsigned int> indices;
 		std::map<std::string, MeshBone> bones;
-
-		//Update mesh bone data into given shader
-		void updateBones(const Shader& shader) const;
-		void updateBones(const Shader& shader, const Skeleton& skeleton) const;
 
 		void init();
 	};

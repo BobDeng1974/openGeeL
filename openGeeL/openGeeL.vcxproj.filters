@@ -492,6 +492,9 @@
     <ClCompile Include="renderer\animation\bone.cpp">
       <Filter>renderer\animation</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\meshes\instancedmesh.cpp">
+      <Filter>renderer\meshes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\renderer.h">
@@ -999,6 +1002,9 @@
       <Filter>renderer\meshes</Filter>
     </ClInclude>
     <ClInclude Include="renderer\meshes\materialmapping.h">
+      <Filter>renderer\meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\meshes\instancedmesh.h">
       <Filter>renderer\meshes</Filter>
     </ClInclude>
   </ItemGroup>
