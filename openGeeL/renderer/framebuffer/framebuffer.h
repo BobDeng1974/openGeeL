@@ -29,6 +29,8 @@ namespace geeL {
 		virtual const Resolution& getResolution() const = 0;
 
 	protected:
+		static unsigned int activeFBO;
+
 		IFrameBuffer() {}
 		virtual ~IFrameBuffer() {};
 

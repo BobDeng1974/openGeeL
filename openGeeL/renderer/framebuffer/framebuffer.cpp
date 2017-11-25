@@ -18,23 +18,23 @@ namespace geeL {
 		}, clearer);
 	}
 
-	static unsigned int currentFBO = 0;
+	unsigned int IFrameBuffer::activeFBO = 0;
 	void FrameBuffer::bind() const {
-		if (fbo.token != currentFBO) {
-			currentFBO = fbo.token;
+		if (fbo.token != IFrameBuffer::activeFBO) {
+			IFrameBuffer::activeFBO = fbo.token;
 			glBindFramebuffer(GL_FRAMEBUFFER, fbo.token);
 		}
 	}
 
 	void FrameBuffer::bind(unsigned int fbo) {
-		if (fbo != currentFBO) {
-			currentFBO = fbo;
+		if (fbo != IFrameBuffer::activeFBO) {
+			IFrameBuffer::activeFBO = fbo;
 			glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		}
 	}
 
 	void IFrameBuffer::unbind() {
-		currentFBO = 0;
+		IFrameBuffer::activeFBO = 0;
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 

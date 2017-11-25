@@ -12,11 +12,11 @@ using namespace std;
 
 namespace geeL {
 
-	static unsigned int activeShader = 0;
+	unsigned int Shader::activeProgram = 0;
 	void Shader::use() const {
-		if (program != activeShader) {
+		if (program != Shader::activeProgram) {
 			glUseProgram(program);
-			activeShader = program;
+			Shader::activeProgram = program;
 		}
 	}
 

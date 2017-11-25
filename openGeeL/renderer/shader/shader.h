@@ -166,6 +166,8 @@ namespace geeL {
 		std::function<void(const T&)> createCallback(const std::string& name);
 
 	private:
+		static unsigned int activeProgram;
+
 		//Bind all added maps into the shader
 		void bindMaps();
 

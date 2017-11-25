@@ -4,31 +4,31 @@
 
 namespace geeL {
 
-	static uint _x = 0;
-	static uint _y = 0;
-	static uint _width = 0;
-	static uint _height = 0;
+	uint Viewport::_x = 0;
+	uint Viewport::_y = 0;
+	uint Viewport::_width = 0;
+	uint Viewport::_height = 0;
 
 	void Viewport::set(uint x, uint y, uint width, uint height) {
 		bool changed = false;
 
-		if (x != _x) {
-			_x = x;
+		if (x != Viewport::_x) {
+			Viewport::_x = x;
 			changed = true;
 		}
 
-		if (y != _y) {
-			_y = y;
+		if (y != Viewport::_y) {
+			Viewport::_y = y;
 			changed = true;
 		}
 
-		if (width != _width) {
-			_width = width;
+		if (width != Viewport::_width) {
+			Viewport::_width = width;
 			changed = true;
 		}
 
-		if (height != _height) {
-			_height = height;
+		if (height != Viewport::_height) {
+			Viewport::_height = height;
 			changed = true;
 		}
 
@@ -38,10 +38,10 @@ namespace geeL {
 	}
 
 	void Viewport::setForced(uint x, uint y, uint width, uint height) {
-		_x = x; 
-		_y = y; 
-		_width = width; 
-		_height = height;
+		Viewport::_x = x;
+		Viewport::_y = y;
+		Viewport::_width = width;
+		Viewport::_height = height;
 
 		glViewport(x, y, width, height);
 	}

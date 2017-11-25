@@ -25,7 +25,6 @@
 using namespace std;
 
 
-
 namespace geeL {
 
 	Scene::Scene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline, SceneCamera& camera)
