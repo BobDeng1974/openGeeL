@@ -55,15 +55,10 @@ namespace geeL {
 		size_t counter = 1;
 		model.iterateMeshesGeneric([&](const StaticMesh& mesh) {
 			string newName = path + " " + mesh.getName() + std::to_string(counter++);
-
-			staticModels[newName] = StaticModel(path);
-
-			//TODO: change the way meshes are saved to avoid unnecessary copying here
-			StaticMesh newMesh(mesh);
-			staticModels[newName].addMesh(std::move(newMesh));
-
 			Transform& newTransform = transform.getParent()->addChild(transform);
-			StaticMeshRenderer* renderer = new StaticMeshRenderer(newTransform, shader, staticModels[newName], 
+			std::list<const StaticMesh*> meshes = { &mesh };
+			
+			StaticMeshRenderer* renderer = new StaticMeshRenderer(newTransform, shader, meshes, 
 				faceCulling, mesh.getName());
 
 			meshRenderer.push_back(renderer);

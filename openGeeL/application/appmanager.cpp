@@ -25,6 +25,8 @@ namespace geeL {
 			Application* app = *it;
 			delete app;
 		}
+
+		ApplicationManager::apps.clear();
 	}
 
 

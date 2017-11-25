@@ -273,6 +273,16 @@ namespace geeL{
 		initMaterials(shader, model);
 	}
 
+	StaticMeshRenderer::StaticMeshRenderer(Transform& transform, 
+		SceneShader& shader, 
+		std::list<const StaticMesh*>& meshes,
+		CullingMode faceCulling, 
+		const std::string & name)
+			: MeshRenderer(transform, faceCulling, name) {
+
+		initMaterials(shader, meshes);
+	}
+
 	StaticMeshRenderer::~StaticMeshRenderer() {
 		for (auto it(meshes.begin()); it != meshes.end(); it++)
 			delete *it;
@@ -287,6 +297,22 @@ namespace geeL{
 		model.iterateMeshesGeneric([&](const StaticMesh& mesh) {
 			meshes.push_back(new StaticMeshInstance(mesh));
 		});
+
+		for (auto it(meshes.begin()); it != meshes.end(); it++) {
+			MeshInstance& mesh = **it;
+
+			MaterialContainer& container = mesh.getMaterialContainer();
+			Material& material = Material(shader, container);
+
+			materials[&shader].push_back(MaterialMapping(mesh, material));
+		}
+	}
+
+	void StaticMeshRenderer::initMaterials(SceneShader& shader, std::list<const StaticMesh*>& newMeshes) {
+		for (auto it(newMeshes.begin()); it != newMeshes.end(); it++) {
+			const StaticMesh& mesh = **it;
+			meshes.push_back(new StaticMeshInstance(mesh));
+		}
 
 		for (auto it(meshes.begin()); it != meshes.end(); it++) {
 			MeshInstance& mesh = **it;
