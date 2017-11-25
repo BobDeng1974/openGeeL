@@ -29,7 +29,7 @@ namespace geeL {
 	class MeshRenderer : public SceneObject {
 
 	public:
-		virtual ~MeshRenderer() {}
+		virtual ~MeshRenderer();
 
 		//Only draw those meshes whose materials
 		//are linked to given shader
@@ -80,6 +80,8 @@ namespace geeL {
 	protected:
 		RenderMask mask;
 		const CullingMode faceCulling;
+
+		std::list<MeshInstance*> meshes;
 		std::list<std::function<void(MeshRenderer&, Material, Material)>> materialListeners;
 		std::map<SceneShader*, std::list<MaterialMapping>> materials;
 

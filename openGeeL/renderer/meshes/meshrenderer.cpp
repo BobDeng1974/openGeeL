@@ -21,6 +21,12 @@ namespace geeL{
 			, mask(RenderMask::None) {}
 
 
+	MeshRenderer::~MeshRenderer() {
+		for (auto it(meshes.begin()); it != meshes.end(); it++)
+			delete *it;
+	}
+
+
 	void MeshRenderer::setRenderMask(RenderMask mask) {
 		this->mask = mask;
 	}
@@ -54,7 +60,6 @@ namespace geeL{
 	bool MeshRenderer::isVisible(const Camera& camera) const {
 		return !autoFilter || !camera.isBehind(transform.getPosition());
 	}
-
 
 	void MeshRenderer::draw(SceneShader& shader) const {
 		CullingGuard culling(faceCulling);
@@ -283,11 +288,6 @@ namespace geeL{
 		initMaterials(shader, meshes);
 	}
 
-	StaticMeshRenderer::~StaticMeshRenderer() {
-		for (auto it(meshes.begin()); it != meshes.end(); it++)
-			delete *it;
-	}
-
 
 	RenderMode StaticMeshRenderer::getRenderMode() const {
 		return RenderMode::Static;
@@ -344,9 +344,6 @@ namespace geeL{
 	}
 
 	SkinnedMeshRenderer::~SkinnedMeshRenderer() {
-		for (auto it(meshes.begin()); it != meshes.end(); it++)
-			delete *it;
-
 		if (skeleton != nullptr)
 			delete skeleton;
 	}
