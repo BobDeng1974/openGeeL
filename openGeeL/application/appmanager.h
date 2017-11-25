@@ -17,44 +17,40 @@ namespace geeL {
 	class ApplicationManager {
 
 	public:
-		ApplicationManager() {}
-		~ApplicationManager();
-		
 		template<typename ...Args>
-		static Application& createApplication(Args& ...args);
+		static Application& createApplication(Args&& ...args);
 
 		static Application& getFirst();
 		static std::list<Application*>::iterator applicationsBegin();
 		static std::list<Application*>::iterator applicationsEnd();
 
+		static void clear();
+
 	private:
-		std::list<Application*> apps;
+		static std::list<Application*> apps;
 		
-		ApplicationManager(const ApplicationManager& other) = delete;
-		ApplicationManager& operator= (const ApplicationManager& other) = delete;
+	};
 
-		template<typename ...Args>
-		Application& createApplicationLocal(Args& ...args);
 
-		static ApplicationManager& getInstance();
+	//RAII wrapper for memory management of application manager. 
+	class ApplicationManagerInstance {
+
+	public:
+		ApplicationManagerInstance();
+		~ApplicationManagerInstance();
 
 	};
 
 
 	template<typename ...Args>
-	inline Application& ApplicationManager::createApplicationLocal(Args& ...args) {
+	inline Application& ApplicationManager::createApplication(Args&& ...args) {
 #if MULTI_APPLICATION_SUPPORT == 0
 		if (apps.size() > 0) throw "Only one application allowed in single application mode\n";
 #endif
-		Application* app = new Application(args...);
+		Application* app = new Application(std::forward<Args>(args)...);
 		apps.push_back(app);
 
 		return *app;
-	}
-
-	template<typename ...Args>
-	inline Application& ApplicationManager::createApplication(Args& ...args) {
-		return getInstance().createApplicationLocal(args...);
 	}
 
 }

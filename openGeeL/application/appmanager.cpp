@@ -5,26 +5,33 @@
 
 namespace geeL {
 	
-	ApplicationManager::~ApplicationManager() {
-		for (auto it(apps.begin()); it != apps.end(); it++)
-			delete *it;
-	}
+	std::list<Application*> ApplicationManager::apps;
 
-	ApplicationManager singleton;
-	ApplicationManager& ApplicationManager::getInstance() {
-		return singleton;
-	}
 
 	Application& ApplicationManager::getFirst() {
-		return **getInstance().apps.begin();
+		return **ApplicationManager::apps.begin();
 	}
 
 	std::list<Application*>::iterator ApplicationManager::applicationsBegin() {
-		return getInstance().apps.begin();
+		return ApplicationManager::apps.begin();
 	}
 
 	std::list<Application*>::iterator ApplicationManager::applicationsEnd() {
-		return getInstance().apps.end();
+		return ApplicationManager::apps.end();
+	}
+
+	void ApplicationManager::clear() {
+		for (auto it(applicationsBegin()); it != applicationsEnd(); it++) {
+			Application* app = *it;
+			delete app;
+		}
+	}
+
+
+	ApplicationManagerInstance::ApplicationManagerInstance() {}
+
+	ApplicationManagerInstance::~ApplicationManagerInstance() {
+		ApplicationManager::clear();
 	}
 
 
@@ -47,4 +54,5 @@ namespace geeL {
 #endif
 	}
 
+	
 }

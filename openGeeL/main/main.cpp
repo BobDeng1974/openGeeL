@@ -1,4 +1,5 @@
 #include <string>
+#include "appmanager.h"
 #include "luaconfig.h"
 #include "arthousescene.h"
 #include "bedroomscene.h"
@@ -12,6 +13,8 @@
 #include "capsulescene.h"
 
 int main(int argc, char* argv[]) {
+	ApplicationManagerInstance instance;
+
 	if (argc >= 2) {
 		 std::string argument = argv[1];
 
