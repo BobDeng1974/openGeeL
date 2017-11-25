@@ -1,8 +1,9 @@
 #ifndef ANIMATEDOBJECT_H
 #define ANIMATEDOBJECT_H
 
+#include <map>
 #include <memory>
-#include <vector>
+#include <string>
 
 namespace geeL {
 
@@ -19,18 +20,15 @@ namespace geeL {
 		//Add animation. Memory will be managed by this model
 		virtual void addAnimation(std::unique_ptr<Animation> animation);
 
-		//Get animation at index. Index will get clamped if not present.
-		const Animation& getAnimation(size_t index) const;
+		//Get animation with given name. Returns nullptr if no such animation exists
+		const Animation* const getAnimation(const std::string& name = "Default") const;
 
-		Skeleton& getSkeleton() const;
-
-		//Set skeleton for this animated object. It is assumed that the 
-		//skeleton is completely processed and ready to use
-		virtual void setSkeleton(std::unique_ptr<Skeleton> skeleton);
+		const Skeleton& getSkeleton() const;
+		void setSkeleton(std::unique_ptr<Skeleton> skeleton);
 
 	protected:
 		Skeleton* skeleton;
-		std::vector<Animation*> animations;
+		std::map<std::string, Animation*> animations;
 	};
 }
 

@@ -2,6 +2,7 @@
 #define ANIMATION_H
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 #include <vec3.hpp>
@@ -31,7 +32,7 @@ namespace geeL{
 		Animation(const std::string& name, double duration, double fps);
 		virtual ~Animation();
 
-		void addBoneData(const std::string& name, AnimationBoneData* data);
+		void addBoneData(const std::string& name, std::unique_ptr<AnimationBoneData> data);
 		Transform getFrame(const std::string& bone, double time) const;
 
 		//Updates bone with transformational data from given time code
@@ -39,6 +40,7 @@ namespace geeL{
 
 		double getDuration() const;
 		double getFPS() const;
+		const std::string& getName() const;
 
 		std::map<std::string, AnimationBoneData*>::const_iterator bonesStart() const;
 		std::map<std::string, AnimationBoneData*>::const_iterator bonesEnd() const;

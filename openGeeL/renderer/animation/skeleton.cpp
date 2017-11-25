@@ -7,7 +7,9 @@ namespace geeL {
 
 	Skeleton::Skeleton() : rootBone(nullptr) {}
 
-	Skeleton::Skeleton(Bone& root) : rootBone(&root) {
+	Skeleton::Skeleton(Bone& root) 
+		: rootBone(&root) {
+
 		addBone(&root);
 	}
 
@@ -64,6 +66,13 @@ namespace geeL {
 		return nullptr;
 	}
 
+	void Skeleton::iterateBones(std::function<void(const Bone&)> function) const {
+		for (auto it(bones.begin()); it != bones.end(); it++) {
+			const Bone& bone = *it->second;
+			function(bone);
+		}
+	}
+
 	void Skeleton::setParent(Transform& parent) {
 		parent.addChild(std::unique_ptr<Transform>(rootBone));
 	}
@@ -71,7 +80,7 @@ namespace geeL {
 	void Skeleton::addBone(Bone* transform) {
 		bones[transform->getName()] = transform;
 		
-		transform->iterateChildren([this](Transform& child) {
+		transform->iterateChildren([this](Bone& child) {
 			addBone(&child);
 		});
 	}

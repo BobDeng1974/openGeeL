@@ -29,7 +29,7 @@ void main() {
     model     += bones[boneIDs[3]] * weights[3];
 
 	mat4 modelView = view * model;
-	vec4 localPosition = modelView * vec4(position, 1.0f);
+	vec4 localPosition = modelView * vec4(position, 1.f);
 
 	normal = transpose(inverse(mat3(modelView))) * norm;
 	fragPosition = vec3(localPosition);

@@ -1,6 +1,7 @@
 #ifndef SKELETON_H
 #define SKELETON_H
 
+#include <functional>
 #include <list>
 #include <map>
 #include <string>
@@ -24,6 +25,7 @@ namespace geeL {
 		Bone* const getRootBone();
 		Bone* const getBone(const std::string& name);
 		const Bone* const getBone(const std::string& name) const;
+		void iterateBones(std::function<void(const Bone&)> function) const;
 
 		void setParent(Transform& parent);
 

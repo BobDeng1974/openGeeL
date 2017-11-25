@@ -16,8 +16,8 @@ namespace geeL {
 	}
 
 
-	void Animation::addBoneData(const std::string& name, AnimationBoneData* data) {
-		bones[name] = data;
+	void Animation::addBoneData(const std::string& name, std::unique_ptr<AnimationBoneData> data) {
+		bones[name] = data.release();
 	}
 
 	Transform Animation::getFrame(const std::string& bone, double time) const {
@@ -91,6 +91,10 @@ namespace geeL {
 
 	double Animation::getFPS() const {
 		return fps;
+	}
+
+	const std::string& Animation::getName() const {
+		return name;
 	}
 
 	std::map<std::string, AnimationBoneData*>::const_iterator Animation::bonesStart() const {

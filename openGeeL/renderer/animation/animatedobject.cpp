@@ -11,21 +11,25 @@ namespace geeL {
 			delete skeleton;
 
 		for (auto it = animations.begin(); it != animations.end(); it++)
-			delete *it;
+			delete it->second;
 	}
 
 
 	void AnimatedObject::addAnimation(std::unique_ptr<Animation> animation) {
-		animations.push_back(animation.release());
+		Animation* a = animation.release();
+
+		animations[a->getName()] = a;
 	}
 
-	const Animation& AnimatedObject::getAnimation(size_t index) const {
-		size_t i = (index > animations.size() - 1) ? animations.size() - 1 : index;
+	const Animation * const AnimatedObject::getAnimation(const std::string& name) const {
+		auto it(animations.find(name));
+		if (it != animations.end())
+			return it->second;
 
-		return *animations[i];
+		return nullptr;
 	}
 
-	Skeleton& AnimatedObject::getSkeleton() const {
+	const Skeleton& AnimatedObject::getSkeleton() const {
 		return *skeleton;
 	}
 

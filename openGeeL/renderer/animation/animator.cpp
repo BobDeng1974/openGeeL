@@ -9,44 +9,42 @@
 namespace geeL {
 
 	Animator::Animator(AnimatedObject& object, Skeleton& skeleton)
-		: object(object), skeleton(skeleton) {}
-
-
-	void Animator::resetSkeleton() {
-		//TODO: implement this
-	}
-
-	const Skeleton& Animator::getSkeleton() const {
-		return skeleton;
-	}
+		: object(object)
+		, skeleton(skeleton) {}
 
 
 	SimpleAnimator::SimpleAnimator(AnimatedObject& object, Skeleton& skeleton)
-		: Animator(object, skeleton), currentAnimation(nullptr), currentTime(0.) {}
+		: Animator(object, skeleton)
+		, currentAnimation(nullptr)
+		, currentTime(0.) {}
 
 
 	void SimpleAnimator::update(Input& input) {
-		if (currentAnimation != nullptr && currentTime < currentAnimation->getDuration()) {
+		if (currentAnimation != nullptr && currentTime <= currentAnimation->getDuration()) {
 			currentTime += currentAnimation->getFPS() * RenderTime::deltaTime();
 
-			for (auto it = currentAnimation->bonesStart(); it != currentAnimation->bonesEnd(); it++) {
+			for (auto it(currentAnimation->bonesStart()); it != currentAnimation->bonesEnd(); it++) {
 				const std::string& name = (*it).first;
 
-				Transform* bone = skeleton.getBone(name);
+				Bone* bone = skeleton.getBone(name);
 				if (bone != nullptr)
 					currentAnimation->updateBone(name, *bone, currentTime);
 			}
 		}
 	}
 
-	void SimpleAnimator::playAnimation(unsigned int index) {
-		currentAnimation = &object.getAnimation(index);
+	void SimpleAnimator::playAnimation(const std::string& name) {
+		currentAnimation = object.getAnimation(name);
 	}
 
 	void SimpleAnimator::stop() {
 		currentAnimation = nullptr;
 		currentTime = 0.;
-		//resetSkeleton();
+	}
+
+	void SimpleAnimator::reset() {
+		currentAnimation = object.getAnimation("Default");
+		currentTime = 0.;
 	}
 
 }

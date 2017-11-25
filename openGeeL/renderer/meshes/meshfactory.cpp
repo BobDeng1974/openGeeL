@@ -159,9 +159,6 @@ namespace geeL {
 			return;
 		}
 
-		std::list<Animation*> animations;
-		processAnimations(model, scene);
-
 		aiNode* node = scene->mRootNode;
 		Bone* rootBone = new Bone(MatrixExtension::convertMatrix(node->mTransformation));
 		rootBone->setName(string(node->mName.C_Str()));
@@ -172,6 +169,9 @@ namespace geeL {
 
 		std::unique_ptr<Skeleton> skeleton(new Skeleton(*rootBone));
 		model.setSkeleton(std::move(skeleton));
+
+		std::list<Animation*> animations;
+		processAnimations(model, scene);
 	}
 
 	void MeshFactory::processSkinnedNode(SkinnedModel& model, Bone& bone,
@@ -384,10 +384,33 @@ namespace geeL {
 
 	void MeshFactory::processAnimations(SkinnedModel& model, const aiScene* scene) {
 
+
+		//Add a default animation that contains original transformation data
+		const Skeleton& skeleton = model.getSkeleton();
+		Animation* defAnimation = new Animation("Default", 0., 0.);
+
+		skeleton.iterateBones([&defAnimation](const Bone& bone) {
+			AnimationBoneData* data = new AnimationBoneData();
+
+			data->positions.push_back(KeyFrame(bone.getPosition(), 0.));
+			data->rotations.push_back(KeyFrame(bone.getEulerAngles(), 0.));
+			data->scalings.push_back(KeyFrame(bone.getScaling(), 0.));
+
+			defAnimation->addBoneData(bone.getName(), std::unique_ptr<AnimationBoneData>(data));
+		});
+		
+		model.addAnimation(std::unique_ptr<Animation>(defAnimation));
+
+
+		//Read animations from scene
 		for (unsigned int i = 0; i < scene->mNumAnimations; i++) {
 			aiAnimation* anim = scene->mAnimations[i];
-			Animation* animation = new Animation(string(anim->mName.C_Str()),
-				anim->mDuration, anim->mTicksPerSecond);
+
+			std::string animationName(anim->mName.C_Str());
+			Animation* animation = new Animation(
+				(animationName.size() > 0) ? animationName : "Animation " + std::to_string(i + 1),
+				anim->mDuration, 
+				anim->mTicksPerSecond);
 
 			//Add key frame data to animation
 			for (unsigned int j = 0; j < anim->mNumChannels; j++) {
@@ -419,7 +442,7 @@ namespace geeL {
 					data->scalings.push_back(KeyFrame(glm::vec3(s.x, s.y, s.z), key.mTime));
 				}
 
-				animation->addBoneData(name, data);
+				animation->addBoneData(name, std::unique_ptr<AnimationBoneData>(data));
 			}
 
 			model.addAnimation(std::unique_ptr<Animation>(animation));
