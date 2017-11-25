@@ -112,6 +112,7 @@ namespace geeL {
 		vec3 right;
 
 	private:
+		static unsigned int idCounter;
 		unsigned int id;
 		std::string name;
 

@@ -17,7 +17,7 @@ using glm::normalize;
 
 namespace geeL {
 
-	unsigned int idCounter = 0;
+	unsigned int Transform::idCounter = 0;
 
 	Transform::Transform() 
 		: matrix(mat4())
@@ -25,16 +25,14 @@ namespace geeL {
 		, parent(nullptr)
 		, status(TransformUpdateStatus::None) {
 
-		id = idCounter;
-		idCounter++;
+		id = Transform::idCounter++;
 	}
 
 	Transform::Transform(mat4& matrix, bool isStatic) : matrix(matrix), isStatic(isStatic), parent(nullptr) {
 		setMatrix(matrix);
 		status = TransformUpdateStatus::None; //Set status here since 'setMatrix' already changed it
 
-		id = idCounter;
-		idCounter++;
+		id = Transform::idCounter++;
 	}
 
 	Transform::Transform(vec3 position, 
@@ -54,8 +52,7 @@ namespace geeL {
 		updateDirections();
 		resetMatrix();
 
-		id = idCounter;
-		idCounter++;
+		id = Transform::idCounter++;
 	}
 
 	Transform::Transform(vec3 position, 
@@ -75,8 +72,7 @@ namespace geeL {
 		updateDirections();
 		resetMatrix();
 
-		id = idCounter;
-		idCounter++;
+		id = Transform::idCounter++;
 	}
 
 	Transform::Transform(const Transform& transform) 
@@ -99,8 +95,7 @@ namespace geeL {
 
 		resetMatrix();
 
-		id = idCounter;
-		idCounter++;
+		id = Transform::idCounter++;
 
 		if(copyChildren) {
 			transform.iterateChildren([this](const Transform& child) {
