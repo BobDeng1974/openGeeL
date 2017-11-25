@@ -5,7 +5,7 @@ using namespace glm;
 
 namespace geeL {
 
-	Animation::Animation(std::string name, double duration, double fps)
+	Animation::Animation(const std::string& name, double duration, double fps)
 		: name(name), duration(duration), fps(fps) {}
 
 	Animation::~Animation() {
@@ -16,7 +16,7 @@ namespace geeL {
 	}
 
 
-	void Animation::addBoneData(std::string name, AnimationBoneData* data) {
+	void Animation::addBoneData(const std::string& name, AnimationBoneData* data) {
 		bones[name] = data;
 	}
 

@@ -28,10 +28,10 @@ namespace geeL{
 	class Animation {
 
 	public:
-		Animation(std::string name, double duration, double fps);
+		Animation(const std::string& name, double duration, double fps);
 		virtual ~Animation();
 
-		void addBoneData(std::string name, AnimationBoneData* data);
+		void addBoneData(const std::string& name, AnimationBoneData* data);
 		Transform getFrame(const std::string& bone, double time) const;
 
 		//Updates bone with transformational data from given time code

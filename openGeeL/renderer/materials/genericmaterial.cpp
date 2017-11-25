@@ -11,7 +11,7 @@ using namespace std;
 
 namespace geeL {
 
-	GenericMaterialContainer::GenericMaterialContainer(string name) 
+	GenericMaterialContainer::GenericMaterialContainer(const std::string& name)
 		: MaterialContainer(name) {}
 
 

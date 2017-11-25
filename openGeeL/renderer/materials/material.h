@@ -15,7 +15,7 @@ namespace geeL {
 	public:
 		std::string name;
 
-		MaterialContainer(std::string name = "material")
+		MaterialContainer(const std::string& name = "material")
 			: name(name) {}
 
 		virtual void addTexture(const std::string& name, Texture2D& texture) = 0;

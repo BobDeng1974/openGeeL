@@ -21,7 +21,7 @@ namespace geeL {
 
 	public:
 		Model() {}
-		Model(std::string path) : path(path) {}
+		Model(const std::string& path) : path(path) {}
 
 		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const = 0;
 		const std::string& getPath() const;
@@ -38,7 +38,7 @@ namespace geeL {
 
 	public:
 		GenericModel() {}
-		GenericModel(std::string path) : Model(path) {}
+		GenericModel(const std::string& path) : Model(path) {}
 
 		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const;
 		virtual void iterateMeshesGeneric(std::function<void(const MeshType&)> function) const;
@@ -58,7 +58,7 @@ namespace geeL {
 	
 	public:
 		StaticModel() : GenericModel() {}
-		StaticModel(std::string path) : GenericModel(path) {}
+		StaticModel(const std::string& path) : GenericModel(path) {}
 		
 	};
 
@@ -68,7 +68,7 @@ namespace geeL {
 
 	public:
 		SkinnedModel() : GenericModel(), AnimatedObject() {}
-		SkinnedModel(std::string path) : GenericModel(path), AnimatedObject() {}
+		SkinnedModel(const std::string& path) : GenericModel(path), AnimatedObject() {}
 
 	};
 

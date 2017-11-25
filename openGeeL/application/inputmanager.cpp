@@ -99,7 +99,7 @@ namespace geeL {
 		return currentKeys[key] == GLFW_REPEAT;
 	}
 
-	void InputManager::defineButton(string name, int key) {
+	void InputManager::defineButton(const std::string& name, int key) {
 
 		if (buttonMapping.count(name)) {
 			vector<int>& keyList = buttonMapping[name];
@@ -113,7 +113,7 @@ namespace geeL {
 		}
 	}
 
-	bool InputManager::getButtonHelper(string button, KeyAction keyFunction) const {
+	bool InputManager::getButtonHelper(const std::string& button, KeyAction keyFunction) const {
 		map<string, vector<int>>::const_iterator iterator = buttonMapping.find(button);
 
 		if (iterator != buttonMapping.end()) {
@@ -128,19 +128,19 @@ namespace geeL {
 		return false;
 	}
 
-	bool InputManager::getButton(string button) const {
+	bool InputManager::getButton(const std::string& button) const {
 		return getButtonHelper(button, &InputManager::getKey);
 	}
 
-	bool InputManager::getButtonDown(string button) const {
+	bool InputManager::getButtonDown(const std::string& button) const {
 		return getButtonHelper(button, &InputManager::getKeyDown);
 	}
 
-	bool InputManager::getButtonUp(string button) const {
+	bool InputManager::getButtonUp(const std::string& button) const {
 		return getButtonHelper(button, &InputManager::getKeyUp);
 	}
 
-	bool InputManager::getButtonHold(string button) const {
+	bool InputManager::getButtonHold(const std::string& button) const {
 		return getButtonHelper(button, &InputManager::getKeyHold);
 	}
 

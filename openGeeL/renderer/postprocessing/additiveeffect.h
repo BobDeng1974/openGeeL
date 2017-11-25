@@ -12,9 +12,11 @@ namespace geeL {
 	class AdditiveEffect : public PostProcessingEffectFS {
 
 	public:
-		AdditiveEffect(const std::string& fragmentPath, BlendMode mode = BlendMode::Add);
-		AdditiveEffect(const std::string& vertexPath, const std::string& fragmentPath, 
-			BlendMode mode = BlendMode::Add);
+		template<typename ...ShaderPaths>
+		AdditiveEffect(ShaderPaths&& ...paths);
+
+		template<typename ...ShaderPaths>
+		AdditiveEffect(BlendMode mode, ShaderPaths&& ...paths);
 
 		virtual void draw();
 		virtual void fill();
@@ -51,6 +53,17 @@ namespace geeL {
 		RenderTexture* tempTexture;
 
 	};
+
+
+	template<typename ...ShaderPaths>
+	inline AdditiveEffect::AdditiveEffect(ShaderPaths&& ...paths) 
+		: PostProcessingEffectFS(std::forward<ShaderPaths>(paths)...)
+		, mode(BlendMode::Add) {}
+
+	template<typename ...ShaderPaths>
+	inline AdditiveEffect::AdditiveEffect(BlendMode mode, ShaderPaths&& ...paths)
+		: PostProcessingEffectFS(std::forward<ShaderPaths>(paths)...)
+		, mode(mode) {}
 
 }
 

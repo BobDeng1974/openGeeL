@@ -31,10 +31,10 @@ namespace geeL {
 		virtual bool getKeyUp(int key) const = 0;
 		virtual bool getKeyHold(int key) const = 0;
 
-		virtual bool getButton(std::string button) const = 0;
-		virtual bool getButtonDown(std::string button) const = 0;
-		virtual bool getButtonUp(std::string button) const = 0;
-		virtual bool getButtonHold(std::string button) const = 0;
+		virtual bool getButton(const std::string& button) const = 0;
+		virtual bool getButtonDown(const std::string& button) const = 0;
+		virtual bool getButtonUp(const std::string& button) const = 0;
+		virtual bool getButtonHold(const std::string& button) const = 0;
 
 		virtual bool getMouseKey(int key) const = 0;
 		virtual double getMouseX() const = 0;
@@ -70,12 +70,12 @@ namespace geeL {
 		virtual bool getKeyUp(int key) const;
 		virtual bool getKeyHold(int key) const;
 
-		void defineButton(std::string name, int key);
+		void defineButton(const std::string& name, int key);
 
-		virtual bool getButton(std::string button) const;
-		virtual bool getButtonDown(std::string button) const;
-		virtual bool getButtonUp(std::string button) const;
-		virtual bool getButtonHold(std::string button) const;
+		virtual bool getButton(const std::string& button) const;
+		virtual bool getButtonDown(const std::string& button) const;
+		virtual bool getButtonUp(const std::string& button) const;
+		virtual bool getButtonHold(const std::string& button) const;
 
 		virtual bool getMouseKey(int key) const;
 		virtual double getMouseX() const;
@@ -107,7 +107,7 @@ namespace geeL {
 		AtomicWrapper<double> scroll;
 		AtomicWrapper<double> lastScroll;
 
-		bool getButtonHelper(std::string button, KeyAction keyFunction) const;
+		bool getButtonHelper(const std::string& button, KeyAction keyFunction) const;
 
 	};
 }

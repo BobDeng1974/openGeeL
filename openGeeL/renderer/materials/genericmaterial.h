@@ -20,7 +20,7 @@ namespace geeL {
 	class GenericMaterialContainer : public MaterialContainer {
 
 	public:
-		GenericMaterialContainer(std::string name = "material");
+		GenericMaterialContainer(const std::string& name = "material");
 
 		//Add a new texture unit with given name. Shader will be notified
 		//if unit is filled or not during rendering process via variable 

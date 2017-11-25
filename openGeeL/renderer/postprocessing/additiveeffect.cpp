@@ -10,17 +10,6 @@
 
 namespace geeL {
 
-	AdditiveEffect::AdditiveEffect(const std::string& fragmentPath, BlendMode mode)
-		: PostProcessingEffectFS(fragmentPath)
-		, mode(mode) {}
-
-	AdditiveEffect::AdditiveEffect(const std::string& vertexPath, 
-		const std::string& fragmentPath, 
-		BlendMode mode)
-			: PostProcessingEffectFS(vertexPath, fragmentPath)
-			, mode(mode) {}
-
-
 	void AdditiveEffect::draw() {
 		if (active) {
 			drawSubImages();
@@ -53,7 +42,10 @@ namespace geeL {
 
 
 	AdditiveWrapper::AdditiveWrapper(PostProcessingEffectFS& effect, BlendMode mode)
-		: AdditiveEffect("renderer/shaders/screen.frag", mode), effect(effect), tempTexture(nullptr) {}
+		: AdditiveEffect(mode, "renderer/shaders/screen.frag")
+		, effect(effect)
+		, tempTexture(nullptr) {}
+
 
 	AdditiveWrapper::~AdditiveWrapper() {
 		if (tempTexture != nullptr) delete tempTexture;

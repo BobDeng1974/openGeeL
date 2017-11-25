@@ -23,7 +23,7 @@ namespace geeL {
 	}
 
 
-	StaticMeshInstance::StaticMeshInstance(const StaticMesh & mesh)
+	StaticMeshInstance::StaticMeshInstance(const StaticMesh& mesh)
 		: MeshInstance(mesh) {}
 
 	void StaticMeshInstance::draw(const Shader& shader) const {

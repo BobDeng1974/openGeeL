@@ -29,13 +29,7 @@ namespace geeL {
 	class MeshRenderer : public SceneObject {
 
 	public:
-		//Constructor for mesh renderer with an unique assigned model
-		MeshRenderer(Transform& transform,
-			CullingMode faceCulling = CullingMode::cullFront,
-			const std::string& name = "MeshRenderer");
-
 		virtual ~MeshRenderer() {}
-
 
 		//Only draw those meshes whose materials
 		//are linked to given shader
@@ -89,6 +83,9 @@ namespace geeL {
 		std::list<std::function<void(MeshRenderer&, Material, Material)>> materialListeners;
 		std::map<SceneShader*, std::list<MaterialMapping>> materials;
 
+		MeshRenderer(Transform& transform,
+			CullingMode faceCulling = CullingMode::cullFront,
+			const std::string& name = "MeshRenderer");
 
 		void drawMask(const MaterialMapping& mapping) const;
 		virtual MaterialMapping* getMapping(const MeshInstance& mesh);
