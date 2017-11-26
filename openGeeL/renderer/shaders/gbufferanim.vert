@@ -19,7 +19,7 @@ out vec3 fragPosition;
 out vec2 textureCoordinates;
 out mat3 TBN;
 
-uniform mat4 bones[100];
+uniform mat4 bones[50];
 
 
 void main() {	

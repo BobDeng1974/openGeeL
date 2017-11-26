@@ -1,5 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <iostream>
 #include <glfw3.h>
 #include "mesh.h"
 #include "materials/defaultmaterial.h"

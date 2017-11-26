@@ -23,13 +23,9 @@ namespace geeL {
 		if (currentAnimation != nullptr && currentTime <= currentAnimation->getDuration()) {
 			currentTime += currentAnimation->getFPS() * RenderTime::deltaTime();
 
-			for (auto it(currentAnimation->bonesStart()); it != currentAnimation->bonesEnd(); it++) {
-				const std::string& name = (*it).first;
-
-				Bone* bone = skeleton.getBone(name);
-				if (bone != nullptr)
-					currentAnimation->updateBone(name, *bone, currentTime);
-			}
+			skeleton.iterateBones([this](Bone& bone) {
+				currentAnimation->updateBone(bone.getName(), bone, currentTime);
+			});
 		}
 	}
 

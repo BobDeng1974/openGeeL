@@ -1,75 +1,111 @@
 #include "utility/vectorextension.h"
+#include "skeleton.h"
 #include "animation.h"
 
 using namespace glm;
 
 namespace geeL {
 
-	Animation::Animation(const std::string& name, double duration, double fps)
+	AnimationMemory::AnimationMemory(const std::string& name, double duration, double fps)
 		: name(name), duration(duration), fps(fps) {}
 
-	Animation::~Animation() {
+	AnimationMemory::~AnimationMemory() {
 		for (auto it = bones.begin(); it != bones.end(); it++) {
-			AnimationBoneData* data = (*it).second;
+			const AnimationBoneData* data = (*it).second;
 			delete data;
 		}
 	}
 
 
-	void Animation::addBoneData(const std::string& name, std::unique_ptr<AnimationBoneData> data) {
+	void AnimationMemory::addBoneData(const std::string& name, std::unique_ptr<AnimationBoneData> data) {
 		bones[name] = data.release();
 	}
 
-	Transform Animation::getFrame(const std::string& bone, double time) const {
-		if (bones.find(bone) != bones.end()) {
-			const AnimationBoneData& data = *bones.at(bone);
-
-			const std::vector<KeyFrame>& positions = data.positions;
-			vec3& position = getVector(positions, time);
-
-			const std::vector<KeyFrame>& rotations = data.rotations;
-			vec3& rotation = getVector(rotations, time);
-
-			const std::vector<KeyFrame>& scalings = data.scalings;
-			vec3& scaling = getVector(scalings, time);
-
-			return Transform(position, rotation, scaling);
-		}
-		
-		return Transform();
-	}
-
-	void Animation::updateBone(const std::string& name, Transform& bone, double time) const {
+	void AnimationMemory::updateBone(const std::string& name, Transform& bone, double time) const {
 
 		auto it = bones.find(name);
 		if (it != bones.end()) {
 			const AnimationBoneData& data = *(*it).second;
-
-			const std::vector<KeyFrame>& positions = data.positions;
-			vec3& position = getVector(positions, time);
-			bone.setPosition(position);
-
-			const std::vector<KeyFrame>& rotations = data.rotations;
-			vec3& rotation = getVector(rotations, time);
-			bone.setEulerAngles(rotation);
-
-			const std::vector<KeyFrame>& scalings = data.scalings;
-			vec3& scaling = getVector(scalings, time);
-			bone.setScaling(scaling);
+			data.updateBone(bone, time);
 		}
-
 	}
 
-	vec3 Animation::getVector(const std::vector<KeyFrame>& list, double time) const {
+	const AnimationBoneData* const AnimationMemory::getAnimationData(const std::string& name) const {
+		auto it(bones.find(name));
+		if (it != bones.end())
+			return it->second;
 
-		//Linear search in sorted key frame list
+		return nullptr;
+	}
+
+	double AnimationMemory::getDuration() const {
+		return duration;
+	}
+
+	double AnimationMemory::getFPS() const {
+		return fps;
+	}
+
+	const std::string& AnimationMemory::getName() const {
+		return name;
+	}
+
+	
+
+
+	AnimationInstance::AnimationInstance(const AnimationMemory& animation, Skeleton& skeleton)
+		: animation(animation)
+		, skeleton(skeleton) {
+	
+		connectSkeleton();
+	}
+
+
+	void AnimationInstance::updateBone(const std::string& name, Transform& bone, double time) const {
+		animation.updateBone(name, bone, time);
+	}
+
+	void AnimationInstance::updateBones(double time) {
+		for (auto it(bones.begin()); it != bones.end(); it++) {
+			Bone& bone = *it->first;
+			const AnimationBoneData& data = *it->second;
+
+			data.updateBone(bone, time);
+		}
+	}
+
+	double AnimationInstance::getDuration() const {
+		animation.getDuration();
+	}
+
+	double AnimationInstance::getFPS() const {
+		animation.getFPS();
+	}
+
+	const std::string& AnimationInstance::getName() const {
+		animation.getName();
+	}
+
+	void AnimationInstance::connectSkeleton() {
+		skeleton.iterateBones([this](Bone& bone) {
+			const AnimationBoneData* data = animation.getAnimationData(bone.getName());
+			assert(data != nullptr);
+
+			bones[&bone] = data;
+		});
+	}
+
+
+
+	vec3 getVector(const std::vector<KeyFrame>& list, double time) {
+		//Binary search in sorted key frame list
 		size_t start = 0;
 		size_t end = list.size();
 
 		while ((end - start) > 1) {
 			size_t step = (start + end) / 2;
 			const KeyFrame& frame = list[step];
-			
+
 			if (frame.time > time)
 				end = step;
 			else
@@ -79,30 +115,21 @@ namespace geeL {
 		//Linear interpolate the two closest results
 		const vec3& startVec = list[start].value;
 		const vec3& endVec = list[end].value;
-		double factor = (time - list[start].time) 
+		double factor = (time - list[start].time)
 			/ (list[end].time - list[start].time);
 
 		return VectorExtension::lerp(startVec, endVec, float(factor));
 	}
 
-	double Animation::getDuration() const {
-		return duration;
-	}
+	void AnimationBoneData::updateBone(Bone& bone, double time) const {
+		vec3& position = getVector(positions, time);
+		bone.setPosition(position);
 
-	double Animation::getFPS() const {
-		return fps;
-	}
+		vec3& rotation = getVector(rotations, time);
+		bone.setEulerAngles(rotation);
 
-	const std::string& Animation::getName() const {
-		return name;
-	}
-
-	std::map<std::string, AnimationBoneData*>::const_iterator Animation::bonesStart() const {
-		return bones.begin();
-	}
-
-	std::map<std::string, AnimationBoneData*>::const_iterator Animation::bonesEnd() const {
-		return bones.end();
+		vec3& scaling = getVector(scalings, time);
+		bone.setScaling(scaling);
 	}
 
 }

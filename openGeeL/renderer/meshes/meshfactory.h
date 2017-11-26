@@ -24,7 +24,7 @@ namespace geeL {
 	struct SkinnedVertex;
 	struct MeshBoneData;
 
-	class Animation;
+	class AnimationMemory;
 	class DefaultMaterialContainer;
 	class MaterialFactory;
 	class StaticMeshRenderer;

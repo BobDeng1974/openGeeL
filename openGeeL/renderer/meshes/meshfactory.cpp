@@ -160,7 +160,7 @@ namespace geeL {
 		}
 
 		aiNode* node = scene->mRootNode;
-		Bone* rootBone = new Bone(MatrixExtension::convertMatrix(node->mTransformation));
+		Bone* rootBone = new Bone(MatrixExtension::convertMatrix(node->mTransformation/*.Inverse()*/));
 		rootBone->setName(string(node->mName.C_Str()));
 		processSkeleton(*rootBone, node);
 
@@ -170,7 +170,7 @@ namespace geeL {
 		std::unique_ptr<Skeleton> skeleton(new Skeleton(*rootBone));
 		model.setSkeleton(std::move(skeleton));
 
-		std::list<Animation*> animations;
+		std::list<AnimationMemory*> animations;
 		processAnimations(model, scene);
 	}
 
@@ -289,21 +289,22 @@ namespace geeL {
 		for (unsigned int i = 0; i < mesh->mNumBones; i++) {
 			aiBone* bone = mesh->mBones[i];
 			const string& name = bone->mName.data;
+			unsigned int id = i + 1;
 
-			Bone* transformBone = static_cast<Bone*>(parentBone.find(name));
+			Bone* transformBone = parentBone.find(name);
 			assert(transformBone != nullptr);
 
 			aiMatrix4x4& mat = bone->mOffsetMatrix;
 			bones[name].offsetMatrix = MatrixExtension::convertMatrix(mat);
-			bones[name].id = i;
+			bones[name].id = id;
 			bones[name].bone = transformBone;			
 
 			//Iterate over all vertices that are affected by this bone
 			for (unsigned int j = 0; j < bone->mNumWeights; j++) {
-				aiVertexWeight weight = bone->mWeights[j];
+				aiVertexWeight& weight = bone->mWeights[j];
 
 				//Populate vertices with bone weights
-				vertices[weight.mVertexId].addBone(i, weight.mWeight);
+				vertices[weight.mVertexId].addBone(id, weight.mWeight);
 			}
 		}
 	}
@@ -387,7 +388,7 @@ namespace geeL {
 
 		//Add a default animation that contains original transformation data
 		const Skeleton& skeleton = model.getSkeleton();
-		Animation* defAnimation = new Animation("Default", 0., 0.);
+		AnimationMemory* defAnimation = new AnimationMemory("Default", 0., 0.);
 
 		skeleton.iterateBones([&defAnimation](const Bone& bone) {
 			AnimationBoneData* data = new AnimationBoneData();
@@ -399,7 +400,7 @@ namespace geeL {
 			defAnimation->addBoneData(bone.getName(), std::unique_ptr<AnimationBoneData>(data));
 		});
 		
-		model.addAnimation(std::unique_ptr<Animation>(defAnimation));
+		model.addAnimation(std::unique_ptr<AnimationMemory>(defAnimation));
 
 
 		//Read animations from scene
@@ -407,7 +408,7 @@ namespace geeL {
 			aiAnimation* anim = scene->mAnimations[i];
 
 			std::string animationName(anim->mName.C_Str());
-			Animation* animation = new Animation(
+			AnimationMemory* animation = new AnimationMemory(
 				(animationName.size() > 0) ? animationName : "Animation " + std::to_string(i + 1),
 				anim->mDuration, 
 				anim->mTicksPerSecond);
@@ -445,7 +446,7 @@ namespace geeL {
 				animation->addBoneData(name, std::unique_ptr<AnimationBoneData>(data));
 			}
 
-			model.addAnimation(std::unique_ptr<Animation>(animation));
+			model.addAnimation(std::unique_ptr<AnimationMemory>(animation));
 		}
 	}
 

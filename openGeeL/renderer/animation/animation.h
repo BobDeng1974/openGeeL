@@ -6,9 +6,28 @@
 #include <string>
 #include <vector>
 #include <vec3.hpp>
+#include "bone.h"
 #include "transformation/transform.h"
 
 namespace geeL{
+
+	class Skeleton;
+
+
+	class Animation {
+
+	public:
+		virtual ~Animation() {}
+
+		//Updates bone with transformational data from given time code
+		virtual void updateBone(const std::string& name, Transform& bone, double time) const = 0;
+
+		virtual double getDuration() const = 0;
+		virtual double getFPS() const = 0;
+		virtual const std::string& getName() const = 0;
+
+	};
+
 
 	struct KeyFrame {
 		glm::vec3 value;
@@ -23,35 +42,61 @@ namespace geeL{
 		std::vector<KeyFrame> positions;
 		std::vector<KeyFrame> rotations;
 		std::vector<KeyFrame> scalings;
+
+		void updateBone(Bone& bone, double time) const;
+
 	};
 
 
-	class Animation {
+	class AnimationMemory : public Animation {
 
 	public:
-		Animation(const std::string& name, double duration, double fps);
-		virtual ~Animation();
+		AnimationMemory(const std::string& name, double duration, double fps);
+
+		virtual ~AnimationMemory();
 
 		void addBoneData(const std::string& name, std::unique_ptr<AnimationBoneData> data);
-		Transform getFrame(const std::string& bone, double time) const;
+		virtual void updateBone(const std::string& name, Transform& bone, double time) const;
 
-		//Updates bone with transformational data from given time code
-		void updateBone(const std::string& name, Transform& bone, double time) const;
+		const AnimationBoneData* const getAnimationData(const std::string& name) const;
 
-		double getDuration() const;
-		double getFPS() const;
-		const std::string& getName() const;
-
-		std::map<std::string, AnimationBoneData*>::const_iterator bonesStart() const;
-		std::map<std::string, AnimationBoneData*>::const_iterator bonesEnd() const;
+		virtual double getDuration() const;
+		virtual double getFPS() const;
+		virtual const std::string& getName() const;
 
 	private:
 		std::string name;
 		double duration;
 		double fps;
-		std::map<std::string, AnimationBoneData*> bones;
+		std::map<std::string, const AnimationBoneData*> bones;
 
-		glm::vec3 getVector(const std::vector<KeyFrame>& list, double time) const;
+	};
+
+
+
+	class AnimationInstance : public Animation {
+
+	public:
+		AnimationInstance(const AnimationMemory& animation, Skeleton& skeleton);
+
+		virtual void updateBone(const std::string& name, Transform& bone, double time) const;
+
+		//Update all bones of comprised skeleton 
+		//with data from comprised animation
+		void updateBones(double time);
+
+		virtual double getDuration() const;
+		virtual double getFPS() const;
+		virtual const std::string& getName() const;
+
+	private:
+		const AnimationMemory& animation;
+		Skeleton& skeleton;
+		std::map<Bone*, const AnimationBoneData*> bones;
+
+		//Connect skeleton instance to bone data of animation
+		void connectSkeleton();
+
 	};
 
 }

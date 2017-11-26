@@ -73,6 +73,13 @@ namespace geeL {
 		}
 	}
 
+	void Skeleton::iterateBones(std::function<void(Bone&)> function) {
+		for (auto it(bones.begin()); it != bones.end(); it++) {
+			Bone& bone = *it->second;
+			function(bone);
+		}
+	}
+
 	void Skeleton::setParent(Transform& parent) {
 		parent.addChild(std::unique_ptr<Transform>(rootBone));
 	}

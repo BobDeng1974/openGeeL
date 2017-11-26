@@ -25,7 +25,9 @@ namespace geeL {
 		Bone* const getRootBone();
 		Bone* const getBone(const std::string& name);
 		const Bone* const getBone(const std::string& name) const;
+		
 		void iterateBones(std::function<void(const Bone&)> function) const;
+		void iterateBones(std::function<void(Bone&)> function);
 
 		void setParent(Transform& parent);
 

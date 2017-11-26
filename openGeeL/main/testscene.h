@@ -147,7 +147,7 @@ public:
 			scene.addMeshRenderer(dude);
 
 			SimpleAnimator& anim = dude.addComponent(SimpleAnimator(dude.getSkinnedModel(), dude.getSkeleton()));
-			anim.playAnimation("Animation 1");
+			anim.playAnimation("Default");
 			
 
 

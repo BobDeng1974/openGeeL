@@ -9,7 +9,7 @@
 #include <map>
 #include "animation/bone.h"
 
-#define BONECOUNT 3
+#define BONECOUNT 4
 
 namespace geeL {
 
@@ -39,6 +39,14 @@ namespace geeL {
 
 		unsigned int IDs[BONECOUNT];
 		float weights[BONECOUNT];
+
+
+		SkinnedVertex() {
+			for (unsigned int i = 0; i < BONECOUNT; i++) {
+				IDs[i] = 0;
+				weights[i] = 0.f;
+			}
+		}
 
 		void addBone(unsigned int id, float weight) {
 			//Find unused spot in arrays

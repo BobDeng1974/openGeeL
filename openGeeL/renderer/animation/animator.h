@@ -6,7 +6,7 @@
 namespace geeL {
 
 	class AnimatedObject;
-	class Animation;
+	class AnimationMemory;
 	class SceneObject;
 	class Skeleton;
 	class Transform;
@@ -41,7 +41,7 @@ namespace geeL {
 		virtual void reset();
 
 	private:
-		const Animation* currentAnimation;
+		const AnimationMemory* currentAnimation;
 		double currentTime;
 
 	};

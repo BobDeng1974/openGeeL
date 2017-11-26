@@ -15,13 +15,13 @@ namespace geeL {
 	}
 
 
-	void AnimatedObject::addAnimation(std::unique_ptr<Animation> animation) {
-		Animation* a = animation.release();
+	void AnimatedObject::addAnimation(std::unique_ptr<AnimationMemory> animation) {
+		AnimationMemory* a = animation.release();
 
 		animations[a->getName()] = a;
 	}
 
-	const Animation * const AnimatedObject::getAnimation(const std::string& name) const {
+	const AnimationMemory * const AnimatedObject::getAnimation(const std::string& name) const {
 		auto it(animations.find(name));
 		if (it != animations.end())
 			return it->second;
