@@ -1,6 +1,5 @@
 #include "transformation/transform.h"
 #include "utility/rendertime.h"
-#include "animation.h"
 #include "bone.h"
 #include "skeleton.h"
 #include "animatedobject.h"
@@ -22,24 +21,30 @@ namespace geeL {
 	void SimpleAnimator::update(Input& input) {
 		if (currentAnimation != nullptr && currentTime <= currentAnimation->getDuration()) {
 			currentTime += currentAnimation->getFPS() * RenderTime::deltaTime();
+			currentAnimation->updateBones(currentTime);
 
+			/*
 			skeleton.iterateBones([this](Bone& bone) {
 				currentAnimation->updateBone(bone.getName(), bone, currentTime);
 			});
+			*/
 		}
 	}
 
 	void SimpleAnimator::playAnimation(const std::string& name) {
-		currentAnimation = object.getAnimation(name);
+		const AnimationMemory* memory = object.getAnimation(name);
+
+		if(memory != nullptr)
+			currentAnimation.reset(new AnimationInstance(*memory, skeleton));
 	}
 
 	void SimpleAnimator::stop() {
-		currentAnimation = nullptr;
+		currentAnimation.reset(nullptr);
 		currentTime = 0.;
 	}
 
 	void SimpleAnimator::reset() {
-		currentAnimation = object.getAnimation("Default");
+		currentAnimation.reset(new AnimationInstance(*object.getAnimation("Default"), skeleton));
 		currentTime = 0.;
 	}
 

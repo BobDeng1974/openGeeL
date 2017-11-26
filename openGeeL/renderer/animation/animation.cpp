@@ -75,15 +75,15 @@ namespace geeL {
 	}
 
 	double AnimationInstance::getDuration() const {
-		animation.getDuration();
+		return animation.getDuration();
 	}
 
 	double AnimationInstance::getFPS() const {
-		animation.getFPS();
+		return animation.getFPS();
 	}
 
 	const std::string& AnimationInstance::getName() const {
-		animation.getName();
+		return animation.getName();
 	}
 
 	void AnimationInstance::connectSkeleton() {

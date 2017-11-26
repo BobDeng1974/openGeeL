@@ -1,15 +1,17 @@
 #ifndef ANIMATOR_H
 #define ANIMATOR_H
 
+#include <memory>
 #include "scripting/component.h"
+#include "animation.h"
 
 namespace geeL {
 
 	class AnimatedObject;
-	class AnimationMemory;
 	class SceneObject;
 	class Skeleton;
 	class Transform;
+
 
 	//Abstract base class for all animating objects
 	class Animator : public Component {
@@ -41,7 +43,7 @@ namespace geeL {
 		virtual void reset();
 
 	private:
-		const AnimationMemory* currentAnimation;
+		std::unique_ptr<AnimationInstance> currentAnimation;
 		double currentTime;
 
 	};
