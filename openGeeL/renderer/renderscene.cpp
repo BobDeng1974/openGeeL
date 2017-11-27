@@ -191,7 +191,7 @@ namespace geeL {
 
 
 	RenderScene::RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline,
-		SceneCamera& camera, const MaterialFactory& materialFactory, Input& input)
+		SceneCamera& camera, MaterialFactory& materialFactory, Input& input)
 			: Scene(world, lightManager, pipeline, camera), 
 				materialFactory(materialFactory), input(input) {
 			

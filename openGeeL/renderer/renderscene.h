@@ -110,7 +110,7 @@ namespace geeL {
 
 	public:
 		RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline, SceneCamera& camera, 
-			const MaterialFactory& materialFactory, Input& input);
+			MaterialFactory& materialFactory, Input& input);
 
 		void init();
 		void updateProbes();
@@ -191,7 +191,7 @@ namespace geeL {
 	private:
 		bool initialized = false;
 		Input& input;
-		const MaterialFactory& materialFactory;
+		MaterialFactory& materialFactory;
 		std::mutex mutex;
 
 		void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera, 

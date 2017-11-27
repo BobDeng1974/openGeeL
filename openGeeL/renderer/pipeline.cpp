@@ -40,6 +40,8 @@ namespace geeL {
 					camera.bindProjectionMatrix(shader, "projection");
 					camera.bindInverseViewMatrix(shader, "inverseView");
 					shader.bind<glm::vec3>("origin", camera.GetOriginInViewSpace());
+
+
 					break;
 				case ShadingMethod::Generic:
 					camera.bindProjectionMatrix(shader, "projection");

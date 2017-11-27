@@ -14,15 +14,7 @@ using namespace std;
 namespace geeL {
 
 	MaterialFactory::MaterialFactory(const GBuffer& buffer, ShaderProvider* const provider) 
-		: genericShader(new SceneShader("renderer/shaders/lighting.vert", 
-			FragmentShader("renderer/shaders/lighting.frag"),
-			ShaderTransformSpace::World, 
-			ShadingMethod::Generic))
-		, forwardShader(new SceneShader("renderer/shaders/forwardlighting.vert", 
-			FragmentShader("renderer/shaders/forwardlighting.frag"), 
-			ShaderTransformSpace::View, 
-			ShadingMethod::Forward))
-		, deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", 
+		: deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", 
 			FragmentShader(buffer.getFragmentPath(), false), 
 			ShaderTransformSpace::View, 
 			ShadingMethod::Deferred))
@@ -30,26 +22,11 @@ namespace geeL {
 			FragmentShader(buffer.getFragmentPath(), false),
 			ShaderTransformSpace::View, 
 			ShadingMethod::Deferred))
-		, transparentODShader(new SceneShader("renderer/shaders/forwardlighting.vert", 
-			FragmentShader("renderer/shaders/forwardlighting.frag"),
-			ShaderTransformSpace::View, 
-			ShadingMethod::TransparentOD))
-		, transparentOIDShader(new SceneShader("renderer/shaders/forwardlighting.vert", 
-			FragmentShader("renderer/shaders/transparentlighting.frag"),
-			ShaderTransformSpace::View, 
-			ShadingMethod::TransparentOID))
-		, provider(provider) {
-
-		genericShader->mapOffset = 1;
-		forwardShader->mapOffset = 1;
-		transparentODShader->mapOffset = 1;
-		transparentOIDShader->mapOffset = 1;
-
-		shaders.push_back(genericShader);
-		shaders.push_back(forwardShader);
-		shaders.push_back(transparentODShader);
-		shaders.push_back(transparentOIDShader);
-	}
+		, genericShader(nullptr)
+		, forwardShader(nullptr)
+		, transparentODShader(nullptr)
+		, transparentOIDShader(nullptr)
+		, provider(provider) {}
 
 	MaterialFactory::~MaterialFactory() {
 		delete deferredShader;
@@ -156,17 +133,58 @@ namespace geeL {
 		return *shaders.back();
 	}
 
-	SceneShader& MaterialFactory::getDefaultShader(ShadingMethod shading, bool animated) const {
+	SceneShader& MaterialFactory::getDefaultShader(ShadingMethod shading, bool animated) {
 		switch (shading) {
 			case ShadingMethod::Generic:
+				if (genericShader == nullptr) {
+					genericShader = new SceneShader("renderer/shaders/lighting.vert",
+						FragmentShader("renderer/shaders/lighting.frag"),
+						ShaderTransformSpace::World,
+						ShadingMethod::Generic);
+
+					genericShader->mapOffset = 1;
+					shaders.push_back(genericShader);
+				}
+					
+
 				return *genericShader;
 			case ShadingMethod::Deferred:
 				return animated ? *deferredAnimatedShader : *deferredShader;
 			case ShadingMethod::Forward:
+				if (forwardShader == nullptr) {
+					forwardShader = new SceneShader("renderer/shaders/forwardlighting.vert",
+						FragmentShader("renderer/shaders/forwardlighting.frag"),
+						ShaderTransformSpace::View,
+						ShadingMethod::Forward);
+
+					forwardShader->mapOffset = 1;
+					shaders.push_back(forwardShader);
+				}
+
 				return *forwardShader;
 			case ShadingMethod::TransparentOD:
+				if (transparentODShader == nullptr) {
+					transparentODShader = new SceneShader("renderer/shaders/forwardlighting.vert",
+						FragmentShader("renderer/shaders/forwardlighting.frag"),
+						ShaderTransformSpace::View,
+						ShadingMethod::TransparentOD);
+
+					transparentODShader->mapOffset = 1;
+					shaders.push_back(transparentODShader);
+				}
+
 				return *transparentODShader;
 			case ShadingMethod::TransparentOID:
+				if (transparentOIDShader == nullptr) {
+					transparentOIDShader = new SceneShader("renderer/shaders/forwardlighting.vert",
+						FragmentShader("renderer/shaders/transparentlighting.frag"),
+						ShaderTransformSpace::View,
+						ShadingMethod::TransparentOID);
+
+					transparentOIDShader->mapOffset = 1;
+					shaders.push_back(transparentOIDShader);
+				}
+
 				return *transparentOIDShader;
 		}
 
