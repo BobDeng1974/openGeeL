@@ -51,10 +51,29 @@ public:
 				container.setIntValue("InverseRoughness", 1);
 			});
 
-			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, -5.f, 4.4f), vec3(0.f, 0.f, 0.f), vec3(0.12f));
-			MeshRenderer& nano = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/nanosuit/nanosuit.obj"),
-				meshTransform1, CullingMode::cullFront, "Nano");
-			scene.addMeshRenderer(nano);
+
+			Transform& meshTransform222 = transformFactory.CreateTransform(vec3(0.0f, -4.75f, 4.1f), vec3(0.f, 180.f, 0.f), vec3(0.0075f));
+			SkinnedMeshRenderer& drone = meshFactory.CreateSkinnedMeshRenderer(meshFactory.CreateSkinnedModel("resources/drone/Drone.fbx"),
+				meshTransform222, CullingMode::cullFront, "Drone");
+			scene.addMeshRenderer(drone);
+
+			SimpleAnimator& anim = drone.addComponent<SimpleAnimator>(drone.getSkinnedModel(), drone.getSkeleton());
+			anim.loopAnimation(true);
+			anim.startAnimation("AnimStack::Take 001", 10);
+
+			drone.iterateMaterials([&](MaterialContainer& container) {
+				if (container.name == "Robot") {
+					container.addTexture("diffuse", materialFactory.CreateTexture("resources/drone/Drone_diff.jpg", ColorType::GammaSpace));
+					container.addTexture("roughness", materialFactory.CreateTexture("resources/drone/Drone_spec.jpg"));
+					container.addTexture("normal", materialFactory.CreateTexture("resources/drone/Drone_normal.jpg"));
+					container.addTexture("metallic", materialFactory.CreateTexture("resources/drone/Drone_gloss.jpg"));
+					container.addTexture("emission", materialFactory.CreateTexture("resources/drone/Drone_emissive.jpg"));
+					container.addTexture("occlusion", materialFactory.CreateTexture("resources/drone/Drone_ao.jpg"));
+
+					container.setFloatValue("Roughness", 0.9f);
+					container.setFloatValue("Metallic", 0.8f);
+				}
+			});
 
 
 			ObjectLister& objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
@@ -80,8 +99,8 @@ public:
 			postLister.add(iblSnippet);
 
 			BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
-			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 100);
-			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, ResolutionPreset::TWENTY, ResolutionPreset::TWENTY);
+			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 150);
+			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, ResolutionPreset::ONETHIRD, ResolutionPreset::ONETHIRD);
 			GodRaySnippet& godRaySnippet = GodRaySnippet(ray);
 			renderer.addEffect(raySmooth, DrawTime::Late);
 			scene.addRequester(ray);
@@ -96,7 +115,7 @@ public:
 
 			ColorCorrection& colorCorrect = ColorCorrection();
 			colorCorrect.setDistortionDirection(glm::vec2(1.f, 0.f));
-			colorCorrect.setChromaticDistortion(glm::vec3(0.001f, 0.f, 0.f));
+			colorCorrect.setChromaticDistortion(glm::vec3(0.0004f, 0.f, 0.f));
 			renderer.addEffect(colorCorrect, DrawTime::Late);
 			postLister.add(colorCorrect);
 
