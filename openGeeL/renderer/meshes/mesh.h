@@ -1,7 +1,6 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include <iostream>
 #include <vec2.hpp>
 #include <vec3.hpp>
 #include <mat4x4.hpp>
@@ -41,9 +40,6 @@ namespace geeL {
 		unsigned int IDs[BONECOUNT];
 		float weights[BONECOUNT];
 
-		unsigned int count = 0;
-
-
 		SkinnedVertex() {
 			for (unsigned int i = 0; i < BONECOUNT; i++) {
 				IDs[i] = 0;
@@ -52,8 +48,6 @@ namespace geeL {
 		}
 
 		void addBone(unsigned int id, float weight) {
-			count += 1;
-
 			//Find unused spot in arrays
 			for (unsigned int i = 0; i < BONECOUNT; i++) {
 				if (weights[i] == 0.f) {

@@ -204,13 +204,6 @@ namespace geeL {
 			processMaterial(mat, mesh, scene);
 			mat.addTextures(textures);
 
-			for (int i = 0; i < vertices.size(); i++) {
-				SkinnedVertex& v = vertices[i];
-
-				if(v.count > 4)
-				std::cout << v.count << "\n";
-			}
-
 			model.addMesh(SkinnedMesh(name, vertices, indices, bones, mat));
 		}
 	}
