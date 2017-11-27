@@ -37,11 +37,13 @@ namespace geeL {
 	public:
 		SimpleAnimator(AnimatedObject& object, Skeleton& skeleton);
 		
-		void startAnimation(const std::string& name);
+		void startAnimation(const std::string& name, double startTime = 0.);
 		void stop();
 
 		virtual void reset();
 		virtual bool isRunning() const;
+
+		void loopAnimation(bool loop);
 
 	protected:
 		virtual void update(Input& input);
@@ -49,6 +51,8 @@ namespace geeL {
 	private:
 		std::unique_ptr<AnimationInstance> currentAnimation;
 		double currentTime;
+		double startTime;
+		bool looping;
 
 	};
 }

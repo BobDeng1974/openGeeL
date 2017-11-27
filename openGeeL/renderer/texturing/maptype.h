@@ -36,6 +36,8 @@ namespace geeL {
 				return "specular";
 			case MapType::Roughness:
 				return "roughness";
+			case MapType::Metallic:
+				return "metallic";
 			case MapType::Normal:
 				return "normal";
 			case MapType::Alpha:
@@ -56,6 +58,7 @@ namespace geeL {
 		if (type == "diffuse") return MapType::Diffuse;
 		if (type == "specular") return MapType::Specular;
 		if (type == "roughness") return MapType::Roughness;
+		if (type == "metallic") return MapType::Metallic;
 		if (type == "normal") return MapType::Normal;
 		if (type == "alpha") return MapType::Alpha;
 		if (type == "emission") return MapType::Emission;

@@ -15,24 +15,31 @@ namespace geeL {
 	SimpleAnimator::SimpleAnimator(AnimatedObject& object, Skeleton& skeleton)
 		: Animator(object, skeleton)
 		, currentAnimation(nullptr)
-		, currentTime(0.) {}
+		, currentTime(0.)
+		, startTime(0.)
+		, looping(false) {}
 
 
 	void SimpleAnimator::update(Input& input) {
 		if (isRunning()) {
-			currentTime += currentAnimation->getFPS() * RenderTime::deltaTime();
 			currentAnimation->updateBones(currentTime);
+			currentTime += currentAnimation->getFPS() * RenderTime::deltaTime();
 		}
+		else if(looping)
+			currentTime = startTime;
 		else
 			stop();
 
 	}
 
-	void SimpleAnimator::startAnimation(const std::string& name) {
+	void SimpleAnimator::startAnimation(const std::string& name, double startTime) {
 		const AnimationMemory* memory = object.getAnimation(name);
 
-		if(memory != nullptr)
+		if (memory != nullptr) {
+			this->startTime = startTime;
 			currentAnimation.reset(new AnimationInstance(*memory, skeleton));
+		}
+			
 	}
 
 	void SimpleAnimator::stop() {
@@ -46,7 +53,11 @@ namespace geeL {
 	}
 
 	bool SimpleAnimator::isRunning() const {
-		return currentAnimation != nullptr && currentTime < currentAnimation->getDuration();
+		return currentAnimation != nullptr && currentTime <= currentAnimation->getDuration();
+	}
+
+	void SimpleAnimator::loopAnimation(bool loop) {
+		looping = loop;
 	}
 
 }

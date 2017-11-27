@@ -152,7 +152,8 @@ namespace geeL {
 	void MeshFactory::fillSkinnedModel(SkinnedModel& model, std::string path) {
 		Assimp::Importer import;
 		const aiScene* scene = import.ReadFile(path,
-			aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+			aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | 
+			aiProcess_LimitBoneWeights | aiProcess_SplitByBoneCount);
 
 		if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
 			cout << "ERROR::ASSIMP::" << import.GetErrorString() << endl;
@@ -202,6 +203,13 @@ namespace geeL {
 			DefaultMaterialContainer& mat = factory.CreateMaterial();
 			processMaterial(mat, mesh, scene);
 			mat.addTextures(textures);
+
+			for (int i = 0; i < vertices.size(); i++) {
+				SkinnedVertex& v = vertices[i];
+
+				if(v.count > 4)
+				std::cout << v.count << "\n";
+			}
 
 			model.addMesh(SkinnedMesh(name, vertices, indices, bones, mat));
 		}

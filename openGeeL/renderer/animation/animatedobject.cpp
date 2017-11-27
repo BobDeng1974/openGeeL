@@ -29,6 +29,13 @@ namespace geeL {
 		return nullptr;
 	}
 
+	void AnimatedObject::iterateAnimations(std::function<void(const Animation&)> function) const {
+		for (auto it = animations.begin(); it != animations.end(); it++) {
+			const Animation& animation = *it->second;
+			function(animation);
+		}
+	}
+
 	const Skeleton& AnimatedObject::getSkeleton() const {
 		return *skeleton;
 	}

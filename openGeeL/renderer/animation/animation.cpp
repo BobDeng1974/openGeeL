@@ -115,6 +115,8 @@ namespace geeL {
 				start = step;
 		}
 
+		if (start == list.size()) end = list.size();
+
 		//Linear interpolate the two closest results
 		const vec3& startVec = list[start].value;
 		const vec3& endVec = list[end].value;
