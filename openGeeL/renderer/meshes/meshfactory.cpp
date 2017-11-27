@@ -197,7 +197,7 @@ namespace geeL {
 
 			processVertices(vertices, mesh);
 			processIndices(indices, mesh);
-			processBones(vertices, bones, mesh, bone);
+			processBones(vertices, bones, mesh);
 			processTextures(textures, directory, mesh, scene);
 
 			DefaultMaterialContainer& mat = factory.CreateMaterial();
@@ -285,20 +285,16 @@ namespace geeL {
 
 
 	void MeshFactory::processBones(vector<SkinnedVertex>& vertices, 
-		std::map<std::string, MeshBone>& bones, aiMesh* mesh, Bone& parentBone) {
+		std::map<std::string, MeshBone>& bones, aiMesh* mesh) {
 
 		for (unsigned int i = 0; i < mesh->mNumBones; i++) {
 			aiBone* bone = mesh->mBones[i];
 			const string& name = bone->mName.data;
 			unsigned int id = i + 1;
 
-			Bone* transformBone = parentBone.find(name);
-			assert(transformBone != nullptr);
-
 			aiMatrix4x4& mat = bone->mOffsetMatrix;
 			bones[name].offsetMatrix = MatrixExtension::convertMatrix(mat);
 			bones[name].id = id;
-			bones[name].bone = transformBone;			
 
 			//Iterate over all vertices that are affected by this bone
 			for (unsigned int j = 0; j < bone->mNumWeights; j++) {

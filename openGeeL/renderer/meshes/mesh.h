@@ -63,12 +63,8 @@ namespace geeL {
 
 	//Stores how single bone needs to be processed by mesh
 	struct MeshBone {
-		Bone* bone = nullptr;
 		unsigned int id;
 		glm::mat4 offsetMatrix;
-
-		glm::mat4 transform;
-
 	};
 
 
@@ -139,7 +135,6 @@ namespace geeL {
 			MaterialContainer& material);
 
 		//Update mesh bone data into given shader
-		void updateBones(const Shader& shader) const;
 		void updateBones(const Shader& shader, const Skeleton& skeleton) const;
 		
 		virtual void draw(const Shader& shader) const;
