@@ -22,8 +22,8 @@ namespace geeL {
 
 	void SimpleAnimator::update(Input& input) {
 		if (isRunning()) {
-			currentAnimation->updateBones(currentTime);
 			currentTime += currentAnimation->getFPS() * RenderTime::deltaTime();
+			currentAnimation->updateBones(currentTime);
 		}
 		else if(looping)
 			currentTime = startTime;

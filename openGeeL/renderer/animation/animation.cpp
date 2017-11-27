@@ -98,7 +98,7 @@ namespace geeL {
 
 
 	vec3 getVector(const std::vector<KeyFrame>& list, double time) {
-		//assert(list.size() > 0);
+		if (time > list[list.size() - 1].time) return list[list.size() - 1].value;
 		if (list.size() == 1) return list[0].value;
 
 		//Binary search in sorted key frame list
@@ -115,7 +115,7 @@ namespace geeL {
 				start = step;
 		}
 
-		if (start == list.size()) end = list.size();
+		if (start >= list.size() - 1) return list[start].value;
 
 		//Linear interpolate the two closest results
 		const vec3& startVec = list[start].value;

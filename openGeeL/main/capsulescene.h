@@ -128,7 +128,7 @@ public:
 		};
 
 
-		Configuration config(window, init, GBufferContent::Default, PhysicsType::World);
+		Configuration config(window, init, GBufferContent::DefaultEmissive, PhysicsType::World);
 		config.run();
 	}
 
