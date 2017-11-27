@@ -16,7 +16,7 @@ namespace geeL {
 		VarianceSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config);
 
 		virtual void draw(const SceneCamera* const camera, std::function<void(const RenderShader&)> renderCall,
-			const ShadowmapRepository& repository);
+			ShadowmapRepository& repository);
 
 		virtual unsigned int getID() const;
 

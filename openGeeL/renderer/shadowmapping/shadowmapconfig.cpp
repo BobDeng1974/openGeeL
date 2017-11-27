@@ -42,30 +42,66 @@ namespace geeL {
 
 
 
-	ShadowmapRepository::ShadowmapRepository() {
-		simple2D = new RenderShader("renderer/shadowmapping/shadowmapping.vert", "renderer/shaders/empty.frag");
-		variance2D = new RenderShader("renderer/shadowmapping/varshadowmapping.vert", "renderer/shadowmapping/varshadowmapping.frag");
-		simpleCube = new RenderShader("renderer/shaders/empty.vert", "renderer/shadowmapping/shadowmapping.geom",
-			"renderer/shadowmapping/shadowmapping.frag");
-
-	}
+	ShadowmapRepository::ShadowmapRepository()
+		: simple2D(nullptr)
+		, simpleCube(nullptr)
+		, variance2D(nullptr)
+		, simple2DAnim(nullptr)
+		, simpleCubeAnim(nullptr) {}
 
 	ShadowmapRepository::~ShadowmapRepository() {
-		delete simple2D;
-		delete variance2D;
-		delete simpleCube;
+		if(simple2D != nullptr) delete simple2D;
+		if (simpleCube != nullptr) delete simpleCube;
+		if (variance2D != nullptr) delete variance2D;
+		if (simple2DAnim != nullptr) delete simple2DAnim;
+		if (simpleCubeAnim != nullptr) delete simpleCubeAnim;
 	}
 
-	const RenderShader& ShadowmapRepository::getSimple2DShader() const {
+	const RenderShader& ShadowmapRepository::getSimple2DShader() {
+		if (simple2D == nullptr) {
+			simple2D = new RenderShader("renderer/shadowmapping/shadowmapping.vert", 
+				"renderer/shaders/empty.frag");
+		}
+
 		return *simple2D;
 	}
 
-	const RenderShader& ShadowmapRepository::getSimpleCubeShader() const {
+	const RenderShader& ShadowmapRepository::getSimpleCubeShader() {
+		if (simpleCube == nullptr) {
+			simpleCube = new RenderShader("renderer/shaders/empty.vert", 
+				"renderer/shadowmapping/shadowmapping.geom",
+				"renderer/shadowmapping/shadowmapping.frag");
+		}
+
 		return *simpleCube;
 	}
 
-	const RenderShader& ShadowmapRepository::getVariance2DShader() const {
+	const RenderShader& ShadowmapRepository::getVariance2DShader() {
+		if (variance2D == nullptr) {
+			variance2D = new RenderShader("renderer/shadowmapping/varshadowmapping.vert", 
+				"renderer/shadowmapping/varshadowmapping.frag");
+		}
+
 		return *variance2D;
+	}
+
+	const RenderShader& ShadowmapRepository::getSimple2DAnimated() {
+		if (simple2DAnim == nullptr) {
+			simple2DAnim = new RenderShader("renderer/shadowmapping/shadowmappingAnim.vert",
+				"renderer/shaders/empty.frag");
+		}
+
+		return *simple2DAnim;
+	}
+
+	const RenderShader& ShadowmapRepository::getSimpleCubeAnimated() {
+		if (simpleCubeAnim == nullptr) {
+			simpleCubeAnim = new RenderShader("renderer/shaders/emptyAnim.vert",
+				"renderer/shadowmapping/shadowmapping.geom",
+				"renderer/shadowmapping/shadowmapping.frag");
+		}
+
+		return *simpleCubeAnim;
 	}
 
 }

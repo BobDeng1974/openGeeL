@@ -1007,6 +1007,9 @@
     <ClInclude Include="renderer\meshes\instancedmesh.h">
       <Filter>renderer\meshes</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\shaders\forwardAnim.vert">
+      <Filter>renderer\shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\lighting.vert">
@@ -1268,6 +1271,15 @@
       <Filter>renderer\postprocessing</Filter>
     </None>
     <None Include="renderer\shaders\gbufferAnim.vert">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\lightingAnim.vert">
+      <Filter>renderer\shaders</Filter>
+    </None>
+    <None Include="renderer\shadowmapping\shadowmappingAnim.vert">
+      <Filter>renderer\shadowmapping</Filter>
+    </None>
+    <None Include="renderer\shaders\emptyAnim.vert">
       <Filter>renderer\shaders</Filter>
     </None>
   </ItemGroup>

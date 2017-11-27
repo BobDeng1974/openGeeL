@@ -54,11 +54,11 @@ namespace geeL {
 		void removeShadowmap(Shader& shader);
 
 		void renderShadowmap(const SceneCamera* const camera, 
-			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository);
+			std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository);
 
 		//Draw shadow map no matter the lights properties. E.g. if it is static or not
 		void renderShadowmapForced(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository);
+			std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository);
 
 		//Computes experienced attenuation at given point. Ranges between 0 and 1
 		virtual float getAttenuation(glm::vec3 point) const;

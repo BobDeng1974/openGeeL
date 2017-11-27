@@ -148,7 +148,7 @@ namespace geeL {
 	}
 
 
-	void LightManager::drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera) const {
+	void LightManager::drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera) {
 		glCullFace(GL_BACK);
 
 		iterLights([this, &scene, &camera](const LightBinding& binding) {
@@ -164,7 +164,7 @@ namespace geeL {
 	}
 
 	
-	void LightManager::drawShadowmapsForced(const RenderScene& scene, const SceneCamera* const camera) const {
+	void LightManager::drawShadowmapsForced(const RenderScene& scene, const SceneCamera* const camera) {
 		glCullFace(GL_BACK);
 
 		iterLights([this, &scene, &camera](const LightBinding& binding) {

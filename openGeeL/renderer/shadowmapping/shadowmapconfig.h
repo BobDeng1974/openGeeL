@@ -61,14 +61,19 @@ namespace geeL {
 		ShadowmapRepository();
 		~ShadowmapRepository();
 
-		const RenderShader& getSimple2DShader() const;
-		const RenderShader& getSimpleCubeShader() const;
-		const RenderShader& getVariance2DShader() const;
+		const RenderShader& getSimple2DShader();
+		const RenderShader& getSimpleCubeShader();
+		const RenderShader& getVariance2DShader();
+
+		const RenderShader& getSimple2DAnimated();
+		const RenderShader& getSimpleCubeAnimated();
 
 	private:
 		RenderShader* simple2D;
 		RenderShader* variance2D;
 		RenderShader* simpleCube;
+		RenderShader* simple2DAnim;
+		RenderShader* simpleCubeAnim;
 
 	};
 

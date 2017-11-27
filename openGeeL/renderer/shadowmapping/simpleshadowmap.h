@@ -27,7 +27,7 @@ namespace geeL {
 		virtual void removeMap(Shader& shader);
 
 		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository) = 0;
+			std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository) = 0;
 
 		virtual TextureType getTextureType() const = 0;
 
@@ -76,7 +76,7 @@ namespace geeL {
 		virtual void bindData(const Shader& shader, const std::string& name);
 
 		virtual void draw(const SceneCamera* const camera, std::function<void(const RenderShader&)> renderCall, 
-			const ShadowmapRepository& repository);
+			ShadowmapRepository& repository);
 
 		void draw(const SceneCamera* const camera, std::function<void(const RenderShader&)> renderCall,
 			const RenderShader& shader);
@@ -104,7 +104,7 @@ namespace geeL {
 		virtual void bindData(const Shader& shader, const std::string& name);
 
 		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository);
+			std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository);
 
 		virtual TextureType getTextureType() const;
 
@@ -132,7 +132,7 @@ namespace geeL {
 		virtual void bindData(const Shader& shader, const std::string& name);
 
 		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository);
+			std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository);
 
 		virtual TextureType getTextureType() const;
 

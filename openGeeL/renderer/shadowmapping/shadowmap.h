@@ -21,7 +21,7 @@ namespace geeL {
 		//that  draws desired objects of scene and the actual shadow map shader.
 		//Note: Scene camera can be NULL so a fallback strategy needs to be implemented
 		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository) = 0;
+			std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository) = 0;
 
 		virtual TextureType getTextureType() const = 0;
 

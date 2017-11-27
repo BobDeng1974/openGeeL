@@ -75,7 +75,7 @@ namespace geeL {
 		void update(const RenderScene& scene, const SceneCamera* const camera);
 
 		//Draw shadow maps no matter the lights properties. E.g.if they are static or not
-		void drawShadowmapsForced(const RenderScene& scene, const SceneCamera* const camera) const;
+		void drawShadowmapsForced(const RenderScene& scene, const SceneCamera* const camera);
 		
 
 		void iterLights(std::function<void(Light&)> function);
@@ -119,7 +119,7 @@ namespace geeL {
 		void onAdd(Light* light, LightBinding& binding);
 		void onChange(Light& light);
 
-		void drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera) const;
+		void drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera);
 		void reindexLights();
 
 	};

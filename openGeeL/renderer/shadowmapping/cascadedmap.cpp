@@ -78,7 +78,7 @@ namespace geeL {
 
 
 	void CascadedDirectionalShadowMap::draw(const SceneCamera* const camera,
-		std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository) {
+		std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository) {
 
 		//TODO: Develop backup strategy for when scene camera is not available
 		if(camera != nullptr)

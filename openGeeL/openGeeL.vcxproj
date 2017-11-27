@@ -408,6 +408,7 @@
     <ClInclude Include="renderer\renderer\splitrenderer.h" />
     <ClInclude Include="renderer\renderscene.h" />
     <ClInclude Include="renderer\sceneobject.h" />
+    <ClInclude Include="renderer\shaders\forwardAnim.vert" />
     <ClInclude Include="renderer\shader\bindingstack.h" />
     <ClInclude Include="renderer\shader\computeshader.h" />
     <ClInclude Include="renderer\shader\defshading.h" />
@@ -517,6 +518,7 @@
     <None Include="renderer\shaders\computetest.com.glsl" />
     <None Include="renderer\shaders\empty.frag" />
     <None Include="renderer\shaders\empty.vert" />
+    <None Include="renderer\shaders\emptyAnim.vert" />
     <None Include="renderer\shaders\forwardlighting.frag" />
     <None Include="renderer\shaders\forwardlighting.vert" />
     <None Include="renderer\shaders\gbuffer.frag" />
@@ -526,6 +528,7 @@
     <None Include="renderer\shaders\helperfunctions.glsl" />
     <None Include="renderer\shaders\lighting.frag" />
     <None Include="renderer\shaders\lighting.vert" />
+    <None Include="renderer\shaders\lightingAnim.vert" />
     <None Include="renderer\shaders\material.glsl" />
     <None Include="renderer\shaders\materialproperties.glsl" />
     <None Include="renderer\shaders\sampling.glsl" />
@@ -536,6 +539,7 @@
     <None Include="renderer\shadowmapping\shadowmapping.frag" />
     <None Include="renderer\shadowmapping\shadowmapping.geom" />
     <None Include="renderer\shadowmapping\shadowmapping.vert" />
+    <None Include="renderer\shadowmapping\shadowmappingAnim.vert" />
     <None Include="renderer\shadowmapping\shadows.glsl" />
     <None Include="renderer\shadowmapping\shadowsView.glsl" />
     <None Include="renderer\shadowmapping\varshadowmapping.frag" />

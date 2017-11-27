@@ -65,14 +65,14 @@ namespace geeL {
 	}
 
 	void Light::renderShadowmap(const SceneCamera* const camera, 
-		std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository) {
+		std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository) {
 
 		if (shadowMap != nullptr && !transform.isStatic)
 			shadowMap->draw(camera, renderCall, repository);
 	}
 
 	void Light::renderShadowmapForced(const SceneCamera* const camera,
-		std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository) {
+		std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository) {
 
 		if (shadowMap != nullptr)
 			shadowMap->draw(camera, renderCall, repository);

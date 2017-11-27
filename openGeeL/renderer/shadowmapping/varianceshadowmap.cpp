@@ -41,7 +41,7 @@ namespace geeL {
 	}
 
 	void VarianceSpotLightMap::draw(const SceneCamera* const camera, std::function<void(const RenderShader&)> renderCall, 
-		const ShadowmapRepository& repository) {
+		ShadowmapRepository& repository) {
 
 		const RenderShader& shader = repository.getVariance2DShader();
 		SimpleSpotLightMap::draw(camera, renderCall, shader);

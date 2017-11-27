@@ -163,7 +163,7 @@ namespace geeL {
 	}
 
 	void SimpleSpotLightMap::draw(const SceneCamera* const camera,
-		std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository) {
+		std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository) {
 
 		const RenderShader& shader = repository.getSimple2DShader();
 		draw(camera, renderCall, shader);
@@ -266,7 +266,7 @@ namespace geeL {
 	}
 
 	void SimplePointLightMap::draw(const SceneCamera* const camera,
-		std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository) {
+		std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository) {
 
 		//Write light transforms of cubemap faces into shader
 		computeLightTransform();
@@ -357,7 +357,7 @@ namespace geeL {
 	}
 
 	void SimpleDirectionalLightMap::draw(const SceneCamera* const camera,
-		std::function<void(const RenderShader&)> renderCall, const ShadowmapRepository& repository) {
+		std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository) {
 
 		//Write light transform into shader
 		computeLightTransform();
