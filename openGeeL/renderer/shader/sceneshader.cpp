@@ -7,17 +7,22 @@ using namespace std;
 
 namespace geeL {
 
-	SceneShader::SceneShader() : RenderShader(), shader(""), 
-		space(ShaderTransformSpace::View) {}
+	SceneShader::SceneShader() 
+		: RenderShader()
+		, shader("")
+		, space(ShaderTransformSpace::View)
+		, animated(false) {}
 
 	SceneShader::SceneShader(const std::string& vertexPath, 
 		const FragmentShader& fragmentPath, 
 		ShaderTransformSpace space, 
 		ShadingMethod shadingMethod, 
+		bool animated,
 		ShaderProvider* const provider)
 			: RenderShader(vertexPath.c_str(), fragmentPath.path.c_str(), provider)
 			, shader(fragmentPath)
 			, space(space)
+			, animated(animated)
 			, shadingMethod(shadingMethod) {
 
 		viewLocation = getLocation("view");
@@ -31,10 +36,12 @@ namespace geeL {
 		const FragmentShader& fragmentPath, 
 		ShaderTransformSpace space, 
 		ShadingMethod shadingMethod, 
+		bool animated,
 		ShaderProvider* const provider)
 			: RenderShader(vertexPath.c_str(), geometryPath.c_str(), fragmentPath.path.c_str(), provider)
 			, shader(fragmentPath)
 			, space(space)
+			, animated(animated)
 			, shadingMethod(shadingMethod) {
 
 		viewLocation = getLocation("view");

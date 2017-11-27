@@ -18,9 +18,11 @@ uniform mat4 projection;
 
 
 void main() {
-	vec4 localPosition = view * model * vec4(position, 1.f);
+	vec4 frag = model * vec4(position, 1.f);
+	vec4 localPosition = view * frag;
+
 	normal = norm;
-	fragPosition = (model * vec4(position, 1.f)).xyz;
+	fragPosition = frag.xyz;
 	texCoords = texCoordss;
 
 	mat3 normalMat = mat3(model);

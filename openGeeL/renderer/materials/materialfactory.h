@@ -67,7 +67,9 @@ namespace geeL {
 		ShaderProvider* const provider;
 
 		SceneShader* genericShader;
+		SceneShader* genericAnimatedShader;
 		SceneShader* forwardShader;
+		SceneShader* forwardAnimatedShader;
 		SceneShader* deferredShader;
 		SceneShader* deferredAnimatedShader;
 		SceneShader* transparentODShader;

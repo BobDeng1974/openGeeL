@@ -23,7 +23,9 @@ namespace geeL {
 			ShaderTransformSpace::View, 
 			ShadingMethod::Deferred))
 		, genericShader(nullptr)
+		, genericAnimatedShader(nullptr)
 		, forwardShader(nullptr)
+		, forwardAnimatedShader(nullptr)
 		, transparentODShader(nullptr)
 		, transparentOIDShader(nullptr)
 		, provider(provider) {}
@@ -112,15 +114,19 @@ namespace geeL {
 
 		switch (shading) {
 			case ShadingMethod::Generic:
-				vertexPath = "renderer/shaders/lighting.vert";
-				space = ShaderTransformSpace::World;
-				break;
+				vertexPath = animated 
+					? "renderer/shaders/lightingAnim.vert" 
+					: "renderer/shaders/lighting.vert";
+
 				space = ShaderTransformSpace::World;
 				break;
 			case ShadingMethod::Forward:
 			case ShadingMethod::TransparentOD:
 			case ShadingMethod::TransparentOID:
-				vertexPath = "renderer/shaders/forwardlighting.vert";
+				vertexPath = animated 
+					? "renderer/shaders/forwardAnim.vert" 
+					: "renderer/shaders/forwardlighting.vert";
+
 				space = ShaderTransformSpace::View;
 				break;
 			default:
@@ -136,32 +142,60 @@ namespace geeL {
 	SceneShader& MaterialFactory::getDefaultShader(ShadingMethod shading, bool animated) {
 		switch (shading) {
 			case ShadingMethod::Generic:
-				if (genericShader == nullptr) {
-					genericShader = new SceneShader("renderer/shaders/lighting.vert",
+				if (animated) {
+					genericAnimatedShader = new SceneShader("renderer/shaders/lightingAnim.vert",
 						FragmentShader("renderer/shaders/lighting.frag"),
 						ShaderTransformSpace::World,
 						ShadingMethod::Generic);
 
-					genericShader->mapOffset = 1;
-					shaders.push_back(genericShader);
-				}
-					
+					genericAnimatedShader->mapOffset = 1;
+					shaders.push_back(genericAnimatedShader);
 
-				return *genericShader;
+					return *genericAnimatedShader;
+				}
+				else {
+					if (genericShader == nullptr) {
+						genericShader = new SceneShader("renderer/shaders/lighting.vert",
+							FragmentShader("renderer/shaders/lighting.frag"),
+							ShaderTransformSpace::World,
+							ShadingMethod::Generic);
+
+						genericShader->mapOffset = 1;
+						shaders.push_back(genericShader);
+					}
+
+					return *genericShader;
+				}
 			case ShadingMethod::Deferred:
 				return animated ? *deferredAnimatedShader : *deferredShader;
 			case ShadingMethod::Forward:
-				if (forwardShader == nullptr) {
-					forwardShader = new SceneShader("renderer/shaders/forwardlighting.vert",
-						FragmentShader("renderer/shaders/forwardlighting.frag"),
-						ShaderTransformSpace::View,
-						ShadingMethod::Forward);
+				if (animated) {
+					if (forwardAnimatedShader == nullptr) {
+						forwardAnimatedShader = new SceneShader("renderer/shaders/forwardAnim.vert",
+							FragmentShader("renderer/shaders/forwardlighting.frag"),
+							ShaderTransformSpace::View,
+							ShadingMethod::Forward,
+							true);
 
-					forwardShader->mapOffset = 1;
-					shaders.push_back(forwardShader);
+						forwardAnimatedShader->mapOffset = 1;
+						shaders.push_back(forwardAnimatedShader);
+					}
+
+					return *forwardAnimatedShader;
 				}
+				else{
+					if (forwardShader == nullptr) {
+						forwardShader = new SceneShader("renderer/shaders/forwardlighting.vert",
+							FragmentShader("renderer/shaders/forwardlighting.frag"),
+							ShaderTransformSpace::View,
+							ShadingMethod::Forward);
 
-				return *forwardShader;
+						forwardShader->mapOffset = 1;
+						shaders.push_back(forwardShader);
+					}
+
+					return *forwardShader;
+				}
 			case ShadingMethod::TransparentOD:
 				if (transparentODShader == nullptr) {
 					transparentODShader = new SceneShader("renderer/shaders/forwardlighting.vert",

@@ -39,7 +39,8 @@ namespace geeL {
 		SceneShader(const std::string& vertexPath, 
 			const FragmentShader& fragmentPath, 
 			ShaderTransformSpace space, 
-			ShadingMethod shadingMethod, 
+			ShadingMethod shadingMethod,
+			bool animated = false,
 			ShaderProvider* const provider = nullptr);
 
 		SceneShader(const std::string& vertexPath, 
@@ -47,12 +48,14 @@ namespace geeL {
 			const FragmentShader& fragmentPath, 
 			ShaderTransformSpace space, 
 			ShadingMethod shadingMethod, 
+			bool animated = false,
 			ShaderProvider* const provider = nullptr);
 
 
-		bool SceneShader::getUseLight() const;
-		bool SceneShader::getUseCamera() const;
-		bool SceneShader::getUseSkybox() const;
+		bool getUseLight() const;
+		bool getUseCamera() const;
+		bool getUseSkybox() const;
+		bool isAnimated() const;
 
 		void setViewMatrix(const glm::mat4& view);
 
@@ -64,6 +67,7 @@ namespace geeL {
 		ShadingMethod getMethod() const;
 
 	private:
+		const bool animated;
 		FragmentShader shader;
 		ShaderTransformSpace space;
 		ShadingMethod shadingMethod;
@@ -88,6 +92,10 @@ namespace geeL {
 
 	inline bool SceneShader::getUseSkybox() const {
 		return shader.useSkybox;
+	}
+
+	inline bool SceneShader::isAnimated() const {
+		return animated;
 	}
 
 	inline ShaderTransformSpace SceneShader::getSpace() const {

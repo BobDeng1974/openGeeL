@@ -41,11 +41,17 @@ namespace geeL {
 					camera.bindInverseViewMatrix(shader, "inverseView");
 					shader.bind<glm::vec3>("origin", camera.GetOriginInViewSpace());
 
+					if(shader.isAnimated())
+						shader.bindViewMatrix();
 
 					break;
 				case ShadingMethod::Generic:
 					camera.bindProjectionMatrix(shader, "projection");
 					shader.bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
+
+					if (shader.isAnimated())
+						shader.bindViewMatrix();
+
 					break;
 			}
 		}

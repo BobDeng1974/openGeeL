@@ -18,7 +18,7 @@ uniform mat4 projection;
 
 
 void main() {
-	vec4 localPosition = modelView * vec4(position, 1.0f);
+	vec4 localPosition = modelView * vec4(position, 1.f);
 
 	normal = normalize(transInvModelView * norm);
 	fragPosition = vec3(localPosition);
