@@ -89,15 +89,18 @@ namespace geeL {
 	void AnimationInstance::connectSkeleton() {
 		skeleton.iterateBones([this](Bone& bone) {
 			const AnimationBoneData* data = animation.getAnimationData(bone.getName());
-			assert(data != nullptr);
 
-			bones[&bone] = data;
+			if (data != nullptr)
+				bones[&bone] = data;
 		});
 	}
 
 
 
 	vec3 getVector(const std::vector<KeyFrame>& list, double time) {
+		//assert(list.size() > 0);
+		if (list.size() == 1) return list[0].value;
+
 		//Binary search in sorted key frame list
 		size_t start = 0;
 		size_t end = list.size();
@@ -118,18 +121,24 @@ namespace geeL {
 		double factor = (time - list[start].time)
 			/ (list[end].time - list[start].time);
 
-		return VectorExtension::lerp(startVec, endVec, float(factor));
+		return VectorExtension::lerp(startVec, endVec, float(1. - factor));
 	}
 
 	void AnimationBoneData::updateBone(Bone& bone, double time) const {
-		vec3& position = getVector(positions, time);
-		bone.setPosition(position);
+		if (positions.size() > 0) {
+			vec3& position = getVector(positions, time);
+			bone.setPosition(position);
+		}
 
-		vec3& rotation = getVector(rotations, time);
-		bone.setEulerAngles(rotation);
+		if (rotations.size() > 0) {
+			vec3& rotation = getVector(rotations, time);
+			bone.setEulerAngles(rotation);
+		}
 
-		vec3& scaling = getVector(scalings, time);
-		bone.setScaling(scaling);
+		if (scalings.size() > 0) {
+			vec3& scaling = getVector(scalings, time);
+			bone.setScaling(scaling);
+		}
 	}
 
 }

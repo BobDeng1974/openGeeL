@@ -26,7 +26,7 @@ namespace geeL {
 			FragmentShader(buffer.getFragmentPath(), false), 
 			ShaderTransformSpace::View, 
 			ShadingMethod::Deferred))
-		, deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferanim.vert", 
+		, deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferAnim.vert", 
 			FragmentShader(buffer.getFragmentPath(), false),
 			ShaderTransformSpace::View, 
 			ShadingMethod::Deferred))

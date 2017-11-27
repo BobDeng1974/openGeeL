@@ -1108,9 +1108,6 @@
     <None Include="renderer\cubemapping\irrmap.frag">
       <Filter>renderer\cubemapping</Filter>
     </None>
-    <None Include="renderer\shaders\gbufferanim.vert">
-      <Filter>renderer\shaders</Filter>
-    </None>
     <None Include="renderer\cubemapping\prefilterEnvmap.frag">
       <Filter>renderer\cubemapping</Filter>
     </None>
@@ -1269,6 +1266,9 @@
     </None>
     <None Include="renderer\postprocessing\gaussianseparated.frag">
       <Filter>renderer\postprocessing</Filter>
+    </None>
+    <None Include="renderer\shaders\gbufferAnim.vert">
+      <Filter>renderer\shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

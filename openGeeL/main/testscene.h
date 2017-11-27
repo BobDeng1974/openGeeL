@@ -144,10 +144,10 @@ public:
 			Transform& meshTransform7 = transformFactory.CreateTransform(vec3(2.f, -2.f, 4.0f), vec3(0.f), vec3(scale));
 			SkinnedMeshRenderer& dude = meshFactory.CreateSkinnedMeshRenderer(meshFactory.CreateSkinnedModel("resources/guard/boblampclean.md5mesh"),
 			meshTransform7, CullingMode::cullFront, "Dude");
-			scene.addMeshRenderer(dude);
+			//scene.addMeshRenderer(dude);
 
-			SimpleAnimator& anim = dude.addComponent(SimpleAnimator(dude.getSkinnedModel(), dude.getSkeleton()));
-			anim.playAnimation("Default");
+			SimpleAnimator& anim = dude.addComponent<SimpleAnimator>(dude.getSkinnedModel(), dude.getSkeleton());
+			//anim.startAnimation("Animation 1");
 			
 
 

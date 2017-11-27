@@ -37,7 +37,7 @@ namespace geeL {
 
 		//Create new component with given paremeters and add it to scene object
 		template<class T, typename ...Args>
-		T& addComponent(const Args& ...args);
+		T& addComponent(Args&& ...args);
 
 		virtual bool isActive() const;
 		virtual void setActive(bool active);
@@ -81,10 +81,10 @@ namespace geeL {
 	}
 
 	template<class T, typename ...Args>
-	inline T& SceneObject::addComponent(const Args& ...args) {
+	inline T& SceneObject::addComponent(Args&& ...args) {
 		static_assert(std::is_base_of<Component, T>::value, "Given class is not a component");
 
-		T* comp = new T(args...);
+		T* comp = new T(std::forward<Args>(args)...);
 		comp->setSceneObject(*this);
 		comp->init();
 		components.push_back(comp);

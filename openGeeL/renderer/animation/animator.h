@@ -19,10 +19,12 @@ namespace geeL {
 	public:
 		Animator(AnimatedObject& object, Skeleton& skeleton);
 
+		virtual void reset() = 0;
+		virtual bool isRunning() const = 0;
+
 	protected:
 		//Tick function of animator. Should be called every frame
 		virtual void update(Input& input) = 0;
-		virtual void reset() = 0;
 
 		AnimatedObject& object;
 		Skeleton& skeleton;
@@ -35,12 +37,14 @@ namespace geeL {
 	public:
 		SimpleAnimator(AnimatedObject& object, Skeleton& skeleton);
 		
-		void playAnimation(const std::string& name);
+		void startAnimation(const std::string& name);
 		void stop();
+
+		virtual void reset();
+		virtual bool isRunning() const;
 
 	protected:
 		virtual void update(Input& input);
-		virtual void reset();
 
 	private:
 		std::unique_ptr<AnimationInstance> currentAnimation;

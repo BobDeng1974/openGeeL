@@ -160,7 +160,7 @@ namespace geeL {
 		}
 
 		aiNode* node = scene->mRootNode;
-		Bone* rootBone = new Bone(MatrixExtension::convertMatrix(node->mTransformation/*.Inverse()*/));
+		Bone* rootBone = new Bone(MatrixExtension::convertMatrix(node->mTransformation));
 		rootBone->setName(string(node->mName.C_Str()));
 		processSkeleton(*rootBone, node);
 
@@ -431,8 +431,13 @@ namespace geeL {
 				for (unsigned int k = 0; k < node->mNumRotationKeys; k++) {
 					aiQuatKey& key = node->mRotationKeys[k];
 					aiQuaternion& r = key.mValue;
-					
-					data->rotations.push_back(KeyFrame(VectorExtension::quatToEuler(r.x, r.y, r.z, r.w), key.mTime));
+
+					vec3 rotation = VectorExtension::quatToEuler(r.x, r.y, r.z, r.w);
+					if (isnan(rotation.x)) rotation.x = 0.f;
+					if (isnan(rotation.y)) rotation.y = 0.f;
+					if (isnan(rotation.z)) rotation.z = 0.f;
+
+					data->rotations.push_back(KeyFrame(rotation, key.mTime));
 				}
 
 				//Add scaling key frames to data

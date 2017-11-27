@@ -521,8 +521,8 @@
     <None Include="renderer\shaders\forwardlighting.vert" />
     <None Include="renderer\shaders\gbuffer.frag" />
     <None Include="renderer\shaders\gbuffer.vert" />
+    <None Include="renderer\shaders\gbufferAnim.vert" />
     <None Include="renderer\shaders\gbufferEmi.frag" />
-    <None Include="renderer\shaders\gbufferanim.vert" />
     <None Include="renderer\shaders\helperfunctions.glsl" />
     <None Include="renderer\shaders\lighting.frag" />
     <None Include="renderer\shaders\lighting.vert" />
