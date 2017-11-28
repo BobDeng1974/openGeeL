@@ -247,7 +247,6 @@
     <ClCompile Include="renderer\renderer\deferredrenderer.cpp" />
     <ClCompile Include="renderer\renderer\rendercontext.cpp" />
     <ClCompile Include="renderer\renderer\renderer.cpp" />
-    <ClCompile Include="renderer\renderer\splitrenderer.cpp" />
     <ClCompile Include="renderer\renderscene.cpp" />
     <ClCompile Include="renderer\sceneobject.cpp" />
     <ClCompile Include="renderer\shader\bindingstack.cpp" />
@@ -410,7 +409,6 @@
     <ClInclude Include="renderer\renderer\postrenderer.h" />
     <ClInclude Include="renderer\renderer\rendercontext.h" />
     <ClInclude Include="renderer\renderer\renderer.h" />
-    <ClInclude Include="renderer\renderer\splitrenderer.h" />
     <ClInclude Include="renderer\renderscene.h" />
     <ClInclude Include="renderer\sceneobject.h" />
     <ClInclude Include="renderer\shader\bindingstack.h" />

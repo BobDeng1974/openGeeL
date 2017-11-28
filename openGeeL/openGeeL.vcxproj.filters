@@ -108,9 +108,6 @@
     <ClCompile Include="renderer\cameras\perspectivecamera.cpp">
       <Filter>renderer\cameras</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\renderer\splitrenderer.cpp">
-      <Filter>renderer\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\meshes\mesh.cpp">
       <Filter>renderer\meshes</Filter>
     </ClCompile>
@@ -523,9 +520,6 @@
     </ClInclude>
     <ClInclude Include="renderer\cameras\perspectivecamera.h">
       <Filter>renderer\cameras</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\renderer\splitrenderer.h">
-      <Filter>renderer\renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\materials\material.h">
       <Filter>renderer\materials</Filter>
