@@ -73,6 +73,7 @@ namespace geeL {
 		SceneShader* deferredShader;
 		SceneShader* deferredAnimatedShader;
 		SceneShader* transparentODShader;
+		SceneShader* transparentODAnimatedShader;
 		SceneShader* transparentOIDShader;
 
 		std::list<MaterialContainer*> container;
