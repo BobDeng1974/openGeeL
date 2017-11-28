@@ -11,13 +11,13 @@
 
 namespace geeL {
 
-	RenderPipeline::RenderPipeline(MaterialFactory& factory)
-		: factory(factory), bindingPointCounter(0) {
+	RenderPipeline::RenderPipeline()
+		: bindingPointCounter(0) {
 	
 		camID = generateUniformBuffer(2 * int(sizeof(glm::mat4) + sizeof(glm::vec3)));
 	}
 
-	void RenderPipeline::staticBind(const Camera& camera, const LightManager& lightManager, SceneShader& shader) const {
+	void RenderPipeline::staticBind(const Camera& camera, SceneShader& shader) const {
 		if (shader.getUseCamera()) {
 			glUniformBlockBinding(shader.getProgram(),
 				glGetUniformBlockIndex(shader.getProgram(), "cameraMatrices"),
@@ -25,46 +25,6 @@ namespace geeL {
 
 			camera.uniformBind(camID);
 		}
-	}
-
-	void RenderPipeline::dynamicBind(const LightManager& lightManager, SceneShader& shader, const Camera& camera) const {
-
-		if (shader.getUseLight()) lightManager.bind(shader, &camera);
-		if (shader.getUseCamera()) {
-			shader.setViewMatrix(camera.getViewMatrix());
-
-			switch (shader.getMethod()) {
-				case ShadingMethod::Forward:
-				case ShadingMethod::TransparentOD:
-				case ShadingMethod::TransparentOID:
-					camera.bindProjectionMatrix(shader, "projection");
-					camera.bindInverseViewMatrix(shader, "inverseView");
-					shader.bind<glm::vec3>("origin", camera.GetOriginInViewSpace());
-
-					if(shader.isAnimated())
-						shader.bindViewMatrix();
-
-					break;
-				case ShadingMethod::Generic:
-					camera.bindProjectionMatrix(shader, "projection");
-					shader.bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
-
-					if (shader.isAnimated())
-						shader.bindViewMatrix();
-
-					break;
-			}
-		}
-	}
-
-	void RenderPipeline::drawingBind(SceneShader& shader) {
-		shader.loadMaps();
-	}
-
-	void RenderPipeline::dynamicBind(const LightManager& lightManager, SceneShader & shader) const {
-		shader.loadMaps();
-
-		if (shader.getUseLight()) lightManager.bind(shader);
 	}
 
 

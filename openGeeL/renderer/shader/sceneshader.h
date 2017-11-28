@@ -7,6 +7,8 @@
 
 namespace geeL {
 
+	class Camera;
+	class LightManager;
 	class Transform;
 
 	struct FragmentShader {
@@ -57,7 +59,8 @@ namespace geeL {
 		bool getUseSkybox() const;
 		bool isAnimated() const;
 
-		void setViewMatrix(const glm::mat4& view);
+		void loadSceneInformation(const LightManager& lightManager, const Camera& camera);
+		void loadSceneInformation(const LightManager& lightManager, const Camera* camera);
 
 		//Bind model and view matrices into shader (if view has been set beforehand)
 		void bindMatrices(const Transform& model) const;
@@ -79,6 +82,9 @@ namespace geeL {
 		ShaderLocation modelLocation;
 		ShaderLocation modelViewLocation;
 		ShaderLocation transInvModelViewLocation;
+
+		void setCamera(const Camera& camera);
+		void setViewMatrix(const glm::mat4& view);
 
 	};
 

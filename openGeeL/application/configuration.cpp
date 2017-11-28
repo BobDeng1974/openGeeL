@@ -29,7 +29,7 @@ namespace geeL {
 		MaterialFactory& materialFactory = MaterialFactory(gBuffer);
 		MeshFactory& meshFactory = MeshFactory(materialFactory);
 		LightManager& lightManager = LightManager();
-		RenderPipeline& pipeline = RenderPipeline(materialFactory);
+		RenderPipeline pipeline;
 		RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, defaultCamera, materialFactory, manager);
 		
 		Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);

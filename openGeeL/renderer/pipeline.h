@@ -10,7 +10,6 @@ namespace geeL {
 
 	class Camera;
 	class LightManager;
-	class MaterialFactory;
 	class RenderScene;
 	class RenderShader;
 	class SceneShader;
@@ -20,21 +19,10 @@ namespace geeL {
 	class RenderPipeline {
 
 	public:
-		RenderPipeline(MaterialFactory& factory);
+		RenderPipeline();
 
 		//Statically bind scene information into shader. Should be called once when shader is created at runtime
-		void staticBind(const Camera& camera, const LightManager& lightManager, SceneShader& shader) const;
-
-		//Dynamically bind scene information into shader during runtime
-		void dynamicBind(const LightManager& lightManager, SceneShader& shader, const Camera& camera) const;
-
-		//Binding method that should be called before drawing with given shader
-		void drawingBind(SceneShader& shader);
-
-		//Dynamically bind scene information into shader during runtime.
-		//Note: Make sure that given scene shader doesn't operate in screen space 
-		//(No camera attached in this overload)
-		void dynamicBind(const LightManager& lightManager, SceneShader& shader) const;
+		void staticBind(const Camera& camera, SceneShader& shader) const;
 
 		//Bind uniform camera information
 		void bindCamera(const Camera& camera) const;
@@ -50,7 +38,6 @@ namespace geeL {
 	private:
 		int bindingPointCounter, camID;
 		map<int, int> UBObjects;
-		MaterialFactory& factory;
 
 	};
 

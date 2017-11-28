@@ -38,7 +38,7 @@ void RaymarchTest::draw() {
 	TextureProvider textureProvider(window, gBuffer);
 	MaterialFactory &materialFactory = MaterialFactory(gBuffer);
 	LightManager& lightManager = LightManager();
-	RenderPipeline& pipeline = RenderPipeline(materialFactory);
+	RenderPipeline pipeline;
 	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, camera, materialFactory, manager);
 
 	DefaultPostProcess& def = DefaultPostProcess(2.f);

@@ -111,6 +111,11 @@ namespace geeL {
 		TextureBindingStack::bindTexturesDynamic(*this, mapOffset);
 	}
 
+	void Shader::initDraw() const {
+		//use();
+		loadMaps();
+	}
+
 	ShaderLocation Shader::getLocation(const string& name) const {
 		return glGetUniformLocation(program, name.c_str());
 	}

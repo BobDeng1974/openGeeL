@@ -1,6 +1,8 @@
 #include <iostream>
 #include <gtc/matrix_transform.hpp>
 #include "transformation/transform.h"
+#include "lights/lightmanager.h"
+#include "cameras/camera.h"
 #include "sceneshader.h"
 
 using namespace std;
@@ -50,6 +52,43 @@ namespace geeL {
 		transInvModelViewLocation = getLocation("transInvModelView");
 	}
 
+
+	void SceneShader::loadSceneInformation(const LightManager& lightManager, const Camera& camera) {
+		if (getUseLight()) lightManager.bind(*this, &camera);
+		if (getUseCamera()) setCamera(camera);
+	}
+
+	void SceneShader::loadSceneInformation(const LightManager& lightManager, const Camera* camera) {
+		if (getUseLight()) lightManager.bind(*this);
+		if (camera != nullptr && getUseCamera()) setCamera(*camera);
+
+	}
+
+	void SceneShader::setCamera(const Camera& camera) {
+		setViewMatrix(camera.getViewMatrix());
+
+		switch (getMethod()) {
+			case ShadingMethod::Forward:
+			case ShadingMethod::TransparentOD:
+			case ShadingMethod::TransparentOID:
+				camera.bindProjectionMatrix(*this, "projection");
+				camera.bindInverseViewMatrix(*this, "inverseView");
+				bind<glm::vec3>("origin", camera.GetOriginInViewSpace());
+
+				if (isAnimated())
+					bindViewMatrix();
+
+				break;
+			case ShadingMethod::Generic:
+				camera.bindProjectionMatrix(*this, "projection");
+				bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
+
+				if (isAnimated())
+					bindViewMatrix();
+
+				break;
+			}
+	}
 
 	void SceneShader::setViewMatrix(const glm::mat4& view) {
 		this->view = view;

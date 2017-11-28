@@ -57,6 +57,10 @@ namespace geeL {
 		//to be expected
 		virtual void loadMapsDynamic() const;
 
+		//Init function that should be called before draw calls. It a
+		//ctivates shader program and loads all necessary maps
+		virtual void initDraw() const;
+
 		ShaderLocation getLocation(const std::string& name) const;
 
 		//Bind value into shader. Value won't be saved in this 

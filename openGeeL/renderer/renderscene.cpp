@@ -80,7 +80,7 @@ namespace geeL {
 		}
 
 		if (needAdd) {
-			pipeline.staticBind(*camera, lightManager, shader);
+			pipeline.staticBind(*camera, shader);
 			if (shader.getUseLight()) lightManager.addShaderListener(shader);
 
 			renderObjects[shader.getMethod()][&shader] = TransformMapping();
@@ -268,7 +268,7 @@ namespace geeL {
 
 	void RenderScene::updateBindings() {
 		iterShaders([this](SceneShader& shader) {
-			pipeline.dynamicBind(lightManager, shader, *camera);
+			shader.loadSceneInformation(lightManager, *camera);
 		});
 	}
 
@@ -280,8 +280,9 @@ namespace geeL {
 			(const MeshRenderer& object, SceneShader& shader) {
 
 			if (currentShader != &shader) {
-				if(updateBinding) pipeline.dynamicBind(lightManager, shader, camera);
-				pipeline.drawingBind(shader);
+				if(updateBinding) shader.loadSceneInformation(lightManager, camera);
+				shader.initDraw();
+
 				currentShader = &shader;
 			}
 
@@ -369,8 +370,9 @@ namespace geeL {
 			SceneShader& shader = *it->second;
 
 			if (currentShader != &shader) {
-				if(updateBindings) pipeline.dynamicBind(lightManager, shader, camera);
-				pipeline.drawingBind(shader);
+				if(updateBindings) shader.loadSceneInformation(lightManager, camera);
+				shader.initDraw();
+
 				currentShader = &shader;
 			}
 
@@ -401,12 +403,8 @@ namespace geeL {
 
 
 	void RenderScene::drawObjects(SceneShader& shader, const Camera* const camera) const {
-		if (camera != nullptr)
-			pipeline.dynamicBind(lightManager, shader, *camera);
-		else
-			pipeline.dynamicBind(lightManager, shader);
-
-		pipeline.drawingBind(shader);
+		shader.loadSceneInformation(lightManager, camera);
+		shader.initDraw();
 
 		iterRenderObjects([&shader](const MeshRenderer& object) {
 			if (object.isActive())
