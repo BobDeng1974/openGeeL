@@ -13,7 +13,7 @@ namespace geeL {
 		VoxelOctree& octree, 
 		int maxStep) 
 			: SceneRender(scene)
-			, PostProcessingEffectFS("renderer/lighting/conetracer.frag")
+			, PostProcessingEffectFS("shaders/lighting/conetracer.frag")
 			, voxelStructure(octree)
 			, maxStepDiffuse(maxStep)
 			, maxStepSpecular(maxStep)
@@ -25,7 +25,7 @@ namespace geeL {
 		int maxStepSpecular, 
 		int maxStepDiffuse) 
 			: SceneRender(scene)
-			, PostProcessingEffectFS("renderer/lighting/conetracerTex.frag")
+			, PostProcessingEffectFS("shaders/lighting/conetracerTex.frag")
 			, voxelStructure(texture)
 			, maxStepSpecular(maxStepSpecular)
 			, maxStepDiffuse(maxStepDiffuse)

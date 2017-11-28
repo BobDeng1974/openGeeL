@@ -6,7 +6,7 @@ namespace geeL {
 		float fxaaMul, 
 		float fxaaMin, 
 		float fxaaClamp)
-			: PostProcessingEffectFS("renderer/postprocessing/fxaa.frag")
+			: PostProcessingEffectFS("shaders/postprocessing/fxaa.frag")
 			, blurMin(minColorDiff)
 			, fxaaMul(fxaaMul)
 			, fxaaMin(fxaaMin)

@@ -36,8 +36,8 @@ namespace geeL {
 			, fBuffer(nullptr)
 			, lighting(lighting)
 			, defaultEffect(def)
-			, fallbackEffect("renderer/shaders/screen.frag")
-			, combineEffect("renderer/shaders/screen.frag") {
+			, fallbackEffect("shaders/screen.frag")
+			, combineEffect("shaders/screen.frag") {
 
 		init();
 	}

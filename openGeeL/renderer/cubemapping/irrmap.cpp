@@ -13,13 +13,12 @@ using namespace glm;
 
 namespace geeL {
 
-
 	IrradianceMap::IrradianceMap(const CubeMap& environmentMap, 
 		CubeBuffer& frameBuffer, unsigned int resolution)
 			: DynamicCubeMap(new RenderTextureCube(resolution))
 			, environmentMap(environmentMap), frameBuffer(frameBuffer)
-			, conversionShader(new RenderShader("renderer/cubemapping/envconvert.vert", 
-				"renderer/cubemapping/irrmap.frag")) {
+			, conversionShader(new RenderShader("shaders/cubemapping/envconvert.vert", 
+				"shaders/cubemapping/irrmap.frag")) {
 
 		conversionShader->mapOffset = 1;
 		conversionShader->addMap(environmentMap.getTexture(), "environmentMap");

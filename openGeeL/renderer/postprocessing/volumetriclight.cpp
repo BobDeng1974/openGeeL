@@ -19,7 +19,7 @@ namespace geeL {
 		float minDistance, 
 		unsigned int samples, 
 		bool useCookie)
-			: AdditiveEffect("renderer/postprocessing/volumetriclight.frag")
+			: AdditiveEffect("shaders/postprocessing/volumetriclight.frag")
 			, light(light)
 			, density(density)
 			, minDistance(minDistance)

@@ -42,7 +42,7 @@ namespace geeL {
 
 
 	AdditiveWrapper::AdditiveWrapper(PostProcessingEffectFS& effect, BlendMode mode)
-		: AdditiveEffect(mode, "renderer/shaders/screen.frag")
+		: AdditiveEffect(mode, "shaders/screen.frag")
 		, effect(effect)
 		, tempTexture(nullptr) {}
 

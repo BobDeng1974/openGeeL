@@ -6,7 +6,7 @@ namespace geeL {
 
 
 	BrightnessFilterCutoff::BrightnessFilterCutoff(float scatter)
-		: BrightnessFilter("renderer/postprocessing/bloomfilter.frag")
+		: BrightnessFilter("shaders/postprocessing/bloomfilter.frag")
 		, scatter(scatter) {}
 
 
@@ -29,7 +29,7 @@ namespace geeL {
 	}
 
 	BrightnessFilterSmooth::BrightnessFilterSmooth(float bias, float scale)
-		: BrightnessFilter("renderer/postprocessing/brightnessfilter.frag")
+		: BrightnessFilter("shaders/postprocessing/brightnessfilter.frag")
 		, bias(bias)
 		, scale(scale) {}
 

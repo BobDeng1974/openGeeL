@@ -6,7 +6,7 @@
 namespace geeL {
 
 	ToneMapping::ToneMapping(float exposure) 
-		: PostProcessingEffectFS("renderer/postprocessing/tonemapping.frag")
+		: PostProcessingEffectFS("shaders/postprocessing/tonemapping.frag")
 		, exposure(exposure) {}
 
 

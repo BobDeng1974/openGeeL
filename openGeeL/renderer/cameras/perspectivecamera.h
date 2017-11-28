@@ -17,7 +17,7 @@ namespace geeL {
 			unsigned int height, 
 			float nearClip, 
 			float farClip, 
-			std::string name = "PerspectiveCamera");
+			const std::string& name = "PerspectiveCamera");
 
 		float getFieldOfView() const;
 		void setFieldOfView(float fov);
@@ -25,7 +25,7 @@ namespace geeL {
 		virtual std::vector<glm::vec3> getViewBorders(float near, float far) const;
 
 	private:
-		AtomicWrapper<float> FOV, currentFOV, width, height, aspectRatio;
+		AtomicWrapper<float> fov, width, height, aspectRatio;
 
 		virtual void computeProjectionMatrix();
 	};

@@ -1,6 +1,6 @@
 
-#include <renderer/shaders/sampling.glsl>
-#include <renderer/lights/lights.glsl>
+#include <shaders/sampling.glsl>
+#include <shaders/lighting/lights.glsl>
 
 
 float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {

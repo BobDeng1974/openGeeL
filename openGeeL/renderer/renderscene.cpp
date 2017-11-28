@@ -204,7 +204,6 @@ namespace geeL {
 	bool Scene::containsSkinnedObjects() const {
 		bool value = false;
 		iterShaders([&value](const SceneShader& shader) -> bool {
-
 			if (shader.isAnimated()) {
 				value = true;
 				return true;

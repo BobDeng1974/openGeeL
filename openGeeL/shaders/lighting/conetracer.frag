@@ -1,6 +1,6 @@
 #version 430
 
-#include <renderer/shaders/helperfunctions.glsl>
+#include <shaders/helperfunctions.glsl>
 
 const float epsilon = 0.000001f;
 const float FLOAT_MAX = 100000.f;

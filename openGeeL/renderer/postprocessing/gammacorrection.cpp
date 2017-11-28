@@ -6,7 +6,7 @@
 namespace geeL {
 
 	GammaCorrection::GammaCorrection(float gamma) : 
-		PostProcessingEffectFS("renderer/postprocessing/gammacorrection.frag"), gamma(gamma) {}
+		PostProcessingEffectFS("shaders/postprocessing/gammacorrection.frag"), gamma(gamma) {}
 
 
 	void GammaCorrection::init(const PostProcessingParameter& parameter) {

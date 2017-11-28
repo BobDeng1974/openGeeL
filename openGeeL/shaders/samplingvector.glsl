@@ -1,5 +1,5 @@
 
-#include <renderer/shaders/helperfunctions.glsl>
+#include <shaders/helperfunctions.glsl>
 
 //Hammersley sequence according to
 //http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html

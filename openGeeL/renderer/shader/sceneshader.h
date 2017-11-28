@@ -64,7 +64,6 @@ namespace geeL {
 
 		//Bind model and view matrices into shader (if view has been set beforehand)
 		void bindMatrices(const Transform& model) const;
-		void bindViewMatrix() const;
 
 		ShaderTransformSpace getSpace() const;
 		ShadingMethod getMethod() const;
@@ -85,6 +84,7 @@ namespace geeL {
 
 		void setCamera(const Camera& camera);
 		void setViewMatrix(const glm::mat4& view);
+		void bindViewMatrix() const;
 
 	};
 

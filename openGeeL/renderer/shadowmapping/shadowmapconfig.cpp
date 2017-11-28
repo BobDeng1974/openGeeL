@@ -59,8 +59,8 @@ namespace geeL {
 
 	const RenderShader& ShadowmapRepository::getSimple2DShader() {
 		if (simple2D == nullptr) {
-			simple2D = new RenderShader("renderer/shadowmapping/shadowmapping.vert", 
-				"renderer/shaders/empty.frag");
+			simple2D = new RenderShader("shaders/shadowmapping/shadowmapping.vert", 
+				"shaders/empty.frag");
 		}
 
 		return *simple2D;
@@ -68,9 +68,9 @@ namespace geeL {
 
 	const RenderShader& ShadowmapRepository::getSimpleCubeShader() {
 		if (simpleCube == nullptr) {
-			simpleCube = new RenderShader("renderer/shaders/empty.vert", 
-				"renderer/shadowmapping/shadowmapping.geom",
-				"renderer/shadowmapping/shadowmapping.frag");
+			simpleCube = new RenderShader("shaders/empty.vert", 
+				"shaders/shadowmapping/shadowmapping.geom",
+				"shaders/shadowmapping/shadowmapping.frag");
 		}
 
 		return *simpleCube;
@@ -78,8 +78,8 @@ namespace geeL {
 
 	const RenderShader& ShadowmapRepository::getVariance2DShader() {
 		if (variance2D == nullptr) {
-			variance2D = new RenderShader("renderer/shadowmapping/varshadowmapping.vert", 
-				"renderer/shadowmapping/varshadowmapping.frag");
+			variance2D = new RenderShader("shaders/shadowmapping/varshadowmapping.vert", 
+				"shaders/shadowmapping/varshadowmapping.frag");
 		}
 
 		return *variance2D;
@@ -87,8 +87,8 @@ namespace geeL {
 
 	const RenderShader& ShadowmapRepository::getSimple2DAnimated() {
 		if (simple2DAnim == nullptr) {
-			simple2DAnim = new RenderShader("renderer/shadowmapping/shadowmappingAnim.vert",
-				"renderer/shaders/empty.frag");
+			simple2DAnim = new RenderShader("shaders/shadowmapping/shadowmappingAnim.vert",
+				"shaders/empty.frag");
 		}
 
 		return *simple2DAnim;
@@ -96,9 +96,9 @@ namespace geeL {
 
 	const RenderShader& ShadowmapRepository::getSimpleCubeAnimated() {
 		if (simpleCubeAnim == nullptr) {
-			simpleCubeAnim = new RenderShader("renderer/shaders/emptyAnim.vert",
-				"renderer/shadowmapping/shadowmapping.geom",
-				"renderer/shadowmapping/shadowmapping.frag");
+			simpleCubeAnim = new RenderShader("shaders/emptyAnim.vert",
+				"shaders/shadowmapping/shadowmapping.geom",
+				"shaders/shadowmapping/shadowmapping.frag");
 		}
 
 		return *simpleCubeAnim;

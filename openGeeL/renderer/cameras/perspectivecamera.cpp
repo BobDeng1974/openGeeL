@@ -16,10 +16,9 @@ namespace geeL {
 		unsigned int height, 
 		float nearClip, 
 		float farClip, 
-		std::string name) 
+		const std::string& name)
 			: SceneCamera(transform, nearClip, farClip, name)
-			, FOV(fov)
-			, currentFOV(fov)
+			, fov(fov)
 			, width(float(width))
 			, height(float(height))
 			, aspectRatio(float(width) / float(height)) {
@@ -29,18 +28,18 @@ namespace geeL {
 
 
 	void PerspectiveCamera::computeProjectionMatrix()  {
-		setProjectionMatrix(perspective(currentFOV(), aspectRatio(), nearClip(), farClip()));
+		setProjectionMatrix(perspective(fov(), aspectRatio(), nearClip(), farClip()));
 	}
 
 	
 
 	float PerspectiveCamera::getFieldOfView() const {
-		return currentFOV;
+		return fov;
 	}
 
 	void PerspectiveCamera::setFieldOfView(float fov) {
 		if (fov > 1.f && fov < 170.f) {
-			currentFOV = fov;
+			this->fov = fov;
 			computeProjectionMatrix();
 		}
 			
@@ -48,8 +47,8 @@ namespace geeL {
 
 	std::vector<vec3> PerspectiveCamera::getViewBorders(float near, float far) const {
 		float invAspect = height / width;
-		float tanHor = tanf(glm::radians(currentFOV / 2.f));
-		float tanVer = tanf(glm::radians((currentFOV * invAspect) / 2.f));
+		float tanHor = tanf(glm::radians(fov / 2.f));
+		float tanVer = tanf(glm::radians((fov * invAspect) / 2.f));
 
 		float xNear = near * tanHor;
 		float xFar = far * tanHor;

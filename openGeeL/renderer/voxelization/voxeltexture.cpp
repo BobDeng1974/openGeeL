@@ -15,8 +15,8 @@ namespace geeL {
 	VoxelTexture::VoxelTexture(const RenderScene& scene, unsigned int dimensions) 
 		: scene(scene), dimensions(dimensions), texture(new RenderTexture3D(dimensions, dimensions, dimensions, 7)) {
 
-		FragmentShader frag = FragmentShader("renderer/voxelization/voxelizeTex.frag", true, false);
-		voxelShader = new SceneShader("renderer/voxelization/voxelize.vert", "renderer/voxelization/voxelize.geom",
+		FragmentShader frag = FragmentShader("shaders/voxelization/voxelizeTex.frag", true, false);
+		voxelShader = new SceneShader("shaders/voxelization/voxelize.vert", "shaders/voxelization/voxelize.geom",
 			frag, ShaderTransformSpace::World, ShadingMethod::Other);
 
 		voxelShader->mapOffset = 1;

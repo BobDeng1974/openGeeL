@@ -2,9 +2,9 @@
 
 #define OCCLUSION_MIN (1.f / 256.f)
 
-#include <renderer/shaders/helperfunctions.glsl>
-#include <renderer/shaders/samplingvector.glsl>
-#include <renderer/lighting/cooktorrance.glsl>
+#include <shaders/helperfunctions.glsl>
+#include <shaders/samplingvector.glsl>
+#include <shaders/lighting/cooktorrance.glsl>
 
 
 struct ReflectionProbe {

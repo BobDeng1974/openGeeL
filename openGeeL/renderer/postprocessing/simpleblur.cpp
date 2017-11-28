@@ -3,7 +3,7 @@
 namespace geeL {
 
 	SimpleBlur::SimpleBlur(unsigned int strength)
-		: PostProcessingEffectFS("renderer/postprocessing/simpleblur.frag"), amount(strength + 1) {}
+		: PostProcessingEffectFS("shaders/postprocessing/simpleblur.frag"), amount(strength + 1) {}
 
 	SimpleBlur::SimpleBlur(unsigned int strength, std::string shaderPath)
 		: PostProcessingEffectFS(shaderPath), amount(strength + 1) {}
@@ -17,6 +17,6 @@ namespace geeL {
 
 
 	SimpleBlur3D::SimpleBlur3D(unsigned int strength) 
-		: SimpleBlur(strength, "renderer/postprocessing/simpleblur3d.frag") {}
+		: SimpleBlur(strength, "shaders/postprocessing/simpleblur3d.frag") {}
 
 }

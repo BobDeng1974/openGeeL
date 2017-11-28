@@ -9,7 +9,7 @@ using namespace std;
 namespace geeL {
 
 	SSRR::SSRR(unsigned int stepCount, float stepSize, float stepSizeGain) 
-		: PostProcessingEffectFS("renderer/postprocessing/ssrr.frag")
+		: PostProcessingEffectFS("shaders/postprocessing/ssrr.frag")
 		, steps(stepCount)
 		, stepSize(stepSize)
 		, stepGain(stepSizeGain) {}
@@ -80,7 +80,7 @@ namespace geeL {
 		unsigned int stepCount, 
 		float stepSize, 
 		float stepSizeGain)
-			: SSRR("renderer/postprocessing/ssrr2.frag", stepCount, stepSize, stepSizeGain)
+			: SSRR("shaders/postprocessing/ssrr2.frag", stepCount, stepSize, stepSizeGain)
 			, samples(sampleCount) {}
 
 

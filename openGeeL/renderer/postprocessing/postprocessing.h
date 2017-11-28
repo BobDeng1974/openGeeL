@@ -154,7 +154,7 @@ namespace geeL {
 
 	public:
 		PassthroughEffect() 
-			: PostProcessingEffectFS("renderer/postprocessing/passthrough.frag") {}
+			: PostProcessingEffectFS("shaders/postprocessing/passthrough.frag") {}
 
 	};
 

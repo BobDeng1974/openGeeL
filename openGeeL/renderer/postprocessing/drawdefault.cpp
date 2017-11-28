@@ -11,7 +11,7 @@ using namespace glm;
 namespace geeL {
 
 	DefaultPostProcess::DefaultPostProcess(float exposure)
-		: PostProcessingEffectFS("renderer/postprocessing/drawdefault.frag")
+		: PostProcessingEffectFS("shaders/postprocessing/drawdefault.frag")
 		, customTexture(nullptr) {
 	
 		noise = new ImageTexture("resources/textures/noise.png", ColorType::Single);

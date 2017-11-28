@@ -1,9 +1,9 @@
 #version 430
 
-#include <renderer/shaders/helperfunctions.glsl>
-#include <renderer/shaders/sampling.glsl>
-#include <renderer/lights/lights.glsl>
-#include <renderer/lighting/cooktorrance.glsl>
+#include <shaders/helperfunctions.glsl>
+#include <shaders/sampling.glsl>
+#include <shaders/lighting/lights.glsl>
+#include <shaders/lighting/cooktorrance.glsl>
 
 
 in vec2 textureCoordinates;
@@ -35,8 +35,8 @@ uniform PointLight pointLights[5];
 uniform DirectionalLight directionalLights[5];
 uniform SpotLight spotLights[5];     
 
-#include <renderer/shadowmapping/shadowsView.glsl>
-#include <renderer/lighting/cooktorrancelights.glsl>
+#include <shaders/shadowmapping/shadowsView.glsl>
+#include <shaders/lighting/cooktorrancelights.glsl>
 
 
 vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightColor, float density);

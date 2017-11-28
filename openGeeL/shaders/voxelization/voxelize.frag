@@ -1,9 +1,9 @@
 #version 430
 
-#include <renderer/shaders/helperfunctions.glsl>
-#include <renderer/shaders/material.glsl>
-#include <renderer/lights/lights.glsl>
-#include <renderer/lighting/cooktorrance.glsl>
+#include <shaders/helperfunctions.glsl>
+#include <shaders/material.glsl>
+#include <shaders/lighting/lights.glsl>
+#include <shaders/lighting/cooktorrance.glsl>
 
 in vec4 fragPosition;
 in vec3 normal;
@@ -102,8 +102,8 @@ uniform SpotLight spotLights[5];
 uniform Material material;
 uniform vec3 cameraPosition;
 
-#include <renderer/shaders/materialproperties.glsl>
-#include <renderer/shadowmapping/shadows.glsl>
+#include <shaders/materialproperties.glsl>
+#include <shaders/shadowmapping/shadows.glsl>
 
 
 vec3 calculateReflectance2(vec3 fragPosition, vec3 normal, vec3 viewDirection, 

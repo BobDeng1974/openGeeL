@@ -16,10 +16,10 @@ shared uint pointLightCounter = 0;
 
 
 
-#include <renderer/shaders/helperfunctions.glsl>
-#include <renderer/shaders/sampling.glsl>
-#include <renderer/lights/lights.glsl>
-#include <renderer/lighting/cooktorrance.glsl>
+#include <shaders/helperfunctions.glsl>
+#include <shaders/sampling.glsl>
+#include <shaders/lighting/lights.glsl>
+#include <shaders/lighting/cooktorrance.glsl>
 
 uniform int plCount;
 uniform int dlCount;
@@ -40,8 +40,8 @@ uniform PointLight pointLights[MAX_LIGHTS];
 uniform DirectionalLight directionalLights[MAX_LIGHTS];
 uniform SpotLight spotLights[MAX_LIGHTS];     
 
-#include <renderer/shadowmapping/shadowsView.glsl>
-#include <renderer/lighting/cooktorrancelights.glsl>
+#include <shaders/shadowmapping/shadowsView.glsl>
+#include <shaders/lighting/cooktorrancelights.glsl>
 
 
 void main() {

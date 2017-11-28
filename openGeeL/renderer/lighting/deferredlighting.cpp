@@ -15,8 +15,8 @@ namespace geeL {
 
 	DeferredLighting::DeferredLighting(RenderScene& scene) 
 		: SceneRender(scene)
-		, PostProcessingEffectFS( "renderer/lighting/deferredlighting.vert",
-			"renderer/lighting/deferredlighting.frag") {}
+		, PostProcessingEffectFS( "shaders/lighting/deferredlighting.vert",
+			"shaders/lighting/deferredlighting.frag") {}
 
 
 	void DeferredLighting::init(const PostProcessingParameter& parameter) {
@@ -84,7 +84,7 @@ namespace geeL {
 
 
 	TiledDeferredLighting::TiledDeferredLighting(RenderScene& scene)
-		: PostProcessingEffectCS("renderer/lighting/tileddeferred.com.glsl", Resolution(16, 16)) 
+		: PostProcessingEffectCS("shaders/lighting/tileddeferred.com.glsl", Resolution(16, 16)) 
 		, SceneRender(scene) {}
 
 

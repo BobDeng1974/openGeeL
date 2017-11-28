@@ -111,9 +111,9 @@ namespace geeL {
 	std::string GBuffer::getFragmentPath() const {
 		switch (content) {
 			case GBufferContent::DefaultEmissive:
-				return "renderer/shaders/gbufferEmi.frag";
+				return "shaders/gbufferEmi.frag";
 			default:
-				return "renderer/shaders/gbuffer.frag";
+				return "shaders/gbuffer.frag";
 		}
 	}
 

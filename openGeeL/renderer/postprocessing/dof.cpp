@@ -11,7 +11,7 @@ using namespace std;
 namespace geeL {
 
 	DepthOfFieldBlur::DepthOfFieldBlur(float threshold, float sigma)
-		: GaussianBlurBase("renderer/postprocessing/dofblur.frag", sigma)
+		: GaussianBlurBase("shaders/postprocessing/dofblur.frag", sigma)
 		, threshold(threshold) {
 
 		setKernelsize(9);
@@ -55,7 +55,7 @@ namespace geeL {
 		float aperture, 
 		float farDistance, 
 		const ResolutionPreset& blurResolution)
-			: PostProcessingEffectFS("renderer/postprocessing/dof.frag")
+			: PostProcessingEffectFS("shaders/postprocessing/dof.frag")
 			, blur(blur)
 			, focalLength(focalLength)
 			, aperture(aperture)

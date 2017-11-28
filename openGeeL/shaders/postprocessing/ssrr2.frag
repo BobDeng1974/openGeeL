@@ -1,7 +1,8 @@
 #version 430 core
 
-#include <renderer/shaders/helperfunctions.glsl>
-#include <renderer/lighting/cooktorrance.glsl>
+#include <shaders/helperfunctions.glsl>
+#include <shaders/samplingvector.glsl>
+#include <shaders/lighting/cooktorrance.glsl>
 
 in vec2 TexCoords;
 
@@ -11,6 +12,7 @@ uniform sampler2D image;
 uniform sampler2D gPositionRoughness;
 uniform sampler2D gNormalMet;
 
+uniform int sampleCount = 40;
 uniform int stepCount = 60;
 uniform	float stepSize = 0.2f;
 uniform	float stepGain = 1.02f;
@@ -20,15 +22,12 @@ uniform int effectOnly;
 
 float border = 1.f;
 
-vec3 getReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float roughness);
-vec3 getReflection(vec3 fragPos, vec3 normal, vec3 reflectionDirection, float roughness);
+bool computeReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float roughness, out vec3 color);
+vec3 getReflectionFussy(vec3 fragPos, vec3 normal, vec3 reflectionDirection, float roughness);
 
-vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness);
-float calculateNormalDistrubution2(vec3 normal, vec3 halfway, float roughness);
-float calculateGeometryFunctionSmith(vec3 normal, vec3 viewDirection, vec3 lightDirection, float roughness);
-
-float interpolatei(vec3 a, vec3 b, vec3 v);
 vec4 transformToClip(vec3 vector);
+vec2 hammersleySeq(int i, int count);
+vec3 generateSampledVector(float roughness, vec2 samp);
 
 
 void main() {
@@ -44,44 +43,57 @@ void main() {
 
 	//DBranch to filter out large bunch of pixels
 	if(depth > 0.1f && roughness < 0.99f) {
-		color = vec4(result + getReflection(fragPos, normal, reflectionDirection, roughness), 1.f);
+		color = vec4(result + getReflectionFussy(fragPos, normal, reflectionDirection, roughness), 1.f);
 	}
 	else 
 		color = vec4(result, 1.f);
 }
 
 
-vec3 getReflection(vec3 fragPos, vec3 normal, vec3 reflectionDirection, float roughness) {
+vec3 getReflectionFussy(vec3 fragPos, vec3 normal, vec3 reflectionDirection, float roughness) {
 	vec3 viewDirection = normalize(-fragPos);
 	float metallic = texture(gNormalMet, TexCoords).w;
 
-	vec3 reflectionColor = getReflectionColor(fragPos, reflectionDirection, normal, roughness);
-	vec3 halfwayDirection = normalize(reflectionDirection + viewDirection);
-	float NdotL = doto(normal, reflectionDirection);
+	vec3 right = cross(reflectionDirection, normal);
+	vec3 up = cross(reflectionDirection, right);
+	float NoV = doto(normal, viewDirection);
 
-	//BRDF
-	float ndf = calculateNormalDistrubution2(normal, halfwayDirection, roughness);
-	float geo = calculateGeometryFunctionSmith(normal, viewDirection, reflectionDirection, roughness);
-	vec3 fres = calculateFresnelTerm(doto(halfwayDirection, viewDirection), reflectionColor, metallic, roughness);
+	vec3 radiance = vec3(0.f);
+	float samples = 0.000001f;
+	for(int i = 0; i < sampleCount; i++) {
+		vec3 sampleVector = generateSampledVector(roughness, hammersleySeq(i, sampleCount));
+		sampleVector = sampleVector.x * right + sampleVector.y * up + sampleVector.z * reflectionDirection; //To world coordinates
+		sampleVector = normalize(sampleVector);
 
-	//Lighting equation
-	vec3  nom   = geo * fres * ndf;
-	float denom = 4.f * doto(viewDirection, normal) * NdotL + 0.001f; 
-	vec3  brdf  = nom / denom;
+		vec3 reflectionColor;
+		bool hit = computeReflectionColor(fragPos, sampleVector, normal, roughness, reflectionColor);
+		samples += float(hit); //Only increment sample count if sample actual hit a surface in the scene
 
-	return reflectionColor * brdf * NdotL;
+		vec3 halfway = normalize(sampleVector + viewDirection);
+		float cosT = doto(sampleVector, normal);
+		cosT = clamp(cosT, 0.f, 1.f);
+		float sinT = sqrt(1.f - cosT * cosT);
+
+		float theta = doto(halfway, viewDirection);
+		vec3  fresnel = calculateFresnelTerm(theta, reflectionColor, metallic, roughness);
+		float geo = calculateGeometryFunctionSmith(normal, viewDirection, sampleVector, roughness);
+		float denom =  1.f / (4.f * NoV * doto(halfway, normal) + 0.001f); 
+
+		radiance += reflectionColor * geo * fresnel * sinT * denom;
+	}
+
+	return radiance / samples;
 }
 
-
-vec3 getReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float roughness) {
+bool computeReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float roughness, out vec3 reflectionColor) {
 	
 	float _stepSize = stepSize * (1.f - roughness); 
 	float _stepCount = stepCount * (1.f - roughness);
 
-	vec3 reflectionColor = vec3(0.f);
+	reflectionColor = vec3(0.f);
 	vec3 currPosition = fragPos;
 	int i = 0;
-	while(i < _stepCount) {
+	for(int i = 0; i < _stepCount; i++) {
 		currPosition = currPosition + reflectionDir * _stepSize;
 		float depth = currPosition.z;
 		
@@ -124,37 +136,14 @@ vec3 getReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float rou
 				//Discard when surface normal and reflected surface normal are too similar. In this case
 				//the backside of reflected surface should have been used, but isn't visible to viewer
 				reflectionColor = step(dotNR, 0.33f) * texture(image, currPosProj.xy).rgb;
-
-				break;
+				return true;
 			}
 		}
 
 		_stepSize *= stepGain;
-		i++;
 	}
 
-	return reflectionColor;
-}
-
-//Trowbridge-Reitz GGX normal distribution function
-float calculateNormalDistrubution2(vec3 normal, vec3 halfway, float roughness) {
-	
-	//TODO: Fix problems in ndf and remove this cop out
-	float offset = 3.f;
-	float copOut = step(roughness, 0.2f);
-
-    float a = roughness * roughness;
-    float NdotH  = doto(normal, halfway);
-    float NdotH2 = NdotH * NdotH;
-	
-    float denom  = (NdotH2 * (a - 1.0f) + 1.0f);
-    denom = PI * denom * denom + 0.0001f;
-
-    float ndf = (a / denom) * (1.f - copOut) + (copOut * offset);
-	ndf = clamp(ndf, 0.f, offset);
-	ndf /= offset;
-
-	return ndf;
+	return false;
 }
 
 //Transform to clip space
@@ -167,8 +156,4 @@ vec4 transformToClip(vec3 vector) {
 	return vecProj;
 }
 
-
-float interpolatei(vec3 a, vec3 b, vec3 v) {
-	return length((v - a) / (b - a));
-}
 

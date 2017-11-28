@@ -1,9 +1,9 @@
 #version 430
 
-#include <renderer/shaders/helperfunctions.glsl>
-#include <renderer/shaders/material.glsl>
+#include <shaders/helperfunctions.glsl>
+#include <shaders/material.glsl>
 
-#include <renderer/lighting/cooktorrance.glsl>
+#include <shaders/lighting/cooktorrance.glsl>
 
 
 in vec3 normal;
@@ -22,7 +22,7 @@ uniform int plCount;
 uniform int dlCount;
 uniform int slCount;
 
-#include <renderer/lights/lights.glsl>
+#include <shaders/lighting/lights.glsl>
 
 uniform PointLight pointLights[5];
 uniform DirectionalLight directionalLights[5];
@@ -35,9 +35,9 @@ uniform mat4 inverseView;
 uniform vec3 origin;
 
 
-#include <renderer/shaders/materialproperties.glsl>
-#include <renderer/shadowmapping/shadowsView.glsl>
-#include <renderer/lighting/cooktorrancelights.glsl>
+#include <shaders/materialproperties.glsl>
+#include <shaders/shadowmapping/shadowsView.glsl>
+#include <shaders/lighting/cooktorrancelights.glsl>
 
 
 void blendCoverage(vec4 premultipliedReflect, vec3 transmit, float z) {

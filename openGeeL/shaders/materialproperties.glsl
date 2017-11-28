@@ -1,5 +1,5 @@
 
-#include <renderer/shaders/material.glsl>
+#include <shaders/material.glsl>
 
 //Read values from a previously declared Material 'material'
 void readMaterialProperties(out vec4 albedo, out vec3 norm, out float roughness, out float metallic, out vec3 emission, bool cutout) {

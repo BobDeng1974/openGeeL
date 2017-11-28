@@ -3,7 +3,7 @@
 namespace geeL {
 
 	SobelFilter::SobelFilter(float scale) 
-		: PostProcessingEffectFS("renderer/postprocessing/sobel.frag")
+		: PostProcessingEffectFS("shaders/postprocessing/sobel.frag")
 		, scale(scale) {}
 
 

@@ -7,9 +7,6 @@
     <Filter Include="renderer">
       <UniqueIdentifier>{2e7645fd-edde-442b-8ec1-49dd98d7750b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="renderer\shaders">
-      <UniqueIdentifier>{f7196ad3-8d6d-4d55-a6da-21459b72e4a1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="renderer\texturing">
       <UniqueIdentifier>{f8161c2b-4b16-44c4-bd0b-0e69f9987b60}</UniqueIdentifier>
     </Filter>
@@ -78,6 +75,24 @@
     </Filter>
     <Filter Include="physics">
       <UniqueIdentifier>{476d69ee-3424-403b-9c2d-5953fc06b5e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{9de347ae-398a-42fc-86fa-f7bfa8120d2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\lighting">
+      <UniqueIdentifier>{3855c639-11a9-4dd4-a9a0-b8fafdef3b4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\shadowmapping">
+      <UniqueIdentifier>{349a7ea4-edeb-4aea-985b-74442cfe7060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\postprocessing">
+      <UniqueIdentifier>{2ff5a0fe-13e2-4d4b-be50-5f0020e297b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\voxelization">
+      <UniqueIdentifier>{bbd92868-9ff5-495c-a8c4-bb727768a5d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\cubemapping">
+      <UniqueIdentifier>{b79adaf8-dfa7-4986-8609-de1c7155d5d6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1004,9 +1019,6 @@
     <ClInclude Include="renderer\meshes\instancedmesh.h">
       <Filter>renderer\meshes</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\shaders\forwardAnim.vert">
-      <Filter>renderer\shaders</Filter>
-    </ClInclude>
     <ClInclude Include="main\modelviewer.h">
       <Filter>main</Filter>
     </ClInclude>
@@ -1015,18 +1027,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="renderer\shaders\lighting.vert">
-      <Filter>renderer\shaders</Filter>
-    </None>
-    <None Include="renderer\shaders\lighting.frag">
-      <Filter>renderer\shaders</Filter>
-    </None>
-    <None Include="renderer\shaders\screen.vert">
-      <Filter>renderer\shaders</Filter>
-    </None>
-    <None Include="renderer\shaders\screen.frag">
-      <Filter>renderer\shaders</Filter>
-    </None>
     <None Include="renderer\postprocessing\colorcorrection.frag">
       <Filter>renderer\postprocessing</Filter>
     </None>
@@ -1039,9 +1039,6 @@
     <None Include="renderer\postprocessing\gammacorrection.frag">
       <Filter>renderer\postprocessing</Filter>
     </None>
-    <None Include="renderer\shaders\empty.frag">
-      <Filter>renderer\shaders</Filter>
-    </None>
     <None Include="renderer\postprocessing\tonemapping.frag">
       <Filter>renderer\postprocessing</Filter>
     </None>
@@ -1051,20 +1048,11 @@
     <None Include="renderer\postprocessing\drawdefault.frag">
       <Filter>renderer\postprocessing</Filter>
     </None>
-    <None Include="renderer\shaders\empty.vert">
-      <Filter>renderer\shaders</Filter>
-    </None>
     <None Include="renderer\postprocessing\bloomfilter.frag">
       <Filter>renderer\postprocessing</Filter>
     </None>
     <None Include="renderer\postprocessing\godray.frag">
       <Filter>renderer\postprocessing</Filter>
-    </None>
-    <None Include="renderer\shaders\gbuffer.vert">
-      <Filter>renderer\shaders</Filter>
-    </None>
-    <None Include="renderer\shaders\gbuffer.frag">
-      <Filter>renderer\shaders</Filter>
     </None>
     <None Include="renderer\postprocessing\ssao.frag">
       <Filter>renderer\postprocessing</Filter>
@@ -1117,65 +1105,8 @@
     <None Include="renderer\cubemapping\prefilterEnvmap.frag">
       <Filter>renderer\cubemapping</Filter>
     </None>
-    <None Include="renderer\texturing\brdfIntMap.frag">
-      <Filter>renderer\texturing</Filter>
-    </None>
-    <None Include="renderer\lighting\raymarch.frag">
-      <Filter>renderer\lighting</Filter>
-    </None>
-    <None Include="renderer\lighting\deferredlighting.vert">
-      <Filter>renderer\lighting</Filter>
-    </None>
-    <None Include="renderer\lighting\ibl.frag">
-      <Filter>renderer\lighting</Filter>
-    </None>
-    <None Include="renderer\voxelization\voxelize.vert">
-      <Filter>renderer\voxelization</Filter>
-    </None>
-    <None Include="renderer\voxelization\voxelize.geom">
-      <Filter>renderer\voxelization</Filter>
-    </None>
-    <None Include="renderer\voxelization\voxelize.frag">
-      <Filter>renderer\voxelization</Filter>
-    </None>
-    <None Include="renderer\voxelization\nodeAlloc.com.glsl">
-      <Filter>renderer\voxelization</Filter>
-    </None>
-    <None Include="renderer\voxelization\nodeFlag.com.glsl">
-      <Filter>renderer\voxelization</Filter>
-    </None>
-    <None Include="renderer\voxelization\nodeInit.com.glsl">
-      <Filter>renderer\voxelization</Filter>
-    </None>
-    <None Include="renderer\shadowmapping\shadowmapping.frag">
-      <Filter>renderer\shadowmapping</Filter>
-    </None>
-    <None Include="renderer\shadowmapping\shadowmapping.vert">
-      <Filter>renderer\shadowmapping</Filter>
-    </None>
-    <None Include="renderer\shadowmapping\shadowmapping.geom">
-      <Filter>renderer\shadowmapping</Filter>
-    </None>
-    <None Include="renderer\voxelization\leavesFill.com.glsl">
-      <Filter>renderer\voxelization</Filter>
-    </None>
-    <None Include="renderer\lighting\conetracer.frag">
-      <Filter>renderer\lighting</Filter>
-    </None>
     <None Include="renderer\postprocessing\ssrr2.frag">
       <Filter>renderer\postprocessing</Filter>
-    </None>
-    <None Include="renderer\voxelization\nodeMipmap.com.glsl">
-      <Filter>renderer\voxelization</Filter>
-    </None>
-    <None Include="renderer\voxelization\voxelizeTex.frag">
-      <Filter>renderer\voxelization</Filter>
-    </None>
-    <None Include="renderer\lighting\conetracerTex.frag">
-      <Filter>renderer\lighting</Filter>
-    </None>
-    <None Include="renderer\shaders\gbufferEmi.frag">
-      <Filter>renderer\shaders</Filter>
     </None>
     <None Include="renderer\postprocessing\motionblur.frag">
       <Filter>renderer\postprocessing</Filter>
@@ -1207,83 +1138,293 @@
     <None Include="renderer\postprocessing\brightnessfilter.frag">
       <Filter>renderer\postprocessing</Filter>
     </None>
-    <None Include="renderer\shaders\helperfunctions.glsl">
-      <Filter>renderer\shaders</Filter>
-    </None>
     <None Include="renderer\lights\lights.glsl">
       <Filter>renderer\lights</Filter>
-    </None>
-    <None Include="renderer\lighting\deferredlighting.frag">
-      <Filter>renderer\lighting</Filter>
-    </None>
-    <None Include="renderer\lighting\cooktorrance.glsl">
-      <Filter>renderer\lighting</Filter>
-    </None>
-    <None Include="renderer\shaders\sampling.glsl">
-      <Filter>renderer\shaders</Filter>
-    </None>
-    <None Include="renderer\shaders\material.glsl">
-      <Filter>renderer\shaders</Filter>
-    </None>
-    <None Include="renderer\shadowmapping\shadows.glsl">
-      <Filter>renderer\shadowmapping</Filter>
-    </None>
-    <None Include="renderer\shaders\samplingvector.glsl">
-      <Filter>renderer\shaders</Filter>
-    </None>
-    <None Include="renderer\shadowmapping\shadowsView.glsl">
-      <Filter>renderer\shadowmapping</Filter>
-    </None>
-    <None Include="renderer\shaders\materialproperties.glsl">
-      <Filter>renderer\shaders</Filter>
     </None>
     <None Include="renderer\postprocessing\gaussianblur5.frag">
       <Filter>renderer\postprocessing</Filter>
     </None>
-    <None Include="renderer\shadowmapping\varshadowmapping.frag">
-      <Filter>renderer\shadowmapping</Filter>
-    </None>
-    <None Include="renderer\shadowmapping\varshadowmapping.vert">
-      <Filter>renderer\shadowmapping</Filter>
-    </None>
-    <None Include="renderer\shaders\computetest.com.glsl">
-      <Filter>renderer\shaders</Filter>
-    </None>
-    <None Include="renderer\shaders\computeshared.com.glsl">
-      <Filter>renderer\shaders</Filter>
-    </None>
-    <None Include="renderer\lighting\cooktorrancelights.glsl">
-      <Filter>renderer\lighting</Filter>
-    </None>
-    <None Include="renderer\lighting\tileddeferred.com.glsl">
-      <Filter>renderer\lighting</Filter>
-    </None>
-    <None Include="renderer\shaders\forwardlighting.vert">
-      <Filter>renderer\shaders</Filter>
-    </None>
-    <None Include="renderer\shaders\forwardlighting.frag">
-      <Filter>renderer\shaders</Filter>
-    </None>
     <None Include="renderer\framebuffer\tcomp.frag">
       <Filter>renderer\framebuffer</Filter>
-    </None>
-    <None Include="renderer\shaders\transparentlighting.frag">
-      <Filter>renderer\shaders</Filter>
     </None>
     <None Include="renderer\postprocessing\gaussianseparated.frag">
       <Filter>renderer\postprocessing</Filter>
     </None>
-    <None Include="renderer\shaders\gbufferAnim.vert">
-      <Filter>renderer\shaders</Filter>
+    <None Include="shaders\combine.frag">
+      <Filter>shaders</Filter>
     </None>
-    <None Include="renderer\shaders\lightingAnim.vert">
-      <Filter>renderer\shaders</Filter>
+    <None Include="shaders\computeshared.com.glsl">
+      <Filter>shaders</Filter>
     </None>
-    <None Include="renderer\shadowmapping\shadowmappingAnim.vert">
-      <Filter>renderer\shadowmapping</Filter>
+    <None Include="shaders\computetest.com.glsl">
+      <Filter>shaders</Filter>
     </None>
-    <None Include="renderer\shaders\emptyAnim.vert">
-      <Filter>renderer\shaders</Filter>
+    <None Include="shaders\empty.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\empty.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\emptyAnim.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\gbuffer.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\gbuffer.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\gbufferAnim.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\gbufferEmi.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\helperfunctions.glsl">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\material.glsl">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\materialproperties.glsl">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\sampling.glsl">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\samplingvector.glsl">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\screen.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\screen.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\tcomp.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\lighting\conetracer.frag">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\conetracerTex.frag">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\cooktorrance.glsl">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\cooktorrancelights.glsl">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\deferredlighting.frag">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\deferredlighting.vert">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\forwardAnim.vert">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\forwardlighting.frag">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\forwardlighting.vert">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\ibl.frag">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\lighting.frag">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\lighting.vert">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\lightingAnim.vert">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\lights.glsl">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\raymarch.frag">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\tileddeferred.com.glsl">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\transparentlighting.frag">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\shadowmapping\shadowmapping.frag">
+      <Filter>shaders\shadowmapping</Filter>
+    </None>
+    <None Include="shaders\shadowmapping\shadowmapping.geom">
+      <Filter>shaders\shadowmapping</Filter>
+    </None>
+    <None Include="shaders\shadowmapping\shadowmapping.vert">
+      <Filter>shaders\shadowmapping</Filter>
+    </None>
+    <None Include="shaders\shadowmapping\shadowmappingAnim.vert">
+      <Filter>shaders\shadowmapping</Filter>
+    </None>
+    <None Include="shaders\shadowmapping\shadows.glsl">
+      <Filter>shaders\shadowmapping</Filter>
+    </None>
+    <None Include="shaders\shadowmapping\shadowsView.glsl">
+      <Filter>shaders\shadowmapping</Filter>
+    </None>
+    <None Include="shaders\shadowmapping\varshadowmapping.frag">
+      <Filter>shaders\shadowmapping</Filter>
+    </None>
+    <None Include="shaders\shadowmapping\varshadowmapping.vert">
+      <Filter>shaders\shadowmapping</Filter>
+    </None>
+    <None Include="shaders\voxelization\leavesFill.com.glsl">
+      <Filter>shaders\voxelization</Filter>
+    </None>
+    <None Include="shaders\voxelization\nodeAlloc.com.glsl">
+      <Filter>shaders\voxelization</Filter>
+    </None>
+    <None Include="shaders\voxelization\nodeFlag.com.glsl">
+      <Filter>shaders\voxelization</Filter>
+    </None>
+    <None Include="shaders\voxelization\nodeInit.com.glsl">
+      <Filter>shaders\voxelization</Filter>
+    </None>
+    <None Include="shaders\voxelization\nodeMipmap.com.glsl">
+      <Filter>shaders\voxelization</Filter>
+    </None>
+    <None Include="shaders\voxelization\voxelize.frag">
+      <Filter>shaders\voxelization</Filter>
+    </None>
+    <None Include="shaders\voxelization\voxelize.geom">
+      <Filter>shaders\voxelization</Filter>
+    </None>
+    <None Include="shaders\voxelization\voxelize.vert">
+      <Filter>shaders\voxelization</Filter>
+    </None>
+    <None Include="shaders\voxelization\voxelizeTex.frag">
+      <Filter>shaders\voxelization</Filter>
+    </None>
+    <None Include="shaders\postprocessing\bilateral.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\bilateraldepth.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\bloomfilter.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\brightnessfilter.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\colorcorrection.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\combine.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\dof.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\dofblur.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\drawdefault.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\fxaa.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\gammacorrection.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\gaussianblur1.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\gaussianblur2.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\gaussianblur3.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\gaussianblur4.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\gaussianblur5.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\gaussianseparated.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\godray.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\kernelprocessing.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\lensflare.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\motionblur.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\motionblur2.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\passthrough.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\simpleblur.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\simpleblur3d.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\sobel.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\sobelblur.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\ssao.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\ssrr.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\ssrr2.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\tonemapping.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\velocity.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\postprocessing\volumetriclight.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\cubemapping\brdfIntMap.frag">
+      <Filter>shaders\cubemapping</Filter>
+    </None>
+    <None Include="shaders\cubemapping\envconvert.frag">
+      <Filter>shaders\cubemapping</Filter>
+    </None>
+    <None Include="shaders\cubemapping\envconvert.vert">
+      <Filter>shaders\cubemapping</Filter>
+    </None>
+    <None Include="shaders\cubemapping\irrmap.frag">
+      <Filter>shaders\cubemapping</Filter>
+    </None>
+    <None Include="shaders\cubemapping\prefilterEnvmap.frag">
+      <Filter>shaders\cubemapping</Filter>
+    </None>
+    <None Include="shaders\cubemapping\skybox.frag">
+      <Filter>shaders\cubemapping</Filter>
+    </None>
+    <None Include="shaders\cubemapping\skybox.vert">
+      <Filter>shaders\cubemapping</Filter>
     </None>
   </ItemGroup>
 </Project>

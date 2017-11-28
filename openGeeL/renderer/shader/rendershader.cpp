@@ -74,7 +74,7 @@ namespace geeL {
 		glGetProgramiv(program, GL_LINK_STATUS, &success);
 		if (!success) {
 			glGetProgramInfoLog(program, 512, NULL, infoLog);
-			cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << endl;
+			cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << fragmentPath << "\n" << infoLog << endl;
 		}
 
 		glDeleteShader(vertexShader);
@@ -108,7 +108,7 @@ namespace geeL {
 		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
 		if (!success) {
 			glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-			cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << endl;
+			cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << fragmentPath << "\n" << infoLog << endl;
 		}
 
 		//Fragment shader
@@ -121,7 +121,7 @@ namespace geeL {
 		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
 		if (!success) {
 			glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-			cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << endl;
+			cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << fragmentPath << "\n" << infoLog << endl;
 		}
 
 		//Geometry shader
@@ -134,7 +134,7 @@ namespace geeL {
 		glGetShaderiv(geometryShader, GL_COMPILE_STATUS, &success);
 		if (!success) {
 			glGetShaderInfoLog(geometryShader, 512, NULL, infoLog);
-			cout << "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n" << infoLog << endl;
+			cout << "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n" << fragmentPath << "\n" << infoLog << endl;
 		}
 
 		//Put progam together
@@ -147,7 +147,7 @@ namespace geeL {
 		glGetProgramiv(program, GL_LINK_STATUS, &success);
 		if (!success) {
 			glGetProgramInfoLog(program, 512, NULL, infoLog);
-			cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << endl;
+			cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << fragmentPath << "\n" << infoLog << endl;
 		}
 
 		glDeleteShader(vertexShader);

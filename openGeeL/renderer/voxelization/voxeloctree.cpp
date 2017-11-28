@@ -11,11 +11,11 @@ namespace geeL {
 	VoxelOctree::VoxelOctree(Voxelizer& voxelizer, unsigned int treeLevels) 
 		: voxelizer(voxelizer), nodeCounter(0) {
 	
-		flagShader = new ComputeShader("renderer/voxelization/nodeFlag.com.glsl");
-		allocShader = new ComputeShader("renderer/voxelization/nodeAlloc.com.glsl");
-		initShader = new ComputeShader("renderer/voxelization/nodeInit.com.glsl");
-		fillLeavesShader = new ComputeShader("renderer/voxelization/leavesFill.com.glsl");
-		mipmapShader = new ComputeShader("renderer/voxelization/nodeMipmap.com.glsl");
+		flagShader = new ComputeShader("shaders/voxelization/nodeFlag.com.glsl");
+		allocShader = new ComputeShader("shaders/voxelization/nodeAlloc.com.glsl");
+		initShader = new ComputeShader("shaders/voxelization/nodeInit.com.glsl");
+		fillLeavesShader = new ComputeShader("shaders/voxelization/leavesFill.com.glsl");
+		mipmapShader = new ComputeShader("shaders/voxelization/nodeMipmap.com.glsl");
 
 		//Clamp tree levels
 		unsigned int levelMax = log(voxelizer.getDimensions()) / log(2) - 1;

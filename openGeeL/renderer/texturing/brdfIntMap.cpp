@@ -10,7 +10,7 @@
 namespace geeL {
 
 	BRDFIntegrationMap::BRDFIntegrationMap() : Texture2D(ColorType::None, Resolution(512)) {
-		RenderShader* shader = new RenderShader("renderer/shaders/screen.vert", "renderer/texturing/brdfIntMap.frag");
+		RenderShader* shader = new RenderShader("shaders/screen.vert", "shaders/cubemapping/brdfIntMap.frag");
 
 		unsigned int resolution = 512;
 		unsigned int fbo, rbo;

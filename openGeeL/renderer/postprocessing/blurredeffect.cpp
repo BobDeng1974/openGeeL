@@ -13,7 +13,7 @@ namespace geeL {
 		PostProcessingEffectFS& blur, 
 		ResolutionPreset effectResolution, 
 		ResolutionPreset blurResolution)
-			: PostProcessingEffectFS("renderer/postprocessing/combine.frag")
+			: PostProcessingEffectFS("shaders/postprocessing/combine.frag")
 			, effect(effect)
 			, blur(blur)
 			, effectResolution(effectResolution)

@@ -17,7 +17,7 @@ using namespace std;
 namespace geeL {
 
 	SSAO::SSAO(PostProcessingEffectFS& blur, float radius, const ResolutionPreset& resolution)
-		: PostProcessingEffectFS("renderer/postprocessing/ssao.frag")
+		: PostProcessingEffectFS("shaders/postprocessing/ssao.frag")
 		, blur(blur)
 		, radius(radius)
 		, scale(resolution) {
@@ -83,7 +83,7 @@ namespace geeL {
 			if(blurTexture == nullptr)
 				blurTexture = new RenderTexture(resolution, ColorType::Single, WrapMode::Repeat, FilterMode::None);
 			if (blendEffect == nullptr) {
-				blendEffect = new PostProcessingEffectFS("renderer/shaders/screen.frag");
+				blendEffect = new PostProcessingEffectFS("shaders/screen.frag");
 				blendEffect->init(PostProcessingParameter(ScreenQuad::get(), *parentBuffer, resolution));
 			}
 			

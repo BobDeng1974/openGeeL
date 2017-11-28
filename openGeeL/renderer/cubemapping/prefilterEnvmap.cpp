@@ -19,8 +19,8 @@ namespace geeL {
 			: DynamicCubeMap(new RenderTextureCube(resolution, WrapMode::ClampEdge, FilterMode::Trilinear))
 			, environmentMap(environmentMap)
 			, frameBuffer(frameBuffer)
-			, conversionShader(new RenderShader("renderer/cubemapping/envconvert.vert",
-				"renderer/cubemapping/prefilterEnvmap.frag")) {
+			, conversionShader(new RenderShader("shaders/cubemapping/envconvert.vert",
+				"shaders/cubemapping/prefilterEnvmap.frag")) {
 
 		texture->mipmap();
 

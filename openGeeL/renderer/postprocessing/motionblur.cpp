@@ -10,7 +10,7 @@
 namespace geeL {
 
 	MotionBlur::MotionBlur(float strength, unsigned int LOD)
-		: PostProcessingEffectFS("renderer/postprocessing/motionblur.frag")
+		: PostProcessingEffectFS("shaders/postprocessing/motionblur.frag")
 		, strength(strength)
 		, LOD(LOD) {}
 
@@ -79,7 +79,7 @@ namespace geeL {
 
 
 	MotionBlurPerPixel::MotionBlurPerPixel(VelocityBuffer& velocity, float strength, unsigned int LOD)
-		: MotionBlur("renderer/postprocessing/motionblur2.frag", strength, LOD)
+		: MotionBlur("shaders/postprocessing/motionblur2.frag", strength, LOD)
 		, velocity(velocity) {}
 
 	MotionBlurPerPixel::~MotionBlurPerPixel() {
@@ -115,7 +115,7 @@ namespace geeL {
 
 
 	VelocityBuffer::VelocityBuffer() 
-		: PostProcessingEffectFS("renderer/postprocessing/velocity.frag") {}
+		: PostProcessingEffectFS("shaders/postprocessing/velocity.frag") {}
 
 	VelocityBuffer::~VelocityBuffer() {
 		if (positionTexture != nullptr) delete positionTexture;

@@ -13,8 +13,8 @@ namespace geeL {
 
 	ImageBasedLighting::ImageBasedLighting(RenderScene& scene)
 		: SceneRender(scene)
-		, AdditiveEffect("renderer/lighting/deferredlighting.vert",
-			"renderer/lighting/ibl.frag") {}
+		, AdditiveEffect("shaders/lighting/deferredlighting.vert",
+			"shaders/lighting/ibl.frag") {}
 
 
 	void ImageBasedLighting::init(const PostProcessingParameter& parameter) {

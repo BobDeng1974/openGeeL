@@ -15,7 +15,7 @@ namespace geeL {
 		float scale, 
 		float samples, 
 		const ResolutionPreset& resolution)
-			: PostProcessingEffectFS("renderer/postprocessing/lensflare.frag")
+			: PostProcessingEffectFS("shaders/postprocessing/lensflare.frag")
 			, filter(filter)
 			, filterResolution(resolution)
 			, strength(1.f)

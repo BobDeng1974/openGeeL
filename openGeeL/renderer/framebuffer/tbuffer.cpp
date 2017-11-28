@@ -10,7 +10,7 @@ namespace geeL {
 
 
 	TransparentOIDBuffer::TransparentOIDBuffer(GBuffer& gBuffer, DynamicBuffer& compBuffer) : gBuffer(gBuffer), 
-		compBuffer(compBuffer), compositionTexture(nullptr), tComp("renderer/framebuffer/tcomp.frag") {
+		compBuffer(compBuffer), compositionTexture(nullptr), tComp("shaders/tcomp.frag") {
 		
 		this->resolution = gBuffer.getResolution();
 

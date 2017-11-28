@@ -14,11 +14,11 @@ using namespace std;
 namespace geeL {
 
 	MaterialFactory::MaterialFactory(const GBuffer& buffer, ShaderProvider* const provider) 
-		: deferredShader(new SceneShader("renderer/shaders/gbuffer.vert", 
+		: deferredShader(new SceneShader("shaders/gbuffer.vert", 
 			FragmentShader(buffer.getFragmentPath(), false), 
 			ShaderTransformSpace::View, 
 			ShadingMethod::Deferred))
-		, deferredAnimatedShader(new SceneShader("renderer/shaders/gbufferAnim.vert", 
+		, deferredAnimatedShader(new SceneShader("shaders/gbufferAnim.vert", 
 			FragmentShader(buffer.getFragmentPath(), false),
 			ShaderTransformSpace::View, 
 			ShadingMethod::Deferred, true))
@@ -116,8 +116,8 @@ namespace geeL {
 		switch (shading) {
 			case ShadingMethod::Generic:
 				vertexPath = animated 
-					? "renderer/shaders/lightingAnim.vert" 
-					: "renderer/shaders/lighting.vert";
+					? "shaders/lighting/lightingAnim.vert" 
+					: "shaders/lighting/lighting.vert";
 
 				space = ShaderTransformSpace::World;
 				break;
@@ -125,8 +125,8 @@ namespace geeL {
 			case ShadingMethod::TransparentOD:
 			case ShadingMethod::TransparentOID:
 				vertexPath = animated 
-					? "renderer/shaders/forwardAnim.vert" 
-					: "renderer/shaders/forwardlighting.vert";
+					? "shaders/lighting/forwardAnim.vert" 
+					: "shaders/lighting/forwardlighting.vert";
 
 				space = ShaderTransformSpace::View;
 				break;
@@ -145,23 +145,22 @@ namespace geeL {
 			case ShadingMethod::Generic:
 				if (animated) {
 					if (genericAnimatedShader == nullptr) {
-						genericAnimatedShader = new SceneShader("renderer/shaders/lightingAnim.vert",
-							FragmentShader("renderer/shaders/lighting.frag"),
+						genericAnimatedShader = new SceneShader("shaders/lighting/lightingAnim.vert",
+							FragmentShader("shaders/lighting/lighting.frag"),
 							ShaderTransformSpace::World,
 							ShadingMethod::Generic,
 							true);
 
 						genericAnimatedShader->mapOffset = 1;
 						shaders.push_back(genericAnimatedShader);
-
 					}
 
 					return *genericAnimatedShader;
 				}
 				else {
 					if (genericShader == nullptr) {
-						genericShader = new SceneShader("renderer/shaders/lighting.vert",
-							FragmentShader("renderer/shaders/lighting.frag"),
+						genericShader = new SceneShader("shaders/lighting/lighting.vert",
+							FragmentShader("shaders/lighting/lighting.frag"),
 							ShaderTransformSpace::World,
 							ShadingMethod::Generic, 
 							false);
@@ -177,8 +176,8 @@ namespace geeL {
 			case ShadingMethod::Forward:
 				if (animated) {
 					if (forwardAnimatedShader == nullptr) {
-						forwardAnimatedShader = new SceneShader("renderer/shaders/forwardAnim.vert",
-							FragmentShader("renderer/shaders/forwardlighting.frag"),
+						forwardAnimatedShader = new SceneShader("shaders/lighting/forwardAnim.vert",
+							FragmentShader("shaders/lighting/forwardlighting.frag"),
 							ShaderTransformSpace::View,
 							ShadingMethod::Forward,
 							true);
@@ -191,8 +190,8 @@ namespace geeL {
 				}
 				else{
 					if (forwardShader == nullptr) {
-						forwardShader = new SceneShader("renderer/shaders/forwardlighting.vert",
-							FragmentShader("renderer/shaders/forwardlighting.frag"),
+						forwardShader = new SceneShader("shaders/lighting/forwardlighting.vert",
+							FragmentShader("shaders/lighting/forwardlighting.frag"),
 							ShaderTransformSpace::View,
 							ShadingMethod::Forward, 
 							false);
@@ -206,8 +205,8 @@ namespace geeL {
 			case ShadingMethod::TransparentOD:
 				if (animated) {
 					if (transparentODAnimatedShader == nullptr) {
-						transparentODAnimatedShader = new SceneShader("renderer/shaders/forwardAnim.vert",
-							FragmentShader("renderer/shaders/forwardlighting.frag"),
+						transparentODAnimatedShader = new SceneShader("shaders/lighting/forwardAnim.vert",
+							FragmentShader("shaders/lighting/forwardlighting.frag"),
 							ShaderTransformSpace::View,
 							ShadingMethod::TransparentOD,
 							true);
@@ -220,8 +219,8 @@ namespace geeL {
 				}
 				else {
 					if (transparentODShader == nullptr) {
-						transparentODShader = new SceneShader("renderer/shaders/forwardlighting.vert",
-							FragmentShader("renderer/shaders/forwardlighting.frag"),
+						transparentODShader = new SceneShader("shaders/lighting/forwardlighting.vert",
+							FragmentShader("shaders/lighting/forwardlighting.frag"),
 							ShaderTransformSpace::View,
 							ShadingMethod::TransparentOD,
 							false);
@@ -234,8 +233,8 @@ namespace geeL {
 				}
 			case ShadingMethod::TransparentOID:
 				if (transparentOIDShader == nullptr) {
-					transparentOIDShader = new SceneShader("renderer/shaders/forwardlighting.vert",
-						FragmentShader("renderer/shaders/transparentlighting.frag"),
+					transparentOIDShader = new SceneShader("shaders/lighting/forwardlighting.vert",
+						FragmentShader("shaders/lighting/transparentlighting.frag"),
 						ShaderTransformSpace::View,
 						ShadingMethod::TransparentOID, 
 						false);

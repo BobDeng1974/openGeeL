@@ -12,7 +12,7 @@
 namespace geeL {
 
 	Skybox::Skybox(const CubeMap& cubeMap) : cubeMap(cubeMap),
-		shader(RenderShader("renderer/cubemapping/skybox.vert", "renderer/cubemapping/skybox.frag")) {}
+		shader(RenderShader("shaders/cubemapping/skybox.vert", "shaders/cubemapping/skybox.frag")) {}
 
 
 	void Skybox::draw(const Camera& camera) const {

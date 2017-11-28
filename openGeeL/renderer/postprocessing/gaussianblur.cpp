@@ -18,7 +18,7 @@ using namespace std;
 namespace geeL {
 
 	GaussianBlurBase::GaussianBlurBase(float sigma)
-		: GaussianBlurBase("renderer/postprocessing/gaussianblur1.frag", sigma) {}
+		: GaussianBlurBase("shaders/postprocessing/gaussianblur1.frag", sigma) {}
 
 	GaussianBlurBase::GaussianBlurBase(string shaderPath, float sigma)
 		: PostProcessingEffectFS(shaderPath)
@@ -108,7 +108,7 @@ namespace geeL {
 
 
 	GaussianBlur::GaussianBlur(KernelSize kernelSize, float sigma)
-		: GaussianBlurBase("renderer/postprocessing/gaussianblur" 
+		: GaussianBlurBase("shaders/postprocessing/gaussianblur" 
 			+ std::to_string((int)kernelSize) + ".frag", sigma) {
 		
 		int size;
@@ -135,7 +135,7 @@ namespace geeL {
 
 
 	SeparatedGaussian::SeparatedGaussian(float sigma) 
-		: GaussianBlurBase("renderer/postprocessing/gaussianseparated.frag", sigma) {
+		: GaussianBlurBase("shaders/postprocessing/gaussianseparated.frag", sigma) {
 
 		setKernelsize(7);
 		setSigma(sigma);
@@ -193,7 +193,7 @@ namespace geeL {
 
 
 	BilateralFilter::BilateralFilter(float sigma, float factor)
-		: GaussianBlurBase("renderer/postprocessing/bilateral.frag", sigma)
+		: GaussianBlurBase("shaders/postprocessing/bilateral.frag", sigma)
 		, sigma2(factor) {
 	
 		setKernelsize(7);
@@ -226,12 +226,12 @@ namespace geeL {
 
 
 	BilateralDepthFilter::BilateralDepthFilter(float sigma, float factor)
-		: BilateralFilter("renderer/postprocessing/bilateraldepth.frag", sigma, factor) {}
+		: BilateralFilter("shaders/postprocessing/bilateraldepth.frag", sigma, factor) {}
 
 
 
 	SobelBlur::SobelBlur(SobelFilter& sobel, float sigma, bool depth)
-		: GaussianBlurBase("renderer/postprocessing/sobelblur.frag", sigma)
+		: GaussianBlurBase("shaders/postprocessing/sobelblur.frag", sigma)
 		, sobel(sobel)
 		, depth(depth) {
 	

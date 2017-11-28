@@ -1,6 +1,6 @@
 
 
-#include <renderer/lighting/cooktorrance.glsl>
+#include <shaders/lighting/cooktorrance.glsl>
 //Note: preferred shadowing shader should be included beforehand (e.g. shadows in view or world space)
 
 vec3 subsurfaceScatteringBack(vec3 fragPosition, vec3 normal, vec3 viewDirection, vec4 albedo, vec3 lightPosition, 
