@@ -317,6 +317,7 @@
     <ClInclude Include="main\characterviewer.h" />
     <ClInclude Include="main\deerscene.h" />
     <ClInclude Include="main\giscene.h" />
+    <ClInclude Include="main\modelviewer.h" />
     <ClInclude Include="main\raymarchscene.h" />
     <ClInclude Include="main\sciencescene.h" />
     <ClInclude Include="main\sponzascene.h" />

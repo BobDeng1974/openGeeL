@@ -10,7 +10,7 @@
 namespace geeL {
 
 	class Component;
-	class InputManager;
+	class Input;
 	class Transform;
 
 	class SceneObject {

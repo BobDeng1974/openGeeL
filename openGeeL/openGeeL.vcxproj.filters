@@ -1010,6 +1010,9 @@
     <ClInclude Include="renderer\shaders\forwardAnim.vert">
       <Filter>renderer\shaders</Filter>
     </ClInclude>
+    <ClInclude Include="main\modelviewer.h">
+      <Filter>main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\lighting.vert">

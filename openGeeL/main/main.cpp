@@ -6,6 +6,7 @@
 #include "characterviewer.h"
 #include "deerscene.h"
 #include "giscene.h"
+#include "modelviewer.h"
 #include "raymarchscene.h"
 #include "sciencescene.h"
 #include "sponzascene.h"
@@ -39,7 +40,8 @@ int main(int argc, char* argv[]) {
 	//SponzaScene::draw();
 	//SponzaGIScene::draw();
 	//ScienceScene::draw();
-	CharacterViewer::draw();
+	//CharacterViewer::draw();
+	ModelViewer::draw();
 	//CapsuleScene::draw();
 
 	//TestScene::draw();

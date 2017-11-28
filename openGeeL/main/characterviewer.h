@@ -103,9 +103,9 @@ public:
 				else if (container.name == "hair_outer")
 					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/hair_outer_alpha_01.jpg"));
 				else if (container.name == "cloth") {
-					container.addTexture("emission", materialFactory.CreateTexture("resources/girl/cloth_spec_01.jpg", ColorType::GammaSpace));
+					container.addTexture("emission", materialFactory.CreateTexture("resources/girl/cloth_glow_01.jpg", ColorType::GammaSpace));
 					container.addTexture("occlusion", materialFactory.CreateTexture("resources/girl/cloth_ao_01.jpg", ColorType::GammaSpace));
-					container.setVectorValue("Emissivity", vec3(50.f));
+					container.setVectorValue("Emissivity", vec3(20.f));
 					container.setFloatValue("Roughness", 0.5f);
 					container.setFloatValue("Metallic", 1.f);
 				}
@@ -113,7 +113,9 @@ public:
 					container.setVectorValue("Emissivity", vec3(100.f));
 				else if (container.name == "body") {
 					container.addTexture("occlusion", materialFactory.CreateTexture("resources/girl/body_ao_01.jpg", ColorType::GammaSpace));
-					container.setFloatValue("Roughness", 0.52f);
+					container.setFloatValue("Roughness", 0.5f);
+
+					container.setIntValue("InverseRoughness", true);
 				}
 			});
 

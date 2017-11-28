@@ -23,7 +23,7 @@ public:
 			camera.addComponent<MovableCamera>(MovableCamera(5.f, 0.45f));
 			scene.setCamera(camera);
 
-			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/Arches_E_PineTree_3k.hdr");
+			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/MonValley_G_DirtRoad_3k.hdr");
 			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeMapFactory.getBuffer(), 1024);
 			IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
@@ -70,7 +70,7 @@ public:
 					container.addTexture("emission", materialFactory.CreateTexture("resources/drone/Drone_emissive.jpg"));
 					container.addTexture("occlusion", materialFactory.CreateTexture("resources/drone/Drone_ao.jpg"));
 
-					container.setFloatValue("Roughness", 0.9f);
+					container.setFloatValue("Roughness", 0.6f);
 					container.setFloatValue("Metallic", 0.8f);
 				}
 			});
