@@ -75,9 +75,9 @@ public:
 
 			ObjectLister& objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
 			objectLister.add(camera);
-			//gui.addElement(objectLister);
+			gui.addElement(objectLister);
 			PostProcessingEffectLister& postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
-			//gui.addElement(postLister);
+			gui.addElement(postLister);
 			gui.addSystemInformation(0.01f, 0.74f, 0.17f, 0.145f);
 
 			def.setExposure(2.5f);
