@@ -12,8 +12,8 @@
 #include "utility/viewport.h"
 #include "transformation/transform.h"
 #include "framebuffer/framebuffer.h"
+#include "renderscene.h"
 #include "cascadedmap.h"
-#include <iostream>
 
 namespace geeL {
 
@@ -77,8 +77,8 @@ namespace geeL {
 	}
 
 
-	void CascadedDirectionalShadowMap::draw(const SceneCamera* const camera,
-		std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository) {
+	void CascadedDirectionalShadowMap::draw(const SceneCamera* const camera, const RenderScene& scene,
+		ShadowmapRepository& repository) {
 
 		//TODO: Develop backup strategy for when scene camera is not available
 		if(camera != nullptr)
@@ -97,7 +97,7 @@ namespace geeL {
 
 			Viewport::set(x * hWidth, y * hHeight, hWidth, hHeight);
 			shader.bind<glm::mat4>("lightTransform", shadowMaps[i].lightTransform);
-			renderCall(shader);
+			scene.drawStaticObjects(shader); //Note: currently only static objects
 		}
 
 		FrameBuffer::unbind();

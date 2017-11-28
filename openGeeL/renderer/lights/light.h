@@ -53,12 +53,12 @@ namespace geeL {
 		//Remove shadow map from given shader
 		void removeShadowmap(Shader& shader);
 
-		void renderShadowmap(const SceneCamera* const camera, 
-			std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository);
+		template<typename ...ShadowArgs>
+		void renderShadowmap(ShadowArgs&& ...args);
 
 		//Draw shadow map no matter the lights properties. E.g. if it is static or not
-		void renderShadowmapForced(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository);
+		template<typename ...ShadowArgs>
+		void renderShadowmapForced(ShadowArgs&& ...args);
 
 		//Computes experienced attenuation at given point. Ranges between 0 and 1
 		virtual float getAttenuation(glm::vec3 point) const;
@@ -100,6 +100,22 @@ namespace geeL {
 		void setDiffuseOnly(vec3 diffuse);
 
 	};
+
+
+	template<typename ...ShadowArgs>
+	inline void Light::renderShadowmap(ShadowArgs&& ...args) {
+
+		if (shadowMap != nullptr && !transform.isStatic)
+			shadowMap->draw(std::forward<ShadowArgs>(args)...);
+	}
+
+	template<typename ...ShadowArgs>
+	inline void Light::renderShadowmapForced(ShadowArgs&& ...args) {
+
+		if (shadowMap != nullptr)
+			shadowMap->draw(std::forward<ShadowArgs>(args)...);
+	}
+
 }
 
 #endif

@@ -8,6 +8,9 @@
 
 namespace geeL {
 
+	class RenderScene;
+
+
 	class ShadowMap : public Texture {
 
 	public:
@@ -17,11 +20,10 @@ namespace geeL {
 		virtual void bindData(const Shader& shader, const std::string& name) = 0;
 		virtual void removeMap(Shader& shader) = 0;
 
-		//Render function for shadow maps. Takes current scene camera, render function
-		//that  draws desired objects of scene and the actual shadow map shader.
+		//Render function for shadow maps. Takes current scene, a camera and the actual shadow map shader.
 		//Note: Scene camera can be NULL so a fallback strategy needs to be implemented
-		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository) = 0;
+		virtual void draw(const SceneCamera* const camera, const RenderScene& scene, 
+			ShadowmapRepository& repository) = 0;
 
 		virtual TextureType getTextureType() const = 0;
 

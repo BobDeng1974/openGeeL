@@ -23,13 +23,9 @@ namespace geeL {
 	public:
 		SimpleShadowMap(const Light& light, const ShadowMapConfiguration& config);
 
-		virtual void bindData(const Shader& shader, const std::string& name) = 0;
+		virtual void bindData(const Shader& shader, const std::string& name);
 		virtual void removeMap(Shader& shader);
 
-		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository) = 0;
-
-		virtual TextureType getTextureType() const = 0;
 
 		void setResolution(ShadowmapResolution resolution);
 
@@ -51,6 +47,7 @@ namespace geeL {
 		SimpleShadowMap(const SimpleShadowMap& other) = delete;
 		SimpleShadowMap& operator= (const SimpleShadowMap& other) = delete;
 
+
 		virtual void init();
 
 		//Dynamically change shadow map resolution
@@ -68,6 +65,7 @@ namespace geeL {
 	};
 
 
+
 	class SimpleSpotLightMap : public SimpleShadowMap {
 
 	public:
@@ -75,10 +73,10 @@ namespace geeL {
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 
-		virtual void draw(const SceneCamera* const camera, std::function<void(const RenderShader&)> renderCall, 
+		virtual void draw(const SceneCamera* const camera, const RenderScene& scene,
 			ShadowmapRepository& repository);
 
-		void draw(const SceneCamera* const camera, std::function<void(const RenderShader&)> renderCall,
+		void draw(const SceneCamera* const camera, const RenderScene& scene,
 			const RenderShader& shader);
 
 		virtual TextureType getTextureType() const;
@@ -103,8 +101,8 @@ namespace geeL {
 		
 		virtual void bindData(const Shader& shader, const std::string& name);
 
-		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository);
+		virtual void draw(const SceneCamera* const camera, const RenderScene& scene,
+			ShadowmapRepository& repository);
 
 		virtual TextureType getTextureType() const;
 
@@ -116,7 +114,6 @@ namespace geeL {
 		const PointLight& pointLight;
 		std::vector<glm::mat4> lightTransforms;
 
-		
 		void computeLightTransform();
 		virtual bool adaptShadowmapResolution(float distance);
 		
@@ -131,8 +128,8 @@ namespace geeL {
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 
-		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository);
+		virtual void draw(const SceneCamera* const camera, const RenderScene& scene,
+			ShadowmapRepository& repository);
 
 		virtual TextureType getTextureType() const;
 

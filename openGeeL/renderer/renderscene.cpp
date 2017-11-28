@@ -187,6 +187,35 @@ namespace geeL {
 		return false;
 	}
 
+	bool Scene::containsStaticObjects() const {
+		bool value = false;
+		iterShaders([&value](const SceneShader& shader) -> bool {
+			if (!shader.isAnimated()) {
+				value = true;
+				return true;
+			}
+
+			return false;
+		});
+
+		return value;
+	}
+
+	bool Scene::containsSkinnedObjects() const {
+		bool value = false;
+		iterShaders([&value](const SceneShader& shader) -> bool {
+
+			if (shader.isAnimated()) {
+				value = true;
+				return true;
+			}
+
+			return false;
+		});
+
+		return value;
+	}
+
 
 
 
@@ -499,6 +528,18 @@ namespace geeL {
 			for (auto itShader(shaders.begin()); itShader != shaders.end(); itShader++) {
 				SceneShader& shader = *itShader->first;
 				function(shader);
+			}
+		}
+	}
+
+	void Scene::iterShaders(std::function<bool(const SceneShader&)> function) const {
+		for (auto itMethod(renderObjects.begin()); itMethod != renderObjects.end(); itMethod++) {
+			const ShaderMapping& shaders = itMethod->second;
+
+			for (auto itShader(shaders.begin()); itShader != shaders.end(); itShader++) {
+				const SceneShader& shader = *itShader->first;
+				
+				if (function(shader)) return;
 			}
 		}
 	}

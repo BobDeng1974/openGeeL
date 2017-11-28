@@ -15,6 +15,7 @@
 #include "cubemapping/reflectionprobe.h"
 #include "cubemapping/iblmap.h"
 #include "framebuffer/cubebuffer.h"
+#include "utility/glguards.h"
 #include "voxelization/voxelstructure.h"
 #include "renderscene.h"
 #include "light.h"
@@ -149,34 +150,26 @@ namespace geeL {
 
 
 	void LightManager::drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera) {
-		glCullFace(GL_BACK);
+		CullingGuard guard(CullingMode::cullBack);
 
 		iterLights([this, &scene, &camera](const LightBinding& binding) {
 			Light& light = *binding.light;
 
 			if (light.isActive())
-				light.renderShadowmap(camera,
-					[&](const RenderShader& shader) { scene.drawStaticObjects(shader); }, shaderRepository);
-
+				light.renderShadowmap(camera, scene, shaderRepository);
 		});
-
-		glCullFace(GL_FRONT);
 	}
 
 	
 	void LightManager::drawShadowmapsForced(const RenderScene& scene, const SceneCamera* const camera) {
-		glCullFace(GL_BACK);
+		CullingGuard guard(CullingMode::cullBack);
 
 		iterLights([this, &scene, &camera](const LightBinding& binding) {
 			Light& light = *binding.light;
 
 			if (light.isActive())
-				light.renderShadowmapForced(camera,
-					[&](const RenderShader& shader) { scene.drawStaticObjects(shader); }, shaderRepository);
-
+				light.renderShadowmapForced(camera, scene, shaderRepository);
 		});
-
-		glCullFace(GL_FRONT);
 	}
 
 

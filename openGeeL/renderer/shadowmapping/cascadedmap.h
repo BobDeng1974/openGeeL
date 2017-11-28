@@ -23,14 +23,6 @@ namespace geeL {
 		CascadedShadowMap(const Light& light, float shadowBias, unsigned int width, unsigned int height)
 			: ShadowMap(light), shadowBias(shadowBias), width(width), height(height) {}
 
-		virtual void bindData(const Shader& shader, const std::string& name) = 0;
-		virtual void removeMap(Shader& shader) = 0;
-
-		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository) = 0;
-
-		virtual TextureType getTextureType() const = 0;
-
 	protected:
 		unsigned int width, height;
 		float shadowBias;
@@ -50,8 +42,8 @@ namespace geeL {
 		virtual void bindData(const Shader& shader, const std::string& name);
 		virtual void removeMap(Shader& shader);
 
-		virtual void draw(const SceneCamera* const camera,
-			std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository);
+		virtual void draw(const SceneCamera* const camera, const RenderScene& scene,
+			ShadowmapRepository& repository);
 
 		//Set split planes (between cameras near and far clip plane)
 		void setCascades(const SceneCamera& camera);

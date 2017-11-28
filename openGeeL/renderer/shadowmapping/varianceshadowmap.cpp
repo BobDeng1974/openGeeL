@@ -40,11 +40,11 @@ namespace geeL {
 		FrameBuffer::unbind();
 	}
 
-	void VarianceSpotLightMap::draw(const SceneCamera* const camera, std::function<void(const RenderShader&)> renderCall, 
+	void VarianceSpotLightMap::draw(const SceneCamera* const camera, const RenderScene& scene,
 		ShadowmapRepository& repository) {
 
 		const RenderShader& shader = repository.getVariance2DShader();
-		SimpleSpotLightMap::draw(camera, renderCall, shader);
+		SimpleSpotLightMap::draw(camera, scene, shader); //Note: currently only static objects
 
 		//Blur shadow map
 		DepthGuard depthGuard(true);

@@ -81,6 +81,9 @@ namespace geeL {
 		template<typename... ShadingMethods>
 		bool contains(ShadingMethod shadingMethod, ShadingMethods ...other) const;
 
+		bool containsStaticObjects() const;
+		bool containsSkinnedObjects() const;
+
 	protected:
 		LightManager& lightManager;
 		SceneCamera* camera;
@@ -100,6 +103,9 @@ namespace geeL {
 
 		void removeMeshRenderer(MeshRenderer& renderer, SceneShader& shader);
 		void updateMeshRenderer(MeshRenderer& renderer, Material oldMaterial, Material newMaterial);
+
+		void iterShaders(std::function<bool(const SceneShader&)> function) const;
+
 
 	};
 

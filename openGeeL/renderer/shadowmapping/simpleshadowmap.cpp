@@ -11,6 +11,7 @@
 #include "lights/pointlight.h"
 #include "lights/directionallight.h"
 #include "framebuffer/framebuffer.h"
+#include "renderscene.h"
 #include "simpleshadowmap.h"
 
 using namespace glm;
@@ -162,20 +163,11 @@ namespace geeL {
 		shader.bind<glm::mat4>(name + "lightTransform", lightTransform);
 	}
 
-	void SimpleSpotLightMap::draw(const SceneCamera* const camera,
-		std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository) {
-
-		const RenderShader& shader = repository.getSimple2DShader();
-		draw(camera, renderCall, shader);
-	}
-
-	void SimpleSpotLightMap::draw(const SceneCamera * const camera, std::function<void(const RenderShader&)> renderCall, 
-		const RenderShader& shader) {
-
+	void SimpleSpotLightMap::draw(const SceneCamera* const camera, const RenderScene& scene, 
+		ShadowmapRepository& repository) {
+		
 		//Write light transform into shader
 		computeLightTransform();
-
-		shader.bind<glm::mat4>("lightTransform", lightTransform);
 
 		if (resolution == ShadowmapResolution::Adaptive)
 			adaptShadowmap(camera);
@@ -184,8 +176,40 @@ namespace geeL {
 		FrameBuffer::bind(fbo.token);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
-		renderCall(shader);
+		if (scene.containsStaticObjects()) {
+			const RenderShader& shader = repository.getSimple2DShader();
+			shader.bind<glm::mat4>("lightTransform", lightTransform);
 
+			scene.drawStaticObjects(shader);
+		}
+
+		if (scene.containsSkinnedObjects()) {
+			const RenderShader& shader = repository.getSimple2DAnimated();
+			shader.bind<glm::mat4>("lightTransform", lightTransform);
+
+			scene.drawSkinnedObjects(shader);
+		}
+		
+
+		FrameBuffer::unbind();
+	}
+
+	void SimpleSpotLightMap::draw(const SceneCamera* const camera, const RenderScene& scene,
+		const RenderShader& shader) {
+
+		//Write light transform into shader
+		computeLightTransform();
+
+		if (resolution == ShadowmapResolution::Adaptive)
+			adaptShadowmap(camera);
+
+		Viewport::set(0, 0, width, height);
+		FrameBuffer::bind(fbo.token);
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		shader.bind<glm::mat4>("lightTransform", lightTransform);
+
+		scene.drawStaticObjects(shader);
 		FrameBuffer::unbind();
 	}
 
@@ -265,20 +289,11 @@ namespace geeL {
 		FrameBuffer::unbind();
 	}
 
-	void SimplePointLightMap::draw(const SceneCamera* const camera,
-		std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository) {
+	void SimplePointLightMap::draw(const SceneCamera* const camera, const RenderScene& scene,
+		ShadowmapRepository& repository) {
 
 		//Write light transforms of cubemap faces into shader
 		computeLightTransform();
-
-		const RenderShader& shader = repository.getSimpleCubeShader();
-		for (int i = 0; i < 6; i++) {
-			std::string name = "lightTransforms[" + std::to_string(i) + "]";
-			shader.bind<glm::mat4>(name, lightTransforms[i]);
-		}
-
-		shader.bind<float>("farPlane", farPlane);
-		shader.bind<glm::vec3>("lightPosition", light.transform.getPosition());
 
 		if (resolution == ShadowmapResolution::Adaptive)
 			adaptShadowmap(camera);
@@ -286,8 +301,33 @@ namespace geeL {
 		Viewport::set(0, 0, width, height);
 		FrameBuffer::bind(fbo.token);
 		glClear(GL_DEPTH_BUFFER_BIT);
+		
+		if (scene.containsStaticObjects()) {
+			const RenderShader& shader = repository.getSimpleCubeShader();
+			for (int i = 0; i < 6; i++) {
+				std::string name = "lightTransforms[" + std::to_string(i) + "]";
+				shader.bind<glm::mat4>(name, lightTransforms[i]);
+			}
 
-		renderCall(shader);
+			shader.bind<float>("farPlane", farPlane);
+			shader.bind<glm::vec3>("lightPosition", light.transform.getPosition());
+
+			scene.drawStaticObjects(shader);
+		}
+
+		if (scene.containsSkinnedObjects()) {
+			const RenderShader& shader = repository.getSimpleCubeAnimated();
+			for (int i = 0; i < 6; i++) {
+				std::string name = "lightTransforms[" + std::to_string(i) + "]";
+				shader.bind<glm::mat4>(name, lightTransforms[i]);
+			}
+
+			shader.bind<float>("farPlane", farPlane);
+			shader.bind<glm::vec3>("lightPosition", light.transform.getPosition());
+
+			scene.drawSkinnedObjects(shader);
+		}
+		
 		FrameBuffer::unbind();
 	}
 
@@ -356,20 +396,31 @@ namespace geeL {
 		shader.bind<glm::mat4>(name + "lightTransform", lightTransform);
 	}
 
-	void SimpleDirectionalLightMap::draw(const SceneCamera* const camera,
-		std::function<void(const RenderShader&)> renderCall, ShadowmapRepository& repository) {
+	void SimpleDirectionalLightMap::draw(const SceneCamera* const camera, const RenderScene& scene, 
+		ShadowmapRepository& repository) {
 
 		//Write light transform into shader
 		computeLightTransform();
-
-		const RenderShader& shader = repository.getSimple2DShader();
-		shader.bind<glm::mat4>("lightTransform", lightTransform);
 
 		Viewport::set(0, 0, width, height);
 		FrameBuffer::bind(fbo.token);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
-		renderCall(shader);
+		if (scene.containsStaticObjects()) {
+			const RenderShader& shader = repository.getSimple2DShader();
+			shader.bind<glm::mat4>("lightTransform", lightTransform);
+
+			scene.drawStaticObjects(shader);
+		}
+
+		if (scene.containsSkinnedObjects()) {
+			const RenderShader& shader = repository.getSimple2DAnimated();
+			shader.bind<glm::mat4>("lightTransform", lightTransform);
+
+			scene.drawSkinnedObjects(shader);
+		}
+
+		
 		FrameBuffer::unbind();
 	}
 
