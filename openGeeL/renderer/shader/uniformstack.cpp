@@ -7,17 +7,17 @@
 #include "materials/materialfactory.h"
 #include "transformation/transform.h"
 #include "scene.h"
-#include "pipeline.h"
+#include "uniformstack.h"
 
 namespace geeL {
 
-	RenderPipeline::RenderPipeline()
+	UniformBindingStack::UniformBindingStack()
 		: bindingPointCounter(0) {
 	
 		camID = generateUniformBuffer(2 * int(sizeof(glm::mat4) + sizeof(glm::vec3)));
 	}
 
-	void RenderPipeline::staticBind(const Camera& camera, SceneShader& shader) const {
+	void UniformBindingStack::staticBind(const Camera& camera, SceneShader& shader) const {
 		if (shader.getUseCamera()) {
 			glUniformBlockBinding(shader.getProgram(),
 				glGetUniformBlockIndex(shader.getProgram(), "cameraMatrices"),
@@ -28,11 +28,11 @@ namespace geeL {
 	}
 
 
-	void RenderPipeline::bindCamera(const Camera& camera) const {
+	void UniformBindingStack::bindCamera(const Camera& camera) const {
 		camera.uniformBind(camID);
 	}
 
-	int RenderPipeline::generateUniformBuffer(int size) {
+	int UniformBindingStack::generateUniformBuffer(int size) {
 		GLuint ubo;
 		glGenBuffers(1, &ubo);
 
@@ -48,7 +48,7 @@ namespace geeL {
 	}
 
 	
-	int RenderPipeline::getUniformBindingPoint(int id) const {
+	int UniformBindingStack::getUniformBindingPoint(int id) const {
 		if (UBObjects.find(id) == UBObjects.end())
 			throw std::invalid_argument("No uniform buffer object with ID: " + id);
 

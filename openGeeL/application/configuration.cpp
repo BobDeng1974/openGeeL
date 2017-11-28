@@ -1,4 +1,5 @@
 #include "framebuffer/tbuffer.h"
+#include "shader/uniformstack.h"
 #include "texturing/textureparams.h"
 #include "texturing/textureprovider.h"
 #include "appmanager.h"
@@ -29,7 +30,7 @@ namespace geeL {
 		MaterialFactory& materialFactory = MaterialFactory(gBuffer);
 		MeshFactory& meshFactory = MeshFactory(materialFactory);
 		LightManager& lightManager = LightManager();
-		RenderPipeline pipeline;
+		UniformBindingStack pipeline;
 		RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, defaultCamera, materialFactory, manager);
 		
 		Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);

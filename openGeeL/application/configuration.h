@@ -11,7 +11,6 @@
 #include "threading.h"
 #include "inputmanager.h"
 #include "window.h"
-#include "pipeline.h"
 #include "renderscene.h"
 
 #include "animation/animator.h"

@@ -4,6 +4,7 @@
 #include <vector>
 #include "shader/rendershader.h"
 #include "shader/sceneshader.h"
+#include "shader/uniformstack.h"
 #include "materials/material.h"
 #include "meshes/mesh.h"
 #include "meshes/model.h"
@@ -15,7 +16,6 @@
 #include "utility/screeninfo.h"
 #include "lights/light.h"
 #include "lights/lightmanager.h"
-#include "pipeline.h"
 #include "inputmanager.h"
 #include "transformation/transform.h"
 #include "utility/worldinformation.h"
@@ -27,7 +27,7 @@ using namespace std;
 
 namespace geeL {
 
-	Scene::Scene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline, SceneCamera& camera)
+	Scene::Scene(Transform& world, LightManager& lightManager, UniformBindingStack& pipeline, SceneCamera& camera)
 		: lightManager(lightManager), pipeline(pipeline), camera(&camera), worldTransform(world), skybox(nullptr) {
 	
 		addRequester(lightManager);
@@ -219,7 +219,7 @@ namespace geeL {
 
 
 
-	RenderScene::RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline,
+	RenderScene::RenderScene(Transform& world, LightManager& lightManager, UniformBindingStack& pipeline,
 		SceneCamera& camera, MaterialFactory& materialFactory, Input& input)
 			: Scene(world, lightManager, pipeline, camera), 
 				materialFactory(materialFactory), input(input) {

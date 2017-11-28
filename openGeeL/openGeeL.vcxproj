@@ -217,7 +217,6 @@
     <ClCompile Include="renderer\meshes\mesh.cpp" />
     <ClCompile Include="renderer\meshes\meshfactory.cpp" />
     <ClCompile Include="renderer\meshes\meshrenderer.cpp" />
-    <ClCompile Include="renderer\pipeline.cpp" />
     <ClCompile Include="renderer\postprocessing\additiveeffect.cpp" />
     <ClCompile Include="renderer\postprocessing\bloom.cpp" />
     <ClCompile Include="renderer\postprocessing\blurredeffect.cpp" />
@@ -255,6 +254,7 @@
     <ClCompile Include="renderer\shader\shaderbinding.cpp" />
     <ClCompile Include="renderer\shader\shaderprovider.cpp" />
     <ClCompile Include="renderer\shader\shaderreader.cpp" />
+    <ClCompile Include="renderer\shader\uniformstack.cpp" />
     <ClCompile Include="renderer\shadowmapping\cascadedmap.cpp" />
     <ClCompile Include="renderer\shadowmapping\shadowmapconfig.cpp" />
     <ClCompile Include="renderer\shadowmapping\simpleshadowmap.cpp" />
@@ -377,7 +377,6 @@
     <ClInclude Include="renderer\meshes\meshfactory.h" />
     <ClInclude Include="renderer\meshes\meshrenderer.h" />
     <ClInclude Include="renderer\meshes\model.h" />
-    <ClInclude Include="renderer\pipeline.h" />
     <ClInclude Include="renderer\postprocessing\additiveeffect.h" />
     <ClInclude Include="renderer\postprocessing\bloom.h" />
     <ClInclude Include="renderer\postprocessing\blurredeffect.h" />
@@ -419,6 +418,7 @@
     <ClInclude Include="renderer\shader\shaderbinding.h" />
     <ClInclude Include="renderer\shader\shaderprovider.h" />
     <ClInclude Include="renderer\shader\shaderreader.h" />
+    <ClInclude Include="renderer\shader\uniformstack.h" />
     <ClInclude Include="renderer\shadowmapping\cascadedmap.h" />
     <ClInclude Include="renderer\shadowmapping\shadowmap.h" />
     <ClInclude Include="renderer\shadowmapping\shadowmapconfig.h" />

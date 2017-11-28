@@ -14,7 +14,6 @@ namespace geeL {
 	class SceneControlObject;
 	class LightManager;
 	class MeshDrawer;
-	class RenderPipeline;
 	class GUIRenderer;
 
 

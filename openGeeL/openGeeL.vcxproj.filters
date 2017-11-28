@@ -285,9 +285,6 @@
     <ClCompile Include="renderer\texturing\rendertexture.cpp">
       <Filter>renderer\texturing</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\pipeline.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\cubemapping\cubemapfactory.cpp">
       <Filter>renderer\cubemapping</Filter>
     </ClCompile>
@@ -494,6 +491,9 @@
     </ClCompile>
     <ClCompile Include="renderer\meshes\instancedmesh.cpp">
       <Filter>renderer\meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\shader\uniformstack.cpp">
+      <Filter>renderer\shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -727,9 +727,6 @@
     </ClInclude>
     <ClInclude Include="renderer\texturing\rendertexture.h">
       <Filter>renderer\texturing</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\pipeline.h">
-      <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\cubemapping\cubemapfactory.h">
       <Filter>renderer\cubemapping</Filter>
@@ -1012,6 +1009,9 @@
     </ClInclude>
     <ClInclude Include="main\modelviewer.h">
       <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shader\uniformstack.h">
+      <Filter>renderer\shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

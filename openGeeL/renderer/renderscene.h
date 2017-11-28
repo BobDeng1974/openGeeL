@@ -20,7 +20,7 @@ namespace geeL {
 	class LightManager;
 	class Skybox;
 	class RenderShader;
-	class RenderPipeline;
+	class UniformBindingStack;
 	class SceneShader;
 	class MeshRenderer;
 	class SkinnedMeshRenderer;
@@ -41,7 +41,7 @@ namespace geeL {
 	class Scene {
 
 	public:
-		Scene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline, SceneCamera& camera);
+		Scene(Transform& world, LightManager& lightManager, UniformBindingStack& pipeline, SceneCamera& camera);
 
 		void addRequester(SceneRequester& requester);
 		void addShader(SceneShader& shader);
@@ -89,7 +89,7 @@ namespace geeL {
 		SceneCamera* camera;
 		Transform& worldTransform;
 		Skybox* skybox;
-		RenderPipeline& pipeline;
+		UniformBindingStack& pipeline;
 
 		std::list<SceneRequester*> sceneRequester;
 
@@ -115,7 +115,7 @@ namespace geeL {
 	class RenderScene : public Scene, public ThreadedObject {
 
 	public:
-		RenderScene(Transform& world, LightManager& lightManager, RenderPipeline& pipeline, SceneCamera& camera, 
+		RenderScene(Transform& world, LightManager& lightManager, UniformBindingStack& pipeline, SceneCamera& camera, 
 			MaterialFactory& materialFactory, Input& input);
 
 		void init();

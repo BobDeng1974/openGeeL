@@ -1,27 +1,22 @@
-#ifndef SHADERMANAGER_H
-#define SHADERMANAGER_H
+#ifndef UNIFORMBINDINGSTACK_H
+#define UNIFORMBINDINGSTACK_H
 
 #include <string>
 #include <map>
 
-using namespace std;
-
 namespace geeL {
 
 	class Camera;
-	class LightManager;
-	class RenderScene;
-	class RenderShader;
 	class SceneShader;
 
 
-	//Class that can forward scene information into rendering pipeline
-	class RenderPipeline {
+	//Stack that manages UBO objects on GPU
+	class UniformBindingStack {
 
 	public:
-		RenderPipeline();
+		UniformBindingStack();
 
-		//Statically bind scene information into shader. Should be called once when shader is created at runtime
+		//Statically bind camera UBO into shader. 
 		void staticBind(const Camera& camera, SceneShader& shader) const;
 
 		//Bind uniform camera information
@@ -37,7 +32,7 @@ namespace geeL {
 
 	private:
 		int bindingPointCounter, camID;
-		map<int, int> UBObjects;
+		std::map<int, int> UBObjects;
 
 	};
 

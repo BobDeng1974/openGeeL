@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
 				LUAConfigurator config(argument);
 				config.run();
 			}
-			catch (const exception& e) {
+			catch (const std::exception& e) {
 				std::cout << e.what() << "\n";
 			}
 		}
