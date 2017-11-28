@@ -9,14 +9,16 @@
 using namespace std;
 
 namespace geeL {
+	
+	RenderShader::RenderShader()
+		: Shader() {}
 
-	RenderShader::RenderShader(const char* vertexPath, const char* fragmentPath, 
+	RenderShader::RenderShader(const char* vertexPath, const char* fragmentPath,
 		ShaderProvider* const provider) : Shader() {
 
 		name = fragmentPath;
 		init(vertexPath, fragmentPath, provider);
 	}
-
 
 	RenderShader::RenderShader(const char* vertexPath, const char* geometryPath, 
 		const char* fragmentPath, ShaderProvider* const provider) : Shader() {

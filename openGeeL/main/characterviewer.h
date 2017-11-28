@@ -46,7 +46,7 @@ public:
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(100.f, 0.2f, 100.f));
 			MeshRenderer& plane = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/plane.obj"),
-				meshTransform2, CullingMode::cullFront, "Floor");
+				meshTransform2, "Floor");
 
 			scene.addMeshRenderer(plane);
 
@@ -73,7 +73,7 @@ public:
 
 			Transform& meshTransform22 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 5.9f), vec3(0.f, 0.f, 0.f), vec3(0.12f));
 			MeshRenderer& girl = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/girl/girl_nofloor.obj"),
-				meshTransform22, CullingMode::cullFront, "Girl");
+				meshTransform22, "Girl");
 			scene.addMeshRenderer(girl);
 
 

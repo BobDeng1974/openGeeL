@@ -4,7 +4,7 @@
 #include "primitives/screenquad.h"
 #include "shader/rendershader.h"
 #include "framebuffer/framebuffer.h"
-#include "utility/viewport.h"
+#include "glwrapper/viewport.h"
 #include "brdfIntMap.h"
 
 namespace geeL {

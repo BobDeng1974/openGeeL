@@ -1,8 +1,6 @@
 #ifndef GLGUARDS_H
 #define GLGUARDS_H
 
-
-
 namespace geeL {
 
 	enum class BlendMode {

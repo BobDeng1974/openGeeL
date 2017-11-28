@@ -44,8 +44,8 @@ public:
 
 
 			Transform& meshTransform3 = transformFactory.CreateTransform(vec3(1.5f, 0.34f, 12.5f), vec3(180.f, 29.6f, 180.f), vec3(0.12f));
-			SkinnedMeshRenderer& skull = meshFactory.CreateSkinnedMeshRenderer(meshFactory.CreateSkinnedModel("resources/skull/skull.fbx"),
-				meshTransform3, CullingMode::cullFront, "Skull");
+			SkinnedMeshRenderer& skull = meshFactory.CreateMeshRenderer(meshFactory.CreateSkinnedModel("resources/skull/skull.fbx"),
+				meshTransform3, "Skull");
 			scene.addMeshRenderer(skull);
 
 			SimpleAnimator& anim = skull.addComponent<SimpleAnimator>(skull.getSkinnedModel(), skull.getSkeleton());
@@ -54,18 +54,18 @@ public:
 
 			skull.iterateMaterials([&](MaterialContainer& container) {
 				if (container.name == "skullhull") {
-					container.addTexture("diffuse", materialFactory.CreateTexture("resources/skull/Servoskull_mechanics_diff2.jpg", ColorType::GammaSpace, WrapMode::Repeat, FilterMode::Bilinear));
-					container.addTexture("normal", materialFactory.CreateTexture("resources/skull/Servoskull_mechanics_normal.jpg", ColorType::RGBA, WrapMode::Repeat, FilterMode::Bilinear));
-					container.addTexture("roughness", materialFactory.CreateTexture("resources/skull/Servoskull_mechanics_gloss.jpg", ColorType::RGBA, WrapMode::Repeat, FilterMode::Bilinear));
+					container.addTexture("diffuse", materialFactory.CreateTexture("resources/skull/Servoskull_mechanics_diff2.jpg", ColorType::GammaSpace, FilterMode::Bilinear));
+					container.addTexture("normal", materialFactory.CreateTexture("resources/skull/Servoskull_mechanics_normal.jpg", ColorType::RGBA, FilterMode::Bilinear));
+					container.addTexture("roughness", materialFactory.CreateTexture("resources/skull/Servoskull_mechanics_gloss.jpg", ColorType::RGBA, FilterMode::Bilinear));
 
 					container.setFloatValue("Roughness", 0.45f);
 					container.setFloatValue("Metallic", 0.95f);
 					container.setVectorValue("Color", vec3(0.2f));
 				}
 				else if (container.name == "skullface") {
-					container.addTexture("diffuse", materialFactory.CreateTexture("resources/skull/Servoskull_face_diff.jpg", ColorType::GammaSpace, WrapMode::Repeat, FilterMode::Bilinear));
-					container.addTexture("normal", materialFactory.CreateTexture("resources/skull/Servoskull_face_normal.jpg", ColorType::RGBA, WrapMode::Repeat, FilterMode::Bilinear));
-					container.addTexture("specular", materialFactory.CreateTexture("resources/skull/Servoskull_face_gloss.jpg", ColorType::RGBA, WrapMode::Repeat, FilterMode::Bilinear));
+					container.addTexture("diffuse", materialFactory.CreateTexture("resources/skull/Servoskull_face_diff.jpg", ColorType::GammaSpace, FilterMode::Bilinear));
+					container.addTexture("normal", materialFactory.CreateTexture("resources/skull/Servoskull_face_normal.jpg", ColorType::RGBA, FilterMode::Bilinear));
+					container.addTexture("specular", materialFactory.CreateTexture("resources/skull/Servoskull_face_gloss.jpg", ColorType::RGBA, FilterMode::Bilinear));
 
 					container.setFloatValue("Roughness", 1.f);
 					container.setFloatValue("Metallic", 0.1f);

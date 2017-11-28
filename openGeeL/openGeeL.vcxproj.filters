@@ -94,22 +94,19 @@
     <Filter Include="shaders\cubemapping">
       <UniqueIdentifier>{b79adaf8-dfa7-4986-8609-de1c7155d5d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="renderer\glwrapper">
+      <UniqueIdentifier>{0eec6da4-46b2-4c71-9cd2-7e53a9f813c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main\main.cpp">
       <Filter>main</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\window.cpp">
-      <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="renderer\cameras\camera.cpp">
       <Filter>renderer\cameras</Filter>
     </ClCompile>
     <ClCompile Include="renderer\cameras\perspectivecamera.cpp">
       <Filter>renderer\cameras</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\renderer.cpp">
-      <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="renderer\renderer\splitrenderer.cpp">
       <Filter>renderer\renderer</Filter>
@@ -258,9 +255,6 @@
     <ClCompile Include="renderer\shader\sceneshader.cpp">
       <Filter>renderer\shader</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\animation\animatedobject.cpp">
-      <Filter>renderer\animation</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\animation\animator.cpp">
       <Filter>renderer\animation</Filter>
     </ClCompile>
@@ -393,9 +387,6 @@
     <ClCompile Include="renderer\framebuffer\colorbuffer.cpp">
       <Filter>renderer\framebuffer</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\utility\viewport.cpp">
-      <Filter>renderer\utility</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\shader\shaderreader.cpp">
       <Filter>renderer\shader</Filter>
     </ClCompile>
@@ -459,20 +450,11 @@
     <ClCompile Include="application\appmanager.cpp">
       <Filter>application</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\utility\glguards.cpp">
-      <Filter>renderer\utility</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\framebuffer\tbuffer.cpp">
       <Filter>renderer\framebuffer</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\utility\clearing.cpp">
-      <Filter>renderer\utility</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\framebuffer\fbotoken.cpp">
       <Filter>renderer\framebuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\utility\masking.cpp">
-      <Filter>renderer\utility</Filter>
     </ClCompile>
     <ClCompile Include="renderer\postprocessing\additiveeffect.cpp">
       <Filter>renderer\postprocessing</Filter>
@@ -510,16 +492,31 @@
     <ClCompile Include="renderer\shader\uniformstack.cpp">
       <Filter>renderer\shader</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\animation\animcontainer.cpp">
+      <Filter>renderer\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\glwrapper\clearing.cpp">
+      <Filter>renderer\glwrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\glwrapper\glguards.cpp">
+      <Filter>renderer\glwrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\glwrapper\masking.cpp">
+      <Filter>renderer\glwrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\glwrapper\viewport.cpp">
+      <Filter>renderer\glwrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="application\window.cpp">
+      <Filter>application</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\renderer\renderer.cpp">
+      <Filter>renderer\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="renderer\renderer.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\texturing\texture.h">
       <Filter>renderer\texturing</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\window.h">
-      <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\cameras\camera.h">
       <Filter>renderer\cameras</Filter>
@@ -689,9 +686,6 @@
     <ClInclude Include="renderer\animation\animator.h">
       <Filter>renderer\animation</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\animation\animatedobject.h">
-      <Filter>renderer\animation</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\utility\vectorextension.h">
       <Filter>renderer\utility</Filter>
     </ClInclude>
@@ -848,9 +842,6 @@
     <ClInclude Include="renderer\framebuffer\colorbuffer.h">
       <Filter>renderer\framebuffer</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\utility\viewport.h">
-      <Filter>renderer\utility</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\shader\shaderreader.h">
       <Filter>renderer\shader</Filter>
     </ClInclude>
@@ -968,17 +959,8 @@
     <ClInclude Include="application\appmanager.h">
       <Filter>application</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\utility\glguards.h">
-      <Filter>renderer\utility</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\framebuffer\tbuffer.h">
       <Filter>renderer\framebuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\utility\clearing.h">
-      <Filter>renderer\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\utility\masking.h">
-      <Filter>renderer\utility</Filter>
     </ClInclude>
     <ClInclude Include="renderer\postprocessing\additiveeffect.h">
       <Filter>renderer\postprocessing</Filter>
@@ -1024,6 +1006,27 @@
     </ClInclude>
     <ClInclude Include="renderer\shader\uniformstack.h">
       <Filter>renderer\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\animation\animcontainer.h">
+      <Filter>renderer\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\glwrapper\clearing.h">
+      <Filter>renderer\glwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\glwrapper\glguards.h">
+      <Filter>renderer\glwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\glwrapper\masking.h">
+      <Filter>renderer\glwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\glwrapper\viewport.h">
+      <Filter>renderer\glwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="application\window.h">
+      <Filter>application</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\renderer\renderer.h">
+      <Filter>renderer\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

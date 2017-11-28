@@ -13,11 +13,11 @@ namespace geeL {
 	class Skeleton;
 
 	//Abstract base class for all objects that shall be animated
-	class AnimatedObject {
+	class AnimationContainer {
 
 	public:
-		AnimatedObject();
-		virtual ~AnimatedObject();
+		AnimationContainer();
+		virtual ~AnimationContainer();
 
 		//Add animation. Memory will be managed by this model
 		virtual void addAnimation(std::unique_ptr<AnimationMemory> animation);

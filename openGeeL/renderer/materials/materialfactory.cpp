@@ -64,7 +64,7 @@ namespace geeL {
 
 
 	ImageTexture& MaterialFactory::CreateTexture(std::string filePath, ColorType colorType,
-		WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter) {
+		FilterMode filterMode, WrapMode wrapMode,  AnisotropicFilter filter) {
 
 		if (textures.find(filePath) == textures.end())
 			textures[filePath] = new ImageTexture(filePath.c_str(), colorType, wrapMode, filterMode, filter);
@@ -73,19 +73,12 @@ namespace geeL {
 	}
 
 	TextureMap& MaterialFactory::CreateTextureMap(string filePath, MapType type, ColorType colorType, 
-		WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter) {
+		FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter filter) {
 		
 		if (textureMaps.find(filePath) == textureMaps.end())
-			textureMaps[filePath] = new TextureMap(filePath.c_str(),  type, colorType, wrapMode, filterMode, filter);
+			textureMaps[filePath] = new TextureMap(filePath.c_str(), type, colorType, wrapMode, filterMode, filter);
 
 		return *textureMaps[filePath];
-	}
-
-	DynamicRenderTexture& MaterialFactory::CreateDynamicRenderTexture(const Camera& camera, Resolution resolution) {
-		DynamicRenderTexture* texture = new DynamicRenderTexture(camera, resolution);
-		otherTextures.push_back(texture);
-
-		return *texture;
 	}
 
 	EnvironmentMap& MaterialFactory::CreateEnvironmentMap(string filePath) {

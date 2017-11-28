@@ -2,17 +2,17 @@
 #include "utility/rendertime.h"
 #include "bone.h"
 #include "skeleton.h"
-#include "animatedobject.h"
+#include "animcontainer.h"
 #include "animator.h"
 
 namespace geeL {
 
-	Animator::Animator(AnimatedObject& object, Skeleton& skeleton)
+	Animator::Animator(AnimationContainer& object, Skeleton& skeleton)
 		: object(object)
 		, skeleton(skeleton) {}
 
 
-	SimpleAnimator::SimpleAnimator(AnimatedObject& object, Skeleton& skeleton)
+	SimpleAnimator::SimpleAnimator(AnimationContainer& object, Skeleton& skeleton)
 		: Animator(object, skeleton)
 		, currentAnimation(nullptr)
 		, currentTime(0.)

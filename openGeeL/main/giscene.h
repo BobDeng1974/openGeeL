@@ -34,7 +34,7 @@ public:
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 121.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
 			MeshRenderer& buddha = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/classics/buddha.obj"),
-				meshTransform2, CullingMode::cullFront, "Buddha");
+				meshTransform2, "Buddha");
 			scene.addMeshRenderer(buddha);
 
 			buddha.iterateMaterials([&](MaterialContainer& container) {
@@ -47,10 +47,10 @@ public:
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(152.f, 24.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
 			MeshRenderer& sponz = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
-				meshTransform6, CullingMode::cullFront, "Sponza");
+				meshTransform6, "Sponza");
 			scene.addMeshRenderer(sponz);
 
-			//DynamicRenderTexture& renderTex = materialFactory.CreateDynamicRenderTexture(camera, Resolution(1000));
+			//DynamicRenderTexture& renderTex = DynamicRenderTexture(camera, Resolution(1000));
 			//renderer.addRenderTexture(renderTex);
 
 			sponz.iterateMaterials([&](MaterialContainer& container) {

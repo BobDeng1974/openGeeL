@@ -6,7 +6,7 @@
 #include "primitives/screenquad.h"
 #include "texturing/rendertexture.h"
 #include "texturing/textureprovider.h"
-#include "utility/glguards.h"
+#include "glwrapper/glguards.h"
 #include "gaussianblur.h"
 #include "ssao.h"
 

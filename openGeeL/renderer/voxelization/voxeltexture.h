@@ -26,13 +26,13 @@ namespace geeL {
 		void clearTexture();
 
 	private:
-		VoxelTexture(const VoxelTexture& other);
-		VoxelTexture& operator= (const VoxelTexture& other);
-
 		unsigned int dimensions;
 		const RenderScene& scene;
 		SceneShader* voxelShader;
 		RenderTexture3D* texture;
+
+		VoxelTexture(const VoxelTexture& other) = delete;
+		VoxelTexture& operator= (const VoxelTexture& other) = delete;
 
 	};
 

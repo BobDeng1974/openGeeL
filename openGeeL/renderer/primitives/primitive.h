@@ -8,17 +8,8 @@ namespace geeL {
 	public:
 		virtual void init() = 0;
 		virtual void draw() const = 0;
-
-		void drawComplete() {
-			if (vao == 0)
-				init();
-
-			draw();
-		}
-
-		bool initialized() {
-			return !(vao == 0 || vbo == 0);
-		}
+		void drawComplete();
+		bool initialized();
 
 	protected:
 		unsigned int vbo;
@@ -26,6 +17,17 @@ namespace geeL {
 
 	};
 
+
+	inline void Primitive::drawComplete() {
+		if (vao == 0)
+			init();
+
+		draw();
+	}
+
+	inline bool Primitive::initialized() {
+		return !(vao == 0 || vbo == 0);
+	}
 }
 
 #endif

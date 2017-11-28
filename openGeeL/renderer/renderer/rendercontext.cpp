@@ -1,6 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include "utility/glguards.h"
+#include "glwrapper/glguards.h"
+#include "appglobals.h"
 #include "rendercontext.h"
 
 namespace geeL {

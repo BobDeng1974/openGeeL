@@ -4,7 +4,7 @@
 #include <gtc/matrix_transform.hpp>
 #include "cameras/camera.h"
 #include "utility/screeninfo.h"
-#include "utility/viewport.h"
+#include "glwrapper/viewport.h"
 #include "shader/rendershader.h"
 #include "transformation/transform.h"
 #include "lights/spotlight.h"

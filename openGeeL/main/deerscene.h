@@ -41,7 +41,7 @@ public:
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(0.1f, 0.1f, 0.1f));
 			MeshRenderer& deer = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/deer/scene2.obj"),
-				meshTransform2, CullingMode::cullFront, "Deer");
+				meshTransform2, "Deer");
 			scene.addMeshRenderer(deer);
 
 			deer.iterateMaterials([&](MaterialContainer& container) {

@@ -18,8 +18,8 @@ namespace geeL {
 		float mass;
 		bool isKinematic;
 
-		RigidbodyProperties(float mass = 0.f, bool isKinematic = false)
-			: mass(isKinematic ? 0.f : mass), isKinematic(isKinematic) {}
+		RigidbodyProperties(float mass = 0.f, bool isKinematic = false);
+
 	};
 
 	//Represents physical properties of an object 
@@ -41,6 +41,13 @@ namespace geeL {
 		MotionState* motionState;
 
 	};
+
+
+	inline RigidbodyProperties::RigidbodyProperties(float mass, bool isKinematic)
+		: mass(isKinematic ? 0.f : mass)
+		, isKinematic(isKinematic) {}
+
+
 }
 
 #endif

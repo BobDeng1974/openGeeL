@@ -15,8 +15,7 @@ namespace geeL {
 	public:
 		std::string name;
 
-		MaterialContainer(const std::string& name = "material")
-			: name(name) {}
+		MaterialContainer(const std::string& name);
 
 		virtual void addTexture(const std::string& name, Texture2D& texture) = 0;
 
@@ -57,6 +56,10 @@ namespace geeL {
 		MaterialContainer* container;
 
 	};
+
+
+	inline MaterialContainer::MaterialContainer(const std::string& name)
+		: name(name) {}
 
 }
 

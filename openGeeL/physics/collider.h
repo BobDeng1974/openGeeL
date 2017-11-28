@@ -9,6 +9,7 @@ namespace geeL {
 
 	class Model;
 
+
 	//Objects that defines a collision shape
 	class Collider {
 

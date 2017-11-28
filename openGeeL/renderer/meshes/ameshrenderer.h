@@ -3,7 +3,7 @@
 
 #include <functional>
 #include <list>
-#include "utility/glguards.h"
+#include "glwrapper/glguards.h"
 #include "materialmapping.h"
 #include "sceneobject.h"
 

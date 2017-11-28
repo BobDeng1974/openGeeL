@@ -44,7 +44,7 @@ public:
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.1f));
 			MeshRenderer& capsule = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/capsule/Capsule.obj"),
-				meshTransform2, CullingMode::cullFront, "Capsule");
+				meshTransform2, "Capsule");
 			scene.addMeshRenderer(capsule);
 
 			capsule.iterateMaterials([&](MaterialContainer& container) {
@@ -53,8 +53,8 @@ public:
 
 
 			Transform& meshTransform222 = transformFactory.CreateTransform(vec3(0.0f, -4.75f, 4.1f), vec3(0.f, 180.f, 0.f), vec3(0.0075f));
-			SkinnedMeshRenderer& drone = meshFactory.CreateSkinnedMeshRenderer(meshFactory.CreateSkinnedModel("resources/drone/Drone.fbx"),
-				meshTransform222, CullingMode::cullFront, "Drone");
+			SkinnedMeshRenderer& drone = meshFactory.CreateMeshRenderer(meshFactory.CreateSkinnedModel("resources/drone/Drone.fbx"),
+				meshTransform222, "Drone");
 			scene.addMeshRenderer(drone);
 
 			SimpleAnimator& anim = drone.addComponent<SimpleAnimator>(drone.getSkinnedModel(), drone.getSkeleton());

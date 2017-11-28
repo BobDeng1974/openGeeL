@@ -8,8 +8,8 @@
 #include "transformation/transform.h"
 #include "renderscene.h"
 #include "lights/lightmanager.h"
-#include "utility/viewport.h"
-#include "utility/glguards.h"
+#include "glwrapper/viewport.h"
+#include "glwrapper/glguards.h"
 #include "voxelizer.h"
 
 using namespace glm;

@@ -7,7 +7,7 @@
 
 namespace geeL {
 
-	class AnimatedObject;
+	class AnimationContainer;
 	class SceneObject;
 	class Skeleton;
 	class Transform;
@@ -17,7 +17,7 @@ namespace geeL {
 	class Animator : public Component {
 
 	public:
-		Animator(AnimatedObject& object, Skeleton& skeleton);
+		Animator(AnimationContainer& object, Skeleton& skeleton);
 
 		virtual void reset() = 0;
 		virtual bool isRunning() const = 0;
@@ -26,7 +26,7 @@ namespace geeL {
 		//Tick function of animator. Should be called every frame
 		virtual void update(Input& input) = 0;
 
-		AnimatedObject& object;
+		AnimationContainer& object;
 		Skeleton& skeleton;
 	};
 
@@ -35,7 +35,7 @@ namespace geeL {
 	class SimpleAnimator : public Animator {
 
 	public:
-		SimpleAnimator(AnimatedObject& object, Skeleton& skeleton);
+		SimpleAnimator(AnimationContainer& object, Skeleton& skeleton);
 		
 		void startAnimation(const std::string& name, double startTime = 0.);
 		void stop();

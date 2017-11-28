@@ -5,8 +5,8 @@
 #include "transformation/transform.h"
 #include "cameras/camera.h"
 #include "shader/sceneshader.h"
-#include "utility/viewport.h"
-#include "utility/glguards.h"
+#include "glwrapper/viewport.h"
+#include "glwrapper/glguards.h"
 #include "renderscene.h"
 #include "voxeltexture.h"
 

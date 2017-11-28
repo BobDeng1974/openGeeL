@@ -9,7 +9,7 @@
 #include "shader/rendershader.h"
 #include "cameras/camera.h"
 #include "lights/light.h"
-#include "utility/viewport.h"
+#include "glwrapper/viewport.h"
 #include "transformation/transform.h"
 #include "framebuffer/framebuffer.h"
 #include "renderscene.h"

@@ -11,10 +11,10 @@
 #include "postprocessing/ssao.h"
 #include "cameras/camera.h"
 #include "lights/lightmanager.h"
-#include "guirenderer.h"
 #include "lighting/deferredlighting.h"
-#include "utility/viewport.h"
-#include "utility/glguards.h"
+#include "glwrapper/viewport.h"
+#include "glwrapper/glguards.h"
+#include "guirenderer.h"
 #include "application.h"
 #include "deferredrenderer.h"
 

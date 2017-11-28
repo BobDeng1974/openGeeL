@@ -11,7 +11,7 @@ namespace geeL {
 	class RenderShader : public Shader {
 
 	public:
-		RenderShader() : Shader() {}
+		RenderShader();
 
 		RenderShader(const char* vertexPath, const char* fragmentPath, 
 			ShaderProvider* const provider = nullptr);

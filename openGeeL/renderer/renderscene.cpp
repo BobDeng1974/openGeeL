@@ -19,7 +19,7 @@
 #include "inputmanager.h"
 #include "transformation/transform.h"
 #include "utility/worldinformation.h"
-#include "utility/glguards.h"
+#include "glwrapper/glguards.h"
 #include "renderscene.h"
 
 using namespace std;

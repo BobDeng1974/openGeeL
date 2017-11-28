@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "animation/animatedobject.h"
+#include "animation/animcontainer.h"
 #include "mesh.h"
 
 namespace geeL {
@@ -64,11 +64,11 @@ namespace geeL {
 
 
 	//Special model that is intented for animated drawing
-	class SkinnedModel : public GenericModel<SkinnedMesh>, public AnimatedObject {
+	class SkinnedModel : public GenericModel<SkinnedMesh>, public AnimationContainer {
 
 	public:
-		SkinnedModel() : GenericModel(), AnimatedObject() {}
-		SkinnedModel(const std::string& path) : GenericModel(path), AnimatedObject() {}
+		SkinnedModel() : GenericModel(), AnimationContainer() {}
+		SkinnedModel(const std::string& path) : GenericModel(path), AnimationContainer() {}
 
 	};
 

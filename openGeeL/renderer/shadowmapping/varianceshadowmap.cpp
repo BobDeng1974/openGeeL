@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "primitives/screenquad.h"
-#include "utility/glguards.h"
+#include "glwrapper/glguards.h"
 #include "varianceshadowmap.h"
 
 namespace geeL {

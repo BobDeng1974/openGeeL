@@ -15,7 +15,7 @@
 #include "cubemapping/reflectionprobe.h"
 #include "cubemapping/iblmap.h"
 #include "framebuffer/cubebuffer.h"
-#include "utility/glguards.h"
+#include "glwrapper/glguards.h"
 #include "voxelization/voxelstructure.h"
 #include "renderscene.h"
 #include "light.h"

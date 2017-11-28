@@ -248,7 +248,7 @@ namespace geeL {
 							std::list<StaticMeshRenderer*>& renderers = meshFactory.CreateMeshRenderers(
 								meshFactory.CreateStaticModel(filePath),
 								materialFactory.getDeferredShader(),
-								meshTransform, CullingMode::cullFront);
+								meshTransform);
 
 							for (auto it(renderers.begin()); it != renderers.end(); it++) {
 								MeshRenderer& renderer = **it;
@@ -260,7 +260,7 @@ namespace geeL {
 						else {
 							MeshRenderer& meshRenderer = meshFactory.CreateMeshRenderer(
 								meshFactory.CreateStaticModel(filePath),
-								meshTransform, CullingMode::cullFront, name);
+								meshTransform, name);
 
 							scene.addMeshRenderer(meshRenderer);
 							meshRenderers.push_back(&meshRenderer);

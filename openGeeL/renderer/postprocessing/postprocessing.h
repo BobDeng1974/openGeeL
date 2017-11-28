@@ -3,11 +3,11 @@
 
 #include <list>
 #include <string>
-#include "renderer.h"
+#include "renderer/renderer.h"
 #include "shader/rendershader.h"
 #include "shader/computeshader.h"
 #include "utility/resolution.h"
-#include "utility/masking.h"
+#include "glwrapper/masking.h"
 
 namespace geeL {
 

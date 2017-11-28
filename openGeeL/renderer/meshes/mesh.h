@@ -40,23 +40,8 @@ namespace geeL {
 		unsigned int IDs[BONECOUNT];
 		float weights[BONECOUNT];
 
-		SkinnedVertex() {
-			for (unsigned int i = 0; i < BONECOUNT; i++) {
-				IDs[i] = 0;
-				weights[i] = 0.f;
-			}
-		}
-
-		void addBone(unsigned int id, float weight) {
-			//Find unused spot in arrays
-			for (unsigned int i = 0; i < BONECOUNT; i++) {
-				if (weights[i] == 0.f) {
-					IDs[i] = id;
-					weights[i] = weight;
-					return;
-				}
-			}
-		}
+		SkinnedVertex();
+		void addBone(unsigned int id, float weight);
 
 	};
 
@@ -165,11 +150,28 @@ namespace geeL {
 
 
 
+
+	inline SkinnedVertex::SkinnedVertex() {
+		for (unsigned int i = 0; i < BONECOUNT; i++) {
+			IDs[i] = 0;
+			weights[i] = 0.f;
+		}
+	}
+
+	inline void SkinnedVertex::addBone(unsigned int id, float weight) {
+		//Find unused spot in arrays
+		for (unsigned int i = 0; i < BONECOUNT; i++) {
+			if (weights[i] == 0.f) {
+				IDs[i] = id;
+				weights[i] = weight;
+				return;
+			}
+		}
+	}
+
 	inline const std::string& Mesh::getName() const {
 		return name;
 	}
-
-
 
 }
 

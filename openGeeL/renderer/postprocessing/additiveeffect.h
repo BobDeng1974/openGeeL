@@ -1,7 +1,7 @@
 #ifndef ADDITIVEEFFECT_H
 #define ADDITIVEEFFECT_H
 
-#include "utility/glguards.h"
+#include "glwrapper/glguards.h"
 #include "postprocessing.h"
 
 namespace geeL {

@@ -3,7 +3,6 @@
 
 namespace geeL {
 
-
 	enum class ClearingMethod {
 		Depth = 1,
 		Color = 2,
@@ -12,7 +11,6 @@ namespace geeL {
 
 
 	class Clearer {
-
 
 	public:
 		Clearer();
@@ -24,10 +22,8 @@ namespace geeL {
 		void clear() const;
 		static void setClearColor(float r = 0.f, float g = 0.f, float b = 0.f, float a = 1.f);
 
-
 	private:
 		unsigned int i;
-
 
 		void add(ClearingMethod method);
 

@@ -22,7 +22,6 @@ namespace geeL {
 	typedef int ShaderLocation;
 
 
-
 	//Base class for all camera objects that contains only transformational information
 	class Camera : public SceneObject {
 
@@ -78,10 +77,10 @@ namespace geeL {
 
 
 	//Simple camera whose view and projection matrices must be computed and set manually
-	class SimpleCamera : public Camera {
+	class ManualCamera : public Camera {
 
 	public:
-		SimpleCamera(Transform& transform, const std::string&name = "Camera");
+		ManualCamera(Transform& transform, const std::string&name = "Camera");
 
 	};
 

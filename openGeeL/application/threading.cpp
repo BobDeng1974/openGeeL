@@ -2,7 +2,6 @@
 #include <chrono>
 #include <limits>
 #include "application.h"
-#include "renderer.h"
 #include "threading.h"
 
 using namespace std;

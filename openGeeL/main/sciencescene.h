@@ -47,7 +47,7 @@ public:
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(0.1f, 0.1f, 0.1f));
 			MeshRenderer& science = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/mad/madScience.obj"),
-				meshTransform2, CullingMode::cullFront, "Science");
+				meshTransform2, "Science");
 			scene.addMeshRenderer(science);
 
 			std::map<const MeshInstance*, const Material*> transObjects;

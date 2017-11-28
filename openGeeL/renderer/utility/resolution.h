@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vec2.hpp>
-#include "viewport.h"
+#include "glwrapper/viewport.h"
 
 namespace geeL {
 

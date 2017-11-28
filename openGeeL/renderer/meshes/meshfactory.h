@@ -46,22 +46,23 @@ namespace geeL {
 		~MeshFactory();
 
 		//Create new mesh renderer with default shading
-		StaticMeshRenderer& CreateMeshRenderer(StaticModel& model, Transform& transform,
-			CullingMode faceCulling, const std::string& name = "MeshRenderer");
+		StaticMeshRenderer& CreateMeshRenderer(StaticModel& model, 
+			Transform& transform, const std::string& name);
 
-		StaticMeshRenderer& CreateMeshRenderer(StaticModel& model, SceneShader& shader, Transform& transform,
-			CullingMode faceCulling, const std::string& name = "MeshRenderer");
+		StaticMeshRenderer& CreateMeshRenderer(StaticModel& model, SceneShader& shader, 
+			Transform& transform, const std::string& name);
 
 		//Create separate mesh renderers for every mesh in given model
-		std::list<StaticMeshRenderer*> CreateMeshRenderers(StaticModel& model, SceneShader& shader, Transform& transform,
-			CullingMode faceCulling);
+		std::list<StaticMeshRenderer*> CreateMeshRenderers(StaticModel& model, 
+			SceneShader& shader, Transform& transform);
 
 		//Create new skinned mesh renderer with default shading
-		SkinnedMeshRenderer& CreateSkinnedMeshRenderer(SkinnedModel& model, Transform& transform,
-			CullingMode faceCulling, const std::string& name = "SkinnedMeshRenderer");
+		SkinnedMeshRenderer& CreateMeshRenderer(SkinnedModel& model, Transform& transform,
+			const std::string& name);
 
-		SkinnedMeshRenderer& CreateSkinnedMeshRenderer(SkinnedModel& model, SceneShader& shader, Transform& transform,
-			CullingMode faceCulling, const std::string& name = "SkinnedMeshRenderer");
+		SkinnedMeshRenderer& CreateMeshRenderer(SkinnedModel& model, SceneShader& shader, 
+			Transform& transform, const std::string& name);
+
 
 		//Creates, initializes and returns a new static model from given file path or 
 		//returns an existing model if it already uses this file

@@ -9,8 +9,8 @@
 #include "utility/rendertime.h"
 #include "splitrenderer.h"
 #include "window.h"
-#include "utility/viewport.h"
-#include "utility/glguards.h"
+#include "glwrapper/viewport.h"
+#include "glwrapper/glguards.h"
 #include "inputmanager.h"
 
 

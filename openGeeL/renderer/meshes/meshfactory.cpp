@@ -31,23 +31,24 @@ namespace geeL {
 
 
 	StaticMeshRenderer& MeshFactory::CreateMeshRenderer(StaticModel& model, 
-		Transform& transform, CullingMode faceCulling, const string& name) {
+		Transform& transform, const string& name) {
 		
 		return CreateMeshRenderer(model, factory.getDefaultShader(ShadingMethod::Deferred), 
-			transform, faceCulling, name);
+			transform, name);
 	}
 
-	StaticMeshRenderer& MeshFactory::CreateMeshRenderer(StaticModel& model, SceneShader& shader, Transform& transform,
-		CullingMode faceCulling, const string& name) {
+	StaticMeshRenderer& MeshFactory::CreateMeshRenderer(StaticModel& model, SceneShader& shader, 
+		Transform& transform, const string& name) {
 
-		StaticMeshRenderer* renderer = new StaticMeshRenderer(transform, shader, model, faceCulling, name);
+		StaticMeshRenderer* renderer = new StaticMeshRenderer(transform, shader, 
+			model, CullingMode::cullFront, name);
 
 		meshRenderer.push_back(renderer);
 		return *renderer;
 	}
 
 	list<StaticMeshRenderer*> MeshFactory::CreateMeshRenderers(StaticModel& model, SceneShader& shader, 
-		Transform& transform, CullingMode faceCulling) {
+		Transform& transform) {
 
 		list<StaticMeshRenderer*> renderers;
 		string path = model.getPath();
@@ -59,7 +60,7 @@ namespace geeL {
 			std::list<const StaticMesh*> meshes = { &mesh };
 			
 			StaticMeshRenderer* renderer = new StaticMeshRenderer(newTransform, shader, meshes, 
-				faceCulling, mesh.getName());
+				CullingMode::cullFront, mesh.getName());
 
 			meshRenderer.push_back(renderer);
 			renderers.push_back(renderer);
@@ -69,18 +70,18 @@ namespace geeL {
 	}
 
 
-	SkinnedMeshRenderer& MeshFactory::CreateSkinnedMeshRenderer(SkinnedModel& model, Transform& transform,
-		CullingMode faceCulling, const string& name) {
+	SkinnedMeshRenderer& MeshFactory::CreateMeshRenderer(SkinnedModel& model, 
+		Transform& transform, const string& name) {
 
-		return CreateSkinnedMeshRenderer(model, factory.getDefaultShader(ShadingMethod::Deferred, true), 
-			transform, faceCulling, name);
+		return CreateMeshRenderer(model, factory.getDefaultShader(ShadingMethod::Deferred, true), 
+			transform, name);
 	}
 
-	SkinnedMeshRenderer& MeshFactory::CreateSkinnedMeshRenderer(SkinnedModel& model, SceneShader& shader, 
-		Transform& transform, CullingMode faceCulling, const string& name) {
+	SkinnedMeshRenderer& MeshFactory::CreateMeshRenderer(SkinnedModel& model, SceneShader& shader, 
+		Transform& transform, const string& name) {
 
 		SkinnedMeshRenderer* renderer = new SkinnedMeshRenderer(transform, shader, 
-			model, faceCulling, name);
+			model, CullingMode::cullFront, name);
 
 		meshRenderer.push_back(renderer);
 		return *renderer;
@@ -374,7 +375,7 @@ namespace geeL {
 
 			if ((bool)ifile) {
 				TextureMap& texture = factory.CreateTextureMap(fileName, type,
-					ct, WrapMode::Repeat, FilterMode::Bilinear, AnisotropicFilter::Medium);
+					ct, FilterMode::Bilinear, WrapMode::Repeat, AnisotropicFilter::Medium);
 				textures.push_back(&texture);
 			}
 		}

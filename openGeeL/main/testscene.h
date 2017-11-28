@@ -54,7 +54,7 @@ public:
 			float outerAngle = glm::cos(glm::radians(27.5f));
 
 			ImageTexture& texture = materialFactory.CreateTexture("resources/textures/cookie.png",
-				ColorType::GammaSpace, WrapMode::Repeat, FilterMode::LinearMip);
+				ColorType::GammaSpace, FilterMode::LinearMip);
 
 			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(0.9f, 5, -22.f), vec3(96.f, -0.1f, -5), vec3(1.f));
 			SpotLight& spotLight = lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle, defSLShadowMapConfig);
@@ -67,7 +67,7 @@ public:
 			float height = -2.f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(20.f, 0.2f, 20.f));
 			MeshRenderer& plane = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/plane.obj"),
-				meshTransform2, CullingMode::cullFront, "Floor");
+				meshTransform2, "Floor");
 
 			scene.addMeshRenderer(plane);
 			//physics.addPlane(vec3(0.f, 1.f, 0.f), meshTransform2, RigidbodyProperties(0.f, false));
@@ -81,7 +81,7 @@ public:
 
 			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 2.f, 4.f), vec3(0.f), vec3(1.f));
 			MeshRenderer& sphere1 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/sphere.obj"),
-				meshTransform4, CullingMode::cullFront, "Sphere");
+				meshTransform4, "Sphere");
 			scene.addMeshRenderer(sphere1);
 			//physics.addSphere(1.f, meshTransform4, RigidbodyProperties(10.f, false));
 			//physics.addMesh(sphere1.getModel(), meshTransform4, RigidbodyProperties(10.f, false));
@@ -99,7 +99,7 @@ public:
 
 			Transform& meshTransform42 = transformFactory.CreateTransform(vec3(12.f, 2.f, 4.f), vec3(0.f), vec3(1.f));
 			MeshRenderer& sphere12 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/sphere.obj"),
-				meshTransform42, CullingMode::cullFront, "Sphere");
+				meshTransform42, "Sphere");
 			scene.addMeshRenderer(sphere12);
 			//physics.addSphere(1.f, meshTransform4, RigidbodyProperties(10.f, false));
 			//physics.addMesh(sphere1.getModel(), meshTransform4, RigidbodyProperties(10.f, false));
@@ -118,7 +118,7 @@ public:
 
 			Transform& meshTransform5 = transformFactory.CreateTransform(vec3(0.0f, 0.5f, -2.0f), vec3(0.5f, 0.5f, 0.5f), vec3(5.2f, 2.2f, 1.2f));
 			MeshRenderer& box = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/cube.obj"),
-				meshTransform5, CullingMode::cullFront, "Box");
+				meshTransform5, "Box");
 			//scene.addMeshRenderer(box);
 
 			box.iterateMaterials([&](MaterialContainer& container) {
@@ -130,20 +130,20 @@ public:
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(1.f));
 			MeshRenderer& cyborg = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/cyborg/Cyborg.obj"),
-				meshTransform6, CullingMode::cullFront, "Cyborg");
+				meshTransform6, "Cyborg");
 			scene.addMeshRenderer(cyborg);
 
 			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.2f));
 			MeshRenderer& nano = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/nanosuit/nanosuit.obj"),
-				meshTransform1, CullingMode::cullFront, "Nano");
+				meshTransform1, "Nano");
 			nano.addComponent<RotationComponent>();
 			scene.addMeshRenderer(nano);
 
 			
 			float scale = 0.05f;
 			Transform& meshTransform7 = transformFactory.CreateTransform(vec3(2.f, -1.f, 4.0f), vec3(0.f), vec3(scale));
-			SkinnedMeshRenderer& dude = meshFactory.CreateSkinnedMeshRenderer(meshFactory.CreateSkinnedModel("resources/guard/boblampclean.md5mesh"),
-			meshTransform7, CullingMode::cullFront, "Dude");
+			SkinnedMeshRenderer& dude = meshFactory.CreateMeshRenderer(meshFactory.CreateSkinnedModel("resources/guard/boblampclean.md5mesh"),
+			meshTransform7, "Dude");
 			//scene.addMeshRenderer(dude);
 
 			SimpleAnimator& anim = dude.addComponent<SimpleAnimator>(dude.getSkinnedModel(), dude.getSkeleton());

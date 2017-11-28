@@ -1,7 +1,7 @@
 #ifndef RENDERCONTEXT_H
 #define RENDERCONTEXT_H
 
-#define ENABLE_STENCIL 1
+
 
 namespace geeL {
 

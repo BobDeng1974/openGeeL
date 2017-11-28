@@ -80,7 +80,7 @@ public:
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.01f));
 			MeshRenderer& sponz = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
-				meshTransform6, CullingMode::cullFront, "Sponza");
+				meshTransform6, "Sponza");
 			scene.addMeshRenderer(sponz);
 
 

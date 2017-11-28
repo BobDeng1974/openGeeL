@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <limits.h>
-#include "utility/viewport.h"
+#include "glwrapper/viewport.h"
 #include "textureparams.h"
 #include "texture.h"
 

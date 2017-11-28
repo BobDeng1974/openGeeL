@@ -4,7 +4,7 @@
 #include <functional>
 #include <string>
 #include "utility/resolution.h"
-#include "utility/clearing.h"
+#include "glwrapper/clearing.h"
 #include "texturing/texture.h"
 #include "texturing/rendertexture.h"
 #include "fbotoken.h"

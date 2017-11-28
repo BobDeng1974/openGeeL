@@ -4,8 +4,8 @@
 #include "framebuffer/framebuffer.h"
 #include "shader/shader.h"
 #include "texturing/textureprovider.h"
-#include "utility/glguards.h"
-#include "utility/clearing.h"
+#include "glwrapper/glguards.h"
+#include "glwrapper/clearing.h"
 #include "additiveeffect.h"
 
 namespace geeL {

@@ -20,8 +20,8 @@ using namespace glm;
 
 namespace geeL {
 
-	Camera::Camera(Transform& transform, const string& name) : SceneObject(transform, name) {}
-
+	Camera::Camera(Transform& transform, const string& name) 
+		: SceneObject(transform, name) {}
 
 	
 	mat4 Camera::getViewMatrix() const {
@@ -193,7 +193,8 @@ namespace geeL {
 	}
 
 
-	SimpleCamera::SimpleCamera(Transform& transform, const std::string& name) : Camera(transform, name) {}
+	ManualCamera::ManualCamera(Transform& transform, const std::string& name)
+		: Camera(transform, name) {}
 
 
 	SceneCamera::SceneCamera(Transform& transform, 

@@ -2,8 +2,8 @@
 #include <glew.h>
 #include <array>
 #include <iostream>
-#include "utility/viewport.h"
-#include "renderer.h"
+#include "glwrapper/viewport.h"
+#include "renderer/renderer.h"
 #include "colorbuffer.h"
 
 using namespace std;

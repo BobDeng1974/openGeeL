@@ -45,7 +45,7 @@ public:
 			float outerAngle = glm::cos(glm::radians(27.5f));
 
 			ImageTexture& texture = materialFactory.CreateTexture("resources/textures/cookie.png",
-				ColorType::GammaSpace, WrapMode::ClampBorder, FilterMode::Linear);
+				ColorType::GammaSpace, FilterMode::Linear, WrapMode::ClampBorder);
 
 			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-14.88f, 0.4f, -1.88f), vec3(90.f, -56.24f, 179.f), vec3(1.f, 1.f, 1.f), true);
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00001f, ShadowMapType::Soft, ShadowmapResolution::High);
@@ -55,7 +55,7 @@ public:
 			float scale = 0.008f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(scale));
 			MeshRenderer& studio = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/art/artStudio.obj"),
-				meshTransform2, CullingMode::cullFront, "Studio");
+				meshTransform2, "Studio");
 			scene.addMeshRenderer(studio);
 
 

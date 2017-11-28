@@ -159,6 +159,7 @@
     <ClCompile Include="application\scripting\luacomp.cpp" />
     <ClCompile Include="application\scripting\luatypes.cpp" />
     <ClCompile Include="application\threading.cpp" />
+    <ClCompile Include="application\window.cpp" />
     <ClCompile Include="interface\elements\objectlister.cpp" />
     <ClCompile Include="interface\elements\posteffectlister.cpp" />
     <ClCompile Include="interface\elements\systeminformation.cpp" />
@@ -174,7 +175,7 @@
     <ClCompile Include="physics\motionstate.cpp" />
     <ClCompile Include="physics\rigidbody.cpp" />
     <ClCompile Include="physics\worldphysics.cpp" />
-    <ClCompile Include="renderer\animation\animatedobject.cpp" />
+    <ClCompile Include="renderer\animation\animcontainer.cpp" />
     <ClCompile Include="renderer\animation\animation.cpp" />
     <ClCompile Include="renderer\animation\animator.cpp" />
     <ClCompile Include="renderer\animation\bone.cpp" />
@@ -200,6 +201,10 @@
     <ClCompile Include="renderer\framebuffer\rendertarget.cpp" />
     <ClCompile Include="renderer\framebuffer\stackbuffer.cpp" />
     <ClCompile Include="renderer\framebuffer\tbuffer.cpp" />
+    <ClCompile Include="renderer\glwrapper\clearing.cpp" />
+    <ClCompile Include="renderer\glwrapper\glguards.cpp" />
+    <ClCompile Include="renderer\glwrapper\masking.cpp" />
+    <ClCompile Include="renderer\glwrapper\viewport.cpp" />
     <ClCompile Include="renderer\lighting\conetracer.cpp" />
     <ClCompile Include="renderer\lighting\deferredlighting.cpp" />
     <ClCompile Include="renderer\lighting\ibl.cpp" />
@@ -239,9 +244,9 @@
     <ClCompile Include="renderer\postprocessing\volumetriclight.cpp" />
     <ClCompile Include="renderer\primitives\screencube.cpp" />
     <ClCompile Include="renderer\primitives\screenquad.cpp" />
-    <ClCompile Include="renderer\renderer.cpp" />
     <ClCompile Include="renderer\renderer\deferredrenderer.cpp" />
     <ClCompile Include="renderer\renderer\rendercontext.cpp" />
+    <ClCompile Include="renderer\renderer\renderer.cpp" />
     <ClCompile Include="renderer\renderer\splitrenderer.cpp" />
     <ClCompile Include="renderer\renderscene.cpp" />
     <ClCompile Include="renderer\sceneobject.cpp" />
@@ -274,21 +279,16 @@
     <ClCompile Include="renderer\texturing\texturetoken.cpp" />
     <ClCompile Include="renderer\transformation\transform.cpp" />
     <ClCompile Include="renderer\transformation\transformfactory.cpp" />
-    <ClCompile Include="renderer\utility\clearing.cpp" />
     <ClCompile Include="renderer\utility\debug.cpp" />
     <ClCompile Include="renderer\utility\defaults.cpp" />
-    <ClCompile Include="renderer\utility\glguards.cpp" />
     <ClCompile Include="renderer\utility\gvector.cpp" />
     <ClCompile Include="renderer\utility\linearkernel.cpp" />
-    <ClCompile Include="renderer\utility\masking.cpp" />
     <ClCompile Include="renderer\utility\rendertime.cpp" />
     <ClCompile Include="renderer\utility\resolution.cpp" />
     <ClCompile Include="renderer\utility\stb_image_importer.cpp" />
-    <ClCompile Include="renderer\utility\viewport.cpp" />
     <ClCompile Include="renderer\voxelization\voxelizer.cpp" />
     <ClCompile Include="renderer\voxelization\voxeloctree.cpp" />
     <ClCompile Include="renderer\voxelization\voxeltexture.cpp" />
-    <ClCompile Include="renderer\window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\appglobals.h" />
@@ -302,6 +302,7 @@
     <ClInclude Include="application\scripting\luacomp.h" />
     <ClInclude Include="application\scripting\luatypes.h" />
     <ClInclude Include="application\threading.h" />
+    <ClInclude Include="application\window.h" />
     <ClInclude Include="interface\elements\objectlister.h" />
     <ClInclude Include="interface\elements\posteffectlister.h" />
     <ClInclude Include="interface\elements\systeminformation.h" />
@@ -328,7 +329,7 @@
     <ClInclude Include="physics\physics.h" />
     <ClInclude Include="physics\rigidbody.h" />
     <ClInclude Include="physics\worldphysics.h" />
-    <ClInclude Include="renderer\animation\animatedobject.h" />
+    <ClInclude Include="renderer\animation\animcontainer.h" />
     <ClInclude Include="renderer\animation\animation.h" />
     <ClInclude Include="renderer\animation\animator.h" />
     <ClInclude Include="renderer\animation\bone.h" />
@@ -355,6 +356,10 @@
     <ClInclude Include="renderer\framebuffer\rendertarget.h" />
     <ClInclude Include="renderer\framebuffer\stackbuffer.h" />
     <ClInclude Include="renderer\framebuffer\tbuffer.h" />
+    <ClInclude Include="renderer\glwrapper\clearing.h" />
+    <ClInclude Include="renderer\glwrapper\glguards.h" />
+    <ClInclude Include="renderer\glwrapper\masking.h" />
+    <ClInclude Include="renderer\glwrapper\viewport.h" />
     <ClInclude Include="renderer\lighting\conetracer.h" />
     <ClInclude Include="renderer\lighting\deferredlighting.h" />
     <ClInclude Include="renderer\lighting\ibl.h" />
@@ -401,10 +406,10 @@
     <ClInclude Include="renderer\primitives\primitive.h" />
     <ClInclude Include="renderer\primitives\screencube.h" />
     <ClInclude Include="renderer\primitives\screenquad.h" />
-    <ClInclude Include="renderer\renderer.h" />
     <ClInclude Include="renderer\renderer\deferredrenderer.h" />
     <ClInclude Include="renderer\renderer\postrenderer.h" />
     <ClInclude Include="renderer\renderer\rendercontext.h" />
+    <ClInclude Include="renderer\renderer\renderer.h" />
     <ClInclude Include="renderer\renderer\splitrenderer.h" />
     <ClInclude Include="renderer\renderscene.h" />
     <ClInclude Include="renderer\sceneobject.h" />
@@ -440,13 +445,10 @@
     <ClInclude Include="renderer\texturing\texturetype.h" />
     <ClInclude Include="renderer\transformation\transform.h" />
     <ClInclude Include="renderer\transformation\transformfactory.h" />
-    <ClInclude Include="renderer\utility\clearing.h" />
     <ClInclude Include="renderer\utility\debug.h" />
     <ClInclude Include="renderer\utility\defaults.h" />
-    <ClInclude Include="renderer\utility\glguards.h" />
     <ClInclude Include="renderer\utility\gvector.h" />
     <ClInclude Include="renderer\utility\linearkernel.h" />
-    <ClInclude Include="renderer\utility\masking.h" />
     <ClInclude Include="renderer\utility\matrixextension.h" />
     <ClInclude Include="renderer\utility\properties.h" />
     <ClInclude Include="renderer\utility\property.h" />
@@ -455,13 +457,11 @@
     <ClInclude Include="renderer\utility\resolution.h" />
     <ClInclude Include="renderer\utility\screeninfo.h" />
     <ClInclude Include="renderer\utility\vectorextension.h" />
-    <ClInclude Include="renderer\utility\viewport.h" />
     <ClInclude Include="renderer\utility\worldinformation.h" />
     <ClInclude Include="renderer\voxelization\voxelizer.h" />
     <ClInclude Include="renderer\voxelization\voxeloctree.h" />
     <ClInclude Include="renderer\voxelization\voxelstructure.h" />
     <ClInclude Include="renderer\voxelization\voxeltexture.h" />
-    <ClInclude Include="renderer\window.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\framebuffer\tcomp.frag" />

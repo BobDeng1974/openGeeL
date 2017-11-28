@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include <iostream>
-#include "renderer.h"
+#include "renderer/renderer.h"
 #include "bufferutil.h"
 #include "rendertarget.h"
 #include "stackbuffer.h"

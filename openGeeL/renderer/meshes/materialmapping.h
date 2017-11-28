@@ -2,7 +2,7 @@
 #define MATERIALMAPPING_H
 
 #include "materials/material.h"
-#include "utility/masking.h"
+#include "glwrapper/masking.h"
 
 namespace geeL {
 
