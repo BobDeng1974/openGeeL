@@ -899,13 +899,7 @@
     <ClInclude Include="main\deerscene.h">
       <Filter>main</Filter>
     </ClInclude>
-    <ClInclude Include="main\giscene.h">
-      <Filter>main</Filter>
-    </ClInclude>
     <ClInclude Include="main\sciencescene.h">
-      <Filter>main</Filter>
-    </ClInclude>
-    <ClInclude Include="main\sponzascene.h">
       <Filter>main</Filter>
     </ClInclude>
     <ClInclude Include="main\testscene.h">
@@ -1021,6 +1015,9 @@
     </ClInclude>
     <ClInclude Include="renderer\renderer\renderer.h">
       <Filter>renderer\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sponzascene.h">
+      <Filter>main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

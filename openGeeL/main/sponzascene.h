@@ -4,84 +4,68 @@
 
 using namespace geeL;
 
-namespace {
 
-	class MovingLight : public Component {
+class SponzaGIScene {
 
-	public:
-
-		float step = 0.01f;
-		virtual void update(Input& input) {
-			vec3 position = sceneObject->transform.getPosition();
-
-			if (position.x > 12.5f || position.x < -7.f)
-				step = -step;
-
-			if(input.getKey(GLFW_KEY_UP) || input.getKeyHold(GLFW_KEY_UP))
-				sceneObject->transform.translate(vec3(0.1f, 0.f, 0.f));
-			else if(input.getKey(GLFW_KEY_DOWN) || input.getKeyHold(GLFW_KEY_DOWN))
-				sceneObject->transform.translate(vec3(-0.1f, 0.f, 0.f));
-
-			sceneObject->transform.translate(vec3(step, 0.f, 0.f));
-		}
-
-	};
-
-}
-
-
-class SponzaScene {
 
 public:
 	static void draw() {
-		RenderWindow& window = RenderWindow("Sponza", Resolution(1920, 1080), WindowMode::Windowed);
+		RenderWindow& window = RenderWindow("Global Illumination Sponza", Resolution(1920, 1080), WindowMode::Windowed);
 
-		
 		auto init = [&window](Application& app, PostEffectDrawer& renderer, GUIRenderer& gui, RenderScene& scene,
-			LightManager& lightManager, TransformFactory& transformFactory, MeshFactory& meshFactory, MaterialFactory& materialFactory, 
+			LightManager& lightManager, TransformFactory& transformFactory, MeshFactory& meshFactory, MaterialFactory& materialFactory,
 			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
 
 
-			Transform& cameraTransform = transformFactory.CreateTransform(vec3(-7.36f, 4.76f, -1.75f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f));
-			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 60.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
-			camera.addComponent<MovableCamera>(MovableCamera(5.f, 0.45f));
+			Transform& cameraTransform = transformFactory.CreateTransform(vec3(41.f, 40.2f, 115.0f), vec3(92.6f, -80.2f, 162.8f), vec3(1.f));
+			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 75.f, window.getWidth(), window.getHeight(), 0.1f, 300.f);
+			camera.addComponent<MovableCamera>(MovableCamera(15.f, 0.65f));
 			scene.setCamera(camera);
-			
-			Transform& probeTransform = transformFactory.CreateTransform(vec3(15.15f, 0.62f, -4.11f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
-			DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024);
 
 			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/MonValley_G_DirtRoad_3k.hdr");
 			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeMapFactory.getBuffer(), 256);
-			//IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
-
 			Skybox& skybox = Skybox(envCubeMap);
 			scene.setSkybox(skybox);
-			lightManager.addReflectionProbe(probe);
 
-
-			float lightIntensity = 3200.f;
-			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-2.4f, 45.6f, -4.6f), vec3(0.f), vec3(1.f), true);
-			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Huge);
+			float lightIntensity = 500.f;
+			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(131.f, 72.2f, 128.f), vec3(0.f), vec3(1.f), true);
+			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 20.f, 15U, 150.f);
 			lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
 
-			lightIntensity = 0.5f;
-			Transform& lightTransform3 = transformFactory.CreateTransform(vec3(15.15f, 0.62f, -5.11f), vec3(0.f), vec3(1.f), true);
-			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Medium);
-			lightManager.addPointLight(lightTransform3, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config2);
+			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 121.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
+			MeshRenderer& buddha = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/classics/buddha.obj"),
+				meshTransform2, "Buddha");
+			scene.addMeshRenderer(buddha);
 
-			Transform& lightTransform4 = transformFactory.CreateTransform(vec3(-8.15f, 0.62f, 4.48f), vec3(0.f), vec3(1.f), true);
-			lightManager.addPointLight(lightTransform4, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config2);
+			buddha.iterateMaterials([&](MaterialContainer& container) {
+				container.setFloatValue("Transparency", 0.01f);
+				container.setFloatValue("Roughness", 0.25f);
+				container.setFloatValue("Metallic", 0.4f);
+				container.setVectorValue("Color", vec3(0.1f));
+			});
 
-			lightIntensity = 55.f;
-			Transform& lightTransform5 = transformFactory.CreateTransform(vec3(2.55f, 3.62f, 4.08f), vec3(0.f), vec3(1.f));
-			ShadowMapConfiguration config3 = ShadowMapConfiguration(0.001f, ShadowMapType::Soft, ShadowmapResolution::High, 5.f, 10);
-			PointLight& point = lightManager.addPointLight(lightTransform5, glm::vec3(lightIntensity *0.148f, lightIntensity *0.0625f, lightIntensity*0.125f), config3);
-			point.addComponent<MovingLight>();
 
-			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.01f));
+			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(152.f, 24.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
 			MeshRenderer& sponz = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
 				meshTransform6, "Sponza");
 			scene.addMeshRenderer(sponz);
+
+			//DynamicRenderTexture& renderTex = DynamicRenderTexture(camera, Resolution(1000));
+			//renderer.addRenderTexture(renderTex);
+
+			sponz.iterateMaterials([&](MaterialContainer& container) {
+				if (container.name == "fabric_g") {
+					//container.addTexture("Diffuse", renderTex);
+					container.setVectorValue("Emissivity", vec3(0.08f));
+				}
+				else if (container.name == "Material__57")
+					container.addTexture("alpha", materialFactory.CreateTexture("resources/sponza/textures/vase_plant_mask.tga"));
+				else if (container.name == "chain")
+					container.addTexture("alpha", materialFactory.CreateTexture("resources/sponza/textures/chain_texture_mask.tga"));
+				else if (container.name == "leaf")
+					container.addTexture("alpha", materialFactory.CreateTexture("resources/sponza/textures/sponza_thorn_mask.tga"));
+
+			});
 
 
 			ObjectLister objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
@@ -91,35 +75,36 @@ public:
 			gui.addElement(postLister);
 			gui.addSystemInformation(0.01f, 0.74f, 0.17f, 0.145f);
 
-
-			def.setExposure(3.5f);
+			def.setExposure(15.f);
 			postLister.add(def);
 
-			BilateralFilter& blur = BilateralFilter(1.3f, 0.7f);
-			SSAO& ssao = SSAO(blur, 2.5f);
-			scene.addRequester(ssao);
-			renderer.addEffect(ssao);
-			postLister.add(ssao);
+			//Voxelizer& voxelizer = Voxelizer(scene);
+			//VoxelOctree& octree = VoxelOctree(voxelizer);
+			//VoxelConeTracer& tracer = VoxelConeTracer(scene, octree);
 
-			ImageBasedLighting& ibl = ImageBasedLighting(scene);
-			renderer.addEffect(ibl);
+			VoxelTexture& tex = VoxelTexture(scene);
+			VoxelConeTracer& tracer = VoxelConeTracer(scene, tex);
 
-			GaussianBlur& blur4 = GaussianBlur();
-			SSRR& ssrr = SSRR();
-			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, ResolutionPreset::EIGHTY, ResolutionPreset::EIGHTY);
+			renderer.addEffect(tracer);
+			postLister.add(tracer);
+			//lightManager.addVoxelStructure(tex);
+
+			/*
+			GaussianBlurBase& blur4 = GaussianBlurBase(0.5f);
+			MultisampledSSRR& ssrr = MultisampledSSRR(25, 35, 1.f);
+			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.5f, 0.5f);
 			renderer.addEffect(ssrrSmooth);
 			scene.addRequester(ssrr);
 			SSRRSnippet& ssrrSnippet = SSRRSnippet(ssrr);
-			GaussianBlurSnippet& gaussSnip = GaussianBlurSnippet(blur4);
-			postLister.add(ssrrSmooth, ssrrSnippet, gaussSnip);
+			GaussianBlurSnippet& gaussSnippet = GaussianBlurSnippet(blur4);
+			postLister.add(ssrrSmooth, ssrrSnippet, gaussSnippet);
+			*/
 
-			BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
-			GodRay& ray = GodRay(vec3(-2.4f, 45.6f, -4.6f), 20);
-			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, ResolutionPreset::TWENTY, ResolutionPreset::TWENTY);
-			GodRaySnippet& godRaySnippet = GodRaySnippet(ray);
-			renderer.addEffect(raySmooth, DrawTime::Late);
-			scene.addRequester(ray);
-			postLister.add(raySmooth, godRaySnippet);
+			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.4f);
+			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 35.f, 
+				camera.getFarPlane(), ResolutionPreset::FULLSCREEN);
+			//renderer.addEffect(dof);
+			//postLister.add(dof);
 
 			FXAA& fxaa = FXAA();
 			renderer.addEffect(fxaa, DrawTime::Late);
@@ -130,9 +115,8 @@ public:
 		};
 
 
-		Configuration config(window, init);
+		Configuration config(window, init, GBufferContent::DefaultEmissive);
 		config.run();
 	}
-
 
 };

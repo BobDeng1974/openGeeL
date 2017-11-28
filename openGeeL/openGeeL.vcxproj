@@ -316,11 +316,10 @@
     <ClInclude Include="main\bedroomscene.h" />
     <ClInclude Include="main\characterviewer.h" />
     <ClInclude Include="main\deerscene.h" />
-    <ClInclude Include="main\giscene.h" />
+    <ClInclude Include="main\sponzascene.h" />
     <ClInclude Include="main\modelviewer.h" />
     <ClInclude Include="main\raymarchscene.h" />
     <ClInclude Include="main\sciencescene.h" />
-    <ClInclude Include="main\sponzascene.h" />
     <ClInclude Include="main\testscene.h" />
     <ClInclude Include="main\capsulescene.h" />
     <ClInclude Include="physics\collider.h" />

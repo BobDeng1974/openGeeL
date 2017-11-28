@@ -5,7 +5,6 @@
 #include "bedroomscene.h"
 #include "characterviewer.h"
 #include "deerscene.h"
-#include "giscene.h"
 #include "modelviewer.h"
 #include "raymarchscene.h"
 #include "sciencescene.h"
@@ -37,7 +36,6 @@ int main(int argc, char* argv[]) {
 	//BedroomScene::draw();
 	//DeerScene::draw();
 	//ArthouseScene::draw();
-	//SponzaScene::draw();
 	//SponzaGIScene::draw();
 	//ScienceScene::draw();
 	//CharacterViewer::draw();
