@@ -15,11 +15,10 @@ namespace geeL {
 	class ShadowMap : public Texture {
 
 	public:
-		ShadowMap(const Light& light, ShadowMapType type = ShadowMapType::Soft) 
+		ShadowMap(const Light& light) 
 			: Texture(ColorType::Depth)
 			, buffer(Resolution(500))
 			, light(light)
-			, type(type)
 			, intensity(1.f) {}
 
 
@@ -36,13 +35,12 @@ namespace geeL {
 		float getIntensity() const;
 		void setIntensity(float value);
 
-		ShadowMapType getType() const;
+		virtual ShadowMapType getType() const;
 
 	protected:
+		const Light& light;
 		DepthFrameBuffer buffer;
 		float intensity;
-		const ShadowMapType type;
-		const Light& light;
 
 	};
 
@@ -57,7 +55,7 @@ namespace geeL {
 	}
 
 	inline ShadowMapType ShadowMap::getType() const {
-		return type;
+		return ShadowMapType::None;
 	}
 	
 }

@@ -18,11 +18,11 @@
 namespace geeL {
 
 	CascadedDirectionalShadowMap::CascadedDirectionalShadowMap(const Light& light, const SceneCamera& camera, 
-		float shadowBias, unsigned int width, unsigned int height)
-			: CascadedShadowMap(light, shadowBias, width, height) {
+		float shadowBias, unsigned int resolution)
+			: CascadedShadowMap(light, shadowBias, resolution) {
 		
 		glBindTexture(GL_TEXTURE_2D, id);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, resolution, resolution,
 			0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
 		initFilterMode(FilterMode::Linear);
@@ -54,7 +54,6 @@ namespace geeL {
 
 	void CascadedDirectionalShadowMap::bindData(const Shader& shader, const std::string& name) {
 		shader.bind<float>(name + "bias", shadowBias);
-		shader.bind<int>(name + "type", (int)type);
 
 		for (unsigned int i = 0; i < MAPCOUNT; i++) {
 			shader.bind<glm::mat4>(name + "lightTransforms[" + std::to_string(i) + "]", shadowMaps[i].lightTransform);
@@ -77,8 +76,8 @@ namespace geeL {
 		buffer.add(*this);
 		buffer.fill([&]() {
 			const RenderShader& shader = repository.getSimple2DShader();
-			unsigned int hWidth = width / 2;
-			unsigned int hHeight = height / 2;
+			unsigned int hWidth = resolution / 2;
+			unsigned int hHeight = resolution / 2;
 			for (unsigned int i = 0; i < MAPCOUNT; i++) {
 				int x = i % 2;
 				int y = i / 2;
@@ -139,7 +138,7 @@ namespace geeL {
 
 
 	Resolution CascadedShadowMap::getScreenResolution() const {
-		return Resolution(width, height);
+		return Resolution(resolution, resolution);
 	}
 
 }

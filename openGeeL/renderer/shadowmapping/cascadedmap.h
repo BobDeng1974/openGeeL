@@ -20,13 +20,12 @@ namespace geeL {
 	class CascadedShadowMap : public ShadowMap {
 
 	public:
-		CascadedShadowMap(const Light& light, float shadowBias, unsigned int width, unsigned int height)
-			: ShadowMap(light), shadowBias(shadowBias), width(width), height(height) {}
+		CascadedShadowMap(const Light& light, float shadowBias, unsigned int resolution);
 
 		virtual Resolution getScreenResolution() const;
 
 	protected:
-		unsigned int width, height;
+		unsigned int resolution;
 		float shadowBias;
 
 		CascadedShadowMap(const CascadedShadowMap& other) = delete;
@@ -39,7 +38,7 @@ namespace geeL {
 
 	public:
 		CascadedDirectionalShadowMap(const Light& light, const SceneCamera& camera, 
-			float shadowBias, unsigned int width, unsigned int height);
+			float shadowBias, unsigned int resolution);
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 		virtual void removeMap(Shader& shader);
@@ -57,6 +56,16 @@ namespace geeL {
 
 		void computeLightTransforms(const SceneCamera& camera);
 	};
+
+
+
+	inline CascadedShadowMap::CascadedShadowMap(const Light& light, 
+		float shadowBias, 
+		unsigned int resolution)
+			: ShadowMap(light)
+			, shadowBias(shadowBias)
+			, resolution(resolution) {}
+
 
 }
 

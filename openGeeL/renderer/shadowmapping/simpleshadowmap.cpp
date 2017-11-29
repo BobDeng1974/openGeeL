@@ -19,7 +19,8 @@ namespace geeL {
 
 	SimpleShadowMap::SimpleShadowMap(const Light& light, 
 		const ShadowMapConfiguration& config)
-			: ShadowMap(light, config.type)
+			: ShadowMap(light)
+			, type(config.type)
 			, shadowBias(config.shadowBias)
 			, dynamicBias(config.shadowBias)
 			, farPlane(config.farPlane)
@@ -105,6 +106,10 @@ namespace geeL {
 	void SimpleShadowMap::setSoftShadowScale(float scale) {
 		if (scale != softShadowScale && scale > 0.f)
 			softShadowScale = scale;
+	}
+
+	ShadowMapType SimpleShadowMap::getType() const {
+		return type;
 	}
 
 

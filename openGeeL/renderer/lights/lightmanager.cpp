@@ -57,7 +57,7 @@ namespace geeL {
 
 		if (config.useShadowMap()) {
 			//SimpleDirectionalLightMap* map = new SimpleDirectionalLightMap(*light, config.shadowBias, 100.f);
-			CascadedDirectionalShadowMap* map = new CascadedDirectionalShadowMap(*light, camera, config.shadowBias, 1024, 1024);
+			CascadedDirectionalShadowMap* map = new CascadedDirectionalShadowMap(*light, camera, config.shadowBias, (int)config.resolution);
 			map->setIntensity(config.intensity);
 			light->setShadowMap(*map);
 		}
