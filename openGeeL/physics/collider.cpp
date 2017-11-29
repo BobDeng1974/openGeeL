@@ -51,7 +51,7 @@ namespace geeL {
 
 		model.iterateMeshes([&](const Mesh& mesh) {
 			for (unsigned int i = 0; i < mesh.getVerticesCount(); i++) {
-				glm::vec3 p1 = mesh.getVertexPosition(i);
+				glm::vec3 p1 = mesh.getVertex(i).position;
 				temp->addPoint(btVector3(p1.x, p1.y, p1.z));
 			}
 		});
@@ -69,9 +69,9 @@ namespace geeL {
 				unsigned int i2 = mesh.getIndex(i + 1);
 				unsigned int i3 = mesh.getIndex(i + 2);
 
-				glm::vec3 p1 = mesh.getVertexPosition(i1);
-				glm::vec3 p2 = mesh.getVertexPosition(i2);
-				glm::vec3 p3 = mesh.getVertexPosition(i3);
+				glm::vec3 p1 = mesh.getVertex(i1).position;
+				glm::vec3 p2 = mesh.getVertex(i2).position;
+				glm::vec3 p3 = mesh.getVertex(i3).position;
 
 				tri.addTriangle(btVector3(p1.x, p1.y, p1.z), btVector3(p2.x, p2.y, p2.z), btVector3(p3.x, p3.y, p3.z));
 			}

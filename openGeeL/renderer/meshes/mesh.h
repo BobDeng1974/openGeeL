@@ -26,17 +26,12 @@ namespace geeL {
 		glm::vec2 texCoords;
 		glm::vec3 tangent;
 		glm::vec3 bitangent;
+
 	};
 
 
 	//Vertex with associated bone data
-	struct SkinnedVertex {
-		glm::vec3 position;
-		glm::vec3 normal;
-		glm::vec2 texCoords;
-		glm::vec3 tangent;
-		glm::vec3 bitangent;
-
+	struct SkinnedVertex : public Vertex {
 		unsigned int IDs[BONECOUNT];
 		float weights[BONECOUNT];
 
@@ -61,14 +56,17 @@ namespace geeL {
 		Mesh(const std::string& name, MaterialContainer& material) 
 			: name(name), material(&material) {}
 
+		Mesh(Mesh&& other);
+		Mesh& operator=(Mesh&& other);
+
+
 		virtual void draw(const Shader& shader) const = 0;
 
 		virtual size_t getIndicesCount() const = 0;
 		virtual size_t getVerticesCount() const = 0;
 
-		//Returns vertex index at index i or clamps index to high
 		virtual unsigned int getIndex(size_t i) const = 0;
-		virtual const glm::vec3& getVertexPosition(size_t i) const = 0;
+		virtual const Vertex& getVertex(size_t i) const = 0;
 
 		const std::string& getName() const;
 		MaterialContainer& getMaterialContainer() const;
@@ -79,16 +77,18 @@ namespace geeL {
 
 	};
 
-
-	//Mesh container class for static geometry
-	class StaticMesh : public Mesh {
+	template<typename VertexType>
+	class GenericMesh : public Mesh {
 
 	public:
-		StaticMesh() : Mesh() {}
-		StaticMesh(const std::string& name, 
-			std::vector<Vertex>& vertices, 
-			std::vector<unsigned int>& indices, 
+		GenericMesh();
+		GenericMesh(const std::string& name,
+			std::vector<VertexType>&& vertices,
+			std::vector<unsigned int>&& indices,
 			MaterialContainer& material);
+
+		GenericMesh(GenericMesh<VertexType>&& other);
+		GenericMesh<VertexType>& operator=(GenericMesh<VertexType>&& other);
 
 		virtual void draw(const Shader& shader) const;
 
@@ -98,19 +98,36 @@ namespace geeL {
 		//Returns vertex at index i or emptry Vertex if i is not present
 		virtual const Vertex& getVertex(size_t i) const;
 		virtual unsigned int getIndex(size_t i) const;
-		virtual const glm::vec3& getVertexPosition(size_t i) const;
 
-	private:
+	protected:
 		unsigned int vao, vbo, ebo;
-		std::vector<Vertex> vertices;
+		std::vector<VertexType> vertices;
 		std::vector<unsigned int> indices;
 
-		void init();
+	};
+
+
+	//Mesh container class for static geometry
+	class StaticMesh : public GenericMesh<Vertex> {
+
+	public:
+		StaticMesh();
+		StaticMesh(const std::string& name,
+			std::vector<Vertex>& vertices,
+			std::vector<unsigned int>& indices,
+			MaterialContainer & material);
+
+		StaticMesh(StaticMesh&& other);
+		StaticMesh& operator=(StaticMesh&& other);
+
+	private:
+		virtual void init();
+		
 	};
 
 
 	//Mesh container for skinable/animatable geometry
-	class SkinnedMesh : public Mesh {
+	class SkinnedMesh : public GenericMesh<SkinnedVertex> {
 
 	public:
 		SkinnedMesh(const std::string& name, 
@@ -119,29 +136,14 @@ namespace geeL {
 			std::map<std::string, MeshBone>& bones,
 			MaterialContainer& material);
 
+		SkinnedMesh(SkinnedMesh&& other);
+		SkinnedMesh& operator=(SkinnedMesh&& other);
+
+
 		//Update mesh bone data into given shader
 		void updateBones(const Shader& shader, const Skeleton& skeleton) const;
 		
-		virtual void draw(const Shader& shader) const;
-
-		virtual size_t getIndicesCount() const;
-		virtual size_t getVerticesCount() const;
-
-		//Returns vertex at index i or emptry Vertex if i is not present
-		virtual const SkinnedVertex& getVertex(size_t i) const;
-		virtual unsigned int getIndex(size_t i) const;
-		virtual const glm::vec3& getVertexPosition(size_t i) const;
-
-		std::map<std::string, MeshBone>::iterator bonesBegin();
-		std::map<std::string, MeshBone>::iterator bonesEnd();
-
-		std::map<std::string, MeshBone>::const_iterator bonesBeginConst() const;
-		std::map<std::string, MeshBone>::const_iterator bonesEndBegin() const;
-
 	private:
-		unsigned int vao, vbo, ebo;
-		std::vector<SkinnedVertex> vertices;
-		std::vector<unsigned int> indices;
 		std::map<std::string, MeshBone> bones;
 
 		void init();
@@ -169,8 +171,83 @@ namespace geeL {
 		}
 	}
 
+
 	inline const std::string& Mesh::getName() const {
 		return name;
+	}
+
+
+	template<typename VertexType>
+	GenericMesh<VertexType>::GenericMesh()
+		: Mesh() {}
+
+	template<typename VertexType>
+	GenericMesh<VertexType>::GenericMesh(const std::string& name, 
+		std::vector<VertexType>&& vertices, 
+		std::vector<unsigned int>&& indices, 
+		MaterialContainer & material)
+			: Mesh(name, material)
+			, vertices(std::move(vertices))
+			, indices(std::move(indices)) {}
+
+	template<typename VertexType>
+	inline GenericMesh<VertexType>::GenericMesh(GenericMesh<VertexType>&& other)
+		: Mesh(std::move(other))
+		, vao(other.vao) 
+		, vbo(other.vbo) 
+		, ebo(other.ebo)
+		, vertices(std::move(other.vertices)) 
+		, indices(std::move(other.indices)) {
+
+		other.vao = 0;
+		other.vbo = 0;
+		other.ebo = 0;
+	}
+
+	template<typename VertexType>
+	inline GenericMesh<VertexType>& GenericMesh<VertexType>::operator=(GenericMesh<VertexType>&& other) {
+		if (this != &other) {
+			Mesh::operator=(std::move(other));
+
+			vao = other.vao;
+			vbo = other.vbo;
+			ebo = other.ebo;
+			vertices = std::move(other.vertices);
+			indices = std::move(other.indices);
+
+			other.vao = 0;
+			other.vbo = 0;
+			other.ebo = 0;
+		}
+
+		return *this;
+	}
+
+
+	template<typename VertexType>
+	inline size_t GenericMesh<VertexType>::getIndicesCount() const {
+		return indices.size();
+	}
+
+	template<typename VertexType>
+	inline size_t GenericMesh<VertexType>::getVerticesCount() const {
+		return vertices.size();
+	}
+
+	template<typename VertexType>
+	inline const Vertex& GenericMesh<VertexType>::getVertex(size_t i) const {
+		if (i >= vertices.size())
+			i = vertices.size() - 1;
+
+		return vertices[i];
+	}
+
+	template<typename VertexType>
+	inline unsigned int GenericMesh<VertexType>::getIndex(size_t i) const {
+		if (i >= vertices.size())
+			i = vertices.size() - 1;
+
+		return indices[i];
 	}
 
 }

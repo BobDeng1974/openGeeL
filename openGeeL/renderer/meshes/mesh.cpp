@@ -13,20 +13,64 @@ using namespace std;
 
 namespace geeL {
 
+	Mesh::Mesh(Mesh&& other)
+		: name(std::move(other.name))
+		, material(other.material) {
+
+		other.material = nullptr;
+	}
+
+	Mesh & Mesh::operator=(Mesh&& other) {
+		if (this != &other) {
+			name = std::move(other.name);
+			material = other.material;
+
+			other.material = nullptr;
+		}
+
+		return *this;
+	}
+
+
 	MaterialContainer& Mesh::getMaterialContainer() const {
 		return *material;
 	}
 
+	template<typename VertexType>
+	void GenericMesh<VertexType>::draw(const Shader& shader) const {
+		glBindVertexArray(vao);
+		glDrawElements(GL_TRIANGLES, int(indices.size()), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
+
+
+
+	StaticMesh::StaticMesh() 
+		: GenericMesh<Vertex>() {}
 
 	StaticMesh::StaticMesh(const std::string& name, 
-		vector<Vertex>& vertices, 
-		vector<unsigned int>& indices, 
+		std::vector<Vertex>& vertices, 
+		std::vector<unsigned int>& indices, 
 		MaterialContainer& material)
-			: Mesh(name, material)
-			, vertices(std::move(vertices))
-			, indices(std::move(indices)) {
-	
+		: GenericMesh<Vertex>(name, 
+			std::move(vertices), 
+			std::move(indices), 
+			material) {
+
 		init();
+	}
+
+	StaticMesh::StaticMesh(StaticMesh&& other)
+		: GenericMesh<Vertex>(std::move(other)) {
+
+		init();
+	}
+
+	StaticMesh& StaticMesh::operator=(StaticMesh&& other) {
+		if (this != &other)
+			GenericMesh<Vertex>::operator=(std::move(other));
+
+		return *this;
 	}
 
 	void StaticMesh::init() {
@@ -60,41 +104,6 @@ namespace geeL {
 		glBindVertexArray(0);
 	}
 
-	void StaticMesh::draw(const Shader& shader) const {
-		glBindVertexArray(vao);
-		glDrawElements(GL_TRIANGLES, int(indices.size()), GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-	}
-
-	size_t StaticMesh::getIndicesCount() const {
-		return indices.size();
-	}
-
-	size_t StaticMesh::getVerticesCount() const {
-		return vertices.size();
-	}
-
-	const Vertex& StaticMesh::getVertex(size_t i) const {
-		if (i >= vertices.size())
-			i = vertices.size() - 1;
-
-		return vertices[i];
-	}
-
-	unsigned int StaticMesh::getIndex(size_t i) const {
-		if (i >= vertices.size())
-			i = vertices.size() - 1;
-			
-		return indices[i];
-	}
-
-	const glm::vec3& StaticMesh::getVertexPosition(size_t i) const {
-		if (i >= vertices.size())
-			i = vertices.size() - 1;
-
-		return vertices[i].position;
-	}
-
 
 
 	SkinnedMesh::SkinnedMesh(const std::string& name, 
@@ -102,12 +111,31 @@ namespace geeL {
 		vector<unsigned int>& indices,
 		std::map<std::string, MeshBone>& bones,
 		MaterialContainer& material)
-			: Mesh(name, material)
-			, vertices(std::move(vertices))
-			, indices(std::move(indices))
+			: GenericMesh<SkinnedVertex>(name
+				, std::move(vertices)
+				, std::move(indices)
+				, material)
 			, bones(std::move(bones)) {
 
 		init();
+	}
+
+	SkinnedMesh::SkinnedMesh(SkinnedMesh&& other)
+		: GenericMesh<SkinnedVertex>(std::move(other))
+		, bones(std::move(other.bones)) {
+
+		init();
+	}
+
+	SkinnedMesh& SkinnedMesh::operator=(SkinnedMesh&& other) {
+		if (this != &other) {
+			GenericMesh<SkinnedVertex>::operator=(std::move(other));
+			bones = std::move(other.bones);
+
+			init();
+		}
+
+		return *this;
 	}
 
 	void SkinnedMesh::init() {
@@ -157,55 +185,5 @@ namespace geeL {
 		}
 	}
 
-	void SkinnedMesh::draw(const Shader& shader) const {
-		glBindVertexArray(vao);
-		glDrawElements(GL_TRIANGLES, int(indices.size()), GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-	}
-
-	size_t SkinnedMesh::getIndicesCount() const {
-		return unsigned int(indices.size());
-	}
-
-	size_t SkinnedMesh::getVerticesCount() const {
-		return unsigned int(vertices.size());
-	}
-
-	const SkinnedVertex& SkinnedMesh::getVertex(size_t i) const {
-		if (i >= vertices.size())
-			i = vertices.size() - 1;
-
-		return vertices[i];
-	}
-
-	unsigned int SkinnedMesh::getIndex(size_t i) const {
-		if (i >= vertices.size())
-			i = vertices.size() - 1;
-
-		return indices[i];
-	}
-
-	const glm::vec3& SkinnedMesh::getVertexPosition(size_t i) const {
-		if (i >= vertices.size())
-			i = vertices.size() - 1;
-
-		return vertices[i].position;
-	}
-
-	std::map<std::string, MeshBone>::iterator  SkinnedMesh::bonesBegin() {
-		return bones.begin();
-	}
-
-	std::map<std::string, MeshBone>::iterator  SkinnedMesh::bonesEnd() {
-		return bones.end();
-	}
-
-	std::map<std::string, MeshBone>::const_iterator  SkinnedMesh::bonesBeginConst() const {
-		return bones.begin();
-	}
-
-	std::map<std::string, MeshBone>::const_iterator  SkinnedMesh::bonesEndBegin() const {
-		return bones.end();
-	}
-
+	
 }
