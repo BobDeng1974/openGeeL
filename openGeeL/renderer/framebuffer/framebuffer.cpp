@@ -10,23 +10,17 @@ using namespace std;
 
 namespace geeL {
 
-	
-
-	void FrameBuffer::fill(Drawer& drawer, Clearer clearer) {
-		fill([&drawer]() {
-			drawer.draw();
-		}, clearer);
-	}
-
 	unsigned int IFrameBuffer::activeFBO = 0;
-	void FrameBuffer::bind() const {
-		if (fbo.token != IFrameBuffer::activeFBO) {
-			IFrameBuffer::activeFBO = fbo.token;
-			glBindFramebuffer(GL_FRAMEBUFFER, fbo.token);
+	void IFrameBuffer::bind() const {
+		unsigned int fbo = getFBO();
+
+		if (fbo != IFrameBuffer::activeFBO) {
+			IFrameBuffer::activeFBO = fbo;
+			glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		}
 	}
 
-	void FrameBuffer::bind(unsigned int fbo) {
+	void IFrameBuffer::bind(unsigned int fbo) {
 		if (fbo != IFrameBuffer::activeFBO) {
 			IFrameBuffer::activeFBO = fbo;
 			glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -36,6 +30,18 @@ namespace geeL {
 	void IFrameBuffer::unbind() {
 		IFrameBuffer::activeFBO = 0;
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void IFrameBuffer::resetSize() const {
+		Viewport::set(0, 0, getResolution().getWidth(), getResolution().getHeight());
+	}
+
+
+
+	void FrameBuffer::fill(Drawer& drawer, Clearer clearer) {
+		fill([&drawer]() {
+			drawer.draw();
+		}, clearer);
 	}
 
 	void FrameBuffer::referenceRBO(FrameBuffer& buffer) {
@@ -85,14 +91,6 @@ namespace geeL {
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo.token);
 		glBlitFramebuffer(0, 0, res.getWidth(), res.getHeight(), 0, 0,
 			res.getWidth(), res.getHeight(), GL_STENCIL_BUFFER_BIT, GL_NEAREST);
-	}
-
-	void FrameBuffer::resetSize() const {
-		Viewport::set(0, 0, getResolution().getWidth(), getResolution().getHeight());
-	}
-
-	void FrameBuffer::resetSize(Resolution resolution) {
-		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 	}
 
 	unsigned int FrameBuffer::getFBO() const {

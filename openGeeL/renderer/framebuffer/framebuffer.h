@@ -22,24 +22,26 @@ namespace geeL {
 		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNormal) = 0;
 		virtual void fill(Drawer& drawer, Clearer clearer = clearNormal) = 0;
 
-		virtual void bind() const = 0;
+		void bind() const;
+		static void bind(unsigned int fbo);
 		static void unbind();
 
-		virtual void resetSize() const = 0;
+		virtual void resetSize() const;
 		virtual const Resolution& getResolution() const = 0;
 
 	protected:
-		static unsigned int activeFBO;
-
 		IFrameBuffer() {}
 		virtual ~IFrameBuffer() {};
 
+		virtual unsigned int getFBO() const = 0;
+
 	private:
+		static unsigned int activeFBO;
+
 		IFrameBuffer(const IFrameBuffer& other) = delete;
 		IFrameBuffer& operator= (const IFrameBuffer& other) = delete;
 
 	};
-
 
 
 	//Abstract base class for all framebuffer objects
@@ -51,9 +53,6 @@ namespace geeL {
 
 		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNormal) = 0;
 		virtual void fill(Drawer& drawer, Clearer clearer = clearNormal);
-
-		virtual void bind() const;
-		static void bind(unsigned int fbo);
 
 		//Use RBO of given framebuffer
 		//Note: RBO will be referenced and not copied. 
@@ -68,8 +67,6 @@ namespace geeL {
 		virtual void copyStencil(const FrameBuffer& buffer) const;
 		
 		virtual const Resolution& getResolution() const;
-		virtual void resetSize() const;
-		static void resetSize(Resolution resolution);
 		
 		virtual bool initialized() const;
 		virtual std::string toString() const = 0;
@@ -79,7 +76,7 @@ namespace geeL {
 		FrameBufferToken fbo;
 		Resolution resolution;
 
-		unsigned int getFBO() const;
+		virtual unsigned int getFBO() const;
 
 	private:
 		FrameBuffer(const FrameBuffer& other) = delete;

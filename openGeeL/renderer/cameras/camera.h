@@ -92,7 +92,6 @@ namespace geeL {
 		//Update view and projection matrices
 		virtual void lateUpdate();
 
-
 		const float getNearPlane() const;
 		const float getFarPlane() const;
 
