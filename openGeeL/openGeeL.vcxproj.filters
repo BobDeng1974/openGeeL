@@ -722,9 +722,6 @@
     <ClInclude Include="renderer\framebuffer\cubebuffer.h">
       <Filter>renderer\framebuffer</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\utility\screeninfo.h">
-      <Filter>renderer\utility</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\texturing\imagetexture.h">
       <Filter>renderer\texturing</Filter>
     </ClInclude>

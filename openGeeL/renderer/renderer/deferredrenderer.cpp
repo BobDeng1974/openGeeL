@@ -100,9 +100,6 @@ namespace geeL {
 		//Geometry pass
 		gBuffer.fill(geometryPassFunction);
 
-		//Hacky: Read camera depth from geometry pass and write it into the scene
-		scene->forwardScreenInfo(gBuffer.screenInfo);
-
 		//Occlusion pass
 		if (ssao != nullptr) {
 			DepthGuard guard(true);

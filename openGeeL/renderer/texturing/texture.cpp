@@ -68,35 +68,44 @@ namespace geeL {
 		int width  = resolution.getWidth();
 		int height = resolution.getHeight();
 
+		unsigned int a = 0;
+		unsigned int b = 0;
+		unsigned int c = 0;
+
 		switch (colorType) {
 			case ColorType::GammaSpace:
-				glTexImage2D(textureType, 0, GL_SRGB_ALPHA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+				a = GL_SRGB_ALPHA; b = GL_RGBA, c = GL_UNSIGNED_BYTE;
+				break;
+			case ColorType::Depth:
+				a = GL_DEPTH_COMPONENT; b = GL_DEPTH_COMPONENT, c = GL_FLOAT;
 				break;
 			case ColorType::Single:
-				glTexImage2D(textureType, 0, GL_RED, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+				a = GL_RED; b = GL_RGB, c = GL_UNSIGNED_BYTE;
 				break;
 			case ColorType::Single16:
-				glTexImage2D(textureType, 0, GL_R16, width, height, 0, GL_RGB, GL_FLOAT, image);
+				a = GL_R16; b = GL_RGB, c = GL_FLOAT;
 				break;
 			case ColorType::RGB:
-				glTexImage2D(textureType, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+				a = GL_RGB; b = GL_RGB, c = GL_UNSIGNED_BYTE;
 				break;
 			case ColorType::RGB16:
-				glTexImage2D(textureType, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, image);
+				a = GL_RGB16F; b = GL_RGB, c = GL_FLOAT;
 				break;
 			case ColorType::RGB32:
-				glTexImage2D(textureType, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, image);
+				a = GL_RGB32F; b = GL_RGB, c = GL_FLOAT;
 				break;
 			case ColorType::RGBA:
-				glTexImage2D(textureType, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+				a = GL_RGBA; b = GL_RGBA, c = GL_UNSIGNED_BYTE;
 				break;
 			case ColorType::RGBA16:
-				glTexImage2D(textureType, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, image);
+				a = GL_RGBA16F; b = GL_RGBA, c = GL_FLOAT;
 				break;
 			case ColorType::RGBA32:
-				glTexImage2D(textureType, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, image);
+				a = GL_RGBA32F; b = GL_RGBA, c = GL_FLOAT;
 				break;
 		}
+
+		glTexImage2D(textureType, 0, a, width, height, 0, b, c, image);
 	}
 
 	void Texture2D::reserveStorage(unsigned int levels) {
@@ -151,6 +160,11 @@ namespace geeL {
 
 		if (maxValue > 0.f)
 			glTexParameterf((int)getTextureType(), GL_TEXTURE_MAX_ANISOTROPY_EXT, maxValue);
+	}
+
+	void Texture::setBorderColors(float r, float g, float b, float a) {
+		float borderColor[] = { r, g, b, a };
+		glTexParameterfv((int)getTextureType(), GL_TEXTURE_BORDER_COLOR, borderColor);
 	}
 
 
@@ -278,6 +292,52 @@ namespace geeL {
 
 	void TextureCube::unbind() {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
+
+	void TextureCube::initStorage(unsigned char* image) {
+		int textureType = (int)getTextureType();
+		unsigned int res = getResolution();
+
+		unsigned int a = 0;
+		unsigned int b = 0;
+		unsigned int c = 0;
+
+		switch (colorType) {
+			case ColorType::GammaSpace:
+				a = GL_SRGB_ALPHA; b = GL_RGBA, c = GL_UNSIGNED_BYTE;
+				break;
+			case ColorType::Depth:
+				a = GL_DEPTH_COMPONENT; b = GL_DEPTH_COMPONENT, c = GL_FLOAT;
+				break;
+			case ColorType::Single:
+				a = GL_RED; b = GL_RGB, c = GL_UNSIGNED_BYTE;
+				break;
+			case ColorType::Single16:
+				a = GL_R16; b = GL_RGB, c = GL_FLOAT;
+				break;
+			case ColorType::RGB:
+				a = GL_RGB; b = GL_RGB, c = GL_UNSIGNED_BYTE;
+				break;
+			case ColorType::RGB16:
+				a = GL_RGB16F; b = GL_RGB, c = GL_FLOAT;
+				break;
+			case ColorType::RGB32:
+				a = GL_RGB32F; b = GL_RGB, c = GL_FLOAT;
+				break;
+			case ColorType::RGBA:
+				a = GL_RGBA; b = GL_RGBA, c = GL_UNSIGNED_BYTE;
+				break;
+			case ColorType::RGBA16:
+				a = GL_RGBA16F; b = GL_RGBA, c = GL_FLOAT;
+				break;
+			case ColorType::RGBA32:
+				a = GL_RGBA32F; b = GL_RGBA, c = GL_FLOAT;
+				break;
+		}
+
+		for (int i = 0; i < 6; i++)
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, a, res, res, 0, b, c, image);
+
 	}
 
 

@@ -41,27 +41,13 @@ namespace geeL {
 
 	protected:
 		float shadowBias, dynamicBias, farPlane, softShadowScale;
-		unsigned int width, height, softShadowResolution, depthID;
-		ShadowmapResolution resolution;
+		unsigned int resolution, softShadowResolution, depthID;
 
 		SimpleShadowMap(const SimpleShadowMap& other) = delete;
 		SimpleShadowMap& operator= (const SimpleShadowMap& other) = delete;
 
-
 		virtual void init();
 
-		//Dynamically change shadow map resolution
-		virtual void adaptShadowmap(const SceneCamera* const camera);
-
-		//Dynamically change resolution of shadow map 
-		//depending on distance to render camera. Returns true if 
-		//resolution has changed
-		virtual bool adaptShadowmapResolution(float distance) = 0;
-
-		//Bind resolution to shadow map texture(s)
-		virtual void bindShadowmapResolution() const;
-
-		bool setResolution(int resolution, float biasFactor);
 	};
 
 
@@ -88,7 +74,6 @@ namespace geeL {
 		SimpleSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config, bool init);
 
 		void computeLightTransform();
-		virtual bool adaptShadowmapResolution(float distance);
 
 	};
 
@@ -108,14 +93,12 @@ namespace geeL {
 
 	protected:
 		virtual void init();
-		virtual void bindShadowmapResolution() const;
 
 	private:
 		const PointLight& pointLight;
 		std::vector<glm::mat4> lightTransforms;
 
 		void computeLightTransform();
-		virtual bool adaptShadowmapResolution(float distance);
 		
 	};
 
@@ -138,7 +121,6 @@ namespace geeL {
 		glm::mat4 lightTransform;
 
 		void computeLightTransform();
-		virtual bool adaptShadowmapResolution(float distance);
 
 	};
 

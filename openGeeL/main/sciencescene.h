@@ -124,7 +124,7 @@ public:
 			scene.addRequester(ssrr);
 
 			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.3f, 5.f);
-			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 15.f, 100.f, ResolutionPreset::HALFSCREEN);
+			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, 10.f, 15.f, 100.f, ResolutionPreset::HALFSCREEN);
 			renderer.addEffect(dof);
 			postLister.add(dof);
 

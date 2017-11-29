@@ -7,7 +7,6 @@
 #include "materials/materialfactory.h"
 #include "cameras/camera.h"
 #include "cubemapping/skybox.h"
-#include "utility/screeninfo.h"
 #include "lights/light.h"
 #include "lights/lightmanager.h"
 #include "inputmanager.h"
@@ -449,10 +448,6 @@ namespace geeL {
 
 	void RenderScene::unlock() {
 		mutex.unlock();
-	}
-
-	void RenderScene::forwardScreenInfo(const ScreenInfo& info) {
-		camera->updateDepth(info);
 	}
 
 	

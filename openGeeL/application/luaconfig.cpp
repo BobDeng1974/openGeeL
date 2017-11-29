@@ -527,9 +527,7 @@ namespace geeL {
 							const string& resString = l["shadowResolution"].get_or<string>("Medium");
 							ShadowmapResolution resolution = ShadowmapResolution::Medium;
 
-							if (resString == "Adaptive")
-								resolution = ShadowmapResolution::Adaptive;
-							else if (resString == "Tiny")
+							if (resString == "Tiny")
 								resolution = ShadowmapResolution::Tiny;
 							else if (resString == "Small")
 								resolution = ShadowmapResolution::Small;
@@ -754,12 +752,13 @@ namespace geeL {
 				if (dofInit.valid()) {
 
 					float aperture = dofInit["aperture"].get_or(10.f);
+					float focalLength = dofInit["focalLength"].get_or(10.f);
 					float blurSigma = dofInit["blurSigma"].get_or(2.f);
 					float resolution = dofInit["resolution"].get_or(0.5f);
 					ResolutionPreset resPreset = getRenderResolution(ResolutionScale(resolution));
 
 					DepthOfFieldBlur* blur = new DepthOfFieldBlur(0.1f, blurSigma);
-					DepthOfFieldBlurred* dof = new DepthOfFieldBlurred(*blur, camera->depth, aperture, 100.f, resPreset);
+					DepthOfFieldBlurred* dof = new DepthOfFieldBlurred(*blur, focalLength, aperture, 100.f, resPreset);
 					renderer.addEffect(*dof);
 
 					if (postLister) postLister->add(*dof);

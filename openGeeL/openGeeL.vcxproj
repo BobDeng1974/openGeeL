@@ -452,7 +452,6 @@
     <ClInclude Include="renderer\utility\range.h" />
     <ClInclude Include="renderer\utility\rendertime.h" />
     <ClInclude Include="renderer\utility\resolution.h" />
-    <ClInclude Include="renderer\utility\screeninfo.h" />
     <ClInclude Include="renderer\utility\vectorextension.h" />
     <ClInclude Include="renderer\utility\worldinformation.h" />
     <ClInclude Include="renderer\voxelization\voxelizer.h" />

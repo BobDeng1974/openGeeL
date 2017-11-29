@@ -101,7 +101,7 @@ public:
 			*/
 
 			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.4f);
-			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 35.f, 
+			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, 10.f, 35.f,
 				camera.getFarPlane(), ResolutionPreset::FULLSCREEN);
 			//renderer.addEffect(dof);
 			//postLister.add(dof);

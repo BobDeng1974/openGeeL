@@ -23,12 +23,6 @@ namespace geeL {
 		GaussianBlurBase::bindValues();
 	}
 
-	void DepthOfFieldBlur::bindDoFData(float focalLength, float aperture, float farDistance) {
-		shader.bind<float>("focalDistance", focalLength);
-		shader.bind<float>("aperture", aperture);
-		shader.bind<float>("farDistance", farDistance);
-	}
-
 	float DepthOfFieldBlur::getThreshold() const {
 		return threshold;
 	}
@@ -49,18 +43,26 @@ namespace geeL {
 		shader.bind<float>("aperture", value);
 	}
 
+	void DepthOfFieldBlur::setFarDistance(float distance) {
+		shader.bind<float>("farDistance", distance);
+	}
+
 
 	DepthOfFieldBlurred::DepthOfFieldBlurred(DepthOfFieldBlur& blur,
-		const float& focalLength, 
+		const float focalLength, 
 		float aperture, 
 		float farDistance, 
 		const ResolutionPreset& blurResolution)
 			: PostProcessingEffectFS("shaders/postprocessing/dof.frag")
 			, blur(blur)
-			, focalLength(focalLength)
-			, aperture(aperture)
-			, farDistance(farDistance)
-			, blurResolution(blurResolution) {}
+			, blurResolution(blurResolution) {
+	
+		focalLocation = shader.getLocation("focalDistance");
+
+		setAperture(aperture);
+		setFocalLength(focalLength);
+		setFarDistance(farDistance);	
+	}
 
 	DepthOfFieldBlurred::~DepthOfFieldBlurred() {
 		if (blurTexture != nullptr) delete blurTexture;
@@ -80,15 +82,6 @@ namespace geeL {
 		addTextureSampler(provider->requestPositionRoughness(), "gPositionDepth");
 		blur.addTextureSampler(provider->requestPositionRoughness(), "gPositionDepth");
 
-		shader.bind<float>("farDistance", farDistance);
-		shader.bind<float>("aperture", aperture);
-
-		focalLocation = shader.getLocation("focalDistance");
-
-		//Clamp focal length with reasonable values
-		float dist = (focalLength < 0.f || focalLength > 30.f) ? 30.f : focalLength;
-		blur.bindDoFData(dist, aperture, farDistance);
-
 		Resolution blurRes = Resolution(parentBuffer->getResolution(), blurResolution);
 		if (blurTexture == nullptr)
 			blurTexture = new RenderTexture(blurRes, ColorType::RGB16,
@@ -101,11 +94,6 @@ namespace geeL {
 	}
 
 	void DepthOfFieldBlurred::bindValues() {
-		//Clamp focal length with reasonable values
-		float dist = (focalLength < 0.f || focalLength > 50.f) ? 50.f : focalLength;
-		shader.bind<float>(focalLocation, dist);
-
-		blur.setFocalLength(dist);
 		blur.bindValues();
 	}
 
@@ -137,6 +125,33 @@ namespace geeL {
 
 			shader.bind<float>("aperture", aperture);
 			blur.setAperture(aperture);
+		}
+	}
+
+	float DepthOfFieldBlurred::getFocalLength() const {
+		return focalLength;
+	}
+
+	void DepthOfFieldBlurred::setFocalLength(float length) {
+		if (length > 0.f && length != focalLength) {
+			focalLength = length;
+
+			shader.bind<float>(focalLocation, length);
+			blur.setFocalLength(length);
+		}
+
+	}
+
+	float DepthOfFieldBlurred::getFarDistance() const {
+		return farDistance;
+	}
+
+	void DepthOfFieldBlurred::setFarDistance(float distance) {
+		if (distance > 0.f && distance != farDistance) {
+			farDistance = distance;
+
+			shader.bind<float>("farDistance", distance);
+			blur.setFarDistance(distance);
 		}
 	}
 

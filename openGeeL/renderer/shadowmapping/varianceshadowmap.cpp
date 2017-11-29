@@ -22,7 +22,7 @@ namespace geeL {
 	void VarianceSpotLightMap::init() {
 
 		glBindTexture(GL_TEXTURE_2D, id);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, width, height, 0, GL_RG, GL_FLOAT, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, resolution, resolution, 0, GL_RG, GL_FLOAT, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
@@ -68,7 +68,7 @@ namespace geeL {
 	void VarianceSpotLightMap::bindShadowmapResolution() const {
 		glBindTexture(GL_TEXTURE_2D, id);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F,
-			width, height, 0, GL_RG, GL_FLOAT, NULL);
+			resolution, resolution, 0, GL_RG, GL_FLOAT, NULL);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}

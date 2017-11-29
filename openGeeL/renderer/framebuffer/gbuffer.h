@@ -1,7 +1,6 @@
 #ifndef GBUFFER_H
 #define GBUFFER_H
 
-#include "utility/screeninfo.h"
 #include "texturing/rendertexture.h"
 #include "framebuffer.h"
 
@@ -17,8 +16,6 @@ namespace geeL {
 	class GBuffer : public FrameBuffer {
 
 	public:
-		ScreenInfo screenInfo;
-
 		GBuffer(Resolution resolution, GBufferContent content = GBufferContent::Default);
 		virtual ~GBuffer();
 

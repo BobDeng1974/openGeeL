@@ -66,7 +66,7 @@ public:
 			scene.addRequester(ssrr);
 
 			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.3f, 10.f);
-			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, camera.depth, 60.f, 100.f, ResolutionPreset::FORTY);
+			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, 2.f, 45.f, 100.f, ResolutionPreset::FORTY);
 			renderer.addEffect(dof);
 
 			FXAA& fxaa = FXAA(0.f, 0.f);

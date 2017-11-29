@@ -2,12 +2,13 @@
 #include <glew.h>
 #include <climits>
 #include <iostream>
+#include "glwrapper/viewport.h"
+#include "glwrapper/glguards.h"
 #include "shader/rendershader.h"
-#include "utility/viewport.h"
-#include "utility/glguards.h"
+#include "renderer/renderer.h"
 #include "appglobals.h"
 #include "bufferutil.h"
-#include "renderer.h"
+
 #include "gbuffer.h"
 
 namespace geeL {
@@ -52,27 +53,6 @@ namespace geeL {
 		clearer.clear();
 
 		drawCall();
-
-		float data[4];
-		glReadPixels(resolution.getWidth() / 2, resolution.getHeight() / 2, 1, 1, GL_RGBA, GL_FLOAT, data);
-		screenInfo.CTdepth = -data[2];
-
-		int xOffset = resolution.getWidth() / 3;
-		int yOffset = resolution.getHeight() / 3;
-		float mini = 0.f;
-		int maxDistance = 100;
-
-		glReadPixels(xOffset, yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
-		screenInfo.TRdepth = (-data[2] < mini) ? maxDistance : -data[2];
-
-		glReadPixels(resolution.getWidth() - xOffset, yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
-		screenInfo.TLdepth = (-data[2] < mini) ? maxDistance : -data[2];
-
-		glReadPixels(xOffset, resolution.getHeight() - yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
-		screenInfo.BRdepth = (-data[2] < mini) ? maxDistance : -data[2];
-
-		glReadPixels(resolution.getWidth() - xOffset, resolution.getHeight() - yOffset, 1, 1, GL_RGBA, GL_FLOAT, data);
-		screenInfo.BLdepth = (-data[2] < mini) ? maxDistance : -data[2];
 		
 		unbind();
 	}

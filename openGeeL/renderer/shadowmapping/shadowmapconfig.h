@@ -13,7 +13,6 @@ namespace geeL {
 	};
 
 	enum class ShadowmapResolution {
-		Adaptive = 0,
 		Tiny = 128,
 		Small = 256,
 		Medium = 512,
@@ -37,7 +36,7 @@ namespace geeL {
 
 		ShadowMapConfiguration();
 		ShadowMapConfiguration(const ShadowMapConfiguration& other);
-		ShadowMapConfiguration(float bias, ShadowMapType type, ShadowmapResolution resolution = ShadowmapResolution::Adaptive,
+		ShadowMapConfiguration(float bias, ShadowMapType type, ShadowmapResolution resolution = ShadowmapResolution::High,
 			float softShadowScale = 1.f, unsigned int softShadowResolution = 8, float farPlane = 100, float intensity = 1.f);
 
 		ShadowMapConfiguration& operator=(const ShadowMapConfiguration& other);
@@ -48,7 +47,7 @@ namespace geeL {
 
 
 	static ShadowMapConfiguration noShadowMapConfig    = ShadowMapConfiguration();
-	static ShadowMapConfiguration defPLShadowMapConfig = ShadowMapConfiguration(0.0001f, ShadowMapType::Soft, ShadowmapResolution::Adaptive, 4.f, 16);
+	static ShadowMapConfiguration defPLShadowMapConfig = ShadowMapConfiguration(0.0001f, ShadowMapType::Soft, ShadowmapResolution::High, 4.f, 16);
 	static ShadowMapConfiguration defSLShadowMapConfig = ShadowMapConfiguration(0.0001f, ShadowMapType::Soft);
 	static ShadowMapConfiguration defDLShadowMapConfig = ShadowMapConfiguration(0.00002f, ShadowMapType::Soft);
 

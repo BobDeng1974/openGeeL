@@ -3,7 +3,6 @@
 #include <gtc/type_ptr.hpp>
 #include <gtc/matrix_transform.hpp>
 #include "cameras/camera.h"
-#include "utility/screeninfo.h"
 #include "glwrapper/viewport.h"
 #include "shader/rendershader.h"
 #include "transformation/transform.h"
@@ -18,9 +17,14 @@ using namespace glm;
 
 namespace geeL {
 
-	SimpleShadowMap::SimpleShadowMap(const Light& light, const ShadowMapConfiguration& config)
-		: ShadowMap(light, config.type), shadowBias(config.shadowBias), dynamicBias(config.shadowBias), farPlane(config.farPlane), 
-			softShadowResolution(config.softShadowResolution), softShadowScale(config.softShadowScale) {
+	SimpleShadowMap::SimpleShadowMap(const Light& light, 
+		const ShadowMapConfiguration& config)
+			: ShadowMap(light, config.type)
+			, shadowBias(config.shadowBias)
+			, dynamicBias(config.shadowBias)
+			, farPlane(config.farPlane)
+			, softShadowResolution(config.softShadowResolution)
+			, softShadowScale(config.softShadowScale) {
 		
 		setResolution(config.resolution);
 	}
@@ -29,13 +33,12 @@ namespace geeL {
 
 		glBindTexture(GL_TEXTURE_2D, id);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
-			width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+			resolution, resolution, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
 		initFilterMode(FilterMode::Linear);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-		GLfloat borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+		setBorderColors(1.f, 1.f, 1.f, 1.f);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		//Bind depth map to frame buffer (the shadow map)
@@ -64,58 +67,11 @@ namespace geeL {
 	}
 
 
-	void SimpleShadowMap::adaptShadowmap(const SceneCamera* const camera) {
-
-		//Fallback strategy if no camera was forwarded
-		if (camera == nullptr) {
-			//Draw with fixed resolution
-			width = height = 512;
-			bindShadowmapResolution();
-			return;
-		}
-
-		vec3 center = camera->center;
-		//float depth = scene.camera.depth;
-		const ScreenInfo& info = camera->info;
-		float depth = fminf(info.CTdepth, fminf(info.BLdepth,
-			fminf(info.BRdepth, fminf(info.TLdepth, info.TRdepth))));
-
-		float intensity = 1.f - light.getAttenuation(center);
-
-		//Check distance between camera and center pixel of camera 
-		//and scale it with experienced intensity at center pixel.
-		//Used as heuristic for adaptive resolution
-		float distance = intensity * depth;
-		bool changed = adaptShadowmapResolution(distance);
-
-		//Only update texture if resolution actually changed
-		if (changed) bindShadowmapResolution();
-
-	}
-
-	void SimpleShadowMap::bindShadowmapResolution() const {
-		glBindTexture(GL_TEXTURE_2D, id);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
-			width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
 
 	void SimpleShadowMap::setResolution(ShadowmapResolution resolution) {
-		this->resolution = resolution;
-
-		width = height = (int)resolution;
+		this->resolution = (int)resolution;
 	}
 
-	bool SimpleShadowMap::setResolution(int resolution, float biasFactor) {
-		if (width != resolution) {
-			width = height = (int)resolution;
-			dynamicBias = shadowBias * biasFactor;
-			return true;
-		}
-
-		return false;
-	}
 
 	float SimpleShadowMap::getShadowBias() const {
 		return dynamicBias;
@@ -146,15 +102,18 @@ namespace geeL {
 	}
 
 
-	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config)
-		: SimpleShadowMap(light, config), spotLight(light) {
+	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight& light, 
+		const ShadowMapConfiguration& config)
+			: SimpleShadowMap(light, config)
+			, spotLight(light) {
 	
 		init();
 	}
 
-
-	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight & light, const ShadowMapConfiguration & config, bool init)
-		: SimpleShadowMap(light, config), spotLight(light) {}
+	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight& light, 
+		const ShadowMapConfiguration& config, bool init)
+			: SimpleShadowMap(light, config)
+			, spotLight(light) {}
 
 
 	void SimpleSpotLightMap::bindData(const Shader& shader, const std::string& name) {
@@ -169,10 +128,7 @@ namespace geeL {
 		//Write light transform into shader
 		computeLightTransform();
 
-		if (resolution == ShadowmapResolution::Adaptive)
-			adaptShadowmap(camera);
-
-		Viewport::set(0, 0, width, height);
+		Viewport::set(0, 0, resolution, resolution);
 		FrameBuffer::bind(fbo.token);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -200,10 +156,7 @@ namespace geeL {
 		//Write light transform into shader
 		computeLightTransform();
 
-		if (resolution == ShadowmapResolution::Adaptive)
-			adaptShadowmap(camera);
-
-		Viewport::set(0, 0, width, height);
+		Viewport::set(0, 0, resolution, resolution);
 		FrameBuffer::bind(fbo.token);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -228,24 +181,13 @@ namespace geeL {
 		lightTransform = projection * view;
 	}
 
-	bool SimpleSpotLightMap::adaptShadowmapResolution(float distance) {
-		if (distance < 1.f)
-			return setResolution(1024, 0.5f);
-		else if (distance < 6.f)
-			return setResolution(768, 0.5f);
-		else if (distance < 10.f)
-			return setResolution(512, 0.5f);
-		else if (distance < 15.f)
-			return setResolution(256, 1.f);
-		else
-			return setResolution(128, 1.5f);
-
-		return false;
-	}
 
 
-	SimplePointLightMap::SimplePointLightMap(const PointLight& light, const ShadowMapConfiguration& config)
-		: SimpleShadowMap(light, config), pointLight(light) {
+
+	SimplePointLightMap::SimplePointLightMap(const PointLight& light, 
+		const ShadowMapConfiguration& config)
+			: SimpleShadowMap(light, config)
+			, pointLight(light) {
 	
 		lightTransforms.reserve(6);
 		computeLightTransform();
@@ -272,7 +214,7 @@ namespace geeL {
 		//Write faces of the cubemap
 		for (int i = 0; i < 6; i++)
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
-				width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+				resolution, resolution, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
 		initFilterMode(FilterMode::Linear);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -295,10 +237,7 @@ namespace geeL {
 		//Write light transforms of cubemap faces into shader
 		computeLightTransform();
 
-		if (resolution == ShadowmapResolution::Adaptive)
-			adaptShadowmap(camera);
-
-		Viewport::set(0, 0, width, height);
+		Viewport::set(0, 0, resolution, resolution);
 		FrameBuffer::bind(fbo.token);
 		glClear(GL_DEPTH_BUFFER_BIT);
 		
@@ -354,38 +293,12 @@ namespace geeL {
 		lightTransforms[5] = std::move(projection * view);
 	}
 
-	bool SimplePointLightMap::adaptShadowmapResolution(float distance) {
-		if (distance < 4.f)
-			return setResolution(1024, 0.2f);
-		else if (distance < 10.f)
-			return setResolution(768, 0.3f);
-		else if (distance < 15.f)
-			return setResolution(512, 0.4f);
-		else if (distance < 20.f)
-			return setResolution(386, 0.5f);
-		else
-			return setResolution(256, 0.6f);
 
-		return false;
-	}
-
-	void SimplePointLightMap::bindShadowmapResolution() const {
-		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-
-		//Write faces of the cubemap
-		for (int i = 0; i < 6; i++)
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
-				width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-	}
-
-
-
-	SimpleDirectionalLightMap::SimpleDirectionalLightMap(const DirectionalLight& light, const ShadowMapConfiguration& config)
-		: SimpleShadowMap(light, config), directionalLight(light) {
+	SimpleDirectionalLightMap::SimpleDirectionalLightMap(const DirectionalLight& light, 
+		const ShadowMapConfiguration& config)
+			: SimpleShadowMap(light, config)
+			, directionalLight(light) {
 	
-		setResolution(ShadowmapResolution::High);
 		init();
 	}
 
@@ -402,7 +315,7 @@ namespace geeL {
 		//Write light transform into shader
 		computeLightTransform();
 
-		Viewport::set(0, 0, width, height);
+		Viewport::set(0, 0, resolution, resolution);
 		FrameBuffer::bind(fbo.token);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -430,15 +343,12 @@ namespace geeL {
 
 
 	void SimpleDirectionalLightMap::computeLightTransform() {
-		float a = width / 10.f;
+		float a = resolution / 10.f;
 		mat4 projection = ortho(-a, a, -a, a, -farPlane, farPlane);
 		mat4 view = lookAt(vec3(0.f), -light.transform.getForwardDirection(), vec3(0.f, 1.f, 0.f));
 
 		lightTransform = projection * view;
 	}
 
-	bool SimpleDirectionalLightMap::adaptShadowmapResolution(float distance) {
-		return false;
-	}
 
 }

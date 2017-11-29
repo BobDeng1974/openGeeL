@@ -18,13 +18,12 @@ namespace geeL {
 
 		virtual void bindValues();
 
-		void bindDoFData(float focalLength, float aperture, float farDistance);
-
 		float getThreshold() const;
 		void  setThreshold(float value);
 
 		void setFocalLength(float value);
 		void setAperture(float value);
+		void setFarDistance(float distance);
 
 	private:
 		float threshold;
@@ -38,7 +37,7 @@ namespace geeL {
 
 	public:
 		DepthOfFieldBlurred(DepthOfFieldBlur& blur, 
-			const float& focalLength, 
+			const float focalLength, 
 			float aperture = 10.f, 
 			float farDistance = 100.f, 
 			const ResolutionPreset& resolution = ResolutionPreset::FULLSCREEN);
@@ -55,6 +54,12 @@ namespace geeL {
 		float getAperture() const;
 		void setAperture(float aperture);
 
+		float getFocalLength() const;
+		void setFocalLength(float length);
+
+		float getFarDistance() const;
+		void setFarDistance(float distance);
+
 		DepthOfFieldBlur& getBlur();
 
 		virtual std::string toString() const;
@@ -62,7 +67,7 @@ namespace geeL {
 		virtual void drawSubImages();
 
 	private:
-		const float& focalLength;
+		float focalLength;
 		float aperture;
 		float farDistance;
 		ResolutionPreset blurResolution;

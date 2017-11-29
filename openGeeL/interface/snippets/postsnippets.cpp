@@ -233,6 +233,9 @@ namespace geeL {
 		float aperture = GUISnippets::drawBarFloatLogarithmic(context, dof.getAperture(), 0.f, 1000.f, 0.1f, "Aperture");
 		dof.setAperture(aperture);
 
+		float focal = GUISnippets::drawBarFloatLogarithmic(context, dof.getFocalLength(), 0.f, 1000.f, 0.1f, "Focal Length");
+		dof.setFocalLength(focal);
+
 		GUISnippets::drawTreeNode(context, "Blur", true, [this](GUIContext* context) {
 			DepthOfFieldBlur& blur = dof.getBlur();
 

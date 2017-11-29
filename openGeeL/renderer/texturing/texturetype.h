@@ -15,6 +15,7 @@
 #define GL_RGBA 0x1908
 #define GL_RGBA16F 0x881A
 #define GL_RGBA32F 0x8814
+#define GL_DEPTH_COMPONENT 0x1902
 
 #define GL_READ_ONLY 0x88B8
 #define GL_WRITE_ONLY 0x88B9
@@ -31,6 +32,7 @@ namespace geeL {
 
 	enum class ColorType {
 		None = 0,
+		Depth = GL_DEPTH_COMPONENT,
 		GammaSpace = GL_SRGB_ALPHA,
 		Single = GL_RED,
 		Single16 = GL_R16,

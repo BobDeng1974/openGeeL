@@ -39,6 +39,7 @@ namespace geeL {
 		virtual void initFilterMode(FilterMode mode);
 		virtual void initWrapMode(WrapMode mode);
 		virtual void initAnisotropyFilter(AnisotropicFilter filter);
+		void setBorderColors(float r, float g, float b, float a);
 
 		static void setMaxAnisotropyAmount(AnisotropicFilter value);
 		static AnisotropicFilter getMaxAnisotropyAmount();
@@ -126,6 +127,8 @@ namespace geeL {
 
 	protected:
 		TextureCube(ColorType colorType) : Texture(colorType) {}
+
+		virtual void initStorage(unsigned char* image);
 
 	};
 

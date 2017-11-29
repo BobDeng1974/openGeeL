@@ -216,19 +216,6 @@ namespace geeL {
 		setViewMatrix(transform.lookAt());
 	}
 
-	void SceneCamera::updateDepth(const ScreenInfo& info) {
-#if MULTI_THREADING_SUPPORT
-		sceneCameraLock();
-#endif
-
-		this->info = info;
-		depth = info.CTdepth;
-
-		center = transform.getPosition() + transform.getForwardDirection() * depth;
-	}
-
-	
-
 	const float SceneCamera::getNearPlane() const {
 		return nearClip;
 	}

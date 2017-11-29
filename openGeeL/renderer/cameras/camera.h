@@ -6,10 +6,8 @@
 #include <vector>
 #include <vec3.hpp>
 #include <mat4x4.hpp>
-#include "utility/screeninfo.h"
 #include "objectwrapper.h"
 #include "sceneobject.h"
-
 
 namespace geeL {
 
@@ -26,10 +24,6 @@ namespace geeL {
 	class Camera : public SceneObject {
 
 	public:
-		float depth;
-		ScreenInfo info;
-		glm::vec3 center;
-
 		glm::mat4 getViewMatrix() const;
 		glm::mat4 getInverseViewMatrix() const;
 		glm::mat4 getProjectionMatrix() const;
@@ -98,8 +92,6 @@ namespace geeL {
 		//Update view and projection matrices
 		virtual void lateUpdate();
 
-		//Update position and depth of center pixel of camera view
-		void updateDepth(const ScreenInfo& info);
 
 		const float getNearPlane() const;
 		const float getFarPlane() const;

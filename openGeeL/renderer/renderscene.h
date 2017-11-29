@@ -30,7 +30,6 @@ namespace geeL {
 	class MeshFactory;
 	class Transform;
 
-	struct ScreenInfo;
 	enum class CullingMode;
 
 	using TransformMapping = std::map<unsigned int, MeshRenderer*>;
@@ -191,8 +190,6 @@ namespace geeL {
 		//Lock scene for reading and writing
 		void lock();
 		void unlock();
-
-		void forwardScreenInfo(const ScreenInfo& info);
 
 	private:
 		bool initialized = false;
