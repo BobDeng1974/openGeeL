@@ -12,9 +12,9 @@ namespace geeL {
 
 		init();
 
-		buffer.initResolution(Resolution((int)config.resolution));
+		blurBuffer.initResolution(Resolution((int)config.resolution));
 		blur.setImage(temp);
-		blur.init(PostProcessingParameter(ScreenQuad::get(), buffer, Resolution((int)config.resolution)));
+		blur.init(PostProcessingParameter(ScreenQuad::get(), blurBuffer, Resolution((int)config.resolution)));
 	}
 
 
@@ -38,6 +38,16 @@ namespace geeL {
 	void VarianceSpotLightMap::draw(const SceneCamera* const camera, const RenderScene& scene,
 		ShadowmapRepository& repository) {
 
+		computeLightTransform();
+
+		buffer.add(getInnerTexture());
+		buffer.fill([this, &scene, &repository]() {
+			this->drawMap(scene, repository);
+
+
+		});
+		
+
 		const RenderShader& shader = repository.getVariance2DShader();
 		//SimpleSpotLightMap::draw(camera, scene, shader); //Note: currently only static objects
 
@@ -45,9 +55,9 @@ namespace geeL {
 		DepthGuard depthGuard(true);
 
 		glCullFace(GL_FRONT);
-		buffer.push(texture);
+		blurBuffer.push(texture);
 		blur.bindValues();
-		buffer.fill(blur);
+		blurBuffer.fill(blur);
 		glCullFace(GL_BACK);
 
 	}
@@ -57,16 +67,4 @@ namespace geeL {
 	unsigned int VarianceSpotLightMap::getID() const {
 		return texture.getID();
 	}
-
-	
-
-	void VarianceSpotLightMap::bindShadowmapResolution() const {
-		glBindTexture(GL_TEXTURE_2D, id);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F,
-			resolution, resolution, 0, GL_RG, GL_FLOAT, NULL);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-
-
 }

@@ -54,13 +54,6 @@ namespace geeL {
 		shader.bind<int>(name + "type", (int)type);
 	}
 
-
-	void SimpleShadowMap::removeMap(Shader& shader) {
-		shader.removeMap(*this);
-	}
-
-
-
 	void SimpleShadowMap::setResolution(ShadowmapResolution resolution) {
 		this->resolution = (int)resolution;
 	}

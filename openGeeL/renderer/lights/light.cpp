@@ -61,7 +61,7 @@ namespace geeL {
 
 	void Light::removeShadowmap(Shader& shader) {
 		if (shadowMap != nullptr)
-			shadowMap->removeMap(shader);
+			shader.removeMap(*shadowMap);
 	}
 
 

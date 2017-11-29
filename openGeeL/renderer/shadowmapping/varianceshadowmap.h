@@ -22,10 +22,9 @@ namespace geeL {
 
 	protected:
 		virtual void init();
-		virtual void bindShadowmapResolution() const;
 
 	private:
-		StackBuffer buffer;
+		StackBuffer blurBuffer;
 		RenderTexture texture;
 		RenderTexture temp;
 		GaussianBlur blur;
