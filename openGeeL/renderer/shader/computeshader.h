@@ -5,6 +5,7 @@
 
 namespace geeL {
 
+	class ITexture;
 	class ShaderProvider;
 
 
@@ -14,7 +15,7 @@ namespace geeL {
 		ComputeShader(const char* shaderPath, ShaderProvider* const provider = nullptr);
 
 		//Add a new map as image texture to the shader
-		void addImage(const Texture& texture, unsigned int bindingPosition);
+		void addImage(const ITexture& texture, unsigned int bindingPosition);
 
 		//Load associated image texture into shader
 		virtual void loadImages() const;
@@ -22,7 +23,7 @@ namespace geeL {
 		static void invoke(unsigned int x, unsigned int y, unsigned int z);
 
 	private:
-		std::map<unsigned int, const Texture*> images;
+		std::map<unsigned int, const ITexture*> images;
 
 	};
 

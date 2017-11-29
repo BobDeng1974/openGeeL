@@ -18,6 +18,7 @@ namespace geeL {
 	class ScreenQuad;
 	class Texture;
 	class ITextureProvider;
+	class ITexture;
 
 
 	struct PostProcessingParameter {
@@ -47,11 +48,11 @@ namespace geeL {
 		virtual ~PostProcessingEffect() {}
 
 		//Returns main image of this effect
-		virtual const Texture& getImage() const = 0;
+		virtual const ITexture& getImage() const = 0;
 
 		//Set main image buffer as texture sampler that will be used as base for post processing
-		virtual void setImage(const Texture& texture) = 0;
-		virtual void addTextureSampler(const Texture& texture, const std::string& name) = 0;
+		virtual void setImage(const ITexture& texture) = 0;
+		virtual void addTextureSampler(const ITexture& texture, const std::string& name) = 0;
 
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues() = 0;
@@ -92,9 +93,9 @@ namespace geeL {
 		PostProcessingEffectFS(const std::string& vertexPath, const std::string& fragmentPath);
 		virtual ~PostProcessingEffectFS() {}
 
-		virtual const Texture& getImage() const;
-		virtual void setImage(const Texture& texture);
-		virtual void addTextureSampler(const Texture& texture, const std::string& name);
+		virtual const ITexture& getImage() const;
+		virtual void setImage(const ITexture& texture);
+		virtual void addTextureSampler(const ITexture& texture, const std::string& name);
 
 		//Add a render mask to this effect. The effect will then only 
 		//be drawn in regions that have been marked with given mask
@@ -128,10 +129,10 @@ namespace geeL {
 		PostProcessingEffectCS(const std::string& path, Resolution groupSize = Resolution(8, 8));
 		virtual ~PostProcessingEffectCS() {}
 
-		virtual const Texture& getImage() const;
-		virtual void setImage(const Texture& texture);
-		virtual void addTextureSampler(const Texture& texture, const std::string& name);
-		virtual void addImageTexture(const Texture& texture, unsigned int bindingPosition);
+		virtual const ITexture& getImage() const;
+		virtual void setImage(const ITexture& texture);
+		virtual void addTextureSampler(const ITexture& texture, const std::string& name);
+		virtual void addImageTexture(const ITexture& texture, unsigned int bindingPosition);
 
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues() {}

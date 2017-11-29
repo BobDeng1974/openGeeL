@@ -9,7 +9,7 @@ typedef int ShaderLocation;
 namespace geeL {
 
 	class Shader;
-	class Texture;
+	class ITexture;
 
 	//Base class for all parameters that can be bound into a shader
 	class ShaderBinding {
@@ -76,13 +76,13 @@ namespace geeL {
 
 
 	struct TextureBinding {
-		const Texture* texture;
+		const ITexture* texture;
 		unsigned int offset;
 		std::string name;
 
 		TextureBinding() {}
 
-		TextureBinding(const Texture* texture, unsigned offset, std::string name) :
+		TextureBinding(const ITexture* texture, unsigned offset, std::string name) :
 			texture(texture), offset(offset), name(name) {}
 
 		bool operator== (const TextureBinding& rhs) const;

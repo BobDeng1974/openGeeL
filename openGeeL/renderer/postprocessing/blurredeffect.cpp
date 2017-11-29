@@ -28,7 +28,7 @@ namespace geeL {
 	}
 
 
-	void BlurredPostEffect::setImage(const Texture& texture) {
+	void BlurredPostEffect::setImage(const ITexture& texture) {
 		PostProcessingEffectFS::setImage(texture);
 
 		effect.setImage(texture);

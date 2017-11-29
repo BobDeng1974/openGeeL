@@ -69,7 +69,7 @@ namespace geeL {
 	}
 
 
-	void DepthOfFieldBlurred::setImage(const Texture& texture) {
+	void DepthOfFieldBlurred::setImage(const ITexture& texture) {
 		PostProcessingEffectFS::setImage(texture);
 
 		blur.setImage(texture);

@@ -9,7 +9,7 @@ namespace geeL {
 
 	class RenderTexture;
 	class SobelFilter;
-	class Texture;
+	class ITexture;
 
 
 	enum class KernelSize {
@@ -27,7 +27,7 @@ namespace geeL {
 	public:
 		virtual ~GaussianBlurBase();
 
-		virtual void setImage(const Texture& texture);
+		virtual void setImage(const ITexture& texture);
 		virtual void init(const PostProcessingParameter& parameter);
 
 		std::vector<float> computeKernel(float sigma) const;
@@ -49,7 +49,7 @@ namespace geeL {
 		unsigned int kernelSize = 5;
 
 		LinearKernel linearKernel;
-		const Texture* mainBuffer;
+		const ITexture* mainBuffer;
 		RenderTexture* tempTexture = nullptr;
 		ShaderLocation horLocation;
 
@@ -127,7 +127,7 @@ namespace geeL {
 		SobelBlur(SobelFilter& sobel, float sigma = 1.5f, bool depth = true);
 		virtual ~SobelBlur();
 
-		virtual void setImage(const Texture& texture);
+		virtual void setImage(const ITexture& texture);
 		virtual void init(const PostProcessingParameter& parameter);
 
 		float getScale() const;

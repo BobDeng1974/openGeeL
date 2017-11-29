@@ -17,7 +17,6 @@ namespace geeL {
 
 	public:
 		ShadowMap(const Light& light, std::unique_ptr<Texture> innerTexture);
-
 		virtual ~ShadowMap();
 
 

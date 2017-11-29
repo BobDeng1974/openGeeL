@@ -59,7 +59,7 @@ namespace geeL {
 			const TextureBinding* binding = bindings[i];
 
 			if (binding != nullptr) {
-				const Texture& texture = *binding->texture;
+				const ITexture& texture = *binding->texture;
 
 				glActiveTexture(layer + i);
 				texture.unbind();

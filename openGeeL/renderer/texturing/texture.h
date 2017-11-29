@@ -9,8 +9,27 @@ namespace geeL {
 
 	class TextureParameters;
 
+
+	class ITexture {
+
+	public:
+		virtual unsigned int getID() const = 0;
+
+		virtual void bind() const = 0;
+		virtual void bind(unsigned int layer) const = 0;
+		virtual void bindImage(unsigned int position = 0, AccessType access = AccessType::All) const = 0;
+
+		virtual void unbind() const = 0;
+		virtual void disable() const = 0;
+
+		virtual bool isEmpty() const;
+		bool operator== (const ITexture& rhs) const;
+		bool operator!= (const ITexture& rhs) const;
+
+	};
 	
-	class Texture {
+
+	class Texture : public ITexture {
 
 	public:
 		virtual ~Texture() {}
@@ -22,21 +41,19 @@ namespace geeL {
 
 		//Bind texture as texture sampler
 		virtual void bind() const;
-		void unbind() const;
+		virtual void unbind() const;
 
 		//Bind texture to given texture layer
-		void bind(unsigned int layer) const;
+		virtual void bind(unsigned int layer) const;
 
 		//Bind texture as image texture
-		void bindImage(unsigned int position = 0, AccessType access = AccessType::All) const;
+		virtual void bindImage(unsigned int position = 0, AccessType access = AccessType::All) const;
 
 		//Call GL disable function with appropriate texture type
-		void disable() const;
+		virtual void disable() const;
 
 		virtual void mipmap() const {}
-
 		virtual void clear();
-		virtual bool isEmpty() const;
 
 		virtual void initFilterMode(FilterMode mode);
 		virtual void initWrapMode(WrapMode mode);
@@ -51,7 +68,7 @@ namespace geeL {
 		void attachParameters(const TextureParameters& parameters);
 		void detachParameters();
 
-		bool operator== (const Texture& rhs) const;
+		
 
 	protected:
 		TextureToken id;
@@ -147,8 +164,17 @@ namespace geeL {
 	};
 
 
-	
+	inline bool ITexture::isEmpty() const {
+		return getID() == 0;
+	}
 
+	inline bool ITexture::operator==(const ITexture& rhs) const {
+		return getID() == rhs.getID();
+	}
+
+	inline bool ITexture::operator!=(const ITexture& rhs) const {
+		return getID() != rhs.getID();
+	}
 
 
 	inline unsigned int Texture::getID() const {
@@ -161,14 +187,6 @@ namespace geeL {
 
 	inline ColorType Texture::getColorType() const {
 		return colorType;
-	}
-
-	inline bool Texture::isEmpty() const {
-		return getID() == 0;
-	}
-
-	inline bool Texture::operator== (const Texture& rhs) const {
-		return getID() == rhs.getID();
 	}
 
 	inline const Resolution& Texture2D::getResolution() const {

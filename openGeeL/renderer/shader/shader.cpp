@@ -28,7 +28,7 @@ namespace geeL {
 	}
 
 
-	void Shader::addMap(const Texture& texture, const std::string& name) {
+	void Shader::addMap(const ITexture& texture, const std::string& name) {
 		auto it = maps.find(name);
 		//Update texture ID if a binding with same name already exists
 		if (it != maps.end()) {
@@ -53,7 +53,7 @@ namespace geeL {
 		}
 	}
 
-	void Shader::removeMap(const Texture& texture) {
+	void Shader::removeMap(const ITexture& texture) {
 		auto element = maps.end();
 		for (auto it = maps.begin(); it != maps.end(); it++) {
 			TextureBinding& tex = (*it).second;
@@ -82,7 +82,7 @@ namespace geeL {
 		}
 	}
 
-	const Texture * const Shader::getMap(const std::string& name) const {
+	const ITexture* const Shader::getMap(const std::string& name) const {
 		auto it = maps.find(name);
 		if (it != maps.end())
 			return (*it).second.texture;

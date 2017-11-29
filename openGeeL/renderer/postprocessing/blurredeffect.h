@@ -18,7 +18,7 @@ namespace geeL {
 
 		virtual ~BlurredPostEffect();
 
-		virtual void setImage(const Texture& texture);
+		virtual void setImage(const ITexture& texture);
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues();
 

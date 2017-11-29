@@ -55,16 +55,16 @@ namespace geeL {
 		: shader(RenderShader(vertexPath.c_str(), fragmentPath.c_str())) {}
 
 
-	const Texture& PostProcessingEffectFS::getImage() const {
+	const ITexture& PostProcessingEffectFS::getImage() const {
 		return *shader.getMap("image");
 	}
 
-	void PostProcessingEffectFS::setImage(const Texture& texture) {
+	void PostProcessingEffectFS::setImage(const ITexture& texture) {
 		shader.addMap(texture, "image");
 	}
 
 
-	void PostProcessingEffectFS::addTextureSampler(const Texture& texture, const std::string& name) {
+	void PostProcessingEffectFS::addTextureSampler(const ITexture& texture, const std::string& name) {
 		shader.addMap(texture, name);
 	}
 
@@ -134,20 +134,20 @@ namespace geeL {
 		: shader(path.c_str()), groupSize(groupSize) {}
 
 
-	const Texture& PostProcessingEffectCS::getImage() const {
+	const ITexture& PostProcessingEffectCS::getImage() const {
 		return *shader.getMap("image");
 	}
 
 
-	void PostProcessingEffectCS::setImage(const Texture& texture) {
+	void PostProcessingEffectCS::setImage(const ITexture& texture) {
 		shader.addMap(texture, "image");
 	}
 
-	void PostProcessingEffectCS::addTextureSampler(const Texture& texture, const std::string& name) {
+	void PostProcessingEffectCS::addTextureSampler(const ITexture& texture, const std::string& name) {
 		shader.addMap(texture, name);
 	}
 
-	void PostProcessingEffectCS::addImageTexture(const Texture& texture, unsigned int bindingPosition) {
+	void PostProcessingEffectCS::addImageTexture(const ITexture& texture, unsigned int bindingPosition) {
 		shader.addImage(texture, bindingPosition);
 	}
 

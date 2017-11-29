@@ -22,7 +22,7 @@ using IntegerBinding = geeL::ComparableBinding<int>;
 
 namespace geeL {
 
-	class Texture;
+	class ITexture;
 
 
 	//Container class that creates and forwards information to linked GLSL shaders
@@ -38,11 +38,11 @@ namespace geeL {
 		unsigned int getProgram() const;
 
 		//Add a new map as texture sampler to the shader
-		void addMap(const Texture& texture, const std::string& name);
-		const Texture* const getMap(const std::string& name) const;
+		void addMap(const ITexture& texture, const std::string& name);
+		const ITexture* const getMap(const std::string& name) const;
 
 		//Remove map from shader (if it is attached)
-		void removeMap(const Texture& texture);
+		void removeMap(const ITexture& texture);
 
 		//Remove map with given name from shader (if it exists)
 		void removeMap(const std::string& name);

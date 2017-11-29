@@ -27,7 +27,7 @@ namespace geeL {
 	}
 
 
-	void LensFlare::setImage(const Texture& texture) {
+	void LensFlare::setImage(const ITexture& texture) {
 		PostProcessingEffectFS::setImage(texture);
 
 		filter.setImage(texture);

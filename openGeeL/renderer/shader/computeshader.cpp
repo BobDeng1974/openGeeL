@@ -46,14 +46,14 @@ namespace geeL {
 	}
 
 
-	void ComputeShader::addImage(const Texture& texture, unsigned int bindingPosition) {
+	void ComputeShader::addImage(const ITexture& texture, unsigned int bindingPosition) {
 		images[bindingPosition] = &texture;
 	}
 
 	void ComputeShader::loadImages() const {
 		for (auto it = images.begin(); it != images.end(); it++) {
 			unsigned int position = it->first;
-			const Texture& texture = *it->second;
+			const ITexture& texture = *it->second;
 			
 			texture.bindImage(position, AccessType::Read);
 		}

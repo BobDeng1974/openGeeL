@@ -34,9 +34,9 @@ namespace geeL {
 		AdditiveWrapper(PostProcessingEffectFS& effect, BlendMode mode = BlendMode::Override);
 		virtual ~AdditiveWrapper();
 
-		virtual const Texture& getImage() const ;
-		virtual void setImage(const Texture& texture);
-		virtual void addTextureSampler(const Texture& texture, const std::string& name);
+		virtual const ITexture& getImage() const ;
+		virtual void setImage(const ITexture& texture);
+		virtual void addTextureSampler(const ITexture& texture, const std::string& name);
 
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues();

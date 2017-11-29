@@ -32,7 +32,7 @@ namespace geeL {
 		if (tempTexture != nullptr) delete tempTexture;
 	}
 
-	void GaussianBlurBase::setImage(const Texture& texture) {
+	void GaussianBlurBase::setImage(const ITexture& texture) {
 		PostProcessingEffectFS::setImage(texture);
 
 		mainBuffer = &texture;
@@ -243,7 +243,7 @@ namespace geeL {
 	}
 
 
-	void SobelBlur::setImage(const Texture& texture) {
+	void SobelBlur::setImage(const ITexture& texture) {
 		GaussianBlurBase::setImage(texture);
 
 		//Use default image if sobel shouldn't use depth buffer ...
@@ -251,7 +251,7 @@ namespace geeL {
 			sobel.setImage(texture);
 		//... or if depth texture wasn't linked properly
 		else {
-			const Texture& buffer = getImage();
+			const ITexture& buffer = getImage();
 			if (buffer.isEmpty()) {
 				sobel.setImage(texture);
 

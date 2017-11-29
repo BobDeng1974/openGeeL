@@ -52,15 +52,15 @@ namespace geeL {
 	}
 
 
-	const Texture& AdditiveWrapper::getImage() const {
+	const ITexture& AdditiveWrapper::getImage() const {
 		return effect.getImage();
 	}
 
-	void AdditiveWrapper::setImage(const Texture& texture) {
+	void AdditiveWrapper::setImage(const ITexture& texture) {
 		effect.setImage(texture);
 	}
 
-	void AdditiveWrapper::addTextureSampler(const Texture& texture, const std::string& name) {
+	void AdditiveWrapper::addTextureSampler(const ITexture& texture, const std::string& name) {
 		effect.addTextureSampler(texture, name);
 	}
 
