@@ -84,7 +84,7 @@ namespace geeL {
 		if(camera != nullptr)
 			computeLightTransforms(*camera);
 
-		buffer.add(getInnerTexture());
+		buffer.add(getTexture());
 		buffer.fill([&]() {
 			const RenderShader& shader = repository.getSimple2DShader();
 			unsigned int hWidth = resolution / 2;

@@ -13,6 +13,8 @@ namespace geeL {
 	class ITexture {
 
 	public:
+		virtual ~ITexture() {}
+
 		virtual unsigned int getID() const = 0;
 
 		virtual void bind() const = 0;
@@ -68,12 +70,11 @@ namespace geeL {
 		void attachParameters(const TextureParameters& parameters);
 		void detachParameters();
 
-		
-
 	protected:
+		static AnisotropicFilter maxAnisotropy;
+
 		TextureToken id;
 		ColorType colorType;
-		static AnisotropicFilter maxAnisotropy;
 		const TextureParameters* parameters;
 		
 		Texture(ColorType colorType) : colorType(colorType), parameters(nullptr) {}
@@ -132,11 +133,14 @@ namespace geeL {
 	protected:
 		unsigned int width, height, depth;
 
-		Texture3D(ColorType colorType, unsigned int width, unsigned int height, unsigned int depth) 
-			: Texture(colorType)
-			, width(width)
-			, height(height)
-			, depth(depth) {}
+		Texture3D(ColorType colorType, 
+			unsigned int width, 
+			unsigned int height, 
+			unsigned int depth) 
+				: Texture(colorType)
+				, width(width)
+				, height(height)
+				, depth(depth) {}
 
 	};
 

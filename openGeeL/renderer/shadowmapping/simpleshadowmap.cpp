@@ -39,7 +39,7 @@ namespace geeL {
 
 		computeLightTransform();
 
-		buffer.add(getInnerTexture());
+		buffer.add(getTexture());
 		buffer.fill([this, &scene, &repository]() {
 			this->drawMap(scene, repository);
 		});

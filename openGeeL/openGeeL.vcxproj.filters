@@ -1022,6 +1022,9 @@
     <ClInclude Include="renderer\shadowmapping\shadowbuffer.h">
       <Filter>renderer\shadowmapping</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\texturing\functionaltexture.h">
+      <Filter>renderer\texturing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\framebuffer\tcomp.frag">

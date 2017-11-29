@@ -21,7 +21,7 @@ namespace geeL {
 		, shadowBias(config.shadowBias)
 		, farPlane(config.farPlane)
 		, resolution((int)config.resolution)
-		, temp(*this, Resolution((int)config.resolution))
+		, temp(getTexture(), Resolution((int)config.resolution))
 		, blur(KernelSize::Depth, 1.5f)
 		, blurTexture(
 			Resolution((int)config.resolution), 
@@ -29,7 +29,7 @@ namespace geeL {
 			WrapMode::ClampEdge, 
 			FilterMode::Linear) {
 
-		getInnerTexture().mipmap();
+		getTexture().mipmap();
 
 		blurBuffer.initResolution(Resolution((int)config.resolution));
 		blur.setImage(temp);
@@ -43,7 +43,7 @@ namespace geeL {
 		computeLightTransform();
 
 		//Note: currently doesn't work since depth framebuffer is used
-		buffer.add(getInnerTexture());
+		buffer.add(getTexture());
 		buffer.fill([this, &scene, &repository]() {
 			if (scene.containsStaticObjects()) {
 				const RenderShader& shader = repository.getVariance2DShader();

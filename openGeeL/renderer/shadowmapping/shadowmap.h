@@ -3,7 +3,7 @@
 
 #include <memory>
 #include "framebuffer/fbotoken.h"
-#include "texturing/texture.h"
+#include "texturing/functionaltexture.h"
 #include "shadowmapconfig.h"
 #include "lights/light.h"
 #include "shadowbuffer.h"
@@ -13,12 +13,10 @@ namespace geeL {
 	class RenderScene;
 
 
-	class ShadowMap : public Texture {
+	class ShadowMap : public FunctionalTexture {
 
 	public:
 		ShadowMap(const Light& light, std::unique_ptr<Texture> innerTexture);
-		virtual ~ShadowMap();
-
 
 		virtual void bindData(const Shader& shader, const std::string& name) = 0;
 
@@ -31,35 +29,22 @@ namespace geeL {
 		void setIntensity(float value);
 
 		virtual ShadowMapType getType() const;
-		virtual TextureType getTextureType() const;
-		virtual unsigned int getID() const;
 
 	protected:
 		const Light& light;
 		DepthFrameBuffer buffer;
 		float intensity;
 
-		Texture& getInnerTexture();
-
-	private:
-		Texture* texture;
-
 	};
 
 
 	inline ShadowMap::ShadowMap(const Light& light, std::unique_ptr<Texture> innerTexture)
-		: Texture(ColorType::Depth)
+		: FunctionalTexture(std::move(innerTexture))
 		, buffer(Resolution(500))
 		, light(light)
-		, intensity(1.f) 
-		, texture(innerTexture.release()) {
+		, intensity(1.f) {
 	
-		texture->setBorderColors(1.f, 1.f, 1.f, 1.f);
-	}
-
-
-	inline ShadowMap::~ShadowMap() {
-		delete texture;
+		getTexture().setBorderColors(1.f, 1.f, 1.f, 1.f);
 	}
 
 
@@ -76,18 +61,6 @@ namespace geeL {
 		return ShadowMapType::None;
 	}
 
-	inline TextureType ShadowMap::getTextureType() const {
-		return texture->getTextureType();
-	}
-
-	inline unsigned int ShadowMap::getID() const {
-		return texture->getID();
-	}
-
-	inline Texture& ShadowMap::getInnerTexture() {
-		return *texture;
-	}
-	
 }
 
 #endif

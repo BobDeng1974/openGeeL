@@ -430,6 +430,7 @@
     <ClInclude Include="renderer\texturing\brdfIntMap.h" />
     <ClInclude Include="renderer\texturing\dynamictexture.h" />
     <ClInclude Include="renderer\texturing\envmap.h" />
+    <ClInclude Include="renderer\texturing\functionaltexture.h" />
     <ClInclude Include="renderer\texturing\imagetexturecube.h" />
     <ClInclude Include="renderer\texturing\textureparams.h" />
     <ClInclude Include="renderer\texturing\textureprovider.h" />
