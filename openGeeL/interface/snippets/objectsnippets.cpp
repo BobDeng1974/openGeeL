@@ -100,7 +100,6 @@ namespace geeL {
 
 			float intensity = GUISnippets::drawBarFloatLogarithmic(context, light.getIntensity(), 0.01f, 2000.f, 0.01f, "Intensity");
 			light.setIntensity(intensity);
-
 			
 			if (snippet != nullptr)
 				snippet->draw(context);

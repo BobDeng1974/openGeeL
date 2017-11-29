@@ -12,26 +12,37 @@
 #include "glwrapper/viewport.h"
 #include "transformation/transform.h"
 #include "framebuffer/framebuffer.h"
+#include "texturing/rendertexture.h"
 #include "renderscene.h"
 #include "cascadedmap.h"
 
 namespace geeL {
 
+	CascadedShadowMap::CascadedShadowMap(const Light& light,
+		std::unique_ptr<Texture> innerTexture,
+		float shadowBias,
+		unsigned int resolution)
+		: ShadowMap(light, std::move(innerTexture))
+		, shadowBias(shadowBias)
+		, resolution(resolution) {}
+
+	Resolution CascadedShadowMap::getScreenResolution() const {
+		return Resolution(resolution, resolution);
+	}
+
+
+
 	CascadedDirectionalShadowMap::CascadedDirectionalShadowMap(const Light& light, const SceneCamera& camera, 
 		float shadowBias, unsigned int resolution)
-			: CascadedShadowMap(light, shadowBias, resolution) {
+			: CascadedShadowMap(light, 
+				std::unique_ptr<Texture>(new RenderTexture(
+					Resolution(resolution), 
+					ColorType::Depth32, 
+					WrapMode::ClampBorder, 
+					FilterMode::Linear)), 
+				shadowBias, 
+				resolution) {
 		
-		glBindTexture(GL_TEXTURE_2D, id);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, resolution, resolution,
-			0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-
-		initFilterMode(FilterMode::Linear);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-		setBorderColors(1.f, 1.f, 1.f, 1.f);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-
 		setCascades(camera);
 	}
 
@@ -133,12 +144,6 @@ namespace geeL {
 
 	TextureType CascadedDirectionalShadowMap::getTextureType() const {
 		return TextureType::Texture2D;
-	}
-
-
-
-	Resolution CascadedShadowMap::getScreenResolution() const {
-		return Resolution(resolution, resolution);
 	}
 
 }

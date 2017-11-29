@@ -5,8 +5,12 @@
 
 namespace geeL {
 
-	RenderTextureCube::RenderTextureCube(unsigned int resolution,
-		WrapMode wrapMode, FilterMode filterMode) : TextureCube(ColorType::RGB16), resolution(resolution) {
+	RenderTextureCube::RenderTextureCube(unsigned int resolution, 
+		ColorType colorType,
+		WrapMode wrapMode, 
+		FilterMode filterMode) 
+			: TextureCube(colorType)
+			, resolution(resolution) {
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 

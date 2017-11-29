@@ -18,7 +18,10 @@ namespace geeL {
 	EnvironmentCubeMap::EnvironmentCubeMap(const EnvironmentMap& map, 
 		CubeBuffer& frameBuffer, 
 		unsigned int resolution)
-			: CubeMap(new RenderTextureCube(resolution, WrapMode::ClampEdge, FilterMode::Trilinear))
+			: CubeMap(new RenderTextureCube(resolution, 
+				ColorType::RGB16, 
+				WrapMode::ClampEdge, 
+				FilterMode::Trilinear))
 			, map(map)
 			, frameBuffer(frameBuffer)
 			, conversionShader(new RenderShader("shaders/cubemapping/envconvert.vert", 

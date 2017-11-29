@@ -17,8 +17,9 @@ namespace geeL {
 	class SimpleShadowMap : public ShadowMap {
 
 	public:
-		SimpleShadowMap(const Light& light, const ShadowMapConfiguration& config);
-
+		SimpleShadowMap(const Light& light, 
+			std::unique_ptr<Texture> innerTexture, 
+			const ShadowMapConfiguration& config);
 
 		virtual void draw(const SceneCamera* const camera, const RenderScene& scene,
 			ShadowmapRepository& repository);
@@ -50,7 +51,6 @@ namespace geeL {
 
 		virtual void drawMap(const RenderScene& scene, ShadowmapRepository& repository) = 0;
 		virtual void computeLightTransform() = 0;
-		virtual void init();
 
 	};
 
@@ -62,7 +62,6 @@ namespace geeL {
 		SimpleSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config);
 
 		virtual void bindData(const Shader& shader, const std::string& name);
-		virtual TextureType getTextureType() const;
 
 	protected:
 		const SpotLight& spotLight;
@@ -83,10 +82,6 @@ namespace geeL {
 		SimplePointLightMap(const PointLight& light, const ShadowMapConfiguration& config);
 		
 		virtual void bindData(const Shader& shader, const std::string& name);
-		virtual TextureType getTextureType() const;
-
-	protected:
-		virtual void init();
 
 	private:
 		const PointLight& pointLight;
@@ -105,7 +100,6 @@ namespace geeL {
 		SimpleDirectionalLightMap(const DirectionalLight& light, const ShadowMapConfiguration& config);
 
 		virtual void bindData(const Shader& shader, const std::string& name);
-		virtual TextureType getTextureType() const;
 
 	private:
 		const DirectionalLight& directionalLight;

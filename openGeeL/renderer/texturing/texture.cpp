@@ -60,6 +60,11 @@ namespace geeL {
 				glClearTexImage(getID(), 0, GL_RGBA, GL_FLOAT, &colors2);
 				break;
 			}
+			case ColorType::Depth:
+			case ColorType::Depth32:
+				float colors[1] = { 0 };
+				glClearTexImage(getID(), 0, GL_DEPTH_COMPONENT, GL_FLOAT, &colors);
+				break;
 		}
 	}
 
@@ -78,6 +83,9 @@ namespace geeL {
 				break;
 			case ColorType::Depth:
 				a = GL_DEPTH_COMPONENT; b = GL_DEPTH_COMPONENT, c = GL_FLOAT;
+				break;
+			case ColorType::Depth32:
+				a = GL_DEPTH_COMPONENT32; b = GL_DEPTH_COMPONENT, c = GL_FLOAT;
 				break;
 			case ColorType::Single:
 				a = GL_RED; b = GL_RGB, c = GL_UNSIGNED_BYTE;
@@ -163,8 +171,10 @@ namespace geeL {
 	}
 
 	void Texture::setBorderColors(float r, float g, float b, float a) {
+		bind();
 		float borderColor[] = { r, g, b, a };
 		glTexParameterfv((int)getTextureType(), GL_TEXTURE_BORDER_COLOR, borderColor);
+		unbind();
 	}
 
 
@@ -308,6 +318,9 @@ namespace geeL {
 				break;
 			case ColorType::Depth:
 				a = GL_DEPTH_COMPONENT; b = GL_DEPTH_COMPONENT, c = GL_FLOAT;
+				break;
+			case ColorType::Depth32:
+				a = GL_DEPTH_COMPONENT32; b = GL_DEPTH_COMPONENT, c = GL_FLOAT;
 				break;
 			case ColorType::Single:
 				a = GL_RED; b = GL_RGB, c = GL_UNSIGNED_BYTE;

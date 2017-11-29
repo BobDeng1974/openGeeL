@@ -16,7 +16,10 @@ namespace geeL {
 	PrefilteredEnvironmentMap::PrefilteredEnvironmentMap(const CubeMap& environmentMap, 
 		CubeBuffer& frameBuffer, 
 		unsigned int resolution)
-			: DynamicCubeMap(new RenderTextureCube(resolution, WrapMode::ClampEdge, FilterMode::Trilinear))
+			: DynamicCubeMap(new RenderTextureCube(resolution, 
+				ColorType::RGB16, 
+				WrapMode::ClampEdge, 
+				FilterMode::Trilinear))
 			, environmentMap(environmentMap)
 			, frameBuffer(frameBuffer)
 			, conversionShader(new RenderShader("shaders/cubemapping/envconvert.vert",

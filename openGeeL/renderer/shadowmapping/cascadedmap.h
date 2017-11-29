@@ -20,7 +20,8 @@ namespace geeL {
 	class CascadedShadowMap : public ShadowMap {
 
 	public:
-		CascadedShadowMap(const Light& light, float shadowBias, unsigned int resolution);
+		CascadedShadowMap(const Light& light, std::unique_ptr<Texture> innerTexture, 
+			float shadowBias, unsigned int resolution);
 
 		virtual Resolution getScreenResolution() const;
 
@@ -56,16 +57,6 @@ namespace geeL {
 
 		void computeLightTransforms(const SceneCamera& camera);
 	};
-
-
-
-	inline CascadedShadowMap::CascadedShadowMap(const Light& light, 
-		float shadowBias, 
-		unsigned int resolution)
-			: ShadowMap(light)
-			, shadowBias(shadowBias)
-			, resolution(resolution) {}
-
 
 }
 

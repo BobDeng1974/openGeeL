@@ -10,6 +10,8 @@
 #include "lights/pointlight.h"
 #include "lights/directionallight.h"
 #include "framebuffer/framebuffer.h"
+#include "texturing/rendertexture.h"
+#include "texturing/rendertexturecube.h"
 #include "renderscene.h"
 #include "simpleshadowmap.h"
 
@@ -18,8 +20,9 @@ using namespace glm;
 namespace geeL {
 
 	SimpleShadowMap::SimpleShadowMap(const Light& light, 
+		std::unique_ptr<Texture> innerTexture,
 		const ShadowMapConfiguration& config)
-			: ShadowMap(light)
+			: ShadowMap(light, std::move(innerTexture))
 			, type(config.type)
 			, shadowBias(config.shadowBias)
 			, dynamicBias(config.shadowBias)
@@ -30,19 +33,6 @@ namespace geeL {
 		setResolution(config.resolution);
 	}
 
-	void SimpleShadowMap::init() {
-
-		glBindTexture(GL_TEXTURE_2D, id);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
-			resolution, resolution, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-
-		initFilterMode(FilterMode::Linear);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-		setBorderColors(1.f, 1.f, 1.f, 1.f);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-
 
 	void SimpleShadowMap::draw(const SceneCamera* const camera, 
 		const RenderScene& scene, 
@@ -50,7 +40,7 @@ namespace geeL {
 
 		computeLightTransform();
 
-		buffer.add(*this);
+		buffer.add(getInnerTexture());
 		buffer.fill([this, &scene, &repository]() {
 			this->drawMap(scene, repository);
 		});
@@ -115,15 +105,24 @@ namespace geeL {
 
 	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight& light, 
 		const ShadowMapConfiguration& config)
-			: SimpleShadowMap(light, config)
-			, spotLight(light) {
-	
-		init();
-	}
+			: SimpleShadowMap(light, 
+				std::unique_ptr<Texture>(new RenderTexture(
+					Resolution((int)config.resolution),
+					ColorType::Depth,
+					WrapMode::ClampBorder,
+					FilterMode::Linear)),
+				config)
+			, spotLight(light) {}
 
 	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight& light, 
 		const ShadowMapConfiguration& config, bool init)
-			: SimpleShadowMap(light, config)
+			: SimpleShadowMap(light, 
+				std::unique_ptr<Texture>(new RenderTexture(
+					Resolution((int)config.resolution), 
+					ColorType::Depth, 
+					WrapMode::ClampBorder, 
+					FilterMode::Linear)), 
+				config)
 			, spotLight(light) {}
 
 
@@ -131,10 +130,6 @@ namespace geeL {
 		SimpleShadowMap::bindData(shader, name);
 
 		shader.bind<glm::mat4>(name + "lightTransform", lightTransform);
-	}
-
-	TextureType SimpleSpotLightMap::getTextureType() const {
-		return TextureType::Texture2D;
 	}
 
 	void SimpleSpotLightMap::drawMap(const RenderScene& scene, ShadowmapRepository& repository) {
@@ -169,13 +164,17 @@ namespace geeL {
 
 	SimplePointLightMap::SimplePointLightMap(const PointLight& light, 
 		const ShadowMapConfiguration& config)
-			: SimpleShadowMap(light, config)
+			: SimpleShadowMap(light, 
+				std::unique_ptr<Texture>(new RenderTextureCube(
+					(int)config.resolution, 
+					ColorType::Depth,
+					WrapMode::ClampEdge, 
+					FilterMode::Linear)),
+				config)
 			, pointLight(light) {
 	
 		lightTransforms.reserve(6);
 		computeLightTransform();
-
-		init();
 	}
 
 
@@ -183,28 +182,6 @@ namespace geeL {
 		SimpleShadowMap::bindData(shader, name);
 
 		shader.bind<float>(name + "farPlane", farPlane);
-	}
-
-	TextureType SimplePointLightMap::getTextureType() const {
-		return TextureType::TextureCube;
-	}
-
-	void SimplePointLightMap::init() {
-
-		//Generate depth cube map texture
-		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-
-		//Write faces of the cubemap
-		for (int i = 0; i < 6; i++)
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
-				resolution, resolution, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-
-		initFilterMode(FilterMode::Linear);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-
 	}
 
 	void SimplePointLightMap::drawMap(const RenderScene& scene, ShadowmapRepository& repository) {
@@ -261,11 +238,14 @@ namespace geeL {
 
 	SimpleDirectionalLightMap::SimpleDirectionalLightMap(const DirectionalLight& light, 
 		const ShadowMapConfiguration& config)
-			: SimpleShadowMap(light, config)
-			, directionalLight(light) {
-	
-		init();
-	}
+			: SimpleShadowMap(light, 
+				std::unique_ptr<Texture>(new RenderTexture(
+					Resolution((int)config.resolution),
+					ColorType::Depth,
+					WrapMode::ClampBorder,
+					FilterMode::Linear)),
+				config)
+			, directionalLight(light) {}
 
 
 	void SimpleDirectionalLightMap::bindData(const Shader& shader, const std::string& name) {
@@ -273,11 +253,6 @@ namespace geeL {
 
 		shader.bind<glm::mat4>(name + "lightTransform", lightTransform);
 	}
-
-	TextureType SimpleDirectionalLightMap::getTextureType() const {
-		return TextureType::Texture2D;
-	}
-
 
 	void SimpleDirectionalLightMap::drawMap(const RenderScene& scene, ShadowmapRepository& repository) {
 		if (scene.containsStaticObjects()) {
@@ -302,6 +277,5 @@ namespace geeL {
 
 		lightTransform = projection * view;
 	}
-
 
 }
