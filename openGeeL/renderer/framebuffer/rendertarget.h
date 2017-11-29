@@ -8,6 +8,7 @@ namespace geeL {
 
 	class IFrameBuffer;
 
+
 	//Interface for all objects that can be used as drawing target of a framebuffer
 	class RenderTarget {
 		friend class LayeredTarget;

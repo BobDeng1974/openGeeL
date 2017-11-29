@@ -9,6 +9,9 @@
 
 namespace geeL {
 
+	class RenderShader;
+
+
 	class TextureStack {
 
 	public:

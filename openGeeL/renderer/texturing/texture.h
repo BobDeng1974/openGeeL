@@ -7,8 +7,6 @@
 
 namespace geeL {
 
-	class IFrameBuffer;
-	class RenderShader;
 	class TextureParameters;
 
 	
@@ -42,8 +40,6 @@ namespace geeL {
 		virtual void initWrapMode(WrapMode mode);
 		virtual void initAnisotropyFilter(AnisotropicFilter filter);
 
-		static void clear(ColorType type, unsigned int id);
-		static void mipmap(TextureType type, unsigned int id);
 		static void setMaxAnisotropyAmount(AnisotropicFilter value);
 		static AnisotropicFilter getMaxAnisotropyAmount();
 

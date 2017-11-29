@@ -42,7 +42,25 @@ namespace geeL {
 	}
 
 	void Texture::clear() {
-		clear(colorType, getID());
+		switch (colorType) {
+			case ColorType::Single:
+			case ColorType::Single16:
+			case ColorType::RGB:
+			case ColorType::RGB16:
+			case ColorType::RGB32: {
+				float colors[3] = { 0, 0, 0 };
+				glClearTexImage(getID(), 0, GL_RGB, GL_FLOAT, &colors);
+				break;
+			}
+			case ColorType::GammaSpace:
+			case ColorType::RGBA:
+			case ColorType::RGBA16:
+			case ColorType::RGBA32: {
+				float colors2[4] = { 0, 0, 0, 0 };
+				glClearTexImage(getID(), 0, GL_RGBA, GL_FLOAT, &colors2);
+				break;
+			}
+		}
 	}
 
 	void Texture2D::initStorage(unsigned char* image) {
@@ -135,36 +153,6 @@ namespace geeL {
 			glTexParameterf((int)getTextureType(), GL_TEXTURE_MAX_ANISOTROPY_EXT, maxValue);
 	}
 
-
-	void Texture::clear(ColorType type, unsigned int id) {
-		switch (type) {
-			case ColorType::Single:
-			case ColorType::Single16:
-			case ColorType::RGB:
-			case ColorType::RGB16:
-			case ColorType::RGB32: {
-				float colors[3] = { 0, 0, 0 };
-				glClearTexImage(id, 0, GL_RGB, GL_FLOAT, &colors);
-				break;
-			}
-			case ColorType::GammaSpace:
-			case ColorType::RGBA:
-			case ColorType::RGBA16:
-			case ColorType::RGBA32: {
-				float colors2[4] = { 0, 0, 0, 0 };
-				glClearTexImage(id, 0, GL_RGBA, GL_FLOAT, &colors2);
-				break;
-			}
-		}
-	}
-
-	void Texture::mipmap(TextureType type, unsigned int id) {
-		int t = (int)type;
-
-		glBindTexture(t, id);
-		glGenerateMipmap(t);
-		glBindTexture(t, 0);
-	}
 
 	void Texture::setMaxAnisotropyAmount(AnisotropicFilter value) {
 		maxAnisotropy = value;

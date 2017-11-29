@@ -77,6 +77,8 @@ namespace geeL {
 
 	};
 
+
+
 	template<typename VertexType>
 	class GenericMesh : public Mesh {
 
@@ -107,6 +109,7 @@ namespace geeL {
 	};
 
 
+
 	//Mesh container class for static geometry
 	class StaticMesh : public GenericMesh<Vertex> {
 
@@ -124,6 +127,7 @@ namespace geeL {
 		virtual void init();
 		
 	};
+
 
 
 	//Mesh container for skinable/animatable geometry
@@ -148,7 +152,6 @@ namespace geeL {
 
 		void init();
 	};
-
 
 
 

@@ -1,15 +1,9 @@
 #include <algorithm>
-#include <vec4.hpp>
-#include <mat4x4.hpp>
+#include <vec3.hpp>
 #include <vector>
-#include "shader/rendershader.h"
 #include "shader/sceneshader.h"
 #include "shader/uniformstack.h"
-#include "materials/material.h"
-#include "meshes/mesh.h"
-#include "meshes/model.h"
 #include "meshes/meshrenderer.h"
-#include "meshes/meshfactory.h"
 #include "materials/materialfactory.h"
 #include "cameras/camera.h"
 #include "cubemapping/skybox.h"

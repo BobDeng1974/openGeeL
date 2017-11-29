@@ -6,8 +6,6 @@
 
 namespace geeL {
 
-	class RenderShader;
-
 	//Cubemap that consists of six textures for each side
 	class ImageTextureCube : public TextureCube {
 

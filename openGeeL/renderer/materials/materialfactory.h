@@ -19,6 +19,7 @@ namespace geeL {
 	class MaterialContainer;
 	class DefaultMaterialContainer;
 	class GenericMaterialContainer;
+	class RenderShader;
 	class SceneShader;
 	class ShaderProvider;
 

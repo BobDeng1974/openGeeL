@@ -66,7 +66,7 @@ namespace geeL {
 
 	void VoxelTexture::clearTexture() {
 		texture->bind();
-		Texture::clear(ColorType::RGBA, texture->getID());
+		texture->clear();
 	}
 
 }
