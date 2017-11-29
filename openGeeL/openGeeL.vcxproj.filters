@@ -510,6 +510,9 @@
     <ClCompile Include="renderer\renderer\renderer.cpp">
       <Filter>renderer\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\shadowmapping\shadowbuffer.cpp">
+      <Filter>renderer\shadowmapping</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\texturing\texture.h">
@@ -1015,6 +1018,9 @@
     </ClInclude>
     <ClInclude Include="main\sponzascene.h">
       <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shadowmapping\shadowbuffer.h">
+      <Filter>renderer\shadowmapping</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

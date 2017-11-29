@@ -23,6 +23,8 @@ namespace geeL {
 		CascadedShadowMap(const Light& light, float shadowBias, unsigned int width, unsigned int height)
 			: ShadowMap(light), shadowBias(shadowBias), width(width), height(height) {}
 
+		virtual Resolution getScreenResolution() const;
+
 	protected:
 		unsigned int width, height;
 		float shadowBias;

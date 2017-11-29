@@ -5,6 +5,7 @@
 #include "texturing/texture.h"
 #include "shadowmapconfig.h"
 #include "lights/light.h"
+#include "shadowbuffer.h"
 
 namespace geeL {
 
@@ -15,7 +16,12 @@ namespace geeL {
 
 	public:
 		ShadowMap(const Light& light, ShadowMapType type = ShadowMapType::Soft) 
-			: Texture(ColorType::None), light(light), type(type), intensity(1.f) {}
+			: Texture(ColorType::Depth)
+			, buffer(Resolution(500))
+			, light(light)
+			, type(type)
+			, intensity(1.f) {}
+
 
 		virtual void bindData(const Shader& shader, const std::string& name) = 0;
 		virtual void removeMap(Shader& shader) = 0;
@@ -33,7 +39,7 @@ namespace geeL {
 		ShadowMapType getType() const;
 
 	protected:
-		FrameBufferToken fbo;
+		DepthFrameBuffer buffer;
 		float intensity;
 		const ShadowMapType type;
 		const Light& light;

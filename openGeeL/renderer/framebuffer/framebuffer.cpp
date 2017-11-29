@@ -10,6 +10,12 @@ using namespace std;
 
 namespace geeL {
 
+	void IFrameBuffer::fill(Drawer& drawer, Clearer clearer) {
+		fill([&drawer]() {
+			drawer.draw();
+		}, clearer);
+	}
+
 	unsigned int IFrameBuffer::activeFBO = 0;
 	void IFrameBuffer::bind() const {
 		unsigned int fbo = getFBO();
@@ -38,11 +44,7 @@ namespace geeL {
 
 
 
-	void FrameBuffer::fill(Drawer& drawer, Clearer clearer) {
-		fill([&drawer]() {
-			drawer.draw();
-		}, clearer);
-	}
+	
 
 	void FrameBuffer::referenceRBO(FrameBuffer& buffer) {
 		referenceRBO(buffer.rbo);

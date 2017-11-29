@@ -20,7 +20,7 @@ namespace geeL {
 
 	public:
 		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNormal) = 0;
-		virtual void fill(Drawer& drawer, Clearer clearer = clearNormal) = 0;
+		virtual void fill(Drawer& drawer, Clearer clearer = clearNormal);
 
 		void bind() const;
 		static void bind(unsigned int fbo);
@@ -52,7 +52,7 @@ namespace geeL {
 		virtual ~FrameBuffer() {}
 
 		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNormal) = 0;
-		virtual void fill(Drawer& drawer, Clearer clearer = clearNormal);
+		using IFrameBuffer::fill;
 
 		//Use RBO of given framebuffer
 		//Note: RBO will be referenced and not copied. 
@@ -91,7 +91,6 @@ namespace geeL {
 	public:
 		virtual void add(RenderTarget& target);
 		virtual void push(RenderTarget& target) = 0;
-
 	};
 
 

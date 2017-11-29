@@ -29,17 +29,8 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 		setBorderColors(1.f, 1.f, 1.f, 1.f);
-		
 		glBindTexture(GL_TEXTURE_2D, 0);
-		
-		glGenFramebuffers(1, &fbo.token);
-		FrameBuffer::bind(fbo.token);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id, 0);
 
-		//Disable writing to color buffer
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
-		FrameBuffer::unbind();
 
 		setCascades(camera);
 	}
@@ -83,23 +74,21 @@ namespace geeL {
 		if(camera != nullptr)
 			computeLightTransforms(*camera);
 
-		FrameBuffer::bind(fbo.token);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id, 0);
-		glClear(GL_DEPTH_BUFFER_BIT);
+		buffer.add(*this);
+		buffer.fill([&]() {
+			const RenderShader& shader = repository.getSimple2DShader();
+			unsigned int hWidth = width / 2;
+			unsigned int hHeight = height / 2;
+			for (unsigned int i = 0; i < MAPCOUNT; i++) {
+				int x = i % 2;
+				int y = i / 2;
 
-		const RenderShader& shader = repository.getSimple2DShader();
-		unsigned int hWidth = width / 2;
-		unsigned int hHeight = height / 2;
-		for (unsigned int i = 0; i < MAPCOUNT; i++) {
-			int x = i % 2;
-			int y = i / 2;
+				Viewport::set(x * hWidth, y * hHeight, hWidth, hHeight);
+				shader.bind<glm::mat4>("lightTransform", shadowMaps[i].lightTransform);
+				scene.drawStaticObjects(shader); //Note: currently only static objects
+			}
 
-			Viewport::set(x * hWidth, y * hHeight, hWidth, hHeight);
-			shader.bind<glm::mat4>("lightTransform", shadowMaps[i].lightTransform);
-			scene.drawStaticObjects(shader); //Note: currently only static objects
-		}
-
-		FrameBuffer::unbind();
+		});
 	}
 
 
@@ -148,5 +137,9 @@ namespace geeL {
 	}
 
 
+
+	Resolution CascadedShadowMap::getScreenResolution() const {
+		return Resolution(width, height);
+	}
 
 }

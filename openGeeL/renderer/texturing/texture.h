@@ -44,6 +44,8 @@ namespace geeL {
 		static void setMaxAnisotropyAmount(AnisotropicFilter value);
 		static AnisotropicFilter getMaxAnisotropyAmount();
 
+		virtual Resolution getScreenResolution() const = 0;
+
 		void attachParameters(const TextureParameters& parameters);
 		void detachParameters();
 
@@ -73,6 +75,8 @@ namespace geeL {
 		//Set render view to resolution of this texture
 		virtual void setRenderResolution() const;
 		virtual const Resolution& getResolution() const;
+		virtual Resolution getScreenResolution() const;
+
 		ResolutionScale getScale() const;
 
 		static void unbind();
@@ -102,11 +106,18 @@ namespace geeL {
 
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
+		virtual Resolution getScreenResolution() const;
 
 		static void unbind();
 
 	protected:
-		Texture3D(ColorType colorType) : Texture(colorType) {}
+		unsigned int width, height, depth;
+
+		Texture3D(ColorType colorType, unsigned int width, unsigned int height, unsigned int depth) 
+			: Texture(colorType)
+			, width(width)
+			, height(height)
+			, depth(depth) {}
 
 	};
 
@@ -121,6 +132,7 @@ namespace geeL {
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
 
+		virtual Resolution getScreenResolution() const;
 		virtual unsigned int getResolution() const = 0;
 
 		static void unbind();
@@ -161,6 +173,10 @@ namespace geeL {
 		return resolution;
 	}
 
+	inline Resolution Texture2D::getScreenResolution() const {
+		return resolution;
+	}
+
 	inline ResolutionScale Texture2D::getScale() const {
 		return resolution.getScale();
 	}
@@ -181,8 +197,17 @@ namespace geeL {
 		return TextureType::Texture3D;
 	}
 
+	inline Resolution Texture3D::getScreenResolution() const {
+		return Resolution(width, height);
+	}
+
 	inline TextureType TextureCube::getTextureType() const {
 		return TextureType::TextureCube;
+	}
+
+	inline Resolution TextureCube::getScreenResolution() const {
+		unsigned int res = getResolution();
+		return Resolution(res);
 	}
 
 	

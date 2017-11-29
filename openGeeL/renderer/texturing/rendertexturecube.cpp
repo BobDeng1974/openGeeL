@@ -9,9 +9,8 @@ namespace geeL {
 		WrapMode wrapMode, FilterMode filterMode) : TextureCube(ColorType::RGB16), resolution(resolution) {
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-		for (unsigned int side = 0; side < 6; side++)
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, 0, GL_RGB16F,
-				resolution, resolution, 0, GL_RGB, GL_FLOAT, nullptr);
+
+		initStorage(0);
 
 		initFilterMode(filterMode);
 		initWrapMode(wrapMode);

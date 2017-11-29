@@ -33,18 +33,13 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 
-		glGenFramebuffers(1, &fbo.token);
-		FrameBuffer::bind(fbo.token);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, id, 0);
-
-		FrameBuffer::unbind();
 	}
 
 	void VarianceSpotLightMap::draw(const SceneCamera* const camera, const RenderScene& scene,
 		ShadowmapRepository& repository) {
 
 		const RenderShader& shader = repository.getVariance2DShader();
-		SimpleSpotLightMap::draw(camera, scene, shader); //Note: currently only static objects
+		//SimpleSpotLightMap::draw(camera, scene, shader); //Note: currently only static objects
 
 		//Blur shadow map
 		DepthGuard depthGuard(true);

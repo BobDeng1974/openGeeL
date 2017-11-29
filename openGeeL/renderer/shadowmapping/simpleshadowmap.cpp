@@ -40,18 +40,20 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 		setBorderColors(1.f, 1.f, 1.f, 1.f);
 		glBindTexture(GL_TEXTURE_2D, 0);
-
-		//Bind depth map to frame buffer (the shadow map)
-		glGenFramebuffers(1, &fbo.token);
-		FrameBuffer::bind(fbo.token);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id, 0);
-
-		//Disable writes to color buffer
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
-		FrameBuffer::unbind();
 	}
 
+
+	void SimpleShadowMap::draw(const SceneCamera* const camera, 
+		const RenderScene& scene, 
+		ShadowmapRepository& repository) {
+
+		computeLightTransform();
+
+		buffer.add(*this);
+		buffer.fill([this, &scene, &repository]() {
+			this->drawMap(scene, repository);
+		});
+	}
 
 	void SimpleShadowMap::bindData(const Shader& shader, const std::string& name) {
 		shader.bind<float>(name + "bias", dynamicBias);
@@ -70,6 +72,10 @@ namespace geeL {
 
 	void SimpleShadowMap::setResolution(ShadowmapResolution resolution) {
 		this->resolution = (int)resolution;
+	}
+
+	Resolution SimpleShadowMap::getScreenResolution() const {
+		return Resolution(resolution);
 	}
 
 
@@ -122,16 +128,11 @@ namespace geeL {
 		shader.bind<glm::mat4>(name + "lightTransform", lightTransform);
 	}
 
-	void SimpleSpotLightMap::draw(const SceneCamera* const camera, const RenderScene& scene, 
-		ShadowmapRepository& repository) {
-		
-		//Write light transform into shader
-		computeLightTransform();
+	TextureType SimpleSpotLightMap::getTextureType() const {
+		return TextureType::Texture2D;
+	}
 
-		Viewport::set(0, 0, resolution, resolution);
-		FrameBuffer::bind(fbo.token);
-		glClear(GL_DEPTH_BUFFER_BIT);
-
+	void SimpleSpotLightMap::drawMap(const RenderScene& scene, ShadowmapRepository& repository) {
 		if (scene.containsStaticObjects()) {
 			const RenderShader& shader = repository.getSimple2DShader();
 			shader.bind<glm::mat4>("lightTransform", lightTransform);
@@ -145,29 +146,6 @@ namespace geeL {
 
 			scene.drawSkinnedObjects(shader);
 		}
-		
-
-		FrameBuffer::unbind();
-	}
-
-	void SimpleSpotLightMap::draw(const SceneCamera* const camera, const RenderScene& scene,
-		const RenderShader& shader) {
-
-		//Write light transform into shader
-		computeLightTransform();
-
-		Viewport::set(0, 0, resolution, resolution);
-		FrameBuffer::bind(fbo.token);
-		glClear(GL_DEPTH_BUFFER_BIT);
-
-		shader.bind<glm::mat4>("lightTransform", lightTransform);
-
-		scene.drawStaticObjects(shader);
-		FrameBuffer::unbind();
-	}
-
-	TextureType SimpleSpotLightMap::getTextureType() const {
-		return TextureType::Texture2D;
 	}
 
 	void SimpleSpotLightMap::computeLightTransform() {
@@ -222,25 +200,9 @@ namespace geeL {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-		//Bind depth map to frame buffer (the shadow map)
-		glGenFramebuffers(1, &fbo.token);
-		FrameBuffer::bind(fbo.token);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, id, 0);
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
-		FrameBuffer::unbind();
 	}
 
-	void SimplePointLightMap::draw(const SceneCamera* const camera, const RenderScene& scene,
-		ShadowmapRepository& repository) {
-
-		//Write light transforms of cubemap faces into shader
-		computeLightTransform();
-
-		Viewport::set(0, 0, resolution, resolution);
-		FrameBuffer::bind(fbo.token);
-		glClear(GL_DEPTH_BUFFER_BIT);
-		
+	void SimplePointLightMap::drawMap(const RenderScene& scene, ShadowmapRepository& repository) {
 		if (scene.containsStaticObjects()) {
 			const RenderShader& shader = repository.getSimpleCubeShader();
 			for (int i = 0; i < 6; i++) {
@@ -266,8 +228,6 @@ namespace geeL {
 
 			scene.drawSkinnedObjects(shader);
 		}
-		
-		FrameBuffer::unbind();
 	}
 
 	void SimplePointLightMap::computeLightTransform() {
@@ -309,16 +269,12 @@ namespace geeL {
 		shader.bind<glm::mat4>(name + "lightTransform", lightTransform);
 	}
 
-	void SimpleDirectionalLightMap::draw(const SceneCamera* const camera, const RenderScene& scene, 
-		ShadowmapRepository& repository) {
+	TextureType SimpleDirectionalLightMap::getTextureType() const {
+		return TextureType::Texture2D;
+	}
 
-		//Write light transform into shader
-		computeLightTransform();
 
-		Viewport::set(0, 0, resolution, resolution);
-		FrameBuffer::bind(fbo.token);
-		glClear(GL_DEPTH_BUFFER_BIT);
-
+	void SimpleDirectionalLightMap::drawMap(const RenderScene& scene, ShadowmapRepository& repository) {
 		if (scene.containsStaticObjects()) {
 			const RenderShader& shader = repository.getSimple2DShader();
 			shader.bind<glm::mat4>("lightTransform", lightTransform);
@@ -332,15 +288,7 @@ namespace geeL {
 
 			scene.drawSkinnedObjects(shader);
 		}
-
-		
-		FrameBuffer::unbind();
 	}
-
-	TextureType SimpleDirectionalLightMap::getTextureType() const {
-		return TextureType::Texture2D;
-	}
-
 
 	void SimpleDirectionalLightMap::computeLightTransform() {
 		float a = resolution / 10.f;
