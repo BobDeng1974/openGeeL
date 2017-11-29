@@ -42,7 +42,7 @@ namespace geeL {
 
 	protected:
 		const ShadowMapType type;
-		float shadowBias, dynamicBias, farPlane, softShadowScale;
+		float shadowBias, farPlane, softShadowScale;
 		unsigned int resolution, softShadowResolution, depthID;
 
 		SimpleShadowMap(const SimpleShadowMap& other) = delete;

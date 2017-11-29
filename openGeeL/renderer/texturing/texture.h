@@ -33,6 +33,8 @@ namespace geeL {
 		//Call GL disable function with appropriate texture type
 		void disable() const;
 
+		virtual void mipmap() const {}
+
 		virtual void clear();
 		virtual bool isEmpty() const;
 
@@ -67,7 +69,7 @@ namespace geeL {
 	public:
 		virtual ~Texture2D() {}
 
-		void mipmap() const;
+		virtual void mipmap() const;
 
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
@@ -102,7 +104,7 @@ namespace geeL {
 	public:
 		virtual ~Texture3D() {}
 
-		void mipmap() const;
+		virtual void mipmap() const;
 
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
@@ -127,7 +129,7 @@ namespace geeL {
 	public:
 		virtual ~TextureCube() {}
 
-		void mipmap() const;
+		virtual void mipmap() const;
 
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;

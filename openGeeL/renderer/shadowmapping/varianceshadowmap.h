@@ -10,7 +10,7 @@ namespace geeL {
 
 	//Implementation of variance shadow maps according to
 	//'http://www.punkuser.net/vsm/vsm_paper.pdf'
-	class VarianceSpotLightMap : public SimpleSpotLightMap {
+	class VarianceSpotLightMap : public ShadowMap {
 
 	public:
 		VarianceSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config);
@@ -18,14 +18,22 @@ namespace geeL {
 		virtual void draw(const SceneCamera* const camera, const RenderScene& scene,
 			ShadowmapRepository& repository);
 
+		virtual void bindData(const Shader& shader, const std::string& name);
+
+		virtual Resolution getScreenResolution() const;
 		virtual unsigned int getID() const;
 
 	protected:
-		virtual void init();
+		virtual void computeLightTransform();
 
 	private:
+		float shadowBias, farPlane;
+		unsigned int resolution;
+		glm::mat4 lightTransform;
+		const SpotLight& spotLight;
+
 		StackBuffer blurBuffer;
-		RenderTexture texture;
+		RenderTexture blurTexture;
 		RenderTexture temp;
 		GaussianBlur blur;
 

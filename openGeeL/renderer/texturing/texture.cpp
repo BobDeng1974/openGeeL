@@ -45,6 +45,7 @@ namespace geeL {
 		switch (colorType) {
 			case ColorType::Single:
 			case ColorType::Single16:
+			case ColorType::RG16:
 			case ColorType::RGB:
 			case ColorType::RGB16:
 			case ColorType::RGB32: {
@@ -92,6 +93,9 @@ namespace geeL {
 				break;
 			case ColorType::Single16:
 				a = GL_R16; b = GL_RGB, c = GL_FLOAT;
+				break;
+			case ColorType::RG16:
+				a = GL_RG16; b = GL_RG, c = GL_FLOAT;
 				break;
 			case ColorType::RGB:
 				a = GL_RGB; b = GL_RGB, c = GL_UNSIGNED_BYTE;
@@ -151,6 +155,10 @@ namespace geeL {
 			case FilterMode::Trilinear:
 				glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 				glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				break;
+			case FilterMode::TrilinearUltra:
+				glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 				break;
 		}
 	}
@@ -327,6 +335,9 @@ namespace geeL {
 				break;
 			case ColorType::Single16:
 				a = GL_R16; b = GL_RGB, c = GL_FLOAT;
+				break;
+			case ColorType::RG16:
+				a = GL_RG16; b = GL_RG, c = GL_FLOAT;
 				break;
 			case ColorType::RGB:
 				a = GL_RGB; b = GL_RGB, c = GL_UNSIGNED_BYTE;

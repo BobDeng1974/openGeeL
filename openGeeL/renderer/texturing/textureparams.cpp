@@ -79,6 +79,10 @@ namespace geeL {
 				glSamplerParameteri(id, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 				glSamplerParameteri(id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 				break;
+			case FilterMode::TrilinearUltra:
+				glSamplerParameteri(id, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				glSamplerParameteri(id, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				break;
 		}
 	}
 

@@ -27,7 +27,7 @@ namespace geeL {
 		bind();
 
 		//TODO: make this less shitty later on
-		assert(texture.getColorType() == ColorType::Depth);
+		assert(texture.getColorType() == ColorType::Depth || texture.getColorType() == ColorType::Depth32);
 		switch (texture.getTextureType()) {
 			case TextureType::Texture2D:
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture.getID(), 0);

@@ -25,7 +25,6 @@ namespace geeL {
 			: ShadowMap(light, std::move(innerTexture))
 			, type(config.type)
 			, shadowBias(config.shadowBias)
-			, dynamicBias(config.shadowBias)
 			, farPlane(config.farPlane)
 			, softShadowResolution(config.softShadowResolution)
 			, softShadowScale(config.softShadowScale) {
@@ -47,7 +46,7 @@ namespace geeL {
 	}
 
 	void SimpleShadowMap::bindData(const Shader& shader, const std::string& name) {
-		shader.bind<float>(name + "bias", dynamicBias);
+		shader.bind<float>(name + "bias", shadowBias);
 		shader.bind<float>(name + "shadowIntensity", intensity);
 		shader.bind<int>(name + "resolution", softShadowResolution);
 		shader.bind<float>(name + "scale", softShadowScale);
@@ -64,12 +63,12 @@ namespace geeL {
 
 
 	float SimpleShadowMap::getShadowBias() const {
-		return dynamicBias;
+		return shadowBias;
 	}
 
 	void SimpleShadowMap::setShadowBias(float bias) {
 		if (bias > 0.f)
-			dynamicBias = bias;
+			shadowBias = bias;
 	}
 
 	int SimpleShadowMap::getSoftShadowResolution() const {

@@ -87,9 +87,11 @@ namespace geeL {
 		LightBinding s = LightBinding(light, slCount++, slName);
 		
 		if (config.useShadowMap()) {
-			ShadowMap* map = (config.type == ShadowMapType::Hard) 
-				? new SimpleSpotLightMap(*light, config)
-				: new VarianceSpotLightMap(*light, config);
+			ShadowMap* map = nullptr;
+			if (config.type == ShadowMapType::Hard)
+				map = new SimpleSpotLightMap(*light, config);
+			else
+				map = new VarianceSpotLightMap(*light, config);
 
 			map->setIntensity(config.intensity);
 			light->setShadowMap(*map);
