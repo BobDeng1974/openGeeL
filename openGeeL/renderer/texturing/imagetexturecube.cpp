@@ -1,5 +1,3 @@
-#define GLEW_STATIC
-#include <glew.h>
 #include "stb_image.h"
 #include "imagetexturecube.h"
 

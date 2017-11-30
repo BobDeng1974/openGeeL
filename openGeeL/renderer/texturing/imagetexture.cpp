@@ -1,6 +1,3 @@
-#define GLEW_STATIC
-#include <glew.h>
-#include <glfw3.h>
 #include "stb_image.h"
 #include "imagetexture.h"
 #include "shader/rendershader.h"

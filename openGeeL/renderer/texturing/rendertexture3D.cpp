@@ -1,5 +1,3 @@
-#define GLEW_STATIC
-#include <glew.h>
 #include "rendertexture3D.h"
 
 namespace geeL {
