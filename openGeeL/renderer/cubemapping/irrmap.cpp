@@ -15,7 +15,8 @@ namespace geeL {
 
 	IrradianceMap::IrradianceMap(const CubeMap& environmentMap, 
 		CubeBuffer& frameBuffer, unsigned int resolution)
-			: DynamicCubeMap(new RenderTextureCube(resolution))
+			: DynamicCubeMap(std::unique_ptr<TextureCube>(
+				new RenderTextureCube(resolution)))
 			, environmentMap(environmentMap), frameBuffer(frameBuffer)
 			, conversionShader(new RenderShader("shaders/cubemapping/envconvert.vert", 
 				"shaders/cubemapping/irrmap.frag")) {
@@ -30,11 +31,11 @@ namespace geeL {
 
 
 	void IrradianceMap::add(RenderShader& shader, std::string name) const {
-		shader.addMap(*texture, name + "irradiance");
+		shader.addMap(getTexture(), name + "irradiance");
 	}
 
 	void IrradianceMap::draw() {
-		frameBuffer.init(*texture);
+		frameBuffer.init(getTexture());
 
 		glm::mat4 projection = perspective(90.0f, 1.0f, 0.1f, 10.0f);
 		glm::mat4 views[] = {

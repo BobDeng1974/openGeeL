@@ -9,15 +9,14 @@
 
 namespace geeL {
 	
-	CubeMap::~CubeMap() {
-		if (texture != nullptr)
-			delete texture;
-	}
-	
+	CubeMap::CubeMap(std::unique_ptr<TextureCube> texture)
+		: FunctionalTexture(std::unique_ptr<Texture>(texture.get())) 
+		, textureCube(*texture.release()) {}
+
+
 	void CubeMap::bindMap(const RenderShader& shader, std::string name) const {
 		TextureBindingStack::bindSingleTexture(getID(), shader, 1, name, TextureType::TextureCube);
 	}
-
 
 	void CubeMap::bind(const Camera& camera, const RenderShader& shader, 
 		const std::string& name, ShaderTransformSpace space) const {
@@ -26,22 +25,19 @@ namespace geeL {
 	}
 
 	void CubeMap::add(RenderShader& shader, std::string name) const {
-		shader.addMap(*texture, name + "albedo");
+		shader.addMap(getTexture(), name + "albedo");
 	}
 
 	void CubeMap::remove(RenderShader& shader) const {
-		shader.removeMap(*texture);
+		shader.removeMap(getTexture());
 	}
 
-	unsigned int CubeMap::getID() const {
-		return texture->getID();
-	}
-	
-	const TextureCube& CubeMap::getTexture() const {
-		return *texture;
+	TextureCube& CubeMap::getTextureCube() {
+		return textureCube;
 	}
 
-	TextureCube & CubeMap::getTexture() {
-		return *texture;
-	}
+
+	DynamicCubeMap::DynamicCubeMap(std::unique_ptr<TextureCube> texture)
+		: CubeMap(std::move(texture)) {}
+
 }

@@ -13,7 +13,8 @@ namespace geeL {
 	class TexturedCubeMap : public CubeMap {
 
 	public:
-		TexturedCubeMap(ImageTextureCube& texture) : CubeMap(&texture) {}
+		TexturedCubeMap(ImageTextureCube& texture) 
+			: CubeMap(std::unique_ptr<TextureCube>(&texture)) {}
 
 	};
 }

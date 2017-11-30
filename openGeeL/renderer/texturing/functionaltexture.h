@@ -26,8 +26,11 @@ namespace geeL {
 		virtual void unbind() const;
 		virtual void disable() const;
 
+		const Texture& getTexture() const;
+
 	protected:
 		Texture& getTexture();
+		void dereferenceTexture(bool del);
 
 	private:
 		Texture* texture;
@@ -39,7 +42,8 @@ namespace geeL {
 		: texture(innerTexture.release()) {}
 
 	inline FunctionalTexture::~FunctionalTexture() {
-		delete texture;
+		if(texture != nullptr)
+			delete texture;
 	}
 
 
@@ -71,8 +75,18 @@ namespace geeL {
 		texture->disable();
 	}
 
+	inline const Texture& FunctionalTexture::getTexture() const {
+		return *texture;
+	}
+
 	inline Texture& FunctionalTexture::getTexture() {
 		return *texture;
+	}
+
+	inline void FunctionalTexture::dereferenceTexture(bool del) {
+		if (del) delete texture;
+
+		texture = nullptr;
 	}
 
 }

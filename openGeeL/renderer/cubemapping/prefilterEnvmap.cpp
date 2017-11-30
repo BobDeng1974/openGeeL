@@ -16,16 +16,17 @@ namespace geeL {
 	PrefilteredEnvironmentMap::PrefilteredEnvironmentMap(const CubeMap& environmentMap, 
 		CubeBuffer& frameBuffer, 
 		unsigned int resolution)
-			: DynamicCubeMap(new RenderTextureCube(resolution, 
-				ColorType::RGB16, 
-				WrapMode::ClampEdge, 
-				FilterMode::Trilinear))
+			: DynamicCubeMap(std::unique_ptr<TextureCube>(
+				new RenderTextureCube(resolution,
+					ColorType::RGB16, 
+					WrapMode::ClampEdge, 
+					FilterMode::Trilinear)))
 			, environmentMap(environmentMap)
 			, frameBuffer(frameBuffer)
 			, conversionShader(new RenderShader("shaders/cubemapping/envconvert.vert",
 				"shaders/cubemapping/prefilterEnvmap.frag")) {
 
-		texture->mipmap();
+		getTexture().mipmap();
 
 		conversionShader->mapOffset = 1;
 		conversionShader->addMap(environmentMap.getTexture(), "environmentMap");
@@ -37,12 +38,12 @@ namespace geeL {
 
 
 	void PrefilteredEnvironmentMap::add(RenderShader& shader, std::string name) const {
-		shader.addMap(*texture, name + "prefilterEnv");
+		shader.addMap(getTexture(), name + "prefilterEnv");
 	}
 
 
 	void PrefilteredEnvironmentMap::draw() {
-		frameBuffer.init(*texture);
+		frameBuffer.init(getTexture());
 
 		glm::mat4 projection = perspective(90.0f, 1.0f, 0.1f, 10.0f);
 		glm::mat4 views[] = {

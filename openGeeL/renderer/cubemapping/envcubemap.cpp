@@ -18,10 +18,11 @@ namespace geeL {
 	EnvironmentCubeMap::EnvironmentCubeMap(const EnvironmentMap& map, 
 		CubeBuffer& frameBuffer, 
 		unsigned int resolution)
-			: CubeMap(new RenderTextureCube(resolution, 
-				ColorType::RGB16, 
-				WrapMode::ClampEdge, 
-				FilterMode::Trilinear)) {
+			: CubeMap(std::unique_ptr<TextureCube>(
+				new RenderTextureCube(resolution,
+					ColorType::RGB16, 
+					WrapMode::ClampEdge, 
+					FilterMode::Trilinear))) {
 
 		draw(map, frameBuffer);
 	}
@@ -34,7 +35,7 @@ namespace geeL {
 		conversionShader.mapOffset = 1;
 		conversionShader.addMap(map, "environmentMap");
 
-		frameBuffer.init(*texture);
+		frameBuffer.init(getTexture());
 
 		glm::mat4 projection = perspective(90.0f, 1.0f, 0.1f, 10.0f);
 		glm::mat4 views[] = {
@@ -54,7 +55,7 @@ namespace geeL {
 			SCREENCUBE.drawComplete();
 		});
 
-		texture->mipmap();
+		getTexture().mipmap();
 	}
 
 }

@@ -25,8 +25,6 @@ namespace geeL {
 			float depth = 50.f, 
 			std::string name = "ReflectionProbe");
 
-		virtual ~ReflectionProbe();
-
 		virtual void bind(const Camera& camera, const RenderShader& shader,
 			const std::string& name, ShaderTransformSpace space) const;
 

@@ -2,21 +2,21 @@
 #define CUBEMAP_H
 
 #include <string>
+#include "texturing/functionaltexture.h"
 
 namespace geeL {
 
 	class Camera;
 	class RenderShader;
+	class Texture;
 	class TextureCube;
 
 	enum class ShaderTransformSpace;
 
 	//Cubemap that consists of six textures for each side
-	class CubeMap {
+	class CubeMap : public FunctionalTexture {
 
 	public:
-		virtual ~CubeMap();
-
 		virtual void bindMap(const RenderShader& shader, std::string name) const;
 
 		virtual void bind(const Camera& camera, const RenderShader& shader,
@@ -25,15 +25,14 @@ namespace geeL {
 		virtual void add(RenderShader& shader, std::string name) const;
 		virtual void remove(RenderShader& shader) const;
 
-		virtual unsigned int getID() const;
-
-		const TextureCube& getTexture() const;
-		TextureCube& getTexture();
+		TextureCube& getTextureCube();
 
 	protected:
-		CubeMap(TextureCube* texture) : texture(texture) {}
+		CubeMap(std::unique_ptr<TextureCube> texture);
 
-		TextureCube* texture;
+	private:
+		TextureCube& textureCube;
+
 
 	};
 
@@ -47,9 +46,10 @@ namespace geeL {
 		virtual void draw() = 0;
 
 	protected:
-		DynamicCubeMap(TextureCube* texture) : CubeMap(texture) {}
+		DynamicCubeMap(std::unique_ptr<TextureCube> texture);
 
 	};
+
 }
 
 #endif

@@ -9,7 +9,8 @@ namespace geeL {
 	IBLMap::IBLMap(BRDFIntegrationMap& brdfIntMap, 
 		IrradianceMap& irrMap, 
 		PrefilteredEnvironmentMap& preEnvMap)
-			: DynamicCubeMap(&irrMap.getTexture())
+			: DynamicCubeMap(std::unique_ptr<TextureCube>(
+				&irrMap.getTextureCube()))
 			, brdfIntMap(brdfIntMap)
 			, irrMap(irrMap)
 			, preEnvMap(preEnvMap) {
@@ -26,7 +27,7 @@ namespace geeL {
 	IBLMap::~IBLMap() {
 		//Set texture to null since it is only a reference to texture
 		//of irradiance map and would therefore be deleted twice
-		texture = nullptr;
+		dereferenceTexture(false);
 	}
 
 
@@ -55,7 +56,8 @@ namespace geeL {
 		BRDFIntegrationMap& brdfIntMap, 
 		IrradianceMap& irrMap, 
 		PrefilteredEnvironmentMap& preEnvMap)
-			: DynamicCubeMap(&environmentMap.getTexture())
+			: DynamicCubeMap(std::unique_ptr<TextureCube>(
+				&environmentMap.getTextureCube()))
 			, baseMap(environmentMap)
 			, brdfIntMap(brdfIntMap)
 			, irrMap(irrMap)

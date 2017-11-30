@@ -24,18 +24,14 @@ namespace geeL {
 		float height, 
 		float depth, 
 		std::string name)
-			: DynamicCubeMap(new RenderTextureCube(resolution))
+			: DynamicCubeMap(std::unique_ptr<TextureCube>(
+				new RenderTextureCube(resolution)))
 			, SceneObject(transform, name)
 			, frameBuffer(frameBuffer)
 			, width(width)
 			, height(height)
 			, depth(depth)
 			, renderCall(renderCall) {}
-
-
-	ReflectionProbe::~ReflectionProbe() {
-		//delete texture;
-	}
 
 
 	void ReflectionProbe::bind(const Camera& camera, const RenderShader& shader,
@@ -65,7 +61,7 @@ namespace geeL {
 
 
 	void ReflectionProbe::draw() {
-		frameBuffer.init(*texture);
+		frameBuffer.init(getTexture());
 
 		ManualCamera& cam = ManualCamera(transform);
 
@@ -90,7 +86,7 @@ namespace geeL {
 			renderCall(cam, frameBuffer);
 		});
 
-		texture->mipmap();
+		getTexture().mipmap();
 	}
 
 }
