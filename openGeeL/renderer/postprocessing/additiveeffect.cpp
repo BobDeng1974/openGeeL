@@ -4,6 +4,7 @@
 #include "framebuffer/framebuffer.h"
 #include "shader/shader.h"
 #include "texturing/textureprovider.h"
+#include "texturing/rendertexture.h"
 #include "glwrapper/glguards.h"
 #include "glwrapper/clearing.h"
 #include "additiveeffect.h"

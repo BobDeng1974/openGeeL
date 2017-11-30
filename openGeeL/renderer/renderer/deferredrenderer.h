@@ -17,6 +17,7 @@ namespace geeL {
 	class DynamicRenderTexture;
 	class ForwardBuffer;
 	class GBuffer;
+	class ITexture;
 	class RenderTexture;
 	class SceneRender;
 	class SSAO;
@@ -52,7 +53,7 @@ namespace geeL {
 
 		//Set image that gets drawn to screen. Picks default 
 		//image if given texture is NULL
-		void setScreenImage(const Texture* const texture = nullptr);
+		void setScreenImage(const ITexture* const texture = nullptr);
 
 		const TextureProvider& getTextureProvider() const;
 

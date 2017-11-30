@@ -6,7 +6,7 @@
 namespace geeL {
 
 	class ImageTexture;
-	class Texture;
+	class ITexture;
 
 	class DefaultPostProcess : public PostProcessingEffectFS {
 
@@ -20,7 +20,7 @@ namespace geeL {
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void draw();
 
-		void setCustomImage(const Texture* const texture = nullptr);
+		void setCustomImage(const ITexture* const texture = nullptr);
 
 		float getExposure() const;
 		void setExposure(float exposure);
@@ -29,7 +29,7 @@ namespace geeL {
 
 	protected:
 		ImageTexture* noise;
-		const Texture* customTexture;
+		const ITexture* customTexture;
 
 	};
 

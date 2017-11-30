@@ -5,6 +5,7 @@
 #include "primitives/screenquad.h"
 #include "framebuffer/colorbuffer.h"
 #include "texturing/textureprovider.h"
+#include "texturing/rendertexture.h"
 #include "glwrapper/glguards.h"
 #include "utility/defaults.h"
 #include "postprocessing.h"

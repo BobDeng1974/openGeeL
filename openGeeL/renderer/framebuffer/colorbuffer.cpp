@@ -4,6 +4,7 @@
 #include <iostream>
 #include "glwrapper/viewport.h"
 #include "renderer/renderer.h"
+#include "texturing/rendertexture.h"
 #include "colorbuffer.h"
 
 using namespace std;
@@ -15,16 +16,16 @@ namespace geeL {
 		for (auto it = buffers.begin(); it != buffers.end(); it++) {
 			//Only remove texture if it was created by this color buffer
 			if (it->first) {
-				RenderTexture* texture = it->second;
+				RenderTarget* texture = it->second;
 				delete texture;
 			}
 		}
 	}
 
-	void ColorBuffer::init(Resolution resolution, std::vector<RenderTexture*>& colorBuffers) {
+	void ColorBuffer::init(Resolution resolution, std::vector<RenderTarget*>& colorBuffers) {
 		for (auto it = colorBuffers.begin(); it != colorBuffers.end(); it++) {
-			RenderTexture* texture = *it;
-			buffers.push_back(pair<bool, RenderTexture*>(false, texture));
+			RenderTarget* texture = *it;
+			buffers.push_back(pair<bool, RenderTarget*>(false, texture));
 		}
 
 		this->resolution = resolution;
@@ -38,7 +39,7 @@ namespace geeL {
 
 		// Create color attachment textures
 		for (int i = 0; i < amount; i++) {
-			RenderTexture& tex = *buffers[i].second;
+			RenderTarget& tex = *buffers[i].second;
 			tex.assignTo(*this, i);
 		}
 
@@ -66,7 +67,7 @@ namespace geeL {
 		unbind();
 	}
 
-	void ColorBuffer::init(Resolution resolution, RenderTexture& texture) {
+	void ColorBuffer::init(Resolution resolution, RenderTarget& texture) {
 		this->resolution = resolution;
 
 		glGenFramebuffers(1, &fbo.token);
@@ -76,7 +77,7 @@ namespace geeL {
 		unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
 		glDrawBuffers(1, attachments);
 
-		buffers.push_back(pair<bool, RenderTexture*>(false, &texture));
+		buffers.push_back(pair<bool, RenderTarget*>(false, &texture));
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
@@ -117,25 +118,6 @@ namespace geeL {
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	}
 
-	void ColorBuffer::resize(ResolutionScale scale) {
-		resolution.resize(scale);
-
-		for (auto buffer = buffers.begin(); buffer != buffers.end(); buffer++) {
-			//Only update texture resolution if it is managed by this color buffer			
-			if (buffer->first) {
-				RenderTexture& texture = *buffer->second;
-				texture.resize(resolution);
-			}
-		}
-		
-		if (rbo != 0U) {
-			bind();
-			glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, resolution.getWidth(), resolution.getHeight());
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
-		}
-	}
-
 	Resolution ColorBuffer::getResolution() const {
 		return resolution;
 	}
@@ -159,7 +141,7 @@ namespace geeL {
 		unbind();
 	}
 
-	const RenderTexture& ColorBuffer::getTexture(unsigned int position) const {
+	const RenderTarget& ColorBuffer::getTexture(unsigned int position) const {
 		if (position >= buffers.size())
 			throw "Committed position out of bounds";
 
@@ -168,17 +150,6 @@ namespace geeL {
 
 	std::string ColorBuffer::toString() const {
 		std::string s = "Color buffer " + std::to_string(fbo.token) + "\n";
-
-		unsigned int counter = 0;
-		for (auto it = buffers.begin(); it != buffers.end(); it++) {
-			RenderTexture* texture = it->second;
-
-			std::string line = "--Texture " + std::to_string(counter) + ": " + std::to_string(texture->getID()) + "\n";
-			s += line;
-
-			counter++;
-		}
-
 		return s;
 	}
 

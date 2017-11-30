@@ -6,7 +6,6 @@
 #include "utility/resolution.h"
 #include "glwrapper/clearing.h"
 #include "texturing/texture.h"
-#include "texturing/rendertexture.h"
 #include "fbotoken.h"
 
 namespace geeL {

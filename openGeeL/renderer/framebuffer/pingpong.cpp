@@ -2,6 +2,7 @@
 #include <glew.h>
 #include <iostream>
 #include "renderer/renderer.h"
+#include "texturing/rendertexture.h"
 #include "pingpong.h"
 
 using namespace std;
@@ -15,7 +16,7 @@ namespace geeL {
 		}
 	}
 
-	void PingPongBuffer::init(RenderTexture& texture1, RenderTexture& texture2) {
+	void PingPongBuffer::init(RenderTarget& texture1, RenderTarget& texture2) {
 		external = true;
 	
 		glGenFramebuffers(1, &fbo.token);
@@ -85,10 +86,10 @@ namespace geeL {
 	}
 
 	Resolution PingPongBuffer::getResolution() const {
-		return current->getResolution();
+		return current->getRenderResolution();
 	}
 
-	const RenderTexture & PingPongBuffer::getTexture(unsigned int position) const {
+	const RenderTarget& PingPongBuffer::getTexture(unsigned int position) const {
 		if (position == 0)
 			return *first;
 		else

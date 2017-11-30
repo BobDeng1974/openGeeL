@@ -1,8 +1,8 @@
 #include <vector>
 #include <iostream>
 #include "renderer/deferredrenderer.h"
-#include "texturing/texture.h"
 #include "texturing/textureprovider.h"
+#include "texturing/rendertexture.h"
 #include "utility/rendertime.h"
 #include "guiwrapper.h"
 #include "systeminformation.h"
@@ -42,7 +42,7 @@ namespace geeL {
 			if (reset != 0)
 				renderer.setScreenImage();
 			else if (back != 0 || forward != 0) {
-				std::vector<const Texture*> textures(std::move(getBuffers()));
+				std::vector<const ITexture*> textures(std::move(getBuffers()));
 				unsigned int size = unsigned int(textures.size());
 
 				if (size != 0) {
@@ -64,17 +64,17 @@ namespace geeL {
 		nk_label(context, t.c_str(), NK_TEXT_LEFT);
 	}
 
-	std::vector<const Texture*> SystemInformation::getBuffers() {
+	std::vector<const ITexture*> SystemInformation::getBuffers() {
 		const TextureProvider& provider = renderer.getTextureProvider();
 
-		const RenderTexture* emisTex = provider.requestEmissivity();
-		const RenderTexture* occTex = provider.requestOcclusion();
+		const ITexture* emisTex = provider.requestEmissivity();
+		const ITexture* occTex = provider.requestOcclusion();
 
 		size_t bufferSize = 2;
 		bufferSize += int(emisTex != nullptr);
 		bufferSize += int(occTex != nullptr);
 
-		std::vector<const Texture*> buffers;
+		std::vector<const ITexture*> buffers;
 		buffers.reserve(bufferSize);
 
 		buffers.push_back(&provider.requestAlbedo());

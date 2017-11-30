@@ -8,6 +8,8 @@
 namespace geeL {
 
 	class DeferredRenderer;
+	class ITExture;
+
 
 	class SystemInformation : public GUIElement {
 
@@ -22,7 +24,7 @@ namespace geeL {
 		DeferredRenderer& renderer;
 
 		void drawTime(GUIContext* context, std::string name);
-		std::vector<const Texture*> getBuffers();
+		std::vector<const ITexture*> getBuffers();
 
 	};
 }

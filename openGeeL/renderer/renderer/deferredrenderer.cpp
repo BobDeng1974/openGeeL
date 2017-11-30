@@ -273,7 +273,7 @@ namespace geeL {
 		fBuffer = &buffer;
 	}
 
-	void DeferredRenderer::setScreenImage(const Texture* const texture) {
+	void DeferredRenderer::setScreenImage(const ITexture* const texture) {
 		defaultEffect.setCustomImage(texture);
 	}
 

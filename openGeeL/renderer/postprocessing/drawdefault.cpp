@@ -3,6 +3,7 @@
 #include "primitives/screenquad.h"
 #include "framebuffer/framebuffer.h"
 #include "texturing/imagetexture.h"
+#include "texturing/rendertexture.h"
 #include "texturing/textureprovider.h"
 #include "drawdefault.h"
 
@@ -55,7 +56,7 @@ namespace geeL {
 		PostProcessingEffectFS::draw();
 	}
 
-	void DefaultPostProcess::setCustomImage(const Texture* const texture) {
+	void DefaultPostProcess::setCustomImage(const ITexture* const texture) {
 		customTexture = texture;
 
 		if (customTexture != nullptr)
