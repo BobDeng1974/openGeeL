@@ -16,6 +16,7 @@ namespace geeL {
 		virtual ~ITexture() {}
 
 		virtual unsigned int getID() const = 0;
+		virtual TextureType getTextureType() const = 0;
 
 		virtual void bind() const = 0;
 		virtual void bind(unsigned int layer) const = 0;
@@ -38,7 +39,7 @@ namespace geeL {
 
 		virtual unsigned int getID() const;
 		const TextureToken& getTextureToken() const;
-		virtual TextureType getTextureType() const = 0;
+		
 		virtual ColorType getColorType() const;
 
 		//Bind texture as texture sampler
@@ -77,7 +78,7 @@ namespace geeL {
 		ColorType colorType;
 		const TextureParameters* parameters;
 		
-		Texture(ColorType colorType) : colorType(colorType), parameters(nullptr) {}
+		Texture(ColorType colorType);
 
 	};
 	
@@ -104,11 +105,13 @@ namespace geeL {
 	protected:
 		Resolution resolution;
 
-		Texture2D(ColorType colorType) : Texture(colorType) {}
-		Texture2D(ColorType colorType, Resolution resolution) 
-			: Texture(colorType), resolution(resolution) {}
+		Texture2D(ColorType colorType);
+		Texture2D(Resolution resolution, ColorType colorType);
+		Texture2D(Resolution resolution, ColorType colorType, void* image);
+		Texture2D(Resolution resolution, ColorType colorType, FilterMode filterMode, WrapMode wrapMode, void* image);
+		Texture2D(Resolution resolution, ColorType colorType, FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter filter, void* image);
 
-		virtual void initStorage(unsigned char* image);
+		virtual void initStorage(void* image);
 		virtual void reserveStorage(unsigned int levels = 1);
 
 		void setResolution(const Resolution& resolution);
@@ -181,17 +184,19 @@ namespace geeL {
 	}
 
 
+
 	inline unsigned int Texture::getID() const {
 		return id;
 	}
 
-	inline const TextureToken & Texture::getTextureToken() const {
+	inline const TextureToken& Texture::getTextureToken() const {
 		return id;
 	}
 
 	inline ColorType Texture::getColorType() const {
 		return colorType;
 	}
+
 
 	inline const Resolution& Texture2D::getResolution() const {
 		return resolution;
@@ -235,6 +240,8 @@ namespace geeL {
 	}
 
 	
+	
+
 }
 
 #endif

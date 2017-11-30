@@ -15,7 +15,9 @@ namespace geeL {
 		FunctionalTexture(std::unique_ptr<Texture> innerTexture);
 		virtual ~FunctionalTexture();
 
+
 		virtual unsigned int getID() const;
+		virtual TextureType getTextureType() const;
 
 		virtual void bind() const;
 		virtual void bind(unsigned int layer) const;
@@ -40,8 +42,13 @@ namespace geeL {
 		delete texture;
 	}
 
+
 	inline unsigned int FunctionalTexture::getID() const {
 		return texture->getID();
+	}
+
+	inline TextureType FunctionalTexture::getTextureType() const {
+		return texture->getTextureType();
 	}
 
 	inline void FunctionalTexture::bind() const {

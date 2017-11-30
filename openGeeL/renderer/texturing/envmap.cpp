@@ -7,27 +7,28 @@
 using namespace std;
 
 namespace geeL {
+	
+	EnvironmentMap::EnvironmentMap()
+		: Texture2D(ColorType::RGB32) {}
+	
+	EnvironmentMap::EnvironmentMap(const string& fileName) 
+		: EnvironmentMap(ImageContainer(fileName)) {}
 
-	EnvironmentMap::EnvironmentMap(const string& fileName) : Texture2D(ColorType::RGB32) {
+	EnvironmentMap::EnvironmentMap(ImageContainer&& container) 
+		: Texture2D(Resolution(container.width, container.height)
+			, ColorType::RGB32
+			, FilterMode::Linear
+			, WrapMode::ClampEdge
+			, container.image) {}
 
+
+	EnvironmentMap::ImageContainer::ImageContainer(const string& fileName) {
 		stbi_set_flip_vertically_on_load(true);
-		int width, height, nrComponents;
-		float* image = stbi_loadf(fileName.c_str(), &width, &height, &nrComponents, 0);
-		
-		setResolution(width, height);
+		image = stbi_loadf(fileName.c_str(), &width, &height, &nrComponents, 0);
+	}
 
-		if (image) {
-			glBindTexture(GL_TEXTURE_2D, id);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, image);
-
-			initWrapMode(WrapMode::ClampEdge);
-			initFilterMode(FilterMode::Linear);
-
-			stbi_image_free(image);
-		}
-		else
-			cout << "Failed to load environment map image.\n";
-
+	EnvironmentMap::ImageContainer::~ImageContainer() {
+		stbi_image_free(image);
 		stbi_set_flip_vertically_on_load(false);
 	}
 

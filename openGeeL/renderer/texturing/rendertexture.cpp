@@ -5,20 +5,22 @@
 #include "rendertexture.h"
 
 namespace geeL {
-
+	
+	RenderTexture::RenderTexture()
+		: Texture2D(ColorType::None) {}
+	
 	RenderTexture::RenderTexture(Resolution resolution,
-		ColorType colorType, WrapMode wrapMode, FilterMode filterMode) 
-			: Texture2D(colorType, resolution) {
-
-		glBindTexture(GL_TEXTURE_2D, id);
-		initStorage(0);
-		initWrapMode(wrapMode);
-		initFilterMode(filterMode);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
+		ColorType colorType, 
+		WrapMode wrapMode, 
+		FilterMode filterMode) 
+			: Texture2D(resolution, 
+				colorType, 
+				filterMode, 
+				wrapMode, 
+				0) {}
 
 	RenderTexture::RenderTexture(const Texture& other, Resolution resolution) 
-		: Texture2D(other.getColorType(), resolution) {
+		: Texture2D(resolution, other.getColorType(), 0) {
 
 		assert(other.getTextureType() == TextureType::Texture2D && "Texture has to be a 2D texture");
 		id = other.getTextureToken();

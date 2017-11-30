@@ -4,45 +4,46 @@
 #include "stb_image.h"
 #include "imagetexture.h"
 #include "shader/rendershader.h"
-#include <iostream>
 
 using namespace std;
 
 namespace geeL {
 
-	ImageTexture::ImageTexture(const char* fileName, ColorType colorType, WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter)
-		: Texture2D(colorType), path(fileName) {
-		
-		int imgWidth, imgHeight;
-		unsigned char* image = stbi_load(fileName, &imgWidth, &imgHeight, 0, STBI_rgb_alpha);
+	ImageTexture::ImageTexture(const char* fileName, 
+		ColorType colorType, 
+		WrapMode wrapMode, 
+		FilterMode filterMode, 
+		AnisotropicFilter filter)
+			: ImageTexture(ImageContainer(fileName), 
+				colorType, 
+				wrapMode, 
+				filterMode, 
+				filter) {}
 
-		setResolution(imgWidth, imgHeight);
+	ImageTexture::ImageTexture(std::vector<glm::vec3>& colors, 
+		const Resolution& resolution,
+		ColorType colorType,
+		WrapMode wrapMode, 
+		FilterMode filterMode, 
+		AnisotropicFilter filter) 
+			: Texture2D(resolution, 
+				colorType, 
+				filterMode, 
+				wrapMode, 
+				filter, 
+				&colors[0]) {}
 
-		glBindTexture(GL_TEXTURE_2D, id);
+	ImageTexture::ImageTexture(ImageContainer&& container,
+		ColorType colorType,
+		WrapMode wrapMode,
+		FilterMode filterMode,
+		AnisotropicFilter filter)
+			: Texture2D(Resolution(container.width, container.height), 
+				colorType, filterMode, 
+				wrapMode, filter, container.image)
+			, path(container.path) {
 
-		initStorage(image);
-		initWrapMode(wrapMode);
-		initFilterMode(filterMode);
-		initAnisotropyFilter(filter);
-
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		stbi_image_free(image);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-
-	ImageTexture::ImageTexture(std::vector<glm::vec3>& colors, unsigned int width, unsigned int height,
-		WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter) : Texture2D(colorType, Resolution(width, height)) {
-
-		glBindTexture(GL_TEXTURE_2D, id);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, &colors[0]);
-
-		Texture2D::initFilterMode(filterMode);
-		Texture2D::initWrapMode(wrapMode);
-		
-		initAnisotropyFilter(filter);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
+		mipmap();
 	}
 
 
@@ -53,6 +54,16 @@ namespace geeL {
 
 	string TextureMap::getTypeAsString() const {
 		return MapTypeConversion::getTypeAsString(type);
+	}
+
+	ImageTexture::ImageContainer::ImageContainer(const char* fileName)
+		: path(fileName) {
+
+		image = stbi_load(fileName, &width, &height, 0, STBI_rgb_alpha);
+	}
+
+	ImageTexture::ImageContainer::~ImageContainer() {
+		stbi_image_free(image);
 	}
 
 }

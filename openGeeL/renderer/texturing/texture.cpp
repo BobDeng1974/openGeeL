@@ -14,6 +14,11 @@ namespace geeL {
 	AnisotropicFilter Texture::maxAnisotropy;
 
 
+	Texture::Texture(ColorType colorType)
+		: colorType(colorType)
+		, parameters(nullptr) {}
+
+
 	void Texture::bind() const {
 		glBindTexture((int)getTextureType(), getID());
 	}
@@ -69,7 +74,59 @@ namespace geeL {
 		}
 	}
 
-	void Texture2D::initStorage(unsigned char* image) {
+
+
+	Texture2D::Texture2D(ColorType colorType)
+		: Texture(colorType) {}
+
+	Texture2D::Texture2D(Resolution resolution, ColorType colorType)
+		: Texture(colorType)
+		, resolution(resolution) {}
+
+	Texture2D::Texture2D(Resolution resolution, ColorType colorType, void* image)
+		: Texture(colorType)
+		, resolution(resolution) {
+	
+		bind();
+		initStorage(image);
+		unbind();
+	}
+
+	Texture2D::Texture2D(Resolution resolution, 
+		ColorType colorType, 
+		FilterMode filterMode, 
+		WrapMode wrapMode, 
+		void* image)
+			: Texture(colorType)
+			, resolution(resolution) {
+	
+		bind();
+		initStorage(image);
+		initWrapMode(wrapMode);
+		initFilterMode(filterMode);
+		unbind();
+	}
+
+	Texture2D::Texture2D(Resolution resolution, 
+		ColorType colorType, 
+		FilterMode filterMode, 
+		WrapMode wrapMode, 
+		AnisotropicFilter filter, 
+		void* image)
+			: Texture(colorType)
+			, resolution(resolution) {
+	
+		bind();
+		initStorage(image);
+		initWrapMode(wrapMode);
+		initFilterMode(filterMode);
+		initAnisotropyFilter(filter);
+		unbind();
+	}
+
+
+
+	void Texture2D::initStorage(void* image) {
 		int textureType = (int)getTextureType();
 		int width  = resolution.getWidth();
 		int height = resolution.getHeight();

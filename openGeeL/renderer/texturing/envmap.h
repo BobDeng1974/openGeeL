@@ -10,10 +10,20 @@ namespace geeL {
 	class EnvironmentMap : public Texture2D {
 
 	public:
-		EnvironmentMap() : Texture2D(ColorType::RGB32) {}
+		EnvironmentMap();
 		EnvironmentMap(const std::string& fileName);
 
 	private:
+		struct ImageContainer {
+			int width, height, nrComponents;
+			float* image;
+
+			ImageContainer(const std::string& fileName);
+			~ImageContainer();
+		};
+
+		EnvironmentMap(ImageContainer&& container);
+
 		EnvironmentMap(const EnvironmentMap& map) = delete;
 		EnvironmentMap& operator= (const EnvironmentMap& other) = delete;
 		

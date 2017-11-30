@@ -38,8 +38,6 @@ namespace geeL {
 		float getSoftShadowScale() const;
 		void setSoftShadowScale(float scale);
 
-		virtual ShadowMapType getType() const;
-
 	protected:
 		const ShadowMapType type;
 		float shadowBias, farPlane, softShadowScale;

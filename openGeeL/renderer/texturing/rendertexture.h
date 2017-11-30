@@ -10,9 +10,11 @@ namespace geeL {
 	class RenderTexture : public Texture2D, public RenderTarget {
 
 	public:
-		RenderTexture() : Texture2D(ColorType::None) {}
-		RenderTexture(Resolution resolution, ColorType colorType = ColorType::RGBA,
-			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::None);
+		RenderTexture();
+		RenderTexture(Resolution resolution, 
+			ColorType colorType = ColorType::RGBA,
+			WrapMode wrapMode = WrapMode::Repeat, 
+			FilterMode filterMode = FilterMode::None);
 		RenderTexture(const Texture& other, Resolution resolution);
 
 		virtual void setRenderResolution() const;

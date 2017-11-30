@@ -15,7 +15,6 @@ namespace geeL {
 		BRDFIntegrationMap();
 
 	private:
-
 		BRDFIntegrationMap(const BRDFIntegrationMap& other) = delete;
 		BRDFIntegrationMap& operator= (const BRDFIntegrationMap& other) = delete;
 

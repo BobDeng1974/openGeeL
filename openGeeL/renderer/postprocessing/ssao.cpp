@@ -48,13 +48,16 @@ namespace geeL {
 			noise.push_back(sample);
 		}
 
-		noiseTexture = new ImageTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::None);
+		noiseTexture = new ImageTexture(noise, Resolution(4, 4), ColorType::RGB16, 
+			WrapMode::Repeat, FilterMode::None);
+
 	}
 
 	SSAO::SSAO(const SSAO& other) : PostProcessingEffectFS(other), radius(other.radius), blur(other.blur), 
 		noise(other.noise), scale(other.scale) {
 		
-		noiseTexture = new ImageTexture(noise, 4, 4, WrapMode::Repeat, FilterMode::None);
+		noiseTexture = new ImageTexture(noise, Resolution(4, 4), ColorType::RGB16, 
+			WrapMode::Repeat, FilterMode::None);
 	}
 
 	SSAO::~SSAO() {

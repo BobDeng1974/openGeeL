@@ -61,7 +61,6 @@ namespace geeL {
 		return Resolution(resolution);
 	}
 
-
 	float SimpleShadowMap::getShadowBias() const {
 		return shadowBias;
 	}
@@ -80,7 +79,6 @@ namespace geeL {
 			softShadowResolution = resolution;
 	}
 
-
 	float SimpleShadowMap::getSoftShadowScale() const {
 		return softShadowScale;
 	}
@@ -90,9 +88,6 @@ namespace geeL {
 			softShadowScale = scale;
 	}
 
-	ShadowMapType SimpleShadowMap::getType() const {
-		return type;
-	}
 
 
 	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight& light, 
