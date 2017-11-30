@@ -84,7 +84,7 @@ namespace geeL {
 		swap();
 	}
 
-	const Resolution& PingPongBuffer::getResolution() const {
+	Resolution PingPongBuffer::getResolution() const {
 		return current->getResolution();
 	}
 
@@ -95,7 +95,7 @@ namespace geeL {
 			return *second;
 	}
 
-	void PingPongBuffer::resetSize() const {
+	void PingPongBuffer::setRenderResolution() const {
 		current->setRenderResolution();
 	}
 

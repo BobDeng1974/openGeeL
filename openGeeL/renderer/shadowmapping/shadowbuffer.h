@@ -11,20 +11,18 @@ namespace geeL {
 	class DepthFrameBuffer : public IFrameBuffer {
 
 	public:
-		DepthFrameBuffer(const Resolution& defaultResolution);
+		DepthFrameBuffer();
 
 		void add(Texture& texture);
 
 		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNothing);
-		virtual const Resolution& getResolution() const;
+		virtual Resolution getResolution() const;
 
 	protected:
 		virtual unsigned int getFBO() const;
 
 	private:
 		FrameBufferToken fbo;
-		Resolution resolution;
-		Resolution currResolution;
 		Clearer clearer;
 		Texture* current;
 

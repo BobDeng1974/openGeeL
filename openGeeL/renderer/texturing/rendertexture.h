@@ -7,7 +7,7 @@
 namespace geeL {
 
 	//Texture that is intended to be rendered into
-	class RenderTexture : public Texture2D, public RenderTarget {
+	class RenderTexture : public Texture2D, public ARenderTarget {
 
 	public:
 		RenderTexture();
@@ -18,7 +18,7 @@ namespace geeL {
 		RenderTexture(const Texture& other, Resolution resolution);
 
 		virtual void setRenderResolution() const;
-		virtual const Resolution& getResolution() const;
+		virtual Resolution getRenderResolution() const;
 		virtual unsigned int getSize() const;
 
 		virtual void resize(Resolution resolution);

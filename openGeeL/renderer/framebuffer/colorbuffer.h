@@ -34,10 +34,12 @@ namespace geeL {
 
 		const RenderTexture& getTexture(unsigned int position) const;
 		virtual void resize(ResolutionScale resolution);
+		virtual Resolution getResolution() const;
 
 		virtual std::string toString() const;
 
 	private:
+		Resolution resolution;
 		std::vector<std::pair<bool, RenderTexture*>> buffers;
 
 		ColorBuffer(const ColorBuffer& other) = delete;

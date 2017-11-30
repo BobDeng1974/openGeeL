@@ -17,7 +17,7 @@ namespace geeL {
 	}
 
 
-	void StackBuffer::push(RenderTarget& target) {
+	void StackBuffer::push(ARenderTarget& target) {
 		assert(target.getSize() == size);
 		stackBuffer.push(&target);
 	}
@@ -28,7 +28,7 @@ namespace geeL {
 		//Restore render settings of previous element of stack (If it exists)
 		//This is necessary since drawcall of current element may has its own settings
 		if (!stackBuffer.empty()) {
-			RenderTarget* previous = stackBuffer.top();
+			ARenderTarget* previous = stackBuffer.top();
 			bind();
 			previous->assignTo(*this, 0);
 			previous->setRenderResolution();
@@ -42,8 +42,6 @@ namespace geeL {
 	}
 
 	void StackBuffer::initResolution(const Resolution& resolution) {
-		this->resolution = resolution;
-
 		bind();
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, resolution.getWidth(), resolution.getHeight());
@@ -62,7 +60,7 @@ namespace geeL {
 	
 
 	void StackBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
-		RenderTarget* current = stackBuffer.top();
+		ARenderTarget* current = stackBuffer.top();
 		
 		bind();
 		current->assignTo(*this, 0);
@@ -76,7 +74,7 @@ namespace geeL {
 	}
 
 	void StackBuffer::fill(Drawer& drawer, Clearer clearer) {
-		RenderTarget* current = stackBuffer.top();
+		ARenderTarget* current = stackBuffer.top();
 
 		bind();
 		current->assignTo(*this, 0);
@@ -89,14 +87,13 @@ namespace geeL {
 		pop();
 	}
 
-	const Resolution& StackBuffer::getResolution() const {
-		if (stackBuffer.empty())
-			return resolution;
+	Resolution StackBuffer::getResolution() const {
+		assert(!stackBuffer.empty());
 
-		return stackBuffer.top()->getResolution();
+		return stackBuffer.top()->getRenderResolution();
 	}
 
-	void StackBuffer::resetSize() const {
+	void StackBuffer::setRenderResolution() const {
 		if(!stackBuffer.empty())
 			stackBuffer.top()->setRenderResolution();
 	}

@@ -12,7 +12,7 @@
 namespace geeL {
 
 	class Drawer;
-	class RenderTarget;
+	class ARenderTarget;
 
 
 	//Interface for all framebuffer objects
@@ -26,8 +26,8 @@ namespace geeL {
 		static void bind(unsigned int fbo);
 		static void unbind();
 
-		virtual void resetSize() const;
-		virtual const Resolution& getResolution() const = 0;
+		virtual void setRenderResolution() const;
+		virtual Resolution getResolution() const = 0;
 
 	protected:
 		IFrameBuffer() {}
@@ -66,15 +66,12 @@ namespace geeL {
 		virtual void copyDepth(const FrameBuffer& buffer) const;
 		virtual void copyStencil(const FrameBuffer& buffer) const;
 		
-		virtual const Resolution& getResolution() const;
-		
 		virtual bool initialized() const;
 		virtual std::string toString() const = 0;
 
 	protected:
 		RenderBufferToken rbo;
 		FrameBufferToken fbo;
-		Resolution resolution;
 
 		virtual unsigned int getFBO() const;
 
@@ -89,8 +86,8 @@ namespace geeL {
 	class DynamicBuffer : public FrameBuffer {
 
 	public:
-		virtual void add(RenderTarget& target);
-		virtual void push(RenderTarget& target) = 0;
+		virtual void add(ARenderTarget& target);
+		virtual void push(ARenderTarget& target) = 0;
 	};
 
 
@@ -99,7 +96,7 @@ namespace geeL {
 		return fbo != 0;
 	}
 
-	inline void DynamicBuffer::add(RenderTarget& texture) {
+	inline void DynamicBuffer::add(ARenderTarget& texture) {
 		push(texture);
 	}
 

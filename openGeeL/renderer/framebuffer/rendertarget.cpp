@@ -5,9 +5,9 @@
 
 namespace geeL {
 
-	RenderTarget::RenderTarget() : parent(nullptr) {}
+	ARenderTarget::ARenderTarget() : parent(nullptr) {}
 
-	void RenderTarget::assignTo(const IFrameBuffer& buffer, unsigned int position, bool bindFB) {
+	void ARenderTarget::assignTo(const IFrameBuffer& buffer, unsigned int position, bool bindFB) {
 		if (bindFB) buffer.bind();
 		parent = &buffer;
 
@@ -16,7 +16,7 @@ namespace geeL {
 
 	}
 
-	bool RenderTarget::assignToo(const IFrameBuffer& buffer, unsigned int position, bool bindFB) const {
+	bool ARenderTarget::assignToo(const IFrameBuffer& buffer, unsigned int position, bool bindFB) const {
 		if (parent != nullptr) {
 			if (bindFB) buffer.bind();
 			assign(position);
@@ -28,7 +28,7 @@ namespace geeL {
 		return false;
 	}
 
-	bool RenderTarget::isAssigned() const {
+	bool ARenderTarget::isAssigned() const {
 		return parent != nullptr;
 	}
 
@@ -37,8 +37,8 @@ namespace geeL {
 		targets.front()->setRenderResolution();
 	}
 
-	const Resolution& LayeredTarget::getResolution() const {
-		return targets.front()->getResolution();
+	Resolution LayeredTarget::getRenderResolution() const {
+		return targets.front()->getRenderResolution();
 	}
 
 	unsigned int LayeredTarget::getSize() const {
@@ -49,7 +49,7 @@ namespace geeL {
 
 		unsigned int size = 0;
 		for (auto it(targets.begin()); it != targets.end(); it++) {
-			RenderTarget& current = **it;
+			ARenderTarget& current = **it;
 			current.assign(position + size);
 
 			size++;

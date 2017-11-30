@@ -23,6 +23,7 @@ namespace geeL {
 
 		//Returns depth of current drawn image
 		float getDepth() const;
+		virtual Resolution getResolution() const;
 
 		const RenderTexture& getDiffuse() const;
 		const RenderTexture& getPositionRoughness() const;
@@ -39,6 +40,7 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	private:
+		Resolution resolution;
 		RenderTexture* diffuse;
 		RenderTexture* positionRough;
 		RenderTexture* normalMet;
@@ -62,12 +64,15 @@ namespace geeL {
 	public:
 		ForwardBuffer(GBuffer& gBuffer);
 		
-		void setTarget(RenderTarget& target);
+		void setTarget(ARenderTarget& target);
 		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNothing);
+
+		virtual Resolution getResolution() const;
 
 		virtual std::string toString() const;
 
 	private:
+		ARenderTarget* target;
 		GBuffer& gBuffer;
 
 		void init();

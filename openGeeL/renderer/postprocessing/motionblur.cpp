@@ -91,7 +91,7 @@ namespace geeL {
 		MotionBlur::init(parameter);
 
 		float res = 1.f;
-		Resolution velocityRes = Resolution(parentBuffer->getResolution(), 1.f);
+		Resolution velocityRes = Resolution(parameter.resolution, 1.f);
 		if (velocityTexture == nullptr)
 			velocityTexture = new RenderTexture(velocityRes,
 				ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::Linear);
@@ -130,7 +130,7 @@ namespace geeL {
 		addTextureSampler(provider->requestPositionRoughness(), "currentPosition");
 
 
-		Resolution positionRes = Resolution(parentBuffer->getResolution(), 1.f);
+		Resolution positionRes = Resolution(parameter.resolution, 1.f);
 		if (positionTexture == nullptr)
 			positionTexture = new RenderTexture(positionRes, ColorType::RGBA16,
 				WrapMode::ClampEdge, FilterMode::Linear);

@@ -40,7 +40,7 @@ namespace geeL {
 		shader.bind<float>("samples", samples);
 		shader.bind<float>("strength", strength);
 
-		Resolution filterRes = Resolution(parentBuffer->getResolution(), filterResolution);
+		Resolution filterRes = Resolution(parameter.resolution, filterResolution);
 		if (filterTexture == nullptr)
 			filterTexture = new RenderTexture(filterRes, ColorType::RGB16,
 				WrapMode::Repeat, FilterMode::Linear);

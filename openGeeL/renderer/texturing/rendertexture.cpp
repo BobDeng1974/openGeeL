@@ -30,7 +30,7 @@ namespace geeL {
 		Texture2D::setRenderResolution();
 	}
 
-	const Resolution& RenderTexture::getResolution() const {
+	Resolution RenderTexture::getRenderResolution() const {
 		return Texture2D::getResolution();
 	}
 

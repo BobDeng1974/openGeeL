@@ -77,6 +77,7 @@ namespace geeL {
 		static AnisotropicFilter getMaxAnisotropyAmount();
 
 		virtual Resolution getScreenResolution() const = 0;
+		virtual void setRenderResolution() const = 0;
 
 		void attachParameters(const TextureParameters& parameters);
 		void detachParameters();
@@ -107,10 +108,9 @@ namespace geeL {
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
 
-		//Set render view to resolution of this texture
-		virtual void setRenderResolution() const;
 		virtual const Resolution& getResolution() const;
 		virtual Resolution getScreenResolution() const;
+		virtual void setRenderResolution() const;
 
 		ResolutionScale getScale() const;
 
@@ -149,7 +149,9 @@ namespace geeL {
 
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
+
 		virtual Resolution getScreenResolution() const;
+		virtual void setRenderResolution() const;
 
 		static void unbind();
 
@@ -194,8 +196,9 @@ namespace geeL {
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
 
-		virtual Resolution getScreenResolution() const;
 		virtual unsigned int getResolution() const;
+		virtual Resolution getScreenResolution() const;
+		virtual void setRenderResolution() const;
 
 		static void unbind();
 
@@ -239,7 +242,6 @@ namespace geeL {
 	inline ColorType Texture::getColorType() const {
 		return colorType;
 	}
-
 
 	inline const Resolution& Texture2D::getResolution() const {
 		return resolution;

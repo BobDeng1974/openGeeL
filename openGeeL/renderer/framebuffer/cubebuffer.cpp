@@ -7,7 +7,9 @@
 
 namespace geeL {
 
-	CubeBuffer::CubeBuffer() : texture(nullptr) {
+	CubeBuffer::CubeBuffer() 
+		: texture(nullptr) {
+
 		glGenFramebuffers(1, &fbo.token);
 	}
 
@@ -54,6 +56,11 @@ namespace geeL {
 		unbind();
 	}
 
+
+	Resolution CubeBuffer::getResolution() const {
+		assert(texture != nullptr);
+		return texture->getScreenResolution();
+	}
 
 	void CubeBuffer::resize(ResolutionScale scale) {
 		resolution.resize(scale);

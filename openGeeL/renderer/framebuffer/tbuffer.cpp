@@ -12,10 +12,10 @@ namespace geeL {
 	TransparentOIDBuffer::TransparentOIDBuffer(GBuffer& gBuffer, DynamicBuffer& compBuffer) : gBuffer(gBuffer), 
 		compBuffer(compBuffer), compositionTexture(nullptr), tComp("shaders/tcomp.frag") {
 		
-		this->resolution = gBuffer.getResolution();
+		Resolution res(gBuffer.getResolution());
 
-		accumulationTexture = new RenderTexture(resolution, ColorType::RGBA16);
-		revealageTexture = new RenderTexture(resolution, ColorType::Single);
+		accumulationTexture = new RenderTexture(res, ColorType::RGBA16);
+		revealageTexture = new RenderTexture(res, ColorType::Single);
 	}
 
 	TransparentOIDBuffer::~TransparentOIDBuffer() {
@@ -27,7 +27,8 @@ namespace geeL {
 	void TransparentOIDBuffer::init(RenderTexture& colorTexture) {
 		compositionTexture = &colorTexture;
 
-		tComp.init(PostProcessingParameter(ScreenQuad::get(), compBuffer, resolution));
+		Resolution res(gBuffer.getResolution());
+		tComp.init(PostProcessingParameter(ScreenQuad::get(), compBuffer, res));
 		tComp.addTextureSampler(*accumulationTexture, "accumulation");
 		tComp.addTextureSampler(*revealageTexture, "revealage");
 
@@ -62,7 +63,7 @@ namespace geeL {
 		glClearBufferfv(GL_COLOR, 3, clearAcc);
 		glClearBufferfv(GL_COLOR, 4, clearRev);
 
-		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
+		setRenderResolution();
 
 		BlendGuard accuBlend(3);
 		accuBlend.blendAdd();
@@ -87,6 +88,10 @@ namespace geeL {
 			tComp.draw();
 		}, clearNothing);
 
+	}
+
+	Resolution TransparentOIDBuffer::getResolution() const {
+		return gBuffer.getResolution();
 	}
 
 

@@ -136,6 +136,10 @@ namespace geeL {
 		}
 	}
 
+	Resolution ColorBuffer::getResolution() const {
+		return resolution;
+	}
+
 
 	void ColorBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
 		bind();

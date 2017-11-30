@@ -40,7 +40,6 @@ namespace geeL {
 
 	inline ShadowMap::ShadowMap(const Light& light, std::unique_ptr<Texture> innerTexture)
 		: FunctionalTexture(std::move(innerTexture))
-		, buffer(Resolution(500))
 		, light(light)
 		, intensity(1.f) {
 	

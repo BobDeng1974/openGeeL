@@ -190,7 +190,7 @@ namespace geeL {
 			ssao->updateCamera(scene->getCamera());
 		}
 
-		buffer.resetSize();
+		buffer.setRenderResolution();
 		buffer.bind();
 
 		//Draw lighting pass and skybox directly into given framebuffer

@@ -38,8 +38,9 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void IFrameBuffer::resetSize() const {
-		Viewport::set(0, 0, getResolution().getWidth(), getResolution().getHeight());
+	void IFrameBuffer::setRenderResolution() const {
+		Resolution res(getResolution());
+		Viewport::set(0, 0, res.getWidth(), res.getHeight());
 	}
 
 
@@ -73,7 +74,7 @@ namespace geeL {
 	void FrameBuffer::copyDepth(const FrameBuffer& buffer) const {
 		if (rbo == buffer.rbo) return;
 
-		const Resolution& res = getResolution();
+		Resolution res(getResolution());
 
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, buffer.getFBO());
@@ -85,7 +86,7 @@ namespace geeL {
 	void FrameBuffer::copyStencil(const FrameBuffer & buffer) const {
 		if (rbo == buffer.rbo) return;
 
-		const Resolution& res = getResolution();
+		Resolution res(getResolution());
 
 		glStencilMask(0xFF);
 		glClear(GL_STENCIL_BUFFER_BIT);
@@ -97,10 +98,6 @@ namespace geeL {
 
 	unsigned int FrameBuffer::getFBO() const {
 		return fbo.token;
-	}
-
-	const Resolution& FrameBuffer::getResolution() const {
-		return resolution;
 	}
 
 }

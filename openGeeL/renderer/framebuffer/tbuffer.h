@@ -22,6 +22,8 @@ namespace geeL {
 		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNothing);
 		void composite();
 
+		virtual Resolution getResolution() const;
+
 		virtual std::string toString() const;
 
 	private:

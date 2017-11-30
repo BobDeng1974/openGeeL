@@ -453,6 +453,10 @@ namespace geeL {
 		glTexImage3D(GL_TEXTURE_3D, 0, a, width, height, depth, 0, b, c, &buffer[0]);
 	}
 
+	void Texture3D::setRenderResolution() const {
+		Viewport::set(0, 0, width, height);
+	}
+
 
 
 	TextureCube::TextureCube(ColorType colorType)
@@ -573,5 +577,12 @@ namespace geeL {
 		for (int i = 0; i < 6; i++)
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, a, res, res, 0, b, c, images[i]);
 	}
+
+	void TextureCube::setRenderResolution() const {
+		Viewport::set(0, 0, resolution, resolution);
+	}
+
+
+	
 
 }

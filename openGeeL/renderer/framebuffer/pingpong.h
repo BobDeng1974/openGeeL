@@ -28,10 +28,10 @@ namespace geeL {
 		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNormal);
 		virtual void fill(Drawer& drawer, Clearer clearer = clearNormal);
 
-		virtual const Resolution& getResolution() const;
+		virtual Resolution getResolution() const;
 		const RenderTexture& getTexture(unsigned int position = 0) const;
 
-		virtual void resetSize() const;
+		virtual void setRenderResolution() const;
 		virtual void resize(ResolutionScale resolution);
 
 		virtual std::string toString() const;

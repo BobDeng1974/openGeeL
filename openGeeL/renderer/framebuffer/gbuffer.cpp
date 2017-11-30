@@ -14,7 +14,10 @@
 namespace geeL {
 
 	GBuffer::GBuffer(Resolution resolution, GBufferContent content) 
-		: content(content), emissivity(nullptr), occlusion(nullptr) {
+		: content(content)
+		, resolution(resolution)
+		, emissivity(nullptr)
+		, occlusion(nullptr) {
 		
 		init(resolution);
 	}
@@ -59,6 +62,10 @@ namespace geeL {
 
 	float GBuffer::getDepth() const {
 		return depthPos;
+	}
+
+	Resolution GBuffer::getResolution() const {
+		return resolution;
 	}
 
 	const RenderTexture& GBuffer::getDiffuse() const {
@@ -135,8 +142,9 @@ namespace geeL {
 		}
 	}
 
-	ForwardBuffer::ForwardBuffer(GBuffer& gBuffer) : gBuffer(gBuffer) {
-		this->resolution = gBuffer.getResolution();
+	ForwardBuffer::ForwardBuffer(GBuffer& gBuffer) 
+		: gBuffer(gBuffer)
+		, target(nullptr) {
 
 		init();
 	}
@@ -162,14 +170,15 @@ namespace geeL {
 		unbind();
 	}
 
-	void ForwardBuffer::setTarget(RenderTarget& colorTexture) {
+	void ForwardBuffer::setTarget(ARenderTarget& colorTexture) {
 		bind();
 		colorTexture.assignTo(*this, 3);
+		target = &colorTexture;
 	}
 
 	void ForwardBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
 		bind();
-		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
+		target->setRenderResolution();
 
 		BlendGuard blend(3);
 		blend.blendAlpha();
@@ -182,6 +191,11 @@ namespace geeL {
 		drawCall();
 
 		unbind();
+	}
+
+	Resolution ForwardBuffer::getResolution() const {
+		assert(target != nullptr);
+		return target->getRenderResolution();
 	}
 
 

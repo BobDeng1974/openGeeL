@@ -6,9 +6,8 @@
 
 namespace geeL {
 
-	DepthFrameBuffer::DepthFrameBuffer(const Resolution& defaultResolution) 
-		: resolution(defaultResolution)
-		, clearer(ClearingMethod::Depth)
+	DepthFrameBuffer::DepthFrameBuffer() 
+		: clearer(ClearingMethod::Depth)
 		, current(nullptr) {
 	
 		glGenFramebuffers(1, &fbo.token);
@@ -22,7 +21,6 @@ namespace geeL {
 
 	void DepthFrameBuffer::add(Texture& texture) {
 		current = &texture;
-		currResolution = current->getScreenResolution();
 
 		bind();
 
@@ -42,8 +40,10 @@ namespace geeL {
 
 
 	void DepthFrameBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
+		assert(current != nullptr);
+
 		bind();
-		resetSize();
+		current->setRenderResolution();
 		this->clearer.clear();
 
 		drawCall();
@@ -52,11 +52,9 @@ namespace geeL {
 
 	}
 
-	const Resolution& DepthFrameBuffer::getResolution() const {
-		if (current != nullptr)
-			return currResolution;
-
-		return resolution;
+	Resolution DepthFrameBuffer::getResolution() const {
+		assert(current != nullptr);
+		return current->getScreenResolution();
 	}
 
 	unsigned int DepthFrameBuffer::getFBO() const {
