@@ -17,6 +17,8 @@ namespace geeL {
 		IBLMap(BRDFIntegrationMap& brdfIntMap, IrradianceMap& irrMap, PrefilteredEnvironmentMap& preEnvMap);
 		IBLMap(const IBLMap& map);
 
+		virtual ~IBLMap();
+
 		virtual void bindMap(const RenderShader& shader, std::string name) const;
 		virtual void add(RenderShader& shader, std::string name) const;
 		virtual void draw();

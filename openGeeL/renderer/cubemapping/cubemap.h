@@ -15,7 +15,7 @@ namespace geeL {
 	class CubeMap {
 
 	public:
-		virtual ~CubeMap() {}
+		virtual ~CubeMap();
 
 		virtual void bindMap(const RenderShader& shader, std::string name) const;
 

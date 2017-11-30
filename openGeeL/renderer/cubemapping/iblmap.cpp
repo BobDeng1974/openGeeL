@@ -23,6 +23,12 @@ namespace geeL {
 		, irrMap(map.irrMap)
 		, preEnvMap(map.preEnvMap) {}
 
+	IBLMap::~IBLMap() {
+		//Set texture to null since it is only a reference to texture
+		//of irradiance map and would therefore be deleted twice
+		texture = nullptr;
+	}
+
 
 	void IBLMap::bindMap(const RenderShader& shader, std::string name) const {
 		irrMap.bindMap(shader, name);

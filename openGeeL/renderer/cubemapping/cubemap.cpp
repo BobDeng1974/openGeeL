@@ -8,7 +8,12 @@
 #define GL_TEXTURE_CUBE_MAP 0x8513
 
 namespace geeL {
-
+	
+	CubeMap::~CubeMap() {
+		if (texture != nullptr)
+			delete texture;
+	}
+	
 	void CubeMap::bindMap(const RenderShader& shader, std::string name) const {
 		TextureBindingStack::bindSingleTexture(getID(), shader, 1, name, TextureType::TextureCube);
 	}

@@ -14,15 +14,12 @@ namespace geeL {
 	class EnvironmentCubeMap : public CubeMap {
 
 	public:
-		EnvironmentCubeMap(const EnvironmentMap& map, CubeBuffer& frameBuffer, unsigned int resolution = 512);
-		virtual ~EnvironmentCubeMap();
+		EnvironmentCubeMap(const EnvironmentMap& map, 
+			CubeBuffer& frameBuffer, 
+			unsigned int resolution = 512);
 
 	private:
-		const EnvironmentMap& map;
-		CubeBuffer& frameBuffer;
-		RenderShader* conversionShader;
-
-		void draw();
+		void draw(const EnvironmentMap& map, CubeBuffer& frameBuffer);
 
 	};
 }
