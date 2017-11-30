@@ -43,7 +43,7 @@ namespace geeL {
 
 
 	void PrefilteredEnvironmentMap::draw() {
-		frameBuffer.init(getTexture());
+		frameBuffer.init(getTextureCube());
 
 		glm::mat4 projection = perspective(90.0f, 1.0f, 0.1f, 10.0f);
 		glm::mat4 views[] = {

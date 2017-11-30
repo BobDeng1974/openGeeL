@@ -61,7 +61,7 @@ namespace geeL {
 
 
 	void ReflectionProbe::draw() {
-		frameBuffer.init(getTexture());
+		frameBuffer.init(getTextureCube());
 
 		ManualCamera& cam = ManualCamera(transform);
 

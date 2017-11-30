@@ -5,14 +5,14 @@
 
 namespace geeL {
 
-	class Texture;
+	class TextureCube;
 
 	class CubeBuffer : public FrameBuffer {
 
 	public:
 		CubeBuffer();
 
-		void init(const Texture& texture);
+		void init(const TextureCube& texture);
 
 		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNormal);
 		void fill(std::function<void(unsigned int)> drawCall, unsigned int mipLevel = 0, Clearer clearer = clearNormal);
@@ -22,7 +22,7 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	private:
-		const Texture* texture;
+		const TextureCube* texture;
 
 		CubeBuffer(const CubeBuffer& other) = delete;
 		CubeBuffer& operator= (const CubeBuffer& other) = delete;

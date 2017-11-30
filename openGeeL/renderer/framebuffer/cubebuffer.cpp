@@ -12,9 +12,9 @@ namespace geeL {
 	}
 
 
-	void CubeBuffer::init(const Texture& texture) {
+	void CubeBuffer::init(const TextureCube& texture) {
 		this->texture = &texture;
-		this->resolution = texture.getScreenResolution();;
+		this->resolution = texture.getScreenResolution();
 
 		bind();
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
