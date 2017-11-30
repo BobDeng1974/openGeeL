@@ -42,6 +42,13 @@ namespace geeL {
 		preEnvMap.add(shader, name);
 	}
 
+	void IBLMap::remove(RenderShader& shader) const {
+		shader.removeMap(brdfIntMap);
+
+		irrMap.remove(shader);
+		preEnvMap.remove(shader);
+	}
+
 	void IBLMap::draw() {
 		irrMap.draw();
 		preEnvMap.draw();
@@ -87,6 +94,14 @@ namespace geeL {
 		baseMap.add(shader, name);
 		irrMap.add(shader, name);
 		preEnvMap.add(shader, name);
+	}
+
+	void DynamicIBLMap::remove(RenderShader& shader) const {
+		shader.removeMap(brdfIntMap);
+
+		baseMap.remove(shader);
+		irrMap.remove(shader);
+		preEnvMap.remove(shader);
 	}
 
 	void DynamicIBLMap::draw() {

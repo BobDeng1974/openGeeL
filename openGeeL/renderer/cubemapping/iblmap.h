@@ -21,6 +21,7 @@ namespace geeL {
 
 		virtual void bindMap(const RenderShader& shader, std::string name) const;
 		virtual void add(RenderShader& shader, std::string name) const;
+		virtual void remove(RenderShader& shader) const;
 		virtual void draw();
 
 		const IrradianceMap& getIrradianceMap() const;
@@ -45,6 +46,7 @@ namespace geeL {
 
 		virtual void draw(const RenderShader& shader, std::string name) const;
 		virtual void add(RenderShader& shader, std::string name) const;
+		virtual void remove(RenderShader& shader) const;
 		virtual void draw();
 
 		const IrradianceMap& getIrradianceMap() const;

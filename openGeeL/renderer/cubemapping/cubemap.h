@@ -13,6 +13,7 @@ namespace geeL {
 
 	enum class ShaderTransformSpace;
 
+
 	//Cubemap that consists of six textures for each side
 	class CubeMap : public FunctionalTexture {
 
@@ -32,7 +33,6 @@ namespace geeL {
 
 	private:
 		TextureCube& textureCube;
-
 
 	};
 
