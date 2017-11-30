@@ -24,7 +24,7 @@ namespace geeL {
 		virtual void resize(Resolution resolution);
 
 	protected:
-		virtual void assignInner(unsigned int position) const;
+		virtual void assign(unsigned int position) const;
 
 	private:
 		RenderTexture(const RenderTexture& other) = delete;

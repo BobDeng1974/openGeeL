@@ -48,8 +48,8 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void RenderTexture::assignInner(unsigned int position) const {
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, GL_TEXTURE_2D, getID(), 0);
+	void RenderTexture::assign(unsigned int position) const {
+		Texture2D::assign(position);
 	}
 
 }

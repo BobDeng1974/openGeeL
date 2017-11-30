@@ -11,7 +11,7 @@ namespace geeL {
 		if (bindFB) buffer.bind();
 		parent = &buffer;
 
-		assignInner(position);
+		assign(position);
 		if (bindFB) buffer.unbind();
 
 	}
@@ -19,7 +19,7 @@ namespace geeL {
 	bool RenderTarget::assignToo(const IFrameBuffer& buffer, unsigned int position, bool bindFB) const {
 		if (parent != nullptr) {
 			if (bindFB) buffer.bind();
-			assignInner(position);
+			assign(position);
 			if (bindFB) buffer.unbind();
 
 			return true;
@@ -45,12 +45,12 @@ namespace geeL {
 		return unsigned int(targets.size());
 	}
 
-	void LayeredTarget::assignInner(unsigned int position) const {
+	void LayeredTarget::assign(unsigned int position) const {
 
 		unsigned int size = 0;
 		for (auto it(targets.begin()); it != targets.end(); it++) {
 			RenderTarget& current = **it;
-			current.assignInner(position + size);
+			current.assign(position + size);
 
 			size++;
 		}

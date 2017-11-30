@@ -32,7 +32,7 @@ namespace geeL {
 
 		RenderTarget();
 
-		virtual void assignInner(unsigned int position) const = 0;
+		virtual void assign(unsigned int position) const = 0;
 
 	};
 
@@ -52,7 +52,7 @@ namespace geeL {
 		virtual unsigned int getSize() const;
 
 	protected:
-		virtual void assignInner(unsigned int position) const;
+		virtual void assign(unsigned int position) const;
 
 	private:
 		std::list<RenderTarget*> targets;

@@ -298,15 +298,15 @@ namespace geeL {
 		glTexStorage2D(GL_TEXTURE_2D, level, (int)getColorType(), width, height);
 	}
 
-	
-
 	void Texture2D::mipmap() const {
 		glBindTexture(GL_TEXTURE_2D, getID());
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	
+	void Texture2D::assign(AttachmentPosition position) const {
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, GL_TEXTURE_2D, getID(), 0);
+	}
 
 	void Texture2D::setRenderResolution() const {
 		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
@@ -402,6 +402,10 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_3D, getID());
 		glGenerateMipmap(GL_TEXTURE_3D);
 		glBindTexture(GL_TEXTURE_3D, 0);
+	}
+
+	void Texture3D::assign(AttachmentPosition position) const {
+		std::cout << "Assigning of 3D texture currently not supported\n";
 	}
 
 	void Texture3D::initWrapMode(WrapMode mode) {
@@ -507,6 +511,12 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, getID());
 		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
+
+	void TextureCube::assign(AttachmentPosition position) const {
+		for (unsigned int side = 0; side < 6; side++)
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, 
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, getID(), 0);
 	}
 
 	void TextureCube::initWrapMode(WrapMode mode) {

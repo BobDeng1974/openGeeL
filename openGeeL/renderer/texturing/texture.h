@@ -6,6 +6,8 @@
 #include "texturetype.h"
 #include "utility/resolution.h"
 
+typedef unsigned int AttachmentPosition;
+
 namespace geeL {
 
 	class TextureParameters;
@@ -57,6 +59,9 @@ namespace geeL {
 		//Bind texture as image texture
 		virtual void bindImage(unsigned int position = 0, AccessType access = AccessType::All) const;
 
+		//Assign this texture into given framebuffer attachment position
+		virtual void assign(AttachmentPosition position) const = 0;
+
 		//Call GL disable function with appropriate texture type
 		virtual void disable() const;
 
@@ -97,6 +102,7 @@ namespace geeL {
 		Texture2D& operator=(Texture2D&& other);
 
 		virtual void mipmap() const;
+		virtual void assign(AttachmentPosition position) const;
 
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
@@ -139,6 +145,7 @@ namespace geeL {
 		Texture3D& operator=(Texture3D&& other);
 
 		virtual void mipmap() const;
+		virtual void assign(AttachmentPosition position) const;
 
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
@@ -182,6 +189,7 @@ namespace geeL {
 		TextureCube& operator=(TextureCube&& other);
 
 		virtual void mipmap() const;
+		virtual void assign(AttachmentPosition position) const;
 
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
