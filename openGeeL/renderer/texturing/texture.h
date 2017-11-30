@@ -36,7 +36,11 @@ namespace geeL {
 	class Texture : public ITexture {
 
 	public:
+		Texture(Texture&& other);
 		virtual ~Texture() {}
+
+		Texture& operator=(Texture&& other);
+
 
 		virtual unsigned int getID() const;
 		const TextureToken& getTextureToken() const;
@@ -87,7 +91,10 @@ namespace geeL {
 	class Texture2D : public Texture {
 
 	public:
+		Texture2D(Texture2D&& other);
 		virtual ~Texture2D() {}
+
+		Texture2D& operator=(Texture2D&& other);
 
 		virtual void mipmap() const;
 
@@ -126,7 +133,10 @@ namespace geeL {
 	class Texture3D : public Texture {
 
 	public:
+		Texture3D(Texture3D&& other);
 		virtual ~Texture3D() {}
+
+		Texture3D& operator=(Texture3D&& other);
 
 		virtual void mipmap() const;
 
@@ -166,7 +176,10 @@ namespace geeL {
 	class TextureCube : public Texture {
 
 	public:
+		TextureCube(TextureCube&& other);
 		virtual ~TextureCube() {}
+
+		TextureCube& operator=(TextureCube&& other);
 
 		virtual void mipmap() const;
 
@@ -192,7 +205,6 @@ namespace geeL {
 	private:
 		unsigned int resolution;
 
-
 	};
 
 
@@ -207,8 +219,6 @@ namespace geeL {
 	inline bool ITexture::operator!=(const ITexture& rhs) const {
 		return getID() != rhs.getID();
 	}
-
-
 
 	inline unsigned int Texture::getID() const {
 		return id;

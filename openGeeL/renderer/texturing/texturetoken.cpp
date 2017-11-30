@@ -4,9 +4,18 @@
 
 namespace geeL {
 
-	inline TextureToken::TokenInner::~TokenInner() {
+	TextureToken::TokenInner::TokenInner(unsigned int id)
+		: id(id) {}
+
+	TextureToken::TokenInner::~TokenInner() {
 		glDeleteTextures(1, &id);
 	}
+
+	TextureToken::TextureToken(const TextureToken& other)
+		: token(other.token) {}
+
+	TextureToken::TextureToken(TextureToken&& other)
+		: token(other.token) {}
 
 
 	TextureToken::TextureToken() {
@@ -18,6 +27,13 @@ namespace geeL {
 
 
 	TextureToken& TextureToken::operator= (const TextureToken& other) {
+		if (this != &other)
+			token = other.token;
+
+		return *this;
+	}
+
+	TextureToken & TextureToken::operator=(TextureToken&& other) {
 		if (this != &other)
 			token = other.token;
 

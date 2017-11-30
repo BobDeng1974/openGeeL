@@ -12,8 +12,10 @@ namespace geeL {
 	public:
 		TextureToken();
 		TextureToken(const TextureToken& other);
+		TextureToken(TextureToken&& other);
 
 		TextureToken& operator= (const TextureToken& other);
+		TextureToken& operator= (TextureToken&& other);
 
 		bool operator== (const TextureToken& other) const;
 		bool operator!= (const TextureToken& other) const;
@@ -36,11 +38,6 @@ namespace geeL {
 		std::shared_ptr<TokenInner> token;
 
 	};
-
-
-	inline TextureToken::TokenInner::TokenInner(unsigned int id) : id(id) {}
-
-	inline TextureToken::TextureToken(const TextureToken& other) : token(other.token) {}
 
 
 	inline bool TextureToken::operator== (const TextureToken& other) const {

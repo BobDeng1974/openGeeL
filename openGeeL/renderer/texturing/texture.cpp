@@ -18,6 +18,26 @@ namespace geeL {
 		: colorType(colorType)
 		, parameters(nullptr) {}
 
+	Texture::Texture(Texture&& other) 
+		: id(std::move(other.id))
+		, colorType(other.colorType)
+		, parameters(other.parameters) {
+
+		other.parameters = nullptr;
+	}
+
+	Texture& Texture::operator=(Texture&& other) {
+		if (this != &other) {
+			id = std::move(other.id);
+			colorType = other.colorType;
+			parameters = other.parameters;
+
+			other.parameters = nullptr;
+		}
+
+		return *this;
+	}
+
 
 	void Texture::bind() const {
 		glBindTexture((int)getTextureType(), getID());
@@ -75,6 +95,80 @@ namespace geeL {
 		}
 	}
 
+	void Texture::initFilterMode(FilterMode mode) {
+		int textureType = (int)getTextureType();
+
+		switch (mode) {
+		case FilterMode::None:
+			glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			break;
+		case FilterMode::Nearest:
+			glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+			glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			break;
+		case FilterMode::Linear:
+			glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			break;
+		case FilterMode::LinearMip:
+			glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			break;
+		case FilterMode::Bilinear:
+			glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+			glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			break;
+		case FilterMode::Trilinear:
+			glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			break;
+		case FilterMode::TrilinearUltra:
+			glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			break;
+		}
+	}
+
+	void Texture::initWrapMode(WrapMode mode) {
+		std::cout << "This texture type doens't support wrapping\n";
+	}
+
+	void Texture::initAnisotropyFilter(AnisotropicFilter filter) {
+		float maxValue = 0.f;
+		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxValue);
+
+		maxValue = std::fmin(maxValue, (float)filter);
+		maxValue = std::fmin(maxValue, (float)maxAnisotropy);
+
+		if (maxValue > 0.f)
+			glTexParameterf((int)getTextureType(), GL_TEXTURE_MAX_ANISOTROPY_EXT, maxValue);
+	}
+
+	void Texture::setBorderColors(float r, float g, float b, float a) {
+		bind();
+		float borderColor[] = { r, g, b, a };
+		glTexParameterfv((int)getTextureType(), GL_TEXTURE_BORDER_COLOR, borderColor);
+		unbind();
+	}
+
+
+	void Texture::setMaxAnisotropyAmount(AnisotropicFilter value) {
+		maxAnisotropy = value;
+	}
+
+	AnisotropicFilter Texture::getMaxAnisotropyAmount() {
+		return maxAnisotropy;
+	}
+
+	void Texture::attachParameters(const TextureParameters& parameters) {
+		this->parameters = &parameters;
+	}
+
+	void Texture::detachParameters() {
+		this->parameters = nullptr;
+	}
+
 
 
 	Texture2D::Texture2D(ColorType colorType)
@@ -123,6 +217,19 @@ namespace geeL {
 		initFilterMode(filterMode);
 		initAnisotropyFilter(filter);
 		unbind();
+	}
+
+	Texture2D::Texture2D(Texture2D&& other)
+		: Texture(std::move(other))
+		, resolution(other.resolution) {}
+
+	Texture2D& Texture2D::operator=(Texture2D&& other) {
+		if (this != &other) {
+			Texture::operator=(std::move(other));
+			resolution = other.resolution;
+		}
+
+		return *this;
 	}
 
 
@@ -191,80 +298,7 @@ namespace geeL {
 		glTexStorage2D(GL_TEXTURE_2D, level, (int)getColorType(), width, height);
 	}
 
-	void Texture::initFilterMode(FilterMode mode) {
-		int textureType = (int)getTextureType();
-
-		switch (mode) {
-			case FilterMode::None:
-				glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-				glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-				break;
-			case FilterMode::Nearest:
-				glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-				glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-				break;
-			case FilterMode::Linear:
-				glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				break;
-			case FilterMode::LinearMip:
-				glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-				glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				break;
-			case FilterMode::Bilinear:
-				glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-				glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				break;
-			case FilterMode::Trilinear:
-				glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-				glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				break;
-			case FilterMode::TrilinearUltra:
-				glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-				glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-				break;
-		}
-	}
-
-	void Texture::initWrapMode(WrapMode mode) {
-		std::cout << "This texture type doens't support wrapping\n";
-	}
-
-	void Texture::initAnisotropyFilter(AnisotropicFilter filter) {
-		float maxValue = 0.f;
-		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxValue);
-
-		maxValue = std::fmin(maxValue, (float)filter);
-		maxValue = std::fmin(maxValue, (float)maxAnisotropy);
-
-		if (maxValue > 0.f)
-			glTexParameterf((int)getTextureType(), GL_TEXTURE_MAX_ANISOTROPY_EXT, maxValue);
-	}
-
-	void Texture::setBorderColors(float r, float g, float b, float a) {
-		bind();
-		float borderColor[] = { r, g, b, a };
-		glTexParameterfv((int)getTextureType(), GL_TEXTURE_BORDER_COLOR, borderColor);
-		unbind();
-	}
-
-
-	void Texture::setMaxAnisotropyAmount(AnisotropicFilter value) {
-		maxAnisotropy = value;
-	}
-
-	AnisotropicFilter Texture::getMaxAnisotropyAmount() {
-		return maxAnisotropy;
-	}
-
-	void Texture::attachParameters(const TextureParameters& parameters) {
-		this->parameters = &parameters;
-	}
-
-	void Texture::detachParameters() {
-		this->parameters = nullptr;
-	}
-
+	
 
 	void Texture2D::mipmap() const {
 		glBindTexture(GL_TEXTURE_2D, getID());
@@ -343,6 +377,26 @@ namespace geeL {
 		unbind();
 	}
 
+
+	Texture3D::Texture3D(Texture3D&& other)
+		: Texture(std::move(other))
+		, width(other.width)
+		, height(other.height)
+		, depth(other.depth)
+		, levels(other.levels) {}
+
+	Texture3D& Texture3D::operator=(Texture3D&& other) {
+		if (this != &other) {
+			Texture::operator=(std::move(other));
+
+			width = other.width;
+			height = other.height;
+			depth = other.depth;
+			levels = other.levels;
+		}
+
+		return *this;
+	}
 
 	void Texture3D::mipmap() const {
 		glBindTexture(GL_TEXTURE_3D, getID());
@@ -434,6 +488,20 @@ namespace geeL {
 		unbind();
 	}
 
+
+	TextureCube::TextureCube(TextureCube&& other)
+		: Texture(std::move(other))
+		, resolution(other.resolution) {}
+
+
+	TextureCube& TextureCube::operator=(TextureCube&& other) {
+		if (this != &other) {
+			Texture::operator=(std::move(other));
+			resolution = other.resolution;
+		}
+
+		return *this;
+	}
 
 	void TextureCube::mipmap() const {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, getID());
