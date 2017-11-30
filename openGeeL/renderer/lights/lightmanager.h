@@ -5,6 +5,7 @@
 #include <list>
 #include <set>
 #include <map>
+#include <memory>
 #include <string>
 #include <vec3.hpp>
 #include "shadowmapping/shadowmapconfig.h"
@@ -83,8 +84,8 @@ namespace geeL {
 		void iterLights(std::function<void(const LightBinding&)> function) const;
 
 
-		DynamicIBLMap& addReflectionProbe(const DynamicIBLMap& probe);
-		IBLMap& addReflectionProbe(const IBLMap& probe);
+		DynamicIBLMap& addReflectionProbe(DynamicIBLMap& probe);
+		IBLMap& addReflectionProbe(IBLMap& probe);
 		void removeReflectionProbe(DynamicCubeMap& probe);
 
 		//Add all reflection probes to given shader

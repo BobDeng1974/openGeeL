@@ -15,7 +15,7 @@ namespace geeL {
 
 	public:
 		IBLMap(BRDFIntegrationMap& brdfIntMap, IrradianceMap& irrMap, PrefilteredEnvironmentMap& preEnvMap);
-		IBLMap(const IBLMap& map);
+		IBLMap(IBLMap&& map);
 
 		virtual ~IBLMap();
 
@@ -39,7 +39,10 @@ namespace geeL {
 	public:
 		DynamicIBLMap(DynamicCubeMap& environmentMap, BRDFIntegrationMap& brdfIntMap, 
 			IrradianceMap& irrMap, PrefilteredEnvironmentMap& preEnvMap);
-		DynamicIBLMap(const DynamicIBLMap& map);
+		DynamicIBLMap(DynamicIBLMap&& map);
+
+		virtual ~DynamicIBLMap();
+
 
 		virtual void bind(const Camera& camera, const RenderShader& shader,
 			const std::string& name, ShaderTransformSpace space) const;

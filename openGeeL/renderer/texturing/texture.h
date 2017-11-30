@@ -97,8 +97,20 @@ namespace geeL {
 	class Texture2D : public Texture {
 
 	public:
+		Texture2D(ColorType colorType);
+		Texture2D(Resolution resolution, ColorType colorType);
+		Texture2D(Resolution resolution, ColorType colorType, void* image);
+
+		Texture2D(Resolution resolution, ColorType colorType, FilterMode filterMode,
+			WrapMode wrapMode, void* image);
+
+		Texture2D(Resolution resolution, ColorType colorType, FilterMode filterMode,
+			WrapMode wrapMode, AnisotropicFilter filter, void* image);
+
 		Texture2D(Texture2D&& other);
+
 		virtual ~Texture2D() {}
+
 
 		Texture2D& operator=(Texture2D&& other);
 
@@ -119,14 +131,6 @@ namespace geeL {
 	protected:
 		Resolution resolution;
 
-		Texture2D(ColorType colorType);
-		Texture2D(Resolution resolution, ColorType colorType);
-		Texture2D(Resolution resolution, ColorType colorType, void* image);
-		Texture2D(Resolution resolution, ColorType colorType, FilterMode filterMode, 
-			WrapMode wrapMode, void* image);
-		Texture2D(Resolution resolution, ColorType colorType, FilterMode filterMode,
-			WrapMode wrapMode, AnisotropicFilter filter, void* image);
-
 		virtual void initStorage(void* image);
 		virtual void reserveStorage(unsigned int levels = 1);
 
@@ -139,25 +143,6 @@ namespace geeL {
 	class Texture3D : public Texture {
 
 	public:
-		Texture3D(Texture3D&& other);
-		virtual ~Texture3D() {}
-
-		Texture3D& operator=(Texture3D&& other);
-
-		virtual void mipmap() const;
-		virtual void assign(AttachmentPosition position) const;
-
-		virtual void initWrapMode(WrapMode mode);
-		virtual TextureType getTextureType() const;
-
-		virtual Resolution getScreenResolution() const;
-		virtual void setRenderResolution() const;
-
-		static void unbind();
-
-	protected:
-		unsigned int width, height, depth, levels;
-
 		Texture3D();
 		Texture3D(unsigned int width,
 			unsigned int height,
@@ -175,9 +160,29 @@ namespace geeL {
 			FilterMode filterMode,
 			WrapMode wrapMode, const std::vector<float>& buffer);
 
+		Texture3D(Texture3D&& other);
+
+		virtual ~Texture3D() {}
+
+
+		Texture3D& operator=(Texture3D&& other);
+
+		virtual void mipmap() const;
+		virtual void assign(AttachmentPosition position) const;
+
+		virtual void initWrapMode(WrapMode mode);
+		virtual TextureType getTextureType() const;
+
+		virtual Resolution getScreenResolution() const;
+		virtual void setRenderResolution() const;
+
+		static void unbind();
+
+	protected:
+		unsigned int width, height, depth, levels;
+
 		void initStorage();
 		void initStorage(const std::vector<float>& buffer);
-				
 
 	};
 
@@ -185,8 +190,19 @@ namespace geeL {
 	class TextureCube : public Texture {
 
 	public:
+		TextureCube(ColorType colorType);
+		TextureCube(unsigned int resolution, ColorType colorType);
+
+		TextureCube(unsigned int resolution, ColorType colorType,
+			FilterMode filterMode, WrapMode wrapMode);
+
+		TextureCube(unsigned int resolution, ColorType colorType,
+			FilterMode filterMode, WrapMode wrapMode, unsigned char* images[6]);
+
 		TextureCube(TextureCube&& other);
+
 		virtual ~TextureCube() {}
+
 
 		TextureCube& operator=(TextureCube&& other);
 
@@ -203,13 +219,6 @@ namespace geeL {
 		static void unbind();
 
 	protected:
-		TextureCube(ColorType colorType);
-		TextureCube(unsigned int resolution, ColorType colorType);
-		TextureCube(unsigned int resolution, ColorType colorType, 
-			FilterMode filterMode, WrapMode wrapMode);
-		TextureCube(unsigned int resolution, ColorType colorType, 
-			FilterMode filterMode, WrapMode wrapMode, unsigned char* images[6]);
-
 		virtual void initStorage(unsigned char* image);
 		void initStorage(unsigned char* images[6]);
 

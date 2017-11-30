@@ -64,7 +64,7 @@ namespace geeL {
 	public:
 		ForwardBuffer(GBuffer& gBuffer);
 		
-		void setTarget(ARenderTarget& target);
+		void setTarget(RenderTarget& target);
 		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNothing);
 
 		virtual Resolution getResolution() const;
@@ -72,7 +72,7 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	private:
-		ARenderTarget* target;
+		RenderTarget* target;
 		GBuffer& gBuffer;
 
 		void init();

@@ -12,7 +12,7 @@
 namespace geeL {
 
 	class Drawer;
-	class ARenderTarget;
+	class RenderTarget;
 
 
 	//Interface for all framebuffer objects
@@ -86,8 +86,8 @@ namespace geeL {
 	class DynamicBuffer : public FrameBuffer {
 
 	public:
-		virtual void add(ARenderTarget& target);
-		virtual void push(ARenderTarget& target) = 0;
+		virtual void add(RenderTarget& target);
+		virtual void push(RenderTarget& target) = 0;
 	};
 
 
@@ -96,7 +96,7 @@ namespace geeL {
 		return fbo != 0;
 	}
 
-	inline void DynamicBuffer::add(ARenderTarget& texture) {
+	inline void DynamicBuffer::add(RenderTarget& texture) {
 		push(texture);
 	}
 

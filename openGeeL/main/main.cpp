@@ -12,8 +12,6 @@
 #include "testscene.h"
 #include "capsulescene.h"
 
-#include <memory>
-
 int main(int argc, char* argv[]) {
 	ApplicationManagerInstance instance;
 
@@ -43,10 +41,6 @@ int main(int argc, char* argv[]) {
 	//CharacterViewer::draw();
 	ModelViewer::draw();
 	//CapsuleScene::draw();
-
-	//std::unique_ptr<int> ayy;
-
-	//ayy.
 
 	//TestScene::draw();
 	//RaymarchTest::draw();

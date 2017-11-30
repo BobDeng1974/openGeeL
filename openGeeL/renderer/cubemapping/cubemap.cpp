@@ -13,6 +13,10 @@ namespace geeL {
 		: FunctionalTexture(std::unique_ptr<Texture>(texture.get())) 
 		, textureCube(*texture.release()) {}
 
+	CubeMap::CubeMap(CubeMap&& other)
+		: FunctionalTexture(std::move(other))
+		, textureCube(other.textureCube) {}
+
 
 	void CubeMap::bindMap(const RenderShader& shader, std::string name) const {
 		TextureBindingStack::bindSingleTexture(getID(), shader, 1, name, TextureType::TextureCube);
@@ -39,5 +43,9 @@ namespace geeL {
 
 	DynamicCubeMap::DynamicCubeMap(std::unique_ptr<TextureCube> texture)
 		: CubeMap(std::move(texture)) {}
+
+	DynamicCubeMap::DynamicCubeMap(DynamicCubeMap&& other)
+		: CubeMap(std::move(other)) {}
+
 
 }

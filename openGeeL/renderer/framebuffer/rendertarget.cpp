@@ -5,9 +5,9 @@
 
 namespace geeL {
 
-	ARenderTarget::ARenderTarget() : parent(nullptr) {}
+	RenderTarget::RenderTarget() : parent(nullptr) {}
 
-	void ARenderTarget::assignTo(const IFrameBuffer& buffer, unsigned int position, bool bindFB) {
+	void RenderTarget::assignTo(const IFrameBuffer& buffer, unsigned int position, bool bindFB) {
 		if (bindFB) buffer.bind();
 		parent = &buffer;
 
@@ -16,7 +16,7 @@ namespace geeL {
 
 	}
 
-	bool ARenderTarget::assignToo(const IFrameBuffer& buffer, unsigned int position, bool bindFB) const {
+	bool RenderTarget::assignToo(const IFrameBuffer& buffer, unsigned int position, bool bindFB) const {
 		if (parent != nullptr) {
 			if (bindFB) buffer.bind();
 			assign(position);
@@ -28,7 +28,7 @@ namespace geeL {
 		return false;
 	}
 
-	bool ARenderTarget::isAssigned() const {
+	bool RenderTarget::isAssigned() const {
 		return parent != nullptr;
 	}
 
@@ -49,7 +49,7 @@ namespace geeL {
 
 		unsigned int size = 0;
 		for (auto it(targets.begin()); it != targets.end(); it++) {
-			ARenderTarget& current = **it;
+			RenderTarget& current = **it;
 			current.assign(position + size);
 
 			size++;

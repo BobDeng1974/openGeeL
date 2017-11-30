@@ -82,7 +82,7 @@ namespace geeL {
 		addTextureSampler(provider->requestPositionRoughness(), "gPositionDepth");
 		blur.addTextureSampler(provider->requestPositionRoughness(), "gPositionDepth");
 
-		Resolution blurRes = Resolution(parentBuffer->getResolution(), blurResolution);
+		Resolution blurRes = Resolution(parameter.resolution, blurResolution);
 		if (blurTexture == nullptr)
 			blurTexture = new RenderTexture(blurRes, ColorType::RGB16,
 				WrapMode::ClampEdge, FilterMode::Linear);

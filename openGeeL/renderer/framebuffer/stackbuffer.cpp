@@ -17,7 +17,7 @@ namespace geeL {
 	}
 
 
-	void StackBuffer::push(ARenderTarget& target) {
+	void StackBuffer::push(RenderTarget& target) {
 		assert(target.getSize() == size);
 		stackBuffer.push(&target);
 	}
@@ -28,7 +28,7 @@ namespace geeL {
 		//Restore render settings of previous element of stack (If it exists)
 		//This is necessary since drawcall of current element may has its own settings
 		if (!stackBuffer.empty()) {
-			ARenderTarget* previous = stackBuffer.top();
+			RenderTarget* previous = stackBuffer.top();
 			bind();
 			previous->assignTo(*this, 0);
 			previous->setRenderResolution();
@@ -60,7 +60,7 @@ namespace geeL {
 	
 
 	void StackBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
-		ARenderTarget* current = stackBuffer.top();
+		RenderTarget* current = stackBuffer.top();
 		
 		bind();
 		current->assignTo(*this, 0);
@@ -74,7 +74,7 @@ namespace geeL {
 	}
 
 	void StackBuffer::fill(Drawer& drawer, Clearer clearer) {
-		ARenderTarget* current = stackBuffer.top();
+		RenderTarget* current = stackBuffer.top();
 
 		bind();
 		current->assignTo(*this, 0);

@@ -170,7 +170,7 @@ namespace geeL {
 		unbind();
 	}
 
-	void ForwardBuffer::setTarget(ARenderTarget& colorTexture) {
+	void ForwardBuffer::setTarget(RenderTarget& colorTexture) {
 		bind();
 		colorTexture.assignTo(*this, 3);
 		target = &colorTexture;

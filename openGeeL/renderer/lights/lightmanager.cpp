@@ -34,9 +34,6 @@ namespace geeL {
 		iterLights([this](Light& light) {
 			delete &light;
 		});
-
-		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++)
-			delete *it;
 	}
 
 
@@ -297,18 +294,14 @@ namespace geeL {
 
 
 
-	DynamicIBLMap& LightManager::addReflectionProbe(const DynamicIBLMap& probe) {
-		DynamicIBLMap* map = new DynamicIBLMap(probe);
-		reflectionProbes.push_back(map);
-
-		return *map;
+	DynamicIBLMap& LightManager::addReflectionProbe(DynamicIBLMap& probe) {
+		reflectionProbes.push_back(&probe);
+		return probe;
 	}
 
-	IBLMap& LightManager::addReflectionProbe(const IBLMap& probe) {
-		IBLMap* map = new IBLMap(probe);
-		reflectionProbes.push_back(map);
-
-		return *map;
+	IBLMap& LightManager::addReflectionProbe(IBLMap& probe) {
+		reflectionProbes.push_back(&probe);
+		return probe;
 	}
 
 	void LightManager::removeReflectionProbe(DynamicCubeMap& probe) {

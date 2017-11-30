@@ -18,8 +18,8 @@ namespace geeL {
 		draw();
 	}
 
-	IBLMap::IBLMap(const IBLMap& map) 
-		: DynamicCubeMap(map)
+	IBLMap::IBLMap(IBLMap&& map) 
+		: DynamicCubeMap(std::move(map))
 		, brdfIntMap(map.brdfIntMap)
 		, irrMap(map.irrMap)
 		, preEnvMap(map.preEnvMap) {}
@@ -70,12 +70,16 @@ namespace geeL {
 			, irrMap(irrMap)
 			, preEnvMap(preEnvMap) {}
 
-	DynamicIBLMap::DynamicIBLMap(const DynamicIBLMap& map) 
-		: DynamicCubeMap(map)
+	DynamicIBLMap::DynamicIBLMap(DynamicIBLMap&& map) 
+		: DynamicCubeMap(std::move(map))
 		, baseMap(map.baseMap)
 		, brdfIntMap(map.brdfIntMap)
 		, irrMap(map.irrMap)
 		, preEnvMap(map.preEnvMap) {}
+
+	DynamicIBLMap::~DynamicIBLMap() {
+		dereferenceTexture(false);
+	}
 
 
 	void DynamicIBLMap::bind(const Camera& camera, const RenderShader& shader, 

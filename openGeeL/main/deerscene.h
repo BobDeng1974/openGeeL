@@ -27,7 +27,7 @@ public:
 
 			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/WinterForest_Ref.hdr");
 			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeMapFactory.getBuffer(), 1024);
-			IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
+			//IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
 			Skybox& skybox = Skybox(envCubeMap);
 			scene.setSkybox(skybox);

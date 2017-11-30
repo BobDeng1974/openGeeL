@@ -15,6 +15,8 @@ namespace geeL {
 		FunctionalTexture(std::unique_ptr<Texture> innerTexture);
 		virtual ~FunctionalTexture();
 
+		FunctionalTexture(FunctionalTexture&& other);
+		FunctionalTexture& operator=(FunctionalTexture&& other);
 
 		virtual unsigned int getID() const;
 		virtual TextureType getTextureType() const;
@@ -35,6 +37,9 @@ namespace geeL {
 	private:
 		Texture* texture;
 
+		FunctionalTexture(const FunctionalTexture& other) = delete;
+		FunctionalTexture& operator=(const FunctionalTexture& other) = delete;
+
 	};
 
 
@@ -44,6 +49,21 @@ namespace geeL {
 	inline FunctionalTexture::~FunctionalTexture() {
 		if(texture != nullptr)
 			delete texture;
+	}
+
+	inline FunctionalTexture::FunctionalTexture(FunctionalTexture&& other)
+		: texture(other.texture) {
+
+		other.texture = nullptr;
+	}
+
+	inline FunctionalTexture& FunctionalTexture::operator=(FunctionalTexture&& other) {
+		if (this != &other) {
+			texture = other.texture;
+			other.texture = nullptr;
+		}
+
+		return *this;
 	}
 
 

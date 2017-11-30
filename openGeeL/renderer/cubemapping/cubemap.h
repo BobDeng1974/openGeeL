@@ -30,6 +30,7 @@ namespace geeL {
 
 	protected:
 		CubeMap(std::unique_ptr<TextureCube> texture);
+		CubeMap(CubeMap&& other);
 
 	private:
 		TextureCube& textureCube;
@@ -47,6 +48,7 @@ namespace geeL {
 
 	protected:
 		DynamicCubeMap(std::unique_ptr<TextureCube> texture);
+		DynamicCubeMap(DynamicCubeMap&& other);
 
 	};
 

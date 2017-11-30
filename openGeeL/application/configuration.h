@@ -84,6 +84,7 @@
 #include "texturing/texture.h"
 #include "texturing/imagetexture.h"
 #include "texturing/dynamictexture.h"
+#include "texturing/texturetarget.h"
 
 #include "transformation/transform.h"
 #include "transformation/transformfactory.h"

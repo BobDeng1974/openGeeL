@@ -10,7 +10,7 @@ namespace geeL {
 
 
 	//Interface for all objects that can be used as drawing target of a framebuffer
-	class ARenderTarget {
+	class RenderTarget {
 		friend class LayeredTarget;
 
 	public:
@@ -30,7 +30,7 @@ namespace geeL {
 	protected:
 		const IFrameBuffer* parent;
 
-		ARenderTarget();
+		RenderTarget();
 
 		virtual void assign(unsigned int position) const = 0;
 
@@ -38,13 +38,13 @@ namespace geeL {
 
 	//Layered render target that managages multiple render targets. 
 	//It is assumed that all targets have same resolution
-	class LayeredTarget : public ARenderTarget {
+	class LayeredTarget : public RenderTarget {
 
 	public:
-		LayeredTarget(ARenderTarget& target);
+		LayeredTarget(RenderTarget& target);
 
 		template<typename... RenderTargets>
-		LayeredTarget(ARenderTarget& target, RenderTargets& ...targets);
+		LayeredTarget(RenderTarget& target, RenderTargets& ...targets);
 
 		virtual void setRenderResolution() const;
 		virtual Resolution getRenderResolution() const;
@@ -54,32 +54,32 @@ namespace geeL {
 		virtual void assign(unsigned int position) const;
 
 	private:
-		std::list<ARenderTarget*> targets;
+		std::list<RenderTarget*> targets;
 
-		void add(ARenderTarget& target);
+		void add(RenderTarget& target);
 
 		template<typename... RenderTargets>
-		void add(ARenderTarget& target, RenderTargets& ...targets);
+		void add(RenderTarget& target, RenderTargets& ...targets);
 
 	};
 
 
 
-	inline LayeredTarget::LayeredTarget(ARenderTarget& target) {
+	inline LayeredTarget::LayeredTarget(RenderTarget& target) {
 		add(target);
 	}
 
 	template<typename... RenderTargets>
-	inline LayeredTarget::LayeredTarget(ARenderTarget& target, RenderTargets& ...targets) {
+	inline LayeredTarget::LayeredTarget(RenderTarget& target, RenderTargets& ...targets) {
 		add(target, targets...);
 	}
 
-	inline void LayeredTarget::add(ARenderTarget& target) {
+	inline void LayeredTarget::add(RenderTarget& target) {
 		targets.push_back(&target);
 	}
 
 	template<typename ...RenderTargets>
-	inline void LayeredTarget::add(ARenderTarget& target, RenderTargets& ...targets) {
+	inline void LayeredTarget::add(RenderTarget& target, RenderTargets& ...targets) {
 		add(target);
 		add(targets...);
 	}

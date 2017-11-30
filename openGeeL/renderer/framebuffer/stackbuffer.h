@@ -15,7 +15,7 @@ namespace geeL {
 		//Adds a new render texture to the stack. The current texture (Top of stack)
 		//will always be used for the next draw/fill call and then removed from the stack.
 		//Note: Memory of render texture will not be managed by this buffer
-		virtual void push(ARenderTarget& target);
+		virtual void push(RenderTarget& target);
 		virtual void pop();
 
 		void initResolution(const Resolution& resolution);
@@ -33,7 +33,7 @@ namespace geeL {
 
 	private:
 		unsigned int size;
-		std::stack<ARenderTarget*> stackBuffer;
+		std::stack<RenderTarget*> stackBuffer;
 
 		void init(unsigned int size);
 
