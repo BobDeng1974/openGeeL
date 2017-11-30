@@ -9,21 +9,13 @@ namespace geeL {
 		ColorType colorType,
 		WrapMode wrapMode, 
 		FilterMode filterMode) 
-			: TextureCube(colorType)
-			, resolution(resolution) {
-
-		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-
-		initStorage(0);
-
-		initFilterMode(filterMode);
-		initWrapMode(wrapMode);
-
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-	}
+			: TextureCube(resolution, 
+				colorType, 
+				filterMode, 
+				wrapMode) {}
 
 	RenderTextureCube::RenderTextureCube(const Texture& other, unsigned int resolution) 
-		: TextureCube(other.getColorType()), resolution(resolution) {
+		: TextureCube(other.getColorType()) {
 
 		assert(other.getTextureType() == TextureType::TextureCube && "Texture has to be a texture cube");
 		id = other.getTextureToken();

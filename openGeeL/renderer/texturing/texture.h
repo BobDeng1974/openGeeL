@@ -1,6 +1,7 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include <vector>
 #include "texturetoken.h"
 #include "texturetype.h"
 #include "utility/resolution.h"
@@ -108,8 +109,10 @@ namespace geeL {
 		Texture2D(ColorType colorType);
 		Texture2D(Resolution resolution, ColorType colorType);
 		Texture2D(Resolution resolution, ColorType colorType, void* image);
-		Texture2D(Resolution resolution, ColorType colorType, FilterMode filterMode, WrapMode wrapMode, void* image);
-		Texture2D(Resolution resolution, ColorType colorType, FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter filter, void* image);
+		Texture2D(Resolution resolution, ColorType colorType, FilterMode filterMode, 
+			WrapMode wrapMode, void* image);
+		Texture2D(Resolution resolution, ColorType colorType, FilterMode filterMode,
+			WrapMode wrapMode, AnisotropicFilter filter, void* image);
 
 		virtual void initStorage(void* image);
 		virtual void reserveStorage(unsigned int levels = 1);
@@ -134,16 +137,28 @@ namespace geeL {
 		static void unbind();
 
 	protected:
-		unsigned int width, height, depth;
+		unsigned int width, height, depth, levels;
 
-		Texture3D(ColorType colorType, 
-			unsigned int width, 
-			unsigned int height, 
-			unsigned int depth) 
-				: Texture(colorType)
-				, width(width)
-				, height(height)
-				, depth(depth) {}
+		Texture3D();
+		Texture3D(unsigned int width,
+			unsigned int height,
+			unsigned int depth,
+			unsigned int levels,
+			ColorType colorType,
+			FilterMode filterMode,
+			WrapMode wrapMode);
+
+		Texture3D(unsigned int width,
+			unsigned int height,
+			unsigned int depth,
+			unsigned int levels,
+			ColorType colorType,
+			FilterMode filterMode,
+			WrapMode wrapMode, const std::vector<float>& buffer);
+
+		void initStorage();
+		void initStorage(const std::vector<float>& buffer);
+				
 
 	};
 
@@ -159,14 +174,24 @@ namespace geeL {
 		virtual TextureType getTextureType() const;
 
 		virtual Resolution getScreenResolution() const;
-		virtual unsigned int getResolution() const = 0;
+		virtual unsigned int getResolution() const;
 
 		static void unbind();
 
 	protected:
-		TextureCube(ColorType colorType) : Texture(colorType) {}
+		TextureCube(ColorType colorType);
+		TextureCube(unsigned int resolution, ColorType colorType);
+		TextureCube(unsigned int resolution, ColorType colorType, 
+			FilterMode filterMode, WrapMode wrapMode);
+		TextureCube(unsigned int resolution, ColorType colorType, 
+			FilterMode filterMode, WrapMode wrapMode, unsigned char* images[6]);
 
 		virtual void initStorage(unsigned char* image);
+		void initStorage(unsigned char* images[6]);
+
+	private:
+		unsigned int resolution;
+
 
 	};
 
@@ -239,8 +264,9 @@ namespace geeL {
 		return Resolution(res);
 	}
 
-	
-	
+	inline unsigned int TextureCube::getResolution() const {
+		return resolution;
+	}
 
 }
 

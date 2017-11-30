@@ -10,24 +10,38 @@ namespace geeL {
 	class ImageTextureCube : public TextureCube {
 
 	public:
-		ImageTextureCube(const std::string& rightPath, const std::string& leftPath, const std::string& topPath,
-			const std::string& bottomPath, const std::string& backPath, const std::string& frontPath, 
-			WrapMode wrapMode = WrapMode::ClampEdge, FilterMode filterMode = FilterMode::Linear);
-
-		virtual unsigned int getResolution() const;
+		ImageTextureCube(const std::string& rightPath, 
+			const std::string& leftPath, 
+			const std::string& topPath,
+			const std::string& bottomPath, 
+			const std::string& backPath, 
+			const std::string& frontPath, 
+			WrapMode wrapMode = WrapMode::ClampEdge, 
+			FilterMode filterMode = FilterMode::Linear);
 
 	private:
-		unsigned int resolution;
+		struct ImageContainer {
+			int width, height;
+			unsigned char* images[6];
+
+			ImageContainer(const std::string& rightPath, 
+				const std::string& leftPath, 
+				const std::string& topPath,
+				const std::string& bottomPath, 
+				const std::string& backPath, 
+				const std::string& frontPath);
+
+			~ImageContainer();
+		};
+
+		ImageTextureCube(ImageContainer&& container, 
+			WrapMode wrapMode, 
+			FilterMode filterMode);
 
 		ImageTextureCube(const ImageTextureCube& other) = delete;
 		ImageTextureCube& operator= (const ImageTextureCube& other) = delete;
 
 	};
-
-
-	inline unsigned int ImageTextureCube::getResolution() const {
-		return resolution;
-	}
 
 }
 

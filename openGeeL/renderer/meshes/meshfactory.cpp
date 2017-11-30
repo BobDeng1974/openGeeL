@@ -13,6 +13,7 @@
 #include "animation/animation.h"
 #include "utility/vectorextension.h"
 #include "utility/matrixextension.h"
+#include "texturing/maptype.h"
 #include "mesh.h"
 #include "model.h"
 #include "meshrenderer.h"

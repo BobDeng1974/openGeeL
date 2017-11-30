@@ -36,10 +36,10 @@ int main(int argc, char* argv[]) {
 	//BedroomScene::draw();
 	//DeerScene::draw();
 	//ArthouseScene::draw();
-	//SponzaGIScene::draw();
+	SponzaGIScene::draw();
 	//ScienceScene::draw();
 	//CharacterViewer::draw();
-	ModelViewer::draw();
+	//ModelViewer::draw();
 	//CapsuleScene::draw();
 
 	//TestScene::draw();

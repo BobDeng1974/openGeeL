@@ -17,22 +17,12 @@ namespace geeL {
 
 		RenderTextureCube(const Texture& other, unsigned int resolution);
 
-
-		virtual unsigned int getResolution() const;
-
 	private:
-		unsigned int resolution;
-
 		RenderTextureCube(const RenderTextureCube& other) = delete;
 		RenderTextureCube& operator= (const RenderTextureCube& other) = delete;
 
 	};
 
-
-	inline unsigned int RenderTextureCube::getResolution() const {
-		return resolution;
-	}
-	
 }
 
 #endif

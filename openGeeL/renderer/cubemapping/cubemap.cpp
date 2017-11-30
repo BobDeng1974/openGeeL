@@ -32,7 +32,7 @@ namespace geeL {
 		return texture->getID();
 	}
 	
-	const TextureCube & CubeMap::getTexture() const {
+	const TextureCube& CubeMap::getTexture() const {
 		return *texture;
 	}
 

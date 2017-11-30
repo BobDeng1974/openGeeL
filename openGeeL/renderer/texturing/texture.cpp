@@ -60,6 +60,7 @@ namespace geeL {
 			}
 			case ColorType::GammaSpace:
 			case ColorType::RGBA:
+			case ColorType::RGBA8:
 			case ColorType::RGBA16:
 			case ColorType::RGBA32: {
 				float colors2[4] = { 0, 0, 0, 0 };
@@ -125,17 +126,8 @@ namespace geeL {
 	}
 
 
-
-	void Texture2D::initStorage(void* image) {
-		int textureType = (int)getTextureType();
-		int width  = resolution.getWidth();
-		int height = resolution.getHeight();
-
-		unsigned int a = 0;
-		unsigned int b = 0;
-		unsigned int c = 0;
-
-		switch (colorType) {
+	void getColorValues(ColorType type, unsigned int& a, unsigned int& b, unsigned int& c) {
+		switch (type) {
 			case ColorType::GammaSpace:
 				a = GL_SRGB_ALPHA; b = GL_RGBA, c = GL_UNSIGNED_BYTE;
 				break;
@@ -166,15 +158,29 @@ namespace geeL {
 			case ColorType::RGBA:
 				a = GL_RGBA; b = GL_RGBA, c = GL_UNSIGNED_BYTE;
 				break;
+			case ColorType::RGBA8:
+				a = GL_RGBA8; b = GL_RGBA, c = GL_FLOAT;
+				break;
 			case ColorType::RGBA16:
 				a = GL_RGBA16F; b = GL_RGBA, c = GL_FLOAT;
 				break;
 			case ColorType::RGBA32:
 				a = GL_RGBA32F; b = GL_RGBA, c = GL_FLOAT;
 				break;
-		}
+			}
+	}
 
-		glTexImage2D(textureType, 0, a, width, height, 0, b, c, image);
+
+	void Texture2D::initStorage(void* image) {
+		int width  = resolution.getWidth();
+		int height = resolution.getHeight();
+
+		unsigned int a = 0;
+		unsigned int b = 0;
+		unsigned int c = 0;
+		getColorValues(colorType, a, b, c);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, a, width, height, 0, b, c, image);
 	}
 
 	void Texture2D::reserveStorage(unsigned int levels) {
@@ -298,6 +304,46 @@ namespace geeL {
 	}
 
 
+
+	Texture3D::Texture3D()
+		: Texture(ColorType::None)
+		, width(0)
+		, height(0)
+		, depth(0)
+		, levels(levels) {}
+
+	Texture3D::Texture3D(unsigned int width, unsigned int height, unsigned int depth, unsigned int levels,
+		ColorType colorType, FilterMode filterMode, WrapMode wrapMode)
+			: Texture(colorType)
+			, width(width)
+			, height(height)
+			, depth(depth)
+			, levels(levels) {
+
+		bind();
+		initFilterMode(filterMode);
+		initWrapMode(wrapMode);
+		initStorage();
+		unbind();
+	}
+
+	Texture3D::Texture3D(unsigned int width, unsigned int height, unsigned int depth, unsigned int levels, 
+		ColorType colorType, FilterMode filterMode, WrapMode wrapMode, 
+		const std::vector<float>& buffer)
+			: Texture(colorType)
+			, width(width)
+			, height(height)
+			, depth(depth)
+			, levels(levels) {
+
+		bind();
+		initFilterMode(filterMode);
+		initWrapMode(wrapMode);
+		initStorage(buffer);
+		unbind();
+	}
+
+
 	void Texture3D::mipmap() const {
 		glBindTexture(GL_TEXTURE_3D, getID());
 		glGenerateMipmap(GL_TEXTURE_3D);
@@ -331,6 +377,61 @@ namespace geeL {
 
 	void Texture3D::unbind() {
 		glBindTexture(GL_TEXTURE_3D, 0);
+	}
+
+	void Texture3D::initStorage() {
+		glTexStorage3D(GL_TEXTURE_3D, levels, (int)getColorType(), width, height, depth);
+	}
+
+	void Texture3D::initStorage(const std::vector<float>& buffer) {
+		//assert(buffer.size() == (4 * width * height * depth));
+
+		unsigned int a = 0;
+		unsigned int b = 0;
+		unsigned int c = 0;
+		getColorValues(colorType, a, b, c);
+
+		glTexStorage3D(GL_TEXTURE_3D, levels, a, width, height, depth);
+		glTexImage3D(GL_TEXTURE_3D, 0, a, width, height, depth, 0, b, c, &buffer[0]);
+	}
+
+
+
+	TextureCube::TextureCube(ColorType colorType)
+		: Texture(colorType) {}
+
+	TextureCube::TextureCube(unsigned int resolution, ColorType colorType)
+		: Texture(colorType)
+		, resolution(resolution) {}
+
+	TextureCube::TextureCube(unsigned int resolution,
+		ColorType colorType,
+		FilterMode filterMode,
+		WrapMode wrapMode)
+		: Texture(colorType)
+		, resolution(resolution) {
+
+		bind();
+		unsigned char* zero = 0;
+		initStorage(zero);
+		initFilterMode(filterMode);
+		initWrapMode(wrapMode);
+		unbind();
+	}
+
+	TextureCube::TextureCube(unsigned int resolution,
+		ColorType colorType,
+		FilterMode filterMode,
+		WrapMode wrapMode,
+		unsigned char * images[6])
+		: Texture(colorType)
+		, resolution(resolution) {
+
+		bind();
+		initStorage(images);
+		initFilterMode(filterMode);
+		initWrapMode(wrapMode);
+		unbind();
 	}
 
 
@@ -370,60 +471,29 @@ namespace geeL {
 	}
 
 	void TextureCube::initStorage(unsigned char* image) {
-		int textureType = (int)getTextureType();
 		unsigned int res = getResolution();
 
 		unsigned int a = 0;
 		unsigned int b = 0;
 		unsigned int c = 0;
-
-		switch (colorType) {
-			case ColorType::GammaSpace:
-				a = GL_SRGB_ALPHA; b = GL_RGBA, c = GL_UNSIGNED_BYTE;
-				break;
-			case ColorType::Depth:
-				a = GL_DEPTH_COMPONENT; b = GL_DEPTH_COMPONENT, c = GL_FLOAT;
-				break;
-			case ColorType::Depth32:
-				a = GL_DEPTH_COMPONENT32; b = GL_DEPTH_COMPONENT, c = GL_FLOAT;
-				break;
-			case ColorType::Single:
-				a = GL_RED; b = GL_RGB, c = GL_UNSIGNED_BYTE;
-				break;
-			case ColorType::Single16:
-				a = GL_R16; b = GL_RGB, c = GL_FLOAT;
-				break;
-			case ColorType::RG16:
-				a = GL_RG16; b = GL_RG, c = GL_FLOAT;
-				break;
-			case ColorType::RGB:
-				a = GL_RGB; b = GL_RGB, c = GL_UNSIGNED_BYTE;
-				break;
-			case ColorType::RGB16:
-				a = GL_RGB16F; b = GL_RGB, c = GL_FLOAT;
-				break;
-			case ColorType::RGB32:
-				a = GL_RGB32F; b = GL_RGB, c = GL_FLOAT;
-				break;
-			case ColorType::RGBA:
-				a = GL_RGBA; b = GL_RGBA, c = GL_UNSIGNED_BYTE;
-				break;
-			case ColorType::RGBA16:
-				a = GL_RGBA16F; b = GL_RGBA, c = GL_FLOAT;
-				break;
-			case ColorType::RGBA32:
-				a = GL_RGBA32F; b = GL_RGBA, c = GL_FLOAT;
-				break;
-		}
+		getColorValues(colorType, a, b, c);
 
 		for (int i = 0; i < 6; i++)
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, a, res, res, 0, b, c, image);
 
 	}
 
+	void TextureCube::initStorage(unsigned char * images[6]) {
+		int textureType = (int)getTextureType();
+		unsigned int res = getResolution();
 
-	
+		unsigned int a = 0;
+		unsigned int b = 0;
+		unsigned int c = 0;
+		getColorValues(colorType, a, b, c);
 
-	
+		for (int i = 0; i < 6; i++)
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, a, res, res, 0, b, c, images[i]);
+	}
 
 }

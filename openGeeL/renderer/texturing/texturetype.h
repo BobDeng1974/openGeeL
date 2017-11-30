@@ -14,6 +14,7 @@
 #define GL_RGB16F 0x881B
 #define GL_RGB32F 0x8815
 #define GL_RGBA 0x1908
+#define GL_RGBA8 0x8058
 #define GL_RGBA16F 0x881A
 #define GL_RGBA32F 0x8814
 #define GL_DEPTH_COMPONENT 0x1902
@@ -44,6 +45,7 @@ namespace geeL {
 		RGB16 = GL_RGB16F,
 		RGB32 = GL_RGB32F,
 		RGBA = GL_RGBA,
+		RGBA8 = GL_RGBA8,
 		RGBA16 = GL_RGBA16F,
 		RGBA32 = GL_RGBA32F
 	};

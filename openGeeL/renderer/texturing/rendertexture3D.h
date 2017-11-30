@@ -11,8 +11,11 @@ namespace geeL {
 
 	public:
 		RenderTexture3D();
-		RenderTexture3D(unsigned int width, unsigned int height, unsigned int depth, unsigned int levels, 
-			WrapMode wrapMode = WrapMode::ClampBorder, FilterMode filterMode = FilterMode::Trilinear);
+		RenderTexture3D(unsigned int width, unsigned int height, 
+			unsigned int depth, unsigned int levels, 
+			ColorType colorType = ColorType::RGBA8, 
+			WrapMode wrapMode = WrapMode::ClampBorder, 
+			FilterMode filterMode = FilterMode::Trilinear);
 
 	private:
 		std::vector<float> buffer;
