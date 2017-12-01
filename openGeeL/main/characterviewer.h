@@ -169,7 +169,7 @@ public:
 			postLister.add(ssssnip);
 			additiveSSS.setRenderMask(RenderMask::Skin);
 
-			FXAA& fxaa = FXAA(0.001f, 0.f);
+			FXAA& fxaa = FXAA(0.02f, 0.15f);
 			renderer.addEffect(fxaa, DrawTime::Late);
 			postLister.add(fxaa);
 

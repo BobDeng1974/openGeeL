@@ -105,10 +105,7 @@ namespace geeL {
 	}
 
 	std::string GBuffer::toString() const {
-		return "GBuffer " + std::to_string(fbo.token) + "\n"
-			+ "--Diffuse " + std::to_string(diffuse->getID()) + "\n"
-			+ "--PositionRoughness " + std::to_string(positionRough->getID()) + "\n"
-			+ "--NormalMetallic " + std::to_string(normalMet->getID()) + "\n";
+		return "GBuffer " + std::to_string(fbo.token) + "\n";
 	}
 
 	void GBuffer::initTextures(Resolution resolution) {

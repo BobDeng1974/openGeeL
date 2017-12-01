@@ -25,8 +25,6 @@ namespace geeL {
 		void draw(const Camera& camera) const;
 		void bind(RenderShader& shader) const;
 
-		unsigned int getID() const;
-
 	private:
 		const CubeMap& cubeMap;
 		RenderShader shader;

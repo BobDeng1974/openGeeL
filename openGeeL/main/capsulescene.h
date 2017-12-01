@@ -119,7 +119,7 @@ public:
 			renderer.addEffect(colorCorrect, DrawTime::Late);
 			postLister.add(colorCorrect);
 
-			FXAA& fxaa = FXAA(0.001f, 0.f);
+			FXAA& fxaa = FXAA(0.02f, 0.15f);
 			renderer.addEffect(fxaa, DrawTime::Late);
 			postLister.add(fxaa);
 

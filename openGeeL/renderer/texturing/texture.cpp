@@ -40,7 +40,7 @@ namespace geeL {
 
 
 	void Texture::bind() const {
-		glBindTexture((int)getTextureType(), getID());
+		glBindTexture((int)getTextureType(), id);
 	}
 
 	void Texture::unbind() const {
@@ -59,11 +59,15 @@ namespace geeL {
 	}
 
 	void Texture::bindImage(unsigned int position, AccessType access) const {
-		glBindImageTexture(position, getID(), 0, GL_TRUE, 0, (int)access, (int)getColorType());
+		glBindImageTexture(position, id, 0, GL_TRUE, 0, (int)access, (int)getColorType());
 	}
 
 	void Texture::disable() const {
 		glDisable((int)getTextureType());
+	}
+
+	bool Texture::isEmpty() const {
+		return id.operator unsigned int() == 0;
 	}
 
 	void Texture::clear() {
@@ -75,7 +79,7 @@ namespace geeL {
 			case ColorType::RGB16:
 			case ColorType::RGB32: {
 				float colors[3] = { 0, 0, 0 };
-				glClearTexImage(getID(), 0, GL_RGB, GL_FLOAT, &colors);
+				glClearTexImage(id, 0, GL_RGB, GL_FLOAT, &colors);
 				break;
 			}
 			case ColorType::GammaSpace:
@@ -84,13 +88,13 @@ namespace geeL {
 			case ColorType::RGBA16:
 			case ColorType::RGBA32: {
 				float colors2[4] = { 0, 0, 0, 0 };
-				glClearTexImage(getID(), 0, GL_RGBA, GL_FLOAT, &colors2);
+				glClearTexImage(id, 0, GL_RGBA, GL_FLOAT, &colors2);
 				break;
 			}
 			case ColorType::Depth:
 			case ColorType::Depth32:
 				float colors[1] = { 0 };
-				glClearTexImage(getID(), 0, GL_DEPTH_COMPONENT, GL_FLOAT, &colors);
+				glClearTexImage(id, 0, GL_DEPTH_COMPONENT, GL_FLOAT, &colors);
 				break;
 		}
 	}
@@ -299,13 +303,17 @@ namespace geeL {
 	}
 
 	void Texture2D::mipmap() const {
-		glBindTexture(GL_TEXTURE_2D, getID());
+		glBindTexture(GL_TEXTURE_2D, id);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void Texture2D::assign(AttachmentPosition position) const {
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, GL_TEXTURE_2D, getID(), 0);
+	void Texture2D::assign(AttachmentPosition position, MipLevel level) const {
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, GL_TEXTURE_2D, id, level);
+	}
+
+	void Texture2D::assignDepth(MipLevel level) const {
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id, level);
 	}
 
 	void Texture2D::setRenderResolution() const {
@@ -399,12 +407,16 @@ namespace geeL {
 	}
 
 	void Texture3D::mipmap() const {
-		glBindTexture(GL_TEXTURE_3D, getID());
+		glBindTexture(GL_TEXTURE_3D, id);
 		glGenerateMipmap(GL_TEXTURE_3D);
 		glBindTexture(GL_TEXTURE_3D, 0);
 	}
 
-	void Texture3D::assign(AttachmentPosition position) const {
+	void Texture3D::assign(AttachmentPosition position, MipLevel level) const {
+		std::cout << "Assigning of 3D texture currently not supported\n";
+	}
+
+	void Texture3D::assignDepth(MipLevel level) const {
 		std::cout << "Assigning of 3D texture currently not supported\n";
 	}
 
@@ -512,15 +524,24 @@ namespace geeL {
 	}
 
 	void TextureCube::mipmap() const {
-		glBindTexture(GL_TEXTURE_CUBE_MAP, getID());
+		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
-	void TextureCube::assign(AttachmentPosition position) const {
+	void TextureCube::assign(AttachmentPosition position, MipLevel level) const {
 		for (unsigned int side = 0; side < 6; side++)
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, 
-				GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, getID(), 0);
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, id, level);
+	}
+
+	void TextureCube::assignSide(AttachmentPosition position, MipLevel level, unsigned int side) const {
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position,
+			GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, id, level);
+	}
+
+	void TextureCube::assignDepth(MipLevel level) const {
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, id, level);
 	}
 
 	void TextureCube::initWrapMode(WrapMode mode) {

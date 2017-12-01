@@ -17,10 +17,8 @@ namespace geeL {
 
 	SystemInformation::SystemInformation(RenderWindow& window, 
 		DeferredRenderer& renderer,
-		float x, 
-		float y, 
-		float width, 
-		float height) 
+		float x, float y, 
+		float width, float height) 
 			: GUIElement(window, x, y, width, height)
 			, renderer(renderer) {}
 
@@ -56,7 +54,6 @@ namespace geeL {
 	}
 
 	void SystemInformation::drawTime(GUIContext* context, std::string name) {
-
 		nk_layout_row_dynamic(context, 30, 2);
 		nk_label(context, name.c_str(), NK_TEXT_RIGHT);
 

@@ -7,6 +7,7 @@
 #include "utility/resolution.h"
 
 typedef unsigned int AttachmentPosition;
+typedef unsigned int MipLevel;
 
 namespace geeL {
 
@@ -18,7 +19,6 @@ namespace geeL {
 	public:
 		virtual ~ITexture() {}
 
-		virtual unsigned int getID() const = 0;
 		virtual TextureType getTextureType() const = 0;
 
 		virtual void bind() const = 0;
@@ -27,15 +27,19 @@ namespace geeL {
 
 		virtual void unbind() const = 0;
 		virtual void disable() const = 0;
+		virtual bool isEmpty() const = 0;
 
-		virtual bool isEmpty() const;
 		bool operator== (const ITexture& rhs) const;
 		bool operator!= (const ITexture& rhs) const;
+
+	protected:
+		virtual unsigned int getID() const = 0;
 
 	};
 	
 
 	class Texture : public ITexture {
+		friend class FunctionalTexture;
 
 	public:
 		Texture(Texture&& other);
@@ -43,8 +47,7 @@ namespace geeL {
 
 		Texture& operator=(Texture&& other);
 
-
-		virtual unsigned int getID() const;
+		
 		const TextureToken& getTextureToken() const;
 		
 		virtual ColorType getColorType() const;
@@ -60,10 +63,11 @@ namespace geeL {
 		virtual void bindImage(unsigned int position = 0, AccessType access = AccessType::All) const;
 
 		//Assign this texture into given framebuffer attachment position
-		virtual void assign(AttachmentPosition position) const = 0;
+		virtual void assign(AttachmentPosition position, MipLevel level = 0) const = 0;
+		virtual void assignDepth(MipLevel level = 0) const = 0;
 
-		//Call GL disable function with appropriate texture type
 		virtual void disable() const;
+		virtual bool isEmpty() const;
 
 		virtual void mipmap() const {}
 		virtual void clear();
@@ -91,6 +95,9 @@ namespace geeL {
 		
 		Texture(ColorType colorType);
 
+		virtual unsigned int getID() const;
+
+
 	};
 	
 
@@ -115,7 +122,8 @@ namespace geeL {
 		Texture2D& operator=(Texture2D&& other);
 
 		virtual void mipmap() const;
-		virtual void assign(AttachmentPosition position) const;
+		virtual void assign(AttachmentPosition position, MipLevel level = 0) const;
+		virtual void assignDepth(MipLevel level = 0) const;
 
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
@@ -168,7 +176,8 @@ namespace geeL {
 		Texture3D& operator=(Texture3D&& other);
 
 		virtual void mipmap() const;
-		virtual void assign(AttachmentPosition position) const;
+		virtual void assign(AttachmentPosition position, MipLevel level = 0) const;
+		virtual void assignDepth(MipLevel level = 0) const;
 
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
@@ -207,7 +216,9 @@ namespace geeL {
 		TextureCube& operator=(TextureCube&& other);
 
 		virtual void mipmap() const;
-		virtual void assign(AttachmentPosition position) const;
+		virtual void assign(AttachmentPosition position, MipLevel level = 0) const;
+		virtual void assignSide(AttachmentPosition position, MipLevel level, unsigned int side) const;
+		virtual void assignDepth(MipLevel level = 0) const;
 
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;

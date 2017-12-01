@@ -18,7 +18,7 @@ namespace geeL {
 		FunctionalTexture(FunctionalTexture&& other);
 		FunctionalTexture& operator=(FunctionalTexture&& other);
 
-		virtual unsigned int getID() const;
+		
 		virtual TextureType getTextureType() const;
 
 		virtual void bind() const;
@@ -27,12 +27,15 @@ namespace geeL {
 
 		virtual void unbind() const;
 		virtual void disable() const;
+		virtual bool isEmpty() const;
 
 		const Texture& getTexture() const;
 
 	protected:
 		Texture& getTexture();
 		void dereferenceTexture(bool del);
+
+		virtual unsigned int getID() const;
 
 	private:
 		Texture* texture;
@@ -93,6 +96,10 @@ namespace geeL {
 
 	inline void FunctionalTexture::disable() const {
 		texture->disable();
+	}
+
+	inline bool FunctionalTexture::isEmpty() const {
+		return texture->isEmpty();
 	}
 
 	inline const Texture& FunctionalTexture::getTexture() const {

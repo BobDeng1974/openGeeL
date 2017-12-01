@@ -31,9 +31,9 @@ namespace geeL {
 	void CubeBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
 
 		bind();
+		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 		for (unsigned int side = 0; side < 6; side++) {
-			Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, texture->getID(), 0);
+			texture->assignSide(0, 0, side);
 			clearer.clear();
 
 			drawCall();
@@ -45,9 +45,9 @@ namespace geeL {
 	void CubeBuffer::fill(std::function<void(unsigned int)> drawCall, unsigned int mipLevel, Clearer clearer) {
 
 		bind();
+		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 		for (unsigned int side = 0; side < 6; side++) {
-			Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, texture->getID(), mipLevel);
+			texture->assignSide(0, mipLevel, side);
 			clearer.clear();
 
 			drawCall(side);
@@ -71,8 +71,7 @@ namespace geeL {
 	}
 
 	std::string CubeBuffer::toString() const {
-		return "Cube buffer " + std::to_string(fbo.token) +
-			"\n -- Texture " + std::to_string(texture->getID()) + "\n";
+		return "Cube buffer " + std::to_string(fbo.token) + "\n";
 	}
 
 }

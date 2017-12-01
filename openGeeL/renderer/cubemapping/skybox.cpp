@@ -32,8 +32,4 @@ namespace geeL {
 		cubeMap.add(shader, "skybox.");
 	}
 
-	unsigned int Skybox::getID() const {
-		return cubeMap.getID();
-	}
-
 }

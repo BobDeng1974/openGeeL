@@ -1033,9 +1033,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="renderer\framebuffer\tcomp.frag">
-      <Filter>renderer\framebuffer</Filter>
-    </None>
     <None Include="shaders\combine.frag">
       <Filter>shaders</Filter>
     </None>

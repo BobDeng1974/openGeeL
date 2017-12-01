@@ -4,8 +4,13 @@
 namespace geeL {
 
 	ShadowMapConfiguration::ShadowMapConfiguration()
-		: type(ShadowMapType::None), shadowBias(0.f), farPlane(0.f), resolution(ShadowmapResolution::Small),
-			softShadowScale(0.f), softShadowResolution(0), intensity(0.f) {}
+		: type(ShadowMapType::None)
+		, shadowBias(0.f)
+		, farPlane(0.f)
+		, resolution(ShadowmapResolution::Small)
+		, softShadowScale(0.f)
+		, softShadowResolution(0)
+		, intensity(0.f) {}
 
 	ShadowMapConfiguration::ShadowMapConfiguration(const ShadowMapConfiguration& other) 
 		: type(other.type)
@@ -16,10 +21,20 @@ namespace geeL {
 		, softShadowResolution(other.softShadowResolution)
 		, resolution(other.resolution) {}
 
-	ShadowMapConfiguration::ShadowMapConfiguration(float bias, ShadowMapType type, ShadowmapResolution resolution, 
-		float softShadowScale, unsigned int softShadowResolution, float farPlane, float intensity)
-			: type(type), shadowBias(bias), resolution(resolution), softShadowScale(softShadowScale), 
-				softShadowResolution(softShadowResolution), farPlane(farPlane), intensity(intensity) {}
+	ShadowMapConfiguration::ShadowMapConfiguration(float bias,
+		ShadowMapType type, 
+		ShadowmapResolution resolution, 
+		float softShadowScale, 
+		unsigned int softShadowResolution, 
+		float farPlane, 
+		float intensity)
+			: type(type)
+			, shadowBias(bias)
+			, resolution(resolution)
+			, softShadowScale(softShadowScale)
+			, softShadowResolution(softShadowResolution)
+			, farPlane(farPlane)
+			, intensity(intensity) {}
 
 	ShadowMapConfiguration& ShadowMapConfiguration::operator=(const ShadowMapConfiguration& other) {
 		if (this != &other) {

@@ -465,7 +465,6 @@
     <ClInclude Include="renderer\voxelization\voxeltexture.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="renderer\framebuffer\tcomp.frag" />
     <None Include="shaders\combine.frag" />
     <None Include="shaders\computeshared.com.glsl" />
     <None Include="shaders\computetest.com.glsl" />

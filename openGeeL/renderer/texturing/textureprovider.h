@@ -21,7 +21,6 @@ namespace geeL {
 	class ITextureProvider {
 
 	public:
-
 		virtual const RenderTexture& requestAlbedo() const = 0;
 		virtual const RenderTexture& requestPositionRoughness() const = 0;
 		virtual const RenderTexture& requestNormalMetallic() const = 0;

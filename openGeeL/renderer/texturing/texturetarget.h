@@ -17,11 +17,10 @@ namespace geeL {
 
 
 		template<typename TextureType, typename ...TextureArgs>
-		static TextureTarget createTextureTargetLocal(TextureArgs&& ...args);
+		static TextureTarget createTextureTarget(TextureArgs&& ...args);
 
 		template<typename TextureType, typename ...TextureArgs>
-		static std::unique_ptr<TextureTarget> createTextureTarget(TextureArgs&& ...args);
-
+		static std::unique_ptr<TextureTarget> createTextureTargetPtr(TextureArgs&& ...args);
 
 	protected:
 		virtual void assign(unsigned int position) const;
@@ -30,14 +29,14 @@ namespace geeL {
 
 
 	template<typename TextureType, typename ...TextureArgs>
-	inline TextureTarget TextureTarget::createTextureTargetLocal(TextureArgs&& ...args) {
+	inline TextureTarget TextureTarget::createTextureTarget(TextureArgs&& ...args) {
 		return TextureTarget(std::unique_ptr<TextureType>(
 			new TextureType(std::forward<TextureArgs>(args)...)
 			));
 	}
 
 	template<typename TextureType, typename ...TextureArgs>
-	inline std::unique_ptr<TextureTarget> TextureTarget::createTextureTarget(TextureArgs&& ...args) {
+	inline std::unique_ptr<TextureTarget> TextureTarget::createTextureTargetPtr(TextureArgs&& ...args) {
 		return std::unique_ptr<TextureTarget>(new TextureTarget(
 			std::unique_ptr<TextureType>(new TextureType(std::forward<TextureArgs>(args)...)
 			)));

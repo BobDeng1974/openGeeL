@@ -42,7 +42,6 @@ public:
 			ShadowMapConfiguration& config = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Medium, 3.f, 15U, 150.f);
 			lightManager.addPointLight(lightTransform21, glm::vec3(13.f / 256.f, 255.f / 256.f, 186.f / 256.f) * lightIntensity, config);
 
-
 			Transform& meshTransform3 = transformFactory.CreateTransform(vec3(1.5f, 0.34f, 12.5f), vec3(180.f, 29.6f, 180.f), vec3(0.12f));
 			SkinnedMeshRenderer& skull = meshFactory.CreateMeshRenderer(meshFactory.CreateSkinnedModel("resources/skull/skull.fbx"),
 				meshTransform3, "Skull");
@@ -102,7 +101,7 @@ public:
 			scene.addRequester(ray);
 			postLister.add(raySmooth, godRaySnippet);
 
-			FXAA& fxaa = FXAA(0.001f, 0.f);
+			FXAA& fxaa = FXAA(0.02f, 0.15f);
 			renderer.addEffect(fxaa, DrawTime::Late);
 			postLister.add(fxaa);
 

@@ -15,13 +15,16 @@ namespace geeL {
 	public:
 		VarianceSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config);
 
+		virtual void bind() const;
+		virtual void bind(unsigned int layer) const;
+		virtual void bindImage(unsigned int position = 0, AccessType access = AccessType::All) const;
+
 		virtual void draw(const SceneCamera* const camera, const RenderScene& scene,
 			ShadowmapRepository& repository);
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 
 		virtual Resolution getScreenResolution() const;
-		virtual unsigned int getID() const;
 
 	protected:
 		virtual void computeLightTransform();
@@ -34,7 +37,6 @@ namespace geeL {
 
 		StackBuffer blurBuffer;
 		RenderTexture blurTexture;
-		RenderTexture temp;
 		GaussianBlur blur;
 
 	};

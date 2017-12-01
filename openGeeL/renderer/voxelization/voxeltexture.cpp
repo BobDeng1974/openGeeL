@@ -44,7 +44,8 @@ namespace geeL {
 
 		scene.getLightmanager().bindShadowmaps(*voxelShader);
 
-		glBindImageTexture(0, texture->getID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA8);
+		//glBindImageTexture(0, texture->getID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA8);
+		texture->bindImage(0, AccessType::Write);
 
 		//Render scene
 		scene.drawObjects(*voxelShader);

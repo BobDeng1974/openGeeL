@@ -21,7 +21,6 @@ namespace geeL {
 		, shadowBias(config.shadowBias)
 		, farPlane(config.farPlane)
 		, resolution((int)config.resolution)
-		, temp(getTexture(), Resolution((int)config.resolution))
 		, blur(KernelSize::Depth, 1.5f)
 		, blurTexture(
 			Resolution((int)config.resolution), 
@@ -32,8 +31,20 @@ namespace geeL {
 		getTexture().mipmap();
 
 		blurBuffer.initResolution(Resolution((int)config.resolution));
-		blur.setImage(temp);
+		blur.setImage(getTexture());
 		blur.init(PostProcessingParameter(ScreenQuad::get(), blurBuffer, Resolution((int)config.resolution)));
+	}
+
+	void VarianceSpotLightMap::bind() const {
+		blurTexture.bind();
+	}
+
+	void VarianceSpotLightMap::bind(unsigned int layer) const {
+		blurTexture.bind(layer);
+	}
+
+	void VarianceSpotLightMap::bindImage(unsigned int position, AccessType access) const {
+		blurTexture.bindImage(position, access);
 	}
 
 
@@ -93,7 +104,4 @@ namespace geeL {
 		return Resolution(resolution);
 	}
 
-	unsigned int VarianceSpotLightMap::getID() const {
-		return blurTexture.getID();
-	}
 }
