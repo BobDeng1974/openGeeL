@@ -75,7 +75,7 @@ namespace geeL {
 	
 
 	template<typename T>
-	inline TempWrapper<T>::TempWrapper(T & obj) : obj(&obj), mutex(nullptr) {}
+	inline TempWrapper<T>::TempWrapper(T& obj) : obj(&obj), mutex(nullptr) {}
 
 	template<typename T>
 	inline TempWrapper<T>::TempWrapper(T& obj, std::recursive_mutex& mutex) : obj(&obj), mutex(&mutex) {

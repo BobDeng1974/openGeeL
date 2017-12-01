@@ -173,6 +173,13 @@ namespace geeL {
 		this->parameters = nullptr;
 	}
 
+	FunctionGuard<Texture> Texture::operator->() {
+		std::function<void()> enter = [this]() { this->bind(); };
+		std::function<void()> exit  = [this]() { this->unbind(); };
+
+		return FunctionGuard<Texture>(*this, enter, exit);
+	}
+
 
 
 	Texture2D::Texture2D(ColorType colorType)

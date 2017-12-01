@@ -15,7 +15,6 @@ namespace geeL {
 	public:
 		VarianceSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config);
 
-		virtual void bind() const;
 		virtual void bind(unsigned int layer) const;
 		virtual void bindImage(unsigned int position = 0, AccessType access = AccessType::All) const;
 

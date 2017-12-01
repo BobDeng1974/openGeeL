@@ -5,6 +5,7 @@
 #include "texturetoken.h"
 #include "texturetype.h"
 #include "utility/resolution.h"
+#include "utility/functionguard.h"
 
 typedef unsigned int AttachmentPosition;
 typedef unsigned int MipLevel;
@@ -21,7 +22,6 @@ namespace geeL {
 
 		virtual TextureType getTextureType() const = 0;
 
-		virtual void bind() const = 0;
 		virtual void bind(unsigned int layer) const = 0;
 		virtual void bindImage(unsigned int position = 0, AccessType access = AccessType::All) const = 0;
 
@@ -47,17 +47,14 @@ namespace geeL {
 
 		Texture& operator=(Texture&& other);
 
-		
+
 		const TextureToken& getTextureToken() const;
-		
 		virtual ColorType getColorType() const;
 
-		//Bind texture as texture sampler
-		virtual void bind() const;
-		virtual void unbind() const;
-
+		
 		//Bind texture to given texture layer
 		virtual void bind(unsigned int layer) const;
+		virtual void unbind() const;
 
 		//Bind texture as image texture
 		virtual void bindImage(unsigned int position = 0, AccessType access = AccessType::All) const;
@@ -86,6 +83,10 @@ namespace geeL {
 		void attachParameters(const TextureParameters& parameters);
 		void detachParameters();
 
+		//Calling texture like this ensures automatic binding
+		//and unbinding of underlying GPU data
+		FunctionGuard<Texture> operator->();
+
 	protected:
 		static AnisotropicFilter maxAnisotropy;
 
@@ -95,8 +96,8 @@ namespace geeL {
 		
 		Texture(ColorType colorType);
 
+		virtual void bind() const;
 		virtual unsigned int getID() const;
-
 
 	};
 	

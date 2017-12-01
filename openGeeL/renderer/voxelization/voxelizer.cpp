@@ -16,7 +16,10 @@ using namespace glm;
 
 namespace geeL {
 
-	Voxelizer::Voxelizer(const RenderScene& scene, unsigned int dimensions) : scene(scene), dimensions(dimensions) {
+	Voxelizer::Voxelizer(const RenderScene& scene, unsigned int dimensions) 
+		: scene(scene)
+		, dimensions(dimensions) {
+
 		FragmentShader frag = FragmentShader("shaders/voxelization/voxelize.frag", true, false);
 		voxelShader = new SceneShader("shaders/voxelization/voxelize.vert", "shaders/voxelization/voxelize.geom", 
 			frag, ShaderTransformSpace::World, ShadingMethod::Other);

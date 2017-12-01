@@ -21,7 +21,7 @@ namespace geeL {
 		
 		virtual TextureType getTextureType() const;
 
-		virtual void bind() const;
+		
 		virtual void bind(unsigned int layer) const;
 		virtual void bindImage(unsigned int position = 0, AccessType access = AccessType::All) const;
 
@@ -76,10 +76,6 @@ namespace geeL {
 
 	inline TextureType FunctionalTexture::getTextureType() const {
 		return texture->getTextureType();
-	}
-
-	inline void FunctionalTexture::bind() const {
-		texture->bind();
 	}
 
 	inline void FunctionalTexture::bind(unsigned int layer) const {

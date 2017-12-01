@@ -35,10 +35,6 @@ namespace geeL {
 		blur.init(PostProcessingParameter(ScreenQuad::get(), blurBuffer, Resolution((int)config.resolution)));
 	}
 
-	void VarianceSpotLightMap::bind() const {
-		blurTexture.bind();
-	}
-
 	void VarianceSpotLightMap::bind(unsigned int layer) const {
 		blurTexture.bind(layer);
 	}

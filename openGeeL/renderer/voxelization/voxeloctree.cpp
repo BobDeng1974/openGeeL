@@ -9,7 +9,8 @@
 namespace geeL {
 
 	VoxelOctree::VoxelOctree(Voxelizer& voxelizer, unsigned int treeLevels) 
-		: voxelizer(voxelizer), nodeCounter(0) {
+		: voxelizer(voxelizer)
+		, nodeCounter(0) {
 	
 		flagShader = new ComputeShader("shaders/voxelization/nodeFlag.com.glsl");
 		allocShader = new ComputeShader("shaders/voxelization/nodeAlloc.com.glsl");

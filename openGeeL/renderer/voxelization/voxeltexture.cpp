@@ -13,7 +13,8 @@
 namespace geeL {
 
 	VoxelTexture::VoxelTexture(const RenderScene& scene, unsigned int dimensions) 
-		: scene(scene), dimensions(dimensions), texture(new RenderTexture3D(dimensions, dimensions, dimensions, 7)) {
+		: scene(scene), dimensions(dimensions)
+		, texture(new RenderTexture3D(dimensions, dimensions, dimensions, 7)) {
 
 		FragmentShader frag = FragmentShader("shaders/voxelization/voxelizeTex.frag", true, false);
 		voxelShader = new SceneShader("shaders/voxelization/voxelize.vert", "shaders/voxelization/voxelize.geom",
@@ -44,7 +45,6 @@ namespace geeL {
 
 		scene.getLightmanager().bindShadowmaps(*voxelShader);
 
-		//glBindImageTexture(0, texture->getID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA8);
 		texture->bindImage(0, AccessType::Write);
 
 		//Render scene
@@ -61,13 +61,12 @@ namespace geeL {
 		shader.bind<int>("dimensions", dimensions);
 	}
 
-	void VoxelTexture::bindTexture(Shader & shader, const std::string& name) {
+	void VoxelTexture::bindTexture(Shader& shader, const std::string& name) {
 		shader.addMap(*texture, name);
 	}
 
 	void VoxelTexture::clearTexture() {
-		texture->bind();
-		texture->clear();
+		(*texture)->clear();
 	}
 
 }
