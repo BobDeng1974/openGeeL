@@ -56,6 +56,9 @@ namespace geeL {
 		clearer.clear();
 
 		drawCall();
+
+		float data[4];
+		glReadPixels(resolution.getWidth() / 2, resolution.getHeight() / 2, 1, 1, GL_RGBA, GL_FLOAT, data);
 		
 		unbind();
 	}

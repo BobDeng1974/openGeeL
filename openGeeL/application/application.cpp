@@ -45,10 +45,8 @@ namespace geeL {
 		while (!window.shouldClose()) {
 			inner.reset();
 
-			inputLock.lock();
 			glfwPollEvents();
 			inputManager.update();
-			inputLock.unlock();
 
 			inner.update();
 			long currFPS = std::max(0L, FPS - inner.deltaTimeMS());

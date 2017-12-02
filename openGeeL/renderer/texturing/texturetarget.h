@@ -15,7 +15,6 @@ namespace geeL {
 		virtual Resolution getRenderResolution() const;
 		virtual unsigned int getSize() const;
 
-
 		template<typename TextureType, typename ...TextureArgs>
 		static TextureTarget createTextureTarget(TextureArgs&& ...args);
 

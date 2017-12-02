@@ -48,7 +48,7 @@ namespace geeL {
 
 		TextureParameters::unbind(offset);
 		shader.bind<int>(name, offset);
-		glBindTexture((int) type, ID);
+		glBindTexture((int)type, ID);
 
 	}
 

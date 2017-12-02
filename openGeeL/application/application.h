@@ -36,7 +36,6 @@ namespace geeL {
 		InputManager& inputManager;
 
 		AtomicWrapper<bool> close;
-		std::mutex inputLock;
 		std::mutex threadLock;
 		std::list<ContinuousThread*> tempThreads;
 		std::map<ThreadID, std::pair<ContinuousThread*, std::thread>> threads;
