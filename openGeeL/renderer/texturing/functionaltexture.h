@@ -21,7 +21,6 @@ namespace geeL {
 		
 		virtual TextureType getTextureType() const;
 
-		
 		virtual void bind(unsigned int layer) const;
 		virtual void bindImage(unsigned int position = 0, AccessType access = AccessType::All) const;
 
@@ -32,9 +31,9 @@ namespace geeL {
 		const Texture& getTexture() const;
 
 	protected:
-		Texture& getTexture();
 		void dereferenceTexture(bool del);
 
+		Texture& getTexture();
 		virtual unsigned int getID() const;
 
 	private:

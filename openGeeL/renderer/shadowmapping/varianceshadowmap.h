@@ -2,7 +2,7 @@
 #define VARIANCESHADOWMAP_H
 
 #include "framebuffer/stackbuffer.h"
-#include "texturing/rendertexture.h"
+#include "texturing/texturetarget.h"
 #include "postprocessing/gaussianblur.h"
 #include "simpleshadowmap.h"
 
@@ -35,7 +35,7 @@ namespace geeL {
 		const SpotLight& spotLight;
 
 		StackBuffer blurBuffer;
-		RenderTexture blurTexture;
+		TextureTarget blurTexture;
 		GaussianBlur blur;
 
 	};

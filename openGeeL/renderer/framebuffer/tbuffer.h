@@ -7,6 +7,7 @@
 namespace geeL {
 
 	class DynamicBuffer;
+	class RenderTarget;
 
 
 	//Framebuffer that draws transparent objects and extends gBuffer with their information
@@ -18,7 +19,7 @@ namespace geeL {
 		TransparentOIDBuffer(GBuffer& gBuffer, DynamicBuffer& compBuffer);
 		virtual ~TransparentOIDBuffer();
 
-		void init(RenderTexture& colorTexture);
+		void init(RenderTarget& colorTexture);
 		virtual void fill(std::function<void()> drawCall, Clearer clearer = clearNothing);
 		void composite();
 
@@ -30,9 +31,9 @@ namespace geeL {
 		GBuffer& gBuffer;
 		DynamicBuffer& compBuffer;
 
-		RenderTexture* accumulationTexture;
-		RenderTexture* revealageTexture;
-		RenderTexture* compositionTexture;
+		RenderTarget* accumulationTexture;
+		RenderTarget* revealageTexture;
+		RenderTarget* compositionTexture;
 
 		PostProcessingEffectFS tComp;
 

@@ -1,7 +1,7 @@
 #ifndef GBUFFER_H
 #define GBUFFER_H
 
-#include "texturing/rendertexture.h"
+#include "rendertarget.h"
 #include "framebuffer.h"
 
 namespace geeL {
@@ -25,27 +25,27 @@ namespace geeL {
 		float getDepth() const;
 		virtual Resolution getResolution() const;
 
-		const RenderTexture& getDiffuse() const;
-		const RenderTexture& getPositionRoughness() const;
-		const RenderTexture& getNormalMetallic() const;
+		const RenderTarget& getDiffuse() const;
+		const RenderTarget& getPositionRoughness() const;
+		const RenderTarget& getNormalMetallic() const;
 
-		const RenderTexture* getEmissivity() const;
-		const RenderTexture* getOcclusion() const;
+		const RenderTarget* getEmissivity() const;
+		const RenderTarget* getOcclusion() const;
 
 		//Request occlusion texture of this buffer. Creates a 
 		//new one with given scale, if it doesn't exist yet
-		RenderTexture& requestOcclusion(const ResolutionScale& scale = 1.f);
+		RenderTarget& requestOcclusion(const ResolutionScale& scale = 1.f);
 
 		std::string getFragmentPath() const;
 		virtual std::string toString() const;
 
 	private:
 		Resolution resolution;
-		RenderTexture* diffuse;
-		RenderTexture* positionRough;
-		RenderTexture* normalMet;
-		RenderTexture* emissivity;
-		RenderTexture* occlusion;
+		RenderTarget* diffuse;
+		RenderTarget* positionRough;
+		RenderTarget* normalMet;
+		RenderTarget* emissivity;
+		RenderTarget* occlusion;
 		GBufferContent content;
 		float depthPos;
 

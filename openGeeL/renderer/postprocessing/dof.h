@@ -7,7 +7,7 @@
 
 namespace geeL {
 
-	class RenderTexture;
+	class RenderTarget;
 	class ScreenQuad;
 
 	//Special gaussian blur that takes distances between pixels into account
@@ -75,7 +75,7 @@ namespace geeL {
 		ShaderLocation focalLocation;
 
 		DepthOfFieldBlur& blur;
-		RenderTexture* blurTexture = nullptr;
+		RenderTarget* blurTexture = nullptr;
 
 	};
 

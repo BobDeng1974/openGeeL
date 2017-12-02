@@ -2,7 +2,7 @@
 #include "transformation/transform.h"
 #include "cameras/camera.h"
 #include "texturing/imagetexture.h"
-#include "texturing/rendertexture.h"
+#include "texturing/texturetarget.h"
 #include "framebuffer/framebuffer.h"
 #include "gaussianblur.h"
 #include "lensflare.h"
@@ -42,10 +42,10 @@ namespace geeL {
 
 		Resolution filterRes = Resolution(parameter.resolution, filterResolution);
 		if (filterTexture == nullptr)
-			filterTexture = new RenderTexture(filterRes, ColorType::RGB16,
-				WrapMode::Repeat, FilterMode::Linear);
-		else
-			filterTexture->resize(filterRes);
+			filterTexture = TextureTarget::createTextureTargetPtr<Texture2D>(filterRes, ColorType::RGB16, 
+				FilterMode::Linear, WrapMode::Repeat).release();
+		//else
+		//	filterTexture->resize(filterRes);
 
 		filter.init(PostProcessingParameter(parameter, filterRes));
 

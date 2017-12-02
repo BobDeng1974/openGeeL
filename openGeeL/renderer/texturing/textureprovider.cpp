@@ -3,14 +3,15 @@
 #include "framebuffer/gbuffer.h"
 #include "utility/resolution.h"
 #include "window.h"
-#include "rendertexture.h"
+#include "framebuffer/rendertarget.h"
+#include "texturetarget.h"
 #include "textureparams.h"
 #include "textureprovider.h"
 
 namespace geeL {
 
-	TextureWrapper::TextureWrapper(RenderTexture& texture, 
-		std::function<void(RenderTexture&)>& onDestroy) 
+	TextureWrapper::TextureWrapper(TextureTarget& texture,
+		std::function<void(TextureTarget&)>& onDestroy)
 			: texture(&texture)
 			, onDestroy(onDestroy) {}
 
@@ -26,7 +27,7 @@ namespace geeL {
 			onDestroy(*texture);
 	}
 
-	RenderTexture& TextureWrapper::getTexture() {
+	TextureTarget& TextureWrapper::getTexture() {
 		assert(texture != nullptr);
 
 		return *texture;
@@ -39,7 +40,7 @@ namespace geeL {
 		, diffuse(nullptr)
 		, specular(nullptr) {
 
-		callback = [this](RenderTexture& texture) { returnTexture(texture); };
+		callback = [this](TextureTarget& texture) { returnTexture(texture); };
 
 	}
 
@@ -54,57 +55,57 @@ namespace geeL {
 				auto& tex = colorsIt->second;
 
 				for (auto texturesIt(tex.begin()); texturesIt != tex.end(); texturesIt++) {
-					RenderTexture* texture = *texturesIt;
+					RenderTarget* texture = *texturesIt;
 					delete texture;
 				}
 			}
 		}
 	}
 
-	const RenderTexture& TextureProvider::requestAlbedo() const {
+	const RenderTarget& TextureProvider::requestAlbedo() const {
 		return gBuffer.getDiffuse();
 	}
 
-	const RenderTexture& TextureProvider::requestPositionRoughness() const {
+	const RenderTarget& TextureProvider::requestPositionRoughness() const {
 		return gBuffer.getPositionRoughness();
 	}
 
-	const RenderTexture& TextureProvider::requestNormalMetallic() const {
+	const RenderTarget& TextureProvider::requestNormalMetallic() const {
 		return gBuffer.getNormalMetallic();
 	}
 
-	const RenderTexture* TextureProvider::requestEmissivity() const {
+	const RenderTarget* TextureProvider::requestEmissivity() const {
 		return gBuffer.getEmissivity();
 	}
 
-	const RenderTexture* TextureProvider::requestOcclusion() const {
+	const RenderTarget* TextureProvider::requestOcclusion() const {
 		return gBuffer.getOcclusion();
 	}
 
-	RenderTexture* TextureProvider::requestOcclusion() {
+	RenderTarget* TextureProvider::requestOcclusion() {
 		return &gBuffer.requestOcclusion();
 	}
 
-	RenderTexture& TextureProvider::requestDefaultTexture() {
+	TextureTarget& TextureProvider::requestDefaultTexture() {
 		return requestTextureManual(ResolutionPreset::FULLSCREEN, ColorType::RGBA16, 
 			FilterMode::None, WrapMode::ClampEdge, AnisotropicFilter::None);
 	}
 
-	RenderTexture& TextureProvider::requestCurrentImage() {
+	TextureTarget& TextureProvider::requestCurrentImage() {
 		if (diffuse == nullptr)
 			diffuse = &requestDefaultTexture();
 
 		return *diffuse;
 	}
 
-	RenderTexture& TextureProvider::requestCurrentSpecular() {
+	TextureTarget& TextureProvider::requestCurrentSpecular() {
 		if (specular == nullptr)
 			specular = &requestDefaultTexture();
 
 		return *specular;
 	}
 
-	void TextureProvider::updateCurrentImage(RenderTexture& texture) {
+	void TextureProvider::updateCurrentImage(TextureTarget& texture) {
 		if (diffuse != &texture) {
 			//Assing diffuse to new texture and throw 
 			//old texture back into texture pool
@@ -113,7 +114,7 @@ namespace geeL {
 		}
 	}
 
-	void TextureProvider::updateCurrentSpecular(RenderTexture& texture) {
+	void TextureProvider::updateCurrentSpecular(TextureTarget& texture) {
 		if (specular != &texture) {
 			if (specular != nullptr) returnTexture(*specular);
 			specular = &texture;
@@ -124,13 +125,13 @@ namespace geeL {
 	TextureWrapper TextureProvider::requestTexture(ResolutionPreset resolution, ColorType colorType,
 		FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter) {
 
-		RenderTexture* texture = &requestTextureManual(resolution, colorType, 
+		TextureTarget* texture = &requestTextureManual(resolution, colorType,
 			filterMode, wrapMode, aFilter);
 
 		return TextureWrapper(*texture, callback);
 	}
 
-	RenderTexture& TextureProvider::requestTextureManual(ResolutionPreset resolution, ColorType colorType, 
+	TextureTarget& TextureProvider::requestTextureManual(ResolutionPreset resolution, ColorType colorType,
 		FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter) {
 
 		auto resolutionIt(textures.find(resolution));
@@ -142,7 +143,7 @@ namespace geeL {
 
 				auto& tex = colorsIt->second;
 				if (!tex.isEmpty()) {
-					RenderTexture* texture = tex.pop();
+					TextureTarget* texture = tex.pop();
 					texture->attachParameters(getParameters(filterMode, wrapMode, aFilter));
 
 					return *texture;
@@ -150,16 +151,23 @@ namespace geeL {
 			}
 		}
 
-		RenderTexture* newTexture = new RenderTexture(Resolution(window.getResolution(), resolution), colorType);
+		//RenderTarget* newTexture = new RenderTarget(Resolution(window.getResolution(), resolution), colorType);
+		TextureTarget* newTexture = TextureTarget::createTextureTargetPtr<Texture2D>(
+			Resolution(window.getResolution(), resolution), colorType).release();
+
 		newTexture->attachParameters(getParameters(filterMode, wrapMode, aFilter));
 
 		return *newTexture;
 	}
 
 
-	void TextureProvider::returnTexture(RenderTexture& texture) {
+	void TextureProvider::returnTexture(TextureTarget& texture) {
+		const TextureTarget* target = static_cast<const TextureTarget*>(&texture);
+		const Texture2D* t = dynamic_cast<const Texture2D*>(&target->getTexture());
+		assert(t != nullptr);
+
 		//TODO: maybe detach parameters here
-		textures[texture.getScale()][texture.getColorType()].push(&texture);
+		textures[t->getScale()][t->getColorType()].push(&texture);
 	}
 
 	void TextureProvider::cleanupCache() {
@@ -182,7 +190,7 @@ namespace geeL {
 				//TODO: Fine-tune this heuristic later
 				unsigned int deleteHeuristic = tex.elementCount() - tex.accessCount();
 				for (unsigned int i = 0; i < deleteHeuristic; i++) {
-					RenderTexture* texture = tex.pop();
+					RenderTarget* texture = tex.pop();
 					delete texture;
 				}
 			}
@@ -213,8 +221,8 @@ namespace geeL {
 
 	
 
-	RenderTexture* TextureProvider::MonitoredList::pop() {
-		RenderTexture* texture = list.front();
+	TextureTarget* TextureProvider::MonitoredList::pop() {
+		TextureTarget* texture = list.front();
 		list.pop_front();
 		accesses++;
 
@@ -222,7 +230,7 @@ namespace geeL {
 	}
 
 
-	void TextureProvider::MonitoredList::push(RenderTexture* texture) {
+	void TextureProvider::MonitoredList::push(TextureTarget* texture) {
 		list.push_back(texture);
 	}
 
@@ -242,11 +250,11 @@ namespace geeL {
 		return list.size();
 	}
 
-	std::list<RenderTexture*>::iterator TextureProvider::MonitoredList::begin() {
+	std::list<TextureTarget*>::iterator TextureProvider::MonitoredList::begin() {
 		return list.begin();
 	}
 
-	std::list<RenderTexture*>::iterator TextureProvider::MonitoredList::end() {
+	std::list<TextureTarget*>::iterator TextureProvider::MonitoredList::end() {
 		return list.end();
 	}
 

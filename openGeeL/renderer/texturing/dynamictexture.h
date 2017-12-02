@@ -3,7 +3,7 @@
 
 #include <functional>
 #include "framebuffer/colorbuffer.h"
-#include "rendertexture.h"
+#include "framebuffer/rendertarget.h"
 
 namespace geeL {
 
@@ -13,7 +13,7 @@ namespace geeL {
 
 
 	//Render texture that can render scene from given camera's point of view.
-	class DynamicRenderTexture : public RenderTexture {
+	class DynamicRenderTexture : public RenderTarget {
 
 	public:
 		DynamicRenderTexture(const Camera& camera, Resolution resolution);

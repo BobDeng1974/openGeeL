@@ -4,7 +4,7 @@
 #include "framebuffer/framebuffer.h"
 #include "shader/shader.h"
 #include "texturing/textureprovider.h"
-#include "texturing/rendertexture.h"
+#include "texturing/texturetarget.h"
 #include "glwrapper/glguards.h"
 #include "glwrapper/clearing.h"
 #include "additiveeffect.h"
@@ -71,10 +71,10 @@ namespace geeL {
 		effect.init(PostProcessingParameter(parameter, parameter.resolution));
 
 		if (tempTexture == nullptr)
-			tempTexture = new RenderTexture(parameter.resolution, ColorType::RGB16,
-				WrapMode::ClampEdge, FilterMode::Linear);
-		else
-			tempTexture->resize(parameter.resolution);
+			tempTexture = TextureTarget::createTextureTargetPtr<Texture2D>(parameter.resolution, ColorType::RGB16, 
+				FilterMode::Linear, WrapMode::ClampEdge).release();
+		//else
+		//	tempTexture->resize(parameter.resolution);
 
 		PostProcessingEffectFS::setImage(*tempTexture);
 	}

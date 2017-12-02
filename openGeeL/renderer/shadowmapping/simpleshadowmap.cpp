@@ -10,7 +10,6 @@
 #include "lights/pointlight.h"
 #include "lights/directionallight.h"
 #include "framebuffer/framebuffer.h"
-#include "texturing/rendertexture.h"
 #include "texturing/rendertexturecube.h"
 #include "renderscene.h"
 #include "simpleshadowmap.h"
@@ -93,22 +92,22 @@ namespace geeL {
 	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight& light, 
 		const ShadowMapConfiguration& config)
 			: SimpleShadowMap(light, 
-				std::unique_ptr<Texture>(new RenderTexture(
+				std::unique_ptr<Texture>(new Texture2D(
 					Resolution((int)config.resolution),
 					ColorType::Depth,
-					WrapMode::ClampBorder,
-					FilterMode::Linear)),
+					FilterMode::Linear,
+					WrapMode::ClampBorder)),
 				config)
 			, spotLight(light) {}
 
 	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight& light, 
 		const ShadowMapConfiguration& config, bool init)
 			: SimpleShadowMap(light, 
-				std::unique_ptr<Texture>(new RenderTexture(
+				std::unique_ptr<Texture>(new Texture2D(
 					Resolution((int)config.resolution), 
-					ColorType::Depth, 
-					WrapMode::ClampBorder, 
-					FilterMode::Linear)), 
+					ColorType::Depth,
+					FilterMode::Linear,
+					WrapMode::ClampBorder)), 
 				config)
 			, spotLight(light) {}
 
@@ -226,11 +225,11 @@ namespace geeL {
 	SimpleDirectionalLightMap::SimpleDirectionalLightMap(const DirectionalLight& light, 
 		const ShadowMapConfiguration& config)
 			: SimpleShadowMap(light, 
-				std::unique_ptr<Texture>(new RenderTexture(
+				std::unique_ptr<Texture>(new Texture2D(
 					Resolution((int)config.resolution),
 					ColorType::Depth,
-					WrapMode::ClampBorder,
-					FilterMode::Linear)),
+					FilterMode::Linear,
+					WrapMode::ClampBorder)),
 				config)
 			, directionalLight(light) {}
 

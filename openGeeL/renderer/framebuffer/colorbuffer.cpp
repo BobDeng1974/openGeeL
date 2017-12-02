@@ -4,7 +4,7 @@
 #include <iostream>
 #include "glwrapper/viewport.h"
 #include "renderer/renderer.h"
-#include "texturing/rendertexture.h"
+#include "texturing/texturetarget.h"
 #include "colorbuffer.h"
 
 using namespace std;
@@ -92,11 +92,14 @@ namespace geeL {
 		bind();
 
 		// Create color attachment textures
-		RenderTexture* texture = new RenderTexture(resolution, colorType, wrapMode, filterMode);
+		RenderTarget* texture = TextureTarget::createTextureTargetPtr<Texture2D>(
+			resolution, colorType, filterMode, wrapMode).release();
+
+
 		texture->assignTo(*this, 0);
 		unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
 		glDrawBuffers(1, attachments);
-		buffers.push_back(pair<bool, RenderTexture*>(true, texture));
+		buffers.push_back(pair<bool, RenderTarget*>(true, texture));
 
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)

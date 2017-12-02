@@ -5,7 +5,8 @@
 
 namespace geeL {
 
-	class RenderTexture;
+	class RenderTarget;
+
 
 	//Wrapper effect that can blur and scale another post processing effect
 	class BlurredPostEffect : public PostProcessingEffectFS {
@@ -43,8 +44,8 @@ namespace geeL {
 		PostProcessingEffectFS& effect;
 		PostProcessingEffectFS& blur;
 
-		RenderTexture* effectTexture = nullptr;
-		RenderTexture* blurTexture = nullptr;
+		RenderTarget* effectTexture = nullptr;
+		RenderTarget* blurTexture = nullptr;
 
 	};
 

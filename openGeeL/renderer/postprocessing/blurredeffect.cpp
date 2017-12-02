@@ -1,5 +1,5 @@
 #include "primitives/screenquad.h"
-#include "texturing/rendertexture.h"
+#include "texturing/texturetarget.h"
 #include "texturing/textureprovider.h"
 #include "framebuffer/framebuffer.h"
 #include "gaussianblur.h"
@@ -41,17 +41,17 @@ namespace geeL {
 
 		Resolution effectRes(resolution, effectResolution);
 		if (effectTexture == nullptr)
-			effectTexture = new RenderTexture(effectRes, ColorType::RGB16,
-				WrapMode::ClampEdge, FilterMode::Linear);
-		else
-			effectTexture->resize(effectRes);
+			effectTexture = TextureTarget::createTextureTargetPtr<Texture2D>(effectRes, ColorType::RGB16, 
+				FilterMode::Linear, WrapMode::ClampEdge).release();
+		//else
+		//	effectTexture->resize(effectRes);
 
 		Resolution blurRes(resolution, blurResolution);
 		if (blurTexture == nullptr)
-			blurTexture = new RenderTexture(blurRes, ColorType::RGB16,
-				WrapMode::ClampEdge, FilterMode::Linear);
-		else
-			blurTexture->resize(blurRes);
+			blurTexture = TextureTarget::createTextureTargetPtr<Texture2D>(blurRes, ColorType::RGB16, 
+				FilterMode::Linear, WrapMode::ClampEdge).release();
+		//else
+		//	blurTexture->resize(blurRes);
 
 		effect.init(PostProcessingParameter(parameter, effectRes));
 		blur.init(PostProcessingParameter(parameter, blurRes));

@@ -1,4 +1,4 @@
-#include "texturing/rendertexture.h"
+#include "framebuffer/rendertarget.h"
 #include "texturing/textureprovider.h"
 #include "voxelization/voxelizer.h"
 #include "voxelization/voxeloctree.h"

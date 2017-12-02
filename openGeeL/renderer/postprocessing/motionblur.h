@@ -10,7 +10,7 @@ namespace geeL {
 
 	class Camera;
 	class GaussianBlurBase;
-	class RenderTexture;
+	class RenderTarget;
 
 
 	//Simple motion blur that blurs in (inverse) direction of camera movement
@@ -58,7 +58,7 @@ namespace geeL {
 	private:
 		glm::vec3 prevPosition;
 		PassthroughEffect prevPositionEffect;
-		RenderTexture* positionTexture = nullptr;
+		RenderTarget* positionTexture = nullptr;
 
 	};
 
@@ -77,7 +77,7 @@ namespace geeL {
 
 	private:
 		VelocityBuffer& velocity;
-		RenderTexture* velocityTexture = nullptr;
+		RenderTarget* velocityTexture = nullptr;
 
 	};
 

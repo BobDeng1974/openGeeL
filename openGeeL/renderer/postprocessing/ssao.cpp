@@ -4,7 +4,7 @@
 #include <string>
 #include <glm.hpp>
 #include "primitives/screenquad.h"
-#include "texturing/rendertexture.h"
+#include "texturing/texturetarget.h"
 #include "texturing/textureprovider.h"
 #include "glwrapper/glguards.h"
 #include "gaussianblur.h"
@@ -78,13 +78,14 @@ namespace geeL {
 		return *this;
 	}
 
-	void SSAO::setTargetTexture(const RenderTexture& texture) {
+	void SSAO::setTargetTexture(const RenderTarget& texture) {
 		blend = texture.isAssigned();
 
 		if (blend) {
 			//Instanciate blending structures if needed
 			if(blurTexture == nullptr)
-				blurTexture = new RenderTexture(resolution, ColorType::Single, WrapMode::Repeat, FilterMode::None);
+				blurTexture = TextureTarget::createTextureTargetPtr<Texture2D>(
+					resolution, ColorType::Single, FilterMode::None, WrapMode::Repeat).release();
 			if (blendEffect == nullptr) {
 				blendEffect = new PostProcessingEffectFS("shaders/screen.frag");
 				blendEffect->init(PostProcessingParameter(ScreenQuad::get(), *parentBuffer, resolution));
@@ -116,7 +117,8 @@ namespace geeL {
 		for (unsigned int i = 0; i < sampleCount; i++)
 			shader.bind<glm::vec3>("samples[" + to_string(i) + "]", kernel[i]);
 		
-		ssaoTexture = new RenderTexture(resolution, ColorType::Single, WrapMode::Repeat, FilterMode::None);
+		ssaoTexture = TextureTarget::createTextureTargetPtr<Texture2D>(
+			resolution, ColorType::Single, FilterMode::None, WrapMode::Repeat).release();
 
 		blur.init(PostProcessingParameter(parameter, resolution));
 		blur.setImage(*ssaoTexture);

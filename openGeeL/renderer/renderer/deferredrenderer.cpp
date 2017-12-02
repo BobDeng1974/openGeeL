@@ -6,6 +6,7 @@
 #include "primitives/screenquad.h"
 #include "texturing/textureprovider.h"
 #include "texturing/dynamictexture.h"
+#include "texturing/texturetarget.h"
 #include "framebuffer/gbuffer.h"
 #include "postprocessing/drawdefault.h"
 #include "postprocessing/ssao.h"

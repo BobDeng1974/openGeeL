@@ -11,7 +11,7 @@
 namespace geeL {
 
 	class BilateralFilter;
-	class RenderTexture;
+	class RenderTarget;
 
 	//Screen Space Ambient Occlusion Post Effect
 	class SSAO : public PostProcessingEffectFS, public CameraRequester {
@@ -32,7 +32,7 @@ namespace geeL {
 		//Tell SSAO in which texture it will get drawn into. The effect
 		//will try to blend content if given texture has already been 
 		//filled with occlusion data
-		void setTargetTexture(const RenderTexture& texture);
+		void setTargetTexture(const RenderTarget& texture);
 
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues();
@@ -57,12 +57,12 @@ namespace geeL {
 		PostProcessingEffectFS& blur;
 
 		ShaderLocation projectionLocation;
-		RenderTexture* ssaoTexture = nullptr;
+		RenderTarget* ssaoTexture = nullptr;
 
 		//These objects are used if SSAO needs to be blended into an existing occlusion texture
 
 		bool blend = false;
-		RenderTexture* blurTexture = nullptr;
+		RenderTarget* blurTexture = nullptr;
 		PostProcessingEffectFS* blendEffect = nullptr;
 		
 	};

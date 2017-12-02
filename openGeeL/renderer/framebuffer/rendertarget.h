@@ -2,6 +2,7 @@
 #define RENDERTARGET_H
 
 #include <list>
+#include "texturing/functionaltexture.h"
 #include "utility/resolution.h"
 
 namespace geeL {
@@ -10,7 +11,7 @@ namespace geeL {
 
 
 	//Interface for all objects that can be used as drawing target of a framebuffer
-	class RenderTarget {
+	class RenderTarget : public FunctionalTexture {
 		friend class LayeredTarget;
 
 	public:
@@ -30,7 +31,7 @@ namespace geeL {
 	protected:
 		const IFrameBuffer* parent;
 
-		RenderTarget();
+		RenderTarget(std::unique_ptr<Texture> texture);
 
 		virtual void assign(unsigned int position) const = 0;
 
@@ -65,12 +66,16 @@ namespace geeL {
 
 
 
-	inline LayeredTarget::LayeredTarget(RenderTarget& target) {
+	inline LayeredTarget::LayeredTarget(RenderTarget& target)
+		: RenderTarget(std::unique_ptr<Texture>(&target.getTexture())) {
+
 		add(target);
 	}
 
 	template<typename... RenderTargets>
-	inline LayeredTarget::LayeredTarget(RenderTarget& target, RenderTargets& ...targets) {
+	inline LayeredTarget::LayeredTarget(RenderTarget& target, RenderTargets& ...targets) 
+		: RenderTarget(std::unique_ptr<Texture>(&target.getTexture())) {
+
 		add(target, targets...);
 	}
 

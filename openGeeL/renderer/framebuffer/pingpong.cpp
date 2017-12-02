@@ -2,7 +2,7 @@
 #include <glew.h>
 #include <iostream>
 #include "renderer/renderer.h"
-#include "texturing/rendertexture.h"
+#include "texturing/texturetarget.h"
 #include "pingpong.h"
 
 using namespace std;
@@ -43,8 +43,8 @@ namespace geeL {
 		glGenFramebuffers(1, &fbo.token);
 		bind();
 
-		first = new RenderTexture(resolution, colorType, wrapMode, filterMode);
-		second = new RenderTexture(resolution, colorType, wrapMode, filterMode);
+		first = TextureTarget::createTextureTargetPtr<Texture2D>(resolution, colorType, filterMode, wrapMode).release();
+		second = TextureTarget::createTextureTargetPtr<Texture2D>(resolution, colorType, filterMode, wrapMode).release();
 
 		first->assignTo(*this, 0);
 		second->assignTo(*this, 1);

@@ -5,7 +5,7 @@
 #include "shader/rendershader.h"
 #include "shader/sceneshader.h"
 #include "lights/lightmanager.h"
-#include "texturing/rendertexture.h"
+#include "framebuffer/rendertarget.h"
 #include "texturing/textureprovider.h"
 #include "appglobals.h"
 #include "renderscene.h"
@@ -29,7 +29,7 @@ namespace geeL {
 		addTextureSampler(provider->requestPositionRoughness(), "gPositionRoughness");
 		addTextureSampler(provider->requestNormalMetallic(), "gNormalMet");
 
-		const Texture* emissivity = provider->requestEmissivity();
+		const ITexture* emissivity = provider->requestEmissivity();
 		if (emissivity != nullptr) {
 			addTextureSampler(*emissivity, "gEmissivity");
 			shader.bind<int>("useEmissivity", 1);

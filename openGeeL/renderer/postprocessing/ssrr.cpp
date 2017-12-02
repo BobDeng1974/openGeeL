@@ -1,6 +1,6 @@
 #include "cameras/camera.h"
 #include "framebuffer/framebuffer.h"
-#include "texturing/rendertexture.h"
+#include "framebuffer/rendertarget.h"
 #include "texturing/textureprovider.h"
 #include "ssrr.h"
 

@@ -6,6 +6,7 @@
 #include "glwrapper/glguards.h"
 #include "shader/rendershader.h"
 #include "renderer/renderer.h"
+#include "texturing/texturetarget.h"
 #include "appglobals.h"
 #include "bufferutil.h"
 
@@ -71,29 +72,30 @@ namespace geeL {
 		return resolution;
 	}
 
-	const RenderTexture& GBuffer::getDiffuse() const {
+	const RenderTarget& GBuffer::getDiffuse() const {
 		return *diffuse;
 	}
 
-	const RenderTexture& GBuffer::getPositionRoughness() const {
+	const RenderTarget& GBuffer::getPositionRoughness() const {
 		return *positionRough;
 	}
 
-	const RenderTexture& GBuffer::getNormalMetallic() const {
+	const RenderTarget& GBuffer::getNormalMetallic() const {
 		return *normalMet;
 	}
 
-	const RenderTexture* GBuffer::getEmissivity() const {
+	const RenderTarget* GBuffer::getEmissivity() const {
 		return emissivity;
 	}
 
-	const RenderTexture* GBuffer::getOcclusion() const {
+	const RenderTarget* GBuffer::getOcclusion() const {
 		return occlusion;
 	}
 
-	RenderTexture& GBuffer::requestOcclusion(const ResolutionScale& scale) {
-		if(occlusion == nullptr)
-			occlusion = new RenderTexture(Resolution(resolution, scale), ColorType::Single, WrapMode::ClampEdge, FilterMode::None);
+	RenderTarget& GBuffer::requestOcclusion(const ResolutionScale& scale) {
+		if (occlusion == nullptr)
+			occlusion = TextureTarget::createTextureTargetPtr<Texture2D>(
+				Resolution(resolution, scale), ColorType::Single, FilterMode::None, WrapMode::ClampEdge).release();
 
 		return *occlusion;
 	}
@@ -112,9 +114,9 @@ namespace geeL {
 	}
 
 	void GBuffer::initTextures(Resolution resolution) {
-		positionRough = new RenderTexture(resolution, ColorType::RGBA16);
-		normalMet = new RenderTexture(resolution, ColorType::RGBA16);
-		diffuse = new RenderTexture(resolution, ColorType::RGBA);
+		positionRough = TextureTarget::createTextureTargetPtr<Texture2D>(resolution, ColorType::RGBA16).release();
+		normalMet = TextureTarget::createTextureTargetPtr<Texture2D>(resolution, ColorType::RGBA16).release();
+		diffuse = TextureTarget::createTextureTargetPtr<Texture2D>(resolution, ColorType::RGBA).release();
 		
 		positionRough->assignTo(*this, 0);
 		normalMet->assignTo(*this, 1);
@@ -122,8 +124,9 @@ namespace geeL {
 		
 		switch (content) {
 			case GBufferContent::DefaultEmissive: {
-				emissivity = new RenderTexture(resolution, ColorType::RGB);
-				occlusion = new RenderTexture(resolution, ColorType::Single, WrapMode::ClampEdge, FilterMode::None);
+				emissivity = TextureTarget::createTextureTargetPtr<Texture2D>(resolution, ColorType::RGB).release();
+				occlusion = TextureTarget::createTextureTargetPtr<Texture2D>(
+					resolution, ColorType::Single, FilterMode::None, WrapMode::ClampEdge).release();
 
 				emissivity->assignTo(*this, 3);
 				occlusion->assignTo(*this, 4);

@@ -10,7 +10,7 @@ namespace geeL {
 
 	class GaussianBlurBase;
 	class ImageTexture;
-	class RenderTexture;
+	class RenderTarget;
 
 
 	class LensFlare : public PostProcessingEffectFS, public CameraRequester {
@@ -51,7 +51,7 @@ namespace geeL {
 		ResolutionPreset filterResolution;
 
 		BlurredPostEffect& filter;
-		RenderTexture* filterTexture = nullptr;
+		RenderTarget* filterTexture = nullptr;
 
 	};
 

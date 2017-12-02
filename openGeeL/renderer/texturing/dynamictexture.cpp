@@ -3,7 +3,8 @@
 namespace geeL {
 
 	DynamicRenderTexture::DynamicRenderTexture(const Camera& camera, Resolution resolution)
-		: RenderTexture(resolution, ColorType::RGBA16, WrapMode::Repeat), camera(camera) {
+		: RenderTarget(std::unique_ptr<Texture>(new Texture2D(resolution, ColorType::RGBA16)))
+		, camera(camera) {
 	
 		buffer.init(resolution, *this);
 		buffer.initDepth();

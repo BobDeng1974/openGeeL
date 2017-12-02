@@ -6,7 +6,8 @@
 
 namespace geeL {
 
-	class RenderTexture;
+	class RenderTarget;
+
 
 	//Post effects that can draw into its texture target but cannot read existing values
 	class AdditiveEffect : public PostProcessingEffectFS {
@@ -50,7 +51,7 @@ namespace geeL {
 
 	private:
 		PostProcessingEffectFS& effect;
-		RenderTexture* tempTexture;
+		RenderTarget* tempTexture;
 
 	};
 

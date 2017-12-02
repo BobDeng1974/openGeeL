@@ -4,8 +4,9 @@
 #include "shader/rendershader.h"
 #include "primitives/screenquad.h"
 #include "framebuffer/colorbuffer.h"
+#include "framebuffer/rendertarget.h"
 #include "texturing/textureprovider.h"
-#include "texturing/rendertexture.h"
+#include "texturing/texturetarget.h"
 #include "glwrapper/glguards.h"
 #include "utility/defaults.h"
 #include "postprocessing.h"
@@ -96,8 +97,8 @@ namespace geeL {
 
 	void PostProcessingEffectFS::fill() {
 		if (parentBuffer != nullptr) {
-			RenderTexture& source = provider->requestCurrentImage();
-			RenderTexture& target = provider->requestDefaultTexture();
+			TextureTarget& source = provider->requestCurrentImage();
+			TextureTarget& target = provider->requestDefaultTexture();
 
 			setImage(source);
 
@@ -164,9 +165,9 @@ namespace geeL {
 		shader.bindParameters();
 
 		//Read target texture from parent buffer and bind it
-		const RenderTexture& target = provider->requestCurrentImage();
+		const RenderTarget& target = provider->requestCurrentImage();
 		target.bindImage(0, AccessType::All);
-		shader.bind<glm::vec2>("resolution", target.getResolution());
+		shader.bind<glm::vec2>("resolution", target.getRenderResolution());
 
 		//Bind source textures from shader
 		shader.loadMaps();

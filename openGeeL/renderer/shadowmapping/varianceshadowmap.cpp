@@ -12,21 +12,21 @@
 namespace geeL {
 
 	VarianceSpotLightMap::VarianceSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config)
-		: ShadowMap(light, std::unique_ptr<Texture>(new RenderTexture(
+		: ShadowMap(light, std::unique_ptr<Texture>(new Texture2D(
 			Resolution((int)config.resolution),
 			ColorType::RG16,
-			WrapMode::ClampBorder,
-			FilterMode::TrilinearUltra)))
+			FilterMode::TrilinearUltra,
+			WrapMode::ClampBorder)))
 		, spotLight(light)
 		, shadowBias(config.shadowBias)
 		, farPlane(config.farPlane)
 		, resolution((int)config.resolution)
 		, blur(KernelSize::Depth, 1.5f)
-		, blurTexture(
+		, blurTexture(std::unique_ptr<Texture2D>(new Texture2D(
 			Resolution((int)config.resolution), 
 			ColorType::RGB16, 
-			WrapMode::ClampEdge, 
-			FilterMode::Linear) {
+			FilterMode::Linear,
+			WrapMode::ClampEdge))) {
 
 		getTexture().mipmap();
 

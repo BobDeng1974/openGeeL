@@ -1,6 +1,6 @@
 #include <iostream>
 #include "transformation/transform.h"
-#include "texturing/rendertexture.h"
+#include "framebuffer/rendertarget.h"
 #include "texturing/textureprovider.h"
 #include "lights/spotlight.h"
 #include "volumetriclight.h"

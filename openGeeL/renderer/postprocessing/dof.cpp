@@ -1,6 +1,6 @@
 #include "gaussianblur.h"
 #include "texturing/texture.h"
-#include "texturing/rendertexture.h"
+#include "texturing/texturetarget.h"
 #include "texturing/textureprovider.h"
 #include "framebuffer/framebuffer.h"
 #include "primitives/screenquad.h"
@@ -84,10 +84,10 @@ namespace geeL {
 
 		Resolution blurRes = Resolution(parameter.resolution, blurResolution);
 		if (blurTexture == nullptr)
-			blurTexture = new RenderTexture(blurRes, ColorType::RGB16,
-				WrapMode::ClampEdge, FilterMode::Linear);
-		else
-			blurTexture->resize(blurRes);
+			blurTexture = TextureTarget::createTextureTargetPtr<Texture2D>(blurRes, ColorType::RGB16, 
+				FilterMode::Linear, WrapMode::ClampEdge).release();
+		//else
+		//	blurTexture->resize(blurRes);
 
 		blur.init(PostProcessingParameter(parameter, blurRes));
 		addTextureSampler(*blurTexture, "blurredImage");
@@ -108,7 +108,7 @@ namespace geeL {
 
 		Resolution newRes = Resolution(resolution, blurResolution);
 		blur.setResolution(newRes);
-		blurTexture->resize(newRes);
+	//	blurTexture->resize(newRes);
 	}
 
 	const ResolutionPreset& DepthOfFieldBlurred::getBlurResolution() const {

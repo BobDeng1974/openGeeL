@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 #include "texturing/texture.h"
-#include "texturing/rendertexture.h"
+#include "texturing/texturetarget.h"
 #include "texturing/textureprovider.h"
 #include "shader/rendershader.h"
 #include "primitives/screenquad.h"
@@ -41,8 +41,8 @@ namespace geeL {
 	void GaussianBlurBase::init(const PostProcessingParameter& parameter) {
 		PostProcessingEffectFS::init(parameter);
 
-		tempTexture = new RenderTexture(resolution, ColorType::RGB16, 
-			WrapMode::ClampEdge, FilterMode::Linear);
+		tempTexture = TextureTarget::createTextureTargetPtr<Texture2D>(resolution, ColorType::RGB16, 
+			FilterMode::Linear, WrapMode::ClampEdge).release();
 
 		horLocation = shader.getLocation("horizontal");
 	}
@@ -267,7 +267,8 @@ namespace geeL {
 		assert(provider != nullptr);
 		sobel.setImage(provider->requestPositionRoughness());
 
-		sobelTexture = new RenderTexture(resolution, ColorType::RGB16, WrapMode::ClampEdge, FilterMode::None);
+		sobelTexture = TextureTarget::createTextureTargetPtr<Texture2D>(resolution, ColorType::RGB16, 
+			FilterMode::None, WrapMode::ClampEdge).release();
 		sobel.init(parameter);
 
 		addTextureSampler(*sobelTexture, "sobel");

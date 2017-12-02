@@ -2,7 +2,7 @@
 #include <iostream>
 #include "renderer/deferredrenderer.h"
 #include "texturing/textureprovider.h"
-#include "texturing/rendertexture.h"
+#include "framebuffer/rendertarget.h"
 #include "utility/rendertime.h"
 #include "guiwrapper.h"
 #include "systeminformation.h"

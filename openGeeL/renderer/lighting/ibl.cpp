@@ -1,7 +1,7 @@
 #include "cameras/camera.h"
 #include "shader/rendershader.h"
 #include "shader/sceneshader.h"
-#include "texturing/rendertexture.h"
+#include "framebuffer/rendertarget.h"
 #include "texturing/textureprovider.h"
 #include "framebuffer/framebuffer.h"
 #include "lights/lightmanager.h"
@@ -25,7 +25,7 @@ namespace geeL {
 		addTextureSampler(provider->requestPositionRoughness(), "gPositionRoughness");
 		addTextureSampler(provider->requestNormalMetallic(), "gNormalMet");
 
-		const Texture* occlusion = provider->requestOcclusion();
+		const ITexture* occlusion = provider->requestOcclusion();
 		if (occlusion != nullptr) {
 			addTextureSampler(*occlusion, "ssao");
 			shader.bind<int>("useSSAO", 1);

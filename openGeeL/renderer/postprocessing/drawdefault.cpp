@@ -2,9 +2,10 @@
 #include "shader/rendershader.h"
 #include "primitives/screenquad.h"
 #include "framebuffer/framebuffer.h"
+#include "framebuffer/rendertarget.h"
 #include "texturing/imagetexture.h"
-#include "texturing/rendertexture.h"
 #include "texturing/textureprovider.h"
+#include "texturing/texturetarget.h"
 #include "drawdefault.h"
 
 using namespace glm;

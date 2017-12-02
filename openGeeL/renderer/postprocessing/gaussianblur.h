@@ -7,7 +7,7 @@
 
 namespace geeL {
 
-	class RenderTexture;
+	class RenderTarget;
 	class SobelFilter;
 	class ITexture;
 
@@ -50,7 +50,7 @@ namespace geeL {
 
 		LinearKernel linearKernel;
 		const ITexture* mainBuffer;
-		RenderTexture* tempTexture = nullptr;
+		RenderTarget* tempTexture = nullptr;
 		ShaderLocation horLocation;
 
 		void updateKernel();
@@ -141,7 +141,7 @@ namespace geeL {
 	private:
 		bool depth;
 		SobelFilter& sobel;
-		RenderTexture* sobelTexture = nullptr;
+		RenderTarget* sobelTexture = nullptr;
 
 	};
 

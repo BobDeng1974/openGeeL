@@ -1,7 +1,7 @@
 #include <iostream>
 #include "primitives/screenquad.h"
 #include "framebuffer/framebuffer.h"
-#include "texturing/rendertexture.h"
+#include "texturing/texturetarget.h"
 #include "texturing/textureprovider.h"
 #include "transformation/transform.h"
 #include "gaussianblur.h"
@@ -93,10 +93,10 @@ namespace geeL {
 		float res = 1.f;
 		Resolution velocityRes = Resolution(parameter.resolution, 1.f);
 		if (velocityTexture == nullptr)
-			velocityTexture = new RenderTexture(velocityRes,
-				ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::Linear);
-		else
-			velocityTexture->resize(velocityRes);
+			velocityTexture = TextureTarget::createTextureTargetPtr<Texture2D>(velocityRes,
+				ColorType::RGBA16, FilterMode::Linear, WrapMode::ClampEdge).release();
+		//else
+		//	velocityTexture->resize(velocityRes);
 
 		velocity.init(PostProcessingParameter(parameter, velocityRes));
 
@@ -129,13 +129,12 @@ namespace geeL {
 		prevPositionEffect.setImage(provider->requestPositionRoughness());
 		addTextureSampler(provider->requestPositionRoughness(), "currentPosition");
 
-
 		Resolution positionRes = Resolution(parameter.resolution, 1.f);
 		if (positionTexture == nullptr)
-			positionTexture = new RenderTexture(positionRes, ColorType::RGBA16,
-				WrapMode::ClampEdge, FilterMode::Linear);
-		else
-			positionTexture->resize(positionRes);
+			positionTexture = TextureTarget::createTextureTargetPtr<Texture2D>(positionRes, ColorType::RGBA16, 
+				FilterMode::Linear, WrapMode::ClampEdge).release();
+		//else
+		//	positionTexture->resize(positionRes);
 
 		prevPositionEffect.init(PostProcessingParameter(parameter, positionRes));
 

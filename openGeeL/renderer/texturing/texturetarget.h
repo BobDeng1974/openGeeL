@@ -6,7 +6,7 @@
 
 namespace geeL {
 
-	class TextureTarget : public RenderTarget, public FunctionalTexture {
+	class TextureTarget : public RenderTarget {
 
 	public:
 		TextureTarget(std::unique_ptr<Texture> texture);
@@ -14,6 +14,9 @@ namespace geeL {
 		virtual void setRenderResolution() const;
 		virtual Resolution getRenderResolution() const;
 		virtual unsigned int getSize() const;
+
+		void attachParameters(const TextureParameters& parameters);
+		void detachParameters();
 
 		template<typename TextureType, typename ...TextureArgs>
 		static TextureTarget createTextureTarget(TextureArgs&& ...args);

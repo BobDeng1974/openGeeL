@@ -3,6 +3,7 @@
 #include "glwrapper/viewport.h"
 #include "glwrapper/glguards.h"
 #include "primitives/screenquad.h"
+#include "texturing/texturetarget.h"
 #include "stackbuffer.h"
 #include "tbuffer.h"
 
@@ -14,8 +15,8 @@ namespace geeL {
 		
 		Resolution res(gBuffer.getResolution());
 
-		accumulationTexture = new RenderTexture(res, ColorType::RGBA16);
-		revealageTexture = new RenderTexture(res, ColorType::Single);
+		accumulationTexture = TextureTarget::createTextureTargetPtr<Texture2D>(res, ColorType::RGBA16).release();
+		revealageTexture = TextureTarget::createTextureTargetPtr<Texture2D>(res, ColorType::Single).release();
 	}
 
 	TransparentOIDBuffer::~TransparentOIDBuffer() {
@@ -24,7 +25,7 @@ namespace geeL {
 	}
 
 
-	void TransparentOIDBuffer::init(RenderTexture& colorTexture) {
+	void TransparentOIDBuffer::init(RenderTarget& colorTexture) {
 		compositionTexture = &colorTexture;
 
 		Resolution res(gBuffer.getResolution());

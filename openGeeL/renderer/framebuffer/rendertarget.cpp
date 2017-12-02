@@ -5,7 +5,10 @@
 
 namespace geeL {
 
-	RenderTarget::RenderTarget() : parent(nullptr) {}
+	RenderTarget::RenderTarget(std::unique_ptr<Texture> texture) 
+		: FunctionalTexture(std::move(texture))
+		, parent(nullptr) {}
+
 
 	void RenderTarget::assignTo(const IFrameBuffer& buffer, unsigned int position, bool bindFB) {
 		if (bindFB) buffer.bind();

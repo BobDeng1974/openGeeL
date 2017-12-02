@@ -288,9 +288,6 @@
     <ClCompile Include="renderer\texturing\imagetexture.cpp">
       <Filter>renderer\texturing</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\texturing\rendertexture.cpp">
-      <Filter>renderer\texturing</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\cubemapping\cubemapfactory.cpp">
       <Filter>renderer\cubemapping</Filter>
     </ClCompile>
@@ -729,9 +726,6 @@
       <Filter>renderer\framebuffer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\texturing\imagetexture.h">
-      <Filter>renderer\texturing</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\texturing\rendertexture.h">
       <Filter>renderer\texturing</Filter>
     </ClInclude>
     <ClInclude Include="renderer\cubemapping\cubemapfactory.h">

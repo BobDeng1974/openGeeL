@@ -110,10 +110,10 @@ namespace geeL {
 		Texture2D(Resolution resolution, ColorType colorType, void* image);
 
 		Texture2D(Resolution resolution, ColorType colorType, FilterMode filterMode,
-			WrapMode wrapMode, void* image);
+			WrapMode wrapMode, void* image = 0);
 
 		Texture2D(Resolution resolution, ColorType colorType, FilterMode filterMode,
-			WrapMode wrapMode, AnisotropicFilter filter, void* image);
+			WrapMode wrapMode, AnisotropicFilter filter, void* image = 0);
 
 		Texture2D(Texture2D&& other);
 
