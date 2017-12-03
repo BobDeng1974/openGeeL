@@ -354,9 +354,6 @@
     <ClCompile Include="renderer\texturing\imagetexturecube.cpp">
       <Filter>renderer\texturing</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\texturing\rendertexture3D.cpp">
-      <Filter>renderer\texturing</Filter>
-    </ClCompile>
     <ClCompile Include="interface\snippets\blursnippets.cpp">
       <Filter>interface\snippets</Filter>
     </ClCompile>
@@ -801,9 +798,6 @@
       <Filter>renderer\texturing</Filter>
     </ClInclude>
     <ClInclude Include="renderer\texturing\imagetexturecube.h">
-      <Filter>renderer\texturing</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\texturing\rendertexture3D.h">
       <Filter>renderer\texturing</Filter>
     </ClInclude>
     <ClInclude Include="interface\snippets\blursnippets.h">
