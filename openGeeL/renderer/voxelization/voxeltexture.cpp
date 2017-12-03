@@ -13,13 +13,19 @@
 namespace geeL {
 
 	VoxelTexture::VoxelTexture(const RenderScene& scene, unsigned int dimensions) 
-		: scene(scene), dimensions(dimensions)
-		, texture(new Texture3D(dimensions, dimensions, dimensions, 7, 
+		: FunctionalTexture(std::unique_ptr<Texture>(new Texture3D(
+			dimensions, 
+			dimensions, 
+			dimensions, 
+			7, 
 			ColorType::RGBA8, 
 			FilterMode::Trilinear, 
-			WrapMode::ClampBorder)) {
+			WrapMode::ClampBorder)))
+		, scene(scene)
+		, dimensions(dimensions) {
 
-		texture->mipmap();
+
+		getTexture().mipmap();
 
 		FragmentShader frag = FragmentShader("shaders/voxelization/voxelizeTex.frag", true, false);
 		voxelShader = new SceneShader("shaders/voxelization/voxelize.vert", "shaders/voxelization/voxelize.geom",
@@ -28,13 +34,9 @@ namespace geeL {
 		voxelShader->mapOffset = 1;
 	}
 
-	VoxelTexture::~VoxelTexture() {
-		delete texture;
-	}
-
 
 	void VoxelTexture::build() {
-		texture->clear();
+		clearTexture();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Viewport::set(0, 0, dimensions, dimensions);
@@ -50,12 +52,12 @@ namespace geeL {
 
 		scene.getLightmanager().bindShadowmaps(*voxelShader);
 
-		texture->bindImage(0, AccessType::Write);
+		getTexture().bindImage(0, AccessType::Write);
 
 		//Render scene
 		scene.drawObjects(*voxelShader);
 
-		texture->mipmap();
+		getTexture().mipmap();
 
 		glEnable(GL_CULL_FACE);
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -66,12 +68,8 @@ namespace geeL {
 		shader.bind<int>("dimensions", dimensions);
 	}
 
-	void VoxelTexture::bindTexture(Shader& shader, const std::string& name) {
-		shader.addMap(*texture, name);
-	}
-
 	void VoxelTexture::clearTexture() {
-		(*texture)->clear();
+		getTexture()->clear();
 	}
 
 }

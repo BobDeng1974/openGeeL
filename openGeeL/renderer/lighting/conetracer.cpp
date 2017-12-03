@@ -32,7 +32,7 @@ namespace geeL {
 			, specularLOD(1.f)
 			, diffuseLOD(1.f) {
 	
-		texture.bindTexture(shader, "voxelTexture");
+		shader.addMap(texture, "voxelTexture");
 	}
 
 
