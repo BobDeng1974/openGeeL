@@ -12,7 +12,7 @@
 #include "glwrapper/viewport.h"
 #include "transformation/transform.h"
 #include "framebuffer/framebuffer.h"
-#include "texturing/rendertexture.h"
+#include "texturing/texture.h"
 #include "renderscene.h"
 #include "cascadedmap.h"
 
@@ -35,11 +35,11 @@ namespace geeL {
 	CascadedDirectionalShadowMap::CascadedDirectionalShadowMap(const Light& light, const SceneCamera& camera, 
 		float shadowBias, unsigned int resolution)
 			: CascadedShadowMap(light, 
-				std::unique_ptr<Texture>(new RenderTexture(
+				std::unique_ptr<Texture>(new Texture2D(
 					Resolution(resolution), 
-					ColorType::Depth32, 
-					WrapMode::ClampBorder, 
-					FilterMode::Linear)), 
+					ColorType::Depth32,
+					FilterMode::Linear,
+					WrapMode::ClampBorder)), 
 				shadowBias, 
 				resolution) {
 		
