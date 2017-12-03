@@ -1,6 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include "texturing/rendertexture3D.h"
+#include "texturing/texture.h"
 #include "lights/lightmanager.h"
 #include "transformation/transform.h"
 #include "cameras/camera.h"
@@ -14,7 +14,12 @@ namespace geeL {
 
 	VoxelTexture::VoxelTexture(const RenderScene& scene, unsigned int dimensions) 
 		: scene(scene), dimensions(dimensions)
-		, texture(new RenderTexture3D(dimensions, dimensions, dimensions, 7)) {
+		, texture(new Texture3D(dimensions, dimensions, dimensions, 7, 
+			ColorType::RGBA8, 
+			FilterMode::Trilinear, 
+			WrapMode::ClampBorder)) {
+
+		texture->mipmap();
 
 		FragmentShader frag = FragmentShader("shaders/voxelization/voxelizeTex.frag", true, false);
 		voxelShader = new SceneShader("shaders/voxelization/voxelize.vert", "shaders/voxelization/voxelize.geom",
