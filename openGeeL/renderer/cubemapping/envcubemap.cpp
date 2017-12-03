@@ -3,7 +3,7 @@
 #include <list>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
-#include "texturing/rendertexturecube.h"
+#include "texturing/texture.h"
 #include "shader/rendershader.h"
 #include "texturing/envmap.h"
 #include "framebuffer/framebuffer.h"
@@ -19,10 +19,10 @@ namespace geeL {
 		CubeBuffer& frameBuffer, 
 		unsigned int resolution)
 			: CubeMap(std::unique_ptr<TextureCube>(
-				new RenderTextureCube(resolution,
-					ColorType::RGB16, 
-					WrapMode::ClampEdge, 
-					FilterMode::Trilinear))) {
+				new TextureCube(resolution,
+					ColorType::RGB16,
+					FilterMode::Trilinear,
+					WrapMode::ClampEdge))) {
 
 		draw(map, frameBuffer);
 	}

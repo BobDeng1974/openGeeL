@@ -2,7 +2,7 @@
 #include <glew.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
-#include "texturing/rendertexturecube.h"
+#include "texturing/texture.h"
 #include "framebuffer/framebuffer.h"
 #include "framebuffer/cubebuffer.h"
 #include "transformation/transform.h"
@@ -25,7 +25,10 @@ namespace geeL {
 		float depth, 
 		std::string name)
 			: DynamicCubeMap(std::unique_ptr<TextureCube>(
-				new RenderTextureCube(resolution)))
+				new TextureCube(resolution, 
+					ColorType::RGB16, 
+					FilterMode::Linear,
+					WrapMode::ClampEdge)))
 			, SceneObject(transform, name)
 			, frameBuffer(frameBuffer)
 			, width(width)

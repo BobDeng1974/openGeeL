@@ -1,6 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include "texturing/rendertexturecube.h"
+#include "texturing/texture.h"
 #include "glwrapper/viewport.h"
 #include "cubebuffer.h"
 

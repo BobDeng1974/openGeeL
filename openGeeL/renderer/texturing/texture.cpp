@@ -483,14 +483,20 @@ namespace geeL {
 
 	TextureCube::TextureCube(unsigned int resolution, ColorType colorType)
 		: Texture(colorType)
-		, resolution(resolution) {}
+		, resolution(resolution) {
+	
+		bind();
+		unsigned char* zero = 0;
+		initStorage(zero);
+		unbind();
+	}
 
 	TextureCube::TextureCube(unsigned int resolution,
 		ColorType colorType,
 		FilterMode filterMode,
 		WrapMode wrapMode)
-		: Texture(colorType)
-		, resolution(resolution) {
+			: Texture(colorType)
+			, resolution(resolution) {
 
 		bind();
 		unsigned char* zero = 0;
@@ -505,8 +511,8 @@ namespace geeL {
 		FilterMode filterMode,
 		WrapMode wrapMode,
 		unsigned char * images[6])
-		: Texture(colorType)
-		, resolution(resolution) {
+			: Texture(colorType)
+			, resolution(resolution) {
 
 		bind();
 		initStorage(images);
