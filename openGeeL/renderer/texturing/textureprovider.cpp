@@ -3,35 +3,12 @@
 #include "framebuffer/gbuffer.h"
 #include "utility/resolution.h"
 #include "window.h"
+#include "texturewrapper.h"
 #include "rendertexture.h"
 #include "textureparams.h"
 #include "textureprovider.h"
 
 namespace geeL {
-
-	TextureWrapper::TextureWrapper(RenderTexture& texture, 
-		std::function<void(RenderTexture&)>& onDestroy) 
-			: texture(&texture)
-			, onDestroy(onDestroy) {}
-
-
-	TextureWrapper::TextureWrapper(TextureWrapper&& other) : texture(other.texture), 
-		onDestroy(other.onDestroy) {
-
-		other.texture = nullptr;
-	}
-
-	TextureWrapper::~TextureWrapper() {
-		if(texture != nullptr)
-			onDestroy(*texture);
-	}
-
-	RenderTexture& TextureWrapper::getTexture() {
-		assert(texture != nullptr);
-
-		return *texture;
-	}
-
 
 	TextureProvider::TextureProvider(const RenderWindow& window, GBuffer& gBuffer) 
 		: window(window)
@@ -40,7 +17,6 @@ namespace geeL {
 		, specular(nullptr) {
 
 		callback = [this](RenderTexture& texture) { returnTexture(texture); };
-
 	}
 
 	TextureProvider::~TextureProvider() {
@@ -60,6 +36,7 @@ namespace geeL {
 			}
 		}
 	}
+
 
 	const RenderTexture& TextureProvider::requestAlbedo() const {
 		return gBuffer.getDiffuse();

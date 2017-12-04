@@ -130,28 +130,6 @@ namespace geeL {
 
 	};
 
-
-
-	class TextureWrapper {
-
-	public:
-		TextureWrapper(RenderTexture& texture, std::function<void(RenderTexture&)>& onDestroy);
-		TextureWrapper(TextureWrapper&& other);
-		~TextureWrapper();
-
-		RenderTexture& getTexture();
-
-	private:
-		RenderTexture* texture;
-		std::function<void(RenderTexture&)>& onDestroy;
-
-		TextureWrapper() = delete;
-		TextureWrapper(const TextureWrapper& other) = delete;
-		TextureWrapper& operator=(const TextureWrapper& other) = delete;
-		TextureWrapper& operator=(TextureWrapper&& other) = delete;
-
-	};
-
 }
 
 #endif

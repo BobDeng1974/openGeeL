@@ -1022,6 +1022,9 @@
     <ClInclude Include="renderer\utility\functionguard.h">
       <Filter>renderer\utility</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\texturing\texturewrapper.h">
+      <Filter>renderer\texturing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\combine.frag">

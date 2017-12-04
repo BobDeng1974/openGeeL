@@ -441,6 +441,7 @@
     <ClInclude Include="renderer\texturing\texture.h" />
     <ClInclude Include="renderer\texturing\texturetoken.h" />
     <ClInclude Include="renderer\texturing\texturetype.h" />
+    <ClInclude Include="renderer\texturing\texturewrapper.h" />
     <ClInclude Include="renderer\transformation\transform.h" />
     <ClInclude Include="renderer\transformation\transformfactory.h" />
     <ClInclude Include="renderer\utility\debug.h" />
