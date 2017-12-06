@@ -516,6 +516,9 @@
     <ClCompile Include="memory\simplepool.cpp">
       <Filter>memory</Filter>
     </ClCompile>
+    <ClCompile Include="application\scripting\component.cpp">
+      <Filter>application\scripting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\texturing\texture.h">

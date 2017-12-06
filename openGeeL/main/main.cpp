@@ -12,21 +12,6 @@
 #include "testscene.h"
 #include "capsulescene.h"
 
-#include "simplepool.h"
-#include "defaultmemory.h"
-
-using namespace geeL::memory;
-
-
-struct Foo {
-
-	int i;
-	float f;
-
-	Foo(int i, float f) : i(i), f(f) {}
-
-};
-
 int main(int argc, char* argv[]) {
 	ApplicationManagerInstance instance;
 
@@ -54,27 +39,11 @@ int main(int argc, char* argv[]) {
 	//SponzaGIScene::draw();
 	//ScienceScene::draw();
 	//CharacterViewer::draw();
-	//ModelViewer::draw();
+	ModelViewer::draw();
 	//CapsuleScene::draw();
 
 	//TestScene::draw();
 	//RaymarchTest::draw();
-
-
-	//SimplePool pool(1000);
-	DefaultMemory pool;
-
-	//Foo* ayy = new(pool.allocate(sizeof(Foo))) Foo(5, 13.4f);
-
-	Foo* ayy = reinterpret_cast<Foo*>(pool.allocate(sizeof(Foo)));
-	ayy->Foo::Foo(5, 13.5f);
-
-
-	std::cout << ayy->f << ": "  << ": " << sizeof(Foo) << "\n";
-
-	pool.deallocate(ayy);
-
-	getchar();
 
 	return 0;
 }

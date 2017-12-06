@@ -48,6 +48,9 @@ namespace geeL {
 
 		Transform& getTransform();
 
+		void* operator new(size_t size);
+		void  operator delete(void* pointer);
+
 	protected:
 		Property<bool> active;
 		std::string name;

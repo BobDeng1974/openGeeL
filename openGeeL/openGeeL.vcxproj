@@ -156,6 +156,7 @@
     <ClCompile Include="application\configuration.cpp" />
     <ClCompile Include="application\inputmanager.cpp" />
     <ClCompile Include="application\luaconfig.cpp" />
+    <ClCompile Include="application\scripting\component.cpp" />
     <ClCompile Include="application\scripting\luacomp.cpp" />
     <ClCompile Include="application\scripting\luatypes.cpp" />
     <ClCompile Include="application\threading.cpp" />

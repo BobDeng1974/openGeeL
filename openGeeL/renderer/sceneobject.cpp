@@ -1,9 +1,12 @@
 #include <algorithm>
 #include <iostream>
 #include "transformation/transform.h"
+#include "memory.h"
+#include "appmanager.h"
 #include "sceneobject.h"
 
 using namespace std;
+using namespace geeL::memory;
 
 namespace geeL {
 
@@ -58,6 +61,17 @@ namespace geeL {
 
 	Transform& SceneObject::getTransform() {
 		return transform;
+	}
+
+
+	void* SceneObject::operator new(size_t size) {
+		Memory& memory = ApplicationManager::getCurrentMemory();
+		return memory.allocate(size);
+	}
+
+	void SceneObject::operator delete(void* pointer) {
+		Memory& memory = ApplicationManager::getCurrentMemory();
+		memory.deallocate(pointer);
 	}
 
 }

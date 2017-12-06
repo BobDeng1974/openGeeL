@@ -148,8 +148,8 @@ ssrr = {
 }
 
 dof = {
-	aperture = 60,
-	focalLength = 10,
+	aperture = 45,
+	focalLength = 2,
 	blurSigma = 10,
 	resolution = 0.4
 }

@@ -13,6 +13,9 @@ namespace geeL {
 	public:
 		virtual ~Component() {}
 
+		void* operator new(size_t size);
+		void  operator delete(void* pointer);
+
 	protected:
 		SceneObject* sceneObject;
 
@@ -39,9 +42,7 @@ namespace geeL {
 	};
 
 
-	inline void Component::setSceneObject(SceneObject& object) {
-		sceneObject = &object;
-	}
+	
 
 	template<class Object>
 	inline void GenericComponent<Object>::setSceneObject(SceneObject& object) {
