@@ -3,6 +3,8 @@
 #include "application.h"
 #include "appmanager.h"
 
+using namespace geeL::memory;
+
 namespace geeL {
 	
 	std::list<Application*> ApplicationManager::apps;
@@ -27,6 +29,24 @@ namespace geeL {
 		}
 
 		ApplicationManager::apps.clear();
+	}
+
+	Memory& ApplicationManager::getCurrentMemory() {
+#if MULTI_APPLICATION_SUPPORT
+		for (auto it(ApplicationManager::applicationsBegin()); it != ApplicationManager::applicationsEnd(); it++) {
+			Application& app = **it;
+			const ContinuousThread* thread = app.getCurrentThread();
+
+			if (thread != nullptr) return app.getMemory();
+		}
+
+		throw "Current application has no memory\n";
+
+#else
+		Application& app = ApplicationManager::getFirst();
+		return app.getMemory();
+
+#endif
 	}
 
 

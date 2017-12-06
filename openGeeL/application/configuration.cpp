@@ -1,9 +1,12 @@
 #include "framebuffer/tbuffer.h"
+#include "defaultmemory.h"
 #include "shader/uniformstack.h"
 #include "texturing/textureparams.h"
 #include "texturing/textureprovider.h"
 #include "appmanager.h"
 #include "configuration.h"
+
+using namespace geeL::memory;
 
 namespace geeL {
 
@@ -46,7 +49,8 @@ namespace geeL {
 		renderer.addFBuffer(fBuffer);
 
 		ContinuousSingleThread renderThread(renderer);
-		Application& app = ApplicationManager::createApplication(window, manager, renderThread);
+		DefaultMemory memory;
+		Application& app = ApplicationManager::createApplication(window, manager, renderThread, memory);
 
 		std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
 			[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };

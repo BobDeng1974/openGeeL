@@ -136,7 +136,7 @@
       <SDLCheck>true</SDLCheck>
       <ShowIncludes>
       </ShowIncludes>
-      <AdditionalIncludeDirectories>dependencies/stb;dependencies/nuklear;dependencies/bullet/src;dependencies/assimp;physics/;dependencies/lua/lua/lua-5.3.0/src/;dependencies/lua/sol2/;application/;interface/;renderer/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>dependencies/stb;dependencies/nuklear;dependencies/bullet/src;dependencies/assimp;physics/;dependencies/lua/lua/lua-5.3.0/src/;dependencies/lua/sol2/;application/;interface/;renderer/;memory/</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -171,6 +171,7 @@
     <ClCompile Include="interface\snippets\postsnippets.cpp" />
     <ClCompile Include="main\raymarchscene.cpp" />
     <ClCompile Include="main\main.cpp" />
+    <ClCompile Include="memory\simplepool.cpp" />
     <ClCompile Include="physics\collider.cpp" />
     <ClCompile Include="physics\motionstate.cpp" />
     <ClCompile Include="physics\rigidbody.cpp" />
@@ -322,6 +323,10 @@
     <ClInclude Include="main\sciencescene.h" />
     <ClInclude Include="main\testscene.h" />
     <ClInclude Include="main\capsulescene.h" />
+    <ClInclude Include="memory\defaultmemory.h" />
+    <ClInclude Include="memory\memory.h" />
+    <ClInclude Include="memory\poolallocator.h" />
+    <ClInclude Include="memory\simplepool.h" />
     <ClInclude Include="physics\collider.h" />
     <ClInclude Include="physics\motionstate.h" />
     <ClInclude Include="physics\physics.h" />

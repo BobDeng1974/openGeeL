@@ -12,15 +12,17 @@
 #include "application.h"
  
 using namespace std;
+using namespace geeL::memory;
 
 namespace geeL {
 
 	Application::Application(RenderWindow& window, 
 		InputManager& inputManager, 
-		ContinuousThread& mainThread)
+		ContinuousThread& mainThread,
+		Memory& memory)
 			: window(window)
-			, inputManager(inputManager) {
-	
+			, inputManager(inputManager)
+			, memory(memory) {
 
 		auto exit = [&window](int key, int scancode, int action, int mode) {
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -92,6 +94,10 @@ namespace geeL {
 		}
 
 		return Time();
+	}
+
+	memory::Memory& Application::getMemory() {
+		return memory;
 	}
 
 	void Application::initThreads() {

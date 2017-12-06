@@ -9,6 +9,10 @@
 
 namespace geeL {
 
+	namespace memory {
+		class Memory;
+	}
+	
 	using ThreadID = std::thread::id;
 
 	class RenderWindow;
@@ -21,7 +25,8 @@ namespace geeL {
 	public:
 		Application(RenderWindow& window, 
 			InputManager& inputManager,
-			ContinuousThread& mainThread);
+			ContinuousThread& mainThread,
+			memory::Memory& memory);
 
 		void run();
 		void addThread(ContinuousThread& thread);
@@ -31,9 +36,12 @@ namespace geeL {
 		const ContinuousThread* const getCurrentThread();
 		Time getCurrentTime();
 
+		memory::Memory& getMemory();
+
 	private:
 		RenderWindow& window;
 		InputManager& inputManager;
+		memory::Memory& memory;
 
 		AtomicWrapper<bool> close;
 		std::mutex threadLock;

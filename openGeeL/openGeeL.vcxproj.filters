@@ -97,6 +97,9 @@
     <Filter Include="renderer\glwrapper">
       <UniqueIdentifier>{0eec6da4-46b2-4c71-9cd2-7e53a9f813c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="memory">
+      <UniqueIdentifier>{ea024874-7c32-4682-a4c3-4e7113ce7087}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main\main.cpp">
@@ -509,6 +512,9 @@
     </ClCompile>
     <ClCompile Include="renderer\texturing\texturetarget.cpp">
       <Filter>renderer\texturing</Filter>
+    </ClCompile>
+    <ClCompile Include="memory\simplepool.cpp">
+      <Filter>memory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1024,6 +1030,18 @@
     </ClInclude>
     <ClInclude Include="renderer\texturing\texturewrapper.h">
       <Filter>renderer\texturing</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\simplepool.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\poolallocator.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\memory.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\defaultmemory.h">
+      <Filter>memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -17,6 +17,7 @@
 #include "renderer/rendercontext.h"
 #include "texturing/textureprovider.h"
 #include "shader/uniformstack.h"
+#include "defaultmemory.h"
 #include "application.h"
 #include "appmanager.h"
 #include "raymarchscene.h"
@@ -48,7 +49,8 @@ void RaymarchTest::draw() {
 	renderer.setScene(scene);
 
 	ContinuousSingleThread renderThread(renderer);
-	Application& app = ApplicationManager::createApplication(window, manager, renderThread);
+	memory::DefaultMemory memory;
+	Application& app = ApplicationManager::createApplication(window, manager, renderThread, memory);
 
 	ContinuousSingleThread scriptingThread(scene);
 	app.addThread(scriptingThread);

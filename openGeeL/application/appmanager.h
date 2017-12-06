@@ -6,6 +6,10 @@
 
 namespace geeL {
 
+	namespace memory {
+		class Memory;
+	}
+
 	class Application;
 	class ContinuousThread;
 	class InputManager;
@@ -25,6 +29,8 @@ namespace geeL {
 		static std::list<Application*>::iterator applicationsEnd();
 
 		static void clear();
+
+		static memory::Memory& getCurrentMemory();
 
 	private:
 		static std::list<Application*> apps;

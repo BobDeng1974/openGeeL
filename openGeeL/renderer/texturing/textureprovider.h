@@ -6,7 +6,6 @@
 #include <list>
 #include "texturetype.h"
 
-
 namespace geeL {
 
 	enum class ResolutionPreset;
