@@ -1,12 +1,11 @@
 #ifndef MEMORYPOOL_H
 #define MEMORYPOOL_H
 
-typedef unsigned int WORD;
-typedef unsigned char BYTE;
-
-
 namespace geeL { 
 	namespace memory {
+
+		typedef unsigned int WORD;
+		typedef unsigned char BYTE;
 
 
 		class Memory {

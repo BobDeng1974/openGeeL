@@ -24,6 +24,8 @@ namespace geeL {
 
 			Chunk firstChunk(freeMemory);
 			firstChunk.write(poolMemory);
+
+			freeChunks.emplace(poolMemory);
 		}
 
 		SimplePool::~SimplePool(){
@@ -34,13 +36,15 @@ namespace geeL {
 		void* SimplePool::allocate(WORD size) {
 			WORD newSize = size + sizeof(Chunk);
 
-			//Search fitting chunk via iteration
-			Chunk* chunk = reinterpret_cast<Chunk*>(poolMemory);
-			while (chunk != nullptr) {
-				if (!chunk->used && size <= chunk->dataSize)
-					break;
+			Chunk* chunk = nullptr;
+			for (auto it(freeChunks.begin()); it != freeChunks.end(); it++) {
+				void* dat = *it;
 
-				chunk = chunk->next;
+				Chunk* currChunk = reinterpret_cast<Chunk*>(dat);
+				if (!currChunk->used && size <= currChunk->dataSize) {
+					chunk = currChunk;
+					break;
+				}
 			}
 
 			assert(chunk != nullptr);
@@ -67,6 +71,9 @@ namespace geeL {
 
 				chunk->next = allocatedChunk;
 				chunk->dataSize = size;
+
+				freeChunks.emplace(allocatedChunk);
+				freeChunks.erase(chunk);
 			}
 
 
@@ -91,6 +98,7 @@ namespace geeL {
 
 			//Previous chunk is unused and we need to merge
 			if (previous != nullptr && !previous->used) {
+				freeChunks.erase(previous);
 				headChunk = previous;
 				previous  = headChunk->previous;
 				next	  = chunk->next;
@@ -103,6 +111,7 @@ namespace geeL {
 
 			//Next chunk is unused and we need to merge
 			if (next != nullptr && !next->used) {
+				freeChunks.erase(next);
 				chunkSize += next->dataSize + sizeof(Chunk);
 				next = next->next;
 
@@ -118,6 +127,7 @@ namespace geeL {
 			newChunk.next = next;
 
 			newChunk.write(newData);
+			freeChunks.emplace(newData);
 		}
 
 	}
