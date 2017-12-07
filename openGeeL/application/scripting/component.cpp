@@ -1,5 +1,5 @@
+#include "memory/memory.h"
 #include "appmanager.h"
-#include "memory.h"
 #include "component.h"
 
 using namespace geeL::memory;

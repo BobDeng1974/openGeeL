@@ -1,5 +1,5 @@
 #include "framebuffer/tbuffer.h"
-#include "defaultmemory.h"
+#include "memory/defaultmemory.h"
 #include "shader/uniformstack.h"
 #include "texturing/textureparams.h"
 #include "texturing/textureprovider.h"

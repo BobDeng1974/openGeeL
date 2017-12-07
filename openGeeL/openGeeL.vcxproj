@@ -156,6 +156,7 @@
     <ClCompile Include="application\configuration.cpp" />
     <ClCompile Include="application\inputmanager.cpp" />
     <ClCompile Include="application\luaconfig.cpp" />
+    <ClCompile Include="application\memory\simplepool.cpp" />
     <ClCompile Include="application\scripting\component.cpp" />
     <ClCompile Include="application\scripting\luacomp.cpp" />
     <ClCompile Include="application\scripting\luatypes.cpp" />
@@ -172,7 +173,6 @@
     <ClCompile Include="interface\snippets\postsnippets.cpp" />
     <ClCompile Include="main\raymarchscene.cpp" />
     <ClCompile Include="main\main.cpp" />
-    <ClCompile Include="memory\simplepool.cpp" />
     <ClCompile Include="physics\collider.cpp" />
     <ClCompile Include="physics\motionstate.cpp" />
     <ClCompile Include="physics\rigidbody.cpp" />
@@ -298,6 +298,10 @@
     <ClInclude Include="application\configuration.h" />
     <ClInclude Include="application\inputmanager.h" />
     <ClInclude Include="application\luaconfig.h" />
+    <ClInclude Include="application\memory\defaultmemory.h" />
+    <ClInclude Include="application\memory\memory.h" />
+    <ClInclude Include="application\memory\poolallocator.h" />
+    <ClInclude Include="application\memory\simplepool.h" />
     <ClInclude Include="application\objectwrapper.h" />
     <ClInclude Include="application\scripting\component.h" />
     <ClInclude Include="application\scripting\luacomp.h" />
@@ -324,10 +328,6 @@
     <ClInclude Include="main\sciencescene.h" />
     <ClInclude Include="main\testscene.h" />
     <ClInclude Include="main\capsulescene.h" />
-    <ClInclude Include="memory\defaultmemory.h" />
-    <ClInclude Include="memory\memory.h" />
-    <ClInclude Include="memory\poolallocator.h" />
-    <ClInclude Include="memory\simplepool.h" />
     <ClInclude Include="physics\collider.h" />
     <ClInclude Include="physics\motionstate.h" />
     <ClInclude Include="physics\physics.h" />

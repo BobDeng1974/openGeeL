@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include "transformation/transform.h"
-#include "memory.h"
+#include "memory/memory.h"
 #include "appmanager.h"
 #include "sceneobject.h"
 
