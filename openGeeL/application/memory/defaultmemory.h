@@ -9,6 +9,8 @@ namespace geeL {
 		class DefaultMemory : public Memory {
 
 		public:
+			virtual ~DefaultMemory() {}
+
 			virtual void* allocate(WORD size);
 			virtual void  deallocate(void* data);
 

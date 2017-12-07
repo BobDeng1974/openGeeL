@@ -22,6 +22,7 @@ namespace geeL {
 
 	void Configuration::run() {
 		InputManager manager;
+		DefaultMemory memory;
 
 		geeL::Transform& world = Transform(glm::vec3(0.f), vec3(0.f), vec3(1.f));
 		TransformFactory& transFactory = TransformFactory(world);
@@ -49,7 +50,7 @@ namespace geeL {
 		renderer.addFBuffer(fBuffer);
 
 		ContinuousSingleThread renderThread(renderer);
-		DefaultMemory memory;
+		
 		Application& app = ApplicationManager::createApplication(window, manager, renderThread, memory);
 
 		std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =

@@ -11,6 +11,8 @@ namespace geeL {
 		class Memory {
 
 			public:
+				virtual ~Memory() {}
+
 				virtual void* allocate(WORD size) = 0;
 				virtual void  deallocate(void* data) = 0;
 		};
@@ -19,6 +21,8 @@ namespace geeL {
 		class MemoryPool : public Memory {
 
 		public:
+			virtual ~MemoryPool() {}
+
 			virtual void* allocate(WORD size) = 0;
 			virtual void  deallocate(void* data) = 0;
 
@@ -30,7 +34,7 @@ namespace geeL {
 			WORD totalMemory;
 
 			MemoryPool();
-			virtual ~MemoryPool() {}
+			
 
 		};
 

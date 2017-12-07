@@ -22,7 +22,7 @@ namespace geeL {
 
 		public:
 			SimplePool(WORD totalSize);
-			~SimplePool();
+			virtual ~SimplePool();
 
 			virtual void* allocate(WORD size);
 			virtual void  deallocate(void* data);

@@ -71,7 +71,7 @@ namespace geeL {
 
 	void SceneObject::operator delete(void* pointer) {
 		Memory& memory = ApplicationManager::getCurrentMemory();
-		memory.deallocate(pointer);
+		//memory.deallocate(pointer);
 	}
 
 }

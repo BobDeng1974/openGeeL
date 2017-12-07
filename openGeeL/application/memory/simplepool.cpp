@@ -16,8 +16,10 @@ namespace geeL {
 		}
 
 
+
 		SimplePool::SimplePool(WORD totalSize) 
 			: currentUsed(nullptr) {
+
 			totalMemory = totalSize;
 			freeMemory  = totalSize - sizeof(Chunk);
 
