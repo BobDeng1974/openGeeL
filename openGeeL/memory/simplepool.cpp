@@ -16,7 +16,8 @@ namespace geeL {
 		}
 
 
-		SimplePool::SimplePool(WORD totalSize) {
+		SimplePool::SimplePool(WORD totalSize) 
+			: currentUsed(nullptr) {
 			totalMemory = totalSize;
 			freeMemory  = totalSize - sizeof(Chunk);
 
@@ -25,7 +26,8 @@ namespace geeL {
 			Chunk firstChunk(freeMemory);
 			firstChunk.write(poolMemory);
 
-			freeChunks.emplace(poolMemory);
+			Chunk* allocatedChunk = reinterpret_cast<Chunk*>(poolMemory);
+			currentFree = allocatedChunk;
 		}
 
 		SimplePool::~SimplePool(){
@@ -36,15 +38,13 @@ namespace geeL {
 		void* SimplePool::allocate(WORD size) {
 			WORD newSize = size + sizeof(Chunk);
 
-			Chunk* chunk = nullptr;
-			for (auto it(freeChunks.begin()); it != freeChunks.end(); it++) {
-				void* dat = *it;
-
-				Chunk* currChunk = reinterpret_cast<Chunk*>(dat);
-				if (!currChunk->used && size <= currChunk->dataSize) {
-					chunk = currChunk;
+			//Search fitting chunk via iteration
+			Chunk* chunk = currentFree;
+			while (chunk != nullptr) {
+				if (size <= chunk->dataSize)
 					break;
-				}
+
+				chunk = chunk->next;
 			}
 
 			assert(chunk != nullptr);
@@ -58,24 +58,28 @@ namespace geeL {
 			if (newFreeSize >= minChunkSize) {
 				Chunk newChunk(newFreeSize);
 
-				newChunk.previous = chunk;
 				newChunk.next = chunk->next;
-
 				newChunk.write(data + newSize); //Move it behind current chunk
+
 				Chunk* allocatedChunk = reinterpret_cast<Chunk*>(data + newSize);
+				currentFree = allocatedChunk;
 
 				if (allocatedChunk->next != nullptr) {
 					Chunk* nextChunk = allocatedChunk->next;
 					nextChunk->previous = allocatedChunk;
 				}
 
-				chunk->next = allocatedChunk;
+				chunk->previous = currentUsed;
+				currentUsed = chunk;
+
+				if (chunk->previous != nullptr) {
+					Chunk* previousUsed = chunk->previous;
+					previousUsed->next = chunk;
+				}
+
+				chunk->next = nullptr;
 				chunk->dataSize = size;
-
-				freeChunks.emplace(allocatedChunk);
-				freeChunks.erase(chunk);
 			}
-
 
 			return data + sizeof(Chunk);
 		}
@@ -90,44 +94,54 @@ namespace geeL {
 			WORD chunkSize = chunk->dataSize + sizeof(Chunk);
 			freeMemory += chunkSize;
 
-			Chunk* headChunk = chunk;
-			Chunk* previous = chunk->previous;
-			Chunk* next		= chunk->next;
+			Chunk* previousUsed = chunk->previous;
+			Chunk* nextUsed		= chunk->next;
 
-			//Try merging chunks if neighours are also unused
+			if (previousUsed != nullptr)
+				previousUsed->next = nextUsed;
 
-			//Previous chunk is unused and we need to merge
-			if (previous != nullptr && !previous->used) {
-				freeChunks.erase(previous);
-				headChunk = previous;
-				previous  = headChunk->previous;
-				next	  = chunk->next;
+			if (nextUsed != nullptr)
+				nextUsed->previous = previousUsed;
 
-				chunkSize += headChunk->dataSize + sizeof(Chunk);
+			chunk->used = false;
+			chunk->previous = nullptr;
+			chunk->next = currentFree;
+			currentFree->previous = chunk;
+			currentFree = chunk;
 
-				if (next != nullptr)
-					next->previous = headChunk;
+			//Try merging chunks if next one (in memory) is also free
+			
+			void* nextData = d + chunk->dataSize;
+			while (inBounds(nextData)) {
+				Chunk* next = reinterpret_cast<Chunk*>(nextData);
+
+				if (!next->used) {
+					chunkSize += next->dataSize + sizeof(Chunk);
+
+					//Remove this element from current linked list position
+					Chunk* nextPrevious = next->previous;
+					Chunk* nextNext     = next->next;
+
+					if (nextPrevious != nullptr)
+						nextPrevious->next = nextNext;
+
+					if (nextNext != nullptr)
+						nextNext->previous = nextPrevious;
+
+					//Write new combined chunk into memory
+					WORD newDataSize = chunkSize - sizeof(Chunk);
+					chunk->dataSize = newDataSize;
+				}
+				else 
+					break;
+
+				BYTE* dat = reinterpret_cast<BYTE*>(next);
+				nextData = dat + next->dataSize + sizeof(Chunk);
 			}
+		}
 
-			//Next chunk is unused and we need to merge
-			if (next != nullptr && !next->used) {
-				freeChunks.erase(next);
-				chunkSize += next->dataSize + sizeof(Chunk);
-				next = next->next;
-
-				if (next != nullptr)
-					next->previous = headChunk;
-			}
-
-
-			BYTE* newData = reinterpret_cast<BYTE*>(headChunk);
-			WORD newDataSize = chunkSize - sizeof(Chunk);
-			Chunk newChunk(newDataSize);
-			newChunk.previous = previous;
-			newChunk.next = next;
-
-			newChunk.write(newData);
-			freeChunks.emplace(newData);
+		bool SimplePool::inBounds(void* data) const {
+			return data >= poolMemory && data < (poolMemory + totalMemory);
 		}
 
 	}

@@ -101,7 +101,7 @@ public:
 			scene.addRequester(ray);
 			postLister.add(raySmooth, godRaySnippet);
 
-			FXAA& fxaa = FXAA(0.02f, 0.15f);
+			FXAA& fxaa = FXAA(0.02f, 0.4f);
 			renderer.addEffect(fxaa, DrawTime::Late);
 			postLister.add(fxaa);
 

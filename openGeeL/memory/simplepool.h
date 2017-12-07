@@ -1,8 +1,6 @@
 #ifndef SIMPLEPOOL_H
 #define SIMPLEPOOL_H
 
-#include <set>
-#include <iostream>
 #include "memory.h"
 
 namespace geeL {
@@ -32,8 +30,11 @@ namespace geeL {
 		private:
 			static const BYTE minChunkSize = 16;
 			BYTE* poolMemory;
-			
-			std::set<void*> freeChunks;
+
+			Chunk* currentUsed;
+			Chunk* currentFree;
+
+			bool inBounds(void* data) const;
 
 		};
 	}

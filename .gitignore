@@ -5,6 +5,7 @@ x64/
 resources/
 *.sdf
 *.opendb
+openGeeL/openGeeL.exe
 openGeeL/GPATH4
 openGeeL/GRTAGS
 openGeeL/GTAGS
