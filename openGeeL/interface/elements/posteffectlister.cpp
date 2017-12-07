@@ -39,8 +39,10 @@ namespace geeL {
 				for (auto it(snippets.begin()); it != snippets.end(); it++) {
 					GUISnippet& snippet = *it->second;
 
+					unsigned int snippetID = reinterpret_cast<unsigned int>(&snippet);
+
 					std::string name = std::to_string(counter) + ". " + snippet.toString();
-					if (nk_tree_push(context, NK_TREE_NODE, name.c_str(), NK_MINIMIZED)) {
+					if (nk_tree_push_id(context, NK_TREE_NODE, name.c_str(), NK_MINIMIZED, snippetID)) {
 						snippet.draw(context);
 						nk_tree_pop(context);
 					}

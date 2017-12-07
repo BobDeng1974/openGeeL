@@ -39,10 +39,11 @@ namespace geeL {
 		: SceneObjectSnippet(mesh), mesh(mesh) {}
 
 	void MeshRendererSnippet::draw(GUIContext* context) {
+		unsigned int id = mesh.transform.getID();
 
 		std::string number = "#" + std::to_string(mesh.transform.getID());
-		std::string id = mesh.getName() + " " + number;
-		if (nk_tree_push(context, NK_TREE_NODE, id.c_str(), NK_MINIMIZED)) {
+		std::string name = mesh.getName() + " " + number;
+		if (nk_tree_push_id(context, NK_TREE_NODE, name.c_str(), NK_MINIMIZED, id)) {
 			SceneObjectSnippet::draw(context);
 
 			std::string materials = "Materials " + number;
@@ -89,9 +90,10 @@ namespace geeL {
 
 
 	void LightSnippet::draw(GUIContext* context) {
+		unsigned int id = light.transform.getID();
 
-		std::string id = light.getName() + " #" + std::to_string(light.transform.getID());
-		if (nk_tree_push(context, NK_TREE_NODE, id.c_str(), NK_MINIMIZED)) {
+		std::string name = light.getName() + " #" + std::to_string(light.transform.getID());
+		if (nk_tree_push_id(context, NK_TREE_NODE, name.c_str(), NK_MINIMIZED, id)) {
 			SceneObjectSnippet::draw(context);
 
 			vec3 color = light.getColor();
@@ -128,9 +130,10 @@ namespace geeL {
 		: CameraSnippet(pcam), pcam(pcam) {}
 
 	void PerspectiveCameraSnippet::draw(GUIContext* context) {
+		unsigned int id = pcam.transform.getID();
 
-		std::string id = pcam.getName() + " #" + std::to_string(pcam.transform.getID());
-		if (nk_tree_push(context, NK_TREE_NODE, id.c_str(), NK_MINIMIZED)) {
+		std::string name = pcam.getName() + " #" + std::to_string(pcam.transform.getID());
+		if (nk_tree_push_id(context, NK_TREE_NODE, name.c_str(), NK_MINIMIZED, id)) {
 			CameraSnippet::draw(context);
 
 			float fov = GUISnippets::drawBarFloat(context, pcam.getFieldOfView(), 1.f, 170.f, 1.f, "FoV");
