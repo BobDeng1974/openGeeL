@@ -162,6 +162,7 @@
     <ClCompile Include="application\scripting\luatypes.cpp" />
     <ClCompile Include="application\threading.cpp" />
     <ClCompile Include="application\window.cpp" />
+    <ClCompile Include="interface\elements\lister.cpp" />
     <ClCompile Include="interface\elements\objectlister.cpp" />
     <ClCompile Include="interface\elements\posteffectlister.cpp" />
     <ClCompile Include="interface\elements\systeminformation.cpp" />
@@ -308,6 +309,7 @@
     <ClInclude Include="application\scripting\luatypes.h" />
     <ClInclude Include="application\threading.h" />
     <ClInclude Include="application\window.h" />
+    <ClInclude Include="interface\elements\lister.h" />
     <ClInclude Include="interface\elements\objectlister.h" />
     <ClInclude Include="interface\elements\posteffectlister.h" />
     <ClInclude Include="interface\elements\systeminformation.h" />

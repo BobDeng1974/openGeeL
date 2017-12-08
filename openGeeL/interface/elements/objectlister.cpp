@@ -16,14 +16,8 @@
 
 namespace geeL {
 
-	ObjectLister::ObjectLister(Scene& scene, 
-		RenderWindow& window, 
-		float x, 
-		float y, 
-		float width, 
-		float height) 
-			: GUIElement(window, x, y, width, height)
-			, scene(scene) {
+	ObjectLister::ObjectLister(Scene& scene) 
+		: scene(scene) {
 
 		scene.iterRenderObjects([&](MeshRenderer& renderer) {
 			add(renderer);
@@ -65,43 +59,38 @@ namespace geeL {
 
 
 	void ObjectLister::draw(GUIContext* context) {
+		if (nk_tree_push(context, NK_TREE_NODE, "Cameras", NK_MINIMIZED)) {
 
-		if (nk_begin(context, "Scene", nk_rect(x, y, width, height),
-			NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
-			NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE)) {
-
-			if (nk_tree_push(context, NK_TREE_NODE, "Cameras", NK_MAXIMIZED)) {
-
-				for (auto it = cameraSnippets.begin(); it != cameraSnippets.end(); it++) {
-					GUISnippet& snippet = **it;
-					snippet.draw(context);
-				}
-
-				nk_tree_pop(context);
-			}
-			
-			if (nk_tree_push(context, NK_TREE_NODE, "Lights", NK_MAXIMIZED)) {
-
-				for (auto it = lightSnippets.begin(); it != lightSnippets.end(); it++) {
-					GUISnippet& snippet = **it;
-					snippet.draw(context);
-				}
-				
-				nk_tree_pop(context);
-			}
-			
-			if (nk_tree_push(context, NK_TREE_NODE, "Objects", NK_MAXIMIZED)) {
-				for (auto it = objectSnippets.begin(); it != objectSnippets.end(); it++) {
-					GUISnippet& snippet = **it;
-					snippet.draw(context);
-				}
-
-				nk_tree_pop(context);
+			for (auto it = cameraSnippets.begin(); it != cameraSnippets.end(); it++) {
+				GUISnippet& snippet = **it;
+				snippet.draw(context);
 			}
 
+			nk_tree_pop(context);
 		}
+			
+		if (nk_tree_push(context, NK_TREE_NODE, "Lights", NK_MAXIMIZED)) {
 
-		nk_end(context);
+			for (auto it = lightSnippets.begin(); it != lightSnippets.end(); it++) {
+				GUISnippet& snippet = **it;
+				snippet.draw(context);
+			}
+				
+			nk_tree_pop(context);
+		}
+			
+		if (nk_tree_push(context, NK_TREE_NODE, "Objects", NK_MAXIMIZED)) {
+			for (auto it = objectSnippets.begin(); it != objectSnippets.end(); it++) {
+				GUISnippet& snippet = **it;
+				snippet.draw(context);
+			}
+
+			nk_tree_pop(context);
+		}
+	}
+
+	std::string ObjectLister::toString() const {
+		return "Object lister";
 	}
 
 

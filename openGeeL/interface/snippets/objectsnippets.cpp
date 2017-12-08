@@ -48,8 +48,7 @@ namespace geeL {
 
 			unsigned int materialsID = id + 1;
 
-			std::string materials = "Materials";
-			if (nk_tree_push_id(context, NK_TREE_NODE, materials.c_str(), NK_MINIMIZED, materialsID)) {
+			if (nk_tree_push_id(context, NK_TREE_NODE, "Materials", NK_MINIMIZED, materialsID)) {
 				auto defaultColor = context->style.tab.node_minimize_button.text_normal;
 
 				unsigned int counter = 0;

@@ -621,6 +621,7 @@ namespace geeL {
 			
 
 			//GUI initialization
+			ObjectLister* objectLister = nullptr;
 			PostProcessingEffectLister* postLister = nullptr;
 			
 			{
@@ -631,20 +632,25 @@ namespace geeL {
 					bool showEffects = guiInit["showEffects"].get_or(false);
 					bool showSystem = guiInit["showSystem"].get_or(false);
 
-					if (showObjects) {
-						unique_ptr<ObjectLister> objectLister(new ObjectLister(scene, window, 
-							0.01f, 0.01f, 0.17f, 0.35f));
-						objectLister->add(*camera);
-						gui.addElement<ObjectLister>(std::move(objectLister));
-					}
+					if (showObjects || showEffects) {
+						unique_ptr<GUILister> guiLister(new GUILister(window, 0.01f, 0.15f, 0.17f, 0.5f));
 
-					if (showEffects) {
-						postLister = new PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
-						gui.addElement(*postLister);
+						if (showObjects) {
+							objectLister = new ObjectLister(scene);
+							objectLister->add(*camera);
+							guiLister->add(*objectLister);
+						}
+
+						if (showEffects) {
+							postLister = new PostProcessingEffectLister();
+							guiLister->add(*postLister);
+						}
+
+						gui.addElement<GUILister>(std::move(guiLister));
 					}
 
 					if (showSystem)
-						gui.addSystemInformation(0.01f, 0.74f, 0.17f, 0.145f);
+						gui.addSystemInformation(0.01f, 0.655f, 0.17f, 0.14f);
 
 				}
 			}
@@ -851,6 +857,7 @@ namespace geeL {
 			if (camera != nullptr) delete camera;
 			if (skybox != nullptr) delete skybox;
 			if (postLister != nullptr) delete postLister;
+			if (objectLister != nullptr) delete objectLister;
 
 			for (auto effect(effects.begin()); effect != effects.end(); effect++)
 				delete *effect;

@@ -38,8 +38,8 @@ int main(int argc, char* argv[]) {
 	//ArthouseScene::draw();
 	//SponzaGIScene::draw();
 	//ScienceScene::draw();
-	//CharacterViewer::draw();
-	ModelViewer::draw();
+	CharacterViewer::draw();
+	//ModelViewer::draw();
 	//CapsuleScene::draw();
 
 	//TestScene::draw();

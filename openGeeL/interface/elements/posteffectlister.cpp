@@ -6,13 +6,6 @@
 
 namespace geeL {
 
-	PostProcessingEffectLister::PostProcessingEffectLister(RenderWindow& window, 
-		float x, 
-		float y, 
-		float width, 
-		float height)
-			: GUIElement(window, x, y, width, height) {}
-
 	PostProcessingEffectLister::~PostProcessingEffectLister() {
 		for (auto it(snippets.begin()); it != snippets.end(); it++) {
 			auto pair = *it;
@@ -28,33 +21,28 @@ namespace geeL {
 
 
 	void PostProcessingEffectLister::draw(GUIContext* context) {
-		
-		if (nk_begin(context, "Post Processing", nk_rect(x, y, width, height),
-			NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
-			NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE)) {
+		if (nk_tree_push(context, NK_TREE_NODE, "Effects", NK_MAXIMIZED)) {
+			unsigned int counter = 1;
+			for (auto it(snippets.begin()); it != snippets.end(); it++) {
+				GUISnippet& snippet = *it->second;
 
-			if (nk_tree_push(context, NK_TREE_NODE, "Effects", NK_MINIMIZED)) {
+				unsigned int snippetID = reinterpret_cast<unsigned int>(&snippet);
 
-				unsigned int counter = 1;
-				for (auto it(snippets.begin()); it != snippets.end(); it++) {
-					GUISnippet& snippet = *it->second;
-
-					unsigned int snippetID = reinterpret_cast<unsigned int>(&snippet);
-
-					std::string name = std::to_string(counter) + ". " + snippet.toString();
-					if (nk_tree_push_id(context, NK_TREE_NODE, name.c_str(), NK_MINIMIZED, snippetID)) {
-						snippet.draw(context);
-						nk_tree_pop(context);
-					}
-
-					counter++;
+				std::string name = std::to_string(counter) + ". " + snippet.toString();
+				if (nk_tree_push_id(context, NK_TREE_NODE, name.c_str(), NK_MINIMIZED, snippetID)) {
+					snippet.draw(context);
+					nk_tree_pop(context);
 				}
 
-				nk_tree_pop(context);
+				counter++;
 			}
-		}
 
-		nk_end(context);
+			nk_tree_pop(context);
+		}
+	}
+
+	std::string PostProcessingEffectLister::toString() const {
+		return "Post effect lister";
 	}
 
 	void PostProcessingEffectLister::add(PostEffectSnippet& snippet) {

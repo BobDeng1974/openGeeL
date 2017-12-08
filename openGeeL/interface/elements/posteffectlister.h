@@ -3,7 +3,7 @@
 
 #include <list>
 #include <memory>
-#include "guielement.h"
+#include "snippets/guisnippets.h"
 
 namespace geeL {
 
@@ -20,15 +20,13 @@ namespace geeL {
 	class VolumetricLight;
 	class VoxelConeTracer;
 
-	class PostProcessingEffectLister : public GUIElement {
+	class PostProcessingEffectLister : public GUISnippet {
 
 	public:
-		PostProcessingEffectLister(RenderWindow& window,
-			float x = 0.1f, float y = 0.1f, float width = 0.2f, float height = 0.2f);
-
 		virtual ~PostProcessingEffectLister();
 
-		virtual void draw(GUIContext* context);
+		virtual void draw(GUIContext* context); 
+		virtual std::string toString() const;
 
 		void add(PostEffectSnippet& snippet);
 		void add(std::unique_ptr<PostEffectSnippet>& snippet);

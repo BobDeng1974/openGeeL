@@ -72,12 +72,12 @@ public:
 			});
 
 
-			ObjectLister& objectLister = ObjectLister(scene, window, 0.01f, 0.01f, 0.17f, 0.35f);
+			ObjectLister& objectLister = ObjectLister(scene);
 			objectLister.add(camera);
-			gui.addElement(objectLister);
-			PostProcessingEffectLister& postLister = PostProcessingEffectLister(window, 0.01f, 0.375f, 0.17f, 0.35f);
-			gui.addElement(postLister);
-			gui.addSystemInformation(0.01f, 0.74f, 0.17f, 0.145f);
+			PostProcessingEffectLister postLister;
+			GUILister& lister = GUILister(window, 0.01f, 0.15f, 0.17f, 0.5f, objectLister, postLister);
+			gui.addElement(lister);
+			gui.addSystemInformation(0.01f, 0.655f, 0.17f, 0.14f);
 
 			def.setExposure(2.5f);
 			postLister.add(def);

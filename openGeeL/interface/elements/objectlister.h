@@ -2,11 +2,10 @@
 #define OBJECTLISTER_H
 
 #include <list>
-#include "guielement.h"
+#include "snippets/guisnippets.h"
 
 namespace geeL {
 
-	class GUISnippet;
 	class SceneObject;
 	class SceneCamera;
 	class PerspectiveCamera;
@@ -16,14 +15,14 @@ namespace geeL {
 	class ShadowMapSnippet;
 	class SimpleShadowMap;
 
-	class ObjectLister : public GUIElement {
+	class ObjectLister : public GUISnippet {
 
 	public:
-		ObjectLister(Scene& scene, RenderWindow& window, 
-			float x = 0.1f, float y = 0.1f, float width = 0.2f, float height = 0.2f);
+		ObjectLister(Scene& scene);
 		virtual ~ObjectLister();
 
 		virtual void draw(GUIContext* context);
+		virtual std::string toString() const;
 
 		void add(SceneObject& obj);
 		void add(SceneCamera& cam);

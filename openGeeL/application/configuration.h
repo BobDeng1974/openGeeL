@@ -94,6 +94,7 @@
 #include "voxelization/voxeltexture.h"
 
 #include "guirenderer.h"
+#include "elements/lister.h"
 #include "elements/objectlister.h"
 #include "snippets/postsnippets.h"
 #include "snippets/blursnippets.h"

@@ -519,6 +519,9 @@
     <ClCompile Include="application\memory\simplepool.cpp">
       <Filter>application\memory</Filter>
     </ClCompile>
+    <ClCompile Include="interface\elements\lister.cpp">
+      <Filter>interface\elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\texturing\texture.h">
@@ -1045,6 +1048,9 @@
     </ClInclude>
     <ClInclude Include="application\memory\simplepool.h">
       <Filter>application\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\elements\lister.h">
+      <Filter>interface\elements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
