@@ -4,9 +4,9 @@
 #include <functional>
 #include <list>
 #include <map>
+#include <memory>
 #include <string>
 #include "texturing/imagetexture.h"
-#include "texturing/envmap.h"
 #include "shader/defshading.h"
 
 namespace geeL {
@@ -49,10 +49,10 @@ namespace geeL {
 
 
 		//Creates and returns a new material with default shading
-		DefaultMaterialContainer& createDefaultMaterial();
+		std::shared_ptr<DefaultMaterialContainer> createDefaultMaterial();
 
 		//Creates and returns a new materials with given shading
-		GenericMaterialContainer& createGenericMaterial();
+		std::shared_ptr<GenericMaterialContainer> createGenericMaterial();
 
 		//Creates and returns a new shader program from given fragment path
 		//Note: Only generic, forward and transparent shading methods allowed
@@ -75,9 +75,7 @@ namespace geeL {
 		SceneShader* transparentODAnimatedShader;
 		SceneShader* transparentOIDShader;
 
-		std::list<MaterialContainer*> container;
 		std::list<SceneShader*> shaders;
-		std::list<Texture2D*> otherTextures;
 		std::map<std::string, ImageTexture*> textures;
 		std::map<std::string, TextureMap*> textureMaps;
 

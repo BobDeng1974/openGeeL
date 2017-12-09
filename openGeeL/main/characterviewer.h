@@ -69,7 +69,7 @@ public:
 				forwardShader.bind<float>("fogFalloff", 15.f);
 				transparentShader.bind<float>("fogFalloff", 15.f);
 			}
-			
+
 
 			Transform& meshTransform22 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 5.9f), vec3(0.f, 0.f, 0.f), vec3(0.12f));
 			std::unique_ptr<MeshRenderer> girlPtr = meshFactory.createMeshRenderer(

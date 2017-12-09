@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <memory>
 #include "animation/bone.h"
 
 #define BONECOUNT 4
@@ -53,9 +54,7 @@ namespace geeL {
 
 	public:
 		Mesh() {}
-		Mesh(const std::string& name, MaterialContainer& material) 
-			: name(name), material(&material) {}
-
+		Mesh(const std::string& name, std::shared_ptr<MaterialContainer> material);
 		Mesh(Mesh&& other);
 		Mesh& operator=(Mesh&& other);
 
@@ -73,7 +72,7 @@ namespace geeL {
 
 	protected:
 		std::string name;
-		MaterialContainer* material;
+		std::shared_ptr<MaterialContainer> material;
 
 	};
 
@@ -87,7 +86,7 @@ namespace geeL {
 		GenericMesh(const std::string& name,
 			std::vector<VertexType>&& vertices,
 			std::vector<unsigned int>&& indices,
-			MaterialContainer& material);
+			std::shared_ptr<MaterialContainer> material);
 
 		GenericMesh(GenericMesh<VertexType>&& other);
 		GenericMesh<VertexType>& operator=(GenericMesh<VertexType>&& other);
@@ -118,7 +117,7 @@ namespace geeL {
 		StaticMesh(const std::string& name,
 			std::vector<Vertex>& vertices,
 			std::vector<unsigned int>& indices,
-			MaterialContainer & material);
+			std::shared_ptr<MaterialContainer> material);
 
 		StaticMesh(StaticMesh&& other);
 		StaticMesh& operator=(StaticMesh&& other);
@@ -138,7 +137,7 @@ namespace geeL {
 			std::vector<SkinnedVertex>& vertices, 
 			std::vector<unsigned int>& indices,
 			std::map<std::string, MeshBone>& bones,
-			MaterialContainer& material);
+			std::shared_ptr<MaterialContainer> material);
 
 		SkinnedMesh(SkinnedMesh&& other);
 		SkinnedMesh& operator=(SkinnedMesh&& other);
@@ -188,7 +187,7 @@ namespace geeL {
 	GenericMesh<VertexType>::GenericMesh(const std::string& name, 
 		std::vector<VertexType>&& vertices, 
 		std::vector<unsigned int>&& indices, 
-		MaterialContainer & material)
+		std::shared_ptr<MaterialContainer> material)
 			: Mesh(name, material)
 			, vertices(std::move(vertices))
 			, indices(std::move(indices)) {}

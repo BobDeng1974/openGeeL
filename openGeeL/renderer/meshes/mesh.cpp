@@ -12,20 +12,24 @@
 using namespace std;
 
 namespace geeL {
+	
+	Mesh::Mesh(const std::string& name, std::shared_ptr<MaterialContainer> material)
+		: name(name)
+		, material(material) {}
 
 	Mesh::Mesh(Mesh&& other)
 		: name(std::move(other.name))
 		, material(other.material) {
 
-		other.material = nullptr;
+		other.material.reset();
 	}
 
-	Mesh & Mesh::operator=(Mesh&& other) {
+	Mesh& Mesh::operator=(Mesh&& other) {
 		if (this != &other) {
 			name = std::move(other.name);
 			material = other.material;
 
-			other.material = nullptr;
+			other.material.reset();
 		}
 
 		return *this;
@@ -51,7 +55,7 @@ namespace geeL {
 	StaticMesh::StaticMesh(const std::string& name, 
 		std::vector<Vertex>& vertices, 
 		std::vector<unsigned int>& indices, 
-		MaterialContainer& material)
+		std::shared_ptr<MaterialContainer> material)
 		: GenericMesh<Vertex>(name, 
 			std::move(vertices), 
 			std::move(indices), 
@@ -110,7 +114,7 @@ namespace geeL {
 		vector<SkinnedVertex>& vertices, 
 		vector<unsigned int>& indices,
 		std::map<std::string, MeshBone>& bones,
-		MaterialContainer& material)
+		std::shared_ptr<MaterialContainer> material)
 			: GenericMesh<SkinnedVertex>(name
 				, std::move(vertices)
 				, std::move(indices)

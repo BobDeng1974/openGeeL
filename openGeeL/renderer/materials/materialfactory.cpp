@@ -38,14 +38,6 @@ namespace geeL {
 		for (auto shader = shaders.begin(); shader != shaders.end(); shader++)
 			delete *shader;
 
-		for (auto material = container.begin(); material != container.end(); material++)
-			delete *material;
-
-		for (auto it = otherTextures.begin(); it != otherTextures.end(); it++) {
-			Texture2D* tex = *it;
-			delete tex;
-		}
-
 		for (auto it = textures.begin(); it != textures.end(); it++) {
 			ImageTexture* tex = it->second;
 			delete tex;
@@ -78,18 +70,12 @@ namespace geeL {
 	}
 
 
-	DefaultMaterialContainer& MaterialFactory::createDefaultMaterial() {
-		DefaultMaterialContainer* mat = new DefaultMaterialContainer();
-		container.push_back(mat);
-
-		return *mat;
+	shared_ptr<DefaultMaterialContainer> MaterialFactory::createDefaultMaterial() {
+		return shared_ptr<DefaultMaterialContainer>(new DefaultMaterialContainer());;
 	}
 
-	GenericMaterialContainer& MaterialFactory::createGenericMaterial() {
-		GenericMaterialContainer* mat = new GenericMaterialContainer();
-		container.push_back(mat);
-
-		return *mat;
+	shared_ptr<GenericMaterialContainer> MaterialFactory::createGenericMaterial() {
+		return shared_ptr<GenericMaterialContainer>(new GenericMaterialContainer());;
 	}
 
 	SceneShader& MaterialFactory::createShader(ShadingMethod shading, string fragmentPath, bool animated) {

@@ -160,9 +160,9 @@ namespace geeL {
 			processIndices(indices, mesh);
 			processTextures(textures, directory, mesh, scene);
 
-			DefaultMaterialContainer& mat = factory.createDefaultMaterial();
-			processMaterial(mat, mesh, scene);
-			mat.addTextures(textures);
+			shared_ptr<DefaultMaterialContainer> mat = std::move(factory.createDefaultMaterial());
+			processMaterial(*mat, mesh, scene);
+			mat->addTextures(textures);
 
 			model.addMesh(StaticMesh(name, vertices, indices, mat));
 		}
@@ -219,9 +219,9 @@ namespace geeL {
 			processBones(vertices, bones, mesh);
 			processTextures(textures, directory, mesh, scene);
 
-			DefaultMaterialContainer& mat = factory.createDefaultMaterial();
-			processMaterial(mat, mesh, scene);
-			mat.addTextures(textures);
+			shared_ptr<DefaultMaterialContainer> mat = std::move(factory.createDefaultMaterial());
+			processMaterial(*mat, mesh, scene);
+			mat->addTextures(textures);
 
 			model.addMesh(SkinnedMesh(name, vertices, indices, bones, mat));
 		}
