@@ -44,13 +44,11 @@ public:
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
 
-			ImageTexture& texture = materialFactory.createTexture("resources/textures/cookie.png",
-				ColorType::GammaSpace, FilterMode::Linear, WrapMode::ClampBorder);
-
 			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-14.88f, 0.4f, -1.88f), vec3(90.f, -56.24f, 179.f), vec3(1.f, 1.f, 1.f), true);
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Huge);
 			SpotLight& spotLight = lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle, config2);
-			spotLight.setLightCookie(texture);
+			spotLight.setLightCookie(materialFactory.createTexture("resources/textures/cookie.png",
+				ColorType::GammaSpace, FilterMode::Linear, WrapMode::ClampBorder));
 
 			float scale = 0.008f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(scale));

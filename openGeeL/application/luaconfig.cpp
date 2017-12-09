@@ -329,8 +329,8 @@ namespace geeL {
 													assert(path.valid() && "No path specified for given texture");
 													assert(type.valid() && "No type specified for given texture");
 
-													ImageTexture& image = materialFactory.createTexture(path, ColorType::GammaSpace);
-													container.addTexture(type, image);
+													container.addTexture(type, 
+														materialFactory.createTexture(path, ColorType::GammaSpace));
 
 													k++;
 													texture = &texturesInit[k];

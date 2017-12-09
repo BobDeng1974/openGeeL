@@ -152,7 +152,7 @@ namespace geeL {
 
 			vector<Vertex> vertices;
 			vector<unsigned int> indices;
-			vector<TextureMap*> textures;
+			vector<shared_ptr<TextureMap>> textures;
 
 			vertices.reserve(mesh->mNumVertices);
 
@@ -210,7 +210,7 @@ namespace geeL {
 			vector<SkinnedVertex> vertices;
 			vector<unsigned int> indices;
 			map<string, MeshBone> bones;
-			vector<TextureMap*> textures;
+			vector<shared_ptr<TextureMap>> textures;
 
 			vertices.reserve(mesh->mNumVertices);
 
@@ -360,7 +360,7 @@ namespace geeL {
 	}
 
 
-	void MeshFactory::processTextures(vector<TextureMap*>& textures, std::string directory, aiMesh* mesh, const aiScene* scene) {
+	void MeshFactory::processTextures(vector<shared_ptr<TextureMap>>& textures, std::string directory, aiMesh* mesh, const aiScene* scene) {
 		if (mesh->mMaterialIndex >= 0) {
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
@@ -377,7 +377,7 @@ namespace geeL {
 	}
 
 
-	void MeshFactory::loadMaterialTextures(vector<TextureMap*>& textures, aiMaterial* mat,
+	void MeshFactory::loadMaterialTextures(vector<shared_ptr<TextureMap>>& textures, aiMaterial* mat,
 		aiTextureType aiType, MapType type, string directory, ColorType colorType) {
 
 		for (unsigned int i = 0; i < mat->GetTextureCount(aiType); i++) {
@@ -392,9 +392,9 @@ namespace geeL {
 			std::ifstream ifile(fileName);
 
 			if ((bool)ifile) {
-				TextureMap& texture = factory.createTextureMap(fileName, type,
+				shared_ptr<TextureMap> texture = factory.createTextureMap(fileName, type,
 					ct, FilterMode::Bilinear, WrapMode::Repeat, AnisotropicFilter::Medium);
-				textures.push_back(&texture);
+				textures.push_back(texture);
 			}
 		}
 	}

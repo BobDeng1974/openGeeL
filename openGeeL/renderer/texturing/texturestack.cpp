@@ -11,15 +11,15 @@ using namespace std;
 
 namespace geeL {
 
-	void TextureStack::addTexture(const string& name, TextureMap& texture) {
-		addTexture(name, texture, texture.type);
+	void TextureStack::addTexture(const string& name, shared_ptr<TextureMap> texture) {
+		addTexture(name, texture, texture->type);
 	}
 
-	void TextureStack::addTexture(const std::string& name, Texture2D& texture, MapType type) {
+	void TextureStack::addTexture(const std::string& name, shared_ptr<Texture2D> texture, MapType type) {
 		if (textures.count(type) == 0)
 			updateMapFlags(type);
 
-		textures[type] = pair<string, Texture2D*>(name + MapTypeConversion::getTypeAsString(type), &texture);
+		textures[type] = pair<string, shared_ptr<Texture2D>>(name + MapTypeConversion::getTypeAsString(type), texture);
 	}
 
 

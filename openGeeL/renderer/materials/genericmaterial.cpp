@@ -21,8 +21,8 @@ namespace geeL {
 			it->second = nullptr;
 	}
 
-	void GenericMaterialContainer::addTexture(const std::string& name, Texture2D& texture) {
-		textures[this->name + "." + name] = &texture;
+	void GenericMaterialContainer::addTexture(const std::string& name, std::shared_ptr<Texture2D> texture) {
+		textures[this->name + "." + name] = texture;
 	}
 
 
@@ -45,7 +45,7 @@ namespace geeL {
 
 	void GenericMaterialContainer::bind(SceneShader& shader) const {
 		for (auto it(textures.begin()); it != textures.end(); it++) {
-			Texture2D* texture = it->second;
+			shared_ptr<Texture2D> texture = it->second;
 			std::string boundName = it->first + "Bound";
 
 			if (texture != nullptr) {

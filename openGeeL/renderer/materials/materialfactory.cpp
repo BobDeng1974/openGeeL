@@ -37,36 +37,39 @@ namespace geeL {
 
 		for (auto shader = shaders.begin(); shader != shaders.end(); shader++)
 			delete *shader;
-
-		for (auto it = textures.begin(); it != textures.end(); it++) {
-			ImageTexture* tex = it->second;
-			delete tex;
-		}
-
-		for (auto it = textureMaps.begin(); it != textureMaps.end(); it++) {
-			TextureMap* tex = it->second;
-			delete tex;
-		}
-
 	}
 
 
-	ImageTexture& MaterialFactory::createTexture(std::string filePath, ColorType colorType,
+	shared_ptr<ImageTexture> MaterialFactory::createTexture(std::string filePath, ColorType colorType,
 		FilterMode filterMode, WrapMode wrapMode,  AnisotropicFilter filter) {
 
-		if (textures.find(filePath) == textures.end())
-			textures[filePath] = new ImageTexture(filePath.c_str(), colorType, wrapMode, filterMode, filter);
+		auto it = textures.find(filePath);
+		if (it == textures.end()) {
+			shared_ptr<ImageTexture> spTexture(new ImageTexture(filePath.c_str(), colorType, wrapMode, filterMode, filter));
+			weak_ptr<ImageTexture> wpTexture(spTexture);
 
-		return *textures[filePath];
+			textures[filePath] = wpTexture;
+			return spTexture;
+		}
+
+		weak_ptr<ImageTexture> tex = it->second;
+		return tex.lock();
 	}
 
-	TextureMap& MaterialFactory::createTextureMap(string filePath, MapType type, ColorType colorType, 
+	shared_ptr<TextureMap> MaterialFactory::createTextureMap(string filePath, MapType type, ColorType colorType, 
 		FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter filter) {
 		
-		if (textureMaps.find(filePath) == textureMaps.end())
-			textureMaps[filePath] = new TextureMap(filePath.c_str(), type, colorType, wrapMode, filterMode, filter);
+		auto it = textureMaps.find(filePath);
+		if (it == textureMaps.end()) {
+			shared_ptr<TextureMap> spTexture(new TextureMap(filePath.c_str(), type, colorType, wrapMode, filterMode, filter));
+			weak_ptr<TextureMap> wpTexture(spTexture);
 
-		return *textureMaps[filePath];
+			textureMaps[filePath] = wpTexture;
+			return spTexture;
+		}
+
+		weak_ptr<TextureMap> tex = it->second;
+		return tex.lock();
 	}
 
 

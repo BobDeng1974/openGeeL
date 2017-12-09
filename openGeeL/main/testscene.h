@@ -53,12 +53,10 @@ public:
 			float angle = glm::cos(glm::radians(25.5f));
 			float outerAngle = glm::cos(glm::radians(27.5f));
 
-			ImageTexture& texture = materialFactory.createTexture("resources/textures/cookie.png",
-				ColorType::GammaSpace, FilterMode::LinearMip);
-
 			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(0.9f, 5, -22.f), vec3(96.f, -0.1f, -5), vec3(1.f));
 			SpotLight& spotLight = lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle, defSLShadowMapConfig);
-			spotLight.setLightCookie(texture);
+			spotLight.setLightCookie(materialFactory.createTexture("resources/textures/cookie.png",
+				ColorType::GammaSpace, FilterMode::LinearMip));
 
 			lightIntensity = 0.5f;
 			//geeL::Transform& lightTransform3 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(-120, -30, -180), vec3(1.f));

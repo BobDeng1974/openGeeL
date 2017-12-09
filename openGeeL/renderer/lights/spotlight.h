@@ -1,6 +1,7 @@
 #ifndef SPOTLIGHT_H
 #define SPOTLIGHT_H
 
+#include <memory>
 #include "light.h"
 
 namespace geeL {
@@ -22,7 +23,7 @@ namespace geeL {
 			const std::string& name, ShaderTransformSpace space, const Camera* const camera = nullptr) const;
 
 		//Set light cookie for this spotlight
-		void setLightCookie(ImageTexture& cookie);
+		void setLightCookie(std::shared_ptr<ImageTexture> cookie);
 		const Texture * const getLightCookie() const;
 
 		
@@ -35,7 +36,7 @@ namespace geeL {
 		virtual LightType getLightType() const;
 
 	private:
-		ImageTexture* lightCookie;
+		std::shared_ptr<ImageTexture> lightCookie;
 		float angle, outerAngle;
 
 	};

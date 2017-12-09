@@ -32,7 +32,7 @@ namespace geeL {
 
 		//Creates and returns a new texture from given file path or 
 		//returns an existing texture if it already uses this file
-		ImageTexture& createTexture(std::string filePath, 
+		std::shared_ptr<ImageTexture> createTexture(std::string filePath, 
 			ColorType colorType = ColorType::RGBA,
 			FilterMode filterMode = FilterMode::None,
 			WrapMode wrapMode = WrapMode::Repeat, 
@@ -40,7 +40,7 @@ namespace geeL {
 
 		//Creates and returns a new texture map from given file path or 
 		//returns an existing texture if it already uses this file
-		TextureMap& createTextureMap(std::string filePath,
+		std::shared_ptr<TextureMap> createTextureMap(std::string filePath,
 			MapType type = MapType::Diffuse, 
 			ColorType colorType = ColorType::RGBA,
 			FilterMode filterMode = FilterMode::None,
@@ -76,8 +76,8 @@ namespace geeL {
 		SceneShader* transparentOIDShader;
 
 		std::list<SceneShader*> shaders;
-		std::map<std::string, ImageTexture*> textures;
-		std::map<std::string, TextureMap*> textureMaps;
+		std::map<std::string, std::weak_ptr<ImageTexture>> textures;
+		std::map<std::string, std::weak_ptr<TextureMap>> textureMaps;
 
 	};
 }

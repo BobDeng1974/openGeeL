@@ -89,11 +89,11 @@ namespace geeL {
 		void processBones(std::vector<SkinnedVertex>& vertices, std::map<std::string, MeshBone>& bones, aiMesh* mesh);
 
 		void processMaterial(DefaultMaterialContainer& material, aiMesh* mesh, const aiScene* scene);
-		void processTextures(std::vector<TextureMap*>& textures, std::string directory, aiMesh* mesh, const aiScene* scene);
+		void processTextures(std::vector<std::shared_ptr<TextureMap>>& textures, std::string directory, aiMesh* mesh, const aiScene* scene);
 		void processAnimations(SkinnedModel& model, const aiScene* scene);
 		void processSkeleton(Bone& bone, aiNode* node);
 
-		void loadMaterialTextures(std::vector<TextureMap*>& textures, aiMaterial* mat,
+		void loadMaterialTextures(std::vector<std::shared_ptr<TextureMap>>& textures, aiMaterial* mat,
 			aiTextureType aiType, MapType type, std::string directory, ColorType colorType);
 
 	};
