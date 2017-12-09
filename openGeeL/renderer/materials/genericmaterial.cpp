@@ -26,19 +26,19 @@ namespace geeL {
 	}
 
 
-	void GenericMaterialContainer::addParameter(string name, float parameter) {
+	void GenericMaterialContainer::addParameter(const std::string& name, float parameter) {
 		floatParameters[this->name + "." + name] = parameter;
 	}
 
-	void GenericMaterialContainer::addParameter(string name, int parameter) {
+	void GenericMaterialContainer::addParameter(const std::string& name, int parameter) {
 		intParameters[this->name + "." + name] = parameter;
 	}
 
-	void GenericMaterialContainer::addParameter(string name, vec3 parameter) {
+	void GenericMaterialContainer::addParameter(const std::string& name, vec3 parameter) {
 		vec3Parameters[this->name + "." + name] = parameter;
 	}
 
-	void GenericMaterialContainer::addParameter(string name, mat4 parameter) {
+	void GenericMaterialContainer::addParameter(const std::string& name, mat4 parameter) {
 		mat4Parameters[this->name + "." + name] = parameter;
 	}
 
@@ -81,7 +81,7 @@ namespace geeL {
 
 	}
 
-	float GenericMaterialContainer::getFloatValue(std::string name) const {
+	float GenericMaterialContainer::getFloatValue(const std::string& name) const {
 		if (floatParameters.count(name))
 			return floatParameters.at(name);
 		
@@ -89,7 +89,7 @@ namespace geeL {
 		return 0.f;
 	}
 
-	int GenericMaterialContainer::getIntValue(std::string name) const {
+	int GenericMaterialContainer::getIntValue(const std::string& name) const {
 		if (intParameters.count(name))
 			return intParameters.at(name);
 
@@ -97,7 +97,7 @@ namespace geeL {
 		return 0;
 	}
 
-	vec3 GenericMaterialContainer::getVectorValue(std::string name) const {
+	vec3 GenericMaterialContainer::getVectorValue(const std::string& name) const {
 		if (vec3Parameters.count(name))
 			return vec3Parameters.at(name);
 
@@ -105,7 +105,7 @@ namespace geeL {
 		return vec3(0.f);
 	}
 
-	mat4 GenericMaterialContainer::getMatrixValue(std::string name) const {
+	mat4 GenericMaterialContainer::getMatrixValue(const std::string& name) const {
 		if (mat4Parameters.count(name))
 			return mat4Parameters.at(name);
 
@@ -113,19 +113,19 @@ namespace geeL {
 		return mat4(0.f);
 	}
 
-	void GenericMaterialContainer::setFloatValue(std::string name, float value) {
+	void GenericMaterialContainer::setFloatValue(const std::string& name, float value) {
 		floatParameters[name] = value;
 	}
 
-	void GenericMaterialContainer::setIntValue(std::string name, int value) {
+	void GenericMaterialContainer::setIntValue(const std::string& name, int value) {
 		intParameters[name] = value;
 	}
 
-	void GenericMaterialContainer::setVectorValue(std::string name, const glm::vec3& value) {
+	void GenericMaterialContainer::setVectorValue(const std::string& name, const glm::vec3& value) {
 		vec3Parameters[name] = value;
 	}
 
-	void GenericMaterialContainer::setMatrixValue(std::string name, mat4 value) {
+	void GenericMaterialContainer::setMatrixValue(const std::string& name, mat4 value) {
 		mat4Parameters[name] = value;
 	}
 

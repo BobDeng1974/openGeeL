@@ -20,13 +20,13 @@ namespace geeL {
 
 		virtual void addTexture(const std::string& name, Texture2D& texture) = 0;
 
-		virtual float getFloatValue(std::string name) const = 0;
-		virtual int getIntValue(std::string name) const = 0;
-		virtual glm::vec3 getVectorValue(std::string name) const = 0;
+		virtual float getFloatValue(const std::string& name) const = 0;
+		virtual int getIntValue(const std::string& name) const = 0;
+		virtual glm::vec3 getVectorValue(const std::string& name) const = 0;
 
-		virtual void setFloatValue(std::string name, float value) = 0;
-		virtual void setIntValue(std::string name, int value) = 0;
-		virtual void setVectorValue(std::string name, const glm::vec3& value) = 0;
+		virtual void setFloatValue(const std::string& name, float value) = 0;
+		virtual void setIntValue(const std::string& name, int value) = 0;
+		virtual void setVectorValue(const std::string& name, const glm::vec3& value) = 0;
 
 		virtual void bind(SceneShader& shader) const = 0;
 

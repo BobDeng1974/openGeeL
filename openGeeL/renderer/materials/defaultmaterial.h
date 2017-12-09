@@ -37,13 +37,13 @@ namespace geeL {
 
 		virtual void bind(SceneShader& shader) const;
 
-		virtual float getFloatValue(std::string name) const;
-		virtual int getIntValue(std::string name) const;
-		virtual glm::vec3 getVectorValue(std::string name) const;
+		virtual float getFloatValue(const std::string& name) const;
+		virtual int getIntValue(const std::string& name) const;
+		virtual glm::vec3 getVectorValue(const std::string& name) const;
 
-		virtual void setFloatValue(std::string name, float value);
-		virtual void setIntValue(std::string name, int value);
-		virtual void setVectorValue(std::string name, const glm::vec3& value);
+		virtual void setFloatValue(const std::string& name, float value);
+		virtual void setIntValue(const std::string& name, int value);
+		virtual void setVectorValue(const std::string& name, const glm::vec3& value);
 
 	private:
 		glm::vec3 color, emissivity;

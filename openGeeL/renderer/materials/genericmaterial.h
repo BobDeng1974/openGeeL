@@ -31,22 +31,22 @@ namespace geeL {
 		//(or create a new one if such unit doens't exist)
 		virtual void addTexture(const std::string& name, Texture2D& texture);
 
-		void addParameter(std::string name, float parameter);
-		void addParameter(std::string name, int parameter);
-		void addParameter(std::string name, vec3 parameter);
-		void addParameter(std::string name, mat4 parameter);
+		void addParameter(const std::string& name, float parameter);
+		void addParameter(const std::string& name, int parameter);
+		void addParameter(const std::string& name, vec3 parameter);
+		void addParameter(const std::string& name, mat4 parameter);
 
 		void bind(SceneShader& shader) const;
 
-		virtual float getFloatValue(std::string name) const;
-		virtual int   getIntValue(std::string name) const;
-		virtual vec3  getVectorValue(std::string name) const;
-		virtual mat4  getMatrixValue(std::string name) const;
+		virtual float getFloatValue(const std::string& name) const;
+		virtual int   getIntValue(const std::string& name) const;
+		virtual vec3  getVectorValue(const std::string& name) const;
+		virtual mat4  getMatrixValue(const std::string& name) const;
 
-		virtual void setFloatValue(std::string name, float value) ;
-		virtual void setIntValue(std::string name, int value);
-		virtual void setVectorValue(std::string name, const glm::vec3& value);
-		virtual void setMatrixValue(std::string name, mat4 value);
+		virtual void setFloatValue(const std::string&, float value) ;
+		virtual void setIntValue(const std::string&, int value);
+		virtual void setVectorValue(const std::string&, const glm::vec3& value);
+		virtual void setMatrixValue(const std::string&, mat4 value);
 
 
 	private:

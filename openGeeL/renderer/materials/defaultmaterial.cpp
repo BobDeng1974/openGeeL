@@ -106,7 +106,7 @@ namespace geeL {
 		emissivity = value;
 	}
 
-	float DefaultMaterialContainer::getFloatValue(std::string name) const {
+	float DefaultMaterialContainer::getFloatValue(const std::string& name) const {
 		if (name == "Transparency")
 			return transparency;
 		else if (name == "Roughness")
@@ -118,12 +118,12 @@ namespace geeL {
 		return 0.f;
 	}
 
-	int DefaultMaterialContainer::getIntValue(std::string name) const {
+	int DefaultMaterialContainer::getIntValue(const std::string& name) const {
 		cout << "Value '" + name + "' not present in material\n";
 		return 0;
 	}
 
-	glm::vec3 DefaultMaterialContainer::getVectorValue(std::string name) const {
+	glm::vec3 DefaultMaterialContainer::getVectorValue(const std::string& name) const {
 		if (name == "Color")
 			return color;
 		else if (name == "Emissivity")
@@ -133,7 +133,7 @@ namespace geeL {
 		return glm::vec3();
 	}
 
-	void  DefaultMaterialContainer::setFloatValue(std::string name, float value) {
+	void  DefaultMaterialContainer::setFloatValue(const std::string& name, float value) {
 		if (name == "Transparency")
 			setTransparency(value);
 		else if (name == "Roughness")
@@ -144,14 +144,14 @@ namespace geeL {
 			cout << "Value '" + name + "' not present in material\n";
 	}
 
-	void  DefaultMaterialContainer::setIntValue(std::string name, int value) {
+	void  DefaultMaterialContainer::setIntValue(const std::string& name, int value) {
 		if (name == "InverseRoughness")
 			inverseRoughness = bool(value);
 		else
 			cout << "Value '" + name + "' not present in material\n";
 	}
 
-	void  DefaultMaterialContainer::setVectorValue(std::string name, const glm::vec3& value) {
+	void  DefaultMaterialContainer::setVectorValue(const std::string& name, const glm::vec3& value) {
 		if (name == "Color")
 			setColor(value);
 		else if (name == "Emissivity")
