@@ -29,7 +29,7 @@ namespace geeL {
 
 		//Add a new texture to material and fill the texture unit that has given name
 		//(or create a new one if such unit doens't exist)
-		virtual void addTexture(const std::string& name, std::shared_ptr<Texture2D> texture);
+		virtual void addTexture(const std::string& name, MemoryObject<Texture2D> texture);
 
 		void addParameter(const std::string& name, float parameter);
 		void addParameter(const std::string& name, int parameter);
@@ -50,7 +50,7 @@ namespace geeL {
 
 
 	private:
-		std::map<std::string, std::shared_ptr<Texture2D>> textures;
+		std::map<std::string, MemoryObject<Texture2D>> textures;
 		std::map<std::string, float> floatParameters;
 		std::map<std::string, int> intParameters;
 		std::map<std::string, vec3> vec3Parameters;

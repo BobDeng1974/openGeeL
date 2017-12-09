@@ -40,12 +40,12 @@ namespace geeL {
 	}
 
 
-	shared_ptr<ImageTexture> MaterialFactory::createTexture(std::string filePath, ColorType colorType,
+	MemoryObject<ImageTexture> MaterialFactory::createTexture(std::string filePath, ColorType colorType,
 		FilterMode filterMode, WrapMode wrapMode,  AnisotropicFilter filter) {
 
 		auto it = textures.find(filePath);
 		if (it == textures.end()) {
-			shared_ptr<ImageTexture> spTexture(new ImageTexture(filePath.c_str(), colorType, wrapMode, filterMode, filter));
+			MemoryObject<ImageTexture> spTexture(new ImageTexture(filePath.c_str(), colorType, wrapMode, filterMode, filter));
 			weak_ptr<ImageTexture> wpTexture(spTexture);
 
 			textures[filePath] = wpTexture;
@@ -53,15 +53,15 @@ namespace geeL {
 		}
 
 		weak_ptr<ImageTexture> tex = it->second;
-		return tex.lock();
+		return MemoryObject<ImageTexture>(tex.lock());
 	}
 
-	shared_ptr<TextureMap> MaterialFactory::createTextureMap(string filePath, MapType type, ColorType colorType, 
+	MemoryObject<TextureMap> MaterialFactory::createTextureMap(string filePath, MapType type, ColorType colorType,
 		FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter filter) {
 		
 		auto it = textureMaps.find(filePath);
 		if (it == textureMaps.end()) {
-			shared_ptr<TextureMap> spTexture(new TextureMap(filePath.c_str(), type, colorType, wrapMode, filterMode, filter));
+			MemoryObject<TextureMap> spTexture(new TextureMap(filePath.c_str(), type, colorType, wrapMode, filterMode, filter));
 			weak_ptr<TextureMap> wpTexture(spTexture);
 
 			textureMaps[filePath] = wpTexture;
@@ -69,16 +69,16 @@ namespace geeL {
 		}
 
 		weak_ptr<TextureMap> tex = it->second;
-		return tex.lock();
+		return MemoryObject<TextureMap>(tex.lock());
 	}
 
 
-	shared_ptr<DefaultMaterialContainer> MaterialFactory::createDefaultMaterial() {
-		return shared_ptr<DefaultMaterialContainer>(new DefaultMaterialContainer());;
+	MemoryObject<DefaultMaterialContainer> MaterialFactory::createDefaultMaterial() {
+		return MemoryObject<DefaultMaterialContainer>(new DefaultMaterialContainer());;
 	}
 
-	shared_ptr<GenericMaterialContainer> MaterialFactory::createGenericMaterial() {
-		return shared_ptr<GenericMaterialContainer>(new GenericMaterialContainer());;
+	MemoryObject<GenericMaterialContainer> MaterialFactory::createGenericMaterial() {
+		return MemoryObject<GenericMaterialContainer>(new GenericMaterialContainer());;
 	}
 
 	SceneShader& MaterialFactory::createShader(ShadingMethod shading, string fragmentPath, bool animated) {

@@ -11,7 +11,9 @@ using namespace geeL::memory;
 namespace geeL {
 
 	SceneObject::SceneObject(Transform& transform, const std::string& name)
-		: transform(transform), name(std::move(name)), active(true) {}
+		: transform(transform)
+		, name(name)
+		, active(true) {}
 
 	SceneObject::~SceneObject() {
 		for_each(components.begin(), components.end(), [&](Component* comp) {

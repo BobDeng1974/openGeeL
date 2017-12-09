@@ -3,10 +3,12 @@
 
 #include <functional>
 #include <list>
-#include <memory>
 #include "glwrapper/glguards.h"
 #include "materialmapping.h"
+#include "memory/memoryobject.h"
 #include "sceneobject.h"
+
+using namespace geeL::memory;
 
 namespace geeL {
 
@@ -82,13 +84,13 @@ namespace geeL {
 		RenderMask mask;
 		const CullingMode faceCulling;
 
-		std::shared_ptr<Model> modelData;
+		MemoryObject<Model> modelData;
 		std::list<MeshInstance*> meshes;
 		std::list<std::function<void(MeshRenderer&, Material, Material)>> materialListeners;
 		std::map<SceneShader*, std::list<MaterialMapping>> materials;
 
 		MeshRenderer(Transform& transform,
-			std::shared_ptr<Model> model,
+			MemoryObject<Model> model,
 			CullingMode faceCulling = CullingMode::cullFront,
 			const std::string& name = "MeshRenderer");
 

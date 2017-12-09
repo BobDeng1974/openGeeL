@@ -20,8 +20,15 @@ using namespace std;
 
 namespace geeL {
 
-	Scene::Scene(Transform& world, LightManager& lightManager, UniformBindingStack& pipeline, SceneCamera& camera)
-		: lightManager(lightManager), pipeline(pipeline), camera(&camera), worldTransform(world), skybox(nullptr) {
+	Scene::Scene(Transform& world, 
+		LightManager& lightManager, 
+		UniformBindingStack& pipeline, 
+		SceneCamera& camera)
+			: lightManager(lightManager)
+			, pipeline(pipeline)
+			, camera(&camera)
+			, worldTransform(world)
+			, skybox(nullptr) {
 	
 		addRequester(lightManager);
 	}
@@ -227,10 +234,15 @@ namespace geeL {
 
 
 
-	RenderScene::RenderScene(Transform& world, LightManager& lightManager, UniformBindingStack& pipeline,
-		SceneCamera& camera, MaterialFactory& materialFactory, Input& input)
-			: Scene(world, lightManager, pipeline, camera), 
-				materialFactory(materialFactory), input(input) {
+	RenderScene::RenderScene(Transform& world, 
+		LightManager& lightManager, 
+		UniformBindingStack& pipeline,
+		SceneCamera& camera, 
+		MaterialFactory& materialFactory, 
+		Input& input)
+			: Scene(world, lightManager, pipeline, camera)
+			, materialFactory(materialFactory)
+			, input(input) {
 			
 		//Add generic shader to scene to allow method 'drawGenericForced' to work
 		addShader(materialFactory.getDefaultShader(ShadingMethod::Generic, false));

@@ -14,7 +14,7 @@ using namespace std;
 namespace geeL{
 
 	MeshRenderer::MeshRenderer(Transform& transform, 
-		std::shared_ptr<Model> model,
+		MemoryObject<Model> model,
 		CullingMode faceCulling, 
 		const std::string& name) 
 			: SceneObject(transform, name)
@@ -272,7 +272,7 @@ namespace geeL{
 
 	StaticMeshRenderer::StaticMeshRenderer(Transform& transform, 
 		SceneShader& shader, 
-		std::shared_ptr<StaticModel> model,
+		MemoryObject<StaticModel> model,
 		CullingMode faceCulling, 
 		const std::string& name)
 			: MeshRenderer(transform, model, faceCulling, name) {
@@ -282,7 +282,7 @@ namespace geeL{
 
 	StaticMeshRenderer::StaticMeshRenderer(Transform& transform, 
 		SceneShader& shader, 
-		std::shared_ptr<StaticModel> model,
+		MemoryObject<StaticModel> model,
 		std::list<const StaticMesh*>& meshes,
 		CullingMode faceCulling, 
 		const std::string & name)
@@ -331,7 +331,7 @@ namespace geeL{
 
 	SkinnedMeshRenderer::SkinnedMeshRenderer(Transform& transform,
 		SceneShader& shader,
-		std::shared_ptr<SkinnedModel> model,
+		MemoryObject<SkinnedModel> model,
 		CullingMode faceCulling,
 		const std::string& name)
 			: MeshRenderer(transform, model, faceCulling, name)

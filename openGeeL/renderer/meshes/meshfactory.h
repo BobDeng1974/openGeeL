@@ -2,11 +2,11 @@
 #define MESHFACTORY_H
 
 #include <map>
-#include <memory>
 #include <string>
 #include <list>
 #include <vector>
 #include "animation/bone.h"
+#include "memory/memoryobject.h"
 
 enum aiTextureType;
 
@@ -14,6 +14,8 @@ struct aiNode;
 struct aiMesh;
 struct aiMaterial;
 struct aiScene;
+
+using namespace geeL::memory;
 
 namespace geeL {
 
@@ -46,31 +48,31 @@ namespace geeL {
 		MeshFactory(MaterialFactory& factory);
 
 		//Create new mesh renderer with default shading
-		std::unique_ptr<StaticMeshRenderer> createMeshRenderer(std::shared_ptr<StaticModel> model,
+		std::unique_ptr<StaticMeshRenderer> createMeshRenderer(MemoryObject<StaticModel> model,
 			Transform& transform, const std::string& name);
 
-		std::unique_ptr<StaticMeshRenderer> createMeshRenderer(std::shared_ptr<StaticModel> model, 
+		std::unique_ptr<StaticMeshRenderer> createMeshRenderer(MemoryObject<StaticModel> model,
 			SceneShader& shader, Transform& transform, const std::string& name);
 
 		//Create separate mesh renderers for every mesh in given model
 		//Note: Memory of returned mesh renderers is unmanaged
-		std::list<StaticMeshRenderer*> createMeshRenderers(std::shared_ptr<StaticModel> model,
+		std::list<StaticMeshRenderer*> createMeshRenderers(MemoryObject<StaticModel> model,
 			SceneShader& shader, Transform& transform);
 
 		//Create new skinned mesh renderer with default shading
-		std::unique_ptr<SkinnedMeshRenderer> createMeshRenderer(std::shared_ptr<SkinnedModel> model, 
+		std::unique_ptr<SkinnedMeshRenderer> createMeshRenderer(MemoryObject<SkinnedModel> model,
 			Transform& transform, const std::string& name);
 
-		std::unique_ptr<SkinnedMeshRenderer> createMeshRenderer(std::shared_ptr<SkinnedModel> model, 
+		std::unique_ptr<SkinnedMeshRenderer> createMeshRenderer(MemoryObject<SkinnedModel> model,
 			SceneShader& shader, Transform& transform, const std::string& name);
 
 		//Creates, initializes and returns a new static model from given file path or 
 		//returns an existing model if it already uses this file
-		std::shared_ptr<StaticModel> createStaticModel(std::string filePath);
+		MemoryObject<StaticModel> createStaticModel(std::string filePath);
 
 		//Creates, initializes and returns a new static model from given file path or 
 		//returns an existing model if it already uses this file
-		std::shared_ptr<SkinnedModel> createSkinnedModel(std::string filePath);
+		MemoryObject<SkinnedModel> createSkinnedModel(std::string filePath);
 
 	private:
 		MaterialFactory& factory;
@@ -89,11 +91,11 @@ namespace geeL {
 		void processBones(std::vector<SkinnedVertex>& vertices, std::map<std::string, MeshBone>& bones, aiMesh* mesh);
 
 		void processMaterial(DefaultMaterialContainer& material, aiMesh* mesh, const aiScene* scene);
-		void processTextures(std::vector<std::shared_ptr<TextureMap>>& textures, std::string directory, aiMesh* mesh, const aiScene* scene);
+		void processTextures(std::vector<MemoryObject<TextureMap>>& textures, std::string directory, aiMesh* mesh, const aiScene* scene);
 		void processAnimations(SkinnedModel& model, const aiScene* scene);
 		void processSkeleton(Bone& bone, aiNode* node);
 
-		void loadMaterialTextures(std::vector<std::shared_ptr<TextureMap>>& textures, aiMaterial* mat,
+		void loadMaterialTextures(std::vector<MemoryObject<TextureMap>>& textures, aiMaterial* mat,
 			aiTextureType aiType, MapType type, std::string directory, ColorType colorType);
 
 	};

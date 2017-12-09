@@ -301,6 +301,7 @@
     <ClInclude Include="application\luaconfig.h" />
     <ClInclude Include="application\memory\defaultmemory.h" />
     <ClInclude Include="application\memory\memory.h" />
+    <ClInclude Include="application\memory\memoryobject.h" />
     <ClInclude Include="application\memory\poolallocator.h" />
     <ClInclude Include="application\memory\simplepool.h" />
     <ClInclude Include="application\objectwrapper.h" />

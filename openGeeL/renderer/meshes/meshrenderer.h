@@ -18,13 +18,13 @@ namespace geeL {
 		//Constructor for mesh renderer with an unique assigned model
 		StaticMeshRenderer(Transform& transform, 
 			SceneShader& shader, 
-			std::shared_ptr<StaticModel> model,
+			MemoryObject<StaticModel> model,
 			CullingMode faceCulling = CullingMode::cullFront, 
 			const std::string& name = "MeshRenderer");
 
 		StaticMeshRenderer(Transform& transform,
 			SceneShader& shader,
-			std::shared_ptr<StaticModel> modelData,
+			MemoryObject<StaticModel> modelData,
 			std::list<const StaticMesh*>& meshes,
 			CullingMode faceCulling = CullingMode::cullFront,
 			const std::string& name = "MeshRenderer");
@@ -45,7 +45,7 @@ namespace geeL {
 	public:
 		SkinnedMeshRenderer(Transform& transform,
 			SceneShader& shader,
-			std::shared_ptr<SkinnedModel> model,
+			MemoryObject<SkinnedModel> model,
 			CullingMode faceCulling = CullingMode::cullFront,
 			const std::string& name = "SkinnedMeshRenderer");
 

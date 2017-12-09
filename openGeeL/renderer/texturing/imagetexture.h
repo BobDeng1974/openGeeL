@@ -16,6 +16,7 @@ namespace geeL {
 		std::string path;
 
 		ImageTexture() : Texture2D(ColorType::None) {}
+
 		ImageTexture(const char* fileName, 
 			ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, 

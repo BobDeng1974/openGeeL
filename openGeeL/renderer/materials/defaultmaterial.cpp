@@ -16,24 +16,24 @@ namespace geeL {
 		, transparency(1.f) {}
 
 
-	void DefaultMaterialContainer::addTexture(const std::string& name, std::shared_ptr<Texture2D> texture) {
+	void DefaultMaterialContainer::addTexture(const std::string& name, MemoryObject<Texture2D> texture) {
 		MapType type = MapTypeConversion::getMapFromString(name);
 		addTexture(type, texture);
 	}
 
 	
-	void DefaultMaterialContainer::addTexture(std::shared_ptr<TextureMap> texture) {
+	void DefaultMaterialContainer::addTexture(MemoryObject<TextureMap> texture) {
 		addTexture(texture->type, texture);
 	}
 
-	void DefaultMaterialContainer::addTextures(std::vector<std::shared_ptr<TextureMap>> textures) {
+	void DefaultMaterialContainer::addTextures(std::vector<MemoryObject<TextureMap>> textures) {
 		for (size_t i = 0; i < textures.size(); i++) {
-			std::shared_ptr<TextureMap> texture = textures[i];
+			MemoryObject<TextureMap> texture = textures[i];
 			addTexture(texture->type, texture);
 		}
 	}
 
-	void DefaultMaterialContainer::addTexture(const MapType& type, std::shared_ptr<Texture2D> texture) {
+	void DefaultMaterialContainer::addTexture(const MapType& type, MemoryObject<Texture2D> texture) {
 		
 		//Interpret roughness map as inversed specular map	
 		if (type == MapType::Roughness) {

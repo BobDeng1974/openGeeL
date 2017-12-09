@@ -1052,6 +1052,9 @@
     <ClInclude Include="interface\elements\lister.h">
       <Filter>interface\elements</Filter>
     </ClInclude>
+    <ClInclude Include="application\memory\memoryobject.h">
+      <Filter>application\memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\combine.frag">

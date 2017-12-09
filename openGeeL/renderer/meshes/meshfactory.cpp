@@ -27,14 +27,14 @@ namespace geeL {
 		: factory(factory) {}
 
 
-	unique_ptr<StaticMeshRenderer> MeshFactory::createMeshRenderer(std::shared_ptr<StaticModel> model,
+	unique_ptr<StaticMeshRenderer> MeshFactory::createMeshRenderer(MemoryObject<StaticModel> model,
 		Transform& transform, const string& name) {
 		
 		return createMeshRenderer(model, factory.getDefaultShader(ShadingMethod::Deferred), 
 			transform, name);
 	}
 
-	unique_ptr<StaticMeshRenderer> MeshFactory::createMeshRenderer(std::shared_ptr<StaticModel> model, SceneShader& shader,
+	unique_ptr<StaticMeshRenderer> MeshFactory::createMeshRenderer(MemoryObject<StaticModel> model, SceneShader& shader,
 		Transform& transform, const string& name) {
 
 		unique_ptr<StaticMeshRenderer> renderer(
@@ -43,7 +43,7 @@ namespace geeL {
 		return renderer;
 	}
 
-	list<StaticMeshRenderer*> MeshFactory::createMeshRenderers(std::shared_ptr<StaticModel> model, SceneShader& shader,
+	list<StaticMeshRenderer*> MeshFactory::createMeshRenderers(MemoryObject<StaticModel> model, SceneShader& shader,
 		Transform& transform) {
 
 		list<StaticMeshRenderer*> renderers;
@@ -65,14 +65,14 @@ namespace geeL {
 	}
 
 
-	unique_ptr<SkinnedMeshRenderer> MeshFactory::createMeshRenderer(std::shared_ptr<SkinnedModel> model,
+	unique_ptr<SkinnedMeshRenderer> MeshFactory::createMeshRenderer(MemoryObject<SkinnedModel> model,
 		Transform& transform, const string& name) {
 
 		return createMeshRenderer(model, factory.getDefaultShader(ShadingMethod::Deferred, true), 
 			transform, name);
 	}
 
-	unique_ptr<SkinnedMeshRenderer> MeshFactory::createMeshRenderer(std::shared_ptr<SkinnedModel> model, SceneShader& shader,
+	unique_ptr<SkinnedMeshRenderer> MeshFactory::createMeshRenderer(MemoryObject<SkinnedModel> model, SceneShader& shader,
 		Transform& transform, const string& name) {
 
 		std::unique_ptr<SkinnedMeshRenderer> renderer(
@@ -81,7 +81,7 @@ namespace geeL {
 		return renderer;
 	}
 
-	shared_ptr<StaticModel> MeshFactory::createStaticModel(string filePath) {
+	MemoryObject<StaticModel> MeshFactory::createStaticModel(string filePath) {
 
 		auto it(staticModels.find(filePath));
 		//Create new model if none exist yet
@@ -89,7 +89,7 @@ namespace geeL {
 			//or memory of existing one expired
 			|| (it != staticModels.end() && it->second.expired())) {
 
-			shared_ptr<StaticModel> model(new StaticModel(filePath));
+			MemoryObject<StaticModel> model(new StaticModel(filePath));
 			weak_ptr<StaticModel> wModel(model);
 
 			staticModels[filePath] = model;
@@ -99,10 +99,10 @@ namespace geeL {
 		}
 
 		weak_ptr<StaticModel> wModel = it->second;
-		return wModel.lock();
+		return MemoryObject<StaticModel>(wModel.lock());
 	}
 
-	shared_ptr<SkinnedModel> MeshFactory::createSkinnedModel(string filePath) {
+	MemoryObject<SkinnedModel> MeshFactory::createSkinnedModel(string filePath) {
 
 		auto it(skinnedModels.find(filePath));
 		//Create new model if none exist yet
@@ -110,7 +110,7 @@ namespace geeL {
 			//or memory of existing one expired
 			|| (it != skinnedModels.end() && it->second.expired())) {
 
-			shared_ptr<SkinnedModel> model(new SkinnedModel(filePath));
+			MemoryObject<SkinnedModel> model(new SkinnedModel(filePath));
 			weak_ptr<SkinnedModel> wModel(model);
 
 			skinnedModels[filePath] = model;
@@ -120,7 +120,7 @@ namespace geeL {
 		}
 
 		weak_ptr<SkinnedModel> wModel = it->second;
-		return wModel.lock();
+		return MemoryObject<SkinnedModel>(wModel.lock());
 	}
 
 
@@ -152,7 +152,7 @@ namespace geeL {
 
 			vector<Vertex> vertices;
 			vector<unsigned int> indices;
-			vector<shared_ptr<TextureMap>> textures;
+			vector<MemoryObject<TextureMap>> textures;
 
 			vertices.reserve(mesh->mNumVertices);
 
@@ -160,7 +160,7 @@ namespace geeL {
 			processIndices(indices, mesh);
 			processTextures(textures, directory, mesh, scene);
 
-			shared_ptr<DefaultMaterialContainer> mat = std::move(factory.createDefaultMaterial());
+			MemoryObject<DefaultMaterialContainer> mat = std::move(factory.createDefaultMaterial());
 			processMaterial(*mat, mesh, scene);
 			mat->addTextures(textures);
 
@@ -210,7 +210,7 @@ namespace geeL {
 			vector<SkinnedVertex> vertices;
 			vector<unsigned int> indices;
 			map<string, MeshBone> bones;
-			vector<shared_ptr<TextureMap>> textures;
+			vector<MemoryObject<TextureMap>> textures;
 
 			vertices.reserve(mesh->mNumVertices);
 
@@ -219,7 +219,7 @@ namespace geeL {
 			processBones(vertices, bones, mesh);
 			processTextures(textures, directory, mesh, scene);
 
-			shared_ptr<DefaultMaterialContainer> mat = std::move(factory.createDefaultMaterial());
+			MemoryObject<DefaultMaterialContainer> mat = std::move(factory.createDefaultMaterial());
 			processMaterial(*mat, mesh, scene);
 			mat->addTextures(textures);
 
@@ -360,7 +360,7 @@ namespace geeL {
 	}
 
 
-	void MeshFactory::processTextures(vector<shared_ptr<TextureMap>>& textures, std::string directory, aiMesh* mesh, const aiScene* scene) {
+	void MeshFactory::processTextures(vector<MemoryObject<TextureMap>>& textures, std::string directory, aiMesh* mesh, const aiScene* scene) {
 		if (mesh->mMaterialIndex >= 0) {
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
@@ -377,7 +377,7 @@ namespace geeL {
 	}
 
 
-	void MeshFactory::loadMaterialTextures(vector<shared_ptr<TextureMap>>& textures, aiMaterial* mat,
+	void MeshFactory::loadMaterialTextures(vector<MemoryObject<TextureMap>>& textures, aiMaterial* mat,
 		aiTextureType aiType, MapType type, string directory, ColorType colorType) {
 
 		for (unsigned int i = 0; i < mat->GetTextureCount(aiType); i++) {
@@ -392,7 +392,7 @@ namespace geeL {
 			std::ifstream ifile(fileName);
 
 			if ((bool)ifile) {
-				shared_ptr<TextureMap> texture = factory.createTextureMap(fileName, type,
+				MemoryObject<TextureMap> texture = factory.createTextureMap(fileName, type,
 					ct, FilterMode::Bilinear, WrapMode::Repeat, AnisotropicFilter::Medium);
 				textures.push_back(texture);
 			}
@@ -400,7 +400,6 @@ namespace geeL {
 	}
 
 	void MeshFactory::processAnimations(SkinnedModel& model, const aiScene* scene) {
-
 
 		//Add a default animation that contains original transformation data
 		const Skeleton& skeleton = model.getSkeleton();

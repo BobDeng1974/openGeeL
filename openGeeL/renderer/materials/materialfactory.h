@@ -4,10 +4,12 @@
 #include <functional>
 #include <list>
 #include <map>
-#include <memory>
 #include <string>
+#include "memory/memoryobject.h"
 #include "texturing/imagetexture.h"
 #include "shader/defshading.h"
+
+using namespace geeL::memory;
 
 namespace geeL {
 
@@ -32,7 +34,7 @@ namespace geeL {
 
 		//Creates and returns a new texture from given file path or 
 		//returns an existing texture if it already uses this file
-		std::shared_ptr<ImageTexture> createTexture(std::string filePath, 
+		MemoryObject<ImageTexture> createTexture(std::string filePath,
 			ColorType colorType = ColorType::RGBA,
 			FilterMode filterMode = FilterMode::None,
 			WrapMode wrapMode = WrapMode::Repeat, 
@@ -40,7 +42,7 @@ namespace geeL {
 
 		//Creates and returns a new texture map from given file path or 
 		//returns an existing texture if it already uses this file
-		std::shared_ptr<TextureMap> createTextureMap(std::string filePath,
+		MemoryObject<TextureMap> createTextureMap(std::string filePath,
 			MapType type = MapType::Diffuse, 
 			ColorType colorType = ColorType::RGBA,
 			FilterMode filterMode = FilterMode::None,
@@ -49,10 +51,10 @@ namespace geeL {
 
 
 		//Creates and returns a new material with default shading
-		std::shared_ptr<DefaultMaterialContainer> createDefaultMaterial();
+		MemoryObject<DefaultMaterialContainer> createDefaultMaterial();
 
 		//Creates and returns a new materials with given shading
-		std::shared_ptr<GenericMaterialContainer> createGenericMaterial();
+		MemoryObject<GenericMaterialContainer> createGenericMaterial();
 
 		//Creates and returns a new shader program from given fragment path
 		//Note: Only generic, forward and transparent shading methods allowed

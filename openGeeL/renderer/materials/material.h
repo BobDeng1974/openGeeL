@@ -1,9 +1,11 @@
 #ifndef RENDERMATERIAL_H
 #define RENDERMATERIAL_H
 
-#include <memory>
 #include <string>
 #include <vec3.hpp>
+#include "memory/memoryobject.h"
+
+using namespace geeL::memory;
 
 namespace geeL {
 
@@ -19,7 +21,7 @@ namespace geeL {
 		MaterialContainer(const std::string& name);
 		virtual ~MaterialContainer() {}
 
-		virtual void addTexture(const std::string& name, std::shared_ptr<Texture2D> texture) = 0;
+		virtual void addTexture(const std::string& name, MemoryObject<Texture2D> texture) = 0;
 
 		virtual float getFloatValue(const std::string& name) const = 0;
 		virtual int getIntValue(const std::string& name) const = 0;

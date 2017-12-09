@@ -13,7 +13,7 @@ using namespace std;
 
 namespace geeL {
 	
-	Mesh::Mesh(const std::string& name, std::shared_ptr<MaterialContainer> material)
+	Mesh::Mesh(const std::string& name, MemoryObject<MaterialContainer> material)
 		: name(name)
 		, material(material) {}
 
@@ -55,7 +55,7 @@ namespace geeL {
 	StaticMesh::StaticMesh(const std::string& name, 
 		std::vector<Vertex>& vertices, 
 		std::vector<unsigned int>& indices, 
-		std::shared_ptr<MaterialContainer> material)
+		MemoryObject<MaterialContainer> material)
 		: GenericMesh<Vertex>(name, 
 			std::move(vertices), 
 			std::move(indices), 
@@ -114,7 +114,7 @@ namespace geeL {
 		vector<SkinnedVertex>& vertices, 
 		vector<unsigned int>& indices,
 		std::map<std::string, MeshBone>& bones,
-		std::shared_ptr<MaterialContainer> material)
+		MemoryObject<MaterialContainer> material)
 			: GenericMesh<SkinnedVertex>(name
 				, std::move(vertices)
 				, std::move(indices)

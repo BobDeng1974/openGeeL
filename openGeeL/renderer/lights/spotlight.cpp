@@ -50,7 +50,7 @@ namespace geeL {
 		shader.bind<int>(name + "useCookie", (lightCookie != nullptr));
 	}
 
-	void SpotLight::setLightCookie(std::shared_ptr<ImageTexture> cookie) {
+	void SpotLight::setLightCookie(memory::MemoryObject<ImageTexture> cookie) {
 		lightCookie = cookie;
 
 		//Force wrap mode to avoid artifacts with wrap methods like 'Repeat'

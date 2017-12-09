@@ -9,7 +9,9 @@
 namespace geeL {
 
 	RenderWindow::RenderWindow(const char* name, Resolution resolution, WindowMode mode)
-		: name(name), debugger(nullptr), resolution(resolution) {
+		: name(name)
+		, debugger(nullptr)
+		, resolution(resolution) {
 	    
 		glfwInit();
 	    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);

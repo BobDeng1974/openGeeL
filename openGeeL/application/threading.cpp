@@ -8,7 +8,8 @@ using namespace std;
 
 namespace geeL {
 
-	ContinuousSingleThread::ContinuousSingleThread(ThreadedObject& obj) : obj(obj) {}
+	ContinuousSingleThread::ContinuousSingleThread(ThreadedObject& obj) 
+		: obj(obj) {}
 
 
 	std::thread ContinuousThread::start() {
