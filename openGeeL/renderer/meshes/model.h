@@ -1,7 +1,6 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include <iostream>
 #include <algorithm>
 #include <functional>
 #include <string>
@@ -23,7 +22,7 @@ namespace geeL {
 	public:
 		Model() {}
 		Model(const std::string& path) : path(path) {}
-		virtual ~Model() { std::cout << path << "\n"; }
+		virtual ~Model() {}
 
 		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const = 0;
 		const std::string& getPath() const;

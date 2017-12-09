@@ -44,27 +44,14 @@ public:
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Huge, 6.f, 15U, 150.f, 1.f);
 			lightManager.addPointLight(lightTransform21, glm::vec3(lightIntensity * 3.f, lightIntensity * 59.f, lightIntensity * 43.f), config2);
 
-			{
-				std::shared_ptr<StaticModel> ayy = meshFactory.CreateStaticModel("resources/primitives/plane.obj");
-			}
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(100.f, 0.2f, 100.f));
-			MeshRenderer& plane = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/plane.obj"),
+			std::unique_ptr<MeshRenderer> planePtr = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateStaticModel("resources/primitives/plane.obj"),
 				meshTransform2, "Floor");
+			MeshRenderer& plane = scene.addMeshRenderer(std::move(planePtr));
 
-			{
-				std::shared_ptr<StaticModel> ayy = meshFactory.CreateStaticModel("resources/primitives/cube.obj");
-
-				/*
-				Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(100.f, 0.2f, 100.f));
-				MeshRenderer& plane = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/cube.obj"),
-					meshTransform2, "Floor");
-					*/
-			}
-			
-
-			scene.addMeshRenderer(plane);
-
+		
 			plane.iterateMeshesSafe([&](const MeshInstance& mesh) {
 				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
 				plane.changeMaterial(ss, mesh);
@@ -76,7 +63,6 @@ public:
 				container.setFloatValue("Transparency", 0.65f);
 			});
 
-
 			{
 				SceneShader& forwardShader = materialFactory.getDefaultShader(ShadingMethod::Forward);
 				SceneShader& transparentShader = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
@@ -87,10 +73,10 @@ public:
 			
 
 			Transform& meshTransform22 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 5.9f), vec3(0.f, 0.f, 0.f), vec3(0.12f));
-			MeshRenderer& girl = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/girl/girl_nofloor.obj"),
+			std::unique_ptr<MeshRenderer> girlPtr = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateStaticModel("resources/girl/girl_nofloor.obj"),
 				meshTransform22, "Girl");
-			scene.addMeshRenderer(girl);
-
+			MeshRenderer& girl = scene.addMeshRenderer(std::move(girlPtr));
 
 			girl.iterateMeshesSafe([&](const MeshInstance& mesh) {
 				if (mesh.getName() == "eyelash" || mesh.getName() == "fur") {

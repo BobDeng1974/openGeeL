@@ -44,26 +44,25 @@ namespace geeL {
 
 	public:
 		MeshFactory(MaterialFactory& factory);
-		~MeshFactory();
 
 		//Create new mesh renderer with default shading
-		StaticMeshRenderer& CreateMeshRenderer(std::shared_ptr<StaticModel> model,
+		std::unique_ptr<StaticMeshRenderer> CreateMeshRenderer(std::shared_ptr<StaticModel> model,
 			Transform& transform, const std::string& name);
 
-		StaticMeshRenderer& CreateMeshRenderer(std::shared_ptr<StaticModel> model, SceneShader& shader,
-			Transform& transform, const std::string& name);
+		std::unique_ptr<StaticMeshRenderer> CreateMeshRenderer(std::shared_ptr<StaticModel> model, 
+			SceneShader& shader, Transform& transform, const std::string& name);
 
 		//Create separate mesh renderers for every mesh in given model
+		//Note: Memory of returned mesh renderers is unmanaged
 		std::list<StaticMeshRenderer*> CreateMeshRenderers(std::shared_ptr<StaticModel> model,
 			SceneShader& shader, Transform& transform);
 
 		//Create new skinned mesh renderer with default shading
-		SkinnedMeshRenderer& CreateMeshRenderer(std::shared_ptr<SkinnedModel> model, Transform& transform,
-			const std::string& name);
-
-		SkinnedMeshRenderer& CreateMeshRenderer(std::shared_ptr<SkinnedModel> model, SceneShader& shader,
+		std::unique_ptr<SkinnedMeshRenderer> CreateMeshRenderer(std::shared_ptr<SkinnedModel> model, 
 			Transform& transform, const std::string& name);
 
+		std::unique_ptr<SkinnedMeshRenderer> CreateMeshRenderer(std::shared_ptr<SkinnedModel> model, 
+			SceneShader& shader, Transform& transform, const std::string& name);
 
 		//Creates, initializes and returns a new static model from given file path or 
 		//returns an existing model if it already uses this file
@@ -77,7 +76,6 @@ namespace geeL {
 		MaterialFactory& factory;
 		std::map<std::string, std::weak_ptr<StaticModel>> staticModels;
 		std::map<std::string, std::weak_ptr<SkinnedModel>> skinnedModels;
-		std::list<MeshRenderer*> meshRenderer;
 
 		void fillStaticModel(StaticModel& model, std::string path);
 		void processStaticNode(StaticModel& model, std::string directory, aiNode* node, const aiScene* scene);

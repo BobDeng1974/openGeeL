@@ -40,9 +40,11 @@ public:
 			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config);
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(0.1f, 0.1f, 0.1f));
-			MeshRenderer& deer = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/deer/scene2.obj"),
+
+			std::unique_ptr<MeshRenderer> deerPtr = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateStaticModel("resources/deer/scene2.obj"),
 				meshTransform2, "Deer");
-			scene.addMeshRenderer(deer);
+			MeshRenderer& deer = scene.addMeshRenderer(std::move(deerPtr));
 
 			deer.iterateMaterials([&](MaterialContainer& container) {
 				container.setFloatValue("Metallic", 0.2f);

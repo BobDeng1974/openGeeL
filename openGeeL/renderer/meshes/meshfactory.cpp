@@ -23,29 +23,24 @@ using namespace std;
 
 namespace geeL {
 
-	MeshFactory::MeshFactory(MaterialFactory& factory) : factory(factory) {}
-
-	MeshFactory::~MeshFactory() {
-		for (auto it = meshRenderer.begin(); it != meshRenderer.end(); it++)
-			delete *it;
-	}
+	MeshFactory::MeshFactory(MaterialFactory& factory) 
+		: factory(factory) {}
 
 
-	StaticMeshRenderer& MeshFactory::CreateMeshRenderer(std::shared_ptr<StaticModel> model,
+	unique_ptr<StaticMeshRenderer> MeshFactory::CreateMeshRenderer(std::shared_ptr<StaticModel> model,
 		Transform& transform, const string& name) {
 		
 		return CreateMeshRenderer(model, factory.getDefaultShader(ShadingMethod::Deferred), 
 			transform, name);
 	}
 
-	StaticMeshRenderer& MeshFactory::CreateMeshRenderer(std::shared_ptr<StaticModel> model, SceneShader& shader,
+	unique_ptr<StaticMeshRenderer> MeshFactory::CreateMeshRenderer(std::shared_ptr<StaticModel> model, SceneShader& shader,
 		Transform& transform, const string& name) {
 
-		StaticMeshRenderer* renderer = new StaticMeshRenderer(transform, shader, 
-			model, CullingMode::cullFront, name);
+		unique_ptr<StaticMeshRenderer> renderer(
+			new StaticMeshRenderer(transform, shader, model, CullingMode::cullFront, name));
 
-		meshRenderer.push_back(renderer);
-		return *renderer;
+		return renderer;
 	}
 
 	list<StaticMeshRenderer*> MeshFactory::CreateMeshRenderers(std::shared_ptr<StaticModel> model, SceneShader& shader,
@@ -63,7 +58,6 @@ namespace geeL {
 			StaticMeshRenderer* renderer = new StaticMeshRenderer(newTransform, shader, model, meshes, 
 				CullingMode::cullFront, mesh.getName());
 
-			meshRenderer.push_back(renderer);
 			renderers.push_back(renderer);
 		});
 		
@@ -71,24 +65,23 @@ namespace geeL {
 	}
 
 
-	SkinnedMeshRenderer& MeshFactory::CreateMeshRenderer(std::shared_ptr<SkinnedModel> model,
+	unique_ptr<SkinnedMeshRenderer> MeshFactory::CreateMeshRenderer(std::shared_ptr<SkinnedModel> model,
 		Transform& transform, const string& name) {
 
 		return CreateMeshRenderer(model, factory.getDefaultShader(ShadingMethod::Deferred, true), 
 			transform, name);
 	}
 
-	SkinnedMeshRenderer& MeshFactory::CreateMeshRenderer(std::shared_ptr<SkinnedModel> model, SceneShader& shader,
+	unique_ptr<SkinnedMeshRenderer> MeshFactory::CreateMeshRenderer(std::shared_ptr<SkinnedModel> model, SceneShader& shader,
 		Transform& transform, const string& name) {
 
-		SkinnedMeshRenderer* renderer = new SkinnedMeshRenderer(transform, shader, 
-			model, CullingMode::cullFront, name);
+		std::unique_ptr<SkinnedMeshRenderer> renderer(
+			new SkinnedMeshRenderer(transform, shader, model, CullingMode::cullFront, name));
 
-		meshRenderer.push_back(renderer);
-		return *renderer;
+		return renderer;
 	}
 
-	std::shared_ptr<StaticModel> MeshFactory::CreateStaticModel(string filePath) {
+	shared_ptr<StaticModel> MeshFactory::CreateStaticModel(string filePath) {
 
 		auto it(staticModels.find(filePath));
 		//Create new model if none exist yet
@@ -109,7 +102,7 @@ namespace geeL {
 		return wModel.lock();
 	}
 
-	std::shared_ptr<SkinnedModel> MeshFactory::CreateSkinnedModel(string filePath) {
+	shared_ptr<SkinnedModel> MeshFactory::CreateSkinnedModel(string filePath) {
 
 		auto it(skinnedModels.find(filePath));
 		//Create new model if none exist yet

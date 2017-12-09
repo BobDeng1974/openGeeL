@@ -242,30 +242,30 @@ namespace geeL {
 						bool separate = m["separate"].get_or(false);
 
 						//Build meshe renderers
-
+						
 						std::list<MeshRenderer*> meshRenderers;
 						if (separate) {
-							std::list<StaticMeshRenderer*>& renderers = meshFactory.CreateMeshRenderers(
+							std::list<StaticMeshRenderer*> renderers = std::move(meshFactory.CreateMeshRenderers(
 								meshFactory.CreateStaticModel(filePath),
 								materialFactory.getDeferredShader(),
-								meshTransform);
+								meshTransform));
 
 							for (auto it(renderers.begin()); it != renderers.end(); it++) {
-								MeshRenderer& renderer = **it;
+								MeshRenderer* rendererPtr = *it;
 
-								scene.addMeshRenderer(renderer);
+								MeshRenderer& renderer = scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(rendererPtr));
 								meshRenderers.push_back(&renderer);
 							}
 						}
 						else {
-							MeshRenderer& meshRenderer = meshFactory.CreateMeshRenderer(
+							std::unique_ptr<MeshRenderer> rendererPtr = meshFactory.CreateMeshRenderer(
 								meshFactory.CreateStaticModel(filePath),
 								meshTransform, name);
 
-							scene.addMeshRenderer(meshRenderer);
+							MeshRenderer& meshRenderer = scene.addMeshRenderer(std::move(rendererPtr));
 							meshRenderers.push_back(&meshRenderer);
 						}
-
+						
 
 						//Iterate through all materials
 

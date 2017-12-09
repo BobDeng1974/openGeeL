@@ -4,6 +4,7 @@
 #include <vec3.hpp>
 #include <functional>
 #include <map>
+#include <memory>
 #include <mutex>
 #include <list>
 #include <set>
@@ -41,6 +42,7 @@ namespace geeL {
 
 	public:
 		Scene(Transform& world, LightManager& lightManager, UniformBindingStack& pipeline, SceneCamera& camera);
+		virtual ~Scene();
 
 		void addRequester(SceneRequester& requester);
 		void addShader(SceneShader& shader);
@@ -52,7 +54,7 @@ namespace geeL {
 		const LightManager& getLightmanager() const;
 		LightManager& getLightmanager();
 
-		void addMeshRenderer(MeshRenderer& renderer);
+		MeshRenderer& addMeshRenderer(std::unique_ptr<MeshRenderer> renderer);
 		void removeMeshRenderer(MeshRenderer& renderer);
 
 		void setSkybox(Skybox& skybox);

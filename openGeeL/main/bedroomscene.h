@@ -50,9 +50,10 @@ public:
 
 			float scale = 0.05f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(scale));
-			MeshRenderer& bedroom = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/bedroom/Bedroom2.obj"),
+			std::unique_ptr<MeshRenderer> bedroomPtr = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateStaticModel("resources/bedroom/Bedroom2.obj"),
 				meshTransform2, "Bedroom");
-			scene.addMeshRenderer(bedroom);
+			MeshRenderer& bedroom = scene.addMeshRenderer(std::move(bedroomPtr));
 
 			std::map<const MeshInstance*, const Material*> transObjects;
 			bedroom.iterate([&](const MeshInstance& mesh, const Material& material) {

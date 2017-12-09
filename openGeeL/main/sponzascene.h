@@ -33,9 +33,10 @@ public:
 			lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 121.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
-			MeshRenderer& buddha = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/classics/buddha.obj"),
+			std::unique_ptr<MeshRenderer> buddhaPtr = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateStaticModel("resources/classics/buddha.obj"),
 				meshTransform2, "Buddha");
-			scene.addMeshRenderer(buddha);
+			MeshRenderer& buddha = scene.addMeshRenderer(std::move(buddhaPtr));
 
 			buddha.iterateMaterials([&](MaterialContainer& container) {
 				container.setFloatValue("Transparency", 0.01f);
@@ -46,14 +47,15 @@ public:
 
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(152.f, 24.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
-			MeshRenderer& sponz = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
+			std::unique_ptr<MeshRenderer> sponzaPtr = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
 				meshTransform6, "Sponza");
-			scene.addMeshRenderer(sponz);
+			MeshRenderer& sponza = scene.addMeshRenderer(std::move(sponzaPtr));
 
 			//DynamicRenderTexture& renderTex = DynamicRenderTexture(camera, Resolution(1000));
 			//renderer.addRenderTexture(renderTex);
 
-			sponz.iterateMaterials([&](MaterialContainer& container) {
+			sponza.iterateMaterials([&](MaterialContainer& container) {
 				if (container.name == "fabric_g") {
 					//container.addTexture("Diffuse", renderTex);
 					container.setVectorValue("Emissivity", vec3(0.08f));

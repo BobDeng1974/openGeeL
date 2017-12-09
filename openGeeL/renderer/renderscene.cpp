@@ -26,6 +26,13 @@ namespace geeL {
 		addRequester(lightManager);
 	}
 
+	Scene::~Scene() {
+		for (auto it(renderers.begin()); it != renderers.end(); it++) {
+			MeshRenderer* renderer = *it;
+			delete renderer;
+		}
+	}
+
 
 	void Scene::addRequester(SceneRequester& requester) {
 		sceneRequester.push_back(&requester);
@@ -80,18 +87,23 @@ namespace geeL {
 		}
 	}
 
-	void Scene::addMeshRenderer(MeshRenderer& renderer) {
-		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
+	MeshRenderer& Scene::addMeshRenderer(std::unique_ptr<MeshRenderer> renderer) {
+		MeshRenderer* rawRenderer = renderer.release();
+		renderers.emplace(rawRenderer);
+
+		rawRenderer->iterateShaders([this, &rawRenderer](SceneShader& shader) {
 			//Init shader if it hasn't been added to the scene yet
 			addShader(shader);
 
-			renderer.addMaterialChangeListener([this](MeshRenderer& renderer, Material oldMaterial, Material newMaterial) {
+			rawRenderer->addMaterialChangeListener([this](MeshRenderer& renderer, Material oldMaterial, Material newMaterial) {
 				updateMeshRenderer(renderer, oldMaterial, newMaterial);
 			});
 
-			renderObjects[shader.getMethod()][&shader][renderer.transform.getID()] = &renderer;
-			renderers.emplace(&renderer);
+			
+			renderObjects[shader.getMethod()][&shader][rawRenderer->transform.getID()] = rawRenderer;
 		});
+
+		return *rawRenderer;
 	}
 
 
@@ -105,19 +117,20 @@ namespace geeL {
 			if (itShader != shaders.end()) {
 				auto& objects = (*itShader).second;
 				auto obj = objects.find(renderer.transform.getID());
-				if (obj != objects.end())
+				if (obj != objects.end()) {
 					objects.erase(obj);
-
+				}
 			}
 		}
-
-		renderers.erase(&renderer);
 	}
 
 	void Scene::removeMeshRenderer(MeshRenderer& renderer) {
 		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
 			removeMeshRenderer(renderer, shader);
 		});
+
+		renderers.erase(&renderer);
+		delete &renderer;
 	}
 
 
@@ -126,9 +139,12 @@ namespace geeL {
 		SceneShader& newShader = newMaterial.getShader();
 
 		if (&oldShader == &newShader || oldShader.getMethod() == newShader.getMethod()) return;
-		
+
 		//Remove mesh renderer from old materials shaders bucket
-		if(!renderer.containsShader(oldShader)) removeMeshRenderer(renderer, oldShader);
+		if (!renderer.containsShader(oldShader)) {
+			removeMeshRenderer(renderer, oldShader);
+		}
+
 
 		addShader(newShader);
 		renderObjects[newShader.getMethod()][&newShader][renderer.transform.getID()] = &renderer;

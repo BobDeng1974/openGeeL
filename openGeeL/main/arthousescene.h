@@ -54,9 +54,10 @@ public:
 
 			float scale = 0.008f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(scale));
-			MeshRenderer& studio = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/art/artStudio.obj"),
+			std::unique_ptr<MeshRenderer> studio = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateStaticModel("resources/art/artStudio.obj"),
 				meshTransform2, "Studio");
-			scene.addMeshRenderer(studio);
+			scene.addMeshRenderer(std::move(studio));
 
 
 			ObjectLister& objectLister = ObjectLister(scene);

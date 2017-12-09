@@ -42,10 +42,12 @@ public:
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::High, 6.f, 15U, 150.f, 1.f);
 			lightManager.addPointLight(lightTransform21, glm::vec3(lightIntensity * 3.f, lightIntensity * 59.f, lightIntensity * 43.f), config2);
 
+
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.1f));
-			MeshRenderer& capsule = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/capsule/Capsule.obj"),
+			std::unique_ptr<MeshRenderer> capsulePtr = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateStaticModel("resources/capsule/Capsule.obj"),
 				meshTransform2, "Capsule");
-			scene.addMeshRenderer(capsule);
+			 MeshRenderer& capsule = scene.addMeshRenderer(std::move(capsulePtr));
 
 			capsule.iterateMaterials([&](MaterialContainer& container) {
 				container.setIntValue("InverseRoughness", 1);
@@ -53,15 +55,15 @@ public:
 
 
 			Transform& meshTransform222 = transformFactory.CreateTransform(vec3(0.0f, -4.75f, 4.1f), vec3(0.f, 180.f, 0.f), vec3(0.0075f));
-			SkinnedMeshRenderer& drone = meshFactory.CreateMeshRenderer(meshFactory.CreateSkinnedModel("resources/drone/Drone.fbx"),
+			std::unique_ptr<SkinnedMeshRenderer> drone = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateSkinnedModel("resources/drone/Drone.fbx"),
 				meshTransform222, "Drone");
-			scene.addMeshRenderer(drone);
-
-			SimpleAnimator& anim = drone.addComponent<SimpleAnimator>(drone.getSkinnedModel(), drone.getSkeleton());
+			
+			SimpleAnimator& anim = drone->addComponent<SimpleAnimator>(drone->getSkinnedModel(), drone->getSkeleton());
 			anim.loopAnimation(true);
 			anim.startAnimation("AnimStack::Take 001", 10);
 
-			drone.iterateMaterials([&](MaterialContainer& container) {
+			drone->iterateMaterials([&](MaterialContainer& container) {
 				if (container.name == "Robot") {
 					container.addTexture("diffuse", materialFactory.CreateTexture("resources/drone/Drone_diff.jpg", ColorType::GammaSpace));
 					container.addTexture("roughness", materialFactory.CreateTexture("resources/drone/Drone_spec.jpg"));
@@ -74,6 +76,9 @@ public:
 					container.setFloatValue("Metallic", 0.8f);
 				}
 			});
+
+			scene.addMeshRenderer(std::move(drone));
+
 
 
 			ObjectLister& objectLister = ObjectLister(scene);

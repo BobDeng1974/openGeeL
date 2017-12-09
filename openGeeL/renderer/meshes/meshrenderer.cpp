@@ -140,13 +140,13 @@ namespace geeL{
 				SceneShader& shader = material.getShader();
 				materials[&shader].push_back(MaterialMapping(toRemove->mesh, material, toRemove->mask));
 
-				//Inform material change listeners
-				for (auto it(materialListeners.begin()); it != materialListeners.end(); it++)
-					(*it)(*this, oldMaterial, material);
-
 				//Remove shader bucket if all associated materials have been removed
 				if (elements->size() == 0)
 					materials.erase(it);
+
+				//Inform material change listeners
+				for (auto it(materialListeners.begin()); it != materialListeners.end(); it++)
+					(*it)(*this, oldMaterial, material);
 
 				return;
 			}

@@ -43,15 +43,15 @@ public:
 			lightManager.addPointLight(lightTransform21, glm::vec3(13.f / 256.f, 255.f / 256.f, 186.f / 256.f) * lightIntensity, config);
 
 			Transform& meshTransform3 = transformFactory.CreateTransform(vec3(1.5f, 0.34f, 12.5f), vec3(180.f, 29.6f, 180.f), vec3(0.12f));
-			SkinnedMeshRenderer& skull = meshFactory.CreateMeshRenderer(meshFactory.CreateSkinnedModel("resources/skull/skull.fbx"),
+			std::unique_ptr<SkinnedMeshRenderer> skull = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateSkinnedModel("resources/skull/skull.fbx"),
 				meshTransform3, "Skull");
-			scene.addMeshRenderer(skull);
-
-			SimpleAnimator& anim = skull.addComponent<SimpleAnimator>(skull.getSkinnedModel(), skull.getSkeleton());
+			
+			SimpleAnimator& anim = skull->addComponent<SimpleAnimator>(skull->getSkinnedModel(), skull->getSkeleton());
 			anim.loopAnimation(true);
 			anim.startAnimation("AnimStack::Take 001");
 
-			skull.iterateMaterials([&](MaterialContainer& container) {
+			skull->iterateMaterials([&](MaterialContainer& container) {
 				if (container.name == "skullhull") {
 					container.addTexture("diffuse", materialFactory.CreateTexture("resources/skull/Servoskull_mechanics_diff2.jpg", ColorType::GammaSpace, FilterMode::Bilinear));
 					container.addTexture("normal", materialFactory.CreateTexture("resources/skull/Servoskull_mechanics_normal.jpg", ColorType::RGBA, FilterMode::Bilinear));
@@ -70,6 +70,8 @@ public:
 					container.setFloatValue("Metallic", 0.1f);
 				}
 			});
+
+			scene.addMeshRenderer(std::move(skull));
 
 
 			ObjectLister& objectLister = ObjectLister(scene);

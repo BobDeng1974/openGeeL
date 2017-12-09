@@ -66,10 +66,11 @@ public:
 
 			float height = -2.f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(20.f, 0.2f, 20.f));
-			MeshRenderer& plane = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/plane.obj"),
+			std::unique_ptr<MeshRenderer> planePtr = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateStaticModel("resources/primitives/plane.obj"),
 				meshTransform2, "Floor");
 
-			scene.addMeshRenderer(plane);
+			MeshRenderer& plane = scene.addMeshRenderer(std::move(planePtr));
 			//physics.addPlane(vec3(0.f, 1.f, 0.f), meshTransform2, RigidbodyProperties(0.f, false));
 
 			plane.iterateMaterials([&](MaterialContainer& container) {
@@ -80,9 +81,10 @@ public:
 
 
 			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 2.f, 4.f), vec3(0.f), vec3(1.f));
-			MeshRenderer& sphere1 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/sphere.obj"),
+			std::unique_ptr<MeshRenderer> spherePtr = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateStaticModel("resources/primitives/sphere.obj"),
 				meshTransform4, "Sphere");
-			scene.addMeshRenderer(sphere1);
+			MeshRenderer& sphere1 = scene.addMeshRenderer(std::move(spherePtr));
 			//physics.addSphere(1.f, meshTransform4, RigidbodyProperties(10.f, false));
 			//physics.addMesh(sphere1.getModel(), meshTransform4, RigidbodyProperties(10.f, false));
 			
@@ -98,9 +100,10 @@ public:
 			});
 
 			Transform& meshTransform42 = transformFactory.CreateTransform(vec3(12.f, 2.f, 4.f), vec3(0.f), vec3(1.f));
-			MeshRenderer& sphere12 = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/sphere.obj"),
+			std::unique_ptr<MeshRenderer> sphere2Ptr = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateStaticModel("resources/primitives/sphere.obj"),
 				meshTransform42, "Sphere");
-			scene.addMeshRenderer(sphere12);
+			MeshRenderer& sphere12 = scene.addMeshRenderer(std::move(sphere2Ptr));
 			//physics.addSphere(1.f, meshTransform4, RigidbodyProperties(10.f, false));
 			//physics.addMesh(sphere1.getModel(), meshTransform4, RigidbodyProperties(10.f, false));
 
@@ -117,9 +120,10 @@ public:
 
 
 			Transform& meshTransform5 = transformFactory.CreateTransform(vec3(0.0f, 0.5f, -2.0f), vec3(0.5f, 0.5f, 0.5f), vec3(5.2f, 2.2f, 1.2f));
-			MeshRenderer& box = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/cube.obj"),
+			std::unique_ptr<MeshRenderer> boxPtr = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateStaticModel("resources/primitives/cube.obj"),
 				meshTransform5, "Box");
-			//scene.addMeshRenderer(box);
+			MeshRenderer& box = scene.addMeshRenderer(std::move(boxPtr));
 
 			box.iterateMaterials([&](MaterialContainer& container) {
 				container.setFloatValue("Roughness", 0.3f);
@@ -129,26 +133,29 @@ public:
 
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(1.f));
-			MeshRenderer& cyborg = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/cyborg/Cyborg.obj"),
+			std::unique_ptr<MeshRenderer> cyborgPtr = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateStaticModel("resources/cyborg/Cyborg.obj"),
 				meshTransform6, "Cyborg");
-			scene.addMeshRenderer(cyborg);
+			MeshRenderer& cyborg = scene.addMeshRenderer(std::move(cyborgPtr));
 
 			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.2f));
-			MeshRenderer& nano = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/nanosuit/nanosuit.obj"),
+			std::unique_ptr<MeshRenderer> nanoPtr = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateStaticModel("resources/nanosuit/nanosuit.obj"),
 				meshTransform1, "Nano");
+			
+			MeshRenderer& nano = scene.addMeshRenderer(std::move(nanoPtr));
 			nano.addComponent<RotationComponent>();
-			scene.addMeshRenderer(nano);
-
 			
 			float scale = 0.05f;
 			Transform& meshTransform7 = transformFactory.CreateTransform(vec3(2.f, -1.f, 4.0f), vec3(0.f), vec3(scale));
-			SkinnedMeshRenderer& dude = meshFactory.CreateMeshRenderer(meshFactory.CreateSkinnedModel("resources/guard/boblampclean.md5mesh"),
+			std::unique_ptr<SkinnedMeshRenderer> dude = meshFactory.CreateMeshRenderer(
+				meshFactory.CreateSkinnedModel("resources/guard/boblampclean.md5mesh"),
 			meshTransform7, "Dude");
-			//scene.addMeshRenderer(dude);
-
-			SimpleAnimator& anim = dude.addComponent<SimpleAnimator>(dude.getSkinnedModel(), dude.getSkeleton());
-			//anim.startAnimation("Animation 1");
 			
+
+			SimpleAnimator& anim = dude->addComponent<SimpleAnimator>(dude->getSkinnedModel(), dude->getSkeleton());
+			//anim.startAnimation("Animation 1");
+			//scene.addMeshRenderer(std::move(dude));
 
 			ObjectLister& objectLister = ObjectLister(scene);
 			objectLister.add(camera);
