@@ -245,8 +245,8 @@ namespace geeL {
 						
 						std::list<MeshRenderer*> meshRenderers;
 						if (separate) {
-							std::list<StaticMeshRenderer*> renderers = std::move(meshFactory.CreateMeshRenderers(
-								meshFactory.CreateStaticModel(filePath),
+							std::list<StaticMeshRenderer*> renderers = std::move(meshFactory.createMeshRenderers(
+								meshFactory.createStaticModel(filePath),
 								materialFactory.getDeferredShader(),
 								meshTransform));
 
@@ -258,8 +258,8 @@ namespace geeL {
 							}
 						}
 						else {
-							std::unique_ptr<MeshRenderer> rendererPtr = meshFactory.CreateMeshRenderer(
-								meshFactory.CreateStaticModel(filePath),
+							std::unique_ptr<MeshRenderer> rendererPtr = meshFactory.createMeshRenderer(
+								meshFactory.createStaticModel(filePath),
 								meshTransform, name);
 
 							MeshRenderer& meshRenderer = scene.addMeshRenderer(std::move(rendererPtr));
@@ -329,7 +329,7 @@ namespace geeL {
 													assert(path.valid() && "No path specified for given texture");
 													assert(type.valid() && "No type specified for given texture");
 
-													ImageTexture& image = materialFactory.CreateTexture(path, ColorType::GammaSpace);
+													ImageTexture& image = materialFactory.createTexture(path, ColorType::GammaSpace);
 													container.addTexture(type, image);
 
 													k++;

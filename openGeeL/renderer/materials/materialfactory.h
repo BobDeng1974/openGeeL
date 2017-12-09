@@ -32,7 +32,7 @@ namespace geeL {
 
 		//Creates and returns a new texture from given file path or 
 		//returns an existing texture if it already uses this file
-		ImageTexture& CreateTexture(std::string filePath, 
+		ImageTexture& createTexture(std::string filePath, 
 			ColorType colorType = ColorType::RGBA,
 			FilterMode filterMode = FilterMode::None,
 			WrapMode wrapMode = WrapMode::Repeat, 
@@ -40,7 +40,7 @@ namespace geeL {
 
 		//Creates and returns a new texture map from given file path or 
 		//returns an existing texture if it already uses this file
-		TextureMap& CreateTextureMap(std::string filePath,
+		TextureMap& createTextureMap(std::string filePath,
 			MapType type = MapType::Diffuse, 
 			ColorType colorType = ColorType::RGBA,
 			FilterMode filterMode = FilterMode::None,
@@ -56,7 +56,7 @@ namespace geeL {
 
 		//Creates and returns a new shader program from given fragment path
 		//Note: Only generic, forward and transparent shading methods allowed
-		SceneShader& CreateShader(ShadingMethod shading, std::string fragmentPath, bool animated = false);
+		SceneShader& createShader(ShadingMethod shading, std::string fragmentPath, bool animated = false);
 
 		//Returns default shader for static deferred rendering
 		SceneShader& getDeferredShader() const;

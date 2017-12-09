@@ -44,8 +44,8 @@ public:
 
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.1f));
-			std::unique_ptr<MeshRenderer> capsulePtr = meshFactory.CreateMeshRenderer(
-				meshFactory.CreateStaticModel("resources/capsule/Capsule.obj"),
+			std::unique_ptr<MeshRenderer> capsulePtr = meshFactory.createMeshRenderer(
+				meshFactory.createStaticModel("resources/capsule/Capsule.obj"),
 				meshTransform2, "Capsule");
 			 MeshRenderer& capsule = scene.addMeshRenderer(std::move(capsulePtr));
 
@@ -55,8 +55,8 @@ public:
 
 
 			Transform& meshTransform222 = transformFactory.CreateTransform(vec3(0.0f, -4.75f, 4.1f), vec3(0.f, 180.f, 0.f), vec3(0.0075f));
-			std::unique_ptr<SkinnedMeshRenderer> drone = meshFactory.CreateMeshRenderer(
-				meshFactory.CreateSkinnedModel("resources/drone/Drone.fbx"),
+			std::unique_ptr<SkinnedMeshRenderer> drone = meshFactory.createMeshRenderer(
+				meshFactory.createSkinnedModel("resources/drone/Drone.fbx"),
 				meshTransform222, "Drone");
 			
 			SimpleAnimator& anim = drone->addComponent<SimpleAnimator>(drone->getSkinnedModel(), drone->getSkeleton());
@@ -65,12 +65,12 @@ public:
 
 			drone->iterateMaterials([&](MaterialContainer& container) {
 				if (container.name == "Robot") {
-					container.addTexture("diffuse", materialFactory.CreateTexture("resources/drone/Drone_diff.jpg", ColorType::GammaSpace));
-					container.addTexture("roughness", materialFactory.CreateTexture("resources/drone/Drone_spec.jpg"));
-					container.addTexture("normal", materialFactory.CreateTexture("resources/drone/Drone_normal.jpg"));
-					container.addTexture("metallic", materialFactory.CreateTexture("resources/drone/Drone_gloss.jpg"));
-					container.addTexture("emission", materialFactory.CreateTexture("resources/drone/Drone_emissive.jpg"));
-					container.addTexture("occlusion", materialFactory.CreateTexture("resources/drone/Drone_ao.jpg"));
+					container.addTexture("diffuse", materialFactory.createTexture("resources/drone/Drone_diff.jpg", ColorType::GammaSpace));
+					container.addTexture("roughness", materialFactory.createTexture("resources/drone/Drone_spec.jpg"));
+					container.addTexture("normal", materialFactory.createTexture("resources/drone/Drone_normal.jpg"));
+					container.addTexture("metallic", materialFactory.createTexture("resources/drone/Drone_gloss.jpg"));
+					container.addTexture("emission", materialFactory.createTexture("resources/drone/Drone_emissive.jpg"));
+					container.addTexture("occlusion", materialFactory.createTexture("resources/drone/Drone_ao.jpg"));
 
 					container.setFloatValue("Roughness", 0.6f);
 					container.setFloatValue("Metallic", 0.8f);

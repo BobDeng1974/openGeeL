@@ -46,8 +46,8 @@ public:
 
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(0.1f, 0.1f, 0.1f));
-			std::unique_ptr<MeshRenderer> sciencePtr = meshFactory.CreateMeshRenderer(
-				meshFactory.CreateStaticModel("resources/mad/madScience.obj"),
+			std::unique_ptr<MeshRenderer> sciencePtr = meshFactory.createMeshRenderer(
+				meshFactory.createStaticModel("resources/mad/madScience.obj"),
 				meshTransform2, "Science");
 			MeshRenderer& science = scene.addMeshRenderer(std::move(sciencePtr));
 

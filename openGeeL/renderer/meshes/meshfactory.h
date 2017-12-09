@@ -46,31 +46,31 @@ namespace geeL {
 		MeshFactory(MaterialFactory& factory);
 
 		//Create new mesh renderer with default shading
-		std::unique_ptr<StaticMeshRenderer> CreateMeshRenderer(std::shared_ptr<StaticModel> model,
+		std::unique_ptr<StaticMeshRenderer> createMeshRenderer(std::shared_ptr<StaticModel> model,
 			Transform& transform, const std::string& name);
 
-		std::unique_ptr<StaticMeshRenderer> CreateMeshRenderer(std::shared_ptr<StaticModel> model, 
+		std::unique_ptr<StaticMeshRenderer> createMeshRenderer(std::shared_ptr<StaticModel> model, 
 			SceneShader& shader, Transform& transform, const std::string& name);
 
 		//Create separate mesh renderers for every mesh in given model
 		//Note: Memory of returned mesh renderers is unmanaged
-		std::list<StaticMeshRenderer*> CreateMeshRenderers(std::shared_ptr<StaticModel> model,
+		std::list<StaticMeshRenderer*> createMeshRenderers(std::shared_ptr<StaticModel> model,
 			SceneShader& shader, Transform& transform);
 
 		//Create new skinned mesh renderer with default shading
-		std::unique_ptr<SkinnedMeshRenderer> CreateMeshRenderer(std::shared_ptr<SkinnedModel> model, 
+		std::unique_ptr<SkinnedMeshRenderer> createMeshRenderer(std::shared_ptr<SkinnedModel> model, 
 			Transform& transform, const std::string& name);
 
-		std::unique_ptr<SkinnedMeshRenderer> CreateMeshRenderer(std::shared_ptr<SkinnedModel> model, 
+		std::unique_ptr<SkinnedMeshRenderer> createMeshRenderer(std::shared_ptr<SkinnedModel> model, 
 			SceneShader& shader, Transform& transform, const std::string& name);
 
 		//Creates, initializes and returns a new static model from given file path or 
 		//returns an existing model if it already uses this file
-		std::shared_ptr<StaticModel> CreateStaticModel(std::string filePath);
+		std::shared_ptr<StaticModel> createStaticModel(std::string filePath);
 
 		//Creates, initializes and returns a new static model from given file path or 
 		//returns an existing model if it already uses this file
-		std::shared_ptr<SkinnedModel> CreateSkinnedModel(std::string filePath);
+		std::shared_ptr<SkinnedModel> createSkinnedModel(std::string filePath);
 
 	private:
 		MaterialFactory& factory;

@@ -33,8 +33,8 @@ public:
 			lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f), config);
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 121.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
-			std::unique_ptr<MeshRenderer> buddhaPtr = meshFactory.CreateMeshRenderer(
-				meshFactory.CreateStaticModel("resources/classics/buddha.obj"),
+			std::unique_ptr<MeshRenderer> buddhaPtr = meshFactory.createMeshRenderer(
+				meshFactory.createStaticModel("resources/classics/buddha.obj"),
 				meshTransform2, "Buddha");
 			MeshRenderer& buddha = scene.addMeshRenderer(std::move(buddhaPtr));
 
@@ -47,8 +47,8 @@ public:
 
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(152.f, 24.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
-			std::unique_ptr<MeshRenderer> sponzaPtr = meshFactory.CreateMeshRenderer(
-				meshFactory.CreateStaticModel("resources/sponza/sponza.obj"),
+			std::unique_ptr<MeshRenderer> sponzaPtr = meshFactory.createMeshRenderer(
+				meshFactory.createStaticModel("resources/sponza/sponza.obj"),
 				meshTransform6, "Sponza");
 			MeshRenderer& sponza = scene.addMeshRenderer(std::move(sponzaPtr));
 
@@ -61,11 +61,11 @@ public:
 					container.setVectorValue("Emissivity", vec3(0.08f));
 				}
 				else if (container.name == "Material__57")
-					container.addTexture("alpha", materialFactory.CreateTexture("resources/sponza/textures/vase_plant_mask.tga"));
+					container.addTexture("alpha", materialFactory.createTexture("resources/sponza/textures/vase_plant_mask.tga"));
 				else if (container.name == "chain")
-					container.addTexture("alpha", materialFactory.CreateTexture("resources/sponza/textures/chain_texture_mask.tga"));
+					container.addTexture("alpha", materialFactory.createTexture("resources/sponza/textures/chain_texture_mask.tga"));
 				else if (container.name == "leaf")
-					container.addTexture("alpha", materialFactory.CreateTexture("resources/sponza/textures/sponza_thorn_mask.tga"));
+					container.addTexture("alpha", materialFactory.createTexture("resources/sponza/textures/sponza_thorn_mask.tga"));
 
 			});
 

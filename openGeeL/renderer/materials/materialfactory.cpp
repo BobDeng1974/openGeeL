@@ -59,7 +59,7 @@ namespace geeL {
 	}
 
 
-	ImageTexture& MaterialFactory::CreateTexture(std::string filePath, ColorType colorType,
+	ImageTexture& MaterialFactory::createTexture(std::string filePath, ColorType colorType,
 		FilterMode filterMode, WrapMode wrapMode,  AnisotropicFilter filter) {
 
 		if (textures.find(filePath) == textures.end())
@@ -68,7 +68,7 @@ namespace geeL {
 		return *textures[filePath];
 	}
 
-	TextureMap& MaterialFactory::CreateTextureMap(string filePath, MapType type, ColorType colorType, 
+	TextureMap& MaterialFactory::createTextureMap(string filePath, MapType type, ColorType colorType, 
 		FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter filter) {
 		
 		if (textureMaps.find(filePath) == textureMaps.end())
@@ -92,7 +92,7 @@ namespace geeL {
 		return *mat;
 	}
 
-	SceneShader& MaterialFactory::CreateShader(ShadingMethod shading, string fragmentPath, bool animated) {
+	SceneShader& MaterialFactory::createShader(ShadingMethod shading, string fragmentPath, bool animated) {
 		std::string vertexPath;
 		ShaderTransformSpace space;
 

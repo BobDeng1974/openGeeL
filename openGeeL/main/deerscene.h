@@ -41,8 +41,8 @@ public:
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(0.1f, 0.1f, 0.1f));
 
-			std::unique_ptr<MeshRenderer> deerPtr = meshFactory.CreateMeshRenderer(
-				meshFactory.CreateStaticModel("resources/deer/scene2.obj"),
+			std::unique_ptr<MeshRenderer> deerPtr = meshFactory.createMeshRenderer(
+				meshFactory.createStaticModel("resources/deer/scene2.obj"),
 				meshTransform2, "Deer");
 			MeshRenderer& deer = scene.addMeshRenderer(std::move(deerPtr));
 

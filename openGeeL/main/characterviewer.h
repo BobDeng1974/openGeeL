@@ -45,8 +45,8 @@ public:
 
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(100.f, 0.2f, 100.f));
-			std::unique_ptr<MeshRenderer> planePtr = meshFactory.CreateMeshRenderer(
-				meshFactory.CreateStaticModel("resources/primitives/plane.obj"),
+			std::unique_ptr<MeshRenderer> planePtr = meshFactory.createMeshRenderer(
+				meshFactory.createStaticModel("resources/primitives/plane.obj"),
 				meshTransform2, "Floor");
 			MeshRenderer& plane = scene.addMeshRenderer(std::move(planePtr));
 
@@ -72,8 +72,8 @@ public:
 			
 
 			Transform& meshTransform22 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 5.9f), vec3(0.f, 0.f, 0.f), vec3(0.12f));
-			std::unique_ptr<MeshRenderer> girlPtr = meshFactory.CreateMeshRenderer(
-				meshFactory.CreateStaticModel("resources/girl/girl_nofloor.obj"),
+			std::unique_ptr<MeshRenderer> girlPtr = meshFactory.createMeshRenderer(
+				meshFactory.createStaticModel("resources/girl/girl_nofloor.obj"),
 				meshTransform22, "Girl");
 			MeshRenderer& girl = scene.addMeshRenderer(std::move(girlPtr));
 
@@ -91,20 +91,20 @@ public:
 
 			girl.iterateMaterials([&](MaterialContainer& container) {
 				if (container.name == "fur") {
-					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/fur_alpha_01.jpg"));
+					container.addTexture("alpha", materialFactory.createTexture("resources/girl/fur_alpha_01.jpg"));
 					container.setFloatValue("Transparency", 0.5f);
 				}
 				else if (container.name == "eyelash")
-					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/eyelash_alpha_01.jpg"));
+					container.addTexture("alpha", materialFactory.createTexture("resources/girl/eyelash_alpha_01.jpg"));
 				else if (container.name == "hair_inner")
-					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/hair_inner_alpha_01.jpg"));
+					container.addTexture("alpha", materialFactory.createTexture("resources/girl/hair_inner_alpha_01.jpg"));
 				else if (container.name == "eyes_outer")
 					container.setFloatValue("Roughness", 0.33f);
 				else if (container.name == "hair_outer")
-					container.addTexture("alpha", materialFactory.CreateTexture("resources/girl/hair_outer_alpha_01.jpg"));
+					container.addTexture("alpha", materialFactory.createTexture("resources/girl/hair_outer_alpha_01.jpg"));
 				else if (container.name == "cloth") {
-					container.addTexture("emission", materialFactory.CreateTexture("resources/girl/cloth_glow_01.jpg", ColorType::GammaSpace));
-					container.addTexture("occlusion", materialFactory.CreateTexture("resources/girl/cloth_ao_01.jpg", ColorType::GammaSpace));
+					container.addTexture("emission", materialFactory.createTexture("resources/girl/cloth_glow_01.jpg", ColorType::GammaSpace));
+					container.addTexture("occlusion", materialFactory.createTexture("resources/girl/cloth_ao_01.jpg", ColorType::GammaSpace));
 					container.setVectorValue("Emissivity", vec3(20.f));
 					container.setFloatValue("Roughness", 0.5f);
 					container.setFloatValue("Metallic", 1.f);
@@ -112,7 +112,7 @@ public:
 				else if (container.name == "light")
 					container.setVectorValue("Emissivity", vec3(100.f));
 				else if (container.name == "body") {
-					container.addTexture("occlusion", materialFactory.CreateTexture("resources/girl/body_ao_01.jpg", ColorType::GammaSpace));
+					container.addTexture("occlusion", materialFactory.createTexture("resources/girl/body_ao_01.jpg", ColorType::GammaSpace));
 					container.setFloatValue("Roughness", 0.5f);
 
 					container.setIntValue("InverseRoughness", true);
