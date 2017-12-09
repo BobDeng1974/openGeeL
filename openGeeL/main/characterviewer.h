@@ -24,9 +24,8 @@ public:
 			camera.addComponent<MovableCamera>(MovableCamera(3.f, 0.45f));
 			scene.setCamera(camera);
 
-			//EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/03-Ueno-Shrine_3k.hdr");
-			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/TropicalRuins_3k.hdr");
-			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeMapFactory.getBuffer(), 1024);
+			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap("resources/envmaps/TropicalRuins_3k.hdr", 
+				cubeMapFactory.getBuffer(), 1024);
 			IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
 			Skybox& skybox = Skybox(iblMap.getIrradianceMap());

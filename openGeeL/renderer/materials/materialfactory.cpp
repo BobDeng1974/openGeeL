@@ -56,10 +56,6 @@ namespace geeL {
 			delete tex;
 		}
 
-		for (auto it = envMaps.begin(); it != envMaps.end(); it++) {
-			EnvironmentMap* tex = it->second;
-			delete tex;
-		}
 	}
 
 
@@ -81,21 +77,15 @@ namespace geeL {
 		return *textureMaps[filePath];
 	}
 
-	EnvironmentMap& MaterialFactory::CreateEnvironmentMap(string filePath) {
-		if (envMaps.find(filePath) == envMaps.end())
-			envMaps[filePath] = new EnvironmentMap(filePath);
 
-		return *envMaps[filePath];
-	}
-
-	DefaultMaterialContainer& MaterialFactory::CreateMaterial() {
+	DefaultMaterialContainer& MaterialFactory::createDefaultMaterial() {
 		DefaultMaterialContainer* mat = new DefaultMaterialContainer();
 		container.push_back(mat);
 
 		return *mat;
 	}
 
-	GenericMaterialContainer& MaterialFactory::CreateMaterial(RenderShader& shader) {
+	GenericMaterialContainer& MaterialFactory::createGenericMaterial() {
 		GenericMaterialContainer* mat = new GenericMaterialContainer();
 		container.push_back(mat);
 

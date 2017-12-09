@@ -34,6 +34,7 @@ namespace geeL {
 		CubeBuffer& getBuffer();
 
 		EnvironmentCubeMap& createEnvironmentCubeMap(EnvironmentMap& environmentMap, unsigned int resolution = 512);
+		EnvironmentCubeMap& createEnvironmentCubeMap(const std::string& fileName, unsigned int resolution = 512);
 		IrradianceMap& createIrradianceMap(const CubeMap& environmentMap, unsigned int resolution = 32);
 
 		PrefilteredEnvironmentMap& createPrefilteredEnvironmentMap(const CubeMap& environmentMap, 

@@ -23,8 +23,8 @@ public:
 			camera.addComponent<MovableCamera>(MovableCamera(5.f, 0.45f));
 			scene.setCamera(camera);
 
-			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/MonValley_G_DirtRoad_3k.hdr");
-			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeMapFactory.getBuffer(), 1024);
+			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap("resources/envmaps/MonValley_G_DirtRoad_3k.hdr", 
+				cubeMapFactory.getBuffer(), 1024);
 			IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
 			Skybox& skybox = Skybox(envCubeMap);

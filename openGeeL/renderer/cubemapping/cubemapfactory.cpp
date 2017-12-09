@@ -36,6 +36,13 @@ namespace geeL {
 		return *map;
 	}
 
+	EnvironmentCubeMap& CubeMapFactory::createEnvironmentCubeMap(const std::string& fileName, unsigned int resolution) {
+		EnvironmentCubeMap* map = new EnvironmentCubeMap(fileName, getBuffer(), resolution);
+		cubeMaps.push_back(map);
+
+		return *map;
+	}
+
 	IrradianceMap& CubeMapFactory::createIrradianceMap(const CubeMap& environmentMap,
 		unsigned int resolution) {
 

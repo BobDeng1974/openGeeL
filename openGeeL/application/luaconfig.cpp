@@ -144,8 +144,8 @@ namespace geeL {
 					bool useIBL = sky["useIBL"].get_or(false);
 					bool drawIrradiance = sky["drawIrradiance"].get_or(false);
 
-					EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap(path);
-					EnvironmentCubeMap& envCubeMap = cubeMapFactory.createEnvironmentCubeMap(preEnvMap, resolution);
+					const string& filePath = path;
+					EnvironmentCubeMap& envCubeMap = cubeMapFactory.createEnvironmentCubeMap(filePath, resolution);
 
 					if (useIBL) {
 						IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);

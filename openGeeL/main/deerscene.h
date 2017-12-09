@@ -25,8 +25,8 @@ public:
 			Transform& probeTransform = transformFactory.CreateTransform(vec3(-0.13f, 0.13f, 0.52f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 			DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024, 20, 20, 20);
 
-			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/WinterForest_Ref.hdr");
-			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeMapFactory.getBuffer(), 1024);
+			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap("resources/envmaps/WinterForest_Ref.hdr", 
+				cubeMapFactory.getBuffer(), 1024);
 			//IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
 			Skybox& skybox = Skybox(envCubeMap);

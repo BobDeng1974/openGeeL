@@ -47,14 +47,12 @@ namespace geeL {
 			WrapMode wrapMode = WrapMode::Repeat, 
 			AnisotropicFilter filter = AnisotropicFilter::Medium);
 
-		//Create and returns new environment map or returns existing one if file is already in use
-		EnvironmentMap& CreateEnvironmentMap(std::string filePath);
 
 		//Creates and returns a new material with default shading
-		DefaultMaterialContainer& CreateMaterial();
+		DefaultMaterialContainer& createDefaultMaterial();
 
 		//Creates and returns a new materials with given shading
-		GenericMaterialContainer& CreateMaterial(RenderShader& shader);
+		GenericMaterialContainer& createGenericMaterial();
 
 		//Creates and returns a new shader program from given fragment path
 		//Note: Only generic, forward and transparent shading methods allowed
@@ -82,7 +80,6 @@ namespace geeL {
 		std::list<Texture2D*> otherTextures;
 		std::map<std::string, ImageTexture*> textures;
 		std::map<std::string, TextureMap*> textureMaps;
-		std::map<std::string, EnvironmentMap*> envMaps;
 
 	};
 }

@@ -27,6 +27,20 @@ namespace geeL {
 		draw(map, frameBuffer);
 	}
 
+	EnvironmentCubeMap::EnvironmentCubeMap(const std::string& filePath, 
+		CubeBuffer& frameBuffer, 
+		unsigned int resolution) 
+			: CubeMap(std::unique_ptr<TextureCube>(
+				new TextureCube(resolution,
+					ColorType::RGB16,
+					FilterMode::Trilinear,
+					WrapMode::ClampEdge))) {
+
+
+		EnvironmentMap map(filePath);
+		draw(map, frameBuffer);
+	}
+
 
 	void EnvironmentCubeMap::draw(const EnvironmentMap& map, CubeBuffer& frameBuffer) {
 		RenderShader conversionShader("shaders/cubemapping/envconvert.vert",

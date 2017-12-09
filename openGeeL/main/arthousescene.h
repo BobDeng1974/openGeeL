@@ -26,8 +26,8 @@ public:
 			Transform& probeTransform = transformFactory.CreateTransform(vec3(-6.9f, 1.9f, 2.3f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 			DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024, 20, 20, 20);
 
-			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/Playa_Sunrise.hdr");
-			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeMapFactory.getBuffer(), 1024);
+			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap("resources/envmaps/Playa_Sunrise.hdr", 
+				cubeMapFactory.getBuffer(), 1024);
 			IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
 			Skybox& skybox = Skybox(envCubeMap);

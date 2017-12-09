@@ -160,7 +160,7 @@ namespace geeL {
 			processIndices(indices, mesh);
 			processTextures(textures, directory, mesh, scene);
 
-			DefaultMaterialContainer& mat = factory.CreateMaterial();
+			DefaultMaterialContainer& mat = factory.createDefaultMaterial();
 			processMaterial(mat, mesh, scene);
 			mat.addTextures(textures);
 
@@ -219,7 +219,7 @@ namespace geeL {
 			processBones(vertices, bones, mesh);
 			processTextures(textures, directory, mesh, scene);
 
-			DefaultMaterialContainer& mat = factory.CreateMaterial();
+			DefaultMaterialContainer& mat = factory.createDefaultMaterial();
 			processMaterial(mat, mesh, scene);
 			mat.addTextures(textures);
 

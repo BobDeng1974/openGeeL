@@ -27,8 +27,8 @@ public:
 			float probeSize = 12.f;
 			DynamicIBLMap& probe = cubeMapFactory.createReflectionProbeIBL(probeTransform, 1024, probeSize, probeSize, probeSize);
 
-			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/Tropical_Beach_3k.hdr");
-			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeMapFactory.getBuffer(), 1024);
+			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap("resources/envmaps/Tropical_Beach_3k.hdr", 
+				cubeMapFactory.getBuffer(), 1024);
 			IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
 			Skybox& skybox = Skybox(envCubeMap);

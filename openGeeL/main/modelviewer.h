@@ -24,8 +24,8 @@ public:
 			camera.addComponent<MovableCamera>(MovableCamera(3.f, 0.45f));
 			scene.setCamera(camera);
 
-			EnvironmentMap& preEnvMap = materialFactory.CreateEnvironmentMap("resources/envmaps/Theatre-Center_2k.hdr");
-			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap(preEnvMap, cubeMapFactory.getBuffer(), 1024);
+			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap("resources/envmaps/Theatre-Center_2k.hdr", 
+				cubeMapFactory.getBuffer(), 1024);
 			IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
 			Skybox& skybox = Skybox(iblMap.getIrradianceMap());

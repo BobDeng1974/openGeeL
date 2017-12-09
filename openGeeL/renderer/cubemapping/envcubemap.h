@@ -18,6 +18,10 @@ namespace geeL {
 			CubeBuffer& frameBuffer, 
 			unsigned int resolution = 512);
 
+		EnvironmentCubeMap(const std::string& filePath,
+			CubeBuffer& frameBuffer,
+			unsigned int resolution = 512);
+
 	private:
 		void draw(const EnvironmentMap& map, CubeBuffer& frameBuffer);
 
