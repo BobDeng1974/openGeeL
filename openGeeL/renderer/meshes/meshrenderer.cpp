@@ -14,9 +14,11 @@ using namespace std;
 namespace geeL{
 
 	MeshRenderer::MeshRenderer(Transform& transform, 
+		std::shared_ptr<Model> model,
 		CullingMode faceCulling, 
-		const std::string & name) 
+		const std::string& name) 
 			: SceneObject(transform, name)
+			, modelData(model)
 			, faceCulling(faceCulling)
 			, mask(RenderMask::None) {}
 
@@ -270,20 +272,21 @@ namespace geeL{
 
 	StaticMeshRenderer::StaticMeshRenderer(Transform& transform, 
 		SceneShader& shader, 
-		StaticModel& model, 
+		std::shared_ptr<StaticModel> model,
 		CullingMode faceCulling, 
 		const std::string& name)
-			: MeshRenderer(transform, faceCulling, name) {
+			: MeshRenderer(transform, model, faceCulling, name) {
 	
-		initMaterials(shader, model);
+		initMaterials(shader, *model);
 	}
 
 	StaticMeshRenderer::StaticMeshRenderer(Transform& transform, 
 		SceneShader& shader, 
+		std::shared_ptr<StaticModel> model,
 		std::list<const StaticMesh*>& meshes,
 		CullingMode faceCulling, 
 		const std::string & name)
-			: MeshRenderer(transform, faceCulling, name) {
+			: MeshRenderer(transform, model, faceCulling, name) {
 
 		initMaterials(shader, meshes);
 	}
@@ -328,12 +331,12 @@ namespace geeL{
 
 	SkinnedMeshRenderer::SkinnedMeshRenderer(Transform& transform,
 		SceneShader& shader,
-		SkinnedModel& model,
+		std::shared_ptr<SkinnedModel> model,
 		CullingMode faceCulling,
 		const std::string& name)
-			: MeshRenderer(transform, faceCulling, name)
-			, skinnedModel(model)
-			, skeleton(new Skeleton(model.getSkeleton())) {
+			: MeshRenderer(transform, model, faceCulling, name)
+			, skinnedModel(*model)
+			, skeleton(new Skeleton(model->getSkeleton())) {
 
 		initMaterials(shader);
 

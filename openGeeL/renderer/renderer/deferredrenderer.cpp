@@ -110,8 +110,15 @@ namespace geeL {
 
 		//Lighting pass
 #if DIFFUSE_SPECULAR_SEPARATION
-		//TODO: draw skybox
 		lighting.fill();
+
+		//TODO: optimize this alter
+		if (!hasForwardPass()) {
+			stackBuffer.fill([this]() {
+				DepthGuard depth;
+				scene->drawSkybox();
+			}, clearNothing);
+		}
 #else
 		stackBuffer.push(provider.requestCurrentImage());
 		stackBuffer.fill(lightingPassFunction, clearColor);

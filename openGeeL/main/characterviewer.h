@@ -36,7 +36,7 @@ public:
 
 			float lightIntensity = 27.f;
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-0.5f, -2.9f, 3), vec3(-180.0f, 0, -50), vec3(1.f), true);
-			ShadowMapConfiguration config = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Huge, 6.f, 15U, 150.f);
+			ShadowMapConfiguration config = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Huge, 5.f, 15U, 150.f);
 			lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), config);
 
 			lightIntensity = 0.5f;
@@ -44,9 +44,24 @@ public:
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Huge, 6.f, 15U, 150.f, 1.f);
 			lightManager.addPointLight(lightTransform21, glm::vec3(lightIntensity * 3.f, lightIntensity * 59.f, lightIntensity * 43.f), config2);
 
+			{
+				std::shared_ptr<StaticModel> ayy = meshFactory.CreateStaticModel("resources/primitives/plane.obj");
+			}
+
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(100.f, 0.2f, 100.f));
 			MeshRenderer& plane = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/plane.obj"),
 				meshTransform2, "Floor");
+
+			{
+				std::shared_ptr<StaticModel> ayy = meshFactory.CreateStaticModel("resources/primitives/cube.obj");
+
+				/*
+				Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(100.f, 0.2f, 100.f));
+				MeshRenderer& plane = meshFactory.CreateMeshRenderer(meshFactory.CreateStaticModel("resources/primitives/cube.obj"),
+					meshTransform2, "Floor");
+					*/
+			}
+			
 
 			scene.addMeshRenderer(plane);
 

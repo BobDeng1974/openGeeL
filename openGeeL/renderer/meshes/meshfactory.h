@@ -2,6 +2,7 @@
 #define MESHFACTORY_H
 
 #include <map>
+#include <memory>
 #include <string>
 #include <list>
 #include <vector>
@@ -46,36 +47,36 @@ namespace geeL {
 		~MeshFactory();
 
 		//Create new mesh renderer with default shading
-		StaticMeshRenderer& CreateMeshRenderer(StaticModel& model, 
+		StaticMeshRenderer& CreateMeshRenderer(std::shared_ptr<StaticModel> model,
 			Transform& transform, const std::string& name);
 
-		StaticMeshRenderer& CreateMeshRenderer(StaticModel& model, SceneShader& shader, 
+		StaticMeshRenderer& CreateMeshRenderer(std::shared_ptr<StaticModel> model, SceneShader& shader,
 			Transform& transform, const std::string& name);
 
 		//Create separate mesh renderers for every mesh in given model
-		std::list<StaticMeshRenderer*> CreateMeshRenderers(StaticModel& model, 
+		std::list<StaticMeshRenderer*> CreateMeshRenderers(std::shared_ptr<StaticModel> model,
 			SceneShader& shader, Transform& transform);
 
 		//Create new skinned mesh renderer with default shading
-		SkinnedMeshRenderer& CreateMeshRenderer(SkinnedModel& model, Transform& transform,
+		SkinnedMeshRenderer& CreateMeshRenderer(std::shared_ptr<SkinnedModel> model, Transform& transform,
 			const std::string& name);
 
-		SkinnedMeshRenderer& CreateMeshRenderer(SkinnedModel& model, SceneShader& shader, 
+		SkinnedMeshRenderer& CreateMeshRenderer(std::shared_ptr<SkinnedModel> model, SceneShader& shader,
 			Transform& transform, const std::string& name);
 
 
 		//Creates, initializes and returns a new static model from given file path or 
 		//returns an existing model if it already uses this file
-		StaticModel& CreateStaticModel(std::string filePath);
+		std::shared_ptr<StaticModel> CreateStaticModel(std::string filePath);
 
 		//Creates, initializes and returns a new static model from given file path or 
 		//returns an existing model if it already uses this file
-		SkinnedModel& CreateSkinnedModel(std::string filePath);
+		std::shared_ptr<SkinnedModel> CreateSkinnedModel(std::string filePath);
 
 	private:
 		MaterialFactory& factory;
-		std::map<std::string, StaticModel> staticModels;
-		std::map<std::string, SkinnedModel> skinnedModels;
+		std::map<std::string, std::weak_ptr<StaticModel>> staticModels;
+		std::map<std::string, std::weak_ptr<SkinnedModel>> skinnedModels;
 		std::list<MeshRenderer*> meshRenderer;
 
 		void fillStaticModel(StaticModel& model, std::string path);

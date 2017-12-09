@@ -31,14 +31,14 @@ namespace geeL {
 	}
 
 
-	StaticMeshRenderer& MeshFactory::CreateMeshRenderer(StaticModel& model, 
+	StaticMeshRenderer& MeshFactory::CreateMeshRenderer(std::shared_ptr<StaticModel> model,
 		Transform& transform, const string& name) {
 		
 		return CreateMeshRenderer(model, factory.getDefaultShader(ShadingMethod::Deferred), 
 			transform, name);
 	}
 
-	StaticMeshRenderer& MeshFactory::CreateMeshRenderer(StaticModel& model, SceneShader& shader, 
+	StaticMeshRenderer& MeshFactory::CreateMeshRenderer(std::shared_ptr<StaticModel> model, SceneShader& shader,
 		Transform& transform, const string& name) {
 
 		StaticMeshRenderer* renderer = new StaticMeshRenderer(transform, shader, 
@@ -48,19 +48,19 @@ namespace geeL {
 		return *renderer;
 	}
 
-	list<StaticMeshRenderer*> MeshFactory::CreateMeshRenderers(StaticModel& model, SceneShader& shader, 
+	list<StaticMeshRenderer*> MeshFactory::CreateMeshRenderers(std::shared_ptr<StaticModel> model, SceneShader& shader,
 		Transform& transform) {
 
 		list<StaticMeshRenderer*> renderers;
-		string path = model.getPath();
+		string path = model->getPath();
 		
 		size_t counter = 1;
-		model.iterateMeshesGeneric([&](const StaticMesh& mesh) {
+		model->iterateMeshesGeneric([&](const StaticMesh& mesh) {
 			string newName = path + " " + mesh.getName() + std::to_string(counter++);
 			Transform& newTransform = transform.getParent()->addChild(transform);
 			std::list<const StaticMesh*> meshes = { &mesh };
 			
-			StaticMeshRenderer* renderer = new StaticMeshRenderer(newTransform, shader, meshes, 
+			StaticMeshRenderer* renderer = new StaticMeshRenderer(newTransform, shader, model, meshes, 
 				CullingMode::cullFront, mesh.getName());
 
 			meshRenderer.push_back(renderer);
@@ -71,14 +71,14 @@ namespace geeL {
 	}
 
 
-	SkinnedMeshRenderer& MeshFactory::CreateMeshRenderer(SkinnedModel& model, 
+	SkinnedMeshRenderer& MeshFactory::CreateMeshRenderer(std::shared_ptr<SkinnedModel> model,
 		Transform& transform, const string& name) {
 
 		return CreateMeshRenderer(model, factory.getDefaultShader(ShadingMethod::Deferred, true), 
 			transform, name);
 	}
 
-	SkinnedMeshRenderer& MeshFactory::CreateMeshRenderer(SkinnedModel& model, SceneShader& shader, 
+	SkinnedMeshRenderer& MeshFactory::CreateMeshRenderer(std::shared_ptr<SkinnedModel> model, SceneShader& shader,
 		Transform& transform, const string& name) {
 
 		SkinnedMeshRenderer* renderer = new SkinnedMeshRenderer(transform, shader, 
@@ -88,22 +88,46 @@ namespace geeL {
 		return *renderer;
 	}
 
-	StaticModel& MeshFactory::CreateStaticModel(string filePath) {
-		if (staticModels.find(filePath) == staticModels.end()) {
-			staticModels[filePath] = StaticModel(filePath);
-			fillStaticModel(staticModels[filePath], filePath);
+	std::shared_ptr<StaticModel> MeshFactory::CreateStaticModel(string filePath) {
+
+		auto it(staticModels.find(filePath));
+		//Create new model if none exist yet
+		if (it == staticModels.end() 
+			//or memory of existing one expired
+			|| (it != staticModels.end() && it->second.expired())) {
+
+			shared_ptr<StaticModel> model(new StaticModel(filePath));
+			weak_ptr<StaticModel> wModel(model);
+
+			staticModels[filePath] = model;
+			fillStaticModel(*model, filePath);
+
+			return model;
 		}
 
-		return staticModels[filePath];
+		weak_ptr<StaticModel> wModel = it->second;
+		return wModel.lock();
 	}
 
-	SkinnedModel& MeshFactory::CreateSkinnedModel(string filePath) {
-		if (skinnedModels.find(filePath) == skinnedModels.end()) {
-			skinnedModels[filePath] = SkinnedModel(filePath);
-			fillSkinnedModel(skinnedModels[filePath], filePath);
+	std::shared_ptr<SkinnedModel> MeshFactory::CreateSkinnedModel(string filePath) {
+
+		auto it(skinnedModels.find(filePath));
+		//Create new model if none exist yet
+		if (skinnedModels.find(filePath) == skinnedModels.end()
+			//or memory of existing one expired
+			|| (it != skinnedModels.end() && it->second.expired())) {
+
+			shared_ptr<SkinnedModel> model(new SkinnedModel(filePath));
+			weak_ptr<SkinnedModel> wModel(model);
+
+			skinnedModels[filePath] = model;
+			fillSkinnedModel(*model, filePath);
+
+			return model;
 		}
 
-		return skinnedModels[filePath];
+		weak_ptr<SkinnedModel> wModel = it->second;
+		return wModel.lock();
 	}
 
 
