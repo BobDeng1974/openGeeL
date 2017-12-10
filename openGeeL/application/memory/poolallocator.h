@@ -27,24 +27,27 @@ namespace geeL {
 			};
 
 		public:
-			inline explicit PoolAllocator(Memory& memory) : memory(memory) {}
+			inline explicit PoolAllocator() : memory(nullptr) {}
+			inline explicit PoolAllocator(Memory& memory) : memory(&memory) {}
 			inline ~PoolAllocator() {}
-			inline explicit PoolAllocator(PoolAllocator const&) {}
+			inline explicit PoolAllocator(PoolAllocator const& other) 
+				: memory(other.memory) {}
 
 			template<typename U>
-			inline explicit PoolAllocator(PoolAllocator<U> const&) {}
+			inline explicit PoolAllocator(PoolAllocator<U> const& other) 
+				: memory(other.memory) {}
 
 			inline pointer address(reference r) { return &r; }
 			inline const_pointer address(const_reference r) { return &r; }
 
 			inline pointer allocate(size_type cnt, typename std::allocator<void>::const_pointer = 0) {
-				void* data = memory.allocate(cnt);
+				void* data = memory->allocate(cnt * sizeof(T));
 
 				return reinterpret_cast<pointer>(data);
 			}
 
 			inline void deallocate(pointer p, size_type) {
-				memory.deallocate(p);
+				memory->deallocate(p);
 			}
 
 			inline size_type max_size() const {
@@ -58,7 +61,7 @@ namespace geeL {
 			inline bool operator!=(PoolAllocator const& a) { return !operator==(a); }
 
 		private:
-			Memory& memory;
+			Memory* memory;
 
 		};
 
@@ -94,7 +97,7 @@ namespace geeL {
 
 			inline pointer allocate(size_type cnt, typename std::allocator<void>::const_pointer = 0) {
 				Memory& memory = ApplicationManager::getCurrentMemory();
-				void* data = memory.allocate(cnt);
+				void* data = memory.allocate(cnt * sizeof(T));
 
 				return reinterpret_cast<pointer>(data);
 			}
