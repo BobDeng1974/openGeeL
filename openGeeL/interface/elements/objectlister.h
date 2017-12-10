@@ -2,7 +2,10 @@
 #define OBJECTLISTER_H
 
 #include <list>
+#include <map>
+#include <memory>
 #include "snippets/guisnippets.h"
+#include "scene.h"
 
 namespace geeL {
 
@@ -15,16 +18,15 @@ namespace geeL {
 	class ShadowMapSnippet;
 	class SimpleShadowMap;
 
-	class ObjectLister : public GUISnippet {
+	class ObjectLister : public GUISnippet, public SceneListener {
 
 	public:
 		ObjectLister(Scene& scene);
-		virtual ~ObjectLister();
 
 		virtual void draw(GUIContext* context);
 		virtual std::string toString() const;
 
-		void add(SceneObject& obj);
+		//void add(SceneObject& obj);
 		void add(SceneCamera& cam);
 		void add(PerspectiveCamera& cam);
 		void add(MeshRenderer& mesh);
@@ -33,11 +35,14 @@ namespace geeL {
 
 		ShadowMapSnippet& createSnippet(SimpleShadowMap& map);
 
+		virtual void onAdd(MeshRenderer& renderer);
+		virtual void onRemove(MeshRenderer& renderer);
+
 	private:
-		std::list<GUISnippet*> lightSnippets;
-		std::list<GUISnippet*> objectSnippets;
-		std::list<GUISnippet*> cameraSnippets;
-		std::list<GUISnippet*> otherSnippets;
+		std::list<std::unique_ptr<GUISnippet>> lightSnippets;
+		std::map<MeshRenderer*, std::unique_ptr<GUISnippet>> objectSnippets;
+		std::list<std::unique_ptr<GUISnippet>> cameraSnippets;
+		std::list<std::unique_ptr<GUISnippet>> otherSnippets;
 		Scene& scene;
 
 	};

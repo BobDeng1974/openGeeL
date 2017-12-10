@@ -48,6 +48,10 @@ namespace geeL {
 		requester.updateCamera(*camera);
 	}
 
+	void Scene::addListener(SceneListener& listener) {
+		sceneListeners.push_back(&listener);
+	}
+
 	void Scene::setCamera(SceneCamera& camera) {
 		this->camera = &camera;
 
@@ -110,6 +114,7 @@ namespace geeL {
 			renderObjects[shader.getMethod()][&shader][rawRenderer->transform.getID()] = rawRenderer;
 		});
 
+		onAdd(*rawRenderer);
 		return *rawRenderer;
 	}
 
@@ -132,12 +137,19 @@ namespace geeL {
 	}
 
 	void Scene::removeMeshRenderer(MeshRenderer& renderer) {
-		renderer.iterateShaders([this, &renderer](SceneShader& shader) {
-			removeMeshRenderer(renderer, shader);
-		});
 
-		renderers.erase(&renderer);
-		delete &renderer;
+		auto toRemove = renderers.find(&renderer);
+
+		if (toRemove != renderers.end()) {
+			renderer.iterateShaders([this, &renderer](SceneShader& shader) {
+				removeMeshRenderer(renderer, shader);
+			});
+
+			renderers.erase(toRemove);
+
+			onRemove(renderer);
+			delete &renderer;
+		}
 	}
 
 
@@ -229,6 +241,20 @@ namespace geeL {
 		});
 
 		return value;
+	}
+
+	void Scene::onAdd(MeshRenderer& renderer) {
+		for (auto it(sceneListeners.begin()); it != sceneListeners.end(); it++) {
+			SceneListener& listener = **it;
+			listener.onAdd(renderer);
+		}
+	}
+
+	void Scene::onRemove(MeshRenderer& renderer) {
+		for (auto it(sceneListeners.begin()); it != sceneListeners.end(); it++) {
+			SceneListener& listener = **it;
+			listener.onRemove(renderer);
+		}
 	}
 
 
@@ -557,6 +583,8 @@ namespace geeL {
 			}
 		}
 	}
+
+	
 
 	
 }

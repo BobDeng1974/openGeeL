@@ -203,7 +203,7 @@ namespace geeL {
 		if (newResolution != oldResolution)
 			bloom.resizeEffectResolution(newResolution);
 
-		float scatter = GUISnippets::drawBarFloat(context, bloom.getScatter(), 0.f, 5.f, 0.005f, "Scatter");
+		float scatter = GUISnippets::drawBarFloatLogarithmic(context, bloom.getScatter(), 0.f, 5.f, 0.005f, "Scatter");
 		bloom.setScatter(scatter);
 	}
 

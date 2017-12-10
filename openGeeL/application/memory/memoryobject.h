@@ -22,6 +22,7 @@ namespace geeL {
 			: std::shared_ptr<T>(std::forward<PointerArgs>(args)...) {}
 
 	}
+
 }
 
 #endif

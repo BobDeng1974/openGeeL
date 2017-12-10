@@ -112,7 +112,7 @@ namespace geeL {
 #if DIFFUSE_SPECULAR_SEPARATION
 		lighting.fill();
 
-		//TODO: optimize this alter
+		//TODO: optimize this later
 		if (!hasForwardPass()) {
 			stackBuffer.fill([this]() {
 				DepthGuard depth;

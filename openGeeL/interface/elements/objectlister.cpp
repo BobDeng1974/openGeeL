@@ -19,6 +19,8 @@ namespace geeL {
 	ObjectLister::ObjectLister(Scene& scene) 
 		: scene(scene) {
 
+		scene.addListener(*this);
+
 		scene.iterRenderObjects([&](MeshRenderer& renderer) {
 			add(renderer);
 		});
@@ -41,20 +43,6 @@ namespace geeL {
 			else
 				add(light);
 		});
-	}
-
-	ObjectLister::~ObjectLister() {
-		for (auto it = lightSnippets.begin(); it != lightSnippets.end(); it++)
-			delete *it;
-		
-		for (auto it = objectSnippets.begin(); it != objectSnippets.end(); it++)
-			delete *it;
-
-		for (auto it = cameraSnippets.begin(); it != cameraSnippets.end(); it++)
-			delete *it;
-
-		for (auto it = otherSnippets.begin(); it != otherSnippets.end(); it++)
-			delete *it;
 	}
 
 
@@ -81,7 +69,7 @@ namespace geeL {
 			
 		if (nk_tree_push(context, NK_TREE_NODE, "Objects", NK_MAXIMIZED)) {
 			for (auto it = objectSnippets.begin(); it != objectSnippets.end(); it++) {
-				GUISnippet& snippet = **it;
+				GUISnippet& snippet = *it->second;
 				snippet.draw(context);
 			}
 
@@ -94,40 +82,45 @@ namespace geeL {
 	}
 
 
-	void ObjectLister::add(SceneObject& obj) {
-		SceneObjectSnippet* snippet = new SceneObjectSnippet(obj);
-		objectSnippets.push_back(snippet);
-	}
 
 	void ObjectLister::add(SceneCamera& cam) {
 		CameraSnippet* snippet = new CameraSnippet(cam);
-		cameraSnippets.push_back(snippet);
+		cameraSnippets.push_back(std::unique_ptr<GUISnippet>(snippet));
 	}
 
 	void ObjectLister::add(PerspectiveCamera& cam) {
 		PerspectiveCameraSnippet* snippet = new PerspectiveCameraSnippet(cam);
-		cameraSnippets.push_back(snippet);
+		cameraSnippets.push_back(std::unique_ptr<GUISnippet>(snippet));
 	}
 
 	void ObjectLister::add(MeshRenderer& mesh) {
 		MeshRendererSnippet* snippet = new MeshRendererSnippet(mesh);
-		objectSnippets.push_back(snippet);
+		objectSnippets[&mesh] = std::unique_ptr<GUISnippet>(snippet);
 	}
 
 	void ObjectLister::add(Light& light) {
 		LightSnippet* snippet = new LightSnippet(light);
-		lightSnippets.push_back(snippet);
+		lightSnippets.push_back(std::unique_ptr<GUISnippet>(snippet));
 	}
 
 	void ObjectLister::add(Light& light, ShadowMapSnippet& mapSnippet) {
 		LightSnippet* snippet = new LightSnippet(light, mapSnippet);
-		lightSnippets.push_back(snippet);
+		lightSnippets.push_back(std::unique_ptr<GUISnippet>(snippet));
 	}
 
 	ShadowMapSnippet& ObjectLister::createSnippet(SimpleShadowMap& map) {
 		ShadowMapSnippet* snippet = new ShadowMapSnippet(map);
-		otherSnippets.push_back(snippet);
+		otherSnippets.push_back(std::unique_ptr<GUISnippet>(snippet));
 
 		return *snippet;
 	}
+
+	void ObjectLister::onAdd(MeshRenderer& renderer) {
+		add(renderer);
+	}
+
+	void ObjectLister::onRemove(MeshRenderer& renderer) {
+		objectSnippets.erase(&renderer);
+	}
+
 }

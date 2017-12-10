@@ -37,6 +37,16 @@ namespace geeL {
 	using ShaderMapping    = std::map<SceneShader*, TransformMapping>;
 
 
+
+	class SceneListener {
+
+	public:
+		virtual void onAdd(MeshRenderer& renderer) = 0;
+		virtual void onRemove(MeshRenderer& renderer) = 0;
+
+	};
+
+
 	//Class that holds scene information (Objects, cameras, lights, ...)
 	class Scene {
 
@@ -45,6 +55,7 @@ namespace geeL {
 		virtual ~Scene();
 
 		void addRequester(SceneRequester& requester);
+		void addListener(SceneListener& listener);
 		void addShader(SceneShader& shader);
 
 		const SceneCamera& getCamera() const;
@@ -93,6 +104,7 @@ namespace geeL {
 		UniformBindingStack& pipeline;
 
 		std::list<SceneRequester*> sceneRequester;
+		std::list<SceneListener*> sceneListeners;
 
 		//Objects are indexed by their used shaders, shading method their transforms id to allow grouped drawing and 
 		//therefore no unnecessary shader programm switching. Objects with multiple materials are linked to
@@ -107,6 +119,8 @@ namespace geeL {
 
 		void iterShaders(std::function<bool(const SceneShader&)> function) const;
 
+		void onAdd(MeshRenderer& renderer);
+		void onRemove(MeshRenderer& renderer);
 
 	};
 
