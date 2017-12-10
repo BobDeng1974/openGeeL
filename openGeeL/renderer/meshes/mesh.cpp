@@ -40,6 +40,18 @@ namespace geeL {
 		return *material;
 	}
 
+	void* Mesh::operator new(size_t size) {
+		Memory& memory = ApplicationManager::getCurrentMemory();
+		return memory.allocate(size);
+	}
+
+	void Mesh::operator delete(void* pointer) {
+		Memory& memory = ApplicationManager::getCurrentMemory();
+		memory.deallocate(pointer);
+	}
+
+
+
 	template<typename VertexType>
 	void GenericMesh<VertexType>::draw(const Shader& shader) const {
 		glBindVertexArray(vao);

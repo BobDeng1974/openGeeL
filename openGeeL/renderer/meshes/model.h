@@ -27,6 +27,9 @@ namespace geeL {
 		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const = 0;
 		const std::string& getPath() const;
 
+		void* operator new(size_t size);
+		void  operator delete(void* pointer);
+
 	protected:
 		std::string path;
 
@@ -72,12 +75,6 @@ namespace geeL {
 		SkinnedModel(const std::string& path) : GenericModel(path), AnimationContainer() {}
 
 	};
-
-
-
-	inline const std::string& Model::getPath() const {
-		return path;
-	}
 
 	template<typename MeshType>
 	inline void GenericModel<MeshType>::iterateMeshes(std::function<void(const Mesh&)> function) const {

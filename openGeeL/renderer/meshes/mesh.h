@@ -73,6 +73,9 @@ namespace geeL {
 		const std::string& getName() const;
 		MaterialContainer& getMaterialContainer() const;
 
+		void* operator new(size_t size);
+		void  operator delete(void* pointer);
+
 	protected:
 		std::string name;
 		MemoryObject<MaterialContainer> material;
