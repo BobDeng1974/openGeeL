@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include "memory/memoryobject.h"
+#include "memory/poolallocator.h"
 #include "animation/bone.h"
 
 #define BONECOUNT 4
@@ -86,8 +87,8 @@ namespace geeL {
 	public:
 		GenericMesh();
 		GenericMesh(const std::string& name,
-			std::vector<VertexType>&& vertices,
-			std::vector<unsigned int>&& indices,
+			std::vector<VertexType, PoolAllocator<VertexType>>&& vertices,
+			std::vector<unsigned int, PoolAllocator<unsigned int>>&& indices,
 			MemoryObject<MaterialContainer> material);
 
 		GenericMesh(GenericMesh<VertexType>&& other);
@@ -104,8 +105,8 @@ namespace geeL {
 
 	protected:
 		unsigned int vao, vbo, ebo;
-		std::vector<VertexType> vertices;
-		std::vector<unsigned int> indices;
+		std::vector<VertexType, PoolAllocator<VertexType>> vertices;
+		std::vector<unsigned int, PoolAllocator<unsigned int>> indices;
 
 	};
 
@@ -117,8 +118,8 @@ namespace geeL {
 	public:
 		StaticMesh();
 		StaticMesh(const std::string& name,
-			std::vector<Vertex>& vertices,
-			std::vector<unsigned int>& indices,
+			std::vector<Vertex, PoolAllocator<Vertex>>& vertices,
+			std::vector<unsigned int, PoolAllocator<unsigned int>>& indices,
 			MemoryObject<MaterialContainer> material);
 
 		StaticMesh(StaticMesh&& other);
@@ -136,8 +137,8 @@ namespace geeL {
 
 	public:
 		SkinnedMesh(const std::string& name, 
-			std::vector<SkinnedVertex>& vertices, 
-			std::vector<unsigned int>& indices,
+			std::vector<SkinnedVertex, PoolAllocator<SkinnedVertex>>& vertices,
+			std::vector<unsigned int, PoolAllocator<unsigned int>>& indices,
 			std::map<std::string, MeshBone>& bones,
 			MemoryObject<MaterialContainer> material);
 
@@ -187,8 +188,8 @@ namespace geeL {
 
 	template<typename VertexType>
 	GenericMesh<VertexType>::GenericMesh(const std::string& name, 
-		std::vector<VertexType>&& vertices, 
-		std::vector<unsigned int>&& indices, 
+		std::vector<VertexType, PoolAllocator<VertexType>>&& vertices,
+		std::vector<unsigned int, PoolAllocator<unsigned int>>&& indices,
 		MemoryObject<MaterialContainer> material)
 			: Mesh(name, material)
 			, vertices(std::move(vertices))

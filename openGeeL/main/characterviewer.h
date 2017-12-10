@@ -3,6 +3,8 @@
 #include "shader/sceneshader.h"
 #include "../application/configuration.h"
 
+#include "windows.h"
+
 using namespace geeL;
 
 
@@ -70,12 +72,15 @@ public:
 				transparentShader.bind<float>("fogFalloff", 15.f);
 			}
 
+			auto time = GetTickCount();
 
 			Transform& meshTransform22 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 5.9f), vec3(0.f, 0.f, 0.f), vec3(0.12f));
 			std::unique_ptr<MeshRenderer> girlPtr = meshFactory.createMeshRenderer(
 				meshFactory.createStaticModel("resources/girl/girl_nofloor.obj"),
 				meshTransform22, "Girl");
 			MeshRenderer& girl = scene.addMeshRenderer(std::move(girlPtr));
+
+			std::cout << GetTickCount() - time << " ms\n";
 
 			girl.iterateMeshesSafe([&](const MeshInstance& mesh) {
 				if (mesh.getName() == "eyelash" || mesh.getName() == "fur") {

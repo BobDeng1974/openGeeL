@@ -19,12 +19,17 @@
 #include "meshrenderer.h"
 #include "meshfactory.h"
 
+#include "memory/defaultmemory.h"
+#include "memory/simplepool.h"
+
 using namespace std;
 
 namespace geeL {
 
-	MeshFactory::MeshFactory(MaterialFactory& factory) 
-		: factory(factory) {}
+	MeshFactory::MeshFactory(MaterialFactory& factory)
+		: factory(factory)
+		//, memory(new SimplePool(500000000)) {}
+		, memory(new DefaultMemory()) {}
 
 
 	unique_ptr<StaticMeshRenderer> MeshFactory::createMeshRenderer(MemoryObject<StaticModel> model,
@@ -150,8 +155,10 @@ namespace geeL {
 		for (unsigned int i = 0; i < node->mNumMeshes; i++) {
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 
-			vector<Vertex> vertices;
-			vector<unsigned int> indices;
+			PoolAllocator<Vertex> allocator(*memory);
+			vector<Vertex, PoolAllocator<Vertex>> vertices(allocator);
+			PoolAllocator<unsigned int> allocator2(*memory);
+			vector<unsigned int, PoolAllocator<unsigned int>> indices(allocator2);
 			vector<MemoryObject<TextureMap>> textures;
 
 			vertices.reserve(mesh->mNumVertices);
@@ -207,8 +214,11 @@ namespace geeL {
 		for (unsigned int i = 0; i < node->mNumMeshes; i++) {
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 
-			vector<SkinnedVertex> vertices;
-			vector<unsigned int> indices;
+
+			PoolAllocator<SkinnedVertex> allocator(*memory);
+			vector<SkinnedVertex, PoolAllocator<SkinnedVertex>> vertices(allocator);
+			PoolAllocator<unsigned int> allocator2(*memory);
+			vector<unsigned int, PoolAllocator<unsigned int>> indices(allocator2);
 			map<string, MeshBone> bones;
 			vector<MemoryObject<TextureMap>> textures;
 
@@ -229,7 +239,7 @@ namespace geeL {
 
 
 	template <class V>
-	void MeshFactory::processVertices(std::vector<V>& vertices, aiMesh* mesh) {
+	void MeshFactory::processVertices(std::vector<V, PoolAllocator<V>>& vertices, aiMesh* mesh) {
 
 		//Walk through meshes vertices
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
@@ -289,8 +299,7 @@ namespace geeL {
 		}
 	}
 
-
-	void MeshFactory::processIndices(vector<unsigned int>& indices, aiMesh* mesh) {
+	void MeshFactory::processIndices(vector<unsigned int, PoolAllocator<unsigned int>>& indices, aiMesh* mesh) {
 
 		//Walk through each of the meshes faces
 		for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
@@ -302,8 +311,7 @@ namespace geeL {
 		}
 	}
 
-
-	void MeshFactory::processBones(vector<SkinnedVertex>& vertices, 
+	void MeshFactory::processBones(vector<SkinnedVertex, PoolAllocator<SkinnedVertex>>& vertices,
 		std::map<std::string, MeshBone>& bones, aiMesh* mesh) {
 
 		for (unsigned int i = 0; i < mesh->mNumBones; i++) {

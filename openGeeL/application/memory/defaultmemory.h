@@ -11,13 +11,13 @@ namespace geeL {
 		public:
 			virtual ~DefaultMemory() {}
 
-			virtual void* allocate(WORD size);
+			virtual void* allocate(size_t size);
 			virtual void  deallocate(void* data);
 
 		};
 
 
-		inline void* DefaultMemory::allocate(WORD size) {
+		inline void* DefaultMemory::allocate(size_t size) {
 			return ::operator new(size);
 		}
 

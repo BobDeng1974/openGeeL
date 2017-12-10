@@ -7,6 +7,7 @@
 #include <vector>
 #include "animation/bone.h"
 #include "memory/memoryobject.h"
+#include "memory/poolallocator.h"
 
 enum aiTextureType;
 
@@ -76,9 +77,10 @@ namespace geeL {
 
 	private:
 		MaterialFactory& factory;
+		std::unique_ptr<Memory> memory;
 		std::map<std::string, std::weak_ptr<StaticModel>> staticModels;
 		std::map<std::string, std::weak_ptr<SkinnedModel>> skinnedModels;
-
+		
 		void fillStaticModel(StaticModel& model, std::string path);
 		void processStaticNode(StaticModel& model, std::string directory, aiNode* node, const aiScene* scene);
 
@@ -86,9 +88,10 @@ namespace geeL {
 		void processSkinnedNode(SkinnedModel& model, Bone& bone, std::string directory, aiNode* node, const aiScene* scene);
 
 		template<class V>
-		void processVertices(std::vector<V>& vertices, aiMesh* mesh);
-		void processIndices(std::vector<unsigned int>& indices, aiMesh* mesh);
-		void processBones(std::vector<SkinnedVertex>& vertices, std::map<std::string, MeshBone>& bones, aiMesh* mesh);
+		void processVertices(std::vector<V, PoolAllocator<V>>& vertices, aiMesh* mesh);
+		void processIndices(std::vector<unsigned int, PoolAllocator<unsigned int>>& indices, aiMesh* mesh);
+		void processBones(std::vector<SkinnedVertex, PoolAllocator<SkinnedVertex>>& vertices,
+			std::map<std::string, MeshBone>& bones, aiMesh* mesh);
 
 		void processMaterial(DefaultMaterialContainer& material, aiMesh* mesh, const aiScene* scene);
 		void processTextures(std::vector<MemoryObject<TextureMap>>& textures, std::string directory, aiMesh* mesh, const aiScene* scene);

@@ -4,16 +4,14 @@
 namespace geeL { 
 	namespace memory {
 
-		typedef unsigned int WORD;
 		typedef unsigned char BYTE;
-
 
 		class Memory {
 
 			public:
 				virtual ~Memory() {}
 
-				virtual void* allocate(WORD size) = 0;
+				virtual void* allocate(size_t size) = 0;
 				virtual void  deallocate(void* data) = 0;
 		};
 
@@ -23,15 +21,15 @@ namespace geeL {
 		public:
 			virtual ~MemoryPool() {}
 
-			virtual void* allocate(WORD size) = 0;
+			virtual void* allocate(size_t size) = 0;
 			virtual void  deallocate(void* data) = 0;
 
-			WORD getFreeMemorySize() const;
-			WORD getTotalMemorySize() const;
+			size_t getFreeMemorySize() const;
+			size_t getTotalMemorySize() const;
 
 		protected:
-			WORD freeMemory;
-			WORD totalMemory;
+			size_t freeMemory;
+			size_t totalMemory;
 
 			MemoryPool();
 			
@@ -43,11 +41,11 @@ namespace geeL {
 			: freeMemory(0)
 			, totalMemory(0) {}
 
-		inline WORD MemoryPool::getFreeMemorySize() const {
+		inline size_t MemoryPool::getFreeMemorySize() const {
 			return freeMemory;
 		}
 
-		inline WORD MemoryPool::getTotalMemorySize() const {
+		inline size_t MemoryPool::getTotalMemorySize() const {
 			return totalMemory;
 		}
 

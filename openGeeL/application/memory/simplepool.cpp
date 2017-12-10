@@ -5,7 +5,7 @@
 namespace geeL {
 	namespace memory {
 
-		Chunk::Chunk(WORD dataSize)
+		Chunk::Chunk(size_t dataSize)
 			: previous(nullptr)
 			, next(nullptr)
 			, dataSize(dataSize)
@@ -17,7 +17,7 @@ namespace geeL {
 
 
 
-		SimplePool::SimplePool(WORD totalSize) 
+		SimplePool::SimplePool(size_t totalSize)
 			: currentUsed(nullptr) {
 
 			totalMemory = totalSize;
@@ -37,8 +37,8 @@ namespace geeL {
 		}
 
 
-		void* SimplePool::allocate(WORD size) {
-			WORD newSize = size + sizeof(Chunk);
+		void* SimplePool::allocate(size_t size) {
+			size_t newSize = size + sizeof(Chunk);
 
 			//Search fitting chunk via iteration
 			Chunk* chunk = currentFree;
@@ -56,7 +56,7 @@ namespace geeL {
 			BYTE* data = reinterpret_cast<BYTE*>(chunk);
 
 			//Split chunks if new size is sufficient enough 
-			WORD newFreeSize = chunk->dataSize - size;
+			size_t newFreeSize = chunk->dataSize - size;
 			if (newFreeSize >= minChunkSize) {
 				Chunk newChunk(newFreeSize);
 
@@ -65,7 +65,6 @@ namespace geeL {
 
 				Chunk* allocatedChunk = reinterpret_cast<Chunk*>(data + newSize);
 				currentFree = allocatedChunk;
-
 				if (allocatedChunk->next != nullptr) {
 					Chunk* nextChunk = allocatedChunk->next;
 					nextChunk->previous = allocatedChunk;
@@ -93,7 +92,7 @@ namespace geeL {
 			Chunk* chunk = reinterpret_cast<Chunk*>(d - sizeof(Chunk));
 			if (!chunk->used) return;
 
-			WORD chunkSize = chunk->dataSize + sizeof(Chunk);
+			size_t chunkSize = chunk->dataSize + sizeof(Chunk);
 			freeMemory += chunkSize;
 
 			Chunk* previousUsed = chunk->previous;
@@ -108,6 +107,7 @@ namespace geeL {
 			chunk->used = false;
 			chunk->previous = nullptr;
 			chunk->next = currentFree;
+
 			currentFree->previous = chunk;
 			currentFree = chunk;
 
@@ -131,7 +131,7 @@ namespace geeL {
 						nextNext->previous = nextPrevious;
 
 					//Write new combined chunk into memory
-					WORD newDataSize = chunkSize - sizeof(Chunk);
+					size_t newDataSize = chunkSize - sizeof(Chunk);
 					chunk->dataSize = newDataSize;
 				}
 				else 

@@ -1,5 +1,6 @@
 #include "framebuffer/tbuffer.h"
 #include "memory/defaultmemory.h"
+#include "memory/simplepool.h"
 #include "shader/uniformstack.h"
 #include "texturing/textureparams.h"
 #include "texturing/textureprovider.h"
@@ -23,6 +24,8 @@ namespace geeL {
 	void Configuration::run() {
 		InputManager manager;
 		DefaultMemory memory;
+		//SimplePool memory(5000000000);
+
 
 		geeL::Transform& world = Transform(glm::vec3(0.f), vec3(0.f), vec3(1.f));
 		TransformFactory& transFactory = TransformFactory(world);

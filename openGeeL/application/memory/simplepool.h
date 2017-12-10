@@ -9,10 +9,10 @@ namespace geeL {
 		struct Chunk {
 			Chunk* previous;
 			Chunk* next;
-			WORD dataSize;
+			size_t dataSize;
 			bool used;
 
-			Chunk(WORD dataSize);
+			Chunk(size_t dataSize);
 
 			void write(void* destination);
 		};
@@ -21,10 +21,10 @@ namespace geeL {
 		class SimplePool : public MemoryPool {
 
 		public:
-			SimplePool(WORD totalSize);
+			SimplePool(size_t totalSize);
 			virtual ~SimplePool();
 
-			virtual void* allocate(WORD size);
+			virtual void* allocate(size_t size);
 			virtual void  deallocate(void* data);
 
 		private:
