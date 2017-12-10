@@ -53,8 +53,8 @@ namespace geeL {
 		: GenericMesh<Vertex>() {}
 
 	StaticMesh::StaticMesh(const std::string& name, 
-		std::vector<Vertex, PoolAllocator<Vertex>>& vertices,
-		std::vector<unsigned int, PoolAllocator<unsigned int>>& indices,
+		std::vector<Vertex, MemoryAllocator<Vertex>>& vertices,
+		std::vector<unsigned int, MemoryAllocator<unsigned int>>& indices,
 		MemoryObject<MaterialContainer> material)
 		: GenericMesh<Vertex>(name, 
 			std::move(vertices), 
@@ -111,8 +111,8 @@ namespace geeL {
 
 
 	SkinnedMesh::SkinnedMesh(const std::string& name, 
-		vector<SkinnedVertex, PoolAllocator<SkinnedVertex>>& vertices,
-		vector<unsigned int, PoolAllocator<unsigned int>>& indices,
+		vector<SkinnedVertex, MemoryAllocator<SkinnedVertex>>& vertices,
+		vector<unsigned int, MemoryAllocator<unsigned int>>& indices,
 		std::map<std::string, MeshBone>& bones,
 		MemoryObject<MaterialContainer> material)
 			: GenericMesh<SkinnedVertex>(name

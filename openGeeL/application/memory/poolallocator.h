@@ -10,7 +10,7 @@ namespace geeL {
 
 		//Allocator that uses given memory class for allocation/deallocation
 		template<typename T>
-		class PoolAllocator {
+		class MemoryAllocator {
 		public:
 			typedef T value_type;
 			typedef value_type* pointer;
@@ -23,18 +23,18 @@ namespace geeL {
 		public:
 			template<typename U>
 			struct rebind {
-				typedef PoolAllocator<U> other;
+				typedef MemoryAllocator<U> other;
 			};
 
 		public:
-			inline explicit PoolAllocator() : memory(nullptr) {}
-			inline explicit PoolAllocator(Memory& memory) : memory(&memory) {}
-			inline ~PoolAllocator() {}
-			inline explicit PoolAllocator(PoolAllocator const& other) 
+			inline explicit MemoryAllocator() : memory(nullptr) {}
+			inline explicit MemoryAllocator(Memory& memory) : memory(&memory) {}
+			inline ~MemoryAllocator() {}
+			inline explicit MemoryAllocator(MemoryAllocator const& other) 
 				: memory(other.memory) {}
 
 			template<typename U>
-			inline explicit PoolAllocator(PoolAllocator<U> const& other) 
+			inline explicit MemoryAllocator(MemoryAllocator<U> const& other) 
 				: memory(other.memory) {}
 
 			inline pointer address(reference r) { return &r; }
@@ -57,8 +57,8 @@ namespace geeL {
 			inline void construct(pointer p, const T& t) { new(p) T(t); }
 			inline void destroy(pointer p) { p->~T(); }
 
-			inline bool operator==(PoolAllocator const&) { return true; }
-			inline bool operator!=(PoolAllocator const& a) { return !operator==(a); }
+			inline bool operator==(MemoryAllocator const&) { return true; }
+			inline bool operator!=(MemoryAllocator const& a) { return !operator==(a); }
 
 		private:
 			Memory* memory;
@@ -68,7 +68,7 @@ namespace geeL {
 
 		//Allocator that uses memory of currently running application
 		template<typename T>
-		class CurrentPoolAllocator {
+		class CurrentMemoryAllocator {
 		public:
 			typedef T value_type;
 			typedef value_type* pointer;
@@ -81,16 +81,16 @@ namespace geeL {
 		public:
 			template<typename U>
 			struct rebind {
-				typedef CurrentPoolAllocator<U> other;
+				typedef CurrentMemoryAllocator<U> other;
 			};
 
 		public:
-			inline explicit CurrentPoolAllocator() {}
-			inline ~CurrentPoolAllocator() {}
-			inline explicit CurrentPoolAllocator(CurrentPoolAllocator const&) {}
+			inline explicit CurrentMemoryAllocator() {}
+			inline ~CurrentMemoryAllocator() {}
+			inline explicit CurrentMemoryAllocator(CurrentMemoryAllocator const&) {}
 
 			template<typename U>
-			inline explicit CurrentPoolAllocator(CurrentPoolAllocator<U> const&) {}
+			inline explicit CurrentMemoryAllocator(CurrentMemoryAllocator<U> const&) {}
 
 			inline pointer address(reference r) { return &r; }
 			inline const_pointer address(const_reference r) { return &r; }
@@ -114,8 +114,8 @@ namespace geeL {
 			inline void construct(pointer p, const T& t) { new(p) T(t); }
 			inline void destroy(pointer p) { p->~T(); }
 
-			inline bool operator==(CurrentPoolAllocator const&) { return true; }
-			inline bool operator!=(CurrentPoolAllocator const& a) { return !operator==(a); }
+			inline bool operator==(CurrentMemoryAllocator const&) { return true; }
+			inline bool operator!=(CurrentMemoryAllocator const& a) { return !operator==(a); }
 		};
 
 	}

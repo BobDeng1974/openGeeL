@@ -88,9 +88,9 @@ namespace geeL {
 		void processSkinnedNode(SkinnedModel& model, Bone& bone, std::string directory, aiNode* node, const aiScene* scene);
 
 		template<class V>
-		void processVertices(std::vector<V, PoolAllocator<V>>& vertices, aiMesh* mesh);
-		void processIndices(std::vector<unsigned int, PoolAllocator<unsigned int>>& indices, aiMesh* mesh);
-		void processBones(std::vector<SkinnedVertex, PoolAllocator<SkinnedVertex>>& vertices,
+		void processVertices(std::vector<V, MemoryAllocator<V>>& vertices, aiMesh* mesh);
+		void processIndices(std::vector<unsigned int, MemoryAllocator<unsigned int>>& indices, aiMesh* mesh);
+		void processBones(std::vector<SkinnedVertex, MemoryAllocator<SkinnedVertex>>& vertices,
 			std::map<std::string, MeshBone>& bones, aiMesh* mesh);
 
 		void processMaterial(DefaultMaterialContainer& material, aiMesh* mesh, const aiScene* scene);
