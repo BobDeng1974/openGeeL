@@ -2,6 +2,8 @@
 #include "scene.h"
 #include "window.h"
 #include "cameras/camera.h"
+#include "meshes/model.h"
+#include "meshes/meshfactory.h"
 #include "renderer/rendercontext.h"
 #include "framebuffer/framebuffer.h"
 
@@ -20,8 +22,15 @@ namespace geeL{
 	}
 
 
-	Renderer::Renderer(RenderWindow& window, RenderContext& context)
-		: ThreadedObject(100L), window(&window), context(&context), gui(nullptr) {}
+	Renderer::Renderer(RenderWindow& window, RenderContext& context, MeshFactory& factory)
+		: ThreadedObject(100L)
+		, window(window)
+		, context(context)
+		, factory(factory)
+		, gui(nullptr) {
+	
+		factory.addListener(*this);
+	}
 
 
 	void Renderer::addGUIRenderer(GUIRenderer* renderer) {
@@ -31,5 +40,18 @@ namespace geeL{
 	void Renderer::setScene(RenderScene& scene) {
 		this->scene = &scene;
 	}
+
+
+	void Renderer::onAdd(Model& model) {
+		std::lock_guard<std::mutex> guard(glMutex);
+		model.initGL();
+	}
+
+	void Renderer::onRemove(Model& model) {
+		std::lock_guard<std::mutex> guard(glMutex);
+		model.clearGL();
+	}
+
+
 
 }

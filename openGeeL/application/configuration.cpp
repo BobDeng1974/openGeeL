@@ -46,7 +46,7 @@ namespace geeL {
 		DefaultPostProcess& def = DefaultPostProcess();
 		RenderContext& context = RenderContext();
 		SceneRender& lighting = DeferredLighting(scene);
-		DeferredRenderer& renderer = DeferredRenderer(window, textureProvider, lighting, context, def, gBuffer);
+		DeferredRenderer& renderer = DeferredRenderer(window, textureProvider, lighting, context, def, gBuffer, meshFactory);
 		renderer.setScene(scene);
 
 		ForwardBuffer& fBuffer = ForwardBuffer(gBuffer);

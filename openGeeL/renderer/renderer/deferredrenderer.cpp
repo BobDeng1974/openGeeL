@@ -28,8 +28,9 @@ namespace geeL {
 		SceneRender& lighting,
 		RenderContext& context, 
 		DefaultPostProcess& def, 
-		GBuffer& gBuffer)
-			: Renderer(window, context)
+		GBuffer& gBuffer,
+		MeshFactory& factory)
+			: Renderer(window, context, factory)
 			, provider(provider)
 			, gBuffer(gBuffer)
 			, ssao(nullptr)
@@ -47,7 +48,7 @@ namespace geeL {
 		geometryPassFunction = [this] () { this->scene->drawDefault(); };
 		lightingPassFunction = [this] () { this->lightingPass(); };
 
-		stackBuffer.initResolution(window->resolution);
+		stackBuffer.initResolution(window.resolution);
 		stackBuffer.referenceRBO(gBuffer);
 
 #if DIFFUSE_SPECULAR_SEPARATION
@@ -62,22 +63,29 @@ namespace geeL {
 
 	
 	void DeferredRenderer::runStart() {
-		window->makeCurrent();
+		lock_guard<mutex> glGuard(glMutex);
+		lock_guard<mutex> renderGuard(renderMutex);
+
+		window.makeCurrent();
 		
 		initEffects();
 		scene->updateProbes(); //Draw reflection probes once at beginning
 	}
 
 	void DeferredRenderer::run() {
+		lock_guard<mutex> renderGuard(renderMutex);
+
 		draw();
 
 		provider.cleanupCache();
-		window->swapBuffer();
+		window.swapBuffer();
 	}
 
 	void DeferredRenderer::draw() {
+		lock_guard<mutex> glGuard(glMutex);
+
 		DepthGuard::enable(true);
-		Viewport::setForced(0, 0, window->resolution.getWidth(), window->resolution.getHeight());
+		Viewport::setForced(0, 0, window.resolution.getWidth(), window.resolution.getHeight());
 
 		//Update scene and forward information into objects and effects
 		
@@ -183,6 +191,8 @@ namespace geeL {
 
 
 	void DeferredRenderer::draw(const Camera& camera, const FrameBuffer& buffer) {
+		lock_guard<mutex> glGuard(glMutex);
+		lock_guard<mutex> renderGuard(renderMutex);
 		DepthGuard::enable(true);
 
 		//Geometry pass
@@ -239,7 +249,7 @@ namespace geeL {
 	void DeferredRenderer::addEffect(SSAO& ssao) {
 		this->ssao = &ssao;
 
-		Resolution ssaoRes = Resolution(window->resolution, ssao.getResolution());
+		Resolution ssaoRes = Resolution(window.resolution, ssao.getResolution());
 		gBuffer.requestOcclusion(ssao.getResolution()); //Ensure that occlusion map gets created
 
 		ssao.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, 
@@ -248,6 +258,9 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect, DrawTime time) {
+		lock_guard<mutex> glGuard(glMutex);
+		lock_guard<mutex> renderGuard(renderMutex);
+
 		SSAO* ssao = dynamic_cast<SSAO*>(&effect);
 		if (ssao != nullptr) {
 			addEffect(*ssao);
@@ -268,27 +281,36 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect, RenderTexture& texture) {
+		lock_guard<mutex> renderGuard(renderMutex);
+
 		externalEffects.push_back(&effect);
 	}
 
 
 	void DeferredRenderer::addRenderTexture(DynamicRenderTexture& texture) {
+		lock_guard<mutex> renderGuard(renderMutex);
+
 		renderTextures.push_back(&texture);
 	}
 
 	void DeferredRenderer::addFBuffer(ForwardBuffer& buffer) {
+		lock_guard<mutex> renderGuard(renderMutex);
+
 		fBuffer = &buffer;
 	}
 
 	void DeferredRenderer::setScreenImage(const ITexture* const texture) {
+		lock_guard<mutex> glGuard(glMutex);
+		lock_guard<mutex> renderGuard(renderMutex);
+
 		defaultEffect.setCustomImage(texture);
 	}
 
 	const TextureProvider& DeferredRenderer::getTextureProvider() const {
+		lock_guard<mutex> renderGuard(renderMutex);
+
 		return provider;
 	}
-
-
 
 
 	void DeferredRenderer::initEffects() {
@@ -297,7 +319,7 @@ namespace geeL {
 			window->resolution, &provider, &fallbackEffect, &separatedBuffer);
 #else
 		PostProcessingParameter parameter(ScreenQuad::get(), stackBuffer,
-			window->resolution, &provider, &fallbackEffect);
+			window.resolution, &provider, &fallbackEffect);
 #endif
 
 		defaultEffect.init(parameter);

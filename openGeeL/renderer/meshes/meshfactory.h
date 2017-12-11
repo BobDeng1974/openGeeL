@@ -8,6 +8,7 @@
 #include "animation/bone.h"
 #include "memory/memoryobject.h"
 #include "memory/poolallocator.h"
+#include "utility/listener.h"
 
 enum aiTextureType;
 
@@ -26,7 +27,7 @@ namespace geeL {
 	enum class ShadingMethod;
 
 	struct SkinnedVertex;
-	struct MeshBoneData;
+	struct MeshBone;
 
 	class AnimationMemory;
 	class DefaultMaterialContainer;
@@ -43,7 +44,7 @@ namespace geeL {
 	class Transform;
 	
 
-	class MeshFactory {
+	class MeshFactory : public DataEventActuator<Model> {
 
 	public:
 		MeshFactory(MaterialFactory& factory);

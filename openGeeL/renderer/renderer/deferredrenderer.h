@@ -18,6 +18,7 @@ namespace geeL {
 	class ForwardBuffer;
 	class GBuffer;
 	class ITexture;
+	class Model;
 	class RenderTexture;
 	class SceneRender;
 	class SSAO;
@@ -33,20 +34,16 @@ namespace geeL {
 			SceneRender& lighting,
 			RenderContext& context, 
 			DefaultPostProcess& def, 
-			GBuffer& gBuffer);
+			GBuffer& gBuffer,
+			MeshFactory& factory);
 
 		virtual void runStart();
 		virtual void run();
-		virtual void draw();
-		virtual void draw(const Camera& camera, const FrameBuffer& buffer);
-
-		//Render current frame of scene with classic forward rendering
-		virtual void drawForward(const Camera& camera);
+		void draw(const Camera& camera, const FrameBuffer& buffer);
 
 		//Add new post processing effect to renderer. 
 		virtual void addEffect(PostProcessingEffect& effect, DrawTime time);
 		virtual void addEffect(PostProcessingEffect& effect, RenderTexture& texture);
-		void addEffect(SSAO& ssao);
 
 		virtual void addRenderTexture(DynamicRenderTexture& texture);
 		void addFBuffer(ForwardBuffer& buffer);
@@ -56,8 +53,10 @@ namespace geeL {
 		void setScreenImage(const ITexture* const texture = nullptr);
 
 		const TextureProvider& getTextureProvider() const;
-
+		
 	private:
+		mutable std::mutex renderMutex;
+
 		std::vector<PostProcessingEffect*> earlyEffects;
 		std::vector<PostProcessingEffect*> intermediateEffects;
 		std::vector<PostProcessingEffect*> lateEffects;
@@ -85,8 +84,14 @@ namespace geeL {
 		DeferredRenderer(const DeferredRenderer& other) = delete;
 		DeferredRenderer& operator= (const DeferredRenderer& other) = delete;
 
+		//Render current frame of scene with classic forward rendering
+		void drawForward(const Camera& camera);
+		void draw();
+
 		void init();
 		void initEffects();
+
+		void addEffect(SSAO& ssao);
 		
 		void drawEffects(std::vector<PostProcessingEffect*>& effects);
 		void iterEffects(std::vector<PostProcessingEffect*>& effects, 

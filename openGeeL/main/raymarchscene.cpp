@@ -14,6 +14,7 @@
 #include "lights/lightmanager.h"
 #include "lighting/raymarcher.h"
 #include "postprocessing/drawdefault.h"
+#include "meshes/meshfactory.h"
 #include "renderer/rendercontext.h"
 #include "texturing/textureprovider.h"
 #include "shader/uniformstack.h"
@@ -39,6 +40,7 @@ void RaymarchTest::draw() {
 	GBuffer& gBuffer = GBuffer(window.resolution);
 	TextureProvider textureProvider(window, gBuffer);
 	MaterialFactory &materialFactory = MaterialFactory(gBuffer);
+	MeshFactory& meshFactory = MeshFactory(materialFactory);
 	LightManager& lightManager = LightManager();
 	UniformBindingStack pipeline;
 	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, camera, materialFactory, manager);
@@ -46,7 +48,7 @@ void RaymarchTest::draw() {
 	DefaultPostProcess& def = DefaultPostProcess(2.f);
 	RenderContext& context = RenderContext();
 	RayMarcher& raymarch = RayMarcher(scene);
-	DeferredRenderer& renderer = DeferredRenderer(window, textureProvider, raymarch, context, def, gBuffer);
+	DeferredRenderer& renderer = DeferredRenderer(window, textureProvider, raymarch, context, def, gBuffer, meshFactory);
 	renderer.setScene(scene);
 
 	ContinuousSingleThread renderThread(renderer);

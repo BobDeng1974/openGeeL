@@ -101,6 +101,7 @@ namespace geeL {
 		GenericMesh(GenericMesh<VertexType>&& other);
 		GenericMesh<VertexType>& operator=(GenericMesh<VertexType>&& other);
 
+
 		virtual void draw(const Shader& shader) const;
 
 		virtual size_t getIndicesCount() const;
@@ -128,8 +129,6 @@ namespace geeL {
 			std::vector<Vertex, MemoryAllocator<Vertex>>& vertices,
 			std::vector<unsigned int, MemoryAllocator<unsigned int>>& indices,
 			MemoryObject<MaterialContainer> material);
-		virtual ~StaticMesh();
-
 		StaticMesh(StaticMesh&& other);
 		StaticMesh& operator=(StaticMesh&& other);
 
@@ -149,8 +148,6 @@ namespace geeL {
 			std::vector<unsigned int, MemoryAllocator<unsigned int>>& indices,
 			std::map<std::string, MeshBone>& bones,
 			MemoryObject<MaterialContainer> material);
-		virtual ~SkinnedMesh();
-
 		SkinnedMesh(SkinnedMesh&& other);
 		SkinnedMesh& operator=(SkinnedMesh&& other);
 

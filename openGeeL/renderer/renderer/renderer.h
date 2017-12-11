@@ -1,7 +1,9 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include <mutex>
 #include <vector>
+#include "utility/listener.h"
 #include "threading.h"
 
 namespace geeL {
@@ -14,6 +16,8 @@ namespace geeL {
 	class SceneControlObject;
 	class LightManager;
 	class MeshDrawer;
+	class MeshFactory;
+	class Model;
 	class GUIRenderer;
 
 
@@ -33,23 +37,26 @@ namespace geeL {
 	};
 
 
-	class Renderer : public Drawer, public ThreadedObject {
+	class Renderer : public ThreadedObject, public DataEventListener<Model> {
 
 	public:
-		Renderer(RenderWindow& window, RenderContext& context);
+		Renderer(RenderWindow& window, RenderContext& context, MeshFactory& factory);
 		virtual ~Renderer() {}
-
-		//Render single frame
-		virtual void draw() = 0;
 
 		virtual void addGUIRenderer(GUIRenderer* renderer);
 		virtual void setScene(RenderScene& scene);
 
-	protected:
-		RenderContext* context;
-		RenderWindow* window;
-		GUIRenderer*  gui;
+		virtual void onAdd(Model& model);
+		virtual void onRemove(Model& model);
 
+	protected:
+		mutable std::mutex glMutex;
+
+		RenderContext& context;
+		RenderWindow& window;
+		MeshFactory& factory;
+
+		GUIRenderer*  gui;
 		RenderScene* scene;
 
 	};

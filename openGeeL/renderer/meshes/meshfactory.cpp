@@ -94,17 +94,25 @@ namespace geeL {
 			//or memory of existing one expired
 			|| (it != staticModels.end() && it->second.expired())) {
 
-			MemoryObject<StaticModel> model(new StaticModel(filePath));
+			MemoryObject<StaticModel> model(new StaticModel(filePath), [this](StaticModel* m) { 
+				//Add a custom deleter to provide a callback when resource gets destroyed
+				this->onRemove(*m);
+				delete m; });
+
 			weak_ptr<StaticModel> wModel(model);
 
 			staticModels[filePath] = model;
 			fillStaticModel(*model, filePath);
+			onAdd(*model);
 
 			return model;
 		}
 
 		weak_ptr<StaticModel> wModel = it->second;
-		return MemoryObject<StaticModel>(wModel.lock());
+		MemoryObject<StaticModel> ptr(wModel.lock());
+		onAdd(*ptr);
+
+		return ptr;
 	}
 
 	MemoryObject<SkinnedModel> MeshFactory::createSkinnedModel(string filePath) {
@@ -115,17 +123,25 @@ namespace geeL {
 			//or memory of existing one expired
 			|| (it != skinnedModels.end() && it->second.expired())) {
 
-			MemoryObject<SkinnedModel> model(new SkinnedModel(filePath));
+			MemoryObject<SkinnedModel> model(new SkinnedModel(filePath), [this](SkinnedModel* m) {
+				//Add a custom deleter to provide a callback when resource gets destroyed
+				this->onRemove(*m);
+				delete m;  });
+
 			weak_ptr<SkinnedModel> wModel(model);
 
 			skinnedModels[filePath] = model;
 			fillSkinnedModel(*model, filePath);
+			onAdd(*model);
 
 			return model;
 		}
 
 		weak_ptr<SkinnedModel> wModel = it->second;
-		return MemoryObject<SkinnedModel>(wModel.lock());
+		MemoryObject<SkinnedModel> ptr(wModel.lock());
+		onAdd(*ptr);
+
+		return ptr;
 	}
 
 

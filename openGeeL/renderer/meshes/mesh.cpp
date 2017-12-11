@@ -71,20 +71,10 @@ namespace geeL {
 		: GenericMesh<Vertex>(name, 
 			std::move(vertices), 
 			std::move(indices), 
-			material) {
-
-		initGL();
-	}
-
-	StaticMesh::~StaticMesh() {
-		clearGL();
-	}
+			material) {}
 
 	StaticMesh::StaticMesh(StaticMesh&& other)
-		: GenericMesh<Vertex>(std::move(other)) {
-
-		initGL();
-	}
+		: GenericMesh<Vertex>(std::move(other)) {}
 
 	StaticMesh& StaticMesh::operator=(StaticMesh&& other) {
 		if (this != &other)
@@ -92,6 +82,7 @@ namespace geeL {
 
 		return *this;
 	}
+
 
 	void StaticMesh::initGL() {
 		glGenVertexArrays(1, &vao);
@@ -141,28 +132,16 @@ namespace geeL {
 				, std::move(vertices)
 				, std::move(indices)
 				, material)
-			, bones(std::move(bones)) {
-
-		initGL();
-	}
-
-	SkinnedMesh::~SkinnedMesh() {
-		clearGL();
-	}
+			, bones(std::move(bones)) {}
 
 	SkinnedMesh::SkinnedMesh(SkinnedMesh&& other)
 		: GenericMesh<SkinnedVertex>(std::move(other))
-		, bones(std::move(other.bones)) {
-
-		initGL();
-	}
+		, bones(std::move(other.bones)) {}
 
 	SkinnedMesh& SkinnedMesh::operator=(SkinnedMesh&& other) {
 		if (this != &other) {
 			GenericMesh<SkinnedVertex>::operator=(std::move(other));
 			bones = std::move(other.bones);
-
-			initGL();
 		}
 
 		return *this;
