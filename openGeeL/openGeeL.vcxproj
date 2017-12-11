@@ -459,6 +459,7 @@
     <ClInclude Include="renderer\utility\functionguard.h" />
     <ClInclude Include="renderer\utility\gvector.h" />
     <ClInclude Include="renderer\utility\linearkernel.h" />
+    <ClInclude Include="renderer\utility\listener.h" />
     <ClInclude Include="renderer\utility\matrixextension.h" />
     <ClInclude Include="renderer\utility\properties.h" />
     <ClInclude Include="renderer\utility\property.h" />

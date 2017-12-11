@@ -5,7 +5,7 @@
 #include <map>
 #include <memory>
 #include "snippets/guisnippets.h"
-#include "scene.h"
+#include "utility/listener.h"
 
 namespace geeL {
 
@@ -18,7 +18,7 @@ namespace geeL {
 	class ShadowMapSnippet;
 	class SimpleShadowMap;
 
-	class ObjectLister : public GUISnippet, public SceneListener {
+	class ObjectLister : public GUISnippet, public DataEventListener<MeshRenderer> {
 
 	public:
 		ObjectLister(Scene& scene);

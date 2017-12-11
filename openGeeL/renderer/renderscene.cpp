@@ -36,6 +36,8 @@ namespace geeL {
 	Scene::~Scene() {
 		for (auto it(renderers.begin()); it != renderers.end(); it++) {
 			MeshRenderer* renderer = *it;
+			onRemove(*renderer);
+
 			delete renderer;
 		}
 	}
@@ -46,10 +48,6 @@ namespace geeL {
 
 		requester.updateSkybox(*skybox);
 		requester.updateCamera(*camera);
-	}
-
-	void Scene::addListener(SceneListener& listener) {
-		sceneListeners.push_back(&listener);
 	}
 
 	void Scene::setCamera(SceneCamera& camera) {
@@ -242,21 +240,6 @@ namespace geeL {
 
 		return value;
 	}
-
-	void Scene::onAdd(MeshRenderer& renderer) {
-		for (auto it(sceneListeners.begin()); it != sceneListeners.end(); it++) {
-			SceneListener& listener = **it;
-			listener.onAdd(renderer);
-		}
-	}
-
-	void Scene::onRemove(MeshRenderer& renderer) {
-		for (auto it(sceneListeners.begin()); it != sceneListeners.end(); it++) {
-			SceneListener& listener = **it;
-			listener.onRemove(renderer);
-		}
-	}
-
 
 
 

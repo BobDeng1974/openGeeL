@@ -8,8 +8,9 @@
 #include <mutex>
 #include <list>
 #include <set>
-#include "threading.h"
+#include "utility/listener.h"
 #include "shader/defshading.h"
+#include "threading.h"
 
 namespace geeL {
 
@@ -36,26 +37,14 @@ namespace geeL {
 	using TransformMapping = std::map<unsigned int, MeshRenderer*>;
 	using ShaderMapping    = std::map<SceneShader*, TransformMapping>;
 
-
-
-	class SceneListener {
-
-	public:
-		virtual void onAdd(MeshRenderer& renderer) = 0;
-		virtual void onRemove(MeshRenderer& renderer) = 0;
-
-	};
-
-
 	//Class that holds scene information (Objects, cameras, lights, ...)
-	class Scene {
+	class Scene : public DataEventActuator<MeshRenderer> {
 
 	public:
 		Scene(Transform& world, LightManager& lightManager, UniformBindingStack& pipeline, SceneCamera& camera);
 		virtual ~Scene();
 
 		void addRequester(SceneRequester& requester);
-		void addListener(SceneListener& listener);
 		void addShader(SceneShader& shader);
 
 		const SceneCamera& getCamera() const;
@@ -104,7 +93,6 @@ namespace geeL {
 		UniformBindingStack& pipeline;
 
 		std::list<SceneRequester*> sceneRequester;
-		std::list<SceneListener*> sceneListeners;
 
 		//Objects are indexed by their used shaders, shading method their transforms id to allow grouped drawing and 
 		//therefore no unnecessary shader programm switching. Objects with multiple materials are linked to
@@ -118,9 +106,6 @@ namespace geeL {
 		void updateMeshRenderer(MeshRenderer& renderer, Material oldMaterial, Material newMaterial);
 
 		void iterShaders(std::function<bool(const SceneShader&)> function) const;
-
-		void onAdd(MeshRenderer& renderer);
-		void onRemove(MeshRenderer& renderer);
 
 	};
 

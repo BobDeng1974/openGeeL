@@ -1058,6 +1058,9 @@
     <ClInclude Include="application\memory\memoryobject.h">
       <Filter>application\memory</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\utility\listener.h">
+      <Filter>renderer\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\combine.frag">
