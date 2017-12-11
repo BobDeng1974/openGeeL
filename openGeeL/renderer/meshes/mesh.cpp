@@ -73,13 +73,17 @@ namespace geeL {
 			std::move(indices), 
 			material) {
 
-		init();
+		initGL();
+	}
+
+	StaticMesh::~StaticMesh() {
+		clearGL();
 	}
 
 	StaticMesh::StaticMesh(StaticMesh&& other)
 		: GenericMesh<Vertex>(std::move(other)) {
 
-		init();
+		initGL();
 	}
 
 	StaticMesh& StaticMesh::operator=(StaticMesh&& other) {
@@ -89,7 +93,7 @@ namespace geeL {
 		return *this;
 	}
 
-	void StaticMesh::init() {
+	void StaticMesh::initGL() {
 		glGenVertexArrays(1, &vao);
 		glGenBuffers(1, &vbo);
 		glGenBuffers(1, &ebo);
@@ -120,6 +124,12 @@ namespace geeL {
 		glBindVertexArray(0);
 	}
 
+	void StaticMesh::clearGL() {
+		glDeleteVertexArrays(1, &vao);
+		glDeleteBuffers(1, &vbo);
+		glDeleteBuffers(1, &ebo);
+	}
+
 
 
 	SkinnedMesh::SkinnedMesh(const std::string& name, 
@@ -133,14 +143,18 @@ namespace geeL {
 				, material)
 			, bones(std::move(bones)) {
 
-		init();
+		initGL();
+	}
+
+	SkinnedMesh::~SkinnedMesh() {
+		clearGL();
 	}
 
 	SkinnedMesh::SkinnedMesh(SkinnedMesh&& other)
 		: GenericMesh<SkinnedVertex>(std::move(other))
 		, bones(std::move(other.bones)) {
 
-		init();
+		initGL();
 	}
 
 	SkinnedMesh& SkinnedMesh::operator=(SkinnedMesh&& other) {
@@ -148,13 +162,13 @@ namespace geeL {
 			GenericMesh<SkinnedVertex>::operator=(std::move(other));
 			bones = std::move(other.bones);
 
-			init();
+			initGL();
 		}
 
 		return *this;
 	}
 
-	void SkinnedMesh::init() {
+	void SkinnedMesh::initGL() {
 		glGenVertexArrays(1, &vao);
 		glGenBuffers(1, &vbo);
 		glGenBuffers(1, &ebo);
@@ -189,6 +203,12 @@ namespace geeL {
 		glVertexAttribPointer(6, BONECOUNT, GL_FLOAT, GL_FALSE, sizeof(SkinnedVertex), (GLvoid*)offsetof(SkinnedVertex, weights));
 
 		glBindVertexArray(0);
+	}
+
+	void SkinnedMesh::clearGL() {
+		glDeleteVertexArrays(1, &vao);
+		glDeleteBuffers(1, &vbo);
+		glDeleteBuffers(1, &ebo);
 	}
 
 	void SkinnedMesh::updateBones(const Shader& shader, const Skeleton& skeleton) const {

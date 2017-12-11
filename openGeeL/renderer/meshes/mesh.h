@@ -59,10 +59,13 @@ namespace geeL {
 		Mesh() {}
 		Mesh(const std::string& name, MemoryObject<MaterialContainer> material);
 		Mesh(Mesh&& other);
+		virtual ~Mesh() {}
+
 		Mesh& operator=(Mesh&& other);
 
-
 		virtual void draw(const Shader& shader) const = 0;
+		virtual void initGL() = 0;
+		virtual void clearGL() = 0;
 
 		virtual size_t getIndicesCount() const = 0;
 		virtual size_t getVerticesCount() const = 0;
@@ -93,6 +96,7 @@ namespace geeL {
 			std::vector<VertexType, MemoryAllocator<VertexType>>&& vertices,
 			std::vector<unsigned int, MemoryAllocator<unsigned int>>&& indices,
 			MemoryObject<MaterialContainer> material);
+		virtual ~GenericMesh() {}
 
 		GenericMesh(GenericMesh<VertexType>&& other);
 		GenericMesh<VertexType>& operator=(GenericMesh<VertexType>&& other);
@@ -124,12 +128,13 @@ namespace geeL {
 			std::vector<Vertex, MemoryAllocator<Vertex>>& vertices,
 			std::vector<unsigned int, MemoryAllocator<unsigned int>>& indices,
 			MemoryObject<MaterialContainer> material);
+		virtual ~StaticMesh();
 
 		StaticMesh(StaticMesh&& other);
 		StaticMesh& operator=(StaticMesh&& other);
 
-	private:
-		virtual void init();
+		virtual void initGL();
+		virtual void clearGL();
 		
 	};
 
@@ -144,10 +149,13 @@ namespace geeL {
 			std::vector<unsigned int, MemoryAllocator<unsigned int>>& indices,
 			std::map<std::string, MeshBone>& bones,
 			MemoryObject<MaterialContainer> material);
+		virtual ~SkinnedMesh();
 
 		SkinnedMesh(SkinnedMesh&& other);
 		SkinnedMesh& operator=(SkinnedMesh&& other);
 
+		virtual void initGL();
+		virtual void clearGL();
 
 		//Update mesh bone data into given shader
 		void updateBones(const Shader& shader, const Skeleton& skeleton) const;
@@ -155,7 +163,6 @@ namespace geeL {
 	private:
 		std::map<std::string, MeshBone> bones;
 
-		void init();
 	};
 
 
