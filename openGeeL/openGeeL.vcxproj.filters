@@ -525,6 +525,9 @@
     <ClCompile Include="renderer\meshes\model.cpp">
       <Filter>renderer\meshes</Filter>
     </ClCompile>
+    <ClCompile Include="workerthread.cpp">
+      <Filter>application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\texturing\texture.h">
@@ -1060,6 +1063,9 @@
     </ClInclude>
     <ClInclude Include="renderer\utility\listener.h">
       <Filter>renderer\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="application\workerthread.h">
+      <Filter>application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

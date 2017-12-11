@@ -300,15 +300,10 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::setScreenImage(const ITexture* const texture) {
-		lock_guard<mutex> glGuard(glMutex);
-		lock_guard<mutex> renderGuard(renderMutex);
-
 		defaultEffect.setCustomImage(texture);
 	}
 
 	const TextureProvider& DeferredRenderer::getTextureProvider() const {
-		lock_guard<mutex> renderGuard(renderMutex);
-
 		return provider;
 	}
 
