@@ -33,6 +33,18 @@ namespace geeL{
 	}
 
 
+	void Renderer::runStart() {
+		window.makeCurrent();
+
+		std::lock_guard<std::mutex> glGuard(glMutex);
+		updateGLStructures();
+	}
+
+	void Renderer::run() {
+		std::lock_guard<std::mutex> glGuard(glMutex);
+		updateGLStructures();
+	}
+
 	void Renderer::addGUIRenderer(GUIRenderer* renderer) {
 		gui = renderer;
 	}
@@ -44,14 +56,27 @@ namespace geeL{
 
 	void Renderer::onAdd(Model& model) {
 		std::lock_guard<std::mutex> guard(glMutex);
-		model.initGL();
+		toAdd.emplace(&model);
 	}
 
 	void Renderer::onRemove(Model& model) {
 		std::lock_guard<std::mutex> guard(glMutex);
-		model.clearGL();
+		toRemove.emplace(&model);
 	}
 
+	void Renderer::updateGLStructures() {
+		while (!toAdd.empty()) {
+			Model* model = toAdd.front();
+			model->initGL();
 
+			toAdd.pop();
+		}
+		
+		while (!toRemove.empty()) {
+			Model* model = toRemove.front();
+			model->clearGL();
 
+			toRemove.pop();
+		}
+	}
 }

@@ -63,18 +63,17 @@ namespace geeL {
 
 	
 	void DeferredRenderer::runStart() {
-		lock_guard<mutex> glGuard(glMutex);
+		Renderer::runStart();
 		lock_guard<mutex> renderGuard(renderMutex);
-
-		window.makeCurrent();
 		
 		initEffects();
 		scene->updateProbes(); //Draw reflection probes once at beginning
 	}
 
 	void DeferredRenderer::run() {
-		lock_guard<mutex> renderGuard(renderMutex);
+		Renderer::run();
 
+		lock_guard<mutex> renderGuard(renderMutex);
 		draw();
 
 		provider.cleanupCache();
@@ -82,8 +81,6 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::draw() {
-		lock_guard<mutex> glGuard(glMutex);
-
 		DepthGuard::enable(true);
 		Viewport::setForced(0, 0, window.resolution.getWidth(), window.resolution.getHeight());
 

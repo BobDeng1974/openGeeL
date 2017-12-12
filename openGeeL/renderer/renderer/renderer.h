@@ -2,6 +2,7 @@
 #define RENDERER_H
 
 #include <mutex>
+#include <queue>
 #include <vector>
 #include "utility/listener.h"
 #include "threading.h"
@@ -43,6 +44,9 @@ namespace geeL {
 		Renderer(RenderWindow& window, RenderContext& context, MeshFactory& factory);
 		virtual ~Renderer() {}
 
+		virtual void runStart();
+		virtual void run();
+
 		virtual void addGUIRenderer(GUIRenderer* renderer);
 		virtual void setScene(RenderScene& scene);
 
@@ -58,6 +62,12 @@ namespace geeL {
 
 		GUIRenderer*  gui;
 		RenderScene* scene;
+
+		void updateGLStructures();
+
+	private:
+		std::queue<Model*> toAdd;
+		std::queue<Model*> toRemove;
 
 	};
 }
