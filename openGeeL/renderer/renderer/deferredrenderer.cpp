@@ -64,6 +64,8 @@ namespace geeL {
 	
 	void DeferredRenderer::runStart() {
 		Renderer::runStart();
+
+		lock_guard<mutex> glGuard(glMutex);
 		lock_guard<mutex> renderGuard(renderMutex);
 		
 		initEffects();
@@ -73,6 +75,7 @@ namespace geeL {
 	void DeferredRenderer::run() {
 		Renderer::run();
 
+		lock_guard<mutex> glGuard(glMutex);
 		lock_guard<mutex> renderGuard(renderMutex);
 		draw();
 

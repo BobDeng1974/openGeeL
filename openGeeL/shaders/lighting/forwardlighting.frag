@@ -40,7 +40,7 @@ uniform mat4 projection;
 uniform mat4 inverseView;
 uniform vec3 origin;
 
-uniform float fogFalloff = 100.f;
+uniform float fogFalloff = 200.f;
 
 
 #include <shaders/materialproperties.glsl>

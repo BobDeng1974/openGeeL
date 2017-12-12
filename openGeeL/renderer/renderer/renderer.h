@@ -42,13 +42,14 @@ namespace geeL {
 		GUIRenderer* gui;
 		RenderScene* scene;
 
-		void updateGLStructures();
-
 	private:
 		std::queue<GLStructure*> toAdd;
 		std::queue<GLStructure*> toRemove;
 
+		void updateGLStructures();
+
 	};
+
 }
 
 #endif
