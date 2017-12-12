@@ -2,6 +2,7 @@
 #define MESHFACTORY_H
 
 #include <map>
+#include <functional>
 #include <string>
 #include <list>
 #include <vector>
@@ -9,6 +10,8 @@
 #include "memory/memoryobject.h"
 #include "memory/poolallocator.h"
 #include "utility/listener.h"
+#include "appglobals.h"
+#include "workerthread.h"
 
 enum aiTextureType;
 
@@ -70,13 +73,24 @@ namespace geeL {
 
 		//Creates, initializes and returns a new static model from given file path or 
 		//returns an existing model if it already uses this file
-		MemoryObject<StaticModel> createStaticModel(std::string filePath);
+		MemoryObject<StaticModel> createStaticModel(const std::string& filePath);
+		
 
 		//Creates, initializes and returns a new static model from given file path or 
 		//returns an existing model if it already uses this file
-		MemoryObject<SkinnedModel> createSkinnedModel(std::string filePath);
+		MemoryObject<SkinnedModel> createSkinnedModel(const std::string& filePath);
+
+#if MULTI_THREADING_SUPPORT
+		void createModelParallel(const std::string& filePath, std::function<void(MemoryObject<StaticModel>)> callback);
+		void createModelParallel(const std::string& filePath, std::function<void(MemoryObject<SkinnedModel>)> callback);
+#endif
+		
 
 	private:
+#if MULTI_THREADING_SUPPORT
+		WorkerThread workerThread;
+#endif
+
 		MaterialFactory& factory;
 		std::unique_ptr<Memory> memory;
 		std::map<std::string, std::weak_ptr<StaticModel>> staticModels;

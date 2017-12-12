@@ -99,6 +99,7 @@ namespace geeL {
 	MeshRenderer& Scene::addMeshRenderer(std::unique_ptr<MeshRenderer> renderer) {
 		MeshRenderer* rawRenderer = renderer.release();
 		renderers.emplace(rawRenderer);
+		onAdd(*rawRenderer);
 
 		rawRenderer->iterateShaders([this, &rawRenderer](SceneShader& shader) {
 			//Init shader if it hasn't been added to the scene yet
@@ -112,7 +113,7 @@ namespace geeL {
 			renderObjects[shader.getMethod()][&shader][rawRenderer->transform.getID()] = rawRenderer;
 		});
 
-		onAdd(*rawRenderer);
+		
 		return *rawRenderer;
 	}
 
@@ -256,6 +257,18 @@ namespace geeL {
 		//Add generic shader to scene to allow method 'drawGenericForced' to work
 		addShader(materialFactory.getDefaultShader(ShadingMethod::Generic, false));
 		addShader(materialFactory.getDefaultShader(ShadingMethod::Generic, true));
+	}
+
+	MeshRenderer& RenderScene::addMeshRenderer(std::unique_ptr<MeshRenderer> renderer) {
+		std::lock_guard<std::mutex> lock(mutex);
+
+		return Scene::addMeshRenderer(std::move(renderer));
+	}
+
+	void RenderScene::removeMeshRenderer(MeshRenderer& renderer) {
+		std::lock_guard<std::mutex> lock(mutex);
+
+		Scene::removeMeshRenderer(renderer);
 	}
 
 	

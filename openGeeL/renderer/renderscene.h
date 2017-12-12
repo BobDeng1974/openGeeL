@@ -54,8 +54,8 @@ namespace geeL {
 		const LightManager& getLightmanager() const;
 		LightManager& getLightmanager();
 
-		MeshRenderer& addMeshRenderer(std::unique_ptr<MeshRenderer> renderer);
-		void removeMeshRenderer(MeshRenderer& renderer);
+		virtual MeshRenderer& addMeshRenderer(std::unique_ptr<MeshRenderer> renderer);
+		virtual void removeMeshRenderer(MeshRenderer& renderer);
 
 		void setSkybox(Skybox& skybox);
 
@@ -117,6 +117,10 @@ namespace geeL {
 	public:
 		RenderScene(Transform& world, LightManager& lightManager, UniformBindingStack& pipeline, SceneCamera& camera, 
 			MaterialFactory& materialFactory, Input& input);
+
+		virtual MeshRenderer& addMeshRenderer(std::unique_ptr<MeshRenderer> renderer);
+		virtual void removeMeshRenderer(MeshRenderer& renderer);
+
 
 		void init();
 		void updateProbes();

@@ -86,7 +86,7 @@ namespace geeL {
 		return renderer;
 	}
 
-	MemoryObject<StaticModel> MeshFactory::createStaticModel(string filePath) {
+	MemoryObject<StaticModel> MeshFactory::createStaticModel(const string& filePath) {
 
 		auto it(staticModels.find(filePath));
 		//Create new model if none exist yet
@@ -115,7 +115,7 @@ namespace geeL {
 		return ptr;
 	}
 
-	MemoryObject<SkinnedModel> MeshFactory::createSkinnedModel(string filePath) {
+	MemoryObject<SkinnedModel> MeshFactory::createSkinnedModel(const string& filePath) {
 
 		auto it(skinnedModels.find(filePath));
 		//Create new model if none exist yet
@@ -143,6 +143,23 @@ namespace geeL {
 
 		return ptr;
 	}
+
+#if MULTI_THREADING_SUPPORT
+	void MeshFactory::createModelParallel(const string& filePath, function<void(MemoryObject<StaticModel>)> callback) {
+		workerThread.addJob([this, filePath, callback]() {
+			MemoryObject<StaticModel> model = createStaticModel(filePath);
+			callback(model);
+		});
+	}
+
+	void MeshFactory::createModelParallel(const string& filePath, function<void(MemoryObject<SkinnedModel>)> callback) {
+		workerThread.addJob([this, filePath, callback]() {
+			MemoryObject<SkinnedModel> model = createSkinnedModel(filePath);
+			callback(model);
+		});
+	}
+#endif
+
 
 
 	void MeshFactory::fillStaticModel(StaticModel& model, string path) {
