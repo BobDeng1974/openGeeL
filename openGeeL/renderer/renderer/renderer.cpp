@@ -9,19 +9,6 @@
 
 namespace geeL{
 
-	void Drawer::setParent(DynamicBuffer& buffer) {
-		parentBuffer = &buffer;
-	}
-
-	const DynamicBuffer* const Drawer::getParentBuffer() const {
-		return parentBuffer;
-	}
-
-	DynamicBuffer* const Drawer::getParentBuffer() {
-		return parentBuffer;
-	}
-
-
 	Renderer::Renderer(RenderWindow& window, RenderContext& context, MeshFactory& factory)
 		: ThreadedObject(100L)
 		, window(window)

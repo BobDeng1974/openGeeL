@@ -3,39 +3,18 @@
 
 #include <mutex>
 #include <queue>
-#include <vector>
 #include "utility/listener.h"
 #include "threading.h"
+#include "glstructures.h"
 
 namespace geeL {
 
-	class IFrameBuffer;
-	class DynamicBuffer;
-	class RenderContext;
-	class RenderWindow;
-	class RenderScene;
-	class SceneControlObject;
-	class LightManager;
-	class MeshDrawer;
+	class GUIRenderer;
 	class MeshFactory;
 	class Model;
-	class GUIRenderer;
-
-
-	//Basic interface for all rendering classes
-	class Drawer {
-
-	public:
-		virtual void draw() = 0;
-
-		void setParent(DynamicBuffer& buffer);
-		const DynamicBuffer* const getParentBuffer() const;
-		DynamicBuffer* const getParentBuffer();
-
-	protected:
-		DynamicBuffer* parentBuffer = nullptr;
-
-	};
+	class RenderContext;
+	class RenderScene;
+	class RenderWindow;
 
 
 	class Renderer : public ThreadedObject, public DataEventListener<Model> {
@@ -60,7 +39,7 @@ namespace geeL {
 		RenderWindow& window;
 		MeshFactory& factory;
 
-		GUIRenderer*  gui;
+		GUIRenderer* gui;
 		RenderScene* scene;
 
 		void updateGLStructures();

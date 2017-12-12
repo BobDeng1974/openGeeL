@@ -528,6 +528,9 @@
     <ClCompile Include="workerthread.cpp">
       <Filter>application</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\renderer\glstructures.cpp">
+      <Filter>renderer\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\texturing\texture.h">
@@ -1066,6 +1069,9 @@
     </ClInclude>
     <ClInclude Include="application\workerthread.h">
       <Filter>application</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\renderer\glstructures.h">
+      <Filter>renderer\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

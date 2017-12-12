@@ -249,6 +249,7 @@
     <ClCompile Include="renderer\primitives\screencube.cpp" />
     <ClCompile Include="renderer\primitives\screenquad.cpp" />
     <ClCompile Include="renderer\renderer\deferredrenderer.cpp" />
+    <ClCompile Include="renderer\renderer\glstructures.cpp" />
     <ClCompile Include="renderer\renderer\rendercontext.cpp" />
     <ClCompile Include="renderer\renderer\renderer.cpp" />
     <ClCompile Include="renderer\renderscene.cpp" />
@@ -417,6 +418,7 @@
     <ClInclude Include="renderer\primitives\screencube.h" />
     <ClInclude Include="renderer\primitives\screenquad.h" />
     <ClInclude Include="renderer\renderer\deferredrenderer.h" />
+    <ClInclude Include="renderer\renderer\glstructures.h" />
     <ClInclude Include="renderer\renderer\postrenderer.h" />
     <ClInclude Include="renderer\renderer\rendercontext.h" />
     <ClInclude Include="renderer\renderer\renderer.h" />

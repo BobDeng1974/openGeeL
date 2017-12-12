@@ -3,7 +3,7 @@
 #include <array>
 #include <iostream>
 #include "glwrapper/viewport.h"
-#include "renderer/renderer.h"
+#include "renderer/glstructures.h"
 #include "texturing/rendertexture.h"
 #include "colorbuffer.h"
 

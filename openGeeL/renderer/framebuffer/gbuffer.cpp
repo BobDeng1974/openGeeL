@@ -5,7 +5,7 @@
 #include "glwrapper/viewport.h"
 #include "glwrapper/glguards.h"
 #include "shader/rendershader.h"
-#include "renderer/renderer.h"
+#include "renderer/glstructures.h"
 #include "appglobals.h"
 #include "bufferutil.h"
 

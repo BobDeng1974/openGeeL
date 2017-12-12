@@ -3,7 +3,7 @@
 
 #include <list>
 #include <string>
-#include "renderer/renderer.h"
+#include "renderer/glstructures.h"
 #include "shader/rendershader.h"
 #include "shader/computeshader.h"
 #include "utility/resolution.h"

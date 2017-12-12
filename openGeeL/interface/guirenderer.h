@@ -3,7 +3,7 @@
 
 #include <list>
 #include <memory>
-#include "renderer/renderer.h"
+#include "renderer/glstructures.h"
 
 struct nk_context;
 typedef nk_context GUIContext;
