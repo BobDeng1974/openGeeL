@@ -7,6 +7,7 @@
 #include <vector>
 #include <map>
 #include "animation/animcontainer.h"
+#include "renderer/glstructures.h"
 #include "mesh.h"
 
 namespace geeL {
@@ -17,15 +18,15 @@ namespace geeL {
 
 
 	//Class that represents a single 3D model in memory
-	class Model {
+	class Model : public GLStructure {
 
 	public:
 		Model() {}
 		Model(const std::string& path) : path(path) {}
 		virtual ~Model() {}
 
-		void initGL();
-		void clearGL();
+		virtual void initGL();
+		virtual void clearGL();
 
 		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const = 0;
 		virtual void iterateMeshes(std::function<void(Mesh&)> function) = 0;

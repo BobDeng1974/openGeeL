@@ -17,7 +17,7 @@ namespace geeL {
 	class RenderWindow;
 
 
-	class Renderer : public ThreadedObject, public DataEventListener<Model> {
+	class Renderer : public ThreadedObject, public DataEventListener<GLStructure> {
 
 	public:
 		Renderer(RenderWindow& window, RenderContext& context, MeshFactory& factory);
@@ -29,8 +29,8 @@ namespace geeL {
 		virtual void addGUIRenderer(GUIRenderer* renderer);
 		virtual void setScene(RenderScene& scene);
 
-		virtual void onAdd(Model& model);
-		virtual void onRemove(Model& model);
+		virtual void onAdd(GLStructure& structure);
+		virtual void onRemove(GLStructure& structure);
 
 	protected:
 		mutable std::mutex glMutex;
@@ -45,8 +45,8 @@ namespace geeL {
 		void updateGLStructures();
 
 	private:
-		std::queue<Model*> toAdd;
-		std::queue<Model*> toRemove;
+		std::queue<GLStructure*> toAdd;
+		std::queue<GLStructure*> toRemove;
 
 	};
 }

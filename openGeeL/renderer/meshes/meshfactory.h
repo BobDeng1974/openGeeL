@@ -9,6 +9,7 @@
 #include "animation/bone.h"
 #include "memory/memoryobject.h"
 #include "memory/poolallocator.h"
+#include "renderer/glstructures.h"
 #include "utility/listener.h"
 #include "appglobals.h"
 #include "workerthread.h"
@@ -47,7 +48,7 @@ namespace geeL {
 	class Transform;
 	
 
-	class MeshFactory : public DataEventActuator<Model> {
+	class MeshFactory : public DataEventActuator<GLStructure> {
 
 	public:
 		MeshFactory(MaterialFactory& factory);
@@ -74,7 +75,6 @@ namespace geeL {
 		//Creates, initializes and returns a new static model from given file path or 
 		//returns an existing model if it already uses this file
 		MemoryObject<StaticModel> createStaticModel(const std::string& filePath);
-		
 
 		//Creates, initializes and returns a new static model from given file path or 
 		//returns an existing model if it already uses this file

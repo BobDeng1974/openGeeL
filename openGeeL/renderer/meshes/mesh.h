@@ -9,6 +9,7 @@
 #include <map>
 #include "memory/memoryobject.h"
 #include "memory/poolallocator.h"
+#include "renderer/glstructures.h"
 #include "animation/bone.h"
 
 #define BONECOUNT 4
@@ -53,7 +54,7 @@ namespace geeL {
 
 
 	//Base class for all mesh containers
-	class Mesh {
+	class Mesh : public GLStructure {
 
 	public:
 		Mesh() {}
@@ -64,8 +65,6 @@ namespace geeL {
 		Mesh& operator=(Mesh&& other);
 
 		virtual void draw(const Shader& shader) const = 0;
-		virtual void initGL() = 0;
-		virtual void clearGL() = 0;
 
 		virtual size_t getIndicesCount() const = 0;
 		virtual size_t getVerticesCount() const = 0;

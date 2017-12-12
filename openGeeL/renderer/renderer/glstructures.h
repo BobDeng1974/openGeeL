@@ -5,6 +5,7 @@ namespace geeL {
 
 	class DynamicBuffer;
 
+
 	//Basic interface for all rendering classes
 	class Drawer {
 
@@ -20,6 +21,16 @@ namespace geeL {
 
 	};
 
+
+	//Basic interface for all classes that need to  
+	//add information to GL context during runtime
+	class GLStructure {
+
+	public:
+		virtual void initGL() = 0;
+		virtual void clearGL() = 0;
+
+	};
 
 }
 

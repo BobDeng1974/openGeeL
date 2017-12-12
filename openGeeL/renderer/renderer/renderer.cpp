@@ -41,27 +41,27 @@ namespace geeL{
 	}
 
 
-	void Renderer::onAdd(Model& model) {
+	void Renderer::onAdd(GLStructure& structure) {
 		std::lock_guard<std::mutex> guard(glMutex);
-		toAdd.emplace(&model);
+		toAdd.emplace(&structure);
 	}
 
-	void Renderer::onRemove(Model& model) {
+	void Renderer::onRemove(GLStructure& structure) {
 		std::lock_guard<std::mutex> guard(glMutex);
-		toRemove.emplace(&model);
+		toRemove.emplace(&structure);
 	}
 
 	void Renderer::updateGLStructures() {
 		while (!toAdd.empty()) {
-			Model* model = toAdd.front();
-			model->initGL();
+			GLStructure* structure = toAdd.front();
+			structure->initGL();
 
 			toAdd.pop();
 		}
 		
 		while (!toRemove.empty()) {
-			Model* model = toRemove.front();
-			model->clearGL();
+			GLStructure* structure = toRemove.front();
+			structure->clearGL();
 
 			toRemove.pop();
 		}
