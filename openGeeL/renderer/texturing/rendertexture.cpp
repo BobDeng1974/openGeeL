@@ -16,15 +16,9 @@ namespace geeL {
 			: Texture2D(resolution, 
 				colorType, 
 				filterMode, 
-				wrapMode, 
+				wrapMode,
+				AnisotropicFilter::None,
 				0) {}
-
-	RenderTexture::RenderTexture(const Texture& other, Resolution resolution) 
-		: Texture2D(resolution, other.getColorType(), 0) {
-
-		assert(other.getTextureType() == TextureType::Texture2D && "Texture has to be a 2D texture");
-		id = other.getTextureToken();
-	}
 
 	void RenderTexture::setRenderResolution() const {
 		Texture2D::setRenderResolution();

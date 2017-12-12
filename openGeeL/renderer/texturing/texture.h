@@ -42,14 +42,10 @@ namespace geeL {
 		friend class FunctionalTexture;
 
 	public:
-		Texture(Texture&& other);
 		virtual ~Texture() {}
 
+		Texture(Texture&& other);
 		Texture& operator=(Texture&& other);
-
-
-		const TextureToken& getTextureToken() const;
-		virtual ColorType getColorType() const;
 
 		
 		//Bind texture to given texture layer
@@ -74,6 +70,9 @@ namespace geeL {
 		virtual void initAnisotropyFilter(AnisotropicFilter filter);
 		void setBorderColors(float r, float g, float b, float a);
 
+		const TextureToken& getTextureToken() const;
+		virtual ColorType getColorType() const;
+
 		static void setMaxAnisotropyAmount(AnisotropicFilter value);
 		static AnisotropicFilter getMaxAnisotropyAmount();
 
@@ -89,12 +88,18 @@ namespace geeL {
 
 	protected:
 		static AnisotropicFilter maxAnisotropy;
+		const TextureParameters* parameters;
 
 		TextureToken id;
 		ColorType colorType;
-		const TextureParameters* parameters;
+		FilterMode filterMode;
+		WrapMode wrapMode; 
+		AnisotropicFilter filter;
 		
-		Texture(ColorType colorType);
+		Texture(ColorType colorType, 
+			FilterMode filterMode = FilterMode::None,
+			WrapMode wrapMode = WrapMode::Repeat, 
+			AnisotropicFilter filter = AnisotropicFilter::None);
 
 		virtual void bind() const;
 		virtual unsigned int getID() const;
@@ -106,21 +111,13 @@ namespace geeL {
 
 	public:
 		Texture2D(ColorType colorType);
-		Texture2D(Resolution resolution, ColorType colorType);
-		Texture2D(Resolution resolution, ColorType colorType, void* image);
-
-		Texture2D(Resolution resolution, ColorType colorType, FilterMode filterMode,
-			WrapMode wrapMode, void* image = 0);
-
 		Texture2D(Resolution resolution, ColorType colorType, FilterMode filterMode,
 			WrapMode wrapMode, AnisotropicFilter filter, void* image = 0);
-
-		Texture2D(Texture2D&& other);
-
 		virtual ~Texture2D() {}
 
-
+		Texture2D(Texture2D&& other);
 		Texture2D& operator=(Texture2D&& other);
+
 
 		virtual void mipmap() const;
 		virtual void assign(AttachmentPosition position, MipLevel level = 0) const;
@@ -152,29 +149,19 @@ namespace geeL {
 	class Texture3D : public Texture {
 
 	public:
-		Texture3D();
 		Texture3D(unsigned int width,
 			unsigned int height,
 			unsigned int depth,
 			unsigned int levels,
 			ColorType colorType,
 			FilterMode filterMode,
-			WrapMode wrapMode);
-
-		Texture3D(unsigned int width,
-			unsigned int height,
-			unsigned int depth,
-			unsigned int levels,
-			ColorType colorType,
-			FilterMode filterMode,
-			WrapMode wrapMode, const std::vector<float>& buffer);
-
-		Texture3D(Texture3D&& other);
-
+			WrapMode wrapMode, 
+			float* buffer = 0);
 		virtual ~Texture3D() {}
 
-
+		Texture3D(Texture3D&& other);
 		Texture3D& operator=(Texture3D&& other);
+
 
 		virtual void mipmap() const;
 		virtual void assign(AttachmentPosition position, MipLevel level = 0) const;
@@ -191,8 +178,7 @@ namespace geeL {
 	protected:
 		unsigned int width, height, depth, levels;
 
-		void initStorage();
-		void initStorage(const std::vector<float>& buffer);
+		void initStorage(float* buffer);
 
 	};
 
@@ -200,21 +186,13 @@ namespace geeL {
 	class TextureCube : public Texture {
 
 	public:
-		TextureCube(ColorType colorType);
-		TextureCube(unsigned int resolution, ColorType colorType);
-
 		TextureCube(unsigned int resolution, ColorType colorType,
-			FilterMode filterMode, WrapMode wrapMode);
-
-		TextureCube(unsigned int resolution, ColorType colorType,
-			FilterMode filterMode, WrapMode wrapMode, unsigned char* images[6]);
-
-		TextureCube(TextureCube&& other);
-
+			FilterMode filterMode, WrapMode wrapMode, unsigned char* images[6] = 0);
 		virtual ~TextureCube() {}
 
-
+		TextureCube(TextureCube&& other);
 		TextureCube& operator=(TextureCube&& other);
+
 
 		virtual void mipmap() const;
 		virtual void assign(AttachmentPosition position, MipLevel level = 0) const;
@@ -231,7 +209,6 @@ namespace geeL {
 		static void unbind();
 
 	protected:
-		virtual void initStorage(unsigned char* image);
 		void initStorage(unsigned char* images[6]);
 
 	private:

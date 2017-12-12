@@ -14,8 +14,11 @@ namespace geeL {
 	AnisotropicFilter Texture::maxAnisotropy;
 
 
-	Texture::Texture(ColorType colorType)
+	Texture::Texture(ColorType colorType, FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter filter)
 		: colorType(colorType)
+		, filterMode(filterMode)
+		, wrapMode(wrapMode)
+		, filter(filter)
 		, parameters(nullptr) {}
 
 	Texture::Texture(Texture&& other) 
@@ -38,6 +41,8 @@ namespace geeL {
 		return *this;
 	}
 
+
+	
 
 	void Texture::bind() const {
 		glBindTexture((int)getTextureType(), id);
@@ -185,41 +190,16 @@ namespace geeL {
 	Texture2D::Texture2D(ColorType colorType)
 		: Texture(colorType) {}
 
-	Texture2D::Texture2D(Resolution resolution, ColorType colorType)
-		: Texture(colorType)
-		, resolution(resolution) {}
-
-	Texture2D::Texture2D(Resolution resolution, ColorType colorType, void* image)
-		: Texture(colorType)
-		, resolution(resolution) {
-	
-		bind();
-		initStorage(image);
-		unbind();
-	}
-
-	Texture2D::Texture2D(Resolution resolution, 
-		ColorType colorType, 
-		FilterMode filterMode, 
-		WrapMode wrapMode, 
-		void* image)
-			: Texture(colorType)
-			, resolution(resolution) {
-	
-		bind();
-		initStorage(image);
-		initWrapMode(wrapMode);
-		initFilterMode(filterMode);
-		unbind();
-	}
-
 	Texture2D::Texture2D(Resolution resolution, 
 		ColorType colorType, 
 		FilterMode filterMode, 
 		WrapMode wrapMode, 
 		AnisotropicFilter filter, 
 		void* image)
-			: Texture(colorType)
+			: Texture(colorType, 
+				filterMode, 
+				wrapMode, 
+				filter)
 			, resolution(resolution) {
 	
 		bind();
@@ -354,32 +334,11 @@ namespace geeL {
 
 
 
-	Texture3D::Texture3D()
-		: Texture(ColorType::None)
-		, width(0)
-		, height(0)
-		, depth(0)
-		, levels(levels) {}
-
-	Texture3D::Texture3D(unsigned int width, unsigned int height, unsigned int depth, unsigned int levels,
-		ColorType colorType, FilterMode filterMode, WrapMode wrapMode)
-			: Texture(colorType)
-			, width(width)
-			, height(height)
-			, depth(depth)
-			, levels(levels) {
-
-		bind();
-		initFilterMode(filterMode);
-		initWrapMode(wrapMode);
-		initStorage();
-		unbind();
-	}
 
 	Texture3D::Texture3D(unsigned int width, unsigned int height, unsigned int depth, unsigned int levels, 
 		ColorType colorType, FilterMode filterMode, WrapMode wrapMode, 
-		const std::vector<float>& buffer)
-			: Texture(colorType)
+		float* buffer)
+			: Texture(colorType, filterMode, wrapMode)
 			, width(width)
 			, height(height)
 			, depth(depth)
@@ -456,20 +415,23 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_3D, 0);
 	}
 
-	void Texture3D::initStorage() {
-		glTexStorage3D(GL_TEXTURE_3D, levels, (int)getColorType(), width, height, depth);
-	}
 
-	void Texture3D::initStorage(const std::vector<float>& buffer) {
-		//assert(buffer.size() == (4 * width * height * depth));
+	void Texture3D::initStorage(float* buffer) {
 
-		unsigned int a = 0;
-		unsigned int b = 0;
-		unsigned int c = 0;
-		getColorValues(colorType, a, b, c);
+		if(buffer == 0)
+			glTexStorage3D(GL_TEXTURE_3D, levels, (int)getColorType(), width, height, depth);
+		else {
+			//assert(buffer.size() == (4 * width * height * depth));
 
-		glTexStorage3D(GL_TEXTURE_3D, levels, a, width, height, depth);
-		glTexImage3D(GL_TEXTURE_3D, 0, a, width, height, depth, 0, b, c, &buffer[0]);
+			unsigned int a = 0;
+			unsigned int b = 0;
+			unsigned int c = 0;
+			getColorValues(colorType, a, b, c);
+
+			glTexStorage3D(GL_TEXTURE_3D, levels, a, width, height, depth);
+			glTexImage3D(GL_TEXTURE_3D, 0, a, width, height, depth, 0, b, c, buffer);
+		}
+		
 	}
 
 	void Texture3D::setRenderResolution() const {
@@ -478,44 +440,18 @@ namespace geeL {
 
 
 
-	TextureCube::TextureCube(ColorType colorType)
-		: Texture(colorType) {}
-
-	TextureCube::TextureCube(unsigned int resolution, ColorType colorType)
-		: Texture(colorType)
-		, resolution(resolution) {
-	
-		bind();
-		unsigned char* zero = 0;
-		initStorage(zero);
-		unbind();
-	}
-
-	TextureCube::TextureCube(unsigned int resolution,
-		ColorType colorType,
-		FilterMode filterMode,
-		WrapMode wrapMode)
-			: Texture(colorType)
-			, resolution(resolution) {
-
-		bind();
-		unsigned char* zero = 0;
-		initStorage(zero);
-		initFilterMode(filterMode);
-		initWrapMode(wrapMode);
-		unbind();
-	}
 
 	TextureCube::TextureCube(unsigned int resolution,
 		ColorType colorType,
 		FilterMode filterMode,
 		WrapMode wrapMode,
-		unsigned char * images[6])
-			: Texture(colorType)
+		unsigned char* images[6])
+			: Texture(colorType, filterMode, wrapMode)
 			, resolution(resolution) {
 
 		bind();
 		initStorage(images);
+
 		initFilterMode(filterMode);
 		initWrapMode(wrapMode);
 		unbind();
@@ -586,20 +522,7 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
-	void TextureCube::initStorage(unsigned char* image) {
-		unsigned int res = getResolution();
-
-		unsigned int a = 0;
-		unsigned int b = 0;
-		unsigned int c = 0;
-		getColorValues(colorType, a, b, c);
-
-		for (int i = 0; i < 6; i++)
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, a, res, res, 0, b, c, image);
-
-	}
-
-	void TextureCube::initStorage(unsigned char * images[6]) {
+	void TextureCube::initStorage(unsigned char* images[6]) {
 		int textureType = (int)getTextureType();
 		unsigned int res = getResolution();
 
@@ -609,7 +532,7 @@ namespace geeL {
 		getColorValues(colorType, a, b, c);
 
 		for (int i = 0; i < 6; i++)
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, a, res, res, 0, b, c, images[i]);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, a, res, res, 0, b, c, (images == 0) ? 0 : images[i]);
 	}
 
 	void TextureCube::setRenderResolution() const {

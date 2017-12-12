@@ -15,7 +15,6 @@ namespace geeL {
 			ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, 
 			FilterMode filterMode = FilterMode::None);
-		RenderTexture(const Texture& other, Resolution resolution);
 
 		virtual void setRenderResolution() const;
 		virtual Resolution getRenderResolution() const;

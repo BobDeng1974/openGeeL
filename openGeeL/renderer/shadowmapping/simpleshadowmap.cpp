@@ -96,7 +96,8 @@ namespace geeL {
 					Resolution((int)config.resolution),
 					ColorType::Depth,
 					FilterMode::Linear,
-					WrapMode::ClampBorder)),
+					WrapMode::ClampBorder,
+					AnisotropicFilter::None)),
 				config)
 			, spotLight(light) {}
 
@@ -107,7 +108,8 @@ namespace geeL {
 					Resolution((int)config.resolution), 
 					ColorType::Depth,
 					FilterMode::Linear,
-					WrapMode::ClampBorder)), 
+					WrapMode::ClampBorder,
+					AnisotropicFilter::None)),
 				config)
 			, spotLight(light) {}
 
@@ -229,7 +231,8 @@ namespace geeL {
 					Resolution((int)config.resolution),
 					ColorType::Depth,
 					FilterMode::Linear,
-					WrapMode::ClampBorder)),
+					WrapMode::ClampBorder,
+					AnisotropicFilter::None)),
 				config)
 			, directionalLight(light) {}
 

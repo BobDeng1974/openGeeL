@@ -13,7 +13,9 @@ namespace geeL {
 		: Texture2D(Resolution(512), 
 			ColorType::RG16, 
 			FilterMode::Linear, 
-			WrapMode::ClampEdge,  0) {
+			WrapMode::ClampEdge, 
+			AnisotropicFilter::None, 
+			0) {
 
 		RenderShader* shader = new RenderShader("shaders/screen.vert", 
 			"shaders/cubemapping/brdfIntMap.frag");

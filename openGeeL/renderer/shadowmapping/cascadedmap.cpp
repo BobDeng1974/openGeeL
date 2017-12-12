@@ -39,7 +39,8 @@ namespace geeL {
 					Resolution(resolution), 
 					ColorType::Depth32,
 					FilterMode::Linear,
-					WrapMode::ClampBorder)), 
+					WrapMode::ClampBorder,
+					AnisotropicFilter::None)), 
 				shadowBias, 
 				resolution) {
 		

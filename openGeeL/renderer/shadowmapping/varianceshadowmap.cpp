@@ -17,7 +17,8 @@ namespace geeL {
 			Resolution((int)config.resolution),
 			ColorType::RG16,
 			FilterMode::TrilinearUltra,
-			WrapMode::ClampBorder)))
+			WrapMode::ClampBorder,
+			AnisotropicFilter::None)))
 		, spotLight(light)
 		, shadowBias(config.shadowBias)
 		, farPlane(config.farPlane)

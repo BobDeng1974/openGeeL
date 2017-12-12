@@ -11,11 +11,12 @@ namespace geeL {
 	EnvironmentMap::EnvironmentMap(const string& fileName) 
 		: EnvironmentMap(ImageContainer(fileName)) {}
 
-	EnvironmentMap::EnvironmentMap(ImageContainer&& container) 
+	EnvironmentMap::EnvironmentMap(ImageContainer&& container)
 		: Texture2D(Resolution(container.width, container.height)
 			, ColorType::RGB32
 			, FilterMode::Linear
 			, WrapMode::ClampEdge
+			, AnisotropicFilter::None
 			, container.image) {}
 
 

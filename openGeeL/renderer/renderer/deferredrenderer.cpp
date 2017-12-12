@@ -191,8 +191,6 @@ namespace geeL {
 
 
 	void DeferredRenderer::draw(const Camera& camera, const FrameBuffer& buffer) {
-		lock_guard<mutex> glGuard(glMutex);
-		lock_guard<mutex> renderGuard(renderMutex);
 		DepthGuard::enable(true);
 
 		//Geometry pass
