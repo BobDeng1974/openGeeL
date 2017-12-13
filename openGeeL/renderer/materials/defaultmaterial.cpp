@@ -16,7 +16,7 @@ namespace geeL {
 		, transparency(1.f) {}
 
 
-	void DefaultMaterialContainer::addTexture(const std::string& name, MemoryObject<Texture2D> texture) {
+	void DefaultMaterialContainer::addTexture(const std::string& name, MemoryObject<ITexture> texture) {
 		MapType type = MapTypeConversion::getMapFromString(name);
 		addTexture(type, texture);
 	}
@@ -33,8 +33,9 @@ namespace geeL {
 		}
 	}
 
-	void DefaultMaterialContainer::addTexture(const MapType& type, MemoryObject<Texture2D> texture) {
-		
+	void DefaultMaterialContainer::addTexture(const MapType& type, MemoryObject<ITexture> texture) {
+		assert(texture->getTextureType() == TextureType::Texture2D);
+
 		//Interpret roughness map as inversed specular map	
 		if (type == MapType::Roughness) {
 			textureStack.addTexture("material.", texture, MapType::Specular);

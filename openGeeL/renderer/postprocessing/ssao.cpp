@@ -4,6 +4,7 @@
 #include <string>
 #include <glm.hpp>
 #include "primitives/screenquad.h"
+#include "framebuffer/framebuffer.h"
 #include "texturing/rendertexture.h"
 #include "texturing/textureprovider.h"
 #include "glwrapper/glguards.h"
@@ -41,6 +42,7 @@ namespace geeL {
 		}
 		
 		//Sample noise
+		std::vector<glm::vec3> noise;
 		for (unsigned int i = 0; i < 16; ++i) {
 			vec3 sample = vec3(random(generator) * 2.f - 1.f,
 				random(generator) * 2.f - 1.f, 0.f);
@@ -48,16 +50,8 @@ namespace geeL {
 			noise.push_back(sample);
 		}
 
-		noiseTexture = new ImageTexture(noise, Resolution(4, 4), ColorType::RGB16, 
-			WrapMode::Repeat, FilterMode::None);
-
-	}
-
-	SSAO::SSAO(const SSAO& other) : PostProcessingEffectFS(other), radius(other.radius), blur(other.blur), 
-		noise(other.noise), scale(other.scale) {
-		
-		noiseTexture = new ImageTexture(noise, Resolution(4, 4), ColorType::RGB16, 
-			WrapMode::Repeat, FilterMode::None);
+		noiseTexture = new Texture2D(Resolution(4, 4), ColorType::RGB16, FilterMode::None, 
+			WrapMode::Repeat, AnisotropicFilter::None, &noise[0]);
 	}
 
 	SSAO::~SSAO() {
@@ -69,14 +63,6 @@ namespace geeL {
 	}
 
 	
-	SSAO& SSAO::operator=(const SSAO& other) {
-		if (&other != this) {
-			SSAO s(other);
-			*this = std::move(s);
-		}
-
-		return *this;
-	}
 
 	void SSAO::setTargetTexture(const RenderTexture& texture) {
 		blend = texture.isAssigned();

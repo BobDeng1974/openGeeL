@@ -17,30 +17,21 @@ namespace geeL {
 				filterMode, 
 				filter) {}
 
-	ImageTexture::ImageTexture(std::vector<glm::vec3>& colors, 
-		const Resolution& resolution,
-		ColorType colorType,
-		WrapMode wrapMode, 
-		FilterMode filterMode, 
-		AnisotropicFilter filter) 
-			: Texture2D(resolution, 
-				colorType, 
-				filterMode, 
-				wrapMode, 
-				filter, 
-				&colors[0]) {}
-
 	ImageTexture::ImageTexture(ImageContainer&& container,
 		ColorType colorType,
 		WrapMode wrapMode,
 		FilterMode filterMode,
 		AnisotropicFilter filter)
-			: Texture2D(Resolution(container.width, container.height), 
-				colorType, filterMode, 
-				wrapMode, filter, container.image)
+			: FunctionalTexture(std::unique_ptr<Texture2D>(
+				new Texture2D(Resolution(container.width, container.height),
+					colorType, 
+					filterMode, 
+					wrapMode, 
+					filter, 
+					container.image)))
 			, path(container.path) {
 
-		mipmap();
+		getTexture().mipmap();
 	}
 
 

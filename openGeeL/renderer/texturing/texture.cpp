@@ -139,7 +139,7 @@ namespace geeL {
 		}
 	}
 
-	void Texture::initWrapMode(WrapMode mode) {
+	void Texture::initWrapMode(WrapMode mode) const {
 		std::cout << "This texture type doens't support wrapping\n";
 	}
 
@@ -307,7 +307,7 @@ namespace geeL {
 		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 	}
 
-	void Texture2D::initWrapMode(WrapMode mode) {
+	void Texture2D::initWrapMode(WrapMode mode) const {
 		switch (mode) {
 			case WrapMode::Repeat:
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -386,7 +386,7 @@ namespace geeL {
 		std::cout << "Assigning of 3D texture currently not supported\n";
 	}
 
-	void Texture3D::initWrapMode(WrapMode mode) {
+	void Texture3D::initWrapMode(WrapMode mode) const {
 		switch (mode) {
 			case WrapMode::Repeat:
 				glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -493,7 +493,7 @@ namespace geeL {
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, id, level);
 	}
 
-	void TextureCube::initWrapMode(WrapMode mode) {
+	void TextureCube::initWrapMode(WrapMode mode) const {
 		switch (mode) {
 			case WrapMode::Repeat:
 				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_REPEAT);

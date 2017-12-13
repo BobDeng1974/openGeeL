@@ -6,28 +6,20 @@
 #include <vec3.hpp>
 #include "maptype.h"
 #include "texture.h"
+#include "functionaltexture.h"
 
 namespace geeL {
 
-	//Simple 2D Texutre loaded from image file
-	class ImageTexture : public Texture2D {
+	//Simple 2D texture loaded an from image file
+	class ImageTexture : public FunctionalTexture {
 
 	public:
 		std::string path;
-
-		ImageTexture() : Texture2D(ColorType::None) {}
 
 		ImageTexture(const char* fileName, 
 			ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, 
 			FilterMode filterMode = FilterMode::None, 
-			AnisotropicFilter filter = AnisotropicFilter::Medium);
-
-		ImageTexture(std::vector<glm::vec3>& colors, 
-			const Resolution& resolution,
-			ColorType colorType = ColorType::RGB16,
-			WrapMode wrapMode = WrapMode::Repeat, 
-			FilterMode filterMode = FilterMode::None,
 			AnisotropicFilter filter = AnisotropicFilter::Medium);
 
 	private:
@@ -59,14 +51,12 @@ namespace geeL {
 	public:
 		MapType type;
 		
-		TextureMap() {}
 		TextureMap(const char* fileName, 
 			MapType textureTpe = MapType::Diffuse, ColorType colorType = ColorType::RGBA,
 			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::None,
 			AnisotropicFilter filter = AnisotropicFilter::Medium);
 
 		std::string getTypeAsString() const;
-		
 
 	private:
 		TextureMap(const TextureMap& other) = delete;

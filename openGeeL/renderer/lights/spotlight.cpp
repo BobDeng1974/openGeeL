@@ -54,10 +54,11 @@ namespace geeL {
 		lightCookie = cookie;
 
 		//Force wrap mode to avoid artifacts with wrap methods like 'Repeat'
-		cookie->initWrapMode(WrapMode::ClampBorder);
+		const ImageTexture& c = *cookie;
+		c.getTexture().initWrapMode(WrapMode::ClampBorder);
 	}
 
-	const Texture * const SpotLight::getLightCookie() const {
+	const ITexture* const SpotLight::getLightCookie() const {
 		return lightCookie.get();
 	}
 

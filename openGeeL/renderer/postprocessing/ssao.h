@@ -3,14 +3,13 @@
 
 #include <vector>
 #include <vec3.hpp>
-#include "texturing/imagetexture.h"
-#include "framebuffer/colorbuffer.h"
 #include "utility/worldinformation.h"
 #include "postprocessing.h"
 
 namespace geeL {
 
 	class BilateralFilter;
+	class Texture2D;
 	class RenderTexture;
 
 	//Screen Space Ambient Occlusion Post Effect
@@ -20,11 +19,8 @@ namespace geeL {
 		SSAO(PostProcessingEffectFS& blur, 
 			float radius = 5.f, 
 			const ResolutionPreset& resolution = ResolutionPreset::HALFSCREEN);
-
-		SSAO(const SSAO& other);
 		virtual ~SSAO();
 
-		SSAO& operator= (const SSAO& other);
 
 		//Empty setter since base image isn't needed for Occlusion
 		virtual void setBuffer(unsigned int buffer) {}
@@ -51,9 +47,9 @@ namespace geeL {
 		unsigned int sampleCount = 32;
 		ResolutionPreset scale;
 
-		ImageTexture* noiseTexture;
+		Texture2D* noiseTexture;
 		std::vector<glm::vec3> kernel;
-		std::vector<glm::vec3> noise;
+	
 		PostProcessingEffectFS& blur;
 
 		ShaderLocation projectionLocation;
@@ -64,6 +60,10 @@ namespace geeL {
 		bool blend = false;
 		RenderTexture* blurTexture = nullptr;
 		PostProcessingEffectFS* blendEffect = nullptr;
+
+
+		SSAO(const SSAO& other) = delete;
+		SSAO& operator=(const SSAO& other) = delete;
 		
 	};
 

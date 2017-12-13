@@ -10,7 +10,7 @@ using namespace geeL::memory;
 namespace geeL {
 
 	class SceneShader;
-	class Texture2D;
+	class ITexture;
 
 
 	class MaterialContainer {
@@ -21,7 +21,7 @@ namespace geeL {
 		MaterialContainer(const std::string& name);
 		virtual ~MaterialContainer() {}
 
-		virtual void addTexture(const std::string& name, MemoryObject<Texture2D> texture) = 0;
+		virtual void addTexture(const std::string& name, MemoryObject<ITexture> texture) = 0;
 
 		virtual float getFloatValue(const std::string& name) const = 0;
 		virtual int getIntValue(const std::string& name) const = 0;

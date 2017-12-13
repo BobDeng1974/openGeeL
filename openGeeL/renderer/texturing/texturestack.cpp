@@ -16,17 +16,17 @@ namespace geeL {
 		addTexture(name, texture, texture->type);
 	}
 
-	void TextureStack::addTexture(const std::string& name, MemoryObject<Texture2D> texture, MapType type) {
+	void TextureStack::addTexture(const std::string& name, MemoryObject<ITexture> texture, MapType type) {
 		if (textures.count(type) == 0)
 			updateMapFlags(type);
 
-		textures[type] = pair<string, MemoryObject<Texture2D>>(name + MapTypeConversion::getTypeAsString(type), texture);
+		textures[type] = pair<string, MemoryObject<ITexture>>(name + MapTypeConversion::getTypeAsString(type), texture);
 	}
 
 
 	void TextureStack::bind(const RenderShader& shader) const {
 		int counter = 0;
-		iterTextures([&counter, &shader](const std::string& name, const Texture2D& texture) {
+		iterTextures([&counter, &shader](const std::string& name, const ITexture& texture) {
 			shader.bind<int>(name, counter + shader.mapBindingPos);
 			counter++;
 		});
@@ -34,19 +34,19 @@ namespace geeL {
 
 	void TextureStack::draw(const RenderShader& shader) const {
 		int counter = 0;
-		iterTextures([&counter, &shader](const std::string& name, const Texture2D& texture) {
+		iterTextures([&counter, &shader](const std::string& name, const ITexture& texture) {
 			texture.bind(counter + shader.mapBindingPos);
 			counter++;
 		});
 	}
 
 
-	void TextureStack::iterTextures(std::function<void(const std::string&, const Texture2D&)> function) const {
+	void TextureStack::iterTextures(std::function<void(const std::string&, const ITexture&)> function) const {
 		for (auto it(textures.begin()); it != textures.end(); it++)
 			function(it->second.first, *it->second.second);
 	}
 
-	void TextureStack::iterTextures(std::function<void(const std::string&, Texture2D&)> function) {
+	void TextureStack::iterTextures(std::function<void(const std::string&, ITexture&)> function) {
 		for (auto it(textures.begin()); it != textures.end(); it++)
 			function(it->second.first, *it->second.second);
 	}

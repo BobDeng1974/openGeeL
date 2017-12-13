@@ -39,7 +39,7 @@ namespace geeL {
 		else
 			std::cout << "Volumetric light not functional since light has no shadow map attached\n";
 
-		const Texture* lightCookie = light.getLightCookie();
+		const ITexture* lightCookie = light.getLightCookie();
 		if (lightCookie != nullptr) {
 			addTextureSampler(*lightCookie, "lightCookie");
 			shader.bind<int>("useCookie", (int)useCookie);

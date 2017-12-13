@@ -66,7 +66,7 @@ namespace geeL {
 		virtual void clear();
 
 		virtual void initFilterMode(FilterMode mode);
-		virtual void initWrapMode(WrapMode mode);
+		virtual void initWrapMode(WrapMode mode) const;
 		virtual void initAnisotropyFilter(AnisotropicFilter filter);
 		void setBorderColors(float r, float g, float b, float a);
 
@@ -123,7 +123,7 @@ namespace geeL {
 		virtual void assign(AttachmentPosition position, MipLevel level = 0) const;
 		virtual void assignDepth(MipLevel level = 0) const;
 
-		virtual void initWrapMode(WrapMode mode);
+		virtual void initWrapMode(WrapMode mode) const;
 		virtual TextureType getTextureType() const;
 
 		virtual const Resolution& getResolution() const;
@@ -167,7 +167,7 @@ namespace geeL {
 		virtual void assign(AttachmentPosition position, MipLevel level = 0) const;
 		virtual void assignDepth(MipLevel level = 0) const;
 
-		virtual void initWrapMode(WrapMode mode);
+		virtual void initWrapMode(WrapMode mode) const;
 		virtual TextureType getTextureType() const;
 
 		virtual Resolution getScreenResolution() const;
@@ -199,7 +199,7 @@ namespace geeL {
 		virtual void assignSide(AttachmentPosition position, MipLevel level, unsigned int side) const;
 		virtual void assignDepth(MipLevel level = 0) const;
 
-		virtual void initWrapMode(WrapMode mode);
+		virtual void initWrapMode(WrapMode mode) const;
 		virtual TextureType getTextureType() const;
 
 		virtual unsigned int getResolution() const;

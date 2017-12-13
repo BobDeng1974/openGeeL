@@ -18,10 +18,10 @@ namespace geeL {
 	public:
 		DefaultMaterialContainer();
 
-		virtual void addTexture(const std::string& name, MemoryObject<Texture2D> texture);
+		virtual void addTexture(const std::string& name, MemoryObject<ITexture> texture);
 		void addTexture(MemoryObject<TextureMap> texture);
 		void addTextures(std::vector<MemoryObject<TextureMap>> textures);
-		void addTexture(const MapType& type, MemoryObject<Texture2D> texture);
+		void addTexture(const MapType& type, MemoryObject<ITexture> texture);
 
 		float getTransparency() const;
 		float getRoughness() const;

@@ -23,11 +23,12 @@ namespace geeL {
 	EnvironmentMap::ImageContainer::ImageContainer(const string& fileName) {
 		stbi_set_flip_vertically_on_load(true);
 		image = stbi_loadf(fileName.c_str(), &width, &height, &nrComponents, 0);
+		stbi_set_flip_vertically_on_load(false);
 	}
 
 	EnvironmentMap::ImageContainer::~ImageContainer() {
 		stbi_image_free(image);
-		stbi_set_flip_vertically_on_load(false);
+		
 	}
 
 }
