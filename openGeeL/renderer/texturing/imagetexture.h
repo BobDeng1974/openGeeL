@@ -27,6 +27,27 @@ namespace geeL {
 		virtual void initGL();
 		virtual void clearGL();
 
+	protected:
+		//Image data wrapper that will delete data when being destroyed
+		struct ImageData {
+			void* image;
+
+			explicit ImageData(void* image);
+			ImageData(ImageData&& data);
+			~ImageData();
+
+		private:
+			ImageData(const ImageData& data) = delete;
+
+		};
+
+		//Note: Image texture will take ownership of given image data
+		ImageTexture(ImageData image, int width, int height,
+			ColorType colorType = ColorType::RGBA,
+			FilterMode filterMode = FilterMode::None,
+			WrapMode wrapMode = WrapMode::Repeat,
+			AnisotropicFilter filter = AnisotropicFilter::Medium);
+
 	private:
 		struct ImageContainer {
 			ColorType colorType;
@@ -35,16 +56,15 @@ namespace geeL {
 			AnisotropicFilter aFilter;
 
 			int width, height;
-			void* image;
+			ImageData data;
 
 			ImageContainer(const char* fileName, 
 				ColorType colorType, FilterMode filterMode, 
 				WrapMode wrapMode, AnisotropicFilter aFilter);
-			ImageContainer(void* image, int width, int height,
+			ImageContainer(ImageData image, int width, int height,
 				ColorType colorType, FilterMode filterMode,
 				WrapMode wrapMode, AnisotropicFilter aFilter);
 
-			~ImageContainer();
 		};
 
 		ImageContainer* container;
@@ -64,8 +84,10 @@ namespace geeL {
 		MapType type;
 		
 		TextureMap(const char* fileName, 
-			MapType textureTpe = MapType::Diffuse, ColorType colorType = ColorType::RGBA,
-			WrapMode wrapMode = WrapMode::Repeat, FilterMode filterMode = FilterMode::None,
+			MapType textureTpe = MapType::Diffuse, 
+			ColorType colorType = ColorType::RGBA,
+			WrapMode wrapMode = WrapMode::Repeat, 
+			FilterMode filterMode = FilterMode::None,
 			AnisotropicFilter filter = AnisotropicFilter::Medium);
 
 		std::string getTypeAsString() const;

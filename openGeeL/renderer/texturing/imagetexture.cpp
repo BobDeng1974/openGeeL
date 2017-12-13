@@ -18,6 +18,18 @@ namespace geeL {
 		initGL();
 	}
 
+	ImageTexture::ImageTexture(ImageData image,
+		int width,
+		int height,
+		ColorType colorType,
+		FilterMode filterMode,
+		WrapMode wrapMode,
+		AnisotropicFilter filter) {
+
+		container = new ImageContainer(std::move(image), width, height, colorType, filterMode, wrapMode, filter);
+		initGL();
+	}
+
 	ImageTexture::~ImageTexture() {
 		if (container != nullptr)
 			delete container;
@@ -28,7 +40,7 @@ namespace geeL {
 		ImageContainer& c = *container;
 
 		Texture2D* newTexture = new Texture2D(Resolution(c.width, c.height),
-			c.colorType, c.filterMode, c.wrapMode, c.aFilter, c.image);
+			c.colorType, c.filterMode, c.wrapMode, c.aFilter, c.data.image);
 		newTexture->mipmap();
 
 		updateTexture(std::unique_ptr<Texture>(newTexture));
@@ -40,8 +52,22 @@ namespace geeL {
 	void ImageTexture::clearGL() {
 		deleteTexture();
 	}
-	
 
+	
+	
+	ImageTexture::ImageData::ImageData(void* image)
+		: image(image) {}
+
+	ImageTexture::ImageData::ImageData(ImageData&& data)
+		: image(data.image) {
+
+		data.image = nullptr;
+	}
+
+	ImageTexture::ImageData::~ImageData() {
+		if(image != nullptr)
+			stbi_image_free(image);
+	}
 
 	ImageTexture::ImageContainer::ImageContainer(const char* fileName, 
 		ColorType colorType, 
@@ -51,27 +77,21 @@ namespace geeL {
 			: colorType(colorType)
 			, filterMode(filterMode)
 			, wrapMode(wrapMode)
-			, aFilter(aFilter) {
+			, aFilter(aFilter) 
+			, data(stbi_load(fileName, &width, &height, 0, STBI_rgb_alpha)) {}
 
-		image = stbi_load(fileName, &width, &height, 0, STBI_rgb_alpha);
-	}
-
-	ImageTexture::ImageContainer::ImageContainer(void* image, int width, int height, 
+	ImageTexture::ImageContainer::ImageContainer(ImageData image, int width, int height,
 		ColorType colorType, 
 		FilterMode filterMode, 
 		WrapMode wrapMode, 
 		AnisotropicFilter aFilter) 
-			: image(image)
+			: data(std::move(image))
 			, width(width)
 			, height(height)
 			, colorType(colorType)
 			, filterMode(filterMode)
 			, wrapMode(wrapMode)
 			, aFilter(aFilter) {}
-
-	ImageTexture::ImageContainer::~ImageContainer() {
-		stbi_image_free(image);
-	}
 
 
 
@@ -84,5 +104,7 @@ namespace geeL {
 		return MapTypeConversion::getTypeAsString(type);
 	}
 
+
+	
 
 }

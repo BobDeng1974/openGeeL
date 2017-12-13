@@ -5,19 +5,17 @@ using namespace std;
 
 namespace geeL {
 	
-	EnvironmentMap::EnvironmentMap()
-		: Texture2D(ColorType::RGB32) {}
-	
 	EnvironmentMap::EnvironmentMap(const string& fileName) 
 		: EnvironmentMap(ImageContainer(fileName)) {}
 
 	EnvironmentMap::EnvironmentMap(ImageContainer&& container)
-		: Texture2D(Resolution(container.width, container.height)
-			, ColorType::RGB32
-			, FilterMode::Linear
-			, WrapMode::ClampEdge
-			, AnisotropicFilter::None
-			, container.image) {}
+		: ImageTexture(ImageData(container.image), 
+			container.width, 
+			container.height, 
+			ColorType::RGB32, 
+			FilterMode::Linear, 
+			WrapMode::ClampEdge, 
+			AnisotropicFilter::None) {}
 
 
 	EnvironmentMap::ImageContainer::ImageContainer(const string& fileName) {
@@ -26,9 +24,5 @@ namespace geeL {
 		stbi_set_flip_vertically_on_load(false);
 	}
 
-	EnvironmentMap::ImageContainer::~ImageContainer() {
-		stbi_image_free(image);
-		
-	}
 
 }

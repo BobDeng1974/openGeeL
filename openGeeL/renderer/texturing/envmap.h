@@ -2,15 +2,14 @@
 #define ENVIRONMENTMAP_H
 
 #include <string>
-#include "texture.h"
+#include "imagetexture.h"
 
 namespace geeL {
 
 	//2D equirectangular map of an 3D environment with HDR
-	class EnvironmentMap : public Texture2D {
+	class EnvironmentMap : public ImageTexture {
 
 	public:
-		EnvironmentMap();
 		EnvironmentMap(const std::string& fileName);
 
 	private:
@@ -19,7 +18,6 @@ namespace geeL {
 			float* image;
 
 			ImageContainer(const std::string& fileName);
-			~ImageContainer();
 		};
 
 		EnvironmentMap(ImageContainer&& container);

@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 	//TestScene::draw();
 	//RaymarchTest::draw();
 
-	//getchar();
+	getchar();
 
 	return 0;
 }
