@@ -6,7 +6,9 @@
 #include <map>
 #include <string>
 #include "memory/memoryobject.h"
+#include "renderer/glstructures.h"
 #include "texturing/imagetexture.h"
+#include "utility/listener.h"
 #include "shader/defshading.h"
 
 using namespace geeL::memory;
@@ -26,7 +28,7 @@ namespace geeL {
 	class ShaderProvider;
 
 
-	class MaterialFactory {
+	class MaterialFactory : public DataEventActuator<GLStructure> {
 
 	public:
 		MaterialFactory(const GBuffer& buffer, ShaderProvider* const provider = nullptr);

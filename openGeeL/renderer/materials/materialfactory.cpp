@@ -44,8 +44,18 @@ namespace geeL {
 		FilterMode filterMode, WrapMode wrapMode,  AnisotropicFilter filter) {
 
 		auto it = textures.find(filePath);
-		if (it == textures.end()) {
-			MemoryObject<ImageTexture> spTexture(new ImageTexture(filePath.c_str(), colorType, wrapMode, filterMode, filter));
+		//Create new texture if none exist yet
+		if (it == textures.end()
+			//or memory of existing one expired
+			|| (it != textures.end() && it->second.expired())) {
+
+			MemoryObject<ImageTexture> spTexture(
+				new ImageTexture(filePath.c_str(), colorType, wrapMode, filterMode, filter), [this](ImageTexture* t) {
+					//Add a custom deleter to provide a callback when resource gets destroyed
+					this->onRemove(*t);
+					delete t;
+			});
+
 			weak_ptr<ImageTexture> wpTexture(spTexture);
 
 			textures[filePath] = wpTexture;
@@ -53,15 +63,28 @@ namespace geeL {
 		}
 
 		weak_ptr<ImageTexture> tex = it->second;
-		return MemoryObject<ImageTexture>(tex.lock());
+		MemoryObject<ImageTexture> ptr(tex.lock());
+		onAdd(*ptr);
+
+		return ptr;
 	}
 
 	MemoryObject<TextureMap> MaterialFactory::createTextureMap(string filePath, MapType type, ColorType colorType,
 		FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter filter) {
 		
 		auto it = textureMaps.find(filePath);
-		if (it == textureMaps.end()) {
-			MemoryObject<TextureMap> spTexture(new TextureMap(filePath.c_str(), type, colorType, wrapMode, filterMode, filter));
+		//Create new texture if none exist yet
+		if (it == textureMaps.end()
+			//or memory of existing one expired
+			|| (it != textureMaps.end() && it->second.expired())) {
+
+			MemoryObject<TextureMap> spTexture(
+				new TextureMap(filePath.c_str(), type, colorType, wrapMode, filterMode, filter), [this](TextureMap* m) {
+					//Add a custom deleter to provide a callback when resource gets destroyed
+					this->onRemove(*m);
+					delete m;
+			});
+
 			weak_ptr<TextureMap> wpTexture(spTexture);
 
 			textureMaps[filePath] = wpTexture;
@@ -69,7 +92,10 @@ namespace geeL {
 		}
 
 		weak_ptr<TextureMap> tex = it->second;
-		return MemoryObject<TextureMap>(tex.lock());
+		MemoryObject<TextureMap> ptr(tex.lock());
+		onAdd(*ptr);
+
+		return ptr;
 	}
 
 
