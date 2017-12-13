@@ -5,13 +5,14 @@
 #include <vector>
 #include <vec3.hpp>
 #include "maptype.h"
+#include "renderer/glstructures.h"
 #include "texture.h"
 #include "functionaltexture.h"
 
 namespace geeL {
 
-	//Simple 2D texture loaded an from image file
-	class ImageTexture : public FunctionalTexture {
+	//Simple 2D texture loaded from an image file
+	class ImageTexture : public FunctionalTexture, public GLStructure {
 
 	public:
 		std::string path;
@@ -21,22 +22,33 @@ namespace geeL {
 			WrapMode wrapMode = WrapMode::Repeat, 
 			FilterMode filterMode = FilterMode::None, 
 			AnisotropicFilter filter = AnisotropicFilter::Medium);
+		virtual ~ImageTexture();
+
+		virtual void initGL();
+		virtual void clearGL();
 
 	private:
 		struct ImageContainer {
-			std::string path;
-			int width, height;
-			unsigned char* image;
+			ColorType colorType;
+			WrapMode wrapMode;
+			FilterMode filterMode;
+			AnisotropicFilter aFilter;
 
-			ImageContainer(const char* fileName);
+			int width, height;
+			void* image;
+
+			ImageContainer(const char* fileName, 
+				ColorType colorType, FilterMode filterMode, 
+				WrapMode wrapMode, AnisotropicFilter aFilter);
+			ImageContainer(void* image, int width, int height,
+				ColorType colorType, FilterMode filterMode,
+				WrapMode wrapMode, AnisotropicFilter aFilter);
+
 			~ImageContainer();
 		};
 
-		ImageTexture(ImageContainer&& container, 
-			ColorType colorType,
-			WrapMode wrapMode, 
-			FilterMode filterMode,
-			AnisotropicFilter filter);
+		ImageContainer* container;
+
 
 		ImageTexture(const ImageTexture& other) = delete;
 		ImageTexture& operator= (const ImageTexture& other) = delete;

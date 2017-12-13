@@ -14,12 +14,15 @@ namespace geeL {
 	AnisotropicFilter Texture::maxAnisotropy;
 
 
-	Texture::Texture(ColorType colorType, FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter filter)
-		: colorType(colorType)
-		, filterMode(filterMode)
-		, wrapMode(wrapMode)
-		, filter(filter)
-		, parameters(nullptr) {}
+	Texture::Texture(ColorType colorType, 
+		FilterMode filterMode, 
+		WrapMode wrapMode, 
+		AnisotropicFilter filter)
+			: colorType(colorType)
+			, filterMode(filterMode)
+			, wrapMode(wrapMode)
+			, filter(filter)
+			, parameters(nullptr) {}
 
 	Texture::Texture(Texture&& other) 
 		: id(std::move(other.id))
@@ -335,8 +338,13 @@ namespace geeL {
 
 
 
-	Texture3D::Texture3D(unsigned int width, unsigned int height, unsigned int depth, unsigned int levels, 
-		ColorType colorType, FilterMode filterMode, WrapMode wrapMode, 
+	Texture3D::Texture3D(unsigned int width, 
+		unsigned int height, 
+		unsigned int depth, 
+		unsigned int levels, 
+		ColorType colorType,
+		FilterMode filterMode, 
+		WrapMode wrapMode, 
 		float* buffer)
 			: Texture(colorType, filterMode, wrapMode)
 			, width(width)
@@ -538,8 +546,5 @@ namespace geeL {
 	void TextureCube::setRenderResolution() const {
 		Viewport::set(0, 0, resolution, resolution);
 	}
-
-
-	
 
 }
