@@ -72,6 +72,7 @@ namespace geeL {
 		virtual unsigned int getIndex(size_t i) const = 0;
 		virtual const Vertex& getVertex(size_t i) const = 0;
 
+		virtual std::string toString() const;
 		const std::string& getName() const;
 		MaterialContainer& getMaterialContainer() const;
 
@@ -182,6 +183,10 @@ namespace geeL {
 		}
 	}
 
+
+	inline std::string Mesh::toString() const {
+		return name;
+	}
 
 	inline const std::string& Mesh::getName() const {
 		return name;

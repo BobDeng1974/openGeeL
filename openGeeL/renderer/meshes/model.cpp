@@ -18,6 +18,10 @@ namespace geeL {
 		});
 	}
 	
+	std::string Model::toString() const {
+		return path;
+	}
+
 	const std::string& Model::getPath() const {
 		return path;
 	}

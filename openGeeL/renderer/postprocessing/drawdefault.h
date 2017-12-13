@@ -1,6 +1,7 @@
 #ifndef DEFAULTPOST_H
 #define DEFAULTPOST_H
 
+#include "memory/memoryobject.h"
 #include "postprocessing.h"
 
 namespace geeL {
@@ -12,10 +13,10 @@ namespace geeL {
 
 	public:
 		DefaultPostProcess(float exposure = 1.f);
-		DefaultPostProcess(const DefaultPostProcess& other);
-		virtual ~DefaultPostProcess();
 
+		DefaultPostProcess(const DefaultPostProcess& other);
 		DefaultPostProcess& operator= (const DefaultPostProcess& other);
+
 
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void draw();
@@ -28,7 +29,7 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	protected:
-		ImageTexture* noise;
+		del_unique_ptr<ImageTexture> noise;
 		const ITexture* customTexture;
 
 	};

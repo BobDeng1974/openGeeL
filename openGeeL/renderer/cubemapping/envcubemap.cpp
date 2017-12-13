@@ -37,8 +37,8 @@ namespace geeL {
 					WrapMode::ClampEdge))) {
 
 
-		EnvironmentMap map(filePath);
-		draw(map, frameBuffer);
+		auto map = EnvironmentMap::create<EnvironmentMap>(filePath);
+		draw(*map, frameBuffer);
 	}
 
 

@@ -57,16 +57,14 @@ namespace geeL {
 			});
 
 			weak_ptr<ImageTexture> wpTexture(spTexture);
+			onAdd(*spTexture);
 
 			textures[filePath] = wpTexture;
 			return spTexture;
 		}
 
 		weak_ptr<ImageTexture> tex = it->second;
-		MemoryObject<ImageTexture> ptr(tex.lock());
-		onAdd(*ptr);
-
-		return ptr;
+		return MemoryObject<ImageTexture>(tex.lock());
 	}
 
 	MemoryObject<TextureMap> MaterialFactory::createTextureMap(string filePath, MapType type, ColorType colorType,
@@ -86,16 +84,14 @@ namespace geeL {
 			});
 
 			weak_ptr<TextureMap> wpTexture(spTexture);
+			onAdd(*spTexture);
 
 			textureMaps[filePath] = wpTexture;
 			return spTexture;
 		}
 
 		weak_ptr<TextureMap> tex = it->second;
-		MemoryObject<TextureMap> ptr(tex.lock());
-		onAdd(*ptr);
-
-		return ptr;
+		return MemoryObject<TextureMap>(tex.lock());
 	}
 
 

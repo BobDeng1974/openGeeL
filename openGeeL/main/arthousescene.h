@@ -99,10 +99,10 @@ public:
 			LensFlare& lensFlare = LensFlare(bBlurred, 0.35f, 6.f);
 			lensFlare.setDistortion(glm::vec3(0.04f, 0.03f, 0.02f));
 			lensFlare.setStrength(0.3f);
-			ImageTexture& dirtTexture = ImageTexture("resources/textures/lens_dirt.jpg", ColorType::GammaSpace);
-			//lensFlare.setDirtTexture(dirtTexture);
-			ImageTexture& starTexture = ImageTexture("resources/textures/starburst3.jpg", ColorType::GammaSpace, WrapMode::ClampEdge, FilterMode::Linear);
-			lensFlare.setStarburstTexture(starTexture);
+			MemoryObject<ImageTexture> dirtTexture = materialFactory.createTexture("resources/textures/lens_dirt.jpg", ColorType::GammaSpace);
+			//lensFlare.setDirtTexture(*dirtTexture);
+			MemoryObject<ImageTexture> starTexture = materialFactory.createTexture("resources/textures/starburst3.jpg", ColorType::GammaSpace, FilterMode::Linear, WrapMode::ClampEdge);
+			lensFlare.setStarburstTexture(*starTexture);
 			LensFlareSnippet& lensSnippet = LensFlareSnippet(lensFlare);
 			renderer.addEffect(lensFlare);
 			scene.addRequester(lensFlare);

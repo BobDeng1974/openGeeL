@@ -2,6 +2,7 @@
 #include "scene.h"
 #include "window.h"
 #include "cameras/camera.h"
+#include "materials/materialfactory.h"
 #include "meshes/model.h"
 #include "meshes/meshfactory.h"
 #include "renderer/rendercontext.h"
@@ -9,14 +10,23 @@
 
 namespace geeL{
 
-	Renderer::Renderer(RenderWindow& window, RenderContext& context, MeshFactory& factory)
-		: ThreadedObject(100L)
-		, window(window)
-		, context(context)
-		, factory(factory)
-		, gui(nullptr) {
+	Renderer::Renderer(RenderWindow& window, 
+		RenderContext& context, 
+		MeshFactory& meshFactory, 
+		MaterialFactory& materialFactory)
+			: ThreadedObject(100L)
+			, window(window)
+			, context(context)
+			, meshFactory(meshFactory)
+			, materialFactory(materialFactory)
+			, gui(nullptr) {
 	
-		factory.addListener(*this);
+		meshFactory.addListener(*this);
+		materialFactory.addListener(*this);
+	}
+
+	Renderer::~Renderer() {
+		onRemove();
 	}
 
 
@@ -52,18 +62,27 @@ namespace geeL{
 	}
 
 	void Renderer::updateGLStructures() {
+		onAdd();
+		onRemove();
+	}
+
+	void Renderer::onAdd() {
 		while (!toAdd.empty()) {
 			GLStructure* structure = toAdd.front();
 			structure->initGL();
 
 			toAdd.pop();
 		}
-		
+	}
+
+	void Renderer::onRemove(){
 		while (!toRemove.empty()) {
 			GLStructure* structure = toRemove.front();
+			std::cout << structure->toString() << "\n";
 			structure->clearGL();
 
 			toRemove.pop();
 		}
 	}
+
 }

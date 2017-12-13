@@ -29,8 +29,9 @@ namespace geeL {
 		RenderContext& context, 
 		DefaultPostProcess& def, 
 		GBuffer& gBuffer,
-		MeshFactory& factory)
-			: Renderer(window, context, factory)
+		MeshFactory& meshFactory,
+		MaterialFactory& materialFactory)
+			: Renderer(window, context, meshFactory, materialFactory)
 			, provider(provider)
 			, gBuffer(gBuffer)
 			, ssao(nullptr)

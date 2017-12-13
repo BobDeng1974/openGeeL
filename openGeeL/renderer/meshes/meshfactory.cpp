@@ -109,10 +109,7 @@ namespace geeL {
 		}
 
 		weak_ptr<StaticModel> wModel = it->second;
-		MemoryObject<StaticModel> ptr(wModel.lock());
-		onAdd(*ptr);
-
-		return ptr;
+		return MemoryObject<StaticModel>(wModel.lock());
 	}
 
 	MemoryObject<SkinnedModel> MeshFactory::createSkinnedModel(const string& filePath) {
@@ -138,10 +135,7 @@ namespace geeL {
 		}
 
 		weak_ptr<SkinnedModel> wModel = it->second;
-		MemoryObject<SkinnedModel> ptr(wModel.lock());
-		onAdd(*ptr);
-
-		return ptr;
+		return MemoryObject<SkinnedModel>(wModel.lock());
 	}
 
 #if MULTI_THREADING_SUPPORT

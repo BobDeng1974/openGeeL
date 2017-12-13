@@ -30,6 +30,8 @@ namespace geeL {
 
 		virtual void iterateMeshes(std::function<void(const Mesh&)> function) const = 0;
 		virtual void iterateMeshes(std::function<void(Mesh&)> function) = 0;
+
+		virtual std::string toString() const;
 		const std::string& getPath() const;
 
 		void* operator new(size_t size);

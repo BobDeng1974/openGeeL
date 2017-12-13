@@ -51,7 +51,7 @@ namespace geeL {
 
 		computeLightTransform();
 
-		//Note: currently doesn't work since depth framebuffer is used
+		//Note: currently doesn't work since depth framebuffer is used and texture has different color type
 		buffer.add(getTexture());
 		buffer.fill([this, &scene, &repository]() {
 			if (scene.containsStaticObjects()) {

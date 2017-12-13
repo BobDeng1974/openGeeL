@@ -10,6 +10,7 @@
 namespace geeL {
 
 	class GUIRenderer;
+	class MaterialFactory;
 	class MeshFactory;
 	class Model;
 	class RenderContext;
@@ -20,8 +21,9 @@ namespace geeL {
 	class Renderer : public ThreadedObject, public DataEventListener<GLStructure> {
 
 	public:
-		Renderer(RenderWindow& window, RenderContext& context, MeshFactory& factory);
-		virtual ~Renderer() {}
+		Renderer(RenderWindow& window, RenderContext& context, 
+			MeshFactory& meshFactory, MaterialFactory& materialFactory);
+		virtual ~Renderer();
 
 		virtual void runStart();
 		virtual void run();
@@ -32,12 +34,15 @@ namespace geeL {
 		virtual void onAdd(GLStructure& structure);
 		virtual void onRemove(GLStructure& structure);
 
+		
+
 	protected:
 		mutable std::mutex glMutex;
 
 		RenderContext& context;
 		RenderWindow& window;
-		MeshFactory& factory;
+		MeshFactory& meshFactory;
+		MaterialFactory& materialFactory;
 
 		GUIRenderer* gui;
 		RenderScene* scene;
@@ -47,6 +52,8 @@ namespace geeL {
 		std::queue<GLStructure*> toRemove;
 
 		void updateGLStructures();
+		void onAdd();
+		void onRemove();
 
 	};
 

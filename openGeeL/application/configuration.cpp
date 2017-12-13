@@ -31,14 +31,17 @@ namespace geeL {
 		TransformFactory& transFactory = TransformFactory(world);
 
 		Transform& cameraTransform = Transform(vec3(0.f), vec3(0.f), vec3(1.f));
-		PerspectiveCamera& defaultCamera = PerspectiveCamera(cameraTransform, 60.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
+		PerspectiveCamera& defaultCamera = PerspectiveCamera(cameraTransform, 60.f, 
+			window.getWidth(), window.getHeight(), 0.1f, 100.f);
 
 		GBuffer& gBuffer = GBuffer(window.resolution, content);
 		MaterialFactory& materialFactory = MaterialFactory(gBuffer);
 		MeshFactory& meshFactory = MeshFactory(materialFactory);
 		LightManager& lightManager = LightManager();
 		UniformBindingStack pipeline;
-		RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, defaultCamera, materialFactory, manager);
+
+		RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, 
+			defaultCamera, materialFactory, manager);
 		
 		Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 		TextureProvider textureProvider(window, gBuffer);
@@ -46,7 +49,8 @@ namespace geeL {
 		DefaultPostProcess& def = DefaultPostProcess();
 		RenderContext& context = RenderContext();
 		SceneRender& lighting = DeferredLighting(scene);
-		DeferredRenderer& renderer = DeferredRenderer(window, textureProvider, lighting, context, def, gBuffer, meshFactory);
+		DeferredRenderer& renderer = DeferredRenderer(window, textureProvider, lighting, context, def, 
+			gBuffer, meshFactory, materialFactory);
 		renderer.setScene(scene);
 
 		ForwardBuffer& fBuffer = ForwardBuffer(gBuffer);

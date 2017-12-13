@@ -83,8 +83,10 @@ namespace geeL {
 	}
 
 	inline void FunctionalTexture::deleteTexture() {
-		if (texture != nullptr)
+		if (texture != nullptr) {
 			delete texture;
+			texture = nullptr;
+		}
 	}
 
 	inline void FunctionalTexture::updateTexture(std::unique_ptr<Texture> newTexture) {

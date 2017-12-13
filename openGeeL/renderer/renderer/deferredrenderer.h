@@ -35,7 +35,8 @@ namespace geeL {
 			RenderContext& context, 
 			DefaultPostProcess& def, 
 			GBuffer& gBuffer,
-			MeshFactory& factory);
+			MeshFactory& meshFactory, 
+			MaterialFactory& materialFactory);
 
 		virtual void runStart();
 		virtual void run();

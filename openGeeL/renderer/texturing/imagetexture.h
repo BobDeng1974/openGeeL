@@ -1,17 +1,21 @@
 #ifndef SIMPLETEXTURE_H
 #define SIMPLETEXTURE_H
 
+#include <iostream>
 #include <string>
 #include <vector>
 #include <vec3.hpp>
-#include "maptype.h"
+#include "memory/memoryobject.h"
 #include "renderer/glstructures.h"
+#include "maptype.h"
 #include "texture.h"
 #include "functionaltexture.h"
 
 namespace geeL {
 
 	//Simple 2D texture loaded from an image file
+	//Note: This structure is useless before being initialized and after
+	//being cleared and should be used with caution in these cases
 	class ImageTexture : public FunctionalTexture, public GLStructure {
 
 	public:
@@ -24,8 +28,14 @@ namespace geeL {
 			AnisotropicFilter filter = AnisotropicFilter::Medium);
 		virtual ~ImageTexture();
 
+		
 		virtual void initGL();
 		virtual void clearGL();
+
+		virtual TextureType getTextureType() const;
+		virtual std::string toString() const;
+
+		void setWrapMode(WrapMode mode);
 
 	protected:
 		//Image data wrapper that will delete data when being destroyed
@@ -41,7 +51,8 @@ namespace geeL {
 
 		};
 
-		//Note: Image texture will take ownership of given image data
+		TextureType textureType;
+
 		ImageTexture(ImageData image, int width, int height,
 			ColorType colorType = ColorType::RGBA,
 			FilterMode filterMode = FilterMode::None,
@@ -68,7 +79,6 @@ namespace geeL {
 		};
 
 		ImageContainer* container;
-
 
 		ImageTexture(const ImageTexture& other) = delete;
 		ImageTexture& operator= (const ImageTexture& other) = delete;

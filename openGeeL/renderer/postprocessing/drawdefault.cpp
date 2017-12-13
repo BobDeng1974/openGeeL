@@ -15,7 +15,7 @@ namespace geeL {
 		: PostProcessingEffectFS("shaders/postprocessing/drawdefault.frag")
 		, customTexture(nullptr) {
 	
-		noise = new ImageTexture("resources/textures/noise.png", ColorType::Single);
+		noise = ImageTexture::create<ImageTexture>("resources/textures/noise.png", ColorType::Single);
 		shader.setValue("exposure", exposure, Range<float>(0.f, 100.f));
 	}
 
@@ -23,13 +23,11 @@ namespace geeL {
 		: PostProcessingEffectFS(other)
 		, customTexture(other.customTexture) {
 
-		noise = new ImageTexture("resources/textures/noise.png", ColorType::Single);
+		noise = ImageTexture::create<ImageTexture>("resources/textures/noise.png", ColorType::Single);
 		shader.setValue("exposure", other.getExposure(), Range<float>(0.f, 100.f));
 	}
 
-	DefaultPostProcess::~DefaultPostProcess() {
-		delete noise;
-	}
+	
 
 	DefaultPostProcess & DefaultPostProcess::operator=(const DefaultPostProcess& other) {
 		if (&other != this) {

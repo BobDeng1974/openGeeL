@@ -49,19 +49,6 @@ public:
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(7, 5, 5), vec3(-180.0f, 0, -50), vec3(1.f));
 			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), defPLShadowMapConfig);
 
-			lightIntensity = 100.f;
-			float angle = glm::cos(glm::radians(25.5f));
-			float outerAngle = glm::cos(glm::radians(27.5f));
-
-			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(0.9f, 5, -22.f), vec3(96.f, -0.1f, -5), vec3(1.f));
-			SpotLight& spotLight = lightManager.addSpotlight(lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle, defSLShadowMapConfig);
-			spotLight.setLightCookie(materialFactory.createTexture("resources/textures/cookie.png",
-				ColorType::GammaSpace, FilterMode::LinearMip));
-
-			lightIntensity = 0.5f;
-			//geeL::Transform& lightTransform3 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(-120, -30, -180), vec3(1.f));
-			//lightManager.addDirectionalLight(scene.getCamera(), lightTransform3, glm::vec3(lightIntensity, lightIntensity, lightIntensity), defDLShadowMapConfig);
-
 			float height = -2.f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(20.f, 0.2f, 20.f));
 			std::unique_ptr<MeshRenderer> planePtr = meshFactory.createMeshRenderer(
@@ -181,15 +168,6 @@ public:
 			renderer.addEffect(raySmooth);
 			scene.addRequester(ray);
 			postLister.add(raySmooth, godRaySnippet);
-
-			SobelFilter& sobel = SobelFilter(15);
-			SobelBlur& sobelBlur = SobelBlur(sobel);
-			VolumetricLight& vol = VolumetricLight(spotLight, 0.1f, 1.f, 160);
-			BlurredPostEffect& volSmooth = BlurredPostEffect(vol, sobelBlur, ResolutionPreset::FORTY, ResolutionPreset::FORTY);
-			//VolumetricLightSnippet lightSnippet = VolumetricLightSnippet(vol);
-			//renderer.addEffect(volSmooth, { &vol, &sobelBlur });
-			//scene.addRequester(vol);
-			//postLister.add(volSmooth, lightSnippet);
 
 			GaussianBlur& blur4 = GaussianBlur();
 			SSRR& ssrr = SSRR();

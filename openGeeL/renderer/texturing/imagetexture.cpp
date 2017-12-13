@@ -11,11 +11,10 @@ namespace geeL {
 		WrapMode wrapMode,
 		FilterMode filterMode,
 		AnisotropicFilter filter)
-			: FunctionalTexture()
-			, path(fileName) {
+			: path(fileName)
+			, textureType(TextureType::Texture2D) {
 
 		container = new ImageContainer(fileName, colorType, filterMode, wrapMode, filter);
-		initGL();
 	}
 
 	ImageTexture::ImageTexture(ImageData image,
@@ -24,10 +23,12 @@ namespace geeL {
 		ColorType colorType,
 		FilterMode filterMode,
 		WrapMode wrapMode,
-		AnisotropicFilter filter) {
+		AnisotropicFilter filter)	
+			: path("No path specified")
+			, textureType(TextureType::Texture2D) {
 
-		container = new ImageContainer(std::move(image), width, height, colorType, filterMode, wrapMode, filter);
-		initGL();
+		container = new ImageContainer(std::move(image), width, height, colorType, 
+			filterMode, wrapMode, filter);
 	}
 
 	ImageTexture::~ImageTexture() {
@@ -51,6 +52,19 @@ namespace geeL {
 
 	void ImageTexture::clearGL() {
 		deleteTexture();
+	}
+
+	TextureType ImageTexture::getTextureType() const {
+		return textureType;
+	}
+
+	std::string ImageTexture::toString() const {
+		return path;
+	}
+
+	void ImageTexture::setWrapMode(WrapMode mode) {
+		if (container != nullptr)
+			container->wrapMode = mode;
 	}
 
 	
@@ -97,14 +111,11 @@ namespace geeL {
 
 	TextureMap::TextureMap(const char* fileName, MapType type, ColorType colorType,
 		WrapMode wrapMode, FilterMode filterMode, AnisotropicFilter filter)
-		: ImageTexture(fileName, colorType, wrapMode, filterMode, filter), type(type) {}
+			: ImageTexture(fileName, colorType, wrapMode, filterMode, filter), type(type) {}
 
 
 	string TextureMap::getTypeAsString() const {
 		return MapTypeConversion::getTypeAsString(type);
 	}
-
-
-	
 
 }

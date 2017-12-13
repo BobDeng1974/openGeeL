@@ -1,9 +1,15 @@
 #ifndef MEMORYOBJECT_H
 #define MEMORYOBJECT_H
 
+#include <functional>
 #include <memory>
 
 namespace geeL {
+
+	template<typename T>
+	using del_unique_ptr = std::unique_ptr<T, std::function<void(T*)>>;
+
+
 	namespace memory {
 
 		template<typename T>
