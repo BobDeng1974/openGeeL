@@ -45,7 +45,7 @@ void main() {
 	result = pow(result.rgb, vec3(0.4545f));
 
 #elif (TONEMAPPING_METHOD == 1)
-	vec3 result = result / (1.f + result);
+	vec3 result = imageColor / (1.f + imageColor);
 	result = pow(result.rgb, vec3(0.4545f));
 	
 #elif (TONEMAPPING_METHOD == 2)
