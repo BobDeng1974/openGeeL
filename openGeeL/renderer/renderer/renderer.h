@@ -28,7 +28,7 @@ namespace geeL {
 		virtual void runStart();
 		virtual void run();
 
-		virtual void addGUIRenderer(GUIRenderer* renderer);
+		virtual void addGUIRenderer(GUIRenderer& renderer);
 		virtual void setScene(RenderScene& scene);
 
 		virtual void onAdd(GLStructure& structure);

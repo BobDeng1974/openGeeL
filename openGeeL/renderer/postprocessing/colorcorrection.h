@@ -11,7 +11,7 @@ namespace geeL {
 
 	public:
 		ColorCorrection(float red = 1.f, float green = 1.f, float blue = 1.f, 
-			float hue = 1.f, float saturation = 1.f, float brightness = 1.f);
+			float hue = 1.f, float saturation = 1.f, float brightness = 1.f, float contrast = 1.f);
 
 		virtual void init(const PostProcessingParameter& parameter);
 
@@ -21,6 +21,7 @@ namespace geeL {
 		float getHue() const;
 		float getSaturation() const;
 		float getBrightness() const;
+		float getContrast() const;
 
 		const glm::vec2& getDistortionDirection() const;
 		const glm::vec3& getChromaticDistortion() const;
@@ -31,6 +32,7 @@ namespace geeL {
 		void setHue(float value);
 		void setSaturation(float value);
 		void setBrightness(float value);
+		void setContrast(float value);
 
 		void setDistortionDirection(const glm::vec2& value);
 		void setChromaticDistortion(const glm::vec3& value);
@@ -40,7 +42,7 @@ namespace geeL {
 	protected:
 		glm::vec2 distortionDirection;
 		glm::vec3 distortion;
-		float r, g, b, h, s, v;
+		float r, g, b, h, s, v, c;
 
 	};
 

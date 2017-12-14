@@ -42,8 +42,8 @@ namespace geeL {
 		updateGLStructures();
 	}
 
-	void Renderer::addGUIRenderer(GUIRenderer* renderer) {
-		gui = renderer;
+	void Renderer::addGUIRenderer(GUIRenderer& renderer) {
+		gui = &renderer;
 	}
 
 	void Renderer::setScene(RenderScene& scene) {

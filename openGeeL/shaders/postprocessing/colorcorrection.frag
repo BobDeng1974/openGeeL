@@ -1,6 +1,6 @@
 #version 330 core
 
-uniform float r, g, b, h, s, v;
+uniform float r, g, b, h, s, v, c;
 uniform vec2 direction;
 uniform vec3 distortion;
 
@@ -28,6 +28,13 @@ vec3 hsv2rgb(vec3 c) {
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
+//Log contrast by John Hable
+vec3 evalLogContrastFunc(vec3 color, float eps, float logMidpoint, float contrast) {
+	vec3 logX = log2(color + eps);
+	vec3 adjX = logMidpoint + (logX - logMidpoint) * contrast;
+
+	return max(vec3(0.f), exp2(adjX) - vec3(eps));
+}
 
 void main() { 
 	//color = texture(image, TexCoords);
@@ -45,7 +52,10 @@ void main() {
 	col.r *= h;
 	col.g *= s;
 	col.b *= v;
-
 	col = hsv2rgb(col);
+	
+	if(c != 1.f)
+		col = evalLogContrastFunc(col, 0.0001f, 0.18f, c); 
+	
 	color = vec4(col, 1.f);
 }

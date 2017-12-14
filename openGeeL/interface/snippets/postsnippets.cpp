@@ -173,6 +173,9 @@ namespace geeL {
 		float v = GUISnippets::drawBarFloat(context, color.getBrightness(), 0.f, 1.f, 0.001f, "Brightness");
 		color.setBrightness(v);
 
+		float c = GUISnippets::drawBarFloat(context, color.getContrast(), 0.f, 4.f, 0.001f, "Contrast");
+		color.setContrast(c);
+
 
 		GUISnippets::drawTreeNode(context, "Chromatic Aberration", true, [this](GUIContext* context) {
 			const glm::vec2& direction = color.getDistortionDirection();

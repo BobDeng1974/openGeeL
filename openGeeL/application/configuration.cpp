@@ -70,7 +70,7 @@ namespace geeL {
 		CubeMapFactory& cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
 
 		GUIRenderer& gui = GUIRenderer(window, context, renderer);
-		renderer.addGUIRenderer(&gui);
+		renderer.addGUIRenderer(gui);
 
 
 		Physics* physics;

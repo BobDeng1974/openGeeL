@@ -13,11 +13,11 @@ namespace geeL {
 		class Memory;
 	}
 	
-	using ThreadID = std::thread::id;
-
 	class RenderWindow;
 	class InputManager;
 	class ContinuousThread;
+
+	using ThreadID = std::thread::id;
 
 
 	class Application {

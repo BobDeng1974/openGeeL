@@ -118,6 +118,7 @@ public:
 				}
 			});
 
+
 			ObjectLister& objectLister = ObjectLister(scene);
 			objectLister.add(camera);
 			PostProcessingEffectLister postLister;
@@ -166,6 +167,11 @@ public:
 			renderer.addEffect(additiveSSS);
 			postLister.add(ssssnip);
 			additiveSSS.setRenderMask(RenderMask::Skin);
+
+			ColorCorrection& colorCorrect = ColorCorrection();
+			renderer.addEffect(colorCorrect, DrawTime::Late);
+			postLister.add(colorCorrect);
+
 
 			FXAA& fxaa = FXAA(0.02f, 0.15f);
 			renderer.addEffect(fxaa, DrawTime::Late);
