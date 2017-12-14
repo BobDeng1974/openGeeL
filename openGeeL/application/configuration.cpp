@@ -40,9 +40,11 @@ namespace geeL {
 		LightManager& lightManager = LightManager();
 		UniformBindingStack pipeline;
 
-		RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, 
+		RenderScene* s = new RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, 
 			defaultCamera, materialFactory, manager);
 		
+		RenderScene& scene = *s;
+
 		Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 		TextureProvider textureProvider(window, gBuffer);
 
@@ -91,6 +93,7 @@ namespace geeL {
 
 		delete physics;
 		if (physicsThread != nullptr) delete physicsThread;
+		delete s;
 	}
 
 }

@@ -42,22 +42,24 @@ void RaymarchTest::draw() {
 	MeshFactory& meshFactory = MeshFactory(materialFactory);
 	LightManager& lightManager = LightManager();
 	UniformBindingStack pipeline;
-	RenderScene& scene = RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, camera, materialFactory, manager);
+	RenderScene* scene = new RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, camera, materialFactory, manager);
 
 	DefaultPostProcess& def = DefaultPostProcess(2.f);
 	RenderContext& context = RenderContext();
-	RayMarcher& raymarch = RayMarcher(scene);
+	RayMarcher& raymarch = RayMarcher(*scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, textureProvider, raymarch, context, def, 
 		gBuffer, meshFactory, materialFactory);
-	renderer.setScene(scene);
+	renderer.setScene(*scene);
 
 	ContinuousSingleThread renderThread(renderer);
 	Application& app = ApplicationManager::createApplication(window, manager, renderThread, *memory);
 
-	ContinuousSingleThread scriptingThread(scene);
+	ContinuousSingleThread scriptingThread(*scene);
 	app.addThread(scriptingThread);
 
 	camera.addComponent<MovableCamera>(MovableCamera(5.f, 0.45f));
 
 	app.run();
+
+	delete scene;
 }

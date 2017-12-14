@@ -34,8 +34,6 @@ namespace geeL {
 		virtual void onAdd(GLStructure& structure);
 		virtual void onRemove(std::shared_ptr<GLStructure> structure);
 
-		
-
 	protected:
 		mutable std::mutex glMutex;
 

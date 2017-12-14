@@ -8,7 +8,7 @@
 #include "renderer/rendercontext.h"
 #include "framebuffer/framebuffer.h"
 
-namespace geeL{
+namespace geeL {
 
 	Renderer::Renderer(RenderWindow& window, 
 		RenderContext& context, 
@@ -78,7 +78,6 @@ namespace geeL{
 	void Renderer::onRemove(){
 		while (!toRemove.empty()) {
 			std::shared_ptr<GLStructure> structure = toRemove.front();
-			std::cout << structure->toString() << "\n";
 			structure->clearGL();
 
 			toRemove.pop();

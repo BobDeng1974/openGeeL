@@ -106,7 +106,6 @@ namespace geeL {
 			rawRenderer->addMaterialChangeListener([this](MeshRenderer& renderer, Material oldMaterial, Material newMaterial) {
 				updateMeshRenderer(renderer, oldMaterial, newMaterial);
 			});
-
 			
 			renderObjects[shader.getMethod()][&shader][rawRenderer->transform.getID()] = rawRenderer;
 		});
@@ -158,7 +157,6 @@ namespace geeL {
 		if (!renderer.containsShader(oldShader)) {
 			removeMeshRenderer(renderer, oldShader);
 		}
-
 
 		addShader(newShader);
 		renderObjects[newShader.getMethod()][&newShader][renderer.transform.getID()] = &renderer;
