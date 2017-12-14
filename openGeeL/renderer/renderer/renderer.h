@@ -32,7 +32,7 @@ namespace geeL {
 		virtual void setScene(RenderScene& scene);
 
 		virtual void onAdd(GLStructure& structure);
-		virtual void onRemove(GLStructure& structure);
+		virtual void onRemove(std::shared_ptr<GLStructure> structure);
 
 		
 
@@ -49,7 +49,7 @@ namespace geeL {
 
 	private:
 		std::queue<GLStructure*> toAdd;
-		std::queue<GLStructure*> toRemove;
+		std::queue<std::shared_ptr<GLStructure>> toRemove;
 
 		void updateGLStructures();
 		void onAdd();

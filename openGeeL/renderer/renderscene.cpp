@@ -36,9 +36,7 @@ namespace geeL {
 	Scene::~Scene() {
 		for (auto it(renderers.begin()); it != renderers.end(); it++) {
 			MeshRenderer* renderer = *it;
-			onRemove(*renderer);
-
-			delete renderer;
+			onRemove(std::shared_ptr<MeshRenderer>(renderer));
 		}
 	}
 
@@ -145,9 +143,7 @@ namespace geeL {
 			});
 
 			renderers.erase(toRemove);
-
-			onRemove(renderer);
-			delete &renderer;
+			onRemove(std::shared_ptr<MeshRenderer>(&renderer));
 		}
 	}
 

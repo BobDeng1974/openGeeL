@@ -36,7 +36,7 @@ namespace geeL {
 		ShadowMapSnippet& createSnippet(SimpleShadowMap& map);
 
 		virtual void onAdd(MeshRenderer& renderer);
-		virtual void onRemove(MeshRenderer& renderer);
+		virtual void onRemove(std::shared_ptr<MeshRenderer> renderer);
 
 	private:
 		std::list<std::unique_ptr<GUISnippet>> lightSnippets;

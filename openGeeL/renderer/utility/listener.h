@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <list>
+#include <memory>
 
 namespace geeL {
 
@@ -11,7 +12,7 @@ namespace geeL {
 
 	public:
 		virtual void onAdd(Data& data) = 0;
-		virtual void onRemove(Data& data) = 0;
+		virtual void onRemove(std::shared_ptr<Data> data) = 0;
 
 	};
 
@@ -24,8 +25,12 @@ namespace geeL {
 		void removeListener(DataEventListener<Data>& listener);
 
 	protected:
+		//Called after data is created/added
 		void onAdd(Data& data);
-		void onRemove(Data& data);
+
+		//Called when data gets removed. The data will get
+		//destroyed as soon as given shared pointer expires
+		void onRemove(std::shared_ptr<Data> data);
 
 	private:
 		std::list<DataEventListener<Data>*> listeners;
@@ -53,7 +58,7 @@ namespace geeL {
 	}
 
 	template<typename Data>
-	inline void DataEventActuator<Data>::onRemove(Data& data) {
+	inline void DataEventActuator<Data>::onRemove(std::shared_ptr<Data> data) {
 		for (auto it(listeners.begin()); it != listeners.end(); it++) {
 			auto& listener = **it;
 			listener.onRemove(data);

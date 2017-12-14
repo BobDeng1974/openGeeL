@@ -52,8 +52,7 @@ namespace geeL {
 			MemoryObject<ImageTexture> spTexture(
 				new ImageTexture(filePath.c_str(), colorType, wrapMode, filterMode, filter), [this](ImageTexture* t) {
 					//Add a custom deleter to provide a callback when resource gets destroyed
-					this->onRemove(*t);
-					delete t;
+					this->onRemove(shared_ptr<ImageTexture>(t));
 			});
 
 			weak_ptr<ImageTexture> wpTexture(spTexture);
@@ -79,8 +78,7 @@ namespace geeL {
 			MemoryObject<TextureMap> spTexture(
 				new TextureMap(filePath.c_str(), type, colorType, wrapMode, filterMode, filter), [this](TextureMap* m) {
 					//Add a custom deleter to provide a callback when resource gets destroyed
-					this->onRemove(*m);
-					delete m;
+					this->onRemove(shared_ptr<TextureMap>(m));
 			});
 
 			weak_ptr<TextureMap> wpTexture(spTexture);

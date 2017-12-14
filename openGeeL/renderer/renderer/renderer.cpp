@@ -56,9 +56,9 @@ namespace geeL{
 		toAdd.emplace(&structure);
 	}
 
-	void Renderer::onRemove(GLStructure& structure) {
+	void Renderer::onRemove(std::shared_ptr<GLStructure> structure) {
 		std::lock_guard<std::mutex> guard(glMutex);
-		toRemove.emplace(&structure);
+		toRemove.emplace(structure);
 	}
 
 	void Renderer::updateGLStructures() {
@@ -77,7 +77,7 @@ namespace geeL{
 
 	void Renderer::onRemove(){
 		while (!toRemove.empty()) {
-			GLStructure* structure = toRemove.front();
+			std::shared_ptr<GLStructure> structure = toRemove.front();
 			std::cout << structure->toString() << "\n";
 			structure->clearGL();
 

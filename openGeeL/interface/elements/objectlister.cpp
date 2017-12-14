@@ -119,8 +119,8 @@ namespace geeL {
 		add(renderer);
 	}
 
-	void ObjectLister::onRemove(MeshRenderer& renderer) {
-		objectSnippets.erase(&renderer);
+	void ObjectLister::onRemove(std::shared_ptr<MeshRenderer> renderer) {
+		objectSnippets.erase(renderer.get());
 	}
 
 }

@@ -118,7 +118,6 @@ public:
 				}
 			});
 
-
 			ObjectLister& objectLister = ObjectLister(scene);
 			objectLister.add(camera);
 			PostProcessingEffectLister postLister;

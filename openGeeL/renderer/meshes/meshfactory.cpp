@@ -96,8 +96,8 @@ namespace geeL {
 
 			MemoryObject<StaticModel> model(new StaticModel(filePath), [this](StaticModel* m) { 
 				//Add a custom deleter to provide a callback when resource gets destroyed
-				this->onRemove(*m);
-				delete m; });
+				this->onRemove(shared_ptr<StaticModel>(m));
+			});
 
 			weak_ptr<StaticModel> wModel(model);
 
@@ -122,8 +122,8 @@ namespace geeL {
 
 			MemoryObject<SkinnedModel> model(new SkinnedModel(filePath), [this](SkinnedModel* m) {
 				//Add a custom deleter to provide a callback when resource gets destroyed
-				this->onRemove(*m);
-				delete m;  });
+				this->onRemove(std::shared_ptr<SkinnedModel>(m));
+			});
 
 			weak_ptr<SkinnedModel> wModel(model);
 
