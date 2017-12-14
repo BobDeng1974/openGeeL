@@ -25,6 +25,7 @@ namespace geeL {
 			ShadowmapRepository& repository);
 
 		virtual void bindData(const Shader& shader, const std::string& name);
+		virtual ShadowMapType getType() const;
 
 		void setResolution(ShadowmapResolution resolution);
 		virtual Resolution getScreenResolution() const;

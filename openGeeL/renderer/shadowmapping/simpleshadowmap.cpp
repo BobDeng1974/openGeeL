@@ -52,6 +52,10 @@ namespace geeL {
 		shader.bind<int>(name + "type", (int)type);
 	}
 
+	ShadowMapType SimpleShadowMap::getType() const {
+		return type;
+	}
+
 	void SimpleShadowMap::setResolution(ShadowmapResolution resolution) {
 		this->resolution = (int)resolution;
 	}

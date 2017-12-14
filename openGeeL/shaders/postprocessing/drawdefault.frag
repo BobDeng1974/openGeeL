@@ -50,7 +50,7 @@ void main() {
 	
 #elif (TONEMAPPING_METHOD == 2)
 	vec3 result = max(vec3(0.f), imageColor - vec3(0.004f));
-	 result = (result * (6.2f * result + 0.5f)) / (result * (6.2f * result + 1.7f) + 0.06f);
+	result = (result * (6.2f * result + 0.5f)) / (result * (6.2f * result + 1.7f) + 0.06f);
 
 #elif (TONEMAPPING_METHOD == 3)
 	vec3 result = Uncharted2Tonemap(exposureBias * imageColor) * whiteScale;

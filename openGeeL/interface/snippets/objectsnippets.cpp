@@ -191,7 +191,7 @@ namespace geeL {
 				int resolution = GUISnippets::drawBarInteger(context, map.getSoftShadowResolution(), 1, 100, 1, "Resolution");
 				map.setSoftShadowResolution(resolution);
 
-				float scale = GUISnippets::drawBarFloatLogarithmic(context, map.getSoftShadowScale(), 0.f, 100.f, 0.1f, "Scale");
+				float scale = GUISnippets::drawBarFloatLogarithmic(context, map.getSoftShadowScale(), 0.f, 15.f, 0.1f, "Scale");
 				map.setSoftShadowScale(scale);
 			}
 		}
