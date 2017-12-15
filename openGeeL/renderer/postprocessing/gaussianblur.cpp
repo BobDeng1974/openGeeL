@@ -134,11 +134,19 @@ namespace geeL {
 
 
 
-	SeparatedGaussian::SeparatedGaussian(float sigma) 
+	SeparatedGaussian::SeparatedGaussian(float sigma, float falloff)
 		: GaussianBlurBase("shaders/postprocessing/gaussianseparated.frag", sigma) {
 
 		setKernelsize(7);
 		setSigma(sigma);
+		setFalloff(falloff);
+	}
+
+	void SeparatedGaussian::init(const PostProcessingParameter& parameter) {
+		GaussianBlurBase::init(parameter);
+
+		assert(provider != nullptr);
+		addTextureSampler(provider->requestPositionRoughness(), "position");
 	}
 
 	float SeparatedGaussian::getSigmaR() const {
@@ -151,6 +159,10 @@ namespace geeL {
 
 	float SeparatedGaussian::getSigmaB() const {
 		return sigmaB;
+	}
+
+	float SeparatedGaussian::getFalloff() const {
+		return falloff;
 	}
 
 	void SeparatedGaussian::setSigma(float value) {
@@ -167,7 +179,6 @@ namespace geeL {
 			
 			kernelR.convert(computeKernel(sigmaR));
 			kernelR.bind(shader, "weightsR", "offsetsR");
-
 		}
 	}
 
@@ -177,7 +188,6 @@ namespace geeL {
 
 			kernelG.convert(computeKernel(sigmaG));
 			kernelG.bind(shader, "weightsG", "offsetsG");
-
 		}
 	}
 
@@ -187,7 +197,14 @@ namespace geeL {
 
 			kernelB.convert(computeKernel(sigmaB));
 			kernelB.bind(shader, "weightsB", "offsetsB");
+		}
+	}
 
+	void SeparatedGaussian::setFalloff(float value) {
+		if (falloff != value && value > 0.f) {
+			falloff = value;
+
+			shader.bind<float>("falloff", value);
 		}
 	}
 

@@ -53,7 +53,7 @@ namespace geeL {
 		stackBuffer.referenceRBO(gBuffer);
 
 #if DIFFUSE_SPECULAR_SEPARATION
-		separatedBuffer.initResolution(window->resolution);
+		separatedBuffer.initResolution(window.resolution);
 		separatedBuffer.referenceRBO(gBuffer);
 		separatedBuffer.setSize(2);
 #endif
@@ -123,6 +123,7 @@ namespace geeL {
 
 		//TODO: optimize this later
 		if (!hasForwardPass()) {
+			stackBuffer.push(provider.requestCurrentImage());
 			stackBuffer.fill([this]() {
 				DepthGuard depth;
 				scene->drawSkybox();
@@ -310,7 +311,7 @@ namespace geeL {
 	void DeferredRenderer::initEffects() {
 #if DIFFUSE_SPECULAR_SEPARATION
 		PostProcessingParameter parameter(ScreenQuad::get(), stackBuffer,
-			window->resolution, &provider, &fallbackEffect, &separatedBuffer);
+			window.resolution, &provider, &fallbackEffect, &separatedBuffer);
 #else
 		PostProcessingParameter parameter(ScreenQuad::get(), stackBuffer,
 			window.resolution, &provider, &fallbackEffect);

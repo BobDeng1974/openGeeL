@@ -69,21 +69,25 @@ namespace geeL {
 	class SeparatedGaussian : public GaussianBlurBase {
 
 	public:
-		SeparatedGaussian(float sigma = 1.3f);
+		SeparatedGaussian(float sigma = 1.3f, float falloff = 0.f);
+
+		virtual void init(const PostProcessingParameter& parameter);
 
 		float getSigmaR() const;
 		float getSigmaG() const ;
 		float getSigmaB() const;
+		float getFalloff() const;
 
 		virtual void setSigma(float value);
 		void setSigmaR(float value);
 		void setSigmaG(float value);
 		void setSigmaB(float value);
+		void setFalloff(float value);
 
 		virtual std::string toString() const;
 
 	private:
-		float sigmaR, sigmaG, sigmaB;
+		float sigmaR, sigmaG, sigmaB, falloff;
 		LinearKernel kernelR, kernelG, kernelB;
 
 	};

@@ -7,6 +7,7 @@
 #include <iostream>
 #include <functional>
 
+#include "appglobals.h"
 #include "application.h"
 #include "threading.h"
 #include "inputmanager.h"
