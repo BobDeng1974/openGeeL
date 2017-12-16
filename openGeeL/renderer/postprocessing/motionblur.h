@@ -9,7 +9,6 @@
 namespace geeL {
 
 	class Camera;
-	class GaussianBlurBase;
 	class RenderTexture;
 
 

@@ -92,7 +92,7 @@ public:
 			//lightManager.addVoxelStructure(tex);
 
 			/*
-			GaussianBlurBase& blur4 = GaussianBlurBase(0.5f);
+			GaussianBlur& blur4 = GaussianBlur(0.5f);
 			MultisampledSSRR& ssrr = MultisampledSSRR(25, 35, 1.f);
 			BlurredPostEffect& ssrrSmooth = BlurredPostEffect(ssrr, blur4, 0.5f, 0.5f);
 			renderer.addEffect(ssrrSmooth);

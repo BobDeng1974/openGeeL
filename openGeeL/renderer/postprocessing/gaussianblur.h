@@ -12,20 +12,12 @@ namespace geeL {
 	class ITexture;
 
 
-	enum class KernelSize {
-		Small = 1,
-		Medium = 2,
-		Large = 3,
-		Huge = 4,
-		Depth = 5
-	};
-
-
 	//Two pass gaussian blur
-	class GaussianBlurBase : public PostProcessingEffectFS {
+	class GaussianBlur : public PostProcessingEffectFS {
 
 	public:
-		virtual ~GaussianBlurBase();
+		GaussianBlur(float sigma = 1.3f, unsigned int kernelSize = 5);
+		virtual ~GaussianBlur();
 
 		virtual void setImage(const ITexture& texture);
 		virtual void init(const PostProcessingParameter& parameter);
@@ -38,38 +30,30 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	protected:
-		GaussianBlurBase(float sigma = 1.3f);
-		GaussianBlurBase(std::string shaderPath, float sigma = 1.3f);
+		GaussianBlur(std::string shaderPath, float sigma = 1.3f,
+			unsigned int kernelSize = 5);
 
 		virtual void drawSubImages();
-		void setKernelsize(unsigned int size);
 
 	private:
 		float sigma;
-		unsigned int kernelSize = 5;
+		unsigned int kernelSize;
 
 		LinearKernel linearKernel;
 		const ITexture* mainBuffer;
 		RenderTexture* tempTexture = nullptr;
 		ShaderLocation horLocation;
 
+		void setKernelsize(unsigned int size);
 		void updateKernel();
 
 	};
 
 
-	class GaussianBlur : public GaussianBlurBase {
+	class SeparatedGaussian : public GaussianBlur {
 
 	public:
-		GaussianBlur(KernelSize kernelSize = KernelSize::Small, float sigma = 1.3f);
-
-	};
-
-
-	class SeparatedGaussian : public GaussianBlurBase {
-
-	public:
-		SeparatedGaussian(float sigma = 1.3f, float falloff = 0.f);
+		SeparatedGaussian(float sigma = 1.3f, unsigned int kernelSize = 7, float falloff = 0.f);
 
 		virtual void init(const PostProcessingParameter& parameter);
 
@@ -94,10 +78,10 @@ namespace geeL {
 
 
 	//Two pass gaussian blur that blurs depending on color differences and scaled with given factor
-	class BilateralFilter : public GaussianBlurBase {
+	class BilateralFilter : public GaussianBlur {
 
 	public:
-		BilateralFilter(float sigma = 1.3f, float factor = 0.5f);
+		BilateralFilter(float sigma = 1.3f, unsigned int kernelSize = 7, float factor = 0.5f);
 
 		virtual void init(const PostProcessingParameter& parameter);
 
@@ -107,7 +91,8 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	protected:
-		BilateralFilter(std::string shaderPath, float sigma = 1.3f, float factor = 0.5f);
+		BilateralFilter(std::string shaderPath, float sigma = 1.3f, 
+			unsigned int kernelSize = 7, float factor = 0.5f);
 
 	private:
 		float sigma2;
@@ -119,16 +104,16 @@ namespace geeL {
 	class BilateralDepthFilter : public BilateralFilter {
 
 	public:
-		BilateralDepthFilter(float sigma = 1.3f, float factor = 0.5f);
+		BilateralDepthFilter(float sigma = 1.3f, unsigned int kernelSize = 7, float factor = 0.5f);
 
 	};
 
 
 	//Two pass gaussian blur that blurs depending sobel edge detection
-	class SobelBlur : public GaussianBlurBase {
+	class SobelBlur : public GaussianBlur {
 
 	public:
-		SobelBlur(SobelFilter& sobel, float sigma = 1.5f, bool depth = true);
+		SobelBlur(SobelFilter& sobel, float sigma = 1.5f, unsigned int kernelSize = 7, bool depth = true);
 		virtual ~SobelBlur();
 
 		virtual void setImage(const ITexture& texture);
@@ -150,7 +135,7 @@ namespace geeL {
 	};
 
 
-	inline std::string GaussianBlurBase::toString() const {
+	inline std::string GaussianBlur::toString() const {
 		return "Gaussian Blur";
 	}
 

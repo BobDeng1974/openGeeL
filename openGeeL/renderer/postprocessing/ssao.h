@@ -8,7 +8,6 @@
 
 namespace geeL {
 
-	class BilateralFilter;
 	class Texture2D;
 	class RenderTexture;
 

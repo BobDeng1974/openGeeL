@@ -526,11 +526,7 @@
     <None Include="shaders\postprocessing\drawdefault.frag" />
     <None Include="shaders\postprocessing\fxaa.frag" />
     <None Include="shaders\postprocessing\gammacorrection.frag" />
-    <None Include="shaders\postprocessing\gaussianblur1.frag" />
-    <None Include="shaders\postprocessing\gaussianblur2.frag" />
-    <None Include="shaders\postprocessing\gaussianblur3.frag" />
-    <None Include="shaders\postprocessing\gaussianblur4.frag" />
-    <None Include="shaders\postprocessing\gaussianblur5.frag" />
+    <None Include="shaders\postprocessing\gaussianblur.frag" />
     <None Include="shaders\postprocessing\gaussianseparated.frag" />
     <None Include="shaders\postprocessing\godray.frag" />
     <None Include="shaders\postprocessing\kernelprocessing.frag" />

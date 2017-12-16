@@ -152,7 +152,7 @@ public:
 			def.setExposure(1.f);
 			postLister.add(def);
 
-			BilateralFilter& blur = BilateralFilter(1.8f, 0.7f);
+			BilateralFilter& blur = BilateralFilter(1.8f, 7, 0.7f);
 			SSAO& ssao = SSAO(blur, 1.f);
 			renderer.addEffect(ssao);
 			scene.addRequester(ssao);
@@ -161,7 +161,7 @@ public:
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
 			renderer.addEffect(ibl);
 
-			BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
+			BilateralFilter& blur2 = BilateralFilter(1, 7, 0.1f);
 			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 25);
 			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, ResolutionPreset::TWENTY, ResolutionPreset::TWENTY);
 			GodRaySnippet& godRaySnippet = GodRaySnippet(ray);

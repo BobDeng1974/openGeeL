@@ -68,7 +68,7 @@ public:
 			def.setExposure(2.f);
 			postLister.add(def);
 
-			BilateralFilter& blur = BilateralFilter(3.084f, 0.403f);
+			BilateralFilter& blur = BilateralFilter(3.084f, 7, 0.403f);
 			SSAO& ssao = SSAO(blur, 1.f);
 			renderer.addEffect(ssao);
 			scene.addRequester(ssao);
@@ -93,7 +93,7 @@ public:
 			postLister.add(ssrrSmooth, ssrrSnippet, blurSnippet);
 
 			BrightnessFilterCutoff& bFilter = BrightnessFilterCutoff(0.7f);
-			GaussianBlur& bBlur = GaussianBlur(KernelSize::Huge, 10.1f);
+			GaussianBlur& bBlur = GaussianBlur(10.1f, 27);
 			BlurredPostEffect& bBlurred = BlurredPostEffect(bFilter, bBlur, ResolutionPreset::HALFSCREEN, ResolutionPreset::TWOTHIRDS);
 			bBlurred.effectOnly(true);
 			LensFlare& lensFlare = LensFlare(bBlurred, 0.35f, 6.f);

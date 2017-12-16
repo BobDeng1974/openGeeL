@@ -7,7 +7,7 @@
 namespace geeL {
 
 	class BilateralFilter;
-	class GaussianBlurBase;
+	class GaussianBlur;
 	class SeparatedGaussian;
 	class MotionBlur;
 	class SobelBlur;
@@ -16,12 +16,12 @@ namespace geeL {
 	class GaussianBlurSnippet : public PostEffectSnippet {
 
 	public:
-		GaussianBlurSnippet(GaussianBlurBase& blur);
+		GaussianBlurSnippet(GaussianBlur& blur);
 
 		virtual void drawSimple(GUIContext* context);
 
 	private:
-		GaussianBlurBase& blur;
+		GaussianBlur& blur;
 
 	};
 

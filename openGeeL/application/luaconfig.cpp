@@ -673,7 +673,7 @@ namespace geeL {
 					float blurFactor = ssaoInit["blurFactor"].get_or(5.f);
 					float resolution = ssaoInit["resolution"].get_or(1.f);
 
-					BilateralFilter* blur = new BilateralFilter(blurSigma, blurFactor);
+					BilateralFilter* blur = new BilateralFilter(blurSigma, 7, blurFactor);
 					SSAO* ssao = new SSAO(*blur, radius, getRenderResolution(ResolutionScale(resolution)));
 					renderer.addEffect(*ssao);
 					scene.addRequester(*ssao);
@@ -711,7 +711,7 @@ namespace geeL {
 					ResolutionPreset resPreset = getRenderResolution(ResolutionScale(resolution));
 
 					BrightnessFilterCutoff* filter = new BrightnessFilterCutoff(scatter);
-					GaussianBlur* blur = new GaussianBlur(KernelSize::Large, blurSigma);
+					GaussianBlur* blur = new GaussianBlur(blurSigma, 17);
 					Bloom* bloom = new Bloom(*filter, *blur, resPreset, resPreset);
 					renderer.addEffect(*bloom, DrawTime::Late);
 
@@ -734,7 +734,7 @@ namespace geeL {
 					float resolution = ssrrInit["resolution"].get_or(1.f);
 					ResolutionPreset resPreset = getRenderResolution(ResolutionScale(resolution));
 
-					GaussianBlur* blur = new GaussianBlur(KernelSize::Small, blurSigma);
+					GaussianBlur* blur = new GaussianBlur(blurSigma, 5);
 					SSRR* ssrr = new SSRR(stepCount, stepSize, stepGain);
 					BlurredPostEffect* ssrrSmooth = new BlurredPostEffect(*ssrr, *blur, resPreset, resPreset);
 
@@ -788,7 +788,7 @@ namespace geeL {
 					float resolution = godInit["resolution"].get_or(1.f);
 					ResolutionPreset resPreset = getRenderResolution(ResolutionScale(resolution));
 
-					BilateralFilter* blur = new BilateralFilter(blurSigma, blurFactor);
+					BilateralFilter* blur = new BilateralFilter(blurSigma, 7, blurFactor);
 					GodRay* ray = new GodRay(position, sampleCount);
 					BlurredPostEffect* raySmooth = new BlurredPostEffect(*ray, *blur, resPreset, resPreset);
 					renderer.addEffect(*raySmooth, DrawTime::Late);

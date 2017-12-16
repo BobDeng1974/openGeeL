@@ -8,7 +8,7 @@
 namespace geeL {
 
 	Bloom::Bloom(BrightnessFilterCutoff& filter, 
-		GaussianBlurBase& blur, 
+		GaussianBlur& blur,
 		ResolutionPreset filterResolution, 
 		ResolutionPreset blurResolution)
 			: BlurredPostEffect(filter, blur, filterResolution, blurResolution)

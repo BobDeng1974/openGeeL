@@ -9,8 +9,8 @@
 namespace geeL {
 
 	class DirectionalLight;
-	class GaussianBlurBase;
 	class RenderScene;
+
 
 	//God ray post effect that draws outgoing light shafts into the scene
 	class GodRay : public PostProcessingEffectFS, public CameraRequester {

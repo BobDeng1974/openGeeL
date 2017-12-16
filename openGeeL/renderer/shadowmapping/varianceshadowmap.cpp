@@ -23,7 +23,7 @@ namespace geeL {
 		, shadowBias(config.shadowBias)
 		, farPlane(config.farPlane)
 		, resolution((int)config.resolution)
-		, blur(KernelSize::Depth, 1.5f)
+		, blur(1.5f, 17)
 		, blurTexture(
 			Resolution((int)config.resolution), 
 			ColorType::RGB16, 

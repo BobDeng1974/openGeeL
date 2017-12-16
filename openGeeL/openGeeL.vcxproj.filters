@@ -1264,21 +1264,6 @@
     <None Include="shaders\postprocessing\gammacorrection.frag">
       <Filter>shaders\postprocessing</Filter>
     </None>
-    <None Include="shaders\postprocessing\gaussianblur1.frag">
-      <Filter>shaders\postprocessing</Filter>
-    </None>
-    <None Include="shaders\postprocessing\gaussianblur2.frag">
-      <Filter>shaders\postprocessing</Filter>
-    </None>
-    <None Include="shaders\postprocessing\gaussianblur3.frag">
-      <Filter>shaders\postprocessing</Filter>
-    </None>
-    <None Include="shaders\postprocessing\gaussianblur4.frag">
-      <Filter>shaders\postprocessing</Filter>
-    </None>
-    <None Include="shaders\postprocessing\gaussianblur5.frag">
-      <Filter>shaders\postprocessing</Filter>
-    </None>
     <None Include="shaders\postprocessing\gaussianseparated.frag">
       <Filter>shaders\postprocessing</Filter>
     </None>
@@ -1350,6 +1335,9 @@
     </None>
     <None Include="shaders\cubemapping\skybox.vert">
       <Filter>shaders\cubemapping</Filter>
+    </None>
+    <None Include="shaders\postprocessing\gaussianblur.frag">
+      <Filter>shaders\postprocessing</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -9,7 +9,7 @@
 namespace geeL {
 
 	class ColorBuffer;
-	class GaussianBlurBase;
+	class GaussianBlur;
 	class ScreenQuad;
 
 	
@@ -18,7 +18,7 @@ namespace geeL {
 
 	public:
 		Bloom(BrightnessFilterCutoff& filter, 
-			GaussianBlurBase& blur, 
+			GaussianBlur& blur,
 			ResolutionPreset effectResolution = ResolutionPreset::FULLSCREEN, 
 			ResolutionPreset blurResolution = ResolutionPreset::FULLSCREEN);
 

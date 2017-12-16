@@ -8,7 +8,6 @@
 
 namespace geeL {
 
-	class GaussianBlurBase;
 	class ImageTexture;
 	class RenderTexture;
 

@@ -51,7 +51,7 @@ public:
 			});
 
 			
-			BilateralFilter& blur = BilateralFilter(4.f, 0.291f);
+			BilateralFilter& blur = BilateralFilter(4.f, 7, 0.291f);
 			SSAO& ssao = SSAO(blur, 0.5f);
 			renderer.addEffect(ssao);
 			scene.addRequester(ssao);

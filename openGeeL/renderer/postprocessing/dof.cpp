@@ -10,17 +10,15 @@ using namespace std;
 
 namespace geeL {
 
-	DepthOfFieldBlur::DepthOfFieldBlur(float threshold, float sigma)
-		: GaussianBlurBase("shaders/postprocessing/dofblur.frag", sigma)
-		, threshold(threshold) {
+	DepthOfFieldBlur::DepthOfFieldBlur(float threshold, float sigma, unsigned int kernelSize)
+		: GaussianBlur("shaders/postprocessing/dofblur.frag", sigma, kernelSize)
+		, threshold(threshold) {}
 
-		setKernelsize(9);
-	}
 
 	void DepthOfFieldBlur::bindValues() {
 		shader.bind<float>("threshold", threshold);
 
-		GaussianBlurBase::bindValues();
+		GaussianBlur::bindValues();
 	}
 
 	float DepthOfFieldBlur::getThreshold() const {

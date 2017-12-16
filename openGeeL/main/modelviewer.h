@@ -90,12 +90,12 @@ public:
 			postLister.add(iblSnippet);
 
 			BrightnessFilterCutoff& filter = BrightnessFilterCutoff(1.f);
-			GaussianBlur& bloomBlur = GaussianBlur(KernelSize::Large, 3.f);
+			GaussianBlur& bloomBlur = GaussianBlur(3.f, 17);
 			Bloom& bloom = Bloom(filter, bloomBlur, ResolutionPreset::HALFSCREEN, ResolutionPreset::HALFSCREEN);
 			//renderer.addEffect(bloom, DrawTime::Late);
 			//postLister.add(bloom);
 
-			BilateralFilter& blur2 = BilateralFilter(1, 0.1f);
+			BilateralFilter& blur2 = BilateralFilter(1, 7, 0.1f);
 			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 100);
 			BlurredPostEffect& raySmooth = BlurredPostEffect(ray, blur2, ResolutionPreset::TWENTYFIVE, ResolutionPreset::TWENTYFIVE);
 			GodRaySnippet& godRaySnippet = GodRaySnippet(ray);
