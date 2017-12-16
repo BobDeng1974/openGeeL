@@ -64,7 +64,7 @@ public:
 				else if (container.name == "skullface") {
 					container.addTexture("diffuse", materialFactory.createTexture("resources/skull/Servoskull_face_diff.jpg", ColorType::GammaSpace, FilterMode::Bilinear));
 					container.addTexture("normal", materialFactory.createTexture("resources/skull/Servoskull_face_normal.jpg", ColorType::RGBA, FilterMode::Bilinear));
-					container.addTexture("specular", materialFactory.createTexture("resources/skull/Servoskull_face_gloss.jpg", ColorType::RGBA, FilterMode::Bilinear));
+					container.addTexture("gloss", materialFactory.createTexture("resources/skull/Servoskull_face_gloss.jpg", ColorType::RGBA, FilterMode::Bilinear));
 
 					container.setFloatValue("Roughness", 1.f);
 					container.setFloatValue("Metallic", 0.1f);

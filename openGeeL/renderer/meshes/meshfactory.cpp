@@ -400,7 +400,7 @@ namespace geeL {
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
 			loadMaterialTextures(textures, material, aiTextureType_DIFFUSE, MapType::Diffuse, directory, ColorType::GammaSpace);
-			loadMaterialTextures(textures, material, aiTextureType_SPECULAR, MapType::Specular, directory, ColorType::RGBA);
+			loadMaterialTextures(textures, material, aiTextureType_SPECULAR, MapType::Gloss, directory, ColorType::RGBA);
 			loadMaterialTextures(textures, material, aiTextureType_HEIGHT, MapType::Normal, directory, ColorType::RGBA);
 			loadMaterialTextures(textures, material, aiTextureType_AMBIENT, MapType::Metallic, directory, ColorType::RGBA);
 		}

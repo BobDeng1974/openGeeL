@@ -2,7 +2,7 @@
 
 struct Material {
 	sampler2D diffuse;
-	sampler2D specular;
+	sampler2D gloss;
 	sampler2D normal;
 	sampler2D metal;
 	sampler2D alpha;
@@ -18,7 +18,7 @@ struct Material {
 
 struct EmissiveMaterial {
 	sampler2D diffuse;
-	sampler2D specular;
+	sampler2D gloss;
 	sampler2D normal;
 	sampler2D metal;
 	sampler2D alpha;

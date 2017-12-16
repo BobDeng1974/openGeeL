@@ -29,7 +29,9 @@ void main() {
 	float emisFlag = mod(material.mapFlags / 100000, 10);
 	float occFlag = mod(material.mapFlags / 1000000, 10);
 
-	vec4 diffuse = (diffFlag == 1) ? texture(material.diffuse, textureCoordinates) * material.color : material.color;
+	vec4 diffuse = (diffFlag == 1) 
+		? texture(material.diffuse, textureCoordinates) * material.color 
+		: material.color;
 
 	if(alphaFlag == 1) {
 		diffuse.a = texture(material.alpha, textureCoordinates).r;
@@ -46,10 +48,13 @@ void main() {
 	}
 
 	//Interpret roughness as (1 - specuarlity)
-	vec3 speColor = (specFlag == 1) ? abs((1.f - float(material.invSpec)) - texture(material.specular, textureCoordinates).rgb) * material.roughness 
+	vec3 speColor = (specFlag == 1) 
+		? abs((1.f - float(material.invSpec)) - texture(material.gloss, textureCoordinates).rgb) * material.roughness 
 		: vec3(material.roughness);
 
-	float metallic = (metaFlag == 1) ? (1.f - texture(material.metal, textureCoordinates).r) * material.metallic : material.metallic;
+	float metallic = (metaFlag == 1) 
+		? (1.f - texture(material.metal, textureCoordinates).r) * material.metallic
+		: material.metallic;
 
 	gNormalMet.rgb = norm;
 	gNormalMet.a = metallic;
@@ -57,7 +62,12 @@ void main() {
 	gPositionRough.a = speColor.r;
 	gDiffuse = diffuse;
 
-	gEmissivity.rgb = (emisFlag == 1) ? texture(material.emission, textureCoordinates).rgb * material.emissivity : material.emissivity;
-	gOcclusion = (occFlag == 1) ? texture(material.occlusion, textureCoordinates).r + OCCLUSION_MIN : 0.f;
+	gEmissivity.rgb = (emisFlag == 1) 
+		? texture(material.emission, textureCoordinates).rgb * material.emissivity 
+		: material.emissivity;
+
+	gOcclusion = (occFlag == 1) 
+		? texture(material.occlusion, textureCoordinates).r + OCCLUSION_MIN 
+		: 0.f;
 
 } 

@@ -162,6 +162,7 @@
     <ClCompile Include="application\scripting\luatypes.cpp" />
     <ClCompile Include="application\threading.cpp" />
     <ClCompile Include="application\window.cpp" />
+    <ClCompile Include="application\workerthread.cpp" />
     <ClCompile Include="interface\elements\lister.cpp" />
     <ClCompile Include="interface\elements\objectlister.cpp" />
     <ClCompile Include="interface\elements\posteffectlister.cpp" />
@@ -293,7 +294,6 @@
     <ClCompile Include="renderer\voxelization\voxelizer.cpp" />
     <ClCompile Include="renderer\voxelization\voxeloctree.cpp" />
     <ClCompile Include="renderer\voxelization\voxeltexture.cpp" />
-    <ClCompile Include="workerthread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\appglobals.h" />

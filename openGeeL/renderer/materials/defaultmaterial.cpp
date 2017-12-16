@@ -38,7 +38,7 @@ namespace geeL {
 
 		//Interpret roughness map as inversed specular map	
 		if (type == MapType::Roughness) {
-			textureStack.addTexture("material.", texture, MapType::Specular);
+			textureStack.addTexture("material.", texture, MapType::Gloss);
 			inverseRoughness = true;
 		}
 		else
@@ -50,7 +50,7 @@ namespace geeL {
 			case MapType::Diffuse:
 				setColor(glm::vec3(1.f));
 				break;
-			case MapType::Specular:
+			case MapType::Gloss:
 				setRoughness(1.f);
 				break;
 			case MapType::Metallic:

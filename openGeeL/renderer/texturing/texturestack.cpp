@@ -57,7 +57,7 @@ namespace geeL {
 			case MapType::Diffuse:
 				mapFlags += 1;
 				break;
-			case MapType::Specular:
+			case MapType::Gloss:
 				mapFlags += 10;
 				break;
 			case MapType::Normal:

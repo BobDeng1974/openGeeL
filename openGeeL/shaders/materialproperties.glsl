@@ -12,7 +12,9 @@ void readMaterialProperties(out vec4 albedo, out vec3 norm, out float roughness,
 	float alphaFlag = mod(material.mapFlags / 10000, 10);
 	float emisFlag = mod(material.mapFlags / 100000, 10);
 
-	vec4 diffuse = (diffFlag == 1) ? texture(material.diffuse, texCoords) * material.color : material.color;
+	vec4 diffuse = (diffFlag == 1) 
+		? texture(material.diffuse, texCoords) * material.color 
+		: material.color;
 
 	if(alphaFlag == 1) {
 		diffuse.a = texture(material.alpha, texCoords).r * diffuse.a;
@@ -29,7 +31,15 @@ void readMaterialProperties(out vec4 albedo, out vec3 norm, out float roughness,
 	}
 
 	albedo = diffuse;
-	roughness = (specFlag == 1) ? abs((1.f - float(material.invSpec)) - texture(material.specular, texCoords).r) * material.roughness : material.roughness; 
-	metallic = (metaFlag == 1) ? 1.f - texture(material.metal, texCoords).r * material.metallic : material.metallic;
-	emission = (emisFlag == 1) ? texture(material.emission, texCoords).rgb * material.emissivity : material.emissivity;
+	roughness = (specFlag == 1) 
+		? abs((1.f - float(material.invSpec)) - texture(material.gloss, texCoords).r) * material.roughness 
+		: material.roughness; 
+	
+	metallic = (metaFlag == 1) 
+		? 1.f - texture(material.metal, texCoords).r * material.metallic 
+		: material.metallic;
+	
+	emission = (emisFlag == 1) 
+		? texture(material.emission, texCoords).rgb * material.emissivity 
+		: material.emissivity;
 }

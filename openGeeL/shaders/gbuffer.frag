@@ -23,7 +23,9 @@ void main() {
 	float metaFlag = mod(material.mapFlags / 1000, 10);
 	float alphaFlag = mod(material.mapFlags / 10000, 10);
 
-	vec4 diffuse = (diffFlag == 1) ? texture(material.diffuse, textureCoordinates) * material.color : material.color;
+	vec4 diffuse = (diffFlag == 1) 
+		? texture(material.diffuse, textureCoordinates) * material.color 
+		: material.color;
 
 	if(alphaFlag == 1) {
 		diffuse.a = texture(material.alpha, textureCoordinates).r;
@@ -40,10 +42,13 @@ void main() {
 	}
 
 	//Interpret roughness as (1 - specuarlity)
-	vec3 speColor = (specFlag == 1) ? abs((1.f - float(material.invSpec)) - texture(material.specular, textureCoordinates).rgb) * material.roughness 
+	vec3 speColor = (specFlag == 1) 
+		? abs((1.f - float(material.invSpec)) - texture(material.gloss, textureCoordinates).rgb) * material.roughness 
 		: vec3(material.roughness);
 
-	float metallic = (metaFlag == 1) ? (1.f - texture(material.metal, textureCoordinates).r) * material.metallic : material.metallic;
+	float metallic = (metaFlag == 1) 
+		? (1.f - texture(material.metal, textureCoordinates).r) * material.metallic 
+		: material.metallic;
 
 	gNormalMet.rgb = norm;
 	gNormalMet.a = metallic;

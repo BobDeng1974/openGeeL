@@ -8,7 +8,7 @@ namespace geeL {
 
 	enum class MapType {
 		Diffuse,
-		Specular,
+		Gloss,
 		Roughness,
 		Normal,
 		Metallic,
@@ -32,8 +32,8 @@ namespace geeL {
 		switch (type) {
 			case MapType::Diffuse:
 				return "diffuse";
-			case MapType::Specular:
-				return "specular";
+			case MapType::Gloss:
+				return "gloss";
 			case MapType::Roughness:
 				return "roughness";
 			case MapType::Metallic:
@@ -56,7 +56,7 @@ namespace geeL {
 		std::transform(type.begin(), type.end(), type.begin(), ::tolower);
 
 		if (type == "diffuse") return MapType::Diffuse;
-		if (type == "specular") return MapType::Specular;
+		if (type == "gloss") return MapType::Gloss;
 		if (type == "roughness") return MapType::Roughness;
 		if (type == "metallic") return MapType::Metallic;
 		if (type == "normal") return MapType::Normal;
