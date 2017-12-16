@@ -1,5 +1,6 @@
 #include <vec3.hpp>
 #include "shader/rendershader.h"
+#include "shader/shaderreader.h"
 #include "primitives/screenquad.h"
 #include "framebuffer/framebuffer.h"
 #include "texturing/imagetexture.h"
@@ -11,8 +12,10 @@ using namespace glm;
 
 namespace geeL {
 
-	DefaultPostProcess::DefaultPostProcess(float exposure)
-		: PostProcessingEffectFS("shaders/postprocessing/drawdefault.frag")
+	DefaultPostProcess::DefaultPostProcess(float exposure, TonemappingMethod method)
+		: PostProcessingEffectFS(defaultVertexPath, "shaders/postprocessing/drawdefault.frag", 
+			StringReplacement("^#define TONEMAPPING_METHOD\\s+([0-9]+){1}\\s?",
+				std::to_string((int)method), 1))
 		, customTexture(nullptr) {
 	
 		noise = ImageTexture::create<ImageTexture>("resources/textures/noise.png", ColorType::Single);

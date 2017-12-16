@@ -9,10 +9,21 @@ namespace geeL {
 	class ImageTexture;
 	class ITexture;
 
+
+	enum class TonemappingMethod {
+		SimpleReinhardt1 = 0,
+		SimpleReinhardt2 = 1,
+		HejlBurgessDawson = 2,
+		Uncharted2 = 3
+
+	};
+
+
 	class DefaultPostProcess : public PostProcessingEffectFS {
 
 	public:
-		DefaultPostProcess(float exposure = 1.f);
+		DefaultPostProcess(float exposure = 1.f, 
+			TonemappingMethod method = TonemappingMethod::Uncharted2);
 
 		DefaultPostProcess(const DefaultPostProcess& other);
 		DefaultPostProcess& operator= (const DefaultPostProcess& other);
