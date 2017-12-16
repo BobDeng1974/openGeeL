@@ -126,7 +126,7 @@ public:
 			gui.addElement(lister);
 			gui.addSystemInformation(0.01f, 0.655f, 0.17f, 0.14f);
 
-			def.setExposure(1.25f);
+			def.setExposure(2.f);
 			postLister.add(def);
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
@@ -169,6 +169,7 @@ public:
 			additiveSSS.setRenderMask(RenderMask::Skin);
 
 			ColorCorrection& colorCorrect = ColorCorrection();
+			colorCorrect.setContrast(1.2f);
 			renderer.addEffect(colorCorrect, DrawTime::Late);
 			postLister.add(colorCorrect);
 

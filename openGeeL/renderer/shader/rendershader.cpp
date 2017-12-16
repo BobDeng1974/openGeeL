@@ -51,8 +51,10 @@ namespace geeL {
 		string fragmentCode = FileReader::readFile(fragmentPath);
 		ShaderFileReader::preprocessShaderString(*this, fragmentCode, fragmentPath, provider);
 
+		ShaderFileReader::setGlobalVariables(fragmentCode);
 		for (auto it(replacements.begin()); it != replacements.end(); it++)
 			FileReader::replaceOccurence(fragmentCode, **it);
+
 
 		const GLchar* fShaderCode = fragmentCode.c_str();
 

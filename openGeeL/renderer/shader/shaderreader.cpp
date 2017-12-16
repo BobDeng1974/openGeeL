@@ -3,6 +3,7 @@
 #include <set>
 #include <sstream>
 #include <iostream>
+#include "appglobals.h"
 #include "shaderprovider.h"
 #include "shaderreader.h"
 
@@ -48,18 +49,15 @@ namespace geeL {
 		string currentValue = result.str(replacement.groupNumber);
 		for (sregex_iterator it(code.begin(), code.end(), require); it != sregex_iterator(); it++) {
 			string current = (*it).str();
-
-			string oldCurrent = current;
-
+			
 			size_t position = current.find(currentValue);
 			if (position != std::string::npos) {
+				string oldCurrent = current;
 				current.replace(position, currentValue.length(), replacement.replacement);
+				code.replace(code.find(oldCurrent), oldCurrent.length(), current);
 			}
-
-			code.replace(code.find(oldCurrent), oldCurrent.length(), current);
 		}
 	}
-
 
 
 
@@ -152,6 +150,18 @@ namespace geeL {
 			preprocessIncludes(shaderCode, includedFiles);
 			counter++;
 		}
+
+	}
+
+	void ShaderFileReader::setGlobalVariables(std::string& shaderCode) {
+
+#if DIFFUSE_SPECULAR_SEPARATION
+		{	
+			StringReplacement separate("^#define DIFFUSE_SPECULAR_SEPARATION\\s+([0]){1}\\s?", "1");
+			FileReader::replaceOccurence(shaderCode, separate);
+		}
+#endif
+
 
 	}
 

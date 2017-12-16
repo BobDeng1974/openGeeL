@@ -14,10 +14,10 @@ namespace geeL {
 		std::string replacement;
 		size_t groupNumber;
 
-		StringReplacement(const std::string& expression,
+		StringReplacement(const std::string& regex,
 			const std::string& replacement,
 			size_t groupNumber = 1)
-				: expression(expression)
+				: expression(regex)
 				, replacement(replacement)
 				, groupNumber(groupNumber) {}
 
@@ -52,6 +52,8 @@ namespace geeL {
 		//variable/funcition definitions won't be detected. Non-existing files will be simply ignored
 		static void preprocessShaderString(Shader& shader, std::string& shaderCode, const std::string& shaderPath,
 			ShaderProvider * const provider);
+
+		static void setGlobalVariables(std::string& shaderCode);
 
 		
 	};

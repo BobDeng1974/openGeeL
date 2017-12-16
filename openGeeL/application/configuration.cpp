@@ -42,7 +42,6 @@ namespace geeL {
 
 		RenderScene* s = new RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, 
 			defaultCamera, materialFactory, manager);
-		
 		RenderScene& scene = *s;
 
 		Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);

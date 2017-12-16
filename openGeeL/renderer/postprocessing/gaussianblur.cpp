@@ -41,6 +41,7 @@ namespace geeL {
 		if (tempTexture != nullptr) delete tempTexture;
 	}
 
+
 	void GaussianBlur::setImage(const ITexture& texture) {
 		PostProcessingEffectFS::setImage(texture);
 

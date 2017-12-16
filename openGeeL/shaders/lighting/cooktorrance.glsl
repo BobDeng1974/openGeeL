@@ -1,6 +1,6 @@
 
 
-#define DIFFUSE_SPECULAR_SEPARATION 1
+#define DIFFUSE_SPECULAR_SEPARATION 0
 #define BACKFACE_SUBSURFACE_SCATTERING 0
 
 //Compute fresnel term with Fresnel-Schlick approximation
