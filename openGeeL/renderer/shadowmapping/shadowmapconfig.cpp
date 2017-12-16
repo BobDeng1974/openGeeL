@@ -83,9 +83,9 @@ namespace geeL {
 
 	const RenderShader& ShadowmapRepository::getSimpleCubeShader() {
 		if (simpleCube == nullptr) {
-			simpleCube = new RenderShader("shaders/empty.vert", 
-				"shaders/shadowmapping/shadowmapping.geom",
-				"shaders/shadowmapping/shadowmapping.frag");
+			simpleCube = new RenderShader("shaders/empty.vert",
+				"shaders/shadowmapping/shadowmapping.frag",
+				"shaders/shadowmapping/shadowmapping.geom");
 		}
 
 		return *simpleCube;
@@ -112,8 +112,8 @@ namespace geeL {
 	const RenderShader& ShadowmapRepository::getSimpleCubeAnimated() {
 		if (simpleCubeAnim == nullptr) {
 			simpleCubeAnim = new RenderShader("shaders/emptyAnim.vert",
-				"shaders/shadowmapping/shadowmapping.geom",
-				"shaders/shadowmapping/shadowmapping.frag");
+				"shaders/shadowmapping/shadowmapping.frag",
+				"shaders/shadowmapping/shadowmapping.geom");
 		}
 
 		return *simpleCubeAnim;

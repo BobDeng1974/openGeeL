@@ -12,6 +12,8 @@
 #include "testscene.h"
 #include "capsulescene.h"
 
+using namespace std;
+
 int main(int argc, char* argv[]) {
 	ApplicationManagerInstance instance;
 

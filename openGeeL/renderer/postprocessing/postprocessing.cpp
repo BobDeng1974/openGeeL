@@ -50,10 +50,10 @@ namespace geeL {
 	
 
 	PostProcessingEffectFS::PostProcessingEffectFS(const string& fragmentPath)
-		: PostProcessingEffectFS("shaders/screen.vert", fragmentPath) {}
+		: PostProcessingEffectFS(defaultVertexPath, fragmentPath) {}
 
 	PostProcessingEffectFS::PostProcessingEffectFS(const string& vertexPath, const string& fragmentPath)
-		: shader(RenderShader(vertexPath.c_str(), fragmentPath.c_str())) {}
+		: shader(RenderShader(vertexPath.c_str(), fragmentPath.c_str(), nullptr, nullptr)) {}
 
 
 	const ITexture& PostProcessingEffectFS::getImage() const {

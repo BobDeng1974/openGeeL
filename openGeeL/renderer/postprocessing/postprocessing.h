@@ -91,6 +91,11 @@ namespace geeL {
 	public:
 		PostProcessingEffectFS(const std::string& fragmentPath);
 		PostProcessingEffectFS(const std::string& vertexPath, const std::string& fragmentPath);
+
+		template<typename ...Replacements>
+		PostProcessingEffectFS(const std::string& vertexPath, const std::string& fragmentPath,
+			const Replacements& ...replacements);
+
 		virtual ~PostProcessingEffectFS() {}
 
 		virtual const ITexture& getImage() const;
@@ -112,6 +117,8 @@ namespace geeL {
 		virtual std::string toString() const;
 
 	protected:
+		static constexpr const char* defaultVertexPath = "shaders/screen.vert";
+
 		RenderMask mask = RenderMask::None;
 		RenderShader shader;
 		ScreenQuad* screen;
@@ -183,7 +190,18 @@ namespace geeL {
 			, fallbackEffect(other.fallbackEffect)
 			, provider(other.provider) {}
 
-
+	
+	template<typename ...Replacements>
+	inline PostProcessingEffectFS::PostProcessingEffectFS(
+		const std::string& vertexPath,
+		const std::string& fragmentPath, 
+		const Replacements& ...replacements) 
+			: shader(RenderShader(vertexPath.c_str(),
+				fragmentPath.c_str(), 
+				nullptr, 
+				nullptr, 
+				replacements...)) {}
+				
 }
 
 #endif

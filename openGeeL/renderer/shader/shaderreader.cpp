@@ -39,6 +39,28 @@ namespace geeL {
 		return shaderCode;
 	}
 
+	void FileReader::replaceOccurence(std::string& code, const StringReplacement& replacement) {
+		regex require(replacement.expression);
+
+		smatch result;
+		regex_search(code, result, require);
+
+		string currentValue = result.str(replacement.groupNumber);
+		for (sregex_iterator it(code.begin(), code.end(), require); it != sregex_iterator(); it++) {
+			string current = (*it).str();
+
+			string oldCurrent = current;
+
+			size_t position = current.find(currentValue);
+			if (position != std::string::npos) {
+				current.replace(position, currentValue.length(), replacement.replacement);
+			}
+
+			code.replace(code.find(oldCurrent), oldCurrent.length(), current);
+		}
+	}
+
+
 
 
 	void preprocessIncludes(std::string& file, set<string>& includedFiles) {
@@ -133,4 +155,5 @@ namespace geeL {
 
 	}
 
+	
 }

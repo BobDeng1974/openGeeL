@@ -98,7 +98,7 @@ public:
 				else if (container.name == "hair_inner")
 					container.addTexture("alpha", materialFactory.createTexture("resources/girl/hair_inner_alpha_01.jpg"));
 				else if (container.name == "eyes_outer")
-					container.setFloatValue("Roughness", 0.33f);
+					container.setFloatValue("Roughness", 0.28f);
 				else if (container.name == "hair_outer")
 					container.addTexture("alpha", materialFactory.createTexture("resources/girl/hair_outer_alpha_01.jpg"));
 				else if (container.name == "cloth") {

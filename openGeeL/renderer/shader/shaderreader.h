@@ -9,11 +9,28 @@ namespace geeL {
 	class ShaderProvider;
 
 
+	struct StringReplacement {
+		std::string expression;
+		std::string replacement;
+		size_t groupNumber;
+
+		StringReplacement(const std::string& expression,
+			const std::string& replacement,
+			size_t groupNumber = 1)
+				: expression(expression)
+				, replacement(replacement)
+				, groupNumber(groupNumber) {}
+
+	};
+
+
 	class FileReader {
 
 	public:
 		//Read code from file
 		static std::string readFile(const char* path);
+
+		static void replaceOccurence(std::string& shaderCode, const StringReplacement& replacement);
 
 	};
 
@@ -36,6 +53,7 @@ namespace geeL {
 		static void preprocessShaderString(Shader& shader, std::string& shaderCode, const std::string& shaderPath,
 			ShaderProvider * const provider);
 
+		
 	};
 
 }

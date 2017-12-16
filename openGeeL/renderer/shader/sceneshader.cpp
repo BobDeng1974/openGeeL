@@ -21,7 +21,7 @@ namespace geeL {
 		ShadingMethod shadingMethod, 
 		bool animated,
 		ShaderProvider* const provider)
-			: RenderShader(vertexPath.c_str(), fragmentPath.path.c_str(), provider)
+			: RenderShader(vertexPath.c_str(), fragmentPath.path.c_str(), nullptr, provider)
 			, shader(fragmentPath)
 			, space(space)
 			, animated(animated)
@@ -40,7 +40,7 @@ namespace geeL {
 		ShadingMethod shadingMethod, 
 		bool animated,
 		ShaderProvider* const provider)
-			: RenderShader(vertexPath.c_str(), geometryPath.c_str(), fragmentPath.path.c_str(), provider)
+			: RenderShader(vertexPath.c_str(), fragmentPath.path.c_str(), geometryPath.c_str(), provider)
 			, shader(fragmentPath)
 			, space(space)
 			, animated(animated)
