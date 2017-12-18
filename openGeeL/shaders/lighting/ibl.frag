@@ -62,7 +62,7 @@ void main() {
 	vec4 normMet  = texture(gNormalMet, textureCoordinates);
 
     vec3 normal		  = normMet.rgb;
-    vec3 albedo		  = texture(gDiffuse, textureCoordinates).rgb;
+    vec4 albedo		  = texture(gDiffuse, textureCoordinates);
 
 	float roughness	  = posRough.a;
 	float metallic    = normMet.a;
@@ -71,19 +71,19 @@ void main() {
 
 	vec3  viewDirection = normalize(-fragPosition);
 
-	vec3 ks = calculateFresnelTerm(doto(normal, viewDirection), albedo, metallic, roughness);
+	vec3 ks = calculateFresnelTerm(doto(normal, viewDirection), albedo.rgb, metallic, roughness);
     vec3 kd = vec3(1.f) - ks;
-    kd *= 1.f - metallic; //metallic surfaces don't refract light => nullify kD if metallic
+    kd *= 1.f - metallic; //Metallic surfaces don't refract light => nullify kD if metallic
 
-	vec3 ambienceDiffuse = calculateIndirectDiffuse(position, normal, kd, albedo, occlusion); 
+	vec3 ambienceDiffuse = calculateIndirectDiffuse(position, normal, kd, albedo.rgb, occlusion); 
 	//vec3 ambienceSpecular = calculateIndirectSpecular(position, normal, viewDirection, albedo, roughness, metallic);
-	vec3 ambienceSpecular = occlusion * calculateIndirectSpecularSplitSum(position, normal, viewDirection, albedo, roughness, metallic);
+	vec3 ambienceSpecular = occlusion * calculateIndirectSpecularSplitSum(position, normal, viewDirection, albedo.rgb, roughness, metallic);
 
 #if (DIFFUSE_SPECULAR_SEPARATION == 0)
-	color = vec4(ambienceDiffuse + ambienceSpecular, 1.f);
+	color = vec4((ambienceDiffuse + ambienceSpecular) * albedo.a, 1.f);
 #else
-	diffuse  = vec4(ambienceDiffuse, 1.f);
-	specular = vec4(ambienceSpecular, 1.f); 
+	diffuse  = vec4(ambienceDiffuse  * albedo.a, 1.f);
+	specular = vec4(ambienceSpecular * albedo.a, 1.f); 
 #endif
 
 }

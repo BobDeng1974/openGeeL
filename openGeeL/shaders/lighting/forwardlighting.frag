@@ -102,7 +102,6 @@ void main() {
 	diffuse = vec4(diff + irradiance, albedo.a);
 	specular = vec4(spec, albedo.a);
 #endif
-
 	
 #endif
 

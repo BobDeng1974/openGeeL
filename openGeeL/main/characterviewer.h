@@ -91,10 +91,12 @@ public:
 			girl.iterateMaterials([&](MaterialContainer& container) {
 				if (container.name == "fur") {
 					container.addTexture("alpha", materialFactory.createTexture("resources/girl/fur_alpha_01.jpg"));
-					container.setFloatValue("Transparency", 0.5f);
+					container.setFloatValue("Transparency", 0.4f);
 				}
-				else if (container.name == "eyelash")
+				else if (container.name == "eyelash") {
 					container.addTexture("alpha", materialFactory.createTexture("resources/girl/eyelash_alpha_01.jpg"));
+					container.setFloatValue("Transparency", 0.7f);
+				}
 				else if (container.name == "hair_inner")
 					container.addTexture("alpha", materialFactory.createTexture("resources/girl/hair_inner_alpha_01.jpg"));
 				else if (container.name == "eyes_outer")
@@ -164,7 +166,7 @@ public:
 			sss.setSigmaB(2.4f);
 			SeparatedGaussianSnippet& ssssnip = SeparatedGaussianSnippet(sss);
 			AdditiveWrapper& additiveSSS = AdditiveWrapper(sss);
-			renderer.addEffect(additiveSSS);
+			renderer.addEffect(additiveSSS, DrawTime::Early);
 			postLister.add(ssssnip);
 			additiveSSS.setRenderMask(RenderMask::Skin);
 
