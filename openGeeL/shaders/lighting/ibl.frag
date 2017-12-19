@@ -13,7 +13,6 @@ struct ReflectionProbe {
 	vec3 minPosition;
 	vec3 maxPosition;
 
-	samplerCube albedo;
 	samplerCube irradiance;
 	samplerCube prefilterEnv;
 };
@@ -76,8 +75,8 @@ void main() {
     kd *= 1.f - metallic; //Metallic surfaces don't refract light => nullify kD if metallic
 
 	vec3 ambienceDiffuse = calculateIndirectDiffuse(position, normal, kd, albedo.rgb, occlusion); 
-	//vec3 ambienceSpecular = calculateIndirectSpecular(position, normal, viewDirection, albedo, roughness, metallic);
-	vec3 ambienceSpecular = occlusion * calculateIndirectSpecularSplitSum(position, normal, viewDirection, albedo.rgb, roughness, metallic);
+	vec3 ambienceSpecular = occlusion * calculateIndirectSpecularSplitSum(position, normal, viewDirection, 
+		albedo.rgb, roughness, metallic);
 
 #if (DIFFUSE_SPECULAR_SEPARATION == 0)
 	color = vec4((ambienceDiffuse + ambienceSpecular) * albedo.a, 1.f);
@@ -138,7 +137,7 @@ vec3 calculateIndirectSpecular(vec3 position, vec3 normal, vec3 view, vec3 albed
 
 		float denom =  1.f / (4.f * NoV * doto(halfway, normalWorld) + 0.001f); 
 
-		radiance += textureLod(skybox.albedo, sampleVector, mipmapHeuristic).rgb * geo * fresnel * sinT * denom;
+		radiance += textureLod(skybox.prefilterEnv, sampleVector, mipmapHeuristic).rgb * geo * fresnel * sinT * denom;
 	}
 	
 	float samp = 1.f / float(sampleCount);

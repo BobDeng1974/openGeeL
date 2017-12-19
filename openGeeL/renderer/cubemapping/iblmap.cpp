@@ -88,14 +88,10 @@ namespace geeL {
 		baseMap.bind(camera, shader, name, space);
 	}
 
-	void DynamicIBLMap::draw(const RenderShader& shader, std::string name) const {
-		baseMap.bindMap(shader, name);
-	}
 
 	void DynamicIBLMap::add(RenderShader& shader, std::string name) const {
 		shader.addMap(brdfIntMap, "BRDFIntegrationMap");
 
-		baseMap.add(shader, name);
 		irrMap.add(shader, name);
 		preEnvMap.add(shader, name);
 	}
@@ -103,7 +99,6 @@ namespace geeL {
 	void DynamicIBLMap::remove(RenderShader& shader) const {
 		shader.removeMap(brdfIntMap);
 
-		baseMap.remove(shader);
 		irrMap.remove(shader);
 		preEnvMap.remove(shader);
 	}

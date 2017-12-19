@@ -47,7 +47,7 @@ namespace geeL {
 		virtual void bind(const Camera& camera, const RenderShader& shader,
 			const std::string& name, ShaderTransformSpace space) const;
 
-		virtual void draw(const RenderShader& shader, std::string name) const;
+		//virtual void draw(const RenderShader& shader, std::string name) const;
 		virtual void add(RenderShader& shader, std::string name) const;
 		virtual void remove(RenderShader& shader) const;
 		virtual void draw();
