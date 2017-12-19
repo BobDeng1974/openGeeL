@@ -83,7 +83,7 @@ public:
 					container.setVectorValue("Color", glm::vec3(0.3f));
 				}
 
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
 				science.changeMaterial(ss, mesh);
 			}
 

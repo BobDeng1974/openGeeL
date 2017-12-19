@@ -14,8 +14,7 @@ namespace geeL {
 		Generic,
 		Deferred,
 		Forward,
-		TransparentOD,
-		TransparentOID,
+		Transparent,
 		Other
 
 	};

@@ -28,7 +28,6 @@ namespace geeL {
 		, forwardAnimatedShader(nullptr)
 		, transparentODShader(nullptr)
 		, transparentODAnimatedShader(nullptr)
-		, transparentOIDShader(nullptr)
 		, provider(provider) {}
 
 	MaterialFactory::~MaterialFactory() {
@@ -114,8 +113,7 @@ namespace geeL {
 				space = ShaderTransformSpace::World;
 				break;
 			case ShadingMethod::Forward:
-			case ShadingMethod::TransparentOD:
-			case ShadingMethod::TransparentOID:
+			case ShadingMethod::Transparent:
 				vertexPath = animated 
 					? "shaders/lighting/forwardAnim.vert" 
 					: "shaders/lighting/forwardlighting.vert";
@@ -194,13 +192,13 @@ namespace geeL {
 
 					return *forwardShader;
 				}
-			case ShadingMethod::TransparentOD:
+			case ShadingMethod::Transparent:
 				if (animated) {
 					if (transparentODAnimatedShader == nullptr) {
 						transparentODAnimatedShader = new SceneShader("shaders/lighting/forwardAnim.vert",
 							FragmentShader("shaders/lighting/forwardlighting.frag"),
 							ShaderTransformSpace::View,
-							ShadingMethod::TransparentOD,
+							ShadingMethod::Transparent,
 							true);
 
 						transparentODAnimatedShader->mapOffset = 1;
@@ -214,7 +212,7 @@ namespace geeL {
 						transparentODShader = new SceneShader("shaders/lighting/forwardlighting.vert",
 							FragmentShader("shaders/lighting/forwardlighting.frag"),
 							ShaderTransformSpace::View,
-							ShadingMethod::TransparentOD,
+							ShadingMethod::Transparent,
 							false);
 
 						transparentODShader->mapOffset = 1;
@@ -223,19 +221,6 @@ namespace geeL {
 
 					return *transparentODShader;
 				}
-			case ShadingMethod::TransparentOID:
-				if (transparentOIDShader == nullptr) {
-					transparentOIDShader = new SceneShader("shaders/lighting/forwardlighting.vert",
-						FragmentShader("shaders/lighting/transparentlighting.frag"),
-						ShaderTransformSpace::View,
-						ShadingMethod::TransparentOID, 
-						false);
-
-					transparentOIDShader->mapOffset = 1;
-					shaders.push_back(transparentOIDShader);
-				}
-
-				return *transparentOIDShader;
 		}
 
 		return *deferredShader;

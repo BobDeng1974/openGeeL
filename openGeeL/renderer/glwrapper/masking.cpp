@@ -33,7 +33,7 @@ namespace geeL {
 		switch (method) {
 			case ShadingMethod::Forward:
 				return RenderMask::Forward;
-			case ShadingMethod::TransparentOD:
+			case ShadingMethod::Transparent:
 				return RenderMask::Transparent;
 			case ShadingMethod::Generic:
 				return RenderMask::Generic;

@@ -153,7 +153,7 @@ namespace geeL {
 			fBuffer->fill([this]() {
 				scene->drawSkybox();
 				scene->drawForward();
-				scene->drawTransparentOD();
+				scene->drawTransparent();
 			});
 		}
 
@@ -241,7 +241,7 @@ namespace geeL {
 	}
 
 	bool DeferredRenderer::hasForwardPass() const {
-		return fBuffer != nullptr && scene->contains(ShadingMethod::Forward, ShadingMethod::TransparentOD);
+		return fBuffer != nullptr && scene->contains(ShadingMethod::Forward, ShadingMethod::Transparent);
 	}
 
 

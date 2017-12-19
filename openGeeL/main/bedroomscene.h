@@ -70,7 +70,7 @@ public:
 				MaterialContainer& container = material.getMaterialContainer();
 				container.setFloatValue("Transparency", 0.2f);
 
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
 				bedroom.changeMaterial(ss, mesh);
 			}
 

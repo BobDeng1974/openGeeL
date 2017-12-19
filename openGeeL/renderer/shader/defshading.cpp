@@ -9,10 +9,8 @@ namespace geeL {
 			return ShadingMethod::Generic;
 		else if (name == "Forward")
 			return ShadingMethod::Forward;
-		else if (name == "TransparentOD")
-			return ShadingMethod::TransparentOD;
-		else if (name == "TransparentOID")
-			return ShadingMethod::TransparentOID;
+		else if (name == "Transparent")
+			return ShadingMethod::Transparent;
 
 		return ShadingMethod::Deferred;
 	}

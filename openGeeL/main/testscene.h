@@ -80,7 +80,7 @@ public:
 			});
 
 			sphere1.iterateMeshesSafe([&](const MeshInstance& mesh) {
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
 				sphere1.changeMaterial(ss, mesh);
 			});
 
@@ -99,7 +99,7 @@ public:
 			});
 
 			sphere12.iterateMeshesSafe([&](const MeshInstance& mesh) {
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
 				sphere12.changeMaterial(ss, mesh);
 			});
 

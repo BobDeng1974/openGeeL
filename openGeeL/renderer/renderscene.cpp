@@ -418,23 +418,12 @@ namespace geeL {
 
 	}
 
-	void RenderScene::drawTransparentOD() const {
-		drawTransparentOD(*camera);
+	void RenderScene::drawTransparent() const {
+		drawTransparent(*camera);
 	}
 
-	void RenderScene::drawTransparentOD(const Camera& camera) const {
-		drawForwardOrdered(ShadingMethod::TransparentOD, camera);
-	}
-
-
-	void RenderScene::drawTransparentOID() const {
-		drawTransparentOID(*camera);
-	}
-
-	void RenderScene::drawTransparentOID(const Camera& camera) const {
-		bool externalCamera = &camera != this->camera;
-
-		draw(ShadingMethod::TransparentOID, camera, externalCamera);
+	void RenderScene::drawTransparent(const Camera& camera) const {
+		drawForwardOrdered(ShadingMethod::Transparent, camera);
 	}
 
 

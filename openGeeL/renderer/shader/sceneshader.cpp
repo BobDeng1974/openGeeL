@@ -69,8 +69,7 @@ namespace geeL {
 
 		switch (getMethod()) {
 			case ShadingMethod::Forward:
-			case ShadingMethod::TransparentOD:
-			case ShadingMethod::TransparentOID:
+			case ShadingMethod::Transparent:
 				camera.bindProjectionMatrix(*this, "projection");
 				camera.bindInverseViewMatrix(*this, "inverseView");
 				bind<glm::vec3>("origin", camera.GetOriginInViewSpace());

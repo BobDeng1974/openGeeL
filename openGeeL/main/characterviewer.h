@@ -52,7 +52,7 @@ public:
 
 		
 			plane.iterateMeshesSafe([&](const MeshInstance& mesh) {
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
 				plane.changeMaterial(ss, mesh);
 			});
 
@@ -64,7 +64,7 @@ public:
 
 			{
 				SceneShader& forwardShader = materialFactory.getDefaultShader(ShadingMethod::Forward);
-				SceneShader& transparentShader = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
+				SceneShader& transparentShader = materialFactory.getDefaultShader(ShadingMethod::Transparent);
 				
 				forwardShader.bind<float>("fogFalloff", 15.f);
 				transparentShader.bind<float>("fogFalloff", 15.f);
@@ -81,7 +81,7 @@ public:
 
 					girl.setRenderMask(RenderMask::Empty, mesh);
 
-					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::TransparentOD);
+					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
 					girl.changeMaterial(ss, mesh);
 				}
 				else if (mesh.getName() == "body")
