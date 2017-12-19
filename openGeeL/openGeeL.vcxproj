@@ -506,6 +506,7 @@
     <None Include="shaders\lighting\forwardlighting.frag" />
     <None Include="shaders\lighting\forwardlighting.vert" />
     <None Include="shaders\lighting\ibl.frag" />
+    <None Include="shaders\lighting\iblcore.glsl" />
     <None Include="shaders\lighting\lighting.frag" />
     <None Include="shaders\lighting\lighting.vert" />
     <None Include="shaders\lighting\lightingAnim.vert" />

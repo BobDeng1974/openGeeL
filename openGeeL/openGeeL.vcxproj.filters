@@ -1339,5 +1339,8 @@
     <None Include="shaders\postprocessing\gaussianblur.frag">
       <Filter>shaders\postprocessing</Filter>
     </None>
+    <None Include="shaders\lighting\iblcore.glsl">
+      <Filter>shaders\lighting</Filter>
+    </None>
   </ItemGroup>
 </Project>
