@@ -177,10 +177,10 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	//Soft shadows
 
 	float shadow = 0.f;
-	vec2 texelSize = 1.f / textureSize(directionalLights[i].shadowMap, 0);
+	vec2 texelSize = directionalLights[i].scale / textureSize(directionalLights[i].shadowMap, 0);
 
 	//Interpolate shadow map in kernel around point
-	int kernel = 1;
+	int kernel = directionalLights[i].resolution;
 	for(int x = -kernel; x <= kernel; x++) {
 		for(int y = -kernel; y <= kernel; y++) {
 			float depth = texture(directionalLights[i].shadowMap, coords.xy + vec2(x, y) * texelSize).r; 

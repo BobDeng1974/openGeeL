@@ -43,11 +43,6 @@ public:
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Huge, 6.f, 15U, 150.f, 1.f);
 			lightManager.addPointLight(lightTransform21, glm::vec3(lightIntensity * 3.f, lightIntensity * 59.f, lightIntensity * 43.f), config2);
 
-			lightIntensity = 15.f;
-			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(0.f), vec3(-145.0f, 50, 160), vec3(1.f));
-			ShadowMapConfiguration dlConfig(0.00002f, ShadowMapType::Soft, ShadowmapResolution::Huge, 1.f, 8U, 10);
-			lightManager.addDirectionalLight(camera, lightTransform2, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), dlConfig);
-
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(100.f, 0.2f, 100.f));
 			std::unique_ptr<MeshRenderer> planePtr = meshFactory.createMeshRenderer(
 				meshFactory.createStaticModel("resources/primitives/plane.obj"),

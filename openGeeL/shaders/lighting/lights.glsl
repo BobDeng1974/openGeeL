@@ -50,11 +50,15 @@ struct DirectionalLight {
 	mat4 lightTransforms[DIRECTIONAL_SHADOWMAP_COUNT];
 #else
 	mat4 lightTransform;
+
+	int resolution;
+	float scale;
 #endif
 
 	vec3 direction;
     vec3 diffuse;
 
+	float shadowIntensity;
 	float bias;
 	int type; //0: No 1: Hard 2: Soft shadow
 };

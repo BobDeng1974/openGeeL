@@ -128,7 +128,7 @@ void calculateDirectionaLight(int index, DirectionalLight light, vec3 normal,
 
 	calculateReflectanceDirectional(fragPosition, normal, viewDirection, light.direction, light.diffuse, 
 		albedo, roughness, metallic, tempDiff, tempSpec);
-	float shadow = 1.f - calculateDirectionalLightShadows(index, normal, fragPosition);
+	float shadow = 1.f - light.shadowIntensity * calculateDirectionalLightShadows(index, normal, fragPosition);
 
 	diffuse  += tempDiff * shadow;
 	specular += tempSpec * shadow;
