@@ -1,4 +1,7 @@
 
+#define USE_CASCASDED_MAP 0
+
+
 struct PointLight {
 	samplerCube shadowMap;
 
@@ -35,12 +38,19 @@ struct SpotLight {
 	bool useCookie;
 };
 
+#if (USE_CASCASDED_MAP == 1)
 const int DIRECTIONAL_SHADOWMAP_COUNT = 4;
+#endif
 
 struct DirectionalLight {
 	sampler2D shadowMap;
+
+#if (USE_CASCASDED_MAP == 1)
 	float cascadeEndClip[DIRECTIONAL_SHADOWMAP_COUNT];
 	mat4 lightTransforms[DIRECTIONAL_SHADOWMAP_COUNT];
+#else
+	mat4 lightTransform;
+#endif
 
 	vec3 direction;
     vec3 diffuse;

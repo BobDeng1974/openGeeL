@@ -53,8 +53,8 @@ namespace geeL {
 		LightBinding d = LightBinding(light, dlCount++, dlName);
 
 		if (config.useShadowMap()) {
-			//SimpleDirectionalLightMap* map = new SimpleDirectionalLightMap(*light, config.shadowBias, 100.f);
-			CascadedDirectionalShadowMap* map = new CascadedDirectionalShadowMap(*light, camera, config.shadowBias, (int)config.resolution);
+			SimpleDirectionalLightMap* map = new SimpleDirectionalLightMap(*light, config);
+			//CascadedDirectionalShadowMap* map = new CascadedDirectionalShadowMap(*light, camera, config.shadowBias, (int)config.resolution);
 			map->setIntensity(config.intensity);
 			light->setShadowMap(*map);
 		}

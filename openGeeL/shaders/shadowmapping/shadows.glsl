@@ -107,6 +107,8 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	if(directionalLights[i].type == 0)
 		return 0.f;
 
+#if (USE_CASCASDED_MAP == 1)
+
 	//TODO: implement hard shadows
 
 	int smIndex = 0;
@@ -152,6 +154,45 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	
 		return shadow / float(samples);
 	}
+
+#else
+	vec4 posLightSpace = directionalLights[i].lightTransform * vec4(fragPosition, 1.f);
+	vec3 coords = posLightSpace.xyz / posLightSpace.w;
+	coords = coords * 0.5f + 0.5f;
+
+	//Don't draw shadow when outside of farPlane region.
+    if(coords.z > 1.f)
+        return 0.f;
+
+	float bias = directionalLights[i].bias;
+	//float bias = max(0.05f * (1.0f - dot(norm, lightDir)), 0.005f);
+	float curDepth = coords.z - bias;
+
+	//Hard shadow
+	if(directionalLights[i].type == 1) {
+		float depth = texture(directionalLights[i].shadowMap, coords.xy).r; 
+		return curDepth > depth ? 1.f : 0.f; 
+	}
+
+	//Soft shadows
+
+	float shadow = 0.f;
+	vec2 texelSize = 1.f / textureSize(directionalLights[i].shadowMap, 0);
+
+	//Interpolate shadow map in kernel around point
+	int kernel = 1;
+	for(int x = -kernel; x <= kernel; x++) {
+		for(int y = -kernel; y <= kernel; y++) {
+			float depth = texture(directionalLights[i].shadowMap, coords.xy + vec2(x, y) * texelSize).r; 
+			shadow += curDepth - bias > depth ? 1.f : 0.f;        
+		}    
+	}
+	
+	int kernelSize = 2 * kernel + 1; 
+	return shadow / (kernelSize * kernelSize);
+
+#endif
+
 }
 
 

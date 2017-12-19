@@ -47,7 +47,11 @@ public:
 
 			float lightIntensity = 100.f;
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(7, 5, 5), vec3(-180.0f, 0, -50), vec3(1.f));
-			&lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), defPLShadowMapConfig);
+			lightManager.addPointLight(lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), defPLShadowMapConfig);
+
+			lightIntensity = 15.f;
+			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(0.f), vec3(145.0f, 50, -160), vec3(1.f));
+			lightManager.addDirectionalLight(camera, lightTransform2, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379), defDLShadowMapConfig);
 
 			float height = -2.f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(20.f, 0.2f, 20.f));
