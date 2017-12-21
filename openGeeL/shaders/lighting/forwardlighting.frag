@@ -7,7 +7,6 @@
 
 #include <shaders/lighting/cooktorrance.glsl>
 
-
 in vec3 normal;
 in vec3 fragPosition;
 in vec2 texCoords;
@@ -54,6 +53,7 @@ void main() {
 	float roughness, metallic;
 	readMaterialProperties(albedo, norm, roughness, metallic, emission, false);
 	
+
 	vec3 viewDirection = normalize(-fragPosition.xyz);
 
 	gPositionRough = vec4(fragPosition.xyz, roughness);
@@ -68,13 +68,13 @@ void main() {
 
 #if (DIFFUSE_SPECULAR_SEPARATION == 0)
 	for(int i = 0; i < plCount; i++) 
-		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
+		irradiance += calculatePointLight(i, pointLights[i], norm, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
        
 	for(int i = 0; i < dlCount; i++) 
-        irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
+        irradiance += calculateDirectionaLight(i, directionalLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
 
 	for(int i = 0; i < slCount; i++)
-		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
+		irradiance += calculateSpotLight(i, spotLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
 
 #if (FOG == 1)
 	color = vec4(irradiance, albedo.a) * fogFactor;
@@ -82,18 +82,20 @@ void main() {
 	color = vec4(irradiance, albedo.a);
 #endif
 
+	
+
 #else
 	vec3 diff = vec3(0.f);
 	vec3 spec = vec3(0.f);
 
 	for(int i = 0; i < plCount; i++) 
-		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
+		irradiance += calculatePointLight(i, pointLights[i], norm, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
        
 	for(int i = 0; i < dlCount; i++) 
-        irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
+        irradiance += calculateDirectionaLight(i, directionalLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
 
 	for(int i = 0; i < slCount; i++)
-		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
+		irradiance += calculateSpotLight(i, spotLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
 
 #if (FOG == 1)
 	diffuse  = vec4(diff + irradiance, albedo.a) * fogFactor;
@@ -102,7 +104,7 @@ void main() {
 	diffuse = vec4(diff + irradiance, albedo.a);
 	specular = vec4(spec, albedo.a);
 #endif
-	
+
 #endif
 
 }

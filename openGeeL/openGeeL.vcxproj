@@ -476,6 +476,7 @@
     <ClInclude Include="renderer\voxelization\voxeloctree.h" />
     <ClInclude Include="renderer\voxelization\voxelstructure.h" />
     <ClInclude Include="renderer\voxelization\voxeltexture.h" />
+    <ClInclude Include="shaders\lighting\transparentlighting.frag" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\combine.frag" />
@@ -513,7 +514,7 @@
     <None Include="shaders\lighting\lights.glsl" />
     <None Include="shaders\lighting\raymarch.frag" />
     <None Include="shaders\lighting\tileddeferred.com.glsl" />
-    <None Include="shaders\lighting\transparentlighting.frag" />
+    <None Include="shaders\lighting\transparentlighting2.frag" />
     <None Include="shaders\material.glsl" />
     <None Include="shaders\materialproperties.glsl" />
     <None Include="shaders\postprocessing\bilateral.frag" />

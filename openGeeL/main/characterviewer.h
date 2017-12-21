@@ -51,7 +51,7 @@ public:
 
 		
 			plane.iterateMeshesSafe([&](const MeshInstance& mesh) {
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Forward);
 				plane.changeMaterial(ss, mesh);
 			});
 
@@ -77,14 +77,15 @@ public:
 
 			girl.iterateMeshesSafe([&](const MeshInstance& mesh) {
 				if (mesh.getName() == "eyelash" || mesh.getName() == "fur") {
-
-					girl.setRenderMask(RenderMask::Empty, mesh);
-
-					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
+					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Generic);
 					girl.changeMaterial(ss, mesh);
 				}
 				else if (mesh.getName() == "body")
 					girl.setRenderMask(RenderMask::Skin, mesh);
+				else if (mesh.getName() == "hair_inner") {
+					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
+					girl.changeMaterial(ss, mesh);
+				}
 			});
 
 			girl.iterateMaterials([&](MaterialContainer& container) {
@@ -134,6 +135,14 @@ public:
 			GenericPostSnippet& iblSnippet = GenericPostSnippet(ibl);
 			renderer.addEffect(ibl, DrawTime::Early);
 			postLister.add(iblSnippet);
+
+			/*
+			ImageBasedLighting& ibl2 = ImageBasedLighting(scene);
+			ibl2.setRenderMask(RenderMask::Transparent);
+			GenericPostSnippet& iblSnippet2 = GenericPostSnippet(ibl2);
+			renderer.addEffect(ibl2, DrawTime::Intermediate);
+			postLister.add(iblSnippet2);
+			*/
 
 			BrightnessFilterCutoff& filter = BrightnessFilterCutoff(1.f);
 			GaussianBlur& bloomBlur = GaussianBlur(3.f, 17);

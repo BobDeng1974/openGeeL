@@ -47,7 +47,8 @@ namespace geeL {
 
 
 	static ShadowMapConfiguration noShadowMapConfig    = ShadowMapConfiguration();
-	static ShadowMapConfiguration defPLShadowMapConfig = ShadowMapConfiguration(0.0001f, ShadowMapType::Soft, ShadowmapResolution::High, 4.f, 16);
+	static ShadowMapConfiguration defPLShadowMapConfig = ShadowMapConfiguration(0.0001f, ShadowMapType::Soft, 
+		ShadowmapResolution::High, 4.f, 16);
 	static ShadowMapConfiguration defSLShadowMapConfig = ShadowMapConfiguration(0.0001f, ShadowMapType::Soft);
 	static ShadowMapConfiguration defDLShadowMapConfig = ShadowMapConfiguration(0.00002f, ShadowMapType::Soft, 
 		ShadowmapResolution::VeryHigh, 1.f, 1);

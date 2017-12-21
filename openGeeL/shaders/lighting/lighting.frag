@@ -53,13 +53,13 @@ void main() {
 	vec3 irradiance = albedo.xyz * emission;
 
 	for(int i = 0; i < plCount; i++) 
-		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
+		irradiance += calculatePointLight(i, pointLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
        
 	for(int i = 0; i < dlCount; i++) 
-        irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
+        irradiance += calculateDirectionaLight(i, directionalLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
 
 	for(int i = 0; i < slCount; i++)
-		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
+		irradiance += calculateSpotLight(i, spotLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
 
 	color = vec4(gammaCorrection ? pow(irradiance, vec3(0.4545f)) : irradiance, albedo.a);
 }

@@ -5,6 +5,7 @@
 #include "texturing/textureprovider.h"
 #include "framebuffer/framebuffer.h"
 #include "lights/lightmanager.h"
+#include "materials/materialfactory.h"
 #include "appglobals.h"
 #include "renderscene.h"
 #include "ibl.h"
@@ -14,11 +15,15 @@ namespace geeL {
 	ImageBasedLighting::ImageBasedLighting(RenderScene& scene)
 		: SceneRender(scene)
 		, AdditiveEffect("shaders/lighting/deferredlighting.vert",
-			"shaders/lighting/ibl.frag") {}
+			"shaders/lighting/ibl.frag") 
+		, factory(nullptr) {}
 
 
 	void ImageBasedLighting::init(const PostProcessingParameter& parameter) {
 		PostProcessingEffectFS::init(parameter);
+
+		factory = parameter.factory;
+		activateTransparentIBL(true);
 
 		assert(provider != nullptr);
 		addTextureSampler(provider->requestAlbedo(), "gDiffuse");
@@ -64,12 +69,41 @@ namespace geeL {
 #endif 
 	}
 
+	void ImageBasedLighting::setActive(bool value) {
+		AdditiveEffect::setActive(value);
+
+		activateTransparentIBL(value);
+	}
+
 
 	void ImageBasedLighting::bindValues() {
 		scene.getLightmanager().bindReflectionProbes(*camera, shader, ShaderTransformSpace::View);
 		camera->bindInverseViewMatrix(shader, invViewLocation);
 
 		shader.bind<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
+	}
+
+
+	void ImageBasedLighting::activateTransparentIBL(bool activate) {
+		assert(factory != nullptr);
+
+		std::list<SceneShader*> shaders;
+		shaders.push_back(&factory->getDefaultShader(ShadingMethod::Transparent, false));
+		shaders.push_back(&factory->getDefaultShader(ShadingMethod::Transparent, true));
+
+		for (auto it(shaders.begin()); it != shaders.end(); it++) {
+			SceneShader& shader = **it;
+
+			if (active) {
+				shader.bind<int>("useIBL", 1);
+				scene.getLightmanager().addReflectionProbes(shader);
+				scene.getLightmanager().bindReflectionProbes(*camera, shader, shader.getSpace());
+			}
+			else {
+				shader.bind<int>("useIBL", 0);
+
+			}
+		}
 	}
 
 }

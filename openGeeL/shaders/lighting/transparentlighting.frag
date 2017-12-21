@@ -1,9 +1,10 @@
 #version 430
 
+#define FOG 1
+
 #include <shaders/helperfunctions.glsl>
 #include <shaders/material.glsl>
-
-#include <shaders/lighting/cooktorrance.glsl>
+#include <shaders/lighting/iblcore.glsl>
 
 
 in vec3 normal;
@@ -15,8 +16,12 @@ layout (location = 0) out vec4 gPositionRough;
 layout (location = 1) out vec4 gNormalMet;
 layout (location = 2) out vec4 gDiffuse;
 
-layout (location = 3) out vec4  accumulation;
-layout (location = 4) out float revealage;
+#if (DIFFUSE_SPECULAR_SEPARATION == 0)
+layout (location = 3) out vec4 color;
+#else
+layout (location = 3) out vec4 diffuse;
+layout (location = 4) out vec4 specular;
+#endif
 
 uniform int plCount;
 uniform int dlCount;
@@ -31,26 +36,13 @@ uniform SpotLight spotLights[5];
 uniform EmissiveMaterial material;
 
 uniform mat4 projection;
-uniform mat4 inverseView;
-uniform vec3 origin;
+uniform float fogFalloff = 200.f;
+uniform bool useIBL;
 
 
 #include <shaders/materialproperties.glsl>
 #include <shaders/shadowmapping/shadowsView.glsl>
 #include <shaders/lighting/cooktorrancelights.glsl>
-
-
-void blendCoverage(vec4 premultipliedReflect, vec3 transmit, float z) {
-	premultipliedReflect.a *= 1.0 - clamp((transmit.r + transmit.g + transmit.b) * (1.0 / 3.0), 0, 1);
-    
-	float a = min(1.0, premultipliedReflect.a) * 8.0 + 0.01;
-    float b = z * 0.95 + 1.0;
-    float w = clamp(a * a * a * 1e8 * b * b * b, 1e-2, 3e2);
-
-	//accumulation = vec4(premultipliedReflect.rgb * premultipliedReflect.a, premultipliedReflect.a) * w;
-	accumulation = premultipliedReflect * w;
-    revealage    = premultipliedReflect.a;
-}
 
 
 void main() {
@@ -60,23 +52,84 @@ void main() {
 	readMaterialProperties(albedo, norm, roughness, metallic, emission, false);
 	
 	vec3 viewDirection = normalize(-fragPosition.xyz);
-	vec3 irradiance = albedo.xyz * emission;
-
-	for(int i = 0; i < plCount; i++) 
-		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
-       
-	for(int i = 0; i < dlCount; i++) 
-        irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
-
-	for(int i = 0; i < slCount; i++)
-		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
 
 	gPositionRough = vec4(fragPosition.xyz, roughness);
 	gNormalMet = vec4(norm, metallic);
 	gDiffuse = albedo;
 
-	vec3 transmit = vec3(1.f - albedo.a);
-	float z = -gl_FragCoord.z;
-	blendCoverage(vec4(irradiance, albedo.a), transmit, z);
+#if (FOG == 1)
+	float fogFactor = 1.f - clamp(abs(fragPosition.z) / fogFalloff, 0.f, 1.f);
+#endif
+
+	vec3 irradiance = albedo.xyz * emission;
+
+#if (DIFFUSE_SPECULAR_SEPARATION == 0)
+	for(int i = 0; i < plCount; i++) 
+		irradiance += calculatePointLight(i, pointLights[i], norm, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
+       
+	for(int i = 0; i < dlCount; i++) 
+        irradiance += calculateDirectionaLight(i, directionalLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
+
+	for(int i = 0; i < slCount; i++)
+		irradiance += calculateSpotLight(i, spotLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
+
+	if(useIBL) {
+		vec3 worldPosition = (inverseView * vec4(fragPosition, 1.f)).xyz;
+		vec3 ks = calculateFresnelTerm(doto(norm, viewDirection), albedo.rgb, metallic, roughness);
+		vec3 kd = vec3(1.f) - ks;
+		kd *= 1.f - metallic;
+
+		vec3 ambienceDiffuse = calculateIndirectDiffuse(worldPosition, norm, kd, albedo.rgb, 1.f); 
+		vec3 ambienceSpecular = calculateIndirectSpecularSplitSum(worldPosition, norm, viewDirection, 
+			albedo.rgb, roughness, metallic);
+
+		irradiance  += ambienceDiffuse + ambienceSpecular;
+	}
+
+#if (FOG == 1)
+	color = vec4(irradiance, albedo.a) * fogFactor;
+#else
+	color = vec4(irradiance, albedo.a);
+#endif
+
+	
+
+#else
+	vec3 diff = vec3(0.f);
+	vec3 spec = vec3(0.f);
+
+	for(int i = 0; i < plCount; i++) 
+		irradiance += calculatePointLight(i, pointLights[i], norm, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
+       
+	for(int i = 0; i < dlCount; i++) 
+        irradiance += calculateDirectionaLight(i, directionalLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
+
+	for(int i = 0; i < slCount; i++)
+		irradiance += calculateSpotLight(i, spotLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
+
+	if(useIBL) {
+		vec3 worldPosition = (inverseView * vec4(fragPosition, 1.f)).xyz;
+		vec3 ks = calculateFresnelTerm(doto(norm, viewDirection), albedo.rgb, metallic, roughness);
+		vec3 kd = vec3(1.f) - ks;
+		kd *= 1.f - metallic;
+
+		vec3 ambienceDiffuse = calculateIndirectDiffuse(worldPosition, norm, kd, albedo.rgb, 1.f); 
+		vec3 ambienceSpecular = calculateIndirectSpecularSplitSum(worldPosition, norm, viewDirection, 
+			albedo.rgb, roughness, metallic);
+
+		diff += ambienceDiffuse;
+		spec += ambienceSpecular;
+	}
+
+#if (FOG == 1)
+	diffuse  = vec4(diff + irradiance, albedo.a) * fogFactor;
+	specular = vec4(spec, albedo.a) * fogFactor;
+#else
+	diffuse = vec4(diff + irradiance, albedo.a);
+	specular = vec4(spec, albedo.a);
+#endif
+
+#endif
+
 }
 

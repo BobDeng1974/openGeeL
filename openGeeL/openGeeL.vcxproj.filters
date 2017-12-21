@@ -1073,6 +1073,9 @@
     <ClInclude Include="renderer\renderer\glstructures.h">
       <Filter>renderer\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="shaders\lighting\transparentlighting.frag">
+      <Filter>shaders\lighting</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\combine.frag">
@@ -1175,9 +1178,6 @@
       <Filter>shaders\lighting</Filter>
     </None>
     <None Include="shaders\lighting\tileddeferred.com.glsl">
-      <Filter>shaders\lighting</Filter>
-    </None>
-    <None Include="shaders\lighting\transparentlighting.frag">
       <Filter>shaders\lighting</Filter>
     </None>
     <None Include="shaders\shadowmapping\shadowmapping.frag">
@@ -1340,6 +1340,9 @@
       <Filter>shaders\postprocessing</Filter>
     </None>
     <None Include="shaders\lighting\iblcore.glsl">
+      <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\lighting\transparentlighting2.frag">
       <Filter>shaders\lighting</Filter>
     </None>
   </ItemGroup>

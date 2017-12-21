@@ -19,6 +19,7 @@ namespace geeL {
 	class Texture;
 	class ITextureProvider;
 	class ITexture;
+	class MaterialFactory;
 
 
 	struct PostProcessingParameter {
@@ -28,13 +29,15 @@ namespace geeL {
 		Resolution resolution;
 		PostProcessingEffect* fallbackEffect;
 		ITextureProvider* provider;
+		MaterialFactory* factory;
 
 		PostProcessingParameter(ScreenQuad& screen, 
 			DynamicBuffer& buffer, 
 			const Resolution& resolution, 
 			ITextureProvider* const provider = nullptr,
 			PostProcessingEffect* const fallbackEffect = nullptr,
-			DynamicBuffer* separatedBuffer = nullptr);
+			DynamicBuffer* separatedBuffer = nullptr,
+			MaterialFactory* factory = nullptr);
 
 		PostProcessingParameter(const PostProcessingParameter& other, const Resolution& resolution);
 
@@ -170,16 +173,18 @@ namespace geeL {
 
 	inline PostProcessingParameter::PostProcessingParameter(ScreenQuad& screen, 
 		DynamicBuffer& buffer, 
-		const Resolution& resolution, 
+		const Resolution& resolution,
 		ITextureProvider* const provider,
 		PostProcessingEffect* const fallbackEffect,
-		DynamicBuffer* separatedBuffer)
+		DynamicBuffer* separatedBuffer,
+		MaterialFactory* factory)
 			: screen(screen)
 			, buffer(buffer)
 			, separatedBuffer(separatedBuffer)
 			, resolution(resolution)
 			, fallbackEffect(fallbackEffect)
-			, provider(provider) {}
+			, provider(provider)
+			, factory(factory) {}
 
 	inline PostProcessingParameter::PostProcessingParameter(const PostProcessingParameter& other, 
 		const Resolution& resolution) 
@@ -188,7 +193,8 @@ namespace geeL {
 			, separatedBuffer(other.separatedBuffer)
 			, resolution(resolution)
 			, fallbackEffect(other.fallbackEffect)
-			, provider(other.provider) {}
+			, provider(other.provider)
+			, factory(other.factory) {}
 
 	
 	template<typename ...Replacements>

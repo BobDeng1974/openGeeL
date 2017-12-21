@@ -253,7 +253,7 @@ namespace geeL {
 		gBuffer.requestOcclusion(ssao.getResolution()); //Ensure that occlusion map gets created
 
 		ssao.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, 
-			ssaoRes, &provider, &fallbackEffect));
+			ssaoRes, &provider, &fallbackEffect, nullptr, &materialFactory));
 		ssao.setTargetTexture(*gBuffer.getOcclusion());
 	}
 
@@ -311,7 +311,7 @@ namespace geeL {
 	void DeferredRenderer::initEffects() {
 #if DIFFUSE_SPECULAR_SEPARATION
 		PostProcessingParameter parameter(ScreenQuad::get(), stackBuffer,
-			window.resolution, &provider, &fallbackEffect, &separatedBuffer);
+			window.resolution, &provider, &fallbackEffect, &separatedBuffer, &materialFactory);
 #else
 		PostProcessingParameter parameter(ScreenQuad::get(), stackBuffer,
 			window.resolution, &provider, &fallbackEffect);

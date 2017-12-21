@@ -6,6 +6,7 @@
 
 namespace geeL {
 
+	class MaterialFactory;
 	class RenderScene;
 
 	class ImageBasedLighting : public SceneRender, public AdditiveEffect {
@@ -20,11 +21,16 @@ namespace geeL {
 		virtual void draw();
 		virtual void fill();
 
+		virtual void setActive(bool value);
+
 		virtual std::string toString() const;
 
 	private:
+		MaterialFactory* factory;
 		ShaderLocation invViewLocation;
 		ShaderLocation originLocation;
+
+		void activateTransparentIBL(bool activate);
 
 	};
 
@@ -33,7 +39,7 @@ namespace geeL {
 		return "IBL";
 	}
 
-
+	
 }
 
 #endif

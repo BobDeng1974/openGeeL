@@ -75,8 +75,8 @@ namespace geeL {
 		SceneShader* forwardAnimatedShader;
 		SceneShader* deferredShader;
 		SceneShader* deferredAnimatedShader;
-		SceneShader* transparentODShader;
-		SceneShader* transparentODAnimatedShader;
+		SceneShader* transparentShader;
+		SceneShader* transparentAnimatedShader;
 
 		std::list<SceneShader*> shaders;
 		std::map<std::string, std::weak_ptr<ImageTexture>> textures;

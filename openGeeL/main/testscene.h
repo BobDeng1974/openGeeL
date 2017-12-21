@@ -165,7 +165,7 @@ public:
 			postLister.add(ssao);
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
-			renderer.addEffect(ibl);
+			renderer.addEffect(ibl, DrawTime::Early);
 
 			BilateralFilter& blur2 = BilateralFilter(1, 7, 0.1f);
 			GodRay& ray = GodRay(glm::vec3(-40, 30, -50), 25);

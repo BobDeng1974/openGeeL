@@ -26,8 +26,8 @@ namespace geeL {
 		, genericAnimatedShader(nullptr)
 		, forwardShader(nullptr)
 		, forwardAnimatedShader(nullptr)
-		, transparentODShader(nullptr)
-		, transparentODAnimatedShader(nullptr)
+		, transparentShader(nullptr)
+		, transparentAnimatedShader(nullptr)
 		, provider(provider) {}
 
 	MaterialFactory::~MaterialFactory() {
@@ -194,32 +194,32 @@ namespace geeL {
 				}
 			case ShadingMethod::Transparent:
 				if (animated) {
-					if (transparentODAnimatedShader == nullptr) {
-						transparentODAnimatedShader = new SceneShader("shaders/lighting/forwardAnim.vert",
-							FragmentShader("shaders/lighting/forwardlighting.frag"),
+					if (transparentAnimatedShader == nullptr) {
+						transparentAnimatedShader = new SceneShader("shaders/lighting/forwardAnim.vert",
+							FragmentShader("shaders/lighting/transparentlighting.frag"),
 							ShaderTransformSpace::View,
 							ShadingMethod::Transparent,
 							true);
 
-						transparentODAnimatedShader->mapOffset = 1;
-						shaders.push_back(transparentODAnimatedShader);
+						transparentAnimatedShader->mapOffset = 1;
+						shaders.push_back(transparentAnimatedShader);
 					}
 
-					return *transparentODAnimatedShader;
+					return *transparentAnimatedShader;
 				}
 				else {
-					if (transparentODShader == nullptr) {
-						transparentODShader = new SceneShader("shaders/lighting/forwardlighting.vert",
-							FragmentShader("shaders/lighting/forwardlighting.frag"),
+					if (transparentShader == nullptr) {
+						transparentShader = new SceneShader("shaders/lighting/forwardlighting.vert",
+							FragmentShader("shaders/lighting/transparentlighting.frag"),
 							ShaderTransformSpace::View,
 							ShadingMethod::Transparent,
 							false);
 
-						transparentODShader->mapOffset = 1;
-						shaders.push_back(transparentODShader);
+						transparentShader->mapOffset = 1;
+						shaders.push_back(transparentShader);
 					}
 
-					return *transparentODShader;
+					return *transparentShader;
 				}
 		}
 
