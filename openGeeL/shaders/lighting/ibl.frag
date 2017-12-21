@@ -53,10 +53,10 @@ void main() {
 		albedo.rgb, roughness, metallic);
 
 #if (DIFFUSE_SPECULAR_SEPARATION == 0)
-	color = vec4((ambienceDiffuse + ambienceSpecular) * albedo.a, 1.f);
+	color = vec4(ambienceDiffuse + ambienceSpecular, 1.f);
 #else
-	diffuse  = vec4(ambienceDiffuse  * albedo.a, 1.f);
-	specular = vec4(ambienceSpecular * albedo.a, 1.f); 
+	diffuse  = vec4(ambienceDiffuse, 1.f);
+	specular = vec4(ambienceSpecular, 1.f); 
 #endif
 
 }
