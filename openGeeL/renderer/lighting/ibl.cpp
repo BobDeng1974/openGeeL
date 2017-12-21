@@ -101,7 +101,7 @@ namespace geeL {
 			}
 			else {
 				shader.bind<int>("useIBL", 0);
-
+				scene.getLightmanager().removeReflectionProbes(shader);
 			}
 		}
 	}

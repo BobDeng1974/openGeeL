@@ -136,14 +136,6 @@ public:
 			renderer.addEffect(ibl, DrawTime::Early);
 			postLister.add(iblSnippet);
 
-			/*
-			ImageBasedLighting& ibl2 = ImageBasedLighting(scene);
-			ibl2.setRenderMask(RenderMask::Transparent);
-			GenericPostSnippet& iblSnippet2 = GenericPostSnippet(ibl2);
-			renderer.addEffect(ibl2, DrawTime::Intermediate);
-			postLister.add(iblSnippet2);
-			*/
-
 			BrightnessFilterCutoff& filter = BrightnessFilterCutoff(1.f);
 			GaussianBlur& bloomBlur = GaussianBlur(3.f, 17);
 			Bloom& bloom = Bloom(filter, bloomBlur, ResolutionPreset::HALFSCREEN, ResolutionPreset::HALFSCREEN);

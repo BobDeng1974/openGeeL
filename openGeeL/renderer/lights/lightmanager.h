@@ -90,6 +90,8 @@ namespace geeL {
 
 		//Add all reflection probes to given shader
 		void addReflectionProbes(RenderShader& shader) const;
+		void removeReflectionProbes(RenderShader& shader) const;
+
 		void bindReflectionProbes(const Camera& camera, const RenderShader& shader, ShaderTransformSpace space) const;
 		void drawReflectionProbes() const;
 

@@ -316,6 +316,13 @@ namespace geeL {
 		}
 	}
 
+	void LightManager::removeReflectionProbes(RenderShader& shader) const {
+		for (auto it = reflectionProbes.begin(); it != reflectionProbes.end(); it++) {
+			DynamicCubeMap& probe = **it;
+			probe.remove(shader);
+		}
+	}
+
 	void LightManager::bindReflectionProbes(const Camera& camera, const RenderShader& shader, ShaderTransformSpace space) const {
 
 		unsigned int rpCount = 0;
