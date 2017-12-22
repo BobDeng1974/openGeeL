@@ -153,6 +153,8 @@ namespace geeL {
 			fBuffer->fill([this]() {
 				scene->drawSkybox();
 				scene->drawForward();
+
+				DepthWriteGuard depthWriteDisable;
 				scene->drawTransparent();
 			});
 		}

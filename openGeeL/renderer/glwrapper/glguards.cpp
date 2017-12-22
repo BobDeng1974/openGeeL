@@ -107,6 +107,16 @@ namespace geeL {
 	}
 
 
+	DepthWriteGuard::DepthWriteGuard() {
+		glDepthMask(GL_FALSE);
+	}
+
+	DepthWriteGuard::~DepthWriteGuard() {
+		glDepthMask(GL_TRUE);
+	}
+
+
+
 	StencilGuard::StencilGuard(bool guardStencil) : guard(guardStencil) {
 #if ENABLE_STENCIL
 		if(guard) glEnable(GL_STENCIL_TEST);
@@ -121,4 +131,5 @@ namespace geeL {
 
 	
 
+	
 }

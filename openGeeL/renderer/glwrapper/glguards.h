@@ -74,6 +74,16 @@ namespace geeL {
 	};
 
 
+	//Disables depth writes during lifetime
+	class DepthWriteGuard {
+
+	public:
+		DepthWriteGuard();
+		~DepthWriteGuard();
+
+	};
+
+
 	class StencilGuard {
 
 	public:

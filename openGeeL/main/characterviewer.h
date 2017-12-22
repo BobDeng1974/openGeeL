@@ -97,8 +97,10 @@ public:
 					container.addTexture("alpha", materialFactory.createTexture("resources/girl/eyelash_alpha_01.jpg"));
 					container.setFloatValue("Transparency", 0.7f);
 				}
-				else if (container.name == "hair_inner")
+				else if (container.name == "hair_inner") {
 					container.addTexture("alpha", materialFactory.createTexture("resources/girl/hair_inner_alpha_01.jpg"));
+					container.setFloatValue("Transparency", 0.9f);
+				}
 				else if (container.name == "eyes_outer")
 					container.setFloatValue("Roughness", 0.28f);
 				else if (container.name == "hair_outer")
