@@ -11,8 +11,13 @@
 
 namespace geeL {
 
-	Skybox::Skybox(const CubeMap& cubeMap) : cubeMap(cubeMap),
-		shader(RenderShader("shaders/cubemapping/skybox.vert", "shaders/cubemapping/skybox.frag")) {}
+	Skybox::Skybox(const CubeMap& cubeMap, float brightnessScale) 
+		: cubeMap(cubeMap)
+		, shader(RenderShader("shaders/cubemapping/skybox.vert", 
+			"shaders/cubemapping/skybox.frag")) {
+	
+		setBrightnessScale(brightnessScale);
+	}
 
 
 	void Skybox::draw(const Camera& camera) const {
@@ -30,6 +35,17 @@ namespace geeL {
 
 	void Skybox::bind(RenderShader& shader) const {
 		cubeMap.add(shader, "skybox.");
+	}
+
+	float Skybox::getBrightnessScale() const {
+		return brightnessScale;
+	}
+
+	void Skybox::setBrightnessScale(float value) {
+		if (value > 0.f && value != brightnessScale) {
+			brightnessScale = value;
+			shader.bind<float>("brightnessScale", value);
+		}
 	}
 
 }

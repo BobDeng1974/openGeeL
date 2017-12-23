@@ -20,12 +20,16 @@ namespace geeL {
 	class Skybox {
 
 	public:
-		Skybox(const CubeMap& cubeMap);
+		Skybox(const CubeMap& cubeMap, float brightnessScale = 1.f);
 
 		void draw(const Camera& camera) const;
 		void bind(RenderShader& shader) const;
 
+		float getBrightnessScale() const;
+		void  setBrightnessScale(float value);
+
 	private:
+		float brightnessScale;
 		const CubeMap& cubeMap;
 		RenderShader shader;
 

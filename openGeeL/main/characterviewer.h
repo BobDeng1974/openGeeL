@@ -28,7 +28,7 @@ public:
 				cubeMapFactory.getBuffer(), 1024);
 			IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
-			Skybox& skybox = Skybox(iblMap.getIrradianceMap());
+			Skybox& skybox = Skybox(iblMap.getIrradianceMap(), 0.75f);
 			scene.setSkybox(skybox);
 			lightManager.addReflectionProbe(iblMap);
 
