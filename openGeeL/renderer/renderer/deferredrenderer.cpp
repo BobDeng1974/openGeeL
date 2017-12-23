@@ -316,7 +316,7 @@ namespace geeL {
 			window.resolution, &provider, &fallbackEffect, &separatedBuffer, &materialFactory);
 #else
 		PostProcessingParameter parameter(ScreenQuad::get(), stackBuffer,
-			window.resolution, &provider, &fallbackEffect);
+			window.resolution, &provider, &fallbackEffect, nullptr, &materialFactory);
 #endif
 
 		defaultEffect.init(parameter);
