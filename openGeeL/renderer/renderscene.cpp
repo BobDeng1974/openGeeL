@@ -308,6 +308,29 @@ namespace geeL {
 		});
 	}
 
+
+
+	void RenderScene::draw(ShadingMethod method) {
+		draw(method, *camera);
+	}
+
+	void RenderScene::draw(ShadingMethod method, const Camera& camera) {
+		switch (method) {
+			case ShadingMethod::Deferred:
+				drawDefault(camera);
+				break;
+			case ShadingMethod::Forward:
+				drawForward(camera);
+				break;
+			case ShadingMethod::Hybrid:
+				drawHybrid(camera);
+				break;
+			case ShadingMethod::Transparent:
+				drawTransparent(camera);
+				break;
+		}
+	}
+
 	
 	void RenderScene::draw(ShadingMethod shadingMethod, const Camera& camera, bool updateBinding) const {
 		SceneShader* currentShader = nullptr;
@@ -327,9 +350,6 @@ namespace geeL {
 		});
 	}
 
-	void RenderScene::drawDefault() const {
-		drawDefault(*camera);
-	}
 
 	void RenderScene::drawDefault(const Camera& camera) const {
 		//Only bind camera if it is external since the scene 
@@ -340,7 +360,7 @@ namespace geeL {
 		draw(ShadingMethod::Deferred, camera, externalCamera);
 	}
 
-	void RenderScene::drawGenericForced(const Camera& camera, bool forceGamma) const {
+	void RenderScene::drawForwardForced(const Camera& camera, bool forceGamma) const {
 		SceneShader& shader = materialFactory.getDefaultShader(ShadingMethod::Forward);
 
 		if (forceGamma) shader.bind<int>("gammaCorrection", true);
@@ -348,11 +368,6 @@ namespace geeL {
 		drawObjects(shader, &camera);
 
 		if (forceGamma) shader.bind<int>("gammaCorrection", false);
-	}
-
-
-	void RenderScene::drawForward() const {
-		drawForward(*camera);
 	}
 
 	void RenderScene::drawForward(const Camera& camera) const {
@@ -364,16 +379,12 @@ namespace geeL {
 		draw(ShadingMethod::Forward, camera, externalCamera);
 	}
 
-	void RenderScene::drawHybrid() const {
-		drawHybrid(*camera);
-	}
 
 	void RenderScene::drawHybrid(const Camera & camera) const {
 		bool externalCamera = &camera != this->camera;
 
 		draw(ShadingMethod::Hybrid, camera, externalCamera);
 	}
-
 
 	void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera, bool updateBindings) const {
 		using MSPair = pair<const MeshRenderer*, SceneShader*>;
@@ -416,10 +427,6 @@ namespace geeL {
 				object.draw(shader);
 		}
 
-	}
-
-	void RenderScene::drawTransparent() const {
-		drawTransparent(*camera);
 	}
 
 	void RenderScene::drawTransparent(const Camera& camera) const {

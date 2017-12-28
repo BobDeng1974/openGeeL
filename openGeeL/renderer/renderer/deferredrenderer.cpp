@@ -46,7 +46,7 @@ namespace geeL {
 
 
 	void DeferredRenderer::init() {
-		geometryPassFunction = [this] () { this->scene->drawDefault(); };
+		geometryPassFunction = [this] () { this->scene->draw(ShadingMethod::Deferred); };
 
 		stackBuffer.initResolution(window.resolution);
 		stackBuffer.referenceRBO(gBuffer);
@@ -117,7 +117,6 @@ namespace geeL {
 		DepthGuard::enable(false);
 
 		lighting.fill();
-
 		drawEffects(externalEffects);
 		drawEffects(earlyEffects);
 
@@ -136,10 +135,10 @@ namespace geeL {
 #endif
 			fBuffer->fill([this]() {
 				scene->drawSkybox();
-				scene->drawHybrid();
+				scene->draw(ShadingMethod::Hybrid);
 
 				DepthWriteGuard depthWriteDisable;
-				scene->drawTransparent();
+				scene->draw(ShadingMethod::Transparent);
 			});
 		}
 		//Draw skybox only
@@ -165,7 +164,7 @@ namespace geeL {
 
 			stackBuffer.push(provider.requestCurrentImage());
 			stackBuffer.fill([this]() {
-				scene->drawForward();
+				scene->draw(ShadingMethod::Forward);
 			}, clearNothing);
 		}
 
@@ -190,7 +189,7 @@ namespace geeL {
 		DepthGuard::enable(true);
 
 		//Geometry pass
-		gBuffer.fill([this, &camera] () { scene->drawDefault(camera); });
+		gBuffer.fill([this, &camera] () { scene->draw(ShadingMethod::Deferred, camera); });
 
 		scene->getLightmanager().update(*scene, nullptr);
 
@@ -217,7 +216,7 @@ namespace geeL {
 	void DeferredRenderer::drawForward(const Camera& camera) {
 		DepthGuard::enable(true);
 		
-		scene->drawGenericForced(camera, true);
+		scene->drawForwardForced(camera, true);
 		scene->drawSkybox(camera);
 	}
 

@@ -134,38 +134,15 @@ namespace geeL {
 		//Update bindings of all contained shaders
 		void updateBindings();
 
-		//Draw all objects whose materials have given shading method
-		void draw(ShadingMethod shadingMethod, const Camera& camera, bool updateBindings = false) const;
 
-		//Draw all those objects with default material (Deferred shading)
-		void drawDefault() const;
+		//Draw all objects that contain materials with given shading method
+		void draw(ShadingMethod method);
 
-		//Draw all objects with default material from given camera's perspective
-		//(Deferred shading)
-		void drawDefault(const Camera& camera) const;
+		//Draw all objects that contain materials with given shading method from given camera's perspective
+		void draw(ShadingMethod method, const Camera& camera);
 
-		void drawForward() const;
-
-		//Draw all objects with generic materials from given camera's perspective
-		//(Forward shading)
-		void drawForward(const Camera& camera) const;
-
-		//Draw all objects with default material from given camera's perspective
-		//(Forward shading)
-		void drawGenericForced(const Camera& camera, bool forceGamma = false) const;
-
-		//Draw all those objects that have hybrid forward shaded materials
-		void drawHybrid() const;
-
-		//Draw all objects that have hybrid forward shaded materials from given camera's perspective
-		void drawHybrid(const Camera& camera) const;
-
-		//Draw all those objects that have order-dependent transparency
-		void drawTransparent() const;
-
-		//Draw all objects that have order-dependent transparency from given camera's perspective
-		void drawTransparent(const Camera& camera) const;
-
+		//Draw all objects with forward shading from given camera's perspective
+		void drawForwardForced(const Camera& camera, bool forceGamma = false) const;
 
 		//Draw all objects in the scene with given shader and given camera.
 		//Note: Scene gets drawn in world space if no camera gets attached
@@ -196,6 +173,15 @@ namespace geeL {
 		Input& input;
 		MaterialFactory& materialFactory;
 		std::mutex mutex;
+
+
+		void drawDefault(const Camera& camera) const;
+		void drawForward(const Camera& camera) const;
+		void drawHybrid(const Camera& camera) const;
+		void drawTransparent(const Camera& camera) const;
+
+		//Draw all objects whose materials have given shading method
+		void draw(ShadingMethod shadingMethod, const Camera& camera, bool updateBindings) const;
 
 		void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera, 
 			bool updateBindings = false) const;
