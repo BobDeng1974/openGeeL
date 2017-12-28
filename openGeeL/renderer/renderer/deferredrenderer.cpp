@@ -47,7 +47,6 @@ namespace geeL {
 
 	void DeferredRenderer::init() {
 		geometryPassFunction = [this] () { this->scene->drawDefault(); };
-		lightingPassFunction = [this] () { this->lightingPass(); };
 
 		stackBuffer.initResolution(window.resolution);
 		stackBuffer.referenceRBO(gBuffer);
@@ -117,27 +116,12 @@ namespace geeL {
 
 		DepthGuard::enable(false);
 
-		//Lighting pass
-#if DIFFUSE_SPECULAR_SEPARATION
 		lighting.fill();
-
-		//TODO: optimize this later
-		if (!hasForwardPass()) {
-			stackBuffer.push(provider.requestCurrentImage());
-			stackBuffer.fill([this]() {
-				DepthGuard depth;
-				scene->drawSkybox();
-			}, clearNothing);
-		}
-#else
-		stackBuffer.push(provider.requestCurrentImage());
-		stackBuffer.fill(lightingPassFunction, clearColor);
-#endif
 
 		drawEffects(externalEffects);
 		drawEffects(earlyEffects);
 
-		//Forward pass
+		//Forward pass (Forward & transparent objects + skybox
 		if (hasForwardPass()) {
 			DepthGuard::enable(true);
 
@@ -157,6 +141,14 @@ namespace geeL {
 				DepthWriteGuard depthWriteDisable;
 				scene->drawTransparent();
 			});
+		}
+		//Draw skybox only
+		else {
+			stackBuffer.push(provider.requestCurrentImage());
+			stackBuffer.fill([this]() {
+				DepthGuard depth;
+				scene->drawSkybox();
+			}, clearNothing);
 		}
 
 		DepthGuard::enable(false);
@@ -229,18 +221,6 @@ namespace geeL {
 		scene->drawSkybox(camera);
 	}
 
-
-
-	void DeferredRenderer::lightingPass() {
-		lighting.draw();
-
-		//Draw skybox directly alongside the lighting
-		//if forward rendering is deactivated
-		if (!hasForwardPass()) {
-			DepthGuard depth;
-			scene->drawSkybox();
-		}
-	}
 
 	bool DeferredRenderer::hasForwardPass() const {
 		return fBuffer != nullptr && scene->contains(ShadingMethod::Forward, ShadingMethod::Transparent);

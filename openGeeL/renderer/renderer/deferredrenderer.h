@@ -80,7 +80,6 @@ namespace geeL {
 		AdditiveEffect combineEffect;
 
 		std::function<void()> geometryPassFunction;
-		std::function<void()> lightingPassFunction;
 
 		DeferredRenderer(const DeferredRenderer& other) = delete;
 		DeferredRenderer& operator= (const DeferredRenderer& other) = delete;
@@ -101,7 +100,6 @@ namespace geeL {
 		//Update shader bindings of all contained post effects
 		void updateEffectBindings();
 
-		void lightingPass();
 		bool hasForwardPass() const;
 
 	};
