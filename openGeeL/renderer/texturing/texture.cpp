@@ -298,6 +298,13 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
+	void Texture2D::resize(Resolution resolution) {
+		glBindTexture(GL_TEXTURE_2D, id);
+		setResolution(resolution);
+		initStorage(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
 	void Texture2D::assign(AttachmentPosition position, MipLevel level) const {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, GL_TEXTURE_2D, id, level);
 	}
@@ -386,12 +393,16 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_3D, 0);
 	}
 
+	void Texture3D::resize(Resolution resolution) {
+		std::cout << "Resizing of 3D texture is currently not supported\n";
+	}
+
 	void Texture3D::assign(AttachmentPosition position, MipLevel level) const {
-		std::cout << "Assigning of 3D texture currently not supported\n";
+		std::cout << "Assigning of 3D texture is currently not supported\n";
 	}
 
 	void Texture3D::assignDepth(MipLevel level) const {
-		std::cout << "Assigning of 3D texture currently not supported\n";
+		std::cout << "Assigning of 3D texture is currently not supported\n";
 	}
 
 	void Texture3D::initWrapMode(WrapMode mode) {
@@ -483,6 +494,14 @@ namespace geeL {
 	void TextureCube::mipmap() const {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
+
+	void TextureCube::resize(Resolution resolution) {
+		this->resolution = (resolution.getWidth() + resolution.getHeight()) / 2;
+
+		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+		initStorage(0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 

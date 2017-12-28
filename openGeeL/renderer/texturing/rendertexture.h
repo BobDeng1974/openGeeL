@@ -20,8 +20,6 @@ namespace geeL {
 		virtual Resolution getRenderResolution() const;
 		virtual unsigned int getSize() const;
 
-		virtual void resize(Resolution resolution);
-
 	protected:
 		virtual void assign(unsigned int position) const;
 

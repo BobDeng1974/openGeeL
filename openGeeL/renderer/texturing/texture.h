@@ -65,6 +65,10 @@ namespace geeL {
 		virtual void mipmap() const {}
 		virtual void clear();
 
+		//Resize this texture to given resolution
+		//Note: Internal image data will be lost
+		virtual void resize(Resolution resolution) = 0;
+
 		virtual void initFilterMode(FilterMode mode);
 		virtual void initWrapMode(WrapMode mode);
 		virtual void initAnisotropyFilter(AnisotropicFilter filter);
@@ -119,9 +123,11 @@ namespace geeL {
 		Texture2D& operator=(Texture2D&& other);
 
 
-		virtual void mipmap() const;
 		virtual void assign(AttachmentPosition position, MipLevel level = 0) const;
 		virtual void assignDepth(MipLevel level = 0) const;
+
+		virtual void mipmap() const;
+		virtual void resize(Resolution resolution);
 
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
@@ -163,9 +169,11 @@ namespace geeL {
 		Texture3D& operator=(Texture3D&& other);
 
 
-		virtual void mipmap() const;
 		virtual void assign(AttachmentPosition position, MipLevel level = 0) const;
 		virtual void assignDepth(MipLevel level = 0) const;
+
+		virtual void mipmap() const;
+		virtual void resize(Resolution resolution);
 
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
@@ -193,11 +201,13 @@ namespace geeL {
 		TextureCube(TextureCube&& other);
 		TextureCube& operator=(TextureCube&& other);
 
-
-		virtual void mipmap() const;
+		
 		virtual void assign(AttachmentPosition position, MipLevel level = 0) const;
 		virtual void assignSide(AttachmentPosition position, MipLevel level, unsigned int side) const;
 		virtual void assignDepth(MipLevel level = 0) const;
+
+		virtual void mipmap() const;
+		virtual void resize(Resolution resolution);
 
 		virtual void initWrapMode(WrapMode mode);
 		virtual TextureType getTextureType() const;
