@@ -129,6 +129,7 @@ namespace geeL {
 		
 		virtual void drawSubImages() {}
 		virtual void bindToScreen();
+		
 	};
 
 
@@ -156,6 +157,11 @@ namespace geeL {
 	protected:
 		ComputeShader shader;
 		Resolution groupSize;
+
+		//Gets called when effects gets drawn/filled to load target of operation
+		//By default, the current image (from render pipeline) is set as target
+		//and its resolution bound 
+		virtual void bindTextureTargets();
 
 	};
 

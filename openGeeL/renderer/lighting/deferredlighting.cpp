@@ -93,6 +93,17 @@ namespace geeL {
 
 		scene.init();
 
+		assert(provider != nullptr);
+		addTextureSampler(provider->requestAlbedo(), "gDiffuse");
+		addTextureSampler(provider->requestPositionRoughness(), "gPositionRoughness");
+		addTextureSampler(provider->requestNormalMetallic(), "gNormalMet");
+
+		const Texture* emissivity = provider->requestEmissivity();
+		if (emissivity != nullptr) {
+			addTextureSampler(*emissivity, "gEmissivity");
+			shader.bind<int>("useEmissivity", 1);
+		}
+
 		LightManager& manager = scene.getLightmanager();
 		manager.addShaderListener(shader);
 
@@ -107,6 +118,16 @@ namespace geeL {
 
 	void TiledDeferredLighting::fill() {
 		PostProcessingEffectCS::fill();
+	}
+
+	void TiledDeferredLighting::bindTextureTargets() {
+		PostProcessingEffectCS::bindTextureTargets();
+
+#if DIFFUSE_SPECULAR_SEPARATION
+		const RenderTexture& specularTarget = provider->requestCurrentSpecular();
+		specularTarget.bindImage(1, AccessType::All);
+#endif
+
 	}
 
 	void TiledDeferredLighting::bindValues() {

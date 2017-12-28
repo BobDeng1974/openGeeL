@@ -37,6 +37,9 @@ namespace geeL {
 		virtual void draw();
 		virtual void fill();
 
+	protected:
+		virtual void bindTextureTargets();
+
 	private:
 		ShaderLocation projectionLocation;
 		ShaderLocation invViewLocation;

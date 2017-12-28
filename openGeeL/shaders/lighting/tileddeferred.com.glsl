@@ -4,7 +4,18 @@
 #define GROUP_SIZE 16
 layout (local_size_x = GROUP_SIZE, local_size_y = GROUP_SIZE, local_size_z = 1) in;
 
+#include <shaders/helperfunctions.glsl>
+#include <shaders/sampling.glsl>
+#include <shaders/lighting/lights.glsl>
+#include <shaders/lighting/cooktorrance.glsl>
+
+
+#if (DIFFUSE_SPECULAR_SEPARATION == 0)
 layout(binding = 0, rgba16f) uniform image2D target;
+#else
+layout(binding = 0, rgba16f) uniform image2D diffuse;
+layout(binding = 1, rgba16f) uniform image2D specular;
+#endif
 
 uniform vec2 resolution;
 
@@ -13,13 +24,6 @@ shared uint uMaxDepth = 0;
 
 shared uint pointLightIndicies[MAX_LIGHTS];
 shared uint pointLightCounter = 0;
-
-
-
-#include <shaders/helperfunctions.glsl>
-#include <shaders/sampling.glsl>
-#include <shaders/lighting/lights.glsl>
-#include <shaders/lighting/cooktorrance.glsl>
 
 uniform int plCount;
 uniform int dlCount;
@@ -134,6 +138,8 @@ void main() {
 
 
 	vec3 irradiance = albedo.rgb * emissivity;
+	
+#if (DIFFUSE_SPECULAR_SEPARATION == 0)
 	for(int i = 0; i < pointLightCounter - 1; i++) {
 		uint index = pointLightIndicies[i];
 		irradiance += calculatePointLight(int(index), pointLights[index], normal, fragPosition, viewDirection, albedo, roughness, metallic);
@@ -145,11 +151,31 @@ void main() {
 	for(int i = 0; i < slCount; i++)
 		irradiance += calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo.rgb, roughness, metallic);
 
+
 	imageStore(target, coords, vec4(irradiance, 1.f));
 
-	if(textureCoordinates.x > 0.5f)
-	imageStore(target, coords, vec4(vec3(pointLightCounter / 256.f), 1.f));
+#else
+	vec3 diff = vec3(0.f);
+	vec3 spec = vec3(0.f);
 
-	return;
+	for(int i = 0; i < pointLightCounter - 1; i++) {
+		uint index = pointLightIndicies[i];
+		calculatePointLight(int(index), pointLights[index], normal, fragPosition, 
+			viewDirection, albedo, roughness, metallic, diff, spec);
+	}
+       
+	for(int i = 0; i < dlCount; i++)
+        calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo.rgb, roughness, metallic, diff, spec);
+
+	for(int i = 0; i < slCount; i++)
+		calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo.rgb, roughness, metallic, diff, spec);
+	
+	imageStore(diffuse, coords, vec4(diff + irradiance, 1.f));
+	imageStore(specular, coords, vec4(spec, 1.f));
+
+#endif
 
 }
+
+
+

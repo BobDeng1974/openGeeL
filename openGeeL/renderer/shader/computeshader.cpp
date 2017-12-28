@@ -16,6 +16,7 @@ namespace geeL {
 
 		string computeCode = FileReader::readFile(shaderPath);
 		ShaderFileReader::preprocessShaderString(*this, computeCode, shaderPath, provider);
+		ShaderFileReader::setGlobalVariables(computeCode);
 
 		const GLchar* shaderCode = computeCode.c_str();
 
