@@ -11,9 +11,9 @@ namespace geeL {
 	};
 
 	enum class ShadingMethod {
-		Generic,
-		Deferred,
 		Forward,
+		Deferred,
+		Hybrid,
 		Transparent,
 		Other
 

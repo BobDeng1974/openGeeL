@@ -9,8 +9,8 @@ namespace geeL {
 	enum class RenderMask {
 		None = 0,
 		Empty = 1,
-		Generic = 2,
-		Forward = 4,
+		Forward = 2,
+		Hybrid = 4,
 		Transparent = 8,
 		Skin = 16,
 

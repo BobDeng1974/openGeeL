@@ -105,14 +105,14 @@ namespace geeL {
 		ShaderTransformSpace space;
 
 		switch (shading) {
-			case ShadingMethod::Generic:
+			case ShadingMethod::Forward:
 				vertexPath = animated 
 					? "shaders/lighting/lightingAnim.vert" 
 					: "shaders/lighting/lighting.vert";
 
 				space = ShaderTransformSpace::World;
 				break;
-			case ShadingMethod::Forward:
+			case ShadingMethod::Hybrid:
 			case ShadingMethod::Transparent:
 				vertexPath = animated 
 					? "shaders/lighting/forwardAnim.vert" 
@@ -132,13 +132,13 @@ namespace geeL {
 
 	SceneShader& MaterialFactory::getDefaultShader(ShadingMethod shading, bool animated) {
 		switch (shading) {
-			case ShadingMethod::Generic:
+			case ShadingMethod::Forward:
 				if (animated) {
 					if (genericAnimatedShader == nullptr) {
 						genericAnimatedShader = new SceneShader("shaders/lighting/lightingAnim.vert",
 							FragmentShader("shaders/lighting/lighting.frag"),
 							ShaderTransformSpace::World,
-							ShadingMethod::Generic,
+							ShadingMethod::Forward,
 							true);
 
 						genericAnimatedShader->mapOffset = 1;
@@ -152,7 +152,7 @@ namespace geeL {
 						genericShader = new SceneShader("shaders/lighting/lighting.vert",
 							FragmentShader("shaders/lighting/lighting.frag"),
 							ShaderTransformSpace::World,
-							ShadingMethod::Generic, 
+							ShadingMethod::Forward, 
 							false);
 
 						genericShader->mapOffset = 1;
@@ -163,13 +163,13 @@ namespace geeL {
 				}
 			case ShadingMethod::Deferred:
 				return animated ? *deferredAnimatedShader : *deferredShader;
-			case ShadingMethod::Forward:
+			case ShadingMethod::Hybrid:
 				if (animated) {
 					if (forwardAnimatedShader == nullptr) {
 						forwardAnimatedShader = new SceneShader("shaders/lighting/forwardAnim.vert",
 							FragmentShader("shaders/lighting/forwardlighting.frag"),
 							ShaderTransformSpace::View,
-							ShadingMethod::Forward,
+							ShadingMethod::Hybrid,
 							true);
 
 						forwardAnimatedShader->mapOffset = 1;
@@ -183,7 +183,7 @@ namespace geeL {
 						forwardShader = new SceneShader("shaders/lighting/forwardlighting.vert",
 							FragmentShader("shaders/lighting/forwardlighting.frag"),
 							ShaderTransformSpace::View,
-							ShadingMethod::Forward, 
+							ShadingMethod::Hybrid, 
 							false);
 
 						forwardShader->mapOffset = 1;

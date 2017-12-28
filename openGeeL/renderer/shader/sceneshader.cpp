@@ -68,7 +68,7 @@ namespace geeL {
 		setViewMatrix(camera.getViewMatrix());
 
 		switch (getMethod()) {
-			case ShadingMethod::Forward:
+			case ShadingMethod::Hybrid:
 			case ShadingMethod::Transparent:
 				camera.bindProjectionMatrix(*this, "projection");
 				camera.bindInverseViewMatrix(*this, "inverseView");
@@ -78,7 +78,7 @@ namespace geeL {
 					bindViewMatrix();
 
 				break;
-			case ShadingMethod::Generic:
+			case ShadingMethod::Forward:
 				camera.bindProjectionMatrix(*this, "projection");
 				bind<glm::vec3>("cameraPosition", camera.transform.getPosition());
 

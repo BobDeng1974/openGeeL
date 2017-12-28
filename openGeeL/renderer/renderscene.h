@@ -144,21 +144,21 @@ namespace geeL {
 		//(Deferred shading)
 		void drawDefault(const Camera& camera) const;
 
-		void drawGeneric() const;
+		void drawForward() const;
 
 		//Draw all objects with generic materials from given camera's perspective
 		//(Forward shading)
-		void drawGeneric(const Camera& camera) const;
+		void drawForward(const Camera& camera) const;
 
 		//Draw all objects with default material from given camera's perspective
 		//(Forward shading)
 		void drawGenericForced(const Camera& camera, bool forceGamma = false) const;
 
-		//Draw all those objects that have forward shaded materials
-		void drawForward() const;
+		//Draw all those objects that have hybrid forward shaded materials
+		void drawHybrid() const;
 
-		//Draw all objects that have forward shaded materials from given camera's perspective
-		void drawForward(const Camera& camera) const;
+		//Draw all objects that have hybrid forward shaded materials from given camera's perspective
+		void drawHybrid(const Camera& camera) const;
 
 		//Draw all those objects that have order-dependent transparency
 		void drawTransparent() const;

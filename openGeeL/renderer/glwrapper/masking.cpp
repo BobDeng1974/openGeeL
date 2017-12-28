@@ -31,12 +31,12 @@ namespace geeL {
 	RenderMask Masking::getShadingMask(ShadingMethod method) {
 
 		switch (method) {
-			case ShadingMethod::Forward:
-				return RenderMask::Forward;
+			case ShadingMethod::Hybrid:
+				return RenderMask::Hybrid;
 			case ShadingMethod::Transparent:
 				return RenderMask::Transparent;
-			case ShadingMethod::Generic:
-				return RenderMask::Generic;
+			case ShadingMethod::Forward:
+				return RenderMask::Forward;
 		}
 
 		return RenderMask::None;
@@ -45,10 +45,10 @@ namespace geeL {
 	RenderMask Masking::getShadingMask(const std::string& name) {
 		if (name == "Empty")
 			return RenderMask::Empty;
-		else if (name == "Generic")
-			return RenderMask::Generic;
 		else if (name == "Forward")
 			return RenderMask::Forward;
+		else if (name == "Hybrid")
+			return RenderMask::Hybrid;
 		else if (name == "Transparent")
 			return RenderMask::Transparent;
 		else if (name == "Skin")

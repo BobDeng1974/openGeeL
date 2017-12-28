@@ -68,7 +68,7 @@ public:
 				const Material& material = *it->second;
 
 				MaterialContainer& container = material.getMaterialContainer();
-				container.setFloatValue("Transparency", 0.2f);
+				container.setFloatValue("Transparency", 0.3f);
 
 				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
 				bedroom.changeMaterial(ss, mesh);

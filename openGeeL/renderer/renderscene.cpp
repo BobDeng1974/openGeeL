@@ -249,8 +249,8 @@ namespace geeL {
 			, input(input) {
 			
 		//Add generic shader to scene to allow method 'drawGenericForced' to work
-		addShader(materialFactory.getDefaultShader(ShadingMethod::Generic, false));
-		addShader(materialFactory.getDefaultShader(ShadingMethod::Generic, true));
+		addShader(materialFactory.getDefaultShader(ShadingMethod::Forward, false));
+		addShader(materialFactory.getDefaultShader(ShadingMethod::Forward, true));
 	}
 
 	MeshRenderer& RenderScene::addMeshRenderer(std::unique_ptr<MeshRenderer> renderer) {
@@ -341,7 +341,7 @@ namespace geeL {
 	}
 
 	void RenderScene::drawGenericForced(const Camera& camera, bool forceGamma) const {
-		SceneShader& shader = materialFactory.getDefaultShader(ShadingMethod::Generic);
+		SceneShader& shader = materialFactory.getDefaultShader(ShadingMethod::Forward);
 
 		if (forceGamma) shader.bind<int>("gammaCorrection", true);
 
@@ -351,27 +351,27 @@ namespace geeL {
 	}
 
 
-	void RenderScene::drawGeneric() const {
-		drawGeneric(*camera);
+	void RenderScene::drawForward() const {
+		drawForward(*camera);
 	}
 
-	void RenderScene::drawGeneric(const Camera& camera) const {
+	void RenderScene::drawForward(const Camera& camera) const {
 		bool externalCamera = &camera != this->camera;
 
 		BlendGuard blend;
 		blend.blendAlpha();
 
-		draw(ShadingMethod::Generic, camera, externalCamera);
+		draw(ShadingMethod::Forward, camera, externalCamera);
 	}
 
-	void RenderScene::drawForward() const {
-		drawForward(*camera);
+	void RenderScene::drawHybrid() const {
+		drawHybrid(*camera);
 	}
 
-	void RenderScene::drawForward(const Camera & camera) const {
+	void RenderScene::drawHybrid(const Camera & camera) const {
 		bool externalCamera = &camera != this->camera;
 
-		draw(ShadingMethod::Forward, camera, externalCamera);
+		draw(ShadingMethod::Hybrid, camera, externalCamera);
 	}
 
 

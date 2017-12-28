@@ -121,7 +121,7 @@ namespace geeL {
 		drawEffects(externalEffects);
 		drawEffects(earlyEffects);
 
-		//Forward pass (Forward & transparent objects + skybox
+		//Hyprid forward pass (Hyprid & transparent objects + skybox
 		if (hasForwardPass()) {
 			DepthGuard::enable(true);
 
@@ -136,7 +136,7 @@ namespace geeL {
 #endif
 			fBuffer->fill([this]() {
 				scene->drawSkybox();
-				scene->drawForward();
+				scene->drawHybrid();
 
 				DepthWriteGuard depthWriteDisable;
 				scene->drawTransparent();
@@ -159,13 +159,13 @@ namespace geeL {
 		combineEffect.fill();
 #endif
 
-		//Generic pass
-		if (scene->contains(ShadingMethod::Generic)) {
+		//Generic forward pass
+		if (scene->contains(ShadingMethod::Forward)) {
 			DepthGuard::enable(true);
 
 			stackBuffer.push(provider.requestCurrentImage());
 			stackBuffer.fill([this]() {
-				scene->drawGeneric();
+				scene->drawForward();
 			}, clearNothing);
 		}
 
@@ -223,7 +223,7 @@ namespace geeL {
 
 
 	bool DeferredRenderer::hasForwardPass() const {
-		return fBuffer != nullptr && scene->contains(ShadingMethod::Forward, ShadingMethod::Transparent);
+		return fBuffer != nullptr && scene->contains(ShadingMethod::Hybrid, ShadingMethod::Transparent);
 	}
 
 
