@@ -170,8 +170,10 @@ namespace geeL {
 		shader.loadMaps();
 		shader.loadImages();
 
-		unsigned int width = resolution.getWidth() / groupSize.getWidth();
-		unsigned int height = resolution.getHeight() / groupSize.getHeight();
+		unsigned int gw = groupSize.getWidth();
+		unsigned int gh = groupSize.getHeight();
+		unsigned int width  = (resolution.getWidth()  + gw - 1) / gw;
+		unsigned int height = (resolution.getHeight() + gh - 1) / gh;
 
 		shader.invoke(width, height, 1);
 		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
