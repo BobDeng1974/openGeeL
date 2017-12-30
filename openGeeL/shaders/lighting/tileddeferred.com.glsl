@@ -170,11 +170,7 @@ void main() {
 	for(int i = 0; i < slCount; i++)
 		calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo.rgb, roughness, metallic, diff, spec);
 	
-	//if(textureCoordinates.y > 0.5)
-	//	imageStore(diffuse, coords, vec4(vec3(pointLightCounter), 1.f));
-	//else
-		imageStore(diffuse, coords, vec4(irradiance + diff, 1.f));
-
+	imageStore(diffuse, coords, vec4(irradiance + diff, 1.f));
 	imageStore(specular, coords, vec4(spec, 1.f));
 
 #endif
