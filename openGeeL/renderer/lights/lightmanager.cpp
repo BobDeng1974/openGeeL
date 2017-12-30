@@ -1,8 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
-#include "pointlight.h"
-#include "directionallight.h"
-#include "spotlight.h"
+
 #include "cameras/camera.h"
 #include "framebuffer/gbuffer.h"
 #include "transformation/transform.h"
@@ -45,12 +43,8 @@ namespace geeL {
 		light->addStatusListener([this](SceneObject& o, bool s) { reindexLights(); });
 	}
 
-
-	DirectionalLight& LightManager::addDirectionalLight(const SceneCamera& camera, Transform& transform, 
-		vec3 diffuse, const ShadowMapConfiguration& config) {
-		
-		DirectionalLight* light = new DirectionalLight(transform, diffuse);
-		LightBinding d = LightBinding(light, dlCount++, dlName);
+	void LightManager::addDirectionalLightInternal(DirectionalLight* light, const ShadowMapConfiguration& config) {
+		LightBinding d(light, dlCount++, dlName);
 
 		if (config.useShadowMap()) {
 			SimpleDirectionalLightMap* map = new SimpleDirectionalLightMap(*light, config);
@@ -60,29 +54,23 @@ namespace geeL {
 		}
 
 		addLight(light, d);
-		return *light;
 	}
-	
-	PointLight& LightManager::addPointLight(Transform& transform, vec3 diffuse, const ShadowMapConfiguration& config) {
-		PointLight* light = new PointLight(transform, diffuse);
-		LightBinding p = LightBinding(light, plCount++, plName);
+
+	void LightManager::addPointLightInternal(PointLight* light, const ShadowMapConfiguration& config) {
+		LightBinding p(light, plCount++, plName);
 
 		if (config.useShadowMap()) {
 			SimplePointLightMap* map = new SimplePointLightMap(*light, config);
 			map->setIntensity(config.intensity);
 			light->setShadowMap(*map);
 		}
-		
+
 		addLight(light, p);
-		return *light;
 	}
 
-	SpotLight& LightManager::addSpotlight(Transform& transform, vec3 diffuse,
-		float angle, float outerAngle, const ShadowMapConfiguration& config) {
+	void LightManager::addSpotlightInternal(SpotLight* light, const ShadowMapConfiguration& config) {
+		LightBinding s(light, slCount++, slName);
 
-		SpotLight* light = new SpotLight(transform, diffuse, angle, outerAngle);
-		LightBinding s = LightBinding(light, slCount++, slName);
-		
 		if (config.useShadowMap()) {
 			ShadowMap* map = nullptr;
 			if (config.type == ShadowMapType::Hard)
@@ -95,7 +83,6 @@ namespace geeL {
 		}
 
 		addLight(light, s);
-		return *light;
 	}
 
 

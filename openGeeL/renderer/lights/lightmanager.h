@@ -10,22 +10,23 @@
 #include <vec3.hpp>
 #include "shadowmapping/shadowmapconfig.h"
 #include "utility/worldinformation.h"
+#include "pointlight.h"
+#include "directionallight.h"
+#include "spotlight.h"
 
 #define MAX_POINTLIGHTS 5
 #define MAX_DIRECTIONALLIGHTS 5
 #define MAX_SPOTLIGHTS 5
 
+
 namespace geeL {
 
 	class Camera;
-	class DirectionalLight;
 	class DynamicCubeMap;
 	class DynamicIBLMap;
 	class IBLMap;
 	class Light;
 	class SceneCamera;
-	class PointLight;
-	class SpotLight;
 	class RenderShader;
 	class ShadowMap;
 	class SceneShader;
@@ -55,15 +56,16 @@ namespace geeL {
 		~LightManager();
 
 		//Add and create directional light
-		DirectionalLight& addDirectionalLight(const SceneCamera& camera, 
-			Transform& transform, glm::vec3 diffuse, const ShadowMapConfiguration& config);
+		template<typename ...DirectonalLightArgs>
+		DirectionalLight& addDirectionalLight(const ShadowMapConfiguration& config, DirectonalLightArgs&& ...args);
 	
 		//Add and create point light
-		PointLight& addPointLight(Transform& transform, glm::vec3 diffuse, const ShadowMapConfiguration& config);
+		template<typename ...PointLightArgs>
+		PointLight& addPointLight(const ShadowMapConfiguration& config, PointLightArgs&& ...args);
 	
 		//Add and create spotlight
-		SpotLight& addSpotlight(Transform& transform, glm::vec3 diffuse,
-			float angle, float outerAngle, const ShadowMapConfiguration& config);
+		template<typename ...SpotLightArgs>
+		SpotLight& addSpotlight(const ShadowMapConfiguration& config, SpotLightArgs&& ...args);
 
 		void removeLight(Light& light);
 
@@ -117,6 +119,10 @@ namespace geeL {
 		std::set<Shader*> shaderListener;
 
 		void addLight(Light* light, LightBinding& binding);
+		void addDirectionalLightInternal(DirectionalLight* light, const ShadowMapConfiguration& config);
+		void addPointLightInternal(PointLight* light, const ShadowMapConfiguration& config);
+		void addSpotlightInternal(SpotLight* light, const ShadowMapConfiguration& config);
+
 
 		void onRemove(Light* light, LightBinding& binding);
 		void onAdd(Light* light, LightBinding& binding);
@@ -126,6 +132,33 @@ namespace geeL {
 		void reindexLights();
 
 	};
+
+
+
+	template<typename ...DirectonalLightArgs>
+	inline DirectionalLight& LightManager::addDirectionalLight(const ShadowMapConfiguration& config, DirectonalLightArgs&& ...args) {
+		DirectionalLight* light = new DirectionalLight(std::forward<DirectonalLightArgs>(args)...);
+		addDirectionalLightInternal(light, config);
+
+		return *light;
+	}
+
+	template<typename ...PointLightArgs>
+	inline PointLight& LightManager::addPointLight(const ShadowMapConfiguration& config, PointLightArgs&& ...args) {
+		PointLight* light = new PointLight(std::forward<PointLightArgs>(args)...);
+		addPointLightInternal(light, config);
+
+		return *light;
+	}
+
+	template<typename ...SpotLightArgs>
+	inline SpotLight& LightManager::addSpotlight(const ShadowMapConfiguration& config, SpotLightArgs&& ...args) {
+		SpotLight* light = new SpotLight(std::forward<SpotLightArgs>(args)...);
+		addSpotlightInternal(light, config);
+
+		return *light;
+	}
+
 }
 
 #endif

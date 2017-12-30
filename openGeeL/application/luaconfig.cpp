@@ -552,12 +552,13 @@ namespace geeL {
 							float angle = l["angle"].get_or(glm::cos(glm::radians(25.5f)));
 							float outerAngle = l["outerAngle"].get_or(glm::cos(glm::radians(27.5f)));
 
-							lightSource = &lightManager.addSpotlight(lightTransform, color * intensity, angle, outerAngle, config);
+							lightSource = &lightManager.addSpotlight(config, lightTransform, color * intensity, angle, outerAngle);
 						}
 						else if (typeString == "Directional")
-							lightSource = &lightManager.addDirectionalLight(*camera, lightTransform, color * intensity, config);
+							lightSource = &lightManager.addDirectionalLight(config, lightTransform, color * intensity);
+
 						else if (typeString == "Point")
-							lightSource = &lightManager.addPointLight(lightTransform, color * intensity, config);
+							lightSource = &lightManager.addPointLight(config, lightTransform, color * intensity);
 						else
 							std::cout << "Valid light types : { Point, Spot, Directional }\n";
 
