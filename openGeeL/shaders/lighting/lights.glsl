@@ -31,6 +31,7 @@ struct SpotLight {
     float outerAngle;
 	float shadowIntensity;
 	float bias;
+	float radius;
 
 	int resolution;
 	float scale;

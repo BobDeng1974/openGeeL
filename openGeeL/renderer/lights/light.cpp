@@ -124,6 +124,11 @@ namespace geeL {
 		}
 	}
 
+	float Light::getLightRadius(float cutoff) const {
+		float luminance = dot(diffuse, vec3(0.2126f, 0.7152f, 0.0722f));
+		return std::sqrtf(luminance / cutoff);
+	}
+
 	void Light::updateDiffuse() {
 		setDiffuseOnly(color * vec3(intensity));
 	}

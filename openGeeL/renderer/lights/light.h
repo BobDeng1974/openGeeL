@@ -90,6 +90,8 @@ namespace geeL {
 
 		void onChange();
 
+		float getLightRadius(float cutoff) const;
+
 	private:
 		float intensity;
 		vec3 color;

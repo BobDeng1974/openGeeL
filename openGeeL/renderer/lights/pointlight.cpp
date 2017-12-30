@@ -17,15 +17,16 @@ using namespace glm;
 
 namespace geeL {
 
-	PointLight::PointLight(Transform& transform, vec3 diffuse, const string& name)
-		: Light(transform, diffuse, name) {}
+	PointLight::PointLight(Transform& transform, vec3 diffuse, float cutoff, const string& name)
+		: Light(transform, diffuse, name)
+		, cutoff(cutoff) {}
 
 
 	void PointLight::bind(const Shader& shader, const string& name, 
 		ShaderTransformSpace space, const Camera* const camera) const {
 		
 		Light::bind(shader, name, space, camera);
-		shader.bind<float>(name + "radius", getLightRadius());
+		shader.bind<float>(name + "radius", getLightRadius(cutoff));
 
 		switch (space) {
 			case ShaderTransformSpace::View:
@@ -40,12 +41,4 @@ namespace geeL {
 		
 	}
 
-	float PointLight::getLightRadius() const {
-		float maxIntensity = std::max(diffuse.x, std::max(diffuse.y, diffuse.z)) * 1000.f;
-		float minFalloff = 5.f / 256.f;
-		
-		return std::sqrtf(maxIntensity / minFalloff);
-	}
-
-	
 }

@@ -9,13 +9,16 @@ namespace geeL {
 	class PointLight : public Light {
 
 	public:
-		PointLight(Transform& transform, vec3 diffuse, const std::string& name = "Pointlight");
+		PointLight(Transform& transform, vec3 diffuse, float cutoff = 0.01f, 
+			const std::string& name = "Pointlight");
 
 		virtual void bind(const Shader& shader, const std::string& name, ShaderTransformSpace space, 
 			const Camera* const camera = nullptr) const;
 
 		virtual LightType getLightType() const;
-		float getLightRadius() const;
+
+	private:
+		float cutoff;
 
 	};
 

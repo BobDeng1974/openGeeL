@@ -84,7 +84,7 @@ namespace geeL {
 
 
 	TiledDeferredLighting::TiledDeferredLighting(RenderScene& scene)
-		: PostProcessingEffectCS("shaders/lighting/tileddeferred.com.glsl", Resolution(16, 16)) 
+		: PostProcessingEffectCS("shaders/lighting/tileddeferred.com.glsl", Resolution(8, 8)) 
 		, SceneRender(scene) {}
 
 

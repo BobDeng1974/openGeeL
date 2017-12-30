@@ -21,15 +21,20 @@ namespace geeL {
 		vec3 diffuse, 
 		float angle, 
 		float outerAngle, 
+		float cutoff,
 		const string& name)
 			: Light(transform, diffuse, name)
 			, angle(angle)
 			, outerAngle(outerAngle)
+			, cutoff(cutoff)
 			, lightCookie(nullptr) {}
 
 
-	void SpotLight::bind(const Shader& shader, const string& name, ShaderTransformSpace space, const Camera* const camera) const {
+	void SpotLight::bind(const Shader& shader, const string& name, ShaderTransformSpace space, 
+		const Camera* const camera) const {
+		
 		Light::bind(shader, name, space, camera);
+		shader.bind<float>(name + "radius", getLightRadius(cutoff));
 
 		switch (space) {
 			case ShaderTransformSpace::View:

@@ -1,7 +1,7 @@
 #version 430
 
 #define MAX_LIGHTS 5
-#define GROUP_SIZE 16
+#define GROUP_SIZE 8
 layout (local_size_x = GROUP_SIZE, local_size_y = GROUP_SIZE, local_size_z = 1) in;
 
 #include <shaders/helperfunctions.glsl>
@@ -170,7 +170,11 @@ void main() {
 	for(int i = 0; i < slCount; i++)
 		calculateSpotLight(i, spotLights[i], normal, fragPosition, viewDirection, albedo.rgb, roughness, metallic, diff, spec);
 	
-	imageStore(diffuse, coords, vec4(diff + irradiance, 1.f));
+	//if(textureCoordinates.y > 0.5)
+	//	imageStore(diffuse, coords, vec4(vec3(pointLightCounter), 1.f));
+	//else
+		imageStore(diffuse, coords, vec4(irradiance + diff, 1.f));
+
 	imageStore(specular, coords, vec4(spec, 1.f));
 
 #endif

@@ -13,10 +13,11 @@ namespace geeL {
 	class SpotLight : public Light {
 
 	public:
-		SpotLight(Transform& transform, 
-			vec3 diffuse, 
-			float angle = 30.f, 
-			float outerAngle = 5.f, 
+		SpotLight(Transform& transform,
+			vec3 diffuse,
+			float angle = 30.f,
+			float outerAngle = 5.f,
+			float cutoff = 0.01f,
 			const std::string& name = "SpotLight");
 
 		virtual void bind(const Shader& shader,
@@ -37,7 +38,7 @@ namespace geeL {
 
 	private:
 		memory::MemoryObject<ImageTexture> lightCookie;
-		float angle, outerAngle;
+		float angle, outerAngle, cutoff;
 
 	};
 

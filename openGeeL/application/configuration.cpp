@@ -49,8 +49,8 @@ namespace geeL {
 
 		DefaultPostProcess& def = DefaultPostProcess();
 		RenderContext& context = RenderContext();
-		SceneRender& lighting = DeferredLighting(scene);
-		//SceneRender& lighting = TiledDeferredLighting(scene);
+		//SceneRender& lighting = DeferredLighting(scene);
+		SceneRender& lighting = TiledDeferredLighting(scene);
 		DeferredRenderer& renderer = DeferredRenderer(window, textureProvider, lighting, context, def, 
 			gBuffer, meshFactory, materialFactory);
 		renderer.setScene(scene);
