@@ -40,7 +40,8 @@ namespace geeL {
 
 		virtual void runStart();
 		virtual void run();
-		void draw(const Camera& camera, const FrameBuffer& buffer);
+
+		virtual void drawForward(const Camera& camera, bool forceGamma = false) const;
 
 		//Add new post processing effect to renderer. 
 		virtual void addEffect(PostProcessingEffect& effect, DrawTime time);
@@ -83,13 +84,10 @@ namespace geeL {
 
 		DeferredRenderer(const DeferredRenderer& other) = delete;
 		DeferredRenderer& operator= (const DeferredRenderer& other) = delete;
-
-		//Render current frame of scene with classic forward rendering
-		void drawForward(const Camera& camera);
-		void draw();
-
+		
 		void init();
 		void initEffects();
+		void draw();
 
 		void addEffect(SSAO& ssao);
 		

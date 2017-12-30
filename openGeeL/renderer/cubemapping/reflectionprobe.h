@@ -17,7 +17,7 @@ namespace geeL {
 
 	public:
 		ReflectionProbe(CubeBuffer& frameBuffer, 
-			std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall,
+			std::function<void(const Camera&)> renderCall,
 			Transform& transform, 
 			unsigned int resolution, 
 			float width = 50.f, 
@@ -34,7 +34,7 @@ namespace geeL {
 		CubeBuffer& frameBuffer;
 		float width, height, depth;
 
-		std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall;
+		std::function<void(const Camera&)> renderCall;
 
 	};
 

@@ -20,15 +20,14 @@ namespace geeL {
 	class IrradianceMap;
 	class PrefilteredEnvironmentMap;
 	class ReflectionProbe;
+	class Renderer;
 	class Transform;
-
-	typedef std::function<void(const Camera&, const FrameBuffer& buffer)> ReflectionProbeRender;
 
 
 	class CubeMapFactory {
 
 	public:
-		CubeMapFactory(CubeBuffer& buffer, ReflectionProbeRender renderCall, BRDFIntegrationMap& integrationMap);
+		CubeMapFactory(CubeBuffer& buffer, const Renderer& renderer, BRDFIntegrationMap& integrationMap);
 		~CubeMapFactory();
 
 		CubeBuffer& getBuffer();
@@ -53,7 +52,7 @@ namespace geeL {
 
 	private:
 		CubeBuffer& buffer;
-		ReflectionProbeRender renderCall;
+		const Renderer& renderer;
 		BRDFIntegrationMap& integrationMap;
 		std::list<CubeMap*> cubeMaps;
 

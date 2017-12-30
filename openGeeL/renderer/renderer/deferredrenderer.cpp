@@ -93,7 +93,7 @@ namespace geeL {
 
 		for (auto it(renderTextures.begin()); it != renderTextures.end(); it++) {
 			DynamicRenderTexture& texture = **it;
-			texture.update([this](const Camera& camera) { drawForward(camera); });
+			texture.update([this](const Camera& camera) { drawForward(camera, true); });
 		}
 
 		scene->updateCamera();
@@ -185,38 +185,10 @@ namespace geeL {
 	}
 
 
-	void DeferredRenderer::draw(const Camera& camera, const FrameBuffer& buffer) {
-		DepthGuard::enable(true);
-
-		//Geometry pass
-		gBuffer.fill([this, &camera] () { scene->draw(ShadingMethod::Deferred, camera); });
-
-		scene->getLightmanager().update(*scene, nullptr);
-
-		//Occlusion pass
-		if (ssao != nullptr) {
-			ssao->setCamera(camera);
-			ssao->fill();
-			ssao->updateCamera(scene->getCamera());
-		}
-
-		buffer.setRenderResolution();
-		buffer.bind();
-
-		//Draw lighting pass and skybox directly into given framebuffer
-		//Set custom camera for deferred lighting
-		lighting.setCamera(camera);
-		lighting.bindValues();
-		lighting.draw();
-		lighting.setCamera(scene->getCamera());
-
-		scene->drawSkybox(camera);
-	}
-
-	void DeferredRenderer::drawForward(const Camera& camera) {
+	void DeferredRenderer::drawForward(const Camera& camera, bool forceGamma) const {
 		DepthGuard::enable(true);
 		
-		scene->drawForwardForced(camera, true);
+		scene->drawForwardForced(camera, forceGamma);
 		scene->drawSkybox(camera);
 	}
 

@@ -1,3 +1,4 @@
+#include "renderer/renderer.h"
 #include "envcubemap.h"
 #include "irrmap.h"
 #include "reflectionprobe.h"
@@ -8,10 +9,10 @@
 namespace geeL {
 
 	CubeMapFactory::CubeMapFactory(CubeBuffer& buffer, 
-		ReflectionProbeRender renderCall, 
+		const Renderer& renderer,
 		BRDFIntegrationMap& integrationMap)
 			: buffer(buffer)
-			, renderCall(renderCall)
+			, renderer(renderer)
 			, integrationMap(integrationMap) {}
 
 
@@ -84,6 +85,8 @@ namespace geeL {
 	//Create reflection probe without 'Image Based Lighting'
 	ReflectionProbe& CubeMapFactory::createReflectionProbe(Transform& transform, unsigned int resolution, float width,
 		float height, float depth, std::string name) {
+
+		std::function<void(const Camera&)> renderCall = [&](const Camera& camera) { renderer.drawForward(camera, false); };
 
 		ReflectionProbe* probe = new ReflectionProbe(buffer, renderCall, transform, resolution, width, height, depth, name);
 		cubeMaps.push_back(probe);

@@ -9,6 +9,7 @@
 
 namespace geeL {
 
+	class Camera;
 	class GUIRenderer;
 	class MaterialFactory;
 	class MeshFactory;
@@ -27,6 +28,9 @@ namespace geeL {
 
 		virtual void runStart();
 		virtual void run();
+
+		//Render complete scene of current frame with forward rendering
+		virtual void drawForward(const Camera& camera, bool forceGamma = false) const = 0;
 
 		virtual void addGUIRenderer(GUIRenderer& renderer);
 		virtual void setScene(RenderScene& scene);

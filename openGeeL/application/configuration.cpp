@@ -49,8 +49,8 @@ namespace geeL {
 
 		DefaultPostProcess& def = DefaultPostProcess();
 		RenderContext& context = RenderContext();
-		//SceneRender& lighting = DeferredLighting(scene);
-		SceneRender& lighting = TiledDeferredLighting(scene);
+		SceneRender& lighting = DeferredLighting(scene);
+		//SceneRender& lighting = TiledDeferredLighting(scene);
 		DeferredRenderer& renderer = DeferredRenderer(window, textureProvider, lighting, context, def, 
 			gBuffer, meshFactory, materialFactory);
 		renderer.setScene(scene);
@@ -59,15 +59,11 @@ namespace geeL {
 		renderer.addFBuffer(fBuffer);
 
 		ContinuousSingleThread renderThread(renderer);
-		
 		Application& app = ApplicationManager::createApplication(window, manager, renderThread, memory);
-
-		std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall =
-			[&](const Camera& camera, const FrameBuffer& buffer) { renderer.draw(camera, buffer); };
 
 		CubeBuffer cubeBuffer;
 		BRDFIntegrationMap brdfInt;
-		CubeMapFactory& cubeMapFactory = CubeMapFactory(cubeBuffer, renderCall, brdfInt);
+		CubeMapFactory& cubeMapFactory = CubeMapFactory(cubeBuffer, renderer, brdfInt);
 
 		GUIRenderer& gui = GUIRenderer(window, context, renderer);
 		renderer.addGUIRenderer(gui);

@@ -17,7 +17,7 @@ using namespace glm;
 namespace geeL {
 
 	ReflectionProbe::ReflectionProbe(CubeBuffer& frameBuffer, 
-		std::function<void(const Camera&, const FrameBuffer& buffer)> renderCall,
+		std::function<void(const Camera&)> renderCall,
 		Transform& transform, 
 		unsigned int resolution, 
 		float width, 
@@ -86,7 +86,7 @@ namespace geeL {
 		frameBuffer.fill([&](unsigned int side) {
 			cam.setViewMatrix(views[side]);
 			cam.setProjectionMatrix(projections[side / 2]);
-			renderCall(cam, frameBuffer);
+			renderCall(cam);
 		});
 
 		getTexture().mipmap();
