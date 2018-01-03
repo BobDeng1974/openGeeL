@@ -22,7 +22,8 @@ namespace geeL {
 
 
 	void Configuration::run() {
-		InputManager manager;
+		InputReader inputReader;
+		InputManager scriptingInput(inputReader);
 		DefaultMemory memory;
 		//SimplePool memory(5000000000);
 
@@ -41,7 +42,7 @@ namespace geeL {
 		UniformBindingStack pipeline;
 
 		RenderScene* s = new RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, 
-			defaultCamera, materialFactory, manager);
+			defaultCamera, materialFactory, scriptingInput);
 		RenderScene& scene = *s;
 
 		Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
@@ -59,7 +60,7 @@ namespace geeL {
 		renderer.addFBuffer(fBuffer);
 
 		ContinuousSingleThread renderThread(renderer);
-		Application& app = ApplicationManager::createApplication(window, manager, renderThread, memory);
+		Application& app = ApplicationManager::createApplication(window, inputReader, renderThread, memory);
 
 		CubeBuffer cubeBuffer;
 		BRDFIntegrationMap brdfInt;

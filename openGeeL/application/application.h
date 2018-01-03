@@ -14,7 +14,7 @@ namespace geeL {
 	}
 	
 	class RenderWindow;
-	class InputManager;
+	class InputReader;
 	class ContinuousThread;
 
 	using ThreadID = std::thread::id;
@@ -24,7 +24,7 @@ namespace geeL {
 
 	public:
 		Application(RenderWindow& window, 
-			InputManager& inputManager,
+			InputReader& inputReader,
 			ContinuousThread& mainThread,
 			memory::Memory& memory);
 
@@ -40,7 +40,7 @@ namespace geeL {
 
 	private:
 		RenderWindow& window;
-		InputManager& inputManager;
+		InputReader& inputReader;
 		memory::Memory& memory;
 
 		AtomicWrapper<bool> close;

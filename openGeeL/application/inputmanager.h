@@ -44,10 +44,11 @@ namespace geeL {
 	};
 
 
-	class InputManager : public Input {
+
+	class InputReader {
 
 	public:
-		typedef bool (InputManager::*KeyAction)(int) const;
+		AtomicWrapper<int> keys[maxKeys];
 
 		//Forwards the input manager (as user pointer) and the callbacks to GLFW 
 		void init(const RenderWindow* renderWindow);
@@ -56,6 +57,40 @@ namespace geeL {
 		//Callback function that will call every registered callback and updates information about each key
 		void callKey(GLFWwindow* window, int key, int scancode, int action, int mode);
 		void callScroll(GLFWwindow* window, double x, double y);
+
+
+		bool getKey(int key) const;
+		bool getKeyHold(int key) const;
+
+
+		bool getMouseKey(int key) const;
+		double getMouseX() const;
+		double getMouseY() const;
+		double getMouseXNorm() const;
+		double getMouseYNorm() const;
+
+		double getMouseScroll() const;
+
+	private:
+		const RenderWindow* window;
+
+		
+
+		AtomicWrapper<double> mouseX;
+		AtomicWrapper<double> mouseY;
+		AtomicWrapper<double> scroll;
+
+	};
+
+
+
+	class InputManager : public Input {
+
+	public:
+		InputManager(InputReader& reader);
+
+		
+		void update();
 
 		virtual bool getKey(int key) const;
 		virtual bool getKeyDown(int key) const;
@@ -80,8 +115,7 @@ namespace geeL {
 		virtual double getMouseScrollOffset() const;
 
 	private:
-		const RenderWindow* window;
-
+		InputReader& inputReader;
 		std::map<std::string, std::vector<int>> buttonMapping;
 
 		AtomicWrapper<int> keyboardBuffer1[maxKeys];
@@ -90,13 +124,14 @@ namespace geeL {
 		AtomicWrapper<int>* currentKeys = keyboardBuffer1;
 		AtomicWrapper<int>* previousKeys = keyboardBuffer2;
 
-		AtomicWrapper<double> mouseX;
-		AtomicWrapper<double> mouseY;
-		AtomicWrapper<double> lastX;
-		AtomicWrapper<double> lastY;
-		AtomicWrapper<double> scroll;
-		AtomicWrapper<double> lastScroll;
+		double mouseX;
+		double mouseY;
+		double lastX;
+		double lastY;
+		double scroll;
+		double lastScroll;
 
+		typedef bool (InputManager::*KeyAction)(int) const;
 		bool getButtonHelper(const std::string& button, KeyAction keyFunction) const;
 
 	};

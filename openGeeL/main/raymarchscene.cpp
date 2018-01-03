@@ -27,7 +27,8 @@ using namespace geeL;
 
 void RaymarchTest::draw() {
 	RenderWindow& window = RenderWindow("Raymarch", Resolution(1920, 1080), WindowMode::Windowed);
-	InputManager manager;
+	InputReader inputReader;
+	InputManager manager(inputReader);
 	memory::DefaultMemory* memory = new memory::DefaultMemory();
 
 	geeL::Transform& world = geeL::Transform(glm::vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
@@ -52,7 +53,7 @@ void RaymarchTest::draw() {
 	renderer.setScene(*scene);
 
 	ContinuousSingleThread renderThread(renderer);
-	Application& app = ApplicationManager::createApplication(window, manager, renderThread, *memory);
+	Application& app = ApplicationManager::createApplication(window, inputReader, renderThread, *memory);
 
 	ContinuousSingleThread scriptingThread(*scene);
 	app.addThread(scriptingThread);

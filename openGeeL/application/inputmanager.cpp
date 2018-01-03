@@ -7,23 +7,25 @@ using namespace std;
 
 namespace geeL {
 
+
+	std::mutex inputMutex;
+
+
 	void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mode) {
-		InputManager* manager = static_cast<InputManager*>(glfwGetWindowUserPointer(window));
+		InputReader* manager = static_cast<InputReader*>(glfwGetWindowUserPointer(window));
 		manager->callKey(window, key, scancode, action, mode);
 	}
 
 	void scrollCallback(GLFWwindow* window, double x, double y) {
-		InputManager* manager = static_cast<InputManager*>(glfwGetWindowUserPointer(window));
+		InputReader* manager = static_cast<InputReader*>(glfwGetWindowUserPointer(window));
 		manager->callScroll(window, x, y);
 	}
 
 
-	void InputManager::init(const RenderWindow* renderWindow) {
+	void InputReader::init(const RenderWindow* renderWindow) {
 		window = renderWindow;
 		mouseX = window->getWidth() * 0.5f;
 		mouseY = window->getHeight() * 0.5f;
-		lastX = mouseX;
-		lastY = mouseY;
 		scroll = 0.0;
 
 		glfwSetWindowUserPointer(window->glWindow, this);
@@ -31,18 +33,8 @@ namespace geeL {
 		glfwSetScrollCallback(window->glWindow, scrollCallback);
 	}
 
-	void InputManager::update() {
-
-		//Switch key buffers
-		AtomicWrapper<int>* temp = currentKeys;
-		for (size_t i = 0; i < maxKeys; i++)
-			currentKeys[i] = temp[i];
-
-		previousKeys = temp;
-
-		//Update mouse cursor information
-		lastX = mouseX;
-		lastY = mouseY;
+	void InputReader::update() {
+		inputMutex.lock();
 
 		double tempX = mouseX;
 		double tempY = mouseY;
@@ -50,19 +42,80 @@ namespace geeL {
 
 		mouseX = tempX;
 		mouseY = tempY;
+
+		inputMutex.unlock();
 	}
 
-	void InputManager::callKey(GLFWwindow* window, int key, int scancode, int action, int mode) {
+	void InputReader::callKey(GLFWwindow* window, int key, int scancode, int action, int mode) {
 		if (key > 0 && key < maxKeys) {
-			currentKeys[key] = action;
+			keys[key] = action;
 		}
 	}
 
-	void InputManager::callScroll(GLFWwindow* window, double x, double y) {
-		lastScroll = scroll;
+	void InputReader::callScroll(GLFWwindow* window, double x, double y) {
 		scroll = scroll() - y;
 	}
+
+	bool InputReader::getKey(int key) const {
+		return keys[key] == GLFW_PRESS;
+	}
+
+
+	bool InputReader::getKeyHold(int key) const {
+		return keys[key] == GLFW_REPEAT;
+	}
+
+	bool InputReader::getMouseKey(int key) const {
+		int state = glfwGetMouseButton(window->glWindow, GLFW_MOUSE_BUTTON_LEFT + key);
+		return state == GLFW_PRESS;
+	}
+
+	double InputReader::getMouseX() const {
+		return mouseX;
+	}
+
+	double InputReader::getMouseY() const {
+		return mouseY;
+	}
+
+	double InputReader::getMouseXNorm() const {
+		return mouseX / (double)window->getWidth();
+	}
+
+	double InputReader::getMouseYNorm() const {
+		return mouseY / (double)window->getHeight();
+	}
+
+	double InputReader::getMouseScroll() const {
+		return scroll;
+	}
+
+
 	
+
+	InputManager::InputManager(InputReader& reader) 
+		: inputReader(reader) {}
+
+
+	void InputManager::update() {
+		inputMutex.lock();
+
+		for (size_t i = 0; i < maxKeys; i++)
+			currentKeys[i] = inputReader.keys[i];
+
+		lastX = mouseX;
+		lastY = mouseY;
+		mouseX = inputReader.getMouseX();
+		mouseY = inputReader.getMouseY();
+
+		lastScroll = scroll;
+		scroll = inputReader.getMouseScroll();
+
+		inputMutex.unlock();
+	}
+
+
+
 
 	bool InputManager::getKey(int key) const {
 		return currentKeys[key] == GLFW_PRESS;
@@ -85,6 +138,7 @@ namespace geeL {
 	bool InputManager::getKeyHold(int key) const {
 		return currentKeys[key] == GLFW_REPEAT;
 	}
+
 
 	void InputManager::defineButton(const std::string& name, int key) {
 
@@ -132,8 +186,7 @@ namespace geeL {
 	}
 
 	bool InputManager::getMouseKey(int key) const {
-		int state = glfwGetMouseButton(window->glWindow, GLFW_MOUSE_BUTTON_LEFT + key);
-		return state == GLFW_PRESS;
+		return inputReader.getMouseKey(key);
 	}
 
 	double InputManager::getMouseX() const {
@@ -145,11 +198,11 @@ namespace geeL {
 	}
 
 	double InputManager::getMouseXNorm() const {
-		return mouseX / (double)window->getWidth();
+		return  inputReader.getMouseXNorm();
 	}
 
 	double InputManager::getMouseYNorm() const {
-		return mouseY / (double)window->getHeight();
+		return  inputReader.getMouseYNorm();
 	}
 
 	double InputManager::getMouseXOffset() const {
@@ -161,7 +214,7 @@ namespace geeL {
 	}
 
 	double InputManager::getMouseScroll() const {
-		return scroll;
+		return inputReader.getMouseScroll();
 	}
 
 	double InputManager::getMouseScrollOffset() const {

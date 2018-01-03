@@ -16,7 +16,7 @@ using namespace geeL::memory;
 
 namespace geeL {
 
-	void updateExitStatus(Input& input, RenderWindow& window) {
+	void updateExitStatus(InputReader& input, RenderWindow& window) {
 		if(input.getKeyHold(GLFW_KEY_ESCAPE))
 			glfwSetWindowShouldClose(window.glWindow, GL_TRUE);
 	}
@@ -24,14 +24,14 @@ namespace geeL {
 
 
 	Application::Application(RenderWindow& window, 
-		InputManager& inputManager, 
+		InputReader& inputReader,
 		ContinuousThread& mainThread,
 		Memory& memory)
 			: window(window)
-			, inputManager(inputManager)
+			, inputReader(inputReader)
 			, memory(memory) {
 
-		inputManager.init(&window);
+		inputReader.init(&window);
 		addThread(mainThread);
 	}
 
@@ -48,13 +48,13 @@ namespace geeL {
 			inner.reset();
 
 			glfwPollEvents();
-			inputManager.update();
+			inputReader.update();
 
 			inner.update();
 			long currFPS = std::max(0L, FPS - inner.deltaTimeMS());
 			this_thread::sleep_for(chrono::milliseconds(currFPS));
 
-			updateExitStatus(inputManager, window);
+			updateExitStatus(inputReader, window);
 		}
 
 		close = true;

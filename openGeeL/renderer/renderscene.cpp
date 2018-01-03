@@ -243,8 +243,9 @@ namespace geeL {
 		UniformBindingStack& pipeline,
 		SceneCamera& camera, 
 		MaterialFactory& materialFactory, 
-		Input& input)
+		InputManager& input)
 			: Scene(world, lightManager, pipeline, camera)
+			, ThreadedObject(60L)
 			, materialFactory(materialFactory)
 			, input(input) {
 			
@@ -288,6 +289,8 @@ namespace geeL {
 
 	void RenderScene::run() {
 		lock();
+
+		input.update();
 
 		iterSceneObjects([&](SceneObject& obj) {
 			obj.update(input);

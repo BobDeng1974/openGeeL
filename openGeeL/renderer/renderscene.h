@@ -16,6 +16,7 @@ namespace geeL {
 
 	class Camera;
 	class Input;
+	class InputManager;
 	class SceneCamera;
 	class SceneObject;
 	class SceneRequester;
@@ -116,7 +117,7 @@ namespace geeL {
 
 	public:
 		RenderScene(Transform& world, LightManager& lightManager, UniformBindingStack& pipeline, SceneCamera& camera, 
-			MaterialFactory& materialFactory, Input& input);
+			MaterialFactory& materialFactory, InputManager& input);
 
 		virtual MeshRenderer& addMeshRenderer(std::unique_ptr<MeshRenderer> renderer);
 		virtual void removeMeshRenderer(MeshRenderer& renderer);
@@ -170,7 +171,7 @@ namespace geeL {
 
 	private:
 		bool initialized = false;
-		Input& input;
+		InputManager& input;
 		MaterialFactory& materialFactory;
 		std::mutex mutex;
 
