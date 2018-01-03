@@ -17,6 +17,7 @@ namespace geeL {
 		manager->callScroll(window, x, y);
 	}
 
+
 	void InputManager::init(const RenderWindow* renderWindow) {
 		window = renderWindow;
 		mouseX = window->getWidth() * 0.5f;
@@ -27,7 +28,7 @@ namespace geeL {
 
 		glfwSetWindowUserPointer(window->glWindow, this);
 		glfwSetKeyCallback(window->glWindow, keyboardCallback);
-		glfwSetScrollCallback(window->glWindow , scrollCallback);
+		glfwSetScrollCallback(window->glWindow, scrollCallback);
 	}
 
 	void InputManager::update() {
@@ -50,23 +51,8 @@ namespace geeL {
 		mouseX = tempX;
 		mouseY = tempY;
 	}
-	
 
-	void InputManager::addCallback(std::function<void(int, int, int, int)> function) {
-		callbackMutex.lock();
-		callbacks.push_back(function);
-		callbackMutex.unlock();
-	}
-
-	
 	void InputManager::callKey(GLFWwindow* window, int key, int scancode, int action, int mode) {
-		callbackMutex.lock();
-		for (size_t i = 0; i < callbacks.size(); i++) {
-			auto func = callbacks[i];
-			func(key, scancode, action, mode);
-		}
-		callbackMutex.unlock();
-
 		if (key > 0 && key < maxKeys) {
 			currentKeys[key] = action;
 		}
@@ -76,6 +62,7 @@ namespace geeL {
 		lastScroll = scroll;
 		scroll = scroll() - y;
 	}
+	
 
 	bool InputManager::getKey(int key) const {
 		return currentKeys[key] == GLFW_PRESS;

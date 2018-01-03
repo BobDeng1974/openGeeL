@@ -16,6 +16,13 @@ using namespace geeL::memory;
 
 namespace geeL {
 
+	void updateExitStatus(Input& input, RenderWindow& window) {
+		if(input.getKeyHold(GLFW_KEY_ESCAPE))
+			glfwSetWindowShouldClose(window.glWindow, GL_TRUE);
+	}
+
+
+
 	Application::Application(RenderWindow& window, 
 		InputManager& inputManager, 
 		ContinuousThread& mainThread,
@@ -24,14 +31,7 @@ namespace geeL {
 			, inputManager(inputManager)
 			, memory(memory) {
 
-		auto exit = [&window](int key, int scancode, int action, int mode) {
-			if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-				glfwSetWindowShouldClose(window.glWindow, GL_TRUE);
-		};
-
-		inputManager.addCallback(exit);
 		inputManager.init(&window);
-
 		addThread(mainThread);
 	}
 
@@ -53,6 +53,8 @@ namespace geeL {
 			inner.update();
 			long currFPS = std::max(0L, FPS - inner.deltaTimeMS());
 			this_thread::sleep_for(chrono::milliseconds(currFPS));
+
+			updateExitStatus(inputManager, window);
 		}
 
 		close = true;
