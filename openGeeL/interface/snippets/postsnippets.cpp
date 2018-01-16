@@ -177,6 +177,10 @@ namespace geeL {
 		color.setContrast(c);
 
 
+		float vi = GUISnippets::drawBarFloat(context, color.getVibrance(), -2.f, 2.f, 0.001f, "Vibrance");
+		color.setVibrance(vi);
+
+
 		GUISnippets::drawTreeNode(context, "Chromatic Aberration", true, [this](GUIContext* context) {
 			const glm::vec2& direction = color.getDistortionDirection();
 			const glm::vec3& distortion = color.getChromaticDistortion() * 1000.f;

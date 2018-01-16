@@ -32,7 +32,7 @@ namespace geeL {
 
 		if (camera != nullptr) {
 			Transform& transform = camera->transform;
-			glm::vec3 currPosition = transform.getPosition() + 20.f * transform.getForwardDirection();
+			glm::vec3 currPosition = transform.getPosition() + 5.f * transform.getForwardDirection();
 			diff = glm::length(currPosition - prevPosition);
 
 			glm::vec3 a = camera->TranslateToScreenSpace(currPosition);
@@ -47,12 +47,11 @@ namespace geeL {
 			std::cout << "No camera attached to motion blur. Effect won't be completely functional.\n";
 		}
 		
-		shader.bind<glm::vec3>(offsetLocation, offset * 2.f);
+		shader.bind<glm::vec3>(offsetLocation, offset * 2.f * strength);
 
 		float value = strength * diff;
 		float detail = float(LOD) - 1.f;
 		value = (value > 1.f) ? 1.f : value;
-		shader.bind<float>(strengthLocation, strength);
 		shader.bind<float>(samplesLocation, ceil(detail * value + 1.f));
 	}
 
@@ -165,7 +164,6 @@ namespace geeL {
 
 		parentBuffer->add(*positionTexture);
 		parentBuffer->fill(prevPositionEffect, clearColor);
-
 	}
 
 }

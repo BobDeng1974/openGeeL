@@ -139,8 +139,8 @@ public:
 			postLister.add(iblSnippet);
 
 			BrightnessFilterCutoff& filter = BrightnessFilterCutoff(1.f);
-			GaussianBlur& bloomBlur = GaussianBlur(3.f, 17);
-			Bloom& bloom = Bloom(filter, bloomBlur, ResolutionPreset::HALFSCREEN, ResolutionPreset::HALFSCREEN);
+			GaussianBlur& bloomBlur = GaussianBlur(3.5f, 11);
+			Bloom& bloom = Bloom(filter, bloomBlur, ResolutionPreset::FULLSCREEN, ResolutionPreset::HALFSCREEN);
 			renderer.addEffect(bloom, DrawTime::Late);
 			postLister.add(bloom);
 
@@ -174,6 +174,7 @@ public:
 
 			ColorCorrection& colorCorrect = ColorCorrection();
 			colorCorrect.setContrast(1.2f);
+			colorCorrect.setVibrance(0.25f);
 			renderer.addEffect(colorCorrect, DrawTime::Late);
 			postLister.add(colorCorrect);
 

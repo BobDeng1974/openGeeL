@@ -1,6 +1,6 @@
 #version 330 core
 
-uniform float r, g, b, h, s, v, c;
+uniform float r, g, b, h, s, v, c, vi;
 uniform vec2 direction;
 uniform vec3 distortion;
 
@@ -8,6 +8,8 @@ in vec2 TexCoords;
 out vec4 color;
 
 uniform sampler2D image;
+
+const vec3 lumaCoeff = vec3(0.2126f, 0.7152f, 0.0722f);
 
 
 vec3 rgb2hsv(vec3 c) {
@@ -36,6 +38,11 @@ vec3 evalLogContrastFunc(vec3 color, float eps, float logMidpoint, float contras
 	return max(vec3(0.f), exp2(adjX) - vec3(eps));
 }
 
+vec3 lerp(vec3 a, vec3 b, float c) {
+	return a * (1.f - c) + b * c;
+
+}
+
 void main() { 
 	//color = texture(image, TexCoords);
 	//vec3 col = vec3(color);
@@ -52,8 +59,22 @@ void main() {
 	col.r *= h;
 	col.g *= s;
 	col.b *= v;
+
+	float saturation = col.g;
 	col = hsv2rgb(col);
-	
+
+	//Intelligent vibrance according to
+	//https://github.com/terrasque/sweetfxui/blob/master/SweetFX/SweetFX/Shaders/Vibrance.h
+	if(vi != 0.f) {
+		float luma = dot(lumaCoeff, col.rgb);
+
+		//float maxColor = max(col.r, max(col.g, col.b)); //Find the strongest color
+		//float minColor = min(col.r, min(col.g, col.b)); //Find the weakest color
+		//float color_saturation = maxColor - minColor;
+
+		col.rgb = lerp(vec3(luma), col.rgb, (1.f + (vi * (1.f - (sign(vi) * saturation)))));
+	}
+
 	if(c != 1.f)
 		col = evalLogContrastFunc(col, 0.0001f, 0.18f, c); 
 	

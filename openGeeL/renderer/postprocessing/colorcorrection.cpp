@@ -7,11 +7,11 @@
 namespace geeL {
 
 	ColorCorrection::ColorCorrection(float red, float green, float blue,
-		float hue, float saturation, float brightness, float contrast)
+		float hue, float saturation, float brightness, float contrast, float vibrance)
 			: PostProcessingEffectFS("shaders/postprocessing/colorcorrection.frag")
 			, r(red), g(green), b(blue)
 			, h(hue), s(saturation), v(brightness)
-			, c(contrast) {}
+			, c(contrast), vi(vibrance) {}
 
 
 	void ColorCorrection::init(const PostProcessingParameter& parameter) {
@@ -24,6 +24,7 @@ namespace geeL {
 		shader.bind<float>("s", s);
 		shader.bind<float>("v", v);
 		shader.bind<float>("c", c);
+		shader.bind<float>("vi", vi);
 
 		shader.bind<glm::vec2>("direction", distortionDirection);
 		shader.bind<glm::vec3>("distortion", distortion);
@@ -56,6 +57,10 @@ namespace geeL {
 
 	float ColorCorrection::getContrast() const {
 		return c;
+	}
+
+	float ColorCorrection::getVibrance() const {
+		return vi;
 	}
 
 	const glm::vec2& ColorCorrection::getDistortionDirection() const {
@@ -119,6 +124,14 @@ namespace geeL {
 			c = value;
 
 			shader.bind<float>("c", c);
+		}
+	}
+
+	void ColorCorrection::setVibrance(float value) {
+		if (vi != value && value >= -2.f && value <= 2.f) {
+			vi = value;
+
+			shader.bind<float>("vi", vi);
 		}
 	}
 
