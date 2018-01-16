@@ -40,22 +40,29 @@ namespace geeL {
 		glfwMakeContextCurrent(0);
 		
 		initThreads();
+		iterObjects([](ThreadedObject& obj) { obj.runStart(); });
 
+		time.reset();
 		Time& inner = Time();
-		long FPS = 10;
+		long ms = 10;
 
 		while (!window.shouldClose()) {
 			inner.reset();
 
 			glfwPollEvents();
 			inputManager.update();
+			iterObjects([](ThreadedObject& obj) { obj.run(); });
 
 			inner.update();
-			long currFPS = std::max(0L, FPS - inner.deltaTimeMS());
-			this_thread::sleep_for(chrono::milliseconds(currFPS));
+			long currMS = std::max(0L, ms - inner.deltaTimeMS());
+			this_thread::sleep_for(chrono::milliseconds(currMS));
 
 			updateExitStatus(inputManager, window);
+
+			time.update();
 		}
+
+		iterObjects([](ThreadedObject& obj) { obj.runEnd(); });
 
 		close = true;
 		joinThreads();
@@ -66,6 +73,10 @@ namespace geeL {
 	void Application::addThread(ContinuousThread& thread) {
 		thread.setApplication(*this);
 		tempThreads.push_back(&thread);
+	}
+
+	void Application::addThreadedObject(ThreadedObject& object) {
+		threadedObjects.push_back(&object);
 	}
 
 	bool Application::closing() const {
@@ -85,6 +96,8 @@ namespace geeL {
 		return nullptr;
 	}
 
+	
+
 	const ContinuousThread* const Application::getCurrentThread() {
 		return getThread(this_thread::get_id());
 	}
@@ -95,7 +108,7 @@ namespace geeL {
 			return thread->getTime();
 		}
 
-		return Time();
+		return time;
 	}
 
 	memory::Memory& Application::getMemory() {
@@ -123,6 +136,13 @@ namespace geeL {
 				thread->join();
 		}
 
+	}
+
+	void Application::iterObjects(std::function<void(ThreadedObject&)> function) {
+		for (auto it(threadedObjects.begin()); it != threadedObjects.end(); it++) {
+			ThreadedObject& object = **it;
+			function(object);
+		}
 	}
 
 }
