@@ -19,15 +19,17 @@ namespace geeL {
 	public:
 		const unsigned int maxLOD;
 
-		MotionBlur(float strength = 0.5f, unsigned int LOD = 15, unsigned int maxLOD = 20);
+		MotionBlur(float strength = 0.5f, float sigma = 5.f, unsigned int LOD = 15,
+			unsigned int maxLOD = 20);
 		
-		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues();
 
 		float getStrength() const;
-		void  setStrength(float value);
-
+		float getSigma() const;
 		unsigned int getLevelOfDetail() const;
+
+		void setStrength(float value);
+		void setSigma(float value);
 		void setLevelOfDetail(unsigned int value);
 
 		virtual std::string toString() const;
@@ -36,14 +38,17 @@ namespace geeL {
 		ShaderLocation samplesLocation;
 		ShaderLocation strengthLocation;
 
-		MotionBlur(const std::string& shaderPath, float strength = 0.5f, 
+		MotionBlur(const std::string& shaderPath, float strength = 0.5f, float sigma = 5.f, 
 			unsigned int LOD = 15, unsigned int maxLOD = 20);
 
 	private:
-		float strength;
+		float strength, sigma;
 		unsigned int LOD;
 
 		std::list<glm::vec3> positions;
+
+
+		void updateKernel();
 
 	};
 

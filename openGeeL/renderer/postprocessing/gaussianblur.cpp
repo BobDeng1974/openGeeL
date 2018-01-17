@@ -77,14 +77,15 @@ namespace geeL {
 
 	}
 
-	std::vector<float> GaussianBlur::computeKernel(float sigma, unsigned int kernelSize) {
+	std::vector<float> GaussianBlur::computeKernel(float sigma, unsigned int kernelSize, bool halvedDistribution) {
 		std::vector<float> kernel = std::vector<float>(kernelSize);
 
+		float h = halvedDistribution ? 1.f : 2.f;
 		float s = 2.f * sigma * sigma;
 		float sum = 0.f;
 		for (int x = 0; x < int(kernelSize); x++) {
 			kernel[x] = (exp(-(x * x) / s)) / (PI * s);
-			sum += (x == 0) ? kernel[x] : 2.f * kernel[x];
+			sum += (x == 0) ? kernel[x] : h * kernel[x];
 		}
 
 		for (unsigned int x = 0; x < kernelSize; x++)

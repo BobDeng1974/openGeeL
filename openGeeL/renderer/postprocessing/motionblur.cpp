@@ -10,24 +10,28 @@
 
 namespace geeL {
 
-	MotionBlur::MotionBlur(float strength, unsigned int LOD, unsigned int maxLOD)
-		: MotionBlur("shaders/postprocessing/motionblur.frag", strength, LOD, maxLOD) {}
+	MotionBlur::MotionBlur(float strength, float sigma, unsigned int LOD, unsigned int maxLOD)
+		: MotionBlur("shaders/postprocessing/motionblur.frag", strength, sigma, LOD, maxLOD) {}
 
-	MotionBlur::MotionBlur(const std::string& shaderPath, float strength, unsigned int LOD, unsigned int maxLOD)
-		: PostProcessingEffectFS(defaultVertexPath, shaderPath,
-			StringReplacement("^const unsigned int maxSamples =\\s+([0-9]+){1};\\s?",
-				std::to_string(maxLOD), 1))
-		, strength(strength)
-		, LOD(LOD)
-		, maxLOD(maxLOD) {}
-
-
-	void MotionBlur::init(const PostProcessingParameter& parameter) {
-		PostProcessingEffectFS::init(parameter);
-
+	MotionBlur::MotionBlur(const std::string& shaderPath, 
+		float strength, float sigma, 
+		unsigned int LOD, unsigned int maxLOD)
+			: PostProcessingEffectFS(defaultVertexPath, shaderPath,
+				StringReplacement("^const unsigned int maxSamples =\\s+([0-9]+){1};\\s?",
+					std::to_string(maxLOD), 1))
+			, strength(0.f)
+			, sigma(0.f)
+			, LOD(0)
+			, maxLOD(maxLOD) {
+	
 		samplesLocation = shader.getLocation("sampleSize");
 		strengthLocation = shader.getLocation("strength");
+
+		setStrength(strength);
+		setSigma(sigma);
+		setLevelOfDetail(LOD);
 	}
+
 
 	void MotionBlur::bindValues() {
 		assert(camera != nullptr);
@@ -50,8 +54,8 @@ namespace geeL {
 			glm::vec3 b = *next(it);
 
 			glm::vec3 off = camera->TranslateToScreenSpace(a) - camera->TranslateToScreenSpace(b);
-			offset += off * strength;
 
+			offset += off * strength;
 			shader.bind<glm::vec3>("offsets[" + std::to_string(i++) + "]", offset);
 		}
 	}
@@ -61,13 +65,26 @@ namespace geeL {
 		return strength;
 	}
 
+	float MotionBlur::getSigma() const {
+		return sigma;
+	}
+
+	unsigned int MotionBlur::getLevelOfDetail() const {
+		return LOD;
+	}
+
+
 	void MotionBlur::setStrength(float value) {
 		if (strength != value && value > 0.f && value < 1.f)
 			strength = value;
 	}
 
-	unsigned int MotionBlur::getLevelOfDetail() const {
-		return LOD;
+	void MotionBlur::setSigma(float value) {
+		if (sigma != value && value > 0.f) {
+			sigma = value;
+
+			updateKernel();
+		}
 	}
 
 	void MotionBlur::setLevelOfDetail(unsigned int value) {
@@ -75,8 +92,19 @@ namespace geeL {
 			LOD = value;
 
 			shader.bind<float>(samplesLocation, LOD - 1);
+			updateKernel();
 		}
 	}
+
+	void MotionBlur::updateKernel() {
+		if (LOD == 0 || sigma == 0.f) return;
+
+		std::vector<float> kernel = std::move(GaussianBlur::computeKernel(sigma, LOD - 1, true));
+		for (int i = 0; i < kernel.size(); i++)
+			shader.bind<float>("kernel[" + std::to_string(i) + "]", kernel[i]);
+
+	}
+
 
 
 	MotionBlurPerPixel::MotionBlurPerPixel(VelocityBuffer& velocity, float strength, unsigned int LOD)

@@ -62,6 +62,9 @@ namespace geeL {
 		float strength = GUISnippets::drawBarFloat(context, blur.getStrength(), 0.f, 1.f, 0.001f, "Strength");
 		blur.setStrength(strength);
 
+		float sigma = GUISnippets::drawBarFloatLogarithmic(context, blur.getSigma(), 0.1f, 25.f, 0.001f, "Sigma");
+		blur.setSigma(sigma);
+
 		int samples = GUISnippets::drawBarInteger(context, blur.getLevelOfDetail(), 2, blur.maxLOD, 1, "Details");
 		blur.setLevelOfDetail(samples);
 	}

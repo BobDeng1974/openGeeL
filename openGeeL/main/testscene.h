@@ -181,7 +181,7 @@ public:
 			renderer.addEffect(ssrrSmooth);
 			scene.addRequester(ssrr);
 
-			MotionBlur& motionBlur = MotionBlur(0.3f, 20);
+			MotionBlur& motionBlur = MotionBlur(0.3f, 5.f, 20);
 			MotionBlurSnippet& mSnippet = MotionBlurSnippet(motionBlur);
 			renderer.addEffect(motionBlur, DrawTime::Late);
 			scene.addRequester(motionBlur);

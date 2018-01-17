@@ -155,7 +155,7 @@ public:
 			scene.addRequester(ray);
 			postLister.add(raySmooth, godRaySnippet);
 
-			MotionBlur& motionBlur = MotionBlur(0.3f, 10);
+			MotionBlur& motionBlur = MotionBlur(0.3f, 2.f, 10);
 			MotionBlurSnippet& mSnippet = MotionBlurSnippet(motionBlur);
 			renderer.addEffect(motionBlur, DrawTime::Late);
 			scene.addRequester(motionBlur);
