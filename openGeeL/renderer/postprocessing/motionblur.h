@@ -81,7 +81,7 @@ namespace geeL {
 		virtual void bindValues();
 
 	protected:
-		virtual void bindSubImages();
+		virtual void drawSubImages();
 
 	private:
 		VelocityBuffer& velocity;
