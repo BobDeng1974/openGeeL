@@ -139,6 +139,10 @@ namespace geeL {
 		textures[texture.getScale()][texture.getColorType()].push(&texture);
 	}
 
+	Resolution TextureProvider::getRenderResolution() const {
+		return window.getResolution();
+	}
+
 	void TextureProvider::cleanupCache() {
 		currentRate = (1 + currentRate) % cacheClearingRate;
 		if (currentRate != 0) return;

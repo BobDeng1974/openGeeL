@@ -267,6 +267,7 @@
     <ClCompile Include="renderer\shader\uniformstack.cpp" />
     <ClCompile Include="renderer\shadowmapping\cascadedmap.cpp" />
     <ClCompile Include="renderer\shadowmapping\shadowbuffer.cpp" />
+    <ClCompile Include="renderer\shadowmapping\shadowmapalloc.cpp" />
     <ClCompile Include="renderer\shadowmapping\shadowmapconfig.cpp" />
     <ClCompile Include="renderer\shadowmapping\simpleshadowmap.cpp" />
     <ClCompile Include="renderer\shadowmapping\varianceshadowmap.cpp" />
@@ -286,6 +287,7 @@
     <ClCompile Include="renderer\transformation\transformfactory.cpp" />
     <ClCompile Include="renderer\utility\debug.cpp" />
     <ClCompile Include="renderer\utility\defaults.cpp" />
+    <ClCompile Include="renderer\utility\depthreader.cpp" />
     <ClCompile Include="renderer\utility\gvector.cpp" />
     <ClCompile Include="renderer\utility\linearkernel.cpp" />
     <ClCompile Include="renderer\utility\rendertime.cpp" />
@@ -437,6 +439,7 @@
     <ClInclude Include="renderer\shadowmapping\cascadedmap.h" />
     <ClInclude Include="renderer\shadowmapping\shadowbuffer.h" />
     <ClInclude Include="renderer\shadowmapping\shadowmap.h" />
+    <ClInclude Include="renderer\shadowmapping\shadowmapalloc.h" />
     <ClInclude Include="renderer\shadowmapping\shadowmapconfig.h" />
     <ClInclude Include="renderer\shadowmapping\simpleshadowmap.h" />
     <ClInclude Include="renderer\shadowmapping\varianceshadowmap.h" />
@@ -460,6 +463,7 @@
     <ClInclude Include="renderer\transformation\transformfactory.h" />
     <ClInclude Include="renderer\utility\debug.h" />
     <ClInclude Include="renderer\utility\defaults.h" />
+    <ClInclude Include="renderer\utility\depthreader.h" />
     <ClInclude Include="renderer\utility\functionguard.h" />
     <ClInclude Include="renderer\utility\gvector.h" />
     <ClInclude Include="renderer\utility\linearkernel.h" />
@@ -517,6 +521,7 @@
     <None Include="shaders\lighting\transparentlighting2.frag" />
     <None Include="shaders\material.glsl" />
     <None Include="shaders\materialproperties.glsl" />
+    <None Include="shaders\nearest.com.glsl" />
     <None Include="shaders\postprocessing\bilateral.frag" />
     <None Include="shaders\postprocessing\bilateraldepth.frag" />
     <None Include="shaders\postprocessing\bloomfilter.frag" />

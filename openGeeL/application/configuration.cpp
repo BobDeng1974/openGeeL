@@ -4,6 +4,7 @@
 #include "shader/uniformstack.h"
 #include "texturing/textureparams.h"
 #include "texturing/textureprovider.h"
+#include "shadowmapping/shadowmapalloc.h"
 #include "appmanager.h"
 #include "configuration.h"
 
@@ -38,6 +39,8 @@ namespace geeL {
 		MaterialFactory& materialFactory = MaterialFactory(gBuffer);
 		MeshFactory& meshFactory = MeshFactory(materialFactory);
 		LightManager& lightManager = LightManager();
+		
+
 		UniformBindingStack pipeline;
 
 		RenderScene* s = new RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, 
@@ -46,6 +49,9 @@ namespace geeL {
 
 		Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 		TextureProvider textureProvider(window, gBuffer);
+
+		ShadowmapAllocator shadowManager(scene, textureProvider);
+		lightManager.addShadowmapManager(shadowManager);
 
 		DefaultPostProcess& def = DefaultPostProcess();
 		RenderContext& context = RenderContext();

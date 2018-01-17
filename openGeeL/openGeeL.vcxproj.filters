@@ -531,6 +531,12 @@
     <ClCompile Include="application\workerthread.cpp">
       <Filter>application</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\utility\depthreader.cpp">
+      <Filter>renderer\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\shadowmapping\shadowmapalloc.cpp">
+      <Filter>renderer\shadowmapping</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\texturing\texture.h">
@@ -1076,6 +1082,12 @@
     <ClInclude Include="shaders\lighting\transparentlighting.frag">
       <Filter>shaders\lighting</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\utility\depthreader.h">
+      <Filter>renderer\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shadowmapping\shadowmapalloc.h">
+      <Filter>renderer\shadowmapping</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\combine.frag">
@@ -1344,6 +1356,9 @@
     </None>
     <None Include="shaders\lighting\transparentlighting2.frag">
       <Filter>shaders\lighting</Filter>
+    </None>
+    <None Include="shaders\nearest.com.glsl">
+      <Filter>shaders\postprocessing</Filter>
     </None>
   </ItemGroup>
 </Project>

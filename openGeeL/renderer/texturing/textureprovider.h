@@ -4,6 +4,7 @@
 #include <functional>
 #include <map>
 #include <list>
+#include "utility/resolution.h"
 #include "texturetype.h"
 
 namespace geeL {
@@ -88,6 +89,7 @@ namespace geeL {
 
 		virtual void returnTexture(RenderTexture& texture);
 
+		Resolution getRenderResolution() const;
 
 		void cleanupCache();
 

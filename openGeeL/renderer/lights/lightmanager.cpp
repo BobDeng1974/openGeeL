@@ -10,6 +10,7 @@
 #include "shadowmapping/simpleshadowmap.h"
 #include "shadowmapping/varianceshadowmap.h"
 #include "shadowmapping/cascadedmap.h"
+#include "shadowmapping/shadowmapalloc.h"
 #include "cubemapping/reflectionprobe.h"
 #include "cubemapping/iblmap.h"
 #include "framebuffer/cubebuffer.h"
@@ -25,8 +26,13 @@ using namespace glm;
 
 namespace geeL {
 
-	LightManager::LightManager() : ambient(ambient), voxelStructure(nullptr),
-		plCount(0), dlCount(0), slCount(0) {}
+	LightManager::LightManager() 
+		: ambient(ambient)
+		, voxelStructure(nullptr)
+		, shadowManager(nullptr)
+		, plCount(0)
+		, dlCount(0)
+		, slCount(0) {}
 
 	LightManager::~LightManager() {
 		iterLights([this](Light& light) {
@@ -130,6 +136,9 @@ namespace geeL {
 	}
 
 	void LightManager::update(const RenderScene& scene, const SceneCamera* const camera) {
+		if (shadowManager != nullptr)
+			shadowManager->update();
+
 		drawShadowmaps(scene, camera);
 		drawVoxelStructure();
 	}
@@ -178,6 +187,18 @@ namespace geeL {
 		for (auto it = lights.begin(); it != lights.end(); it++) {
 			const LightBinding& binding = it->second;
 			function(binding);
+		}
+	}
+
+	void LightManager::iterShadowmaps(std::function<void(ShadowMap&)> function) const {
+		for (auto it = lights.begin(); it != lights.end(); it++) {
+			const LightBinding& binding = it->second;
+			Light& light = *binding.light;
+
+			ShadowMap* map = light.getShadowMap();
+
+			if (map != nullptr)
+				function(*map);
 		}
 	}
 
@@ -339,6 +360,10 @@ namespace geeL {
 	void LightManager::drawVoxelStructure() {
 		if (voxelStructure != nullptr)
 			voxelStructure->build();
+	}
+
+	void LightManager::addShadowmapManager(ShadowmapAllocator& manager) {
+		shadowManager = &manager;
 	}
 
 

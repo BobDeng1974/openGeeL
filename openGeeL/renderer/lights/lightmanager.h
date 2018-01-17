@@ -32,6 +32,8 @@ namespace geeL {
 	class SceneShader;
 	class RenderScene;
 	class Shader;
+	class ShadowMap;
+	class ShadowmapAllocator;
 	class Transform;
 	class VoxelStructure;
 	class LightBinding;
@@ -84,6 +86,7 @@ namespace geeL {
 		void iterLights(std::function<void(Light&)> function);
 		void iterLights(std::function<void(LightBinding&)> function);
 		void iterLights(std::function<void(const LightBinding&)> function) const;
+		void iterShadowmaps(std::function<void(ShadowMap&)> function) const;
 
 
 		DynamicIBLMap& addReflectionProbe(DynamicIBLMap& probe);
@@ -100,6 +103,8 @@ namespace geeL {
 		void addVoxelStructure(VoxelStructure& structure);
 		void drawVoxelStructure();
 
+		void addShadowmapManager(ShadowmapAllocator& manager);
+
 		
 		//Add shader that shall be updated when lights are added/removed
 		void addShaderListener(Shader& shader);
@@ -111,6 +116,8 @@ namespace geeL {
 	private:
 		glm::vec3 ambient;
 		VoxelStructure* voxelStructure;
+		ShadowmapAllocator* shadowManager;
+
 		ShadowmapRepository shaderRepository;
 		size_t plCount, dlCount, slCount;
 
