@@ -6,16 +6,17 @@ out vec4 color;
 
 uniform sampler2D image;
 
-uniform float maxSamples = 5.f;
-uniform vec3 offset;
+const unsigned int maxSamples = 20;
+uniform float sampleSize = 5.f;
+
+uniform vec3 offsets[maxSamples];
+
 
 void main() {
-
 	vec3 result = vec3(0.f);
-	for(float i = 0; i < maxSamples; i += 1.f) {
-		vec2 off = (i / maxSamples) * offset.xy;
-		result += texture(image, TexCoords - off).rgb; 
+	for(unsigned int i = 0; i < int(sampleSize); i ++) {
+		result += texture(image, TexCoords - offsets[i].xy).rgb; 
 	}
 
-	color = vec4(result / maxSamples, 1.f);
+	color = vec4(result / sampleSize, 1.f);
 }

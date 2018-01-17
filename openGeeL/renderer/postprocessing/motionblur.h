@@ -2,6 +2,7 @@
 #define MOTIONBLUR_H
 
 #include <glm.hpp>
+#include <list>
 #include <string>
 #include "utility/worldinformation.h"
 #include "postprocessing.h"
@@ -16,7 +17,9 @@ namespace geeL {
 	class MotionBlur : public PostProcessingEffectFS, public CameraRequester {
 
 	public:
-		MotionBlur(float strength = 0.5f, unsigned int LOD = 15);
+		const unsigned int maxLOD;
+
+		MotionBlur(float strength = 0.5f, unsigned int LOD = 15, unsigned int maxLOD = 20);
 		
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues();
@@ -32,14 +35,15 @@ namespace geeL {
 	protected:
 		ShaderLocation samplesLocation;
 		ShaderLocation strengthLocation;
-		ShaderLocation offsetLocation;
 
-		MotionBlur(const std::string& shaderPath, float strength = 0.5f, unsigned int LOD = 15);
+		MotionBlur(const std::string& shaderPath, float strength = 0.5f, 
+			unsigned int LOD = 15, unsigned int maxLOD = 20);
 
 	private:
 		float strength;
 		unsigned int LOD;
-		glm::vec3 prevPosition;
+
+		std::list<glm::vec3> positions;
 
 	};
 

@@ -155,11 +155,11 @@ public:
 			scene.addRequester(ray);
 			postLister.add(raySmooth, godRaySnippet);
 
-			MotionBlur& motionBlur = MotionBlur(0.3f, 20);
+			MotionBlur& motionBlur = MotionBlur(0.3f, 10);
 			MotionBlurSnippet& mSnippet = MotionBlurSnippet(motionBlur);
-			//renderer.addEffect(motionBlur, DrawTime::Late);
-			//scene.addRequester(motionBlur);
-			//postLister.add(mSnippet);
+			renderer.addEffect(motionBlur, DrawTime::Late);
+			scene.addRequester(motionBlur);
+			postLister.add(mSnippet);
 
 			//Fake subsurface scattering with gaussian blur
 			SeparatedGaussian& sss = SeparatedGaussian(1.3f, 7, 0.55f);

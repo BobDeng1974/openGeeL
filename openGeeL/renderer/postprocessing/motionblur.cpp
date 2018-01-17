@@ -1,6 +1,7 @@
 #include <iostream>
 #include "primitives/screenquad.h"
 #include "framebuffer/framebuffer.h"
+#include "shader/shaderreader.h"
 #include "texturing/rendertexture.h"
 #include "texturing/textureprovider.h"
 #include "transformation/transform.h"
@@ -9,52 +10,51 @@
 
 namespace geeL {
 
-	MotionBlur::MotionBlur(float strength, unsigned int LOD)
-		: PostProcessingEffectFS("shaders/postprocessing/motionblur.frag")
-		, strength(strength)
-		, LOD(LOD) {}
+	MotionBlur::MotionBlur(float strength, unsigned int LOD, unsigned int maxLOD)
+		: MotionBlur("shaders/postprocessing/motionblur.frag", strength, LOD, maxLOD) {}
 
-	MotionBlur::MotionBlur(const std::string& shaderPath, float strength, unsigned int LOD)
-		: PostProcessingEffectFS(shaderPath), strength(strength), LOD(LOD) {}
+	MotionBlur::MotionBlur(const std::string& shaderPath, float strength, unsigned int LOD, unsigned int maxLOD)
+		: PostProcessingEffectFS(defaultVertexPath, shaderPath,
+			StringReplacement("^const unsigned int maxSamples =\\s+([0-9]+){1};\\s?",
+				std::to_string(maxLOD), 1))
+		, strength(strength)
+		, LOD(LOD)
+		, maxLOD(maxLOD) {}
 
 
 	void MotionBlur::init(const PostProcessingParameter& parameter) {
 		PostProcessingEffectFS::init(parameter);
 
-		samplesLocation = shader.getLocation("maxSamples");
+		samplesLocation = shader.getLocation("sampleSize");
 		strengthLocation = shader.getLocation("strength");
-		offsetLocation = shader.getLocation("offset");
 	}
 
 	void MotionBlur::bindValues() {
-		float diff;
-		glm::vec3 offset;
+		assert(camera != nullptr);
 
-		if (camera != nullptr) {
-			Transform& transform = camera->transform;
-			glm::vec3 currPosition = transform.getPosition() + 5.f * transform.getForwardDirection();
-			diff = glm::length(currPosition - prevPosition);
+		Transform& transform = camera->transform;
+		glm::vec3 currPosition = transform.getPosition() + 5.f * transform.getForwardDirection();
 
-			glm::vec3 a = camera->TranslateToScreenSpace(currPosition);
-			glm::vec3 b = camera->TranslateToScreenSpace(prevPosition);
-			offset = a - b;
 
-			prevPosition = currPosition;
+		while (positions.size() >= LOD)
+			positions.pop_back();
+
+		positions.push_front(currPosition);
+
+
+		size_t i = 0;
+		glm::vec3 offset(0.f);
+		for (auto it(positions.begin()); it != prev(positions.end()); it++) {
+
+			glm::vec3 a = *it;
+			glm::vec3 b = *next(it);
+
+			glm::vec3 off = camera->TranslateToScreenSpace(a) - camera->TranslateToScreenSpace(b);
+			offset += off * strength;
+
+			shader.bind<glm::vec3>("offsets[" + std::to_string(i++) + "]", offset);
 		}
-		else {
-			diff = 1.f;
-			offset = glm::vec3(0.1f);
-			std::cout << "No camera attached to motion blur. Effect won't be completely functional.\n";
-		}
-		
-		shader.bind<glm::vec3>(offsetLocation, offset * 2.f * strength);
-
-		float value = strength * diff;
-		float detail = float(LOD) - 1.f;
-		value = (value > 1.f) ? 1.f : value;
-		shader.bind<float>(samplesLocation, ceil(detail * value + 1.f));
 	}
-
 	
 
 	float MotionBlur::getStrength() const {
@@ -71,8 +71,10 @@ namespace geeL {
 	}
 
 	void MotionBlur::setLevelOfDetail(unsigned int value) {
-		if (LOD != value && LOD > 0 && LOD < 50) {
+		if (LOD != value && value > 2 && value <= maxLOD) {
 			LOD = value;
+
+			shader.bind<float>(samplesLocation, LOD - 1);
 		}
 	}
 
