@@ -77,7 +77,7 @@ namespace geeL {
 
 	}
 
-	std::vector<float> GaussianBlur::computeKernel(float sigma) const {
+	std::vector<float> GaussianBlur::computeKernel(float sigma, unsigned int kernelSize) {
 		std::vector<float> kernel = std::vector<float>(kernelSize);
 
 		float s = 2.f * sigma * sigma;
@@ -91,6 +91,10 @@ namespace geeL {
 			kernel[x] /= sum;
 
 		return kernel;
+	}
+
+	std::vector<float> GaussianBlur::computeKernel(float sigma) const {
+		return std::move(computeKernel(sigma, kernelSize));
 	}
 
 	float GaussianBlur::getSigma() const {

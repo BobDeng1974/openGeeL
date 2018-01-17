@@ -22,6 +22,7 @@ namespace geeL {
 		virtual void setImage(const ITexture& texture);
 		virtual void init(const PostProcessingParameter& parameter);
 
+		static std::vector<float> computeKernel(float sigma, unsigned int kernelSize);
 		std::vector<float> computeKernel(float sigma) const;
 
 		float getSigma() const;
