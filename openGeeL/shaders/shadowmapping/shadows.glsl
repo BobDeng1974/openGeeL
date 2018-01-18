@@ -30,8 +30,7 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 
 		//Soft shadow
 
-		vec2 size = textureSize(pointLights[i].shadowMap, 0);
-		float mag = (size.x + size.y) * (1.f / pow(pointLights[i].scale, 2));
+		float mag = (1.f / pow(pointLights[i].scale, 2)) * 50000.f;
 		float dist = length(fragPosition - pointLights[i].position);
 		float diskRadius = (1.f + (dist / 150.f)) / mag;
 
@@ -89,7 +88,7 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 
 		//Soft shadow
 
 		float shadow = 0.f;
-		vec2 texelSize = spotLights[i].scale / textureSize(spotLights[i].shadowMap, 0);
+		vec2 texelSize = vec2(spotLights[i].scale) / 1000.f;
 		int samples = spotLights[i].resolution;
 		for(int j = 0; j < samples; j++) {
 			int index = int(20.f * random(floor(fragPosition.xyz * 1000.f), j)) % 20;
@@ -177,7 +176,7 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	//Soft shadows
 
 	float shadow = 0.f;
-	vec2 texelSize = directionalLights[i].scale / textureSize(directionalLights[i].shadowMap, 0);
+	vec2 texelSize = vec2(directionalLights[i].scale) / 1000.f;
 
 	//Interpolate shadow map in kernel around point
 	int kernel = directionalLights[i].resolution;
