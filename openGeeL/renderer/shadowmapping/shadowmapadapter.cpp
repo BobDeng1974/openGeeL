@@ -14,18 +14,14 @@ using namespace std;
 
 namespace geeL {
 	
-		ShadowmapAdapter::ShadowmapAdapter(const Scene& scene, TextureProvider& provider, 
-			unsigned int allocationSize, 
-			float depthScale, 
-			float attenuationScale,
-			float baseSize) 
-				: provider(provider)
-				, scene(scene)
-				, depthReader(provider)
-				, allocationSize(allocationSize)
-				, depthScale(depthScale) 
-				, attenuationScale(attenuationScale)
-				, baseSize(baseSize) {}
+	ShadowmapAdapter::ShadowmapAdapter(const Scene& scene, TextureProvider& provider, unsigned int allocationSize) 
+		: provider(provider)
+		, scene(scene)
+		, depthReader(provider)
+		, allocationSize(allocationSize)
+		, depthScale(50.f) 
+		, attenuationScale(0.33f)
+		, baseSizeScale(2.f) {}
 
 
 	void ShadowmapAdapter::update() {
@@ -71,12 +67,9 @@ namespace geeL {
 			allocationSpace -= static_cast<unsigned int>(finalSize);
 			map.resize(finalSize);
 
-			//std::cout << std::to_string(sizeEstimate) << " : " <<std::to_string((int)finalSize) << " Estimate\n";
+			std::cout << std::to_string(sizeEstimate) << " : " << std::to_string((int)finalSize) << "\n";
 		}
 	}
-
-	
-
 
 	float ShadowmapAdapter::computeSizeHeuristic(const Light& light, const glm::vec3& position, float depth) {
 		float weightedDepth = pow(1.f - depth, depthScale);
@@ -84,15 +77,7 @@ namespace geeL {
 		float attenuation = min(light.getAttenuation(position) * light.getIntensity(), 1.f);
 		attenuation = pow(attenuation, attenuationScale);
 
-		float sizeHeuristic = baseSize * weightedDepth * attenuation;
-
-		/*
-		std::cout << std::to_string(weightedDepth) << " : " <<
-			std::to_string(attenuation) << " : " <<
-			std::to_string(sizeHeuristic) << "\n";
-			*/
-
-		return sizeHeuristic;
+		return (baseSizeScale * allocationSize) * weightedDepth * attenuation;
 	}
 
 
@@ -122,7 +107,6 @@ namespace geeL {
 			}
 			else
 				return ShadowmapResolution::Huge;
-
 		}
 	}
 
@@ -136,8 +120,8 @@ namespace geeL {
 		return attenuationScale;
 	}
 
-	float ShadowmapAdapter::getBaseSize() const {
-		return baseSize;
+	float ShadowmapAdapter::getBaseSizeScale() const {
+		return baseSizeScale;
 	}
 
 	void ShadowmapAdapter::setDepthScale(float value) {
@@ -152,9 +136,9 @@ namespace geeL {
 
 	}
 
-	void ShadowmapAdapter::setBaseSize(float value) {
+	void ShadowmapAdapter::setBaseSizeScale(float value) {
 		if (value > 0.f)
-			baseSize = value;
+			baseSizeScale = value;
 	}
 
 }

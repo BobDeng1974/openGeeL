@@ -50,8 +50,8 @@ namespace geeL {
 		Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 		TextureProvider textureProvider(window, gBuffer);
 
-		ShadowmapAdapter shadowManager(scene, textureProvider);
-		lightManager.addShadowmapAdapter(shadowManager);
+		ShadowmapAdapter shadowAdapter(scene, textureProvider, 2000);
+		lightManager.addShadowmapAdapter(shadowAdapter);
 
 		DefaultPostProcess& def = DefaultPostProcess();
 		RenderContext& context = RenderContext();
