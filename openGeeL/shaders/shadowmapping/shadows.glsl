@@ -47,11 +47,10 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 			return testShadow;
 		else {
 			float shadow = 0.f;
-			int samples = pointLights[i].resolution;
-			for(int j = 0; j < samples; j++) {
-				int index = int(20.f * random(floor(fragPosition.xyz * 1000.f), j)) % 20;
+			int samples = min(pointLights[i].resolution * 3, 20);
 
-				float depth = texture(pointLights[i].shadowMap, direction + sampleDirections3D[index] * diskRadius).r;
+			for(int j = 0; j < samples; j++) {
+				float depth = texture(pointLights[i].shadowMap, direction + sampleDirections3D[j] * diskRadius).r;
 				shadow += step(depth, curDepth - bias);
 			}    
 
