@@ -163,6 +163,7 @@
     <ClCompile Include="application\threading.cpp" />
     <ClCompile Include="application\window.cpp" />
     <ClCompile Include="application\workerthread.cpp" />
+    <ClCompile Include="interface\debug\shadowadapterdebug.cpp" />
     <ClCompile Include="interface\elements\lister.cpp" />
     <ClCompile Include="interface\elements\objectlister.cpp" />
     <ClCompile Include="interface\elements\posteffectlister.cpp" />
@@ -316,6 +317,7 @@
     <ClInclude Include="application\threading.h" />
     <ClInclude Include="application\window.h" />
     <ClInclude Include="application\workerthread.h" />
+    <ClInclude Include="interface\debug\shadowadapterdebug.h" />
     <ClInclude Include="interface\elements\lister.h" />
     <ClInclude Include="interface\elements\objectlister.h" />
     <ClInclude Include="interface\elements\posteffectlister.h" />

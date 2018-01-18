@@ -3,6 +3,8 @@
 #include "shader/sceneshader.h"
 #include "../application/configuration.h"
 
+#include "debug/shadowadapterdebug.h"
+
 using namespace geeL;
 
 
@@ -126,7 +128,11 @@ public:
 			ObjectLister& objectLister = ObjectLister(scene);
 			objectLister.add(camera);
 			PostProcessingEffectLister postLister;
-			GUILister& lister = GUILister(window, 0.01f, 0.15f, 0.17f, 0.5f, objectLister, postLister);
+
+			ShadowAdapterDebug adapterDebug(*lightManager.getShadowmapAdapter());
+
+
+			GUILister& lister = GUILister(window, 0.01f, 0.15f, 0.17f, 0.5f, objectLister, postLister, adapterDebug);
 			gui.addElement(lister);
 			gui.addSystemInformation(0.01f, 0.655f, 0.17f, 0.14f);
 

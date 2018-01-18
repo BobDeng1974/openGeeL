@@ -51,7 +51,7 @@ namespace geeL {
 		TextureProvider textureProvider(window, gBuffer);
 
 		ShadowmapAdapter shadowManager(scene, textureProvider);
-		lightManager.addShadowmapManager(shadowManager);
+		lightManager.addShadowmapAdapter(shadowManager);
 
 		DefaultPostProcess& def = DefaultPostProcess();
 		RenderContext& context = RenderContext();

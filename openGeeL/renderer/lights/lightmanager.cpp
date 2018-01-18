@@ -362,7 +362,11 @@ namespace geeL {
 			voxelStructure->build();
 	}
 
-	void LightManager::addShadowmapManager(ShadowmapAdapter& manager) {
+	ShadowmapAdapter* const LightManager::getShadowmapAdapter() {
+		return mapAdapter;
+	}
+
+	void LightManager::addShadowmapAdapter(ShadowmapAdapter& manager) {
 		mapAdapter = &manager;
 	}
 
