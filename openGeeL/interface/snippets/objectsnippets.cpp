@@ -188,7 +188,7 @@ namespace geeL {
 
 
 			if (type == ShadowMapType::Soft) {
-				int resolution = GUISnippets::drawBarInteger(context, map.getSoftShadowResolution(), 1, 100, 1, "Resolution");
+				int resolution = GUISnippets::drawBarInteger(context, map.getSoftShadowResolution(), 1, 10, 1, "Resolution");
 				map.setSoftShadowResolution(resolution);
 
 				float scale = GUISnippets::drawBarFloatLogarithmic(context, map.getSoftShadowScale(), 0.f, 15.f, 0.1f, "Scale");

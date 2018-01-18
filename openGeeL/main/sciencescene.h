@@ -34,7 +34,7 @@ public:
 
 			float lightIntensity = 100.f;
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(7.1f, 4.9f, 2.4f), vec3(-180.0f, 0, -50), vec3(1.f, 1.f, 1.f), true);
-			&lightManager.addPointLight(defPLShadowMapConfig, lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379));
+			lightManager.addPointLight(defPLShadowMapConfig, lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379));
 
 			lightIntensity = 100.f;
 			float angle = glm::cos(glm::radians(25.5f));
@@ -93,7 +93,7 @@ public:
 			objectLister.add(camera);
 			PostProcessingEffectLister postLister;
 			GUILister& lister = GUILister(window, 0.01f, 0.15f, 0.17f, 0.5f, objectLister, postLister);
-			//gui.addElement(lister);
+			gui.addElement(lister);
 			//gui.addSystemInformation(0.01f, 0.655f, 0.17f, 0.14f);
 
 			def.setExposure(2.f);

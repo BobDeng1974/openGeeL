@@ -39,7 +39,7 @@ public:
 
 			lightIntensity = 69.f;
 			Transform& lightTransform21 = transformFactory.CreateTransform(vec3(-5.2f, -0.2f, 7.5f), vec3(-180.0f, 0, -50), vec3(1.f), false);
-			ShadowMapConfiguration& config = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Medium, 3.f, 15U, 150.f);
+			ShadowMapConfiguration& config = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Medium, 10.f, 7U, 150.f);
 			lightManager.addPointLight(config, lightTransform21, glm::vec3(13.f / 256.f, 255.f / 256.f, 186.f / 256.f) * lightIntensity);
 
 			Transform& meshTransform3 = transformFactory.CreateTransform(vec3(1.5f, 0.34f, 12.5f), vec3(180.f, 29.6f, 180.f), vec3(0.12f));

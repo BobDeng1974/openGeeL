@@ -67,7 +67,7 @@ namespace geeL {
 			allocationSpace -= static_cast<unsigned int>(finalSize);
 			map.resize(finalSize);
 
-			std::cout << std::to_string(sizeEstimate) << " : " << std::to_string((int)finalSize) << "\n";
+			//std::cout << std::to_string(sizeEstimate) << " : " << std::to_string((int)finalSize) << "\n";
 		}
 	}
 
