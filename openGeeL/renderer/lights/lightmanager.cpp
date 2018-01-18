@@ -10,7 +10,7 @@
 #include "shadowmapping/simpleshadowmap.h"
 #include "shadowmapping/varianceshadowmap.h"
 #include "shadowmapping/cascadedmap.h"
-#include "shadowmapping/shadowmapalloc.h"
+#include "shadowmapping/shadowmapadapter.h"
 #include "cubemapping/reflectionprobe.h"
 #include "cubemapping/iblmap.h"
 #include "framebuffer/cubebuffer.h"
@@ -29,7 +29,7 @@ namespace geeL {
 	LightManager::LightManager() 
 		: ambient(ambient)
 		, voxelStructure(nullptr)
-		, shadowManager(nullptr)
+		, mapAdapter(nullptr)
 		, plCount(0)
 		, dlCount(0)
 		, slCount(0) {}
@@ -54,7 +54,7 @@ namespace geeL {
 
 		if (config.useShadowMap()) {
 			SimpleDirectionalLightMap* map = new SimpleDirectionalLightMap(*light, config);
-			//CascadedDirectionalShadowMap* map = new CascadedDirectionalShadowMap(*light, camera, config.shadowBias, (int)config.resolution);
+			//CascadedDirectionalShadowMap* map = new CascadedDirectionalShadowMap(*light, *camera, config.shadowBias, config.resolution);
 			map->setIntensity(config.intensity);
 			light->setShadowMap(*map);
 		}
@@ -136,8 +136,8 @@ namespace geeL {
 	}
 
 	void LightManager::update(const RenderScene& scene, const SceneCamera* const camera) {
-		if (shadowManager != nullptr)
-			shadowManager->update();
+		if (mapAdapter != nullptr)
+			mapAdapter->update();
 
 		drawShadowmaps(scene, camera);
 		drawVoxelStructure();
@@ -362,8 +362,8 @@ namespace geeL {
 			voxelStructure->build();
 	}
 
-	void LightManager::addShadowmapManager(ShadowmapAllocator& manager) {
-		shadowManager = &manager;
+	void LightManager::addShadowmapManager(ShadowmapAdapter& manager) {
+		mapAdapter = &manager;
 	}
 
 

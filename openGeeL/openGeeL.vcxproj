@@ -267,7 +267,7 @@
     <ClCompile Include="renderer\shader\uniformstack.cpp" />
     <ClCompile Include="renderer\shadowmapping\cascadedmap.cpp" />
     <ClCompile Include="renderer\shadowmapping\shadowbuffer.cpp" />
-    <ClCompile Include="renderer\shadowmapping\shadowmapalloc.cpp" />
+    <ClCompile Include="renderer\shadowmapping\shadowmapadapter.cpp" />
     <ClCompile Include="renderer\shadowmapping\shadowmapconfig.cpp" />
     <ClCompile Include="renderer\shadowmapping\simpleshadowmap.cpp" />
     <ClCompile Include="renderer\shadowmapping\varianceshadowmap.cpp" />
@@ -439,7 +439,7 @@
     <ClInclude Include="renderer\shadowmapping\cascadedmap.h" />
     <ClInclude Include="renderer\shadowmapping\shadowbuffer.h" />
     <ClInclude Include="renderer\shadowmapping\shadowmap.h" />
-    <ClInclude Include="renderer\shadowmapping\shadowmapalloc.h" />
+    <ClInclude Include="renderer\shadowmapping\shadowmapadapter.h" />
     <ClInclude Include="renderer\shadowmapping\shadowmapconfig.h" />
     <ClInclude Include="renderer\shadowmapping\simpleshadowmap.h" />
     <ClInclude Include="renderer\shadowmapping\varianceshadowmap.h" />

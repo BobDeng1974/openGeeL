@@ -3,6 +3,7 @@
 
 #include <vec3.hpp>
 #include <mat4x4.hpp>
+#include "shadowmapconfig.h"
 #include "shadowmap.h"
 
 #define MAPCOUNT 4
@@ -21,12 +22,11 @@ namespace geeL {
 
 	public:
 		CascadedShadowMap(const Light& light, std::unique_ptr<Texture> innerTexture, 
-			float shadowBias, unsigned int resolution);
+			float shadowBias, ShadowmapResolution resolution);
 
 		virtual Resolution getScreenResolution() const;
 
 	protected:
-		unsigned int resolution;
 		float shadowBias;
 
 		CascadedShadowMap(const CascadedShadowMap& other) = delete;
@@ -39,7 +39,7 @@ namespace geeL {
 
 	public:
 		CascadedDirectionalShadowMap(const Light& light, const SceneCamera& camera, 
-			float shadowBias, unsigned int resolution);
+			float shadowBias, ShadowmapResolution resolution);
 
 		virtual void bindData(const Shader& shader, const std::string& name);
 		virtual void removeMap(Shader& shader);

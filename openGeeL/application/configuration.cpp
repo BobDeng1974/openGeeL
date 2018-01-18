@@ -4,7 +4,7 @@
 #include "shader/uniformstack.h"
 #include "texturing/textureparams.h"
 #include "texturing/textureprovider.h"
-#include "shadowmapping/shadowmapalloc.h"
+#include "shadowmapping/shadowmapadapter.h"
 #include "appmanager.h"
 #include "configuration.h"
 
@@ -50,7 +50,7 @@ namespace geeL {
 		Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
 		TextureProvider textureProvider(window, gBuffer);
 
-		ShadowmapAllocator shadowManager(scene, textureProvider);
+		ShadowmapAdapter shadowManager(scene, textureProvider);
 		lightManager.addShadowmapManager(shadowManager);
 
 		DefaultPostProcess& def = DefaultPostProcess();

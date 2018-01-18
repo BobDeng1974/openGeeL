@@ -21,22 +21,22 @@ namespace geeL {
 	CascadedShadowMap::CascadedShadowMap(const Light& light,
 		std::unique_ptr<Texture> innerTexture,
 		float shadowBias,
-		unsigned int resolution)
-		: ShadowMap(light, std::move(innerTexture))
-		, shadowBias(shadowBias)
-		, resolution(resolution) {}
+		ShadowmapResolution resolution)
+			: ShadowMap(light, std::move(innerTexture), resolution)
+			, shadowBias(shadowBias) {}
 
 	Resolution CascadedShadowMap::getScreenResolution() const {
-		return Resolution(resolution, resolution);
+		unsigned int res = static_cast<unsigned int>(getShadowResolution());
+		return Resolution(res, res);
 	}
 
 
 
 	CascadedDirectionalShadowMap::CascadedDirectionalShadowMap(const Light& light, const SceneCamera& camera, 
-		float shadowBias, unsigned int resolution)
+		float shadowBias, ShadowmapResolution resolution)
 			: CascadedShadowMap(light, 
 				std::unique_ptr<Texture>(new Texture2D(
-					Resolution(resolution), 
+					Resolution(static_cast<unsigned int>(resolution)), 
 					ColorType::Depth32,
 					FilterMode::Linear,
 					WrapMode::ClampBorder,
@@ -88,6 +88,7 @@ namespace geeL {
 		buffer.add(getTexture());
 		buffer.fill([&]() {
 			const RenderShader& shader = repository.getSimple2DShader();
+			unsigned int resolution = static_cast<unsigned int>(getShadowResolution());
 			unsigned int hWidth = resolution / 2;
 			unsigned int hHeight = resolution / 2;
 			for (unsigned int i = 0; i < MAPCOUNT; i++) {

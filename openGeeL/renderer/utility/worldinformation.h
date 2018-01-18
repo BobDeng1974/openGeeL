@@ -29,18 +29,12 @@ namespace geeL {
 	public:
 		virtual void updateCamera(SceneCamera& camera);
 
-		void setCamera(const Camera& camera);
-
 	protected:
-		const Camera* camera = nullptr;
+		const SceneCamera* camera = nullptr;
 	};
 
 
 	inline void CameraRequester::updateCamera(SceneCamera& camera) {
-		this->camera = &camera;
-	}
-
-	inline void CameraRequester::setCamera(const Camera& camera) {
 		this->camera = &camera;
 	}
 

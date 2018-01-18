@@ -12,14 +12,22 @@ namespace geeL {
 		Soft = 2
 	};
 
+
 	enum class ShadowmapResolution {
 		Tiny = 128,
 		Small = 256,
 		Medium = 512,
 		High = 768,
 		VeryHigh = 1024,
+		Large = 2048,
 		Huge = 4096
 	};
+
+	inline bool operator<(ShadowmapResolution a, ShadowmapResolution b) {
+		return static_cast<int>(a) < static_cast<int>(b);
+	}
+
+
 
 
 	//Container class for shadow map configurations

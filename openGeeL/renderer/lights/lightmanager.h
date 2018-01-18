@@ -33,7 +33,7 @@ namespace geeL {
 	class RenderScene;
 	class Shader;
 	class ShadowMap;
-	class ShadowmapAllocator;
+	class ShadowmapAdapter;
 	class Transform;
 	class VoxelStructure;
 	class LightBinding;
@@ -103,7 +103,7 @@ namespace geeL {
 		void addVoxelStructure(VoxelStructure& structure);
 		void drawVoxelStructure();
 
-		void addShadowmapManager(ShadowmapAllocator& manager);
+		void addShadowmapManager(ShadowmapAdapter& manager);
 
 		
 		//Add shader that shall be updated when lights are added/removed
@@ -116,7 +116,7 @@ namespace geeL {
 	private:
 		glm::vec3 ambient;
 		VoxelStructure* voxelStructure;
-		ShadowmapAllocator* shadowManager;
+		ShadowmapAdapter* mapAdapter;
 
 		ShadowmapRepository shaderRepository;
 		size_t plCount, dlCount, slCount;

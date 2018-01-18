@@ -21,7 +21,7 @@ namespace geeL {
 	SimpleShadowMap::SimpleShadowMap(const Light& light, 
 		std::unique_ptr<Texture> innerTexture,
 		const ShadowMapConfiguration& config)
-			: ShadowMap(light, std::move(innerTexture))
+			: ShadowMap(light, std::move(innerTexture), config.resolution)
 			, type(config.type)
 			, shadowBias(config.shadowBias)
 			, farPlane(config.farPlane)

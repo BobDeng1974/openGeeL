@@ -1,0 +1,51 @@
+#ifndef SHADOWMAPMANAGER_H
+#define SHADOWMAPMANAGER_H
+
+#include <vec3.hpp>
+#include "utility/depthreader.h"
+
+namespace geeL {
+
+	enum class ShadowmapResolution;
+
+	class Light;
+	class Scene;
+	class TextureProvider;
+
+
+	class ShadowmapAdapter {
+
+	public:
+		ShadowmapAdapter(const Scene& scene, TextureProvider& provider, 
+			unsigned int allocationSize = 4000, 
+			float depthScale = 48.f, 
+			float attenuationScale = 0.33, 
+			float baseSize = 6000.f);
+
+		void update();
+
+
+		float getDepthScale() const;
+		float getAttenuationScale() const;
+		float getBaseSize() const;
+
+		void setDepthScale(float value);
+		void setAttenuationScale(float value);
+		void setBaseSize(float value);
+
+	private:
+		unsigned int allocationSize;
+		float depthScale, attenuationScale, baseSize;
+
+		DepthReader depthReader;
+		const Scene& scene;
+		TextureProvider& provider;
+
+		float computeSizeHeuristic(const Light& light, const glm::vec3& position, float depth);
+		ShadowmapResolution getResolution(float estimate);
+
+	};
+
+}
+
+#endif

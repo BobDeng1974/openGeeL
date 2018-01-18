@@ -534,7 +534,7 @@
     <ClCompile Include="renderer\utility\depthreader.cpp">
       <Filter>renderer\utility</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\shadowmapping\shadowmapalloc.cpp">
+    <ClCompile Include="renderer\shadowmapping\shadowmapadapter.cpp">
       <Filter>renderer\shadowmapping</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1085,7 +1085,7 @@
     <ClInclude Include="renderer\utility\depthreader.h">
       <Filter>renderer\utility</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\shadowmapping\shadowmapalloc.h">
+    <ClInclude Include="renderer\shadowmapping\shadowmapadapter.h">
       <Filter>renderer\shadowmapping</Filter>
     </ClInclude>
   </ItemGroup>

@@ -31,9 +31,9 @@ void main() {
 	if(gl_GlobalInvocationID.x == 0 && gl_GlobalInvocationID.y == 0) {
 		float m = FLOAT_MAX;
 
-		for (int x = 0; x < GROUP_SIZE; x++) {
-			for (int y = 0; y < GROUP_SIZE; y++) {
-				m = min(m, depths[x][y]);
+		for (int x = 4; x < GROUP_SIZE; x++) {
+			for (int y = 4; y < GROUP_SIZE; y++) {
+				m = min(m, depths[x - 2][y - 2]);
 			}
 		}
 
