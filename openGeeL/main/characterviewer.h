@@ -3,8 +3,6 @@
 #include "shader/sceneshader.h"
 #include "../application/configuration.h"
 
-#include "debug/shadowadapterdebug.h"
-
 using namespace geeL;
 
 
@@ -21,8 +19,9 @@ public:
 			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
 
 
-			Transform& cameraTransform = transformFactory.CreateTransform(vec3(1.3f, -3.58f, 4.11f), vec3(78.13f, 44.83f, -174.44f), vec3(1.f));
-			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 80.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
+			//Transform& cameraTransform = transformFactory.CreateTransform(vec3(1.3f, -3.58f, 4.11f), vec3(78.13f, 44.83f, -174.44f), vec3(1.f));
+			Transform& cameraTransform = transformFactory.CreateTransform(vec3(2.94f, -2.52f, 3.11f), vec3(70.32f, 48.27f, -179.4f), vec3(1.f));
+			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 45.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
 			camera.addComponent<MovableCamera>(MovableCamera(3.f, 0.45f));
 			scene.setCamera(camera);
 
@@ -37,11 +36,11 @@ public:
 
 			float lightIntensity = 27.f;
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-0.5f, -2.9f, 3), vec3(-180.0f, 0, -50), vec3(1.f), true);
-			ShadowMapConfiguration config = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Huge, 6.f, 7U, 150.f);
+			ShadowMapConfiguration config = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Large, 6.f, 7U, 150.f);
 			lightManager.addPointLight(config, lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379));
 
 			lightIntensity = 0.5f;
-			Transform& lightTransform21 = transformFactory.CreateTransform(vec3(-5.2f, -0.2f, 7.5f), vec3(-180.0f, 0, -50), vec3(1.f));
+			Transform& lightTransform21 = transformFactory.CreateTransform(vec3(-5.2f, -0.2f, 7.5f), vec3(-180.0f, 0, -50), vec3(1.f), true);
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Large, 6.f, 7U, 150.f, 1.f);
 			lightManager.addPointLight(config2, lightTransform21, glm::vec3(lightIntensity * 3.f, lightIntensity * 59.f, lightIntensity * 43.f), 0.25f);
 
@@ -128,11 +127,7 @@ public:
 			ObjectLister& objectLister = ObjectLister(scene);
 			objectLister.add(camera);
 			PostProcessingEffectLister postLister;
-
-			ShadowAdapterDebug adapterDebug(*lightManager.getShadowmapAdapter());
-
-
-			GUILister& lister = GUILister(window, 0.01f, 0.15f, 0.17f, 0.5f, objectLister, adapterDebug, postLister);
+			GUILister& lister = GUILister(window, 0.01f, 0.15f, 0.17f, 0.5f, objectLister, postLister);
 			gui.addElement(lister);
 			gui.addSystemInformation(0.01f, 0.655f, 0.17f, 0.14f);
 

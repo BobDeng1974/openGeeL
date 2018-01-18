@@ -64,7 +64,7 @@ public:
 			renderer.addEffect(ssao);
 			scene.addRequester(ssao);
 
-			def.setExposure(1.f);
+			def.setExposure(1.6f);
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
 			renderer.addEffect(ibl);
@@ -78,6 +78,11 @@ public:
 			DepthOfFieldBlur& blur3 = DepthOfFieldBlur(0.3f, 10.f);
 			DepthOfFieldBlurred& dof = DepthOfFieldBlurred(blur3, 2.f, 45.f, 100.f, ResolutionPreset::FORTY);
 			renderer.addEffect(dof);
+
+			ColorCorrection& colorCorrect = ColorCorrection();
+			colorCorrect.setContrast(1.05f);
+			colorCorrect.setVibrance(0.4f);
+			renderer.addEffect(colorCorrect, DrawTime::Late);
 
 			FXAA& fxaa = FXAA(0.f, 0.f);
 			renderer.addEffect(fxaa, DrawTime::Late);

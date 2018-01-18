@@ -81,6 +81,7 @@ public:
 			
 			sphere1.iterateMaterials([&](MaterialContainer& container) {
 				container.setVectorValue("Color", vec3(0.6f));
+				container.setFloatValue("Transparency", 0.5f);
 				container.setFloatValue("Roughness", 0.05f);
 				container.setFloatValue("Metallic", 0.5f);
 			});
