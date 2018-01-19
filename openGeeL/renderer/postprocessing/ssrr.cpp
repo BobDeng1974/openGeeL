@@ -26,7 +26,7 @@ namespace geeL {
 		assert(provider != nullptr);
 		addTextureSampler(provider->requestPosition(), "gPositionRoughness");
 		addTextureSampler(provider->requestNormal(), "gNormalMet");
-		addTextureSampler(provider->requesOcclusionEmissivityRoughnessMetallic(), "gProperties");
+		addTextureSampler(provider->requestProperties(), "gProperties");
 
 		shader.bind<int>("stepCount", steps);
 		shader.bind<float>("stepSize", stepSize);

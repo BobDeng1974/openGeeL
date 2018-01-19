@@ -76,7 +76,7 @@ namespace geeL {
 		return *normal;
 	}
 
-	const RenderTexture& GBuffer::getOcclusionEmissivityRoughnessMetallic() const {
+	const RenderTexture& GBuffer::getProperties() const {
 		return *occEmiRoughMet;
 	}
 
@@ -122,7 +122,7 @@ namespace geeL {
 		gBuffer.getPosition().assignToo(*this, 0);
 		gBuffer.getNormal().assignToo(*this, 1);
 		gBuffer.getDiffuse().assignToo(*this, 2);
-		gBuffer.getOcclusionEmissivityRoughnessMetallic().assignToo(*this, 3);
+		gBuffer.getProperties().assignToo(*this, 3);
 
 #if DIFFUSE_SPECULAR_SEPARATION
 		BufferUtility::drawBuffers(6);

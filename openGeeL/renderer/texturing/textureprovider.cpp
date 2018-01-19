@@ -50,8 +50,8 @@ namespace geeL {
 		return gBuffer.getNormal();
 	}
 
-	const RenderTexture& TextureProvider::requesOcclusionEmissivityRoughnessMetallic() const {
-		return gBuffer.getOcclusionEmissivityRoughnessMetallic();
+	const RenderTexture& TextureProvider::requestProperties() const {
+		return gBuffer.getProperties();
 	}
 
 	RenderTexture& TextureProvider::requestOcclusion() const {

@@ -43,7 +43,7 @@ namespace geeL {
 		addTextureSampler(provider->requestAlbedo(), "gDiffuse");
 		addTextureSampler(provider->requestPosition(), "gPosition");
 		addTextureSampler(provider->requestNormal(), "gNormal");
-		addTextureSampler(provider->requesOcclusionEmissivityRoughnessMetallic(), "gProperties");
+		addTextureSampler(provider->requestProperties(), "gProperties");
 
 		shader.bind<int>("maxStepSpecular", maxStepSpecular);
 		shader.bind<int>("maxStepDiffuse", maxStepDiffuse);

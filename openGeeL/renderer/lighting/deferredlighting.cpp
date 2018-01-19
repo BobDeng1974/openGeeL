@@ -28,7 +28,7 @@ namespace geeL {
 		addTextureSampler(provider->requestAlbedo(), "gDiffuse");
 		addTextureSampler(provider->requestPosition(), "gPosition");
 		addTextureSampler(provider->requestNormal(), "gNormal");
-		addTextureSampler(provider->requesOcclusionEmissivityRoughnessMetallic(), "gProperties");
+		addTextureSampler(provider->requestProperties(), "gProperties");
 		shader.bind<int>("useEmissivity", 1);
 
 		LightManager& manager = scene.getLightmanager();
@@ -93,7 +93,7 @@ namespace geeL {
 		addTextureSampler(provider->requestAlbedo(), "gDiffuse");
 		addTextureSampler(provider->requestPosition(), "gPosition");
 		addTextureSampler(provider->requestNormal(), "gNormal");
-		addTextureSampler(provider->requesOcclusionEmissivityRoughnessMetallic(), "gProperties");
+		addTextureSampler(provider->requestProperties(), "gProperties");
 		shader.bind<int>("useEmissivity", 1);
 
 		LightManager& manager = scene.getLightmanager();

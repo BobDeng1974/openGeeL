@@ -20,7 +20,7 @@ namespace geeL {
 		const RenderTexture& getDiffuse() const;
 		const RenderTexture& getPosition() const;
 		const RenderTexture& getNormal() const;
-		const RenderTexture& getOcclusionEmissivityRoughnessMetallic() const;
+		const RenderTexture& getProperties() const;
 		RenderTexture& getOcclusion() const;
 
 		std::string getFragmentPath() const;
