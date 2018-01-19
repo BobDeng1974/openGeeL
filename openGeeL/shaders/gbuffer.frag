@@ -14,7 +14,7 @@ in vec3 fragPosition;
 in vec2 textureCoordinates;
 in mat3 TBN;
 
-uniform EmissiveMaterial material;
+uniform Material material;
 
 
 void main() {    

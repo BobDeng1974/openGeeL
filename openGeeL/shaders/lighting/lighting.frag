@@ -25,7 +25,7 @@ uniform PointLight pointLights[5];
 uniform DirectionalLight directionalLights[5];
 uniform SpotLight spotLights[5];
 
-uniform EmissiveMaterial material;
+uniform Material material;
 uniform vec3 cameraPosition;
 
 
