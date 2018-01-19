@@ -57,7 +57,7 @@ void main() {
 	gPosition = fragPosition.xyz;
 	gNormal = vec4(norm, 0.f);
 	gDiffuse = albedo;
-	gProperties = vec4(0.f, 0.f, roughness, metallic);
+	gProperties = vec4(roughness, metallic, 0.f, 0.f);
 
 #if (FOG == 1)
 	float fogFactor = 1.f - clamp(abs(fragPosition.z) / fogFalloff, 0.f, 1.f);
@@ -85,7 +85,7 @@ void main() {
 		vec3 ambienceSpecular = calculateIndirectSpecularSplitSum(worldPosition, norm, viewDirection, 
 			albedo.rgb, roughness, metallic);
 
-		irradiance  += ambienceDiffuse + ambienceSpecular;
+		irradiance += ambienceDiffuse + ambienceSpecular;
 	}
 
 #if (FOG == 1)

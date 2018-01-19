@@ -36,19 +36,19 @@
 	}
 
 	float readOcclusion(vec2 texCoords) {
-		return texture(PROPERTY_MAP, texCoords).r;
+		return texture(PROPERTY_MAP, texCoords).a;
 	}
 
 	vec3 readEmissitivity(vec2 texCoords) {
-		return vec3(texture(PROPERTY_MAP, texCoords).g);
+		return vec3(texture(PROPERTY_MAP, texCoords).b);
 	}
 
 	float readRoughness(vec2 texCoords) {
-		return texture(PROPERTY_MAP, texCoords).b;
+		return texture(PROPERTY_MAP, texCoords).r;
 	}
 
 	float readMetallic(vec2 texCoords) {
-		return texture(PROPERTY_MAP, texCoords).a;
+		return texture(PROPERTY_MAP, texCoords).g;
 	}
 
 

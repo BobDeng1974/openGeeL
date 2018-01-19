@@ -41,8 +41,6 @@ uniform sampler2D PROPERTY_MAP;
 
 #include <shaders/gbufferread.glsl>
 
-uniform bool useEmissivity;
-
 uniform mat4 projection;
 uniform mat4 inverseView;
 uniform vec3 origin;
@@ -131,16 +129,15 @@ void main() {
 	
 	//Proceed as usual
 
-    vec3 normal		= readNormal(textureCoordinates);
-    vec4 albedo		= readDiffuse(textureCoordinates);
+    vec3 normal	= readNormal(textureCoordinates);
+    vec4 albedo	= readDiffuse(textureCoordinates);
 
 	vec4 properties = readProperties(textureCoordinates);
-	vec3 emissivity = vec3(properties.g);
-	float roughness = properties.b;
-	float metallic = properties.a;
+	vec3 emissivity = vec3(properties.b);
+	float roughness = properties.r;
+	float metallic = properties.g;
 
 	vec3  viewDirection = normalize(-fragPosition);
-
 
 	vec3 irradiance = albedo.rgb * emissivity;
 	

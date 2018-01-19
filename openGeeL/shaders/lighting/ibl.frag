@@ -26,8 +26,6 @@ uniform sampler2D NORMAL_MAP;
 uniform sampler2D DIFFUSE_MAP;
 uniform sampler2D PROPERTY_MAP;
 
-uniform int useSSAO;
-
 #include <shaders/gbufferread.glsl>
 
 
@@ -38,16 +36,15 @@ void main() {
 	//Discard pixel if it is not connected to any position in scene (Will be rendered black anyway)
 	if(length(fragPosition) <= 0.001f) return;
 
-    vec3 normal		  = readNormal(textureCoordinates);
-    vec4 albedo		  = readDiffuse(textureCoordinates);
+    vec3 normal	= readNormal(textureCoordinates);
+    vec4 albedo	= readDiffuse(textureCoordinates);
 
 	vec4 properties = readProperties(textureCoordinates);
-	float roughness = properties.b;
-	float metallic = properties.a;
+	float roughness = properties.r;
+	float metallic = properties.g;
 
-
-	float occlusion   = 1.f;
-	//occlusion = (occlusion == 0.f) ? 1.f : clamp(occlusion + OCCLUSION_MIN, 0.f, 1.f);
+	float occlusion = properties.a;
+	occlusion = (occlusion == 0.f) ? 1.f : clamp(occlusion + OCCLUSION_MIN, 0.f, 1.f);
 
 	vec3  viewDirection = normalize(-fragPosition);
 

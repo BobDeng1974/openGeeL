@@ -81,8 +81,8 @@ void main() {
 
 	vec3 albedo = readDiffuse(TexCoords).rgb;
 	vec4 properties = readProperties(TexCoords);
-	float roughness = properties.b;
-	float metallic = properties.a;
+	float roughness = properties.r;
+	float metallic = properties.g;
 
 	//vec3 indirectDiffuse = indirectDiffuse(position, normal, albedo);
 	//vec3 indirectSpecular = indirectSpecular(position, refl, normal, roughness);

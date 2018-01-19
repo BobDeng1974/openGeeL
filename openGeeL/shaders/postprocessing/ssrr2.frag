@@ -44,8 +44,8 @@ void main() {
 	float depth = -fragPos.z;
 
 	vec4 properties = readProperties(TexCoords);
-	float roughness = properties.b;
-	float metallic = properties.a;
+	float roughness = properties.r;
+	float metallic = properties.g;
 	
 	vec3 normal = normalize(readNormal(TexCoords));
 	vec3 reflectionDirection = normalize(reflect(fragPos, normal));

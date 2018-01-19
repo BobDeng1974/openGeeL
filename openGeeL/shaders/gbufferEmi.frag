@@ -71,8 +71,9 @@ void main() {
 	gPosition = fragPosition;
 	gDiffuse = diffuse;
 
-	gProperties.r = occlusion;
-	gProperties.g = emissivity;
-	gProperties.b = speColor.r;
-	gProperties.a = metallic;
+	gProperties.r = speColor.r;
+	gProperties.g = metallic;
+	gProperties.b = emissivity;
+	gProperties.a = occlusion;
+	
 } 

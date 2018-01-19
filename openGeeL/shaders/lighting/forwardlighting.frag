@@ -60,7 +60,7 @@ void main() {
 	gPosition = fragPosition.xyz;
 	gNormal = vec4(norm, 0.f);
 	gDiffuse = albedo;
-	gProperties = vec4(0.f, 0.f, roughness, metallic);
+	gProperties = vec4(roughness, metallic, 0.f, 0.f);
 
 
 #if (FOG == 1)

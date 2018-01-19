@@ -66,8 +66,8 @@ void main() {
 	vec4 albedo = texture(gDiffuse, TexCoords);
 
 	vec4 properties = readProperties(TexCoords);
-	float roughness = properties.b;
-	float metallic = properties.a;
+	float roughness = properties.r;
+	float metallic = properties.g;
 
 	vec3 ks = calculateFresnelTerm(doto(normal, view), albedo.rgb, metallic, roughness);
 	vec3 kd = 1.f - ks;
