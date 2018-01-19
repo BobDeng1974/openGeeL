@@ -1117,16 +1117,10 @@
     <None Include="shaders\emptyAnim.vert">
       <Filter>shaders</Filter>
     </None>
-    <None Include="shaders\gbuffer.frag">
-      <Filter>shaders</Filter>
-    </None>
     <None Include="shaders\gbuffer.vert">
       <Filter>shaders</Filter>
     </None>
     <None Include="shaders\gbufferAnim.vert">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\gbufferEmi.frag">
       <Filter>shaders</Filter>
     </None>
     <None Include="shaders\helperfunctions.glsl">
@@ -1374,6 +1368,9 @@
     </None>
     <None Include="shaders\postprocessing\ssaoblend.frag">
       <Filter>shaders\postprocessing</Filter>
+    </None>
+    <None Include="shaders\gbuffer.frag">
+      <Filter>shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

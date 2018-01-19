@@ -1,18 +1,20 @@
 #version 430 core
 
+#define OCCLUSION_MIN (1.f / 256.f)
+
 #include <shaders/material.glsl>
 
-layout (location = 0) out vec4 gPosition;
+layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec4 gNormal;
 layout (location = 2) out vec4 gDiffuse;
-layout (location = 3) out vec4 gOther;
+layout (location = 3) out vec4 gProperties;
 
 in vec3 normal;
 in vec3 fragPosition;
 in vec2 textureCoordinates;
 in mat3 TBN;
 
-uniform Material material;
+uniform EmissiveMaterial material;
 
 
 void main() {    
@@ -23,6 +25,8 @@ void main() {
 	float normFlag = mod(material.mapFlags / 100, 10);
 	float metaFlag = mod(material.mapFlags / 1000, 10);
 	float alphaFlag = mod(material.mapFlags / 10000, 10);
+	float emisFlag = mod(material.mapFlags / 100000, 10);
+	float occFlag = mod(material.mapFlags / 1000000, 10);
 
 	vec4 diffuse = (diffFlag == 1) 
 		? texture(material.diffuse, textureCoordinates) * material.color 
@@ -48,13 +52,28 @@ void main() {
 		: vec3(material.roughness);
 
 	float metallic = (metaFlag == 1) 
-		? (1.f - texture(material.metal, textureCoordinates).r) * material.metallic 
+		? (1.f - texture(material.metal, textureCoordinates).r) * material.metallic
 		: material.metallic;
 
+	vec3 emiRGB = (emisFlag == 1) 
+		? texture(material.emission, textureCoordinates).rgb * material.emissivity 
+		: material.emissivity;
+
+	//Only write intensity of emissivity into gBuffer
+	float emissivity = dot(emiRGB, vec3(0.2126f, 0.7152f, 0.0722f));
+
+	float occlusion = (occFlag == 1) 
+		? texture(material.occlusion, textureCoordinates).r + OCCLUSION_MIN 
+		: 0.f;
+
+
 	gNormal.rgb = norm;
-	gPosition.xyz = fragPosition;
+	gPosition = fragPosition;
 	gDiffuse = diffuse;
 
+	gProperties.r = speColor.r;
+	gProperties.g = metallic;
+	gProperties.b = emissivity;
+	gProperties.a = occlusion;
 	
-
 } 

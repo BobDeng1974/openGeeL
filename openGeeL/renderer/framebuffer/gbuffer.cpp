@@ -85,7 +85,7 @@ namespace geeL {
 	}
 
 	std::string GBuffer::getFragmentPath() const {
-		return "shaders/gbufferEmi.frag";
+		return "shaders/gbuffer.frag";
 	}
 
 	std::string GBuffer::toString() const {
