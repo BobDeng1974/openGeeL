@@ -549,6 +549,7 @@
     <None Include="shaders\postprocessing\sobel.frag" />
     <None Include="shaders\postprocessing\sobelblur.frag" />
     <None Include="shaders\postprocessing\ssao.frag" />
+    <None Include="shaders\postprocessing\ssaoblend.frag" />
     <None Include="shaders\postprocessing\ssrr.frag" />
     <None Include="shaders\postprocessing\ssrr2.frag" />
     <None Include="shaders\postprocessing\tonemapping.frag" />

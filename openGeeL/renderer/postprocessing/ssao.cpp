@@ -19,6 +19,7 @@ namespace geeL {
 
 	SSAO::SSAO(PostProcessingEffectFS& blur, float radius, const ResolutionPreset& resolution)
 		: PostProcessingEffectFS("shaders/postprocessing/ssao.frag")
+		, blendEffect(new PostProcessingEffectFS("shaders/postprocessing/ssaoblend.frag"))
 		, blur(blur)
 		, radius(radius)
 		, scale(resolution) {
@@ -64,27 +65,6 @@ namespace geeL {
 
 	
 
-	void SSAO::setTargetTexture(const RenderTexture& texture) {
-		blend = texture.isAssigned();
-
-		if (blend) {
-			//Instanciate blending structures if needed
-			if(blurTexture == nullptr)
-				blurTexture = new RenderTexture(resolution, ColorType::Single, WrapMode::Repeat, FilterMode::None);
-			if (blendEffect == nullptr) {
-				blendEffect = new PostProcessingEffectFS("shaders/screen.frag");
-				blendEffect->init(PostProcessingParameter(ScreenQuad::get(), *parentBuffer, resolution));
-			}
-			
-			blendEffect->setImage(*blurTexture);
-		}
-		else {
-			if (blurTexture != nullptr) delete blurTexture;
-			if (blendEffect != nullptr) delete blendEffect;
-		}
-
-	}
-
 	void SSAO::init(const PostProcessingParameter& parameter) {
 		PostProcessingEffectFS::init(parameter);
 
@@ -108,6 +88,12 @@ namespace geeL {
 		blur.setImage(*ssaoTexture);
 
 		projectionLocation = shader.getLocation("projection");
+
+
+		blurTexture = new RenderTexture(resolution, ColorType::Single, WrapMode::Repeat, FilterMode::None);
+		blendEffect->init(PostProcessingParameter(ScreenQuad::get(), parameter.buffer, parameter.resolution));
+		blendEffect->setImage(*blurTexture);
+
 	}
 
 	void SSAO::draw() {
@@ -121,26 +107,21 @@ namespace geeL {
 
 		//Draw blurred SSAO in separate texture and
 		//then blend it with original texture
-		if (blend) {
-			parentBuffer->add(*blurTexture);
-			parentBuffer->fill([this]() {
-				blur.draw();
-			}, clearColor);
-
-			BlendGuard blendGuard;
-			glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_DST_COLOR);
-
-			blendEffect->draw();
-		}
-		//Otherwise, write blurred SSAO directly to target
-		else
+		parentBuffer->add(*blurTexture);
+		parentBuffer->fill([this]() {
 			blur.draw();
+		}, clearColor);
+
+		BlendGuard blendGuard;
+		glBlendFuncSeparate(GL_ONE, GL_ONE, GL_ONE_MINUS_DST_COLOR, GL_DST_COLOR);
+
+		blendEffect->draw();
 	}
 
 	void SSAO::fill() {
 		if (parentBuffer != nullptr) {
 			parentBuffer->add(provider->requestOcclusion());
-			parentBuffer->fill(*this, blend ? clearNothing : clearColor);
+			parentBuffer->fill(*this, clearNothing);
 		}
 	}
 

@@ -29,7 +29,6 @@ namespace geeL {
 		addTextureSampler(provider->requestPosition(), "gPosition");
 		addTextureSampler(provider->requestNormal(), "gNormal");
 		addTextureSampler(provider->requestProperties(), "gProperties");
-		shader.bind<int>("useEmissivity", 1);
 
 		LightManager& manager = scene.getLightmanager();
 		manager.addShaderListener(shader);

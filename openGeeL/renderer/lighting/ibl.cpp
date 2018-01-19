@@ -31,8 +31,6 @@ namespace geeL {
 		addTextureSampler(provider->requestNormal(), "gNormal");
 		addTextureSampler(provider->requestProperties(), "gProperties");
 
-		shader.bind<int>("useSSAO", 1);
-
 		scene.getLightmanager().addReflectionProbes(shader);
 		invViewLocation = shader.getLocation("inverseView");
 		originLocation = shader.getLocation("origin");

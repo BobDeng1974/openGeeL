@@ -1372,5 +1372,8 @@
     <None Include="shaders\gbufferread.glsl">
       <Filter>shaders</Filter>
     </None>
+    <None Include="shaders\postprocessing\ssaoblend.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
   </ItemGroup>
 </Project>

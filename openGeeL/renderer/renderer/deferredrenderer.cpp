@@ -203,11 +203,8 @@ namespace geeL {
 		this->ssao = &ssao;
 
 		Resolution ssaoRes = Resolution(window.resolution, ssao.getResolution());
-		//gBuffer.requestOcclusion(ssao.getResolution()); //Ensure that occlusion map gets created
-
 		ssao.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, 
 			ssaoRes, &provider, &fallbackEffect, nullptr, &materialFactory));
-		ssao.setTargetTexture(gBuffer.getOcclusion());
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect, DrawTime time) {

@@ -97,10 +97,6 @@ public:
 			renderer.addEffect(ibl, DrawTime::Early);
 			postLister.add(iblSnippet);
 
-			ImageBasedLighting& forwardIBL = ImageBasedLighting(scene);
-			renderer.addEffect(forwardIBL, DrawTime::Intermediate);
-			forwardIBL.setRenderMask(RenderMask::Transparent);
-
 			SSAOSnippet& ssaoSnippet = SSAOSnippet(ssao);
 			BilateralFilterSnippet& ssaoBlurSnippet = BilateralFilterSnippet(blur);
 			PostGroupSnippet& groupSnippet = PostGroupSnippet(ssaoSnippet, ssaoBlurSnippet);
