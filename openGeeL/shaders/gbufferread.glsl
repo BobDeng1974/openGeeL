@@ -1,20 +1,17 @@
 
-#ifndef TEXTURE_COORDINATES
-#define TEXTURE_COORDINATES texCoords
-#endif
 
 #ifdef POSITION_MAP
 
-	vec4 readPositionRoughness() {
-		return texture(POSITION_MAP, TEXTURE_COORDINATES);
+	vec4 readPositionRoughness(vec2 texCoords) {
+		return texture(POSITION_MAP, texCoords);
 	}
 	
-	vec3 readPosition() {
-		return texture(POSITION_MAP, TEXTURE_COORDINATES).xyz;
+	vec3 readPosition(vec2 texCoords) {
+		return texture(POSITION_MAP, texCoords).xyz;
 	}
 
-	float readDepth() {
-		return -texture(POSITION_MAP, TEXTURE_COORDINATES).z;
+	float readDepth(vec2 texCoords) {
+		return -texture(POSITION_MAP, texCoords).z;
 	}
 
 
@@ -22,16 +19,16 @@
 
 #ifdef NORMAL_MAP
 
-	vec4 readNormalMetallic() {
-		return texture(NORMAL_MAP, TEXTURE_COORDINATES);
+	vec4 readNormalMetallic(vec2 texCoords) {
+		return texture(NORMAL_MAP, texCoords);
 	}
 
-	vec3 readNormal() {
-		return texture(NORMAL_MAP, TEXTURE_COORDINATES).xyz;
+	vec3 readNormal(vec2 texCoords) {
+		return texture(NORMAL_MAP, texCoords).xyz;
 	}
 
-	float readMetallic() {
-		return texture(NORMAL_MAP, TEXTURE_COORDINATES).w;
+	float readMetallic(vec2 texCoords) {
+		return texture(NORMAL_MAP, texCoords).w;
 	}
 
 
@@ -39,24 +36,24 @@
 
 #ifdef DIFFUSE_MAP
 
-	vec4 readDiffuse() {
-		return texture(DIFFUSE_MAP, TEXTURE_COORDINATES);
+	vec4 readDiffuse(vec2 texCoords) {
+		return texture(DIFFUSE_MAP, texCoords);
 	}
 
 #endif
 
 #ifdef EMISSIVITY_MAP
 
-	vec3 readEmissitivity() {
-		return texture(EMISSIVITY_MAP, TEXTURE_COORDINATES).rgb;
+	vec3 readEmissitivity(vec2 texCoords) {
+		return texture(EMISSIVITY_MAP, texCoords).rgb;
 	}
 
 #endif
 
 #ifdef OCCLUSION_MAP 
 
-	float readOcclusion() {
-		return texture(OCCLUSION_MAP, TEXTURE_COORDINATES).r;
+	float readOcclusion(vec2 texCoords) {
+		return texture(OCCLUSION_MAP, texCoords).r;
 	}
 
 #endif
