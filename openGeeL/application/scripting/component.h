@@ -13,6 +13,9 @@ namespace geeL {
 	public:
 		virtual ~Component() {}
 
+		virtual bool isActive() const;
+		virtual void setActive(bool active);
+
 		void* operator new(size_t size);
 		void  operator delete(void* pointer);
 
@@ -24,6 +27,9 @@ namespace geeL {
 		virtual void init() {}
 		virtual void update(Input& input) {}
 		virtual void lateUpdate() {}
+
+	private:
+		bool active = true;
 
 	};
 

@@ -1,5 +1,8 @@
 #version 430 core
 
+#define POSITION_MAP	gPositionRoughness
+#define NORMAL_MAP		gNormalMet
+
 #include <shaders/helperfunctions.glsl>
 #include <shaders/samplingvector.glsl>
 #include <shaders/lighting/cooktorrance.glsl>
@@ -9,8 +12,8 @@ in vec2 TexCoords;
 out vec4 color;
 
 uniform sampler2D image;
-uniform sampler2D gPositionRoughness;
-uniform sampler2D gNormalMet;
+uniform sampler2D POSITION_MAP;
+uniform sampler2D NORMAL_MAP;
 
 uniform int sampleCount = 40;
 uniform int stepCount = 60;
@@ -33,12 +36,12 @@ vec3 generateSampledVector(float roughness, vec2 samp);
 void main() {
 	vec3 result = step(effectOnly, 0.f) * texture(image, TexCoords).rgb;
 
-	vec4 posRough = texture(gPositionRoughness, TexCoords);
+	vec4 posRough = texture(POSITION_MAP, TexCoords);
 	vec3 fragPos = posRough.xyz;
 	float depth = -fragPos.z;
 	float roughness = posRough.w; 
 	
-	vec3 normal = normalize(texture(gNormalMet, TexCoords).rgb);
+	vec3 normal = normalize(texture(NORMAL_MAP, TexCoords).rgb);
 	vec3 reflectionDirection = normalize(reflect(fragPos, normal));
 
 	//DBranch to filter out large bunch of pixels
@@ -52,7 +55,7 @@ void main() {
 
 vec3 getReflectionFussy(vec3 fragPos, vec3 normal, vec3 reflectionDirection, float roughness) {
 	vec3 viewDirection = normalize(-fragPos);
-	float metallic = texture(gNormalMet, TexCoords).w;
+	float metallic = texture(NORMAL_MAP, TexCoords).w;
 
 	vec3 right = cross(reflectionDirection, normal);
 	vec3 up = cross(reflectionDirection, right);
@@ -98,7 +101,7 @@ bool computeReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float
 		float depth = currPosition.z;
 		
 		vec4 currPosProj = transformToClip(currPosition);
-		vec3 sampledPosition = texture(gPositionRoughness, currPosProj.xy).xyz;
+		vec3 sampledPosition = texture(POSITION_MAP, currPosProj.xy).xyz;
 		float currDepth = sampledPosition.z;
 
 		//Break when reaching border of image
@@ -118,7 +121,7 @@ bool computeReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float
 				for(int j = 0; j < 5; j++) {
 				
 					currPosition = mix(left, right, 0.5f);
-					currDepth    = texture(gPositionRoughness, currPosProj.xy).z;
+					currDepth    = texture(POSITION_MAP, currPosProj.xy).z;
 					currPosProj  = transformToClip(currPosition);
 
 					float leftDep = abs(left.z - currDepth);
@@ -130,7 +133,7 @@ bool computeReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float
 						left = currPosition;
 				}
 
-				vec3 reflectedNormal = normalize(texture(gNormalMet, currPosProj.xy).rgb);
+				vec3 reflectedNormal = normalize(texture(NORMAL_MAP, currPosProj.xy).rgb);
 				float dotNR = abs(dot(normal, reflectedNormal));
 
 				//Discard when surface normal and reflected surface normal are too similar. In this case

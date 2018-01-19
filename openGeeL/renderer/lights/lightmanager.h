@@ -103,10 +103,10 @@ namespace geeL {
 		void addVoxelStructure(VoxelStructure& structure);
 		void drawVoxelStructure();
 
+		//Returns shadowmap adapter if attached, null otherwise
 		ShadowmapAdapter* const getShadowmapAdapter();
 		void addShadowmapAdapter(ShadowmapAdapter& manager);
 
-		
 		//Add shader that shall be updated when lights are added/removed
 		void addShaderListener(Shader& shader);
 		void addShaderListener(SceneShader& shader);

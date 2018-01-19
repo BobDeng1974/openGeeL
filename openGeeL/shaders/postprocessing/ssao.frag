@@ -1,11 +1,14 @@
 #version 430 core
 
+#define POSITION_MAP	gPositionDepth
+#define NORMAL_MAP		gNormalMet
+
 in vec2 TexCoords;
 
 out float color;
 
-uniform sampler2D gPositionDepth;
-uniform sampler2D gNormalMet;
+uniform sampler2D POSITION_MAP;
+uniform sampler2D NORMAL_MAP;
 uniform sampler2D noiseTexture;
 
 uniform vec3 samples[64];
@@ -21,8 +24,8 @@ vec2 noiseScale() {
 
 void main() {
 
-	vec3 fragPos = texture(gPositionDepth, TexCoords).xyz;
-	vec3 normal  = texture(gNormalMet, TexCoords).rgb;
+	vec3 fragPos = texture(POSITION_MAP, TexCoords).xyz;
+	vec3 normal  = texture(NORMAL_MAP, TexCoords).rgb;
 
 	vec3 random = texture(noiseTexture, TexCoords * noiseScale()).xyz;
 	random = normalize(random);
@@ -43,7 +46,7 @@ void main() {
 		offset.xyz = offset.xyz / offset.w;
 		offset.xyz = offset.xyz * 0.5f + 0.5f;
 
-		float depth = texture(gPositionDepth, offset.xy).z;
+		float depth = texture(POSITION_MAP, offset.xy).z;
 		//Add to occlusion if depth > samp.z
 		occlusion += step(samp.z, depth) * smoothstep(0.f, 1.f, radius / abs(fragPos.z - depth));
 	}

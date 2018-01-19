@@ -1,5 +1,9 @@
 #version 430
 
+#define POSITION_MAP	gPositionRoughness
+#define NORMAL_MAP		gNormalMet
+#define DIFFUSE_MAP		gDiffuse
+
 #include <shaders/lighting/iblcore.glsl>
 
 
@@ -16,26 +20,26 @@ layout (location = 1) out vec4 specular;
 #endif
 
 uniform sampler2D image;  
-uniform sampler2D gPositionRoughness;
-uniform sampler2D gNormalMet;
-uniform sampler2D gDiffuse;
+uniform sampler2D POSITION_MAP;
+uniform sampler2D NORMAL_MAP;
+uniform sampler2D DIFFUSE_MAP;
 
 uniform sampler2D ssao;
 uniform int useSSAO;
 
 
 void main() {
-	vec4 posRough = texture(gPositionRoughness, textureCoordinates);
+	vec4 posRough = texture(POSITION_MAP, textureCoordinates);
 	vec3 fragPosition = posRough.rgb;
 	vec3 position = (inverseView * vec4(fragPosition, 1.f)).xyz;
 
 	//Discard pixel if it is not connected to any position in scene (Will be rendered black anyway)
 	if(length(fragPosition) <= 0.001f) return;
 
-	vec4 normMet  = texture(gNormalMet, textureCoordinates);
+	vec4 normMet  = texture(NORMAL_MAP, textureCoordinates);
 
     vec3 normal		  = normMet.rgb;
-    vec4 albedo		  = texture(gDiffuse, textureCoordinates);
+    vec4 albedo		  = texture(DIFFUSE_MAP, textureCoordinates);
 
 	float roughness	  = posRough.a;
 	float metallic    = normMet.a;

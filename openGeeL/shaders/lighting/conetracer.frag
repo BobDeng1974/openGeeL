@@ -1,5 +1,9 @@
 #version 430
 
+#define POSITION_MAP	gPositionRoughness
+#define NORMAL_MAP		gNormalMet
+#define DIFFUSE_MAP		gDiffuse
+
 #include <shaders/helperfunctions.glsl>
 
 const float epsilon = 0.000001f;
@@ -23,9 +27,9 @@ uniform layout (binding = 0, r32ui) uimageBuffer nodeIndicies;
 uniform layout (binding = 1, r32ui) uimageBuffer nodeDiffuse;
 
 uniform sampler2D image;
-uniform sampler2D gPositionRoughness;
-uniform sampler2D gNormalMet;
-uniform sampler2D gDiffuse;
+uniform sampler2D POSITION_MAP;
+uniform sampler2D NORMAL_MAP;
+uniform sampler2D DIFFUSE_MAP;
 
 
 vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo);
@@ -60,8 +64,8 @@ vec4 mix3D(vec4 p000, vec4 p100, vec4 p010, vec4 p110, vec4 p001, vec4 p101, vec
 
 
 void main() {
-	vec4 normMet  = texture(gNormalMet, TexCoords);
-	vec4 posRough = texture(gPositionRoughness, TexCoords);
+	vec4 posRough = texture(POSITION_MAP, TexCoords);
+	vec4 normMet  = texture(NORMAL_MAP, TexCoords);
 
 	vec3 baseColor = texture(image, TexCoords).rgb;
 	vec3 posView  = posRough.rgb;
@@ -74,7 +78,7 @@ void main() {
 	vec3 refl = normalize(reflect(-view, normal));
 	vec3 camPosition = (inverseView * vec4(vec3(0.f), 1.f)).xyz;
 
-	vec3 albedo = texture(gDiffuse, TexCoords).rgb;
+	vec3 albedo = texture(DIFFUSE_MAP, TexCoords).rgb;
 	float roughness = posRough.a;
 	float metallic = normMet.w;
 

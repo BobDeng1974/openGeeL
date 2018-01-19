@@ -1,11 +1,13 @@
 #version 430 core
 
+#define POSITION_MAP gPositionDepth
+
 in vec2 TexCoords;
 
 out vec4 color;
 
 uniform sampler2D image;
-uniform sampler2D gPositionDepth;
+uniform sampler2D POSITION_MAP;
 uniform sampler2D blurredImage;
 
 uniform float focalDistance;
@@ -15,7 +17,7 @@ uniform float farDistance;
 void main() {
 	vec3 focused = texture(image, TexCoords).rgb; 
 	vec3 blurred = texture(blurredImage, TexCoords).rgb; 
-	float depth  = -texture(gPositionDepth, TexCoords).z;
+	float depth  = -texture(POSITION_MAP, TexCoords).z;
 
 	float diff = abs(focalDistance - depth);
 	diff = (diff / farDistance) * aperture;

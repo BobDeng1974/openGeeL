@@ -5,7 +5,15 @@
 using namespace geeL::memory;
 
 namespace geeL {
-
+	
+	bool Component::isActive() const {
+		return active;
+	}
+	
+	void Component::setActive(bool active) {
+		this->active = active;
+	}
+	
 	void* Component::operator new(size_t size) {
 		Memory& memory = ApplicationManager::getCurrentMemory();
 		return memory.allocate(size);

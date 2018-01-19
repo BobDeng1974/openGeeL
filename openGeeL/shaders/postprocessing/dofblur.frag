@@ -1,5 +1,7 @@
 #version 430 core
 
+#define POSITION_MAP gPositionDepth
+
 in vec2 TexCoords;
 
 out vec4 color;
@@ -10,7 +12,7 @@ uniform float weights[kernelSize];
 uniform float offsets[kernelSize];
 
 uniform sampler2D image;
-uniform sampler2D gPositionDepth;
+uniform sampler2D POSITION_MAP;
 
 uniform float focalDistance;
 uniform	float aperture;
@@ -43,13 +45,13 @@ void main() {
 		vec2 off = offset * offsets[i];
 
 		//Sample right / top pixel
-		float depth = -texture(gPositionDepth, TexCoords + off).z;
+		float depth = -texture(POSITION_MAP, TexCoords + off).z;
 		float sharp = getSharpness(depth);
 
 		result += (texture(image, TexCoords + off).rgb * sharp + baseColor * (1 - sharp)) * weights[i];
             
 		//Sample left / bottom pixel
-		depth = -texture(gPositionDepth, TexCoords - off).z;
+		depth = -texture(POSITION_MAP, TexCoords - off).z;
 		sharp = getSharpness(depth);
 
 		result += (texture(image, TexCoords - off).rgb * sharp + baseColor * (1.f - sharp))* weights[i];

@@ -1,5 +1,7 @@
 #version 430 core
 
+#define POSITION_MAP gPositionDepth
+
 in vec2 TexCoords;
 
 out vec4 color;
@@ -29,7 +31,7 @@ void main() {
 	//Size of single texel
     vec2 texOffset = 1.f / textureSize(image, 0); 
     vec3 base = texture(image, TexCoords).rgb; 
-	float baseDepth = -texture(gPositionDepth, TexCoords).z;
+	float baseDepth = -texture(POSITION_MAP, TexCoords).z;
 	vec3 result = base * weights[0];
 
 	float hor = step(1.f, float(horizontal));
@@ -41,7 +43,7 @@ void main() {
 		vec2 off = offset * offsets[i];
 
 		vec3 samp = texture(image, TexCoords + off).rgb;
-		float sampDepth = -texture(gPositionDepth, TexCoords + off).z;
+		float sampDepth = -texture(POSITION_MAP, TexCoords + off).z;
 		float weight = bilateralCoeffient(baseDepth, sampDepth) * weights[i];
 		weightSum += weight;
 
@@ -49,7 +51,7 @@ void main() {
 		result += samp * weight;
 
 		samp = texture(image, TexCoords - off).rgb;
-		sampDepth = -texture(gPositionDepth, TexCoords - off).z;
+		sampDepth = -texture(POSITION_MAP, TexCoords - off).z;
 		weight = bilateralCoeffient(baseDepth, sampDepth) * weights[i];
 		weightSum += weight;
 

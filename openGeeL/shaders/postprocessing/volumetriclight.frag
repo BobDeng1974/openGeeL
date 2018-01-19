@@ -1,5 +1,7 @@
 #version 430 core
 
+#define POSITION_MAP gPositionDepth
+
 const float PI = 3.14159265359;
 
 struct SpotLight {
@@ -20,7 +22,7 @@ in vec2 TexCoords;
 out vec4 color;
 
 uniform sampler2D image;
-uniform sampler2D gPositionDepth;
+uniform sampler2D POSITION_MAP;
 uniform sampler2D shadowMap;
 uniform sampler2D lightCookie;
 
@@ -44,7 +46,7 @@ float calculateSpotLightShadows(vec3 coords);
 void main() {
 	if(!lightActive) return;
 
-	vec3 fragPos = texture(gPositionDepth, TexCoords).xyz;
+	vec3 fragPos = texture(POSITION_MAP, TexCoords).xyz;
 	float depth = length(fragPos);
 
 	//Detect pixels that aren't present in gbuffer

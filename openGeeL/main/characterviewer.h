@@ -8,7 +8,6 @@ using namespace geeL;
 
 class CharacterViewer {
 
-
 public:
 	static void draw() {
 		RenderWindow& window = RenderWindow("Character Viewer", Resolution(1920, 1080), WindowMode::Windowed);
@@ -18,9 +17,8 @@ public:
 			LightManager& lightManager, TransformFactory& transformFactory, MeshFactory& meshFactory, MaterialFactory& materialFactory,
 			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
 
-
 			//Transform& cameraTransform = transformFactory.CreateTransform(vec3(1.3f, -3.58f, 4.11f), vec3(78.13f, 44.83f, -174.44f), vec3(1.f));
-			Transform& cameraTransform = transformFactory.CreateTransform(vec3(2.94f, -2.52f, 3.11f), vec3(70.32f, 48.27f, -179.4f), vec3(1.f));
+			Transform& cameraTransform = transformFactory.CreateTransform(vec3(2.55f, -2.7f, 3.44f), vec3(69.28f, 48.02f, -179.29f), vec3(1.f));
 			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 45.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
 			camera.addComponent<MovableCamera>(MovableCamera(3.f, 0.45f));
 			scene.setCamera(camera);

@@ -19,7 +19,6 @@ namespace geeL {
 		ShadowmapAdapter(const Scene& scene, TextureProvider& provider, 
 			unsigned int allocationSize = 4000);
 
-
 		void update();
 
 		float getDepthScale() const;
@@ -30,7 +29,11 @@ namespace geeL {
 		void setAttenuationScale(float value);
 		void setBaseSizeScale(float value);
 
+		bool isActive() const;
+		void setActive(bool active);
+
 	private:
+		bool active;
 		unsigned int allocationSize;
 		float depthScale, attenuationScale, baseSizeScale;
 

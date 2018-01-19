@@ -24,14 +24,23 @@ namespace geeL {
 
 	void SceneObject::update(Input& input) {
 		for_each(components.begin(), components.end(), [&](Component* comp) {
-			comp->update(input);
+			if(comp->isActive())
+				comp->update(input);
 		});
 	}
 
 	void SceneObject::lateUpdate() {
 		for_each(components.begin(), components.end(), [&](Component* comp) {
-			comp->lateUpdate();
+			if(comp->isActive())
+				comp->lateUpdate();
 		});
+	}
+
+	void SceneObject::removeComponent(Component& component) {
+		Component* c = &component;
+
+		components.remove(c);
+		delete c;
 	}
 
 	bool SceneObject::isActive() const {

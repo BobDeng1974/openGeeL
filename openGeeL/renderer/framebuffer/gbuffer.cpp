@@ -93,7 +93,7 @@ namespace geeL {
 
 	RenderTexture& GBuffer::requestOcclusion(const ResolutionScale& scale) {
 		if(occlusion == nullptr)
-			occlusion = new RenderTexture(Resolution(resolution, scale), ColorType::Single, WrapMode::ClampEdge, FilterMode::None);
+			occlusion = new RenderTexture(Resolution(resolution, scale), ColorType::RGB, WrapMode::ClampEdge, FilterMode::None);
 
 		return *occlusion;
 	}

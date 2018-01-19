@@ -1,5 +1,10 @@
 #version 430
 
+#define POSITION_MAP	gPositionRoughness
+#define NORMAL_MAP		gNormalMet
+#define DIFFUSE_MAP		gDiffuse
+#define EMISSIVITY_MAP	gEmissivity
+
 #define MAX_LIGHTS 5
 #define GROUP_SIZE 8
 layout (local_size_x = GROUP_SIZE, local_size_y = GROUP_SIZE, local_size_z = 1) in;
@@ -29,10 +34,10 @@ uniform int plCount;
 uniform int dlCount;
 uniform int slCount;
 
-uniform sampler2D gPositionRoughness;
-uniform sampler2D gNormalMet;
-uniform sampler2D gDiffuse;
-uniform sampler2D gEmissivity;
+uniform sampler2D POSITION_MAP;
+uniform sampler2D NORMAL_MAP;
+uniform sampler2D DIFFUSE_MAP;
+uniform sampler2D EMISSIVITY_MAP;
 
 uniform bool useEmissivity;
 
@@ -52,7 +57,7 @@ void main() {
 	ivec2 coords = ivec2(gl_GlobalInvocationID.xy);
 	vec2 textureCoordinates = gl_GlobalInvocationID.xy / resolution;
 
-	vec4 posRough = texture2D(gPositionRoughness, textureCoordinates);
+	vec4 posRough = texture2D(POSITION_MAP, textureCoordinates);
 	vec3 fragPosition = posRough.rgb;
 
 	
@@ -125,11 +130,11 @@ void main() {
 	
 	//Proceed as usual
 
-	vec4 normMet  = texture2D(gNormalMet, textureCoordinates);
+	vec4 normMet  = texture2D(NORMAL_MAP, textureCoordinates);
 
     vec3 normal		= normMet.rgb;
-    vec4 albedo		= texture2D(gDiffuse, textureCoordinates);
-	vec3 emissivity = useEmissivity ? texture2D(gEmissivity, textureCoordinates).rgb : vec3(0.f);
+    vec4 albedo		= texture2D(DIFFUSE_MAP, textureCoordinates);
+	vec3 emissivity = useEmissivity ? texture2D(EMISSIVITY_MAP, textureCoordinates).rgb : vec3(0.f);
 
 	float roughness	= posRough.a;
 	float metallic  = normMet.a;

@@ -1,5 +1,10 @@
 #version 430
 
+#define POSITION_MAP	gPositionRoughness
+#define NORMAL_MAP		gNormalMet
+#define DIFFUSE_MAP		gDiffuse
+#define EMISSIVITY_MAP	gEmissivity
+
 #include <shaders/helperfunctions.glsl>
 #include <shaders/sampling.glsl>
 #include <shaders/lighting/lights.glsl>
@@ -20,10 +25,10 @@ uniform int plCount;
 uniform int dlCount;
 uniform int slCount;
 
-uniform sampler2D gPositionRoughness;
-uniform sampler2D gNormalMet;
-uniform sampler2D gDiffuse;
-uniform sampler2D gEmissivity;
+uniform sampler2D POSITION_MAP;
+uniform sampler2D NORMAL_MAP;
+uniform sampler2D DIFFUSE_MAP;
+uniform sampler2D EMISSIVITY_MAP;
 
 uniform bool useEmissivity;
 
@@ -39,21 +44,23 @@ uniform SpotLight spotLights[5];
 #include <shaders/lighting/cooktorrancelights.glsl>
 
 
+
+
 vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightColor, float density);
 
 
 void main() {
-	vec4 posRough = texture(gPositionRoughness, textureCoordinates);
+	vec4 posRough = texture(POSITION_MAP, textureCoordinates);
 	vec3 fragPosition = posRough.rgb;
 
 	//Discard pixel if it is not connected to any position in scene (Will be rendered black anyway)
 	discard(length(fragPosition) <= 0.001f);
 
-	vec4 normMet  = texture(gNormalMet, textureCoordinates);
+	vec4 normMet  = texture(NORMAL_MAP, textureCoordinates);
 
     vec3 normal		= normMet.rgb;
-    vec4 albedo		= texture(gDiffuse, textureCoordinates);
-	vec3 emissivity = useEmissivity ? texture(gEmissivity, textureCoordinates).rgb : vec3(0.f);
+    vec4 albedo		= texture(DIFFUSE_MAP, textureCoordinates);
+	vec3 emissivity = useEmissivity ? texture(EMISSIVITY_MAP, textureCoordinates).rgb : vec3(0.f);
 
 	float roughness	= posRough.a;
 	float metallic  = normMet.a;

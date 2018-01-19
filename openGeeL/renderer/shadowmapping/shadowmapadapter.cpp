@@ -21,10 +21,13 @@ namespace geeL {
 		, allocationSize(allocationSize)
 		, depthScale(50.f) 
 		, attenuationScale(0.33f)
-		, baseSizeScale(2.f) {}
+		, baseSizeScale(2.f)
+		, active(true) {}
 
 
 	void ShadowmapAdapter::update() {
+		if (!active) return;
+
 		depthReader.readDepth();
 		float depth = depthReader.getDepth();
 
@@ -139,6 +142,14 @@ namespace geeL {
 	void ShadowmapAdapter::setBaseSizeScale(float value) {
 		if (value > 0.f)
 			baseSizeScale = value;
+	}
+
+	bool ShadowmapAdapter::isActive() const {
+		return active;
+	}
+
+	void ShadowmapAdapter::setActive(bool active) {
+		this->active = active;
 	}
 
 }
