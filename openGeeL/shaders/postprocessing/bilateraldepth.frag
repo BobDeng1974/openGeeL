@@ -12,7 +12,9 @@ uniform float weights[kernelSize];
 uniform float offsets[kernelSize];
 
 uniform sampler2D image;
-uniform sampler2D gPositionDepth;
+uniform sampler2D POSITION_MAP;
+
+#include <shaders/gbufferread.glsl>
 
 uniform bool horizontal;
 uniform float sigma;
@@ -31,7 +33,7 @@ void main() {
 	//Size of single texel
     vec2 texOffset = 1.f / textureSize(image, 0); 
     vec3 base = texture(image, TexCoords).rgb; 
-	float baseDepth = -texture(POSITION_MAP, TexCoords).z;
+	float baseDepth = readDepth(TexCoords);
 	vec3 result = base * weights[0];
 
 	float hor = step(1.f, float(horizontal));
@@ -43,7 +45,7 @@ void main() {
 		vec2 off = offset * offsets[i];
 
 		vec3 samp = texture(image, TexCoords + off).rgb;
-		float sampDepth = -texture(POSITION_MAP, TexCoords + off).z;
+		float sampDepth = readDepth(TexCoords + off);
 		float weight = bilateralCoeffient(baseDepth, sampDepth) * weights[i];
 		weightSum += weight;
 
@@ -51,7 +53,7 @@ void main() {
 		result += samp * weight;
 
 		samp = texture(image, TexCoords - off).rgb;
-		sampDepth = -texture(POSITION_MAP, TexCoords - off).z;
+		sampDepth = readDepth(TexCoords - off);
 		weight = bilateralCoeffient(baseDepth, sampDepth) * weights[i];
 		weightSum += weight;
 

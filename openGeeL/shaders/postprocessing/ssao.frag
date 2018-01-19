@@ -11,6 +11,8 @@ uniform sampler2D POSITION_MAP;
 uniform sampler2D NORMAL_MAP;
 uniform sampler2D noiseTexture;
 
+#include <shaders/gbufferread.glsl>
+
 uniform vec3 samples[64];
 uniform mat4 projection;
 
@@ -24,8 +26,8 @@ vec2 noiseScale() {
 
 void main() {
 
-	vec3 fragPos = texture(POSITION_MAP, TexCoords).xyz;
-	vec3 normal  = texture(NORMAL_MAP, TexCoords).rgb;
+	vec3 fragPos = readPosition(TexCoords);
+	vec3 normal  = readNormal(TexCoords);
 
 	vec3 random = texture(noiseTexture, TexCoords * noiseScale()).xyz;
 	random = normalize(random);
@@ -46,7 +48,7 @@ void main() {
 		offset.xyz = offset.xyz / offset.w;
 		offset.xyz = offset.xyz * 0.5f + 0.5f;
 
-		float depth = texture(POSITION_MAP, offset.xy).z;
+		float depth = -readDepth(offset.xy);
 		//Add to occlusion if depth > samp.z
 		occlusion += step(samp.z, depth) * smoothstep(0.f, 1.f, radius / abs(fragPos.z - depth));
 	}

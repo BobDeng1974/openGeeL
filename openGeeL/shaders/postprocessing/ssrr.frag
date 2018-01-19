@@ -14,6 +14,8 @@ uniform sampler2D image;
 uniform sampler2D POSITION_MAP;
 uniform sampler2D NORMAL_MAP;
 
+#include <shaders/gbufferread.glsl>
+
 uniform int stepCount = 60;
 uniform	float stepSize = 0.2f;
 uniform	float stepGain = 1.02f;
@@ -37,7 +39,7 @@ vec4 transformToClip(vec3 vector);
 void main() {
 	vec3 result = step(effectOnly, 0.f) * texture(image, TexCoords).rgb;
 
-	vec4 posRough = texture(POSITION_MAP, TexCoords);
+	vec4 posRough = readPositionRoughness(TexCoords);
 	vec3 fragPos = posRough.xyz;
 	float depth = -fragPos.z;
 	float roughness = posRough.w; 
@@ -89,7 +91,7 @@ vec3 getReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float rou
 		float depth = currPosition.z;
 		
 		vec4 currPosProj = transformToClip(currPosition);
-		vec3 sampledPosition = texture(POSITION_MAP, currPosProj.xy).xyz;
+		vec3 sampledPosition = readPosition(currPosProj.xy);
 		float currDepth = sampledPosition.z;
 
 		//Break when reaching border of image
@@ -109,7 +111,7 @@ vec3 getReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float rou
 				for(int j = 0; j < 5; j++) {
 				
 					currPosition = mix(left, right, 0.5f);
-					currDepth    = texture(POSITION_MAP, currPosProj.xy).z;
+					currDepth    = -readDepth(currPosProj.xy);
 					currPosProj  = transformToClip(currPosition);
 
 					float leftDep = abs(left.z - currDepth);

@@ -14,6 +14,8 @@ layout (binding = 1, std430) buffer OutputBlock {
 
 uniform sampler2D POSITION_MAP;
 
+#include <shaders/gbufferread.glsl>
+
 shared float depths[10][10];
 
 
@@ -21,7 +23,7 @@ void main() {
 	ivec2 coords = ivec2(gl_GlobalInvocationID.xy);;
 	vec2 texCoords = vec2(coords) / vec2(GROUP_SIZE);
 
-	float depth = -texture2D(POSITION_MAP, texCoords).z;
+	float depth = readDepth(texCoords);
 	depth = (depth <= 0) ? FLOAT_MAX : depth;
 
 	depths[coords.x][coords.y] = depth;

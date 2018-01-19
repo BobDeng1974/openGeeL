@@ -502,6 +502,7 @@
     <None Include="shaders\gbuffer.vert" />
     <None Include="shaders\gbufferAnim.vert" />
     <None Include="shaders\gbufferEmi.frag" />
+    <None Include="shaders\gbufferread.glsl" />
     <None Include="shaders\helperfunctions.glsl" />
     <None Include="shaders\lighting\conetracer.frag" />
     <None Include="shaders\lighting\conetracerTex.frag" />

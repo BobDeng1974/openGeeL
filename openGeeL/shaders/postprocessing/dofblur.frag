@@ -14,6 +14,8 @@ uniform float offsets[kernelSize];
 uniform sampler2D image;
 uniform sampler2D POSITION_MAP;
 
+#include <shaders/gbufferread.glsl>
+
 uniform float focalDistance;
 uniform	float aperture;
 uniform	float farDistance;
@@ -45,13 +47,13 @@ void main() {
 		vec2 off = offset * offsets[i];
 
 		//Sample right / top pixel
-		float depth = -texture(POSITION_MAP, TexCoords + off).z;
+		float depth = readDepth(TexCoords + off);
 		float sharp = getSharpness(depth);
 
 		result += (texture(image, TexCoords + off).rgb * sharp + baseColor * (1 - sharp)) * weights[i];
             
 		//Sample left / bottom pixel
-		depth = -texture(POSITION_MAP, TexCoords - off).z;
+		depth = readDepth(TexCoords - off);
 		sharp = getSharpness(depth);
 
 		result += (texture(image, TexCoords - off).rgb * sharp + baseColor * (1.f - sharp))* weights[i];

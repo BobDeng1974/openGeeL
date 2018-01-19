@@ -7,8 +7,10 @@ in vec2 TexCoords;
 out vec4 color;
 
 uniform sampler2D image;
-uniform sampler2D POSITION_MAP;
 uniform sampler2D blurredImage;
+uniform sampler2D POSITION_MAP;
+
+#include <shaders/gbufferread.glsl>
 
 uniform float focalDistance;
 uniform float aperture;
@@ -17,7 +19,7 @@ uniform float farDistance;
 void main() {
 	vec3 focused = texture(image, TexCoords).rgb; 
 	vec3 blurred = texture(blurredImage, TexCoords).rgb; 
-	float depth  = -texture(POSITION_MAP, TexCoords).z;
+	float depth  = readDepth(TexCoords);
 
 	float diff = abs(focalDistance - depth);
 	diff = (diff / farDistance) * aperture;

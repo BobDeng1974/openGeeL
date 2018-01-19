@@ -30,6 +30,8 @@ uniform sampler2D NORMAL_MAP;
 uniform sampler2D DIFFUSE_MAP;
 uniform sampler2D EMISSIVITY_MAP;
 
+#include <shaders/gbufferread.glsl>
+
 uniform bool useEmissivity;
 
 uniform mat4 projection;
@@ -50,17 +52,17 @@ vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightC
 
 
 void main() {
-	vec4 posRough = texture(POSITION_MAP, textureCoordinates);
+	vec4 posRough = readPositionRoughness(textureCoordinates);
 	vec3 fragPosition = posRough.rgb;
 
 	//Discard pixel if it is not connected to any position in scene (Will be rendered black anyway)
 	discard(length(fragPosition) <= 0.001f);
 
-	vec4 normMet  = texture(NORMAL_MAP, textureCoordinates);
+	vec4 normMet  = readNormalMetallic(textureCoordinates);
 
     vec3 normal		= normMet.rgb;
-    vec4 albedo		= texture(DIFFUSE_MAP, textureCoordinates);
-	vec3 emissivity = useEmissivity ? texture(EMISSIVITY_MAP, textureCoordinates).rgb : vec3(0.f);
+    vec4 albedo		= readDiffuse(textureCoordinates);
+	vec3 emissivity = useEmissivity ? readEmissitivity(textureCoordinates).rgb : vec3(0.f);
 
 	float roughness	= posRough.a;
 	float metallic  = normMet.a;

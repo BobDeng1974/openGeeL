@@ -31,6 +31,8 @@ uniform sampler2D POSITION_MAP;
 uniform sampler2D NORMAL_MAP;
 uniform sampler2D DIFFUSE_MAP;
 
+#include <shaders/gbufferread.glsl>
+
 
 vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo);
 vec3 indirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness);
@@ -64,8 +66,8 @@ vec4 mix3D(vec4 p000, vec4 p100, vec4 p010, vec4 p110, vec4 p001, vec4 p101, vec
 
 
 void main() {
-	vec4 posRough = texture(POSITION_MAP, TexCoords);
-	vec4 normMet  = texture(NORMAL_MAP, TexCoords);
+	vec4 posRough = readPositionRoughness(TexCoords);
+	vec4 normMet  = readNormalMetallic(TexCoords);
 
 	vec3 baseColor = texture(image, TexCoords).rgb;
 	vec3 posView  = posRough.rgb;
@@ -78,7 +80,7 @@ void main() {
 	vec3 refl = normalize(reflect(-view, normal));
 	vec3 camPosition = (inverseView * vec4(vec3(0.f), 1.f)).xyz;
 
-	vec3 albedo = texture(DIFFUSE_MAP, TexCoords).rgb;
+	vec3 albedo = readDiffuse(TexCoords).rgb;
 	float roughness = posRough.a;
 	float metallic = normMet.w;
 

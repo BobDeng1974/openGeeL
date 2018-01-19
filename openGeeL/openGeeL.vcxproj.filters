@@ -1369,5 +1369,8 @@
     <None Include="shaders\nearest.com.glsl">
       <Filter>shaders\postprocessing</Filter>
     </None>
+    <None Include="shaders\gbufferread.glsl">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -26,6 +26,8 @@ uniform sampler2D POSITION_MAP;
 uniform sampler2D shadowMap;
 uniform sampler2D lightCookie;
 
+#include <shaders/gbufferread.glsl>
+
 uniform SpotLight light;
 uniform float density;
 uniform float minCutoff;
@@ -46,7 +48,7 @@ float calculateSpotLightShadows(vec3 coords);
 void main() {
 	if(!lightActive) return;
 
-	vec3 fragPos = texture(POSITION_MAP, TexCoords).xyz;
+	vec3 fragPos = readPosition(TexCoords);
 	float depth = length(fragPos);
 
 	//Detect pixels that aren't present in gbuffer
