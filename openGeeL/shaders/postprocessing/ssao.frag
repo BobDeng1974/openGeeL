@@ -1,7 +1,7 @@
 #version 430 core
 
-#define POSITION_MAP	gPositionDepth
-#define NORMAL_MAP		gNormalMet
+#define POSITION_MAP	gPosition
+#define NORMAL_MAP		gNormal
 
 in vec2 TexCoords;
 

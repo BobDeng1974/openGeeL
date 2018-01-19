@@ -77,8 +77,8 @@ namespace geeL {
 		PostProcessingEffectFS::init(parameter);
 
 		assert(provider != nullptr);
-		addTextureSampler(provider->requestPositionRoughness(), "gPositionDepth");
-		blur.addTextureSampler(provider->requestPositionRoughness(), "gPositionDepth");
+		addTextureSampler(provider->requestPosition(), "gPositionDepth");
+		blur.addTextureSampler(provider->requestPosition(), "gPositionDepth");
 
 		Resolution blurRes = Resolution(parameter.resolution, blurResolution);
 		if (blurTexture == nullptr)

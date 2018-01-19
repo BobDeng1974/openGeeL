@@ -64,24 +64,27 @@ namespace geeL {
 	std::vector<const ITexture*> SystemInformation::getBuffers() {
 		const TextureProvider& provider = renderer.getTextureProvider();
 
-		const ITexture* emisTex = provider.requestEmissivity();
-		const ITexture* occTex = provider.requestOcclusion();
+
+		//const ITexture* emisTex = provider.requestEmissivity();
+		//const ITexture* occTex = provider.requestOcclusion();
 
 		size_t bufferSize = 2;
-		bufferSize += int(emisTex != nullptr);
-		bufferSize += int(occTex != nullptr);
+		//bufferSize += int(emisTex != nullptr);
+		//bufferSize += int(occTex != nullptr);
 
 		std::vector<const ITexture*> buffers;
 		buffers.reserve(bufferSize);
 
 		buffers.push_back(&provider.requestAlbedo());
-		buffers.push_back(&provider.requestNormalMetallic());
+		buffers.push_back(&provider.requestNormal());
 
+		/*
 		if (emisTex != nullptr)
 			buffers.push_back(emisTex);
 
 		if (occTex != nullptr)
 			buffers.push_back(occTex);
+			*/
 
 		return buffers;
 	}

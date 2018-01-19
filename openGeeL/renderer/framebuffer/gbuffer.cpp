@@ -11,24 +11,21 @@
 
 #include "gbuffer.h"
 
+
 namespace geeL {
 
-	GBuffer::GBuffer(Resolution resolution, GBufferContent content) 
-		: content(content)
-		, resolution(resolution)
-		, emissivity(nullptr)
-		, occlusion(nullptr) {
+	GBuffer::GBuffer(Resolution resolution) 
+		: resolution(resolution)
+		, occEmiRoughMet(nullptr) {
 		
 		init(resolution);
 	}
 
 	GBuffer::~GBuffer() {
-		delete positionRough;
-		delete normalMet;
+		delete position;
+		delete normal;
 		delete diffuse;
-		
-		if (emissivity != nullptr) delete emissivity;
-		if (occlusion != nullptr) delete occlusion;
+		delete occEmiRoughMet;
 	}
 
 
@@ -63,10 +60,6 @@ namespace geeL {
 		unbind();
 	}
 
-	float GBuffer::getDepth() const {
-		return depthPos;
-	}
-
 	Resolution GBuffer::getResolution() const {
 		return resolution;
 	}
@@ -75,36 +68,24 @@ namespace geeL {
 		return *diffuse;
 	}
 
-	const RenderTexture& GBuffer::getPositionRoughness() const {
-		return *positionRough;
+	const RenderTexture& GBuffer::getPosition() const {
+		return *position;
 	}
 
-	const RenderTexture& GBuffer::getNormalMetallic() const {
-		return *normalMet;
+	const RenderTexture& GBuffer::getNormal() const {
+		return *normal;
 	}
 
-	const RenderTexture* GBuffer::getEmissivity() const {
-		return emissivity;
+	const RenderTexture& GBuffer::getOcclusionEmissivityRoughnessMetallic() const {
+		return *occEmiRoughMet;
 	}
 
-	const RenderTexture* GBuffer::getOcclusion() const {
-		return occlusion;
-	}
-
-	RenderTexture& GBuffer::requestOcclusion(const ResolutionScale& scale) {
-		if(occlusion == nullptr)
-			occlusion = new RenderTexture(Resolution(resolution, scale), ColorType::RGB, WrapMode::ClampEdge, FilterMode::None);
-
-		return *occlusion;
+	RenderTexture& GBuffer::getOcclusion() const {
+		return *occEmiRoughMet;
 	}
 
 	std::string GBuffer::getFragmentPath() const {
-		switch (content) {
-			case GBufferContent::DefaultEmissive:
-				return "shaders/gbufferEmi.frag";
-			default:
-				return "shaders/gbuffer.frag";
-		}
+		return "shaders/gbufferEmi.frag";
 	}
 
 	std::string GBuffer::toString() const {
@@ -112,34 +93,18 @@ namespace geeL {
 	}
 
 	void GBuffer::initTextures(Resolution resolution) {
-		positionRough = new RenderTexture(resolution, ColorType::RGBA16);
-		normalMet = new RenderTexture(resolution, ColorType::RGBA16);
+		position = new RenderTexture(resolution, ColorType::RGB16);
+		normal = new RenderTexture(resolution, ColorType::RGBA16);
 		diffuse = new RenderTexture(resolution, ColorType::RGBA);
+		occEmiRoughMet = new RenderTexture(resolution, ColorType::RGBA);
 		
-		positionRough->assignTo(*this, 0);
-		normalMet->assignTo(*this, 1);
+		position->assignTo(*this, 0);
+		normal->assignTo(*this, 1);
 		diffuse->assignTo(*this, 2);
+		occEmiRoughMet->assignTo(*this, 3);
 		
-		switch (content) {
-			case GBufferContent::DefaultEmissive: {
-				emissivity = new RenderTexture(resolution, ColorType::RGB);
-				occlusion = new RenderTexture(resolution, ColorType::Single, WrapMode::ClampEdge, FilterMode::None);
-
-				emissivity->assignTo(*this, 3);
-				occlusion->assignTo(*this, 4);
-
-				unsigned int attachments[5] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, 
-					GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 };
-
-				glDrawBuffers(5, attachments);
-				break;
-			}
-			default: {
-				unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
-				glDrawBuffers(3, attachments);
-				break;
-			}
-		}
+		unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
+		glDrawBuffers(4, attachments);
 	}
 
 	ForwardBuffer::ForwardBuffer(GBuffer& gBuffer) 
@@ -154,15 +119,15 @@ namespace geeL {
 		bind();
 
 		//Create attachements for all color buffers
-		gBuffer.getPositionRoughness().assignToo(*this, 0);
-		gBuffer.getNormalMetallic().assignToo(*this, 1);
+		gBuffer.getPosition().assignToo(*this, 0);
+		gBuffer.getNormal().assignToo(*this, 1);
 		gBuffer.getDiffuse().assignToo(*this, 2);
-		//TODO: add emissivity texture
+		gBuffer.getOcclusionEmissivityRoughnessMetallic().assignToo(*this, 3);
 
 #if DIFFUSE_SPECULAR_SEPARATION
-		BufferUtility::drawBuffers(5);
+		BufferUtility::drawBuffers(6);
 #else
-		BufferUtility::drawBuffers(4);
+		BufferUtility::drawBuffers(5);
 #endif
 
 		referenceRBO(gBuffer);
@@ -172,7 +137,7 @@ namespace geeL {
 
 	void ForwardBuffer::setTarget(RenderTarget& colorTexture) {
 		bind();
-		colorTexture.assignTo(*this, 3);
+		colorTexture.assignTo(*this, 4);
 		target = &colorTexture;
 	}
 
@@ -180,11 +145,11 @@ namespace geeL {
 		bind();
 		target->setRenderResolution();
 
-		BlendGuard blend(3);
+		BlendGuard blend(4);
 		blend.blendAlpha();
 
 #if DIFFUSE_SPECULAR_SEPARATION
-		BlendGuard blendSpecular(4);
+		BlendGuard blendSpecular(5);
 		blendSpecular.blendAlpha();
 #endif
 

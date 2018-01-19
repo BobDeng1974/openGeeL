@@ -12,15 +12,16 @@ in vec3 fragPosition;
 in vec2 texCoords;
 in mat3 TBN;
 
-layout (location = 0) out vec4 gPositionRough;
-layout (location = 1) out vec4 gNormalMet;
+layout (location = 0) out vec3 gPosition;
+layout (location = 1) out vec4 gNormal;
 layout (location = 2) out vec4 gDiffuse;
+layout (location = 3) out vec4 gProperties;
 
 #if (DIFFUSE_SPECULAR_SEPARATION == 0)
-layout (location = 3) out vec4 color;
+layout (location = 4) out vec4 color;
 #else
-layout (location = 3) out vec4 diffuse;
-layout (location = 4) out vec4 specular;
+layout (location = 4) out vec4 diffuse;
+layout (location = 5) out vec4 specular;
 #endif
 
 uniform int plCount;
@@ -56,9 +57,11 @@ void main() {
 
 	vec3 viewDirection = normalize(-fragPosition.xyz);
 
-	gPositionRough = vec4(fragPosition.xyz, roughness);
-	gNormalMet = vec4(norm, metallic);
+	gPosition = fragPosition.xyz;
+	gNormal = vec4(norm, 0.f);
 	gDiffuse = albedo;
+	gProperties = vec4(0.f, 0.f, roughness, metallic);
+
 
 #if (FOG == 1)
 	float fogFactor = 1.f - clamp(abs(fragPosition.z) / fogFalloff, 0.f, 1.f);

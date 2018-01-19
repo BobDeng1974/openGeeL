@@ -157,8 +157,8 @@ namespace geeL {
 		PostProcessingEffectFS::init(parameter);
 
 		assert(provider != nullptr);
-		prevPositionEffect.setImage(provider->requestPositionRoughness());
-		addTextureSampler(provider->requestPositionRoughness(), "currentPosition");
+		prevPositionEffect.setImage(provider->requestPosition());
+		addTextureSampler(provider->requestPosition(), "currentPosition");
 
 
 		Resolution positionRes = Resolution(parameter.resolution, 1.f);

@@ -22,11 +22,10 @@ namespace geeL {
 
 	public:
 		virtual const RenderTexture& requestAlbedo() const = 0;
-		virtual const RenderTexture& requestPositionRoughness() const = 0;
-		virtual const RenderTexture& requestNormalMetallic() const = 0;
-		virtual const RenderTexture* requestEmissivity() const = 0;
-		virtual const RenderTexture* requestOcclusion() const = 0;
-		virtual RenderTexture* requestOcclusion() = 0;
+		virtual const RenderTexture& requestPosition() const = 0;
+		virtual const RenderTexture& requestNormal() const = 0;
+		virtual const RenderTexture& requesOcclusionEmissivityRoughnessMetallic() const = 0;
+		virtual RenderTexture& requestOcclusion() const = 0;
 
 		//Request texture with default properties (Properties of final screen texture)
 		virtual RenderTexture& requestDefaultTexture() = 0;
@@ -68,11 +67,10 @@ namespace geeL {
 		~TextureProvider();
 
 		virtual const RenderTexture& requestAlbedo() const;
-		virtual const RenderTexture& requestPositionRoughness() const;
-		virtual const RenderTexture& requestNormalMetallic() const;
-		virtual const RenderTexture* requestEmissivity() const;
-		virtual const RenderTexture* requestOcclusion() const;
-		virtual RenderTexture* requestOcclusion();
+		virtual const RenderTexture& requestPosition() const;
+		virtual const RenderTexture& requestNormal() const;
+		virtual const RenderTexture& requesOcclusionEmissivityRoughnessMetallic() const;
+		virtual RenderTexture& requestOcclusion() const;
 
 		virtual RenderTexture& requestDefaultTexture();
 		virtual RenderTexture& requestCurrentImage();

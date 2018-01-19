@@ -2,9 +2,10 @@
 
 #include <shaders/material.glsl>
 
-layout (location = 0) out vec4 gPositionRough;
-layout (location = 1) out vec4 gNormalMet;
+layout (location = 0) out vec4 gPosition;
+layout (location = 1) out vec4 gNormal;
 layout (location = 2) out vec4 gDiffuse;
+layout (location = 3) out vec4 gOther;
 
 in vec3 normal;
 in vec3 fragPosition;
@@ -50,9 +51,10 @@ void main() {
 		? (1.f - texture(material.metal, textureCoordinates).r) * material.metallic 
 		: material.metallic;
 
-	gNormalMet.rgb = norm;
-	gNormalMet.a = metallic;
-	gPositionRough.xyz = fragPosition;
-	gPositionRough.a = speColor.r;
+	gNormal.rgb = norm;
+	gPosition.xyz = fragPosition;
 	gDiffuse = diffuse;
+
+	
+
 } 

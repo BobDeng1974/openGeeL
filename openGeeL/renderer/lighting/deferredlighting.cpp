@@ -26,14 +26,10 @@ namespace geeL {
 
 		assert(provider != nullptr);
 		addTextureSampler(provider->requestAlbedo(), "gDiffuse");
-		addTextureSampler(provider->requestPositionRoughness(), "gPositionRoughness");
-		addTextureSampler(provider->requestNormalMetallic(), "gNormalMet");
-
-		const Texture* emissivity = provider->requestEmissivity();
-		if (emissivity != nullptr) {
-			addTextureSampler(*emissivity, "gEmissivity");
-			shader.bind<int>("useEmissivity", 1);
-		}
+		addTextureSampler(provider->requestPosition(), "gPosition");
+		addTextureSampler(provider->requestNormal(), "gNormal");
+		addTextureSampler(provider->requesOcclusionEmissivityRoughnessMetallic(), "gProperties");
+		shader.bind<int>("useEmissivity", 1);
 
 		LightManager& manager = scene.getLightmanager();
 		manager.addShaderListener(shader);
@@ -95,14 +91,10 @@ namespace geeL {
 
 		assert(provider != nullptr);
 		addTextureSampler(provider->requestAlbedo(), "gDiffuse");
-		addTextureSampler(provider->requestPositionRoughness(), "gPositionRoughness");
-		addTextureSampler(provider->requestNormalMetallic(), "gNormalMet");
-
-		const Texture* emissivity = provider->requestEmissivity();
-		if (emissivity != nullptr) {
-			addTextureSampler(*emissivity, "gEmissivity");
-			shader.bind<int>("useEmissivity", 1);
-		}
+		addTextureSampler(provider->requestPosition(), "gPosition");
+		addTextureSampler(provider->requestNormal(), "gNormal");
+		addTextureSampler(provider->requesOcclusionEmissivityRoughnessMetallic(), "gProperties");
+		shader.bind<int>("useEmissivity", 1);
 
 		LightManager& manager = scene.getLightmanager();
 		manager.addShaderListener(shader);

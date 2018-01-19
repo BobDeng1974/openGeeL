@@ -868,10 +868,9 @@ namespace geeL {
 		bool usePhysics  = state.get_or<int>("usePhysics", false);
 		bool useEmissive = state.get_or<int>("useEmissive", false);
 
-		GBufferContent content = useEmissive ? GBufferContent::DefaultEmissive : GBufferContent::Default;
 		PhysicsType physicsType = usePhysics ? PhysicsType::World : PhysicsType::None;
 
-		Configuration config(window, init, content, physicsType);
+		Configuration config(window, init, physicsType);
 		config.run();
 	}
 

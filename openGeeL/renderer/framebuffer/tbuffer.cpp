@@ -36,8 +36,8 @@ namespace geeL {
 		bind();
 
 		//Create attachements for all color buffers
-		gBuffer.getPositionRoughness().assignToo(*this, 0);
-		gBuffer.getNormalMetallic().assignToo(*this, 1);
+		gBuffer.getPosition().assignToo(*this, 0);
+		gBuffer.getNormal().assignToo(*this, 1);
 		gBuffer.getDiffuse().assignToo(*this, 2);
 
 		accumulationTexture->assignTo(*this, 3);

@@ -2,10 +2,6 @@
 
 #ifdef POSITION_MAP
 
-	vec4 readPositionRoughness(vec2 texCoords) {
-		return texture(POSITION_MAP, texCoords);
-	}
-	
 	vec3 readPosition(vec2 texCoords) {
 		return texture(POSITION_MAP, texCoords).xyz;
 	}
@@ -19,18 +15,9 @@
 
 #ifdef NORMAL_MAP
 
-	vec4 readNormalMetallic(vec2 texCoords) {
-		return texture(NORMAL_MAP, texCoords);
-	}
-
 	vec3 readNormal(vec2 texCoords) {
 		return texture(NORMAL_MAP, texCoords).xyz;
 	}
-
-	float readMetallic(vec2 texCoords) {
-		return texture(NORMAL_MAP, texCoords).w;
-	}
-
 
 #endif
 
@@ -42,18 +29,27 @@
 
 #endif
 
-#ifdef EMISSIVITY_MAP
+#ifdef PROPERTY_MAP
 
-	vec3 readEmissitivity(vec2 texCoords) {
-		return texture(EMISSIVITY_MAP, texCoords).rgb;
+	vec4 readProperties(vec2 texCoords) {
+		return texture(PROPERTY_MAP, texCoords);
 	}
-
-#endif
-
-#ifdef OCCLUSION_MAP 
 
 	float readOcclusion(vec2 texCoords) {
-		return texture(OCCLUSION_MAP, texCoords).r;
+		return texture(PROPERTY_MAP, texCoords).r;
 	}
+
+	vec3 readEmissitivity(vec2 texCoords) {
+		return vec3(texture(PROPERTY_MAP, texCoords).g);
+	}
+
+	float readRoughness(vec2 texCoords) {
+		return texture(PROPERTY_MAP, texCoords).b;
+	}
+
+	float readMetallic(vec2 texCoords) {
+		return texture(PROPERTY_MAP, texCoords).a;
+	}
+
 
 #endif

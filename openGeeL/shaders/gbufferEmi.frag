@@ -4,11 +4,10 @@
 
 #include <shaders/material.glsl>
 
-layout (location = 0) out vec4 gPositionRough;
-layout (location = 1) out vec4 gNormalMet;
+layout (location = 0) out vec3 gPosition;
+layout (location = 1) out vec4 gNormal;
 layout (location = 2) out vec4 gDiffuse;
-layout (location = 3) out vec3 gEmissivity;
-layout (location = 4) out float gOcclusion;
+layout (location = 3) out vec4 gProperties;
 
 in vec3 normal;
 in vec3 fragPosition;
@@ -56,18 +55,24 @@ void main() {
 		? (1.f - texture(material.metal, textureCoordinates).r) * material.metallic
 		: material.metallic;
 
-	gNormalMet.rgb = norm;
-	gNormalMet.a = metallic;
-	gPositionRough.xyz = fragPosition;
-	gPositionRough.a = speColor.r;
-	gDiffuse = diffuse;
-
-	gEmissivity.rgb = (emisFlag == 1) 
+	vec3 emiRGB = (emisFlag == 1) 
 		? texture(material.emission, textureCoordinates).rgb * material.emissivity 
 		: material.emissivity;
 
-	gOcclusion = (occFlag == 1) 
+	//Only write intensity of emissivity into gBuffer
+	float emissivity = dot(emiRGB, vec3(0.2126f, 0.7152f, 0.0722f));
+
+	float occlusion = (occFlag == 1) 
 		? texture(material.occlusion, textureCoordinates).r + OCCLUSION_MIN 
 		: 0.f;
 
+
+	gNormal.rgb = norm;
+	gPosition = fragPosition;
+	gDiffuse = diffuse;
+
+	gProperties.r = occlusion;
+	gProperties.g = emissivity;
+	gProperties.b = speColor.r;
+	gProperties.a = metallic;
 } 

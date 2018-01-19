@@ -42,24 +42,20 @@ namespace geeL {
 		return gBuffer.getDiffuse();
 	}
 
-	const RenderTexture& TextureProvider::requestPositionRoughness() const {
-		return gBuffer.getPositionRoughness();
+	const RenderTexture& TextureProvider::requestPosition() const {
+		return gBuffer.getPosition();
 	}
 
-	const RenderTexture& TextureProvider::requestNormalMetallic() const {
-		return gBuffer.getNormalMetallic();
+	const RenderTexture& TextureProvider::requestNormal() const {
+		return gBuffer.getNormal();
 	}
 
-	const RenderTexture* TextureProvider::requestEmissivity() const {
-		return gBuffer.getEmissivity();
+	const RenderTexture& TextureProvider::requesOcclusionEmissivityRoughnessMetallic() const {
+		return gBuffer.getOcclusionEmissivityRoughnessMetallic();
 	}
 
-	const RenderTexture* TextureProvider::requestOcclusion() const {
+	RenderTexture& TextureProvider::requestOcclusion() const {
 		return gBuffer.getOcclusion();
-	}
-
-	RenderTexture* TextureProvider::requestOcclusion() {
-		return &gBuffer.requestOcclusion();
 	}
 
 	RenderTexture& TextureProvider::requestDefaultTexture() {

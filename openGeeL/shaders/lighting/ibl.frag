@@ -1,9 +1,9 @@
 #version 430
 
-#define POSITION_MAP	gPositionRoughness
-#define NORMAL_MAP		gNormalMet
+#define POSITION_MAP	gPosition
+#define NORMAL_MAP		gNormal
 #define DIFFUSE_MAP		gDiffuse
-#define OCCLUSION_MAP	ssao
+#define PROPERTY_MAP	gProperties
 
 #include <shaders/lighting/iblcore.glsl>
 
@@ -24,7 +24,7 @@ uniform sampler2D image;
 uniform sampler2D POSITION_MAP;
 uniform sampler2D NORMAL_MAP;
 uniform sampler2D DIFFUSE_MAP;
-uniform sampler2D OCCLUSION_MAP;
+uniform sampler2D PROPERTY_MAP;
 
 uniform int useSSAO;
 
@@ -32,22 +32,22 @@ uniform int useSSAO;
 
 
 void main() {
-	vec4 posRough = readPositionRoughness(textureCoordinates);
-	vec3 fragPosition = posRough.rgb;
+	vec3 fragPosition = readPosition(textureCoordinates);
 	vec3 position = (inverseView * vec4(fragPosition, 1.f)).xyz;
 
 	//Discard pixel if it is not connected to any position in scene (Will be rendered black anyway)
 	if(length(fragPosition) <= 0.001f) return;
 
-	vec4 normMet  = readNormalMetallic(textureCoordinates);
-
-    vec3 normal		  = normMet.rgb;
+    vec3 normal		  = readNormal(textureCoordinates);
     vec4 albedo		  = readDiffuse(textureCoordinates);
 
-	float roughness	  = posRough.a;
-	float metallic    = normMet.a;
-	float occlusion   = (useSSAO == 1) ? readOcclusion(textureCoordinates).r : 1.f;
-	occlusion = (occlusion == 0.f) ? 1.f : clamp(occlusion + OCCLUSION_MIN, 0.f, 1.f);
+	vec4 properties = readProperties(textureCoordinates);
+	float roughness = properties.b;
+	float metallic = properties.a;
+
+
+	float occlusion   = 1.f;
+	//occlusion = (occlusion == 0.f) ? 1.f : clamp(occlusion + OCCLUSION_MIN, 0.f, 1.f);
 
 	vec3  viewDirection = normalize(-fragPosition);
 

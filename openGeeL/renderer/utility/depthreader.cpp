@@ -13,7 +13,7 @@ namespace geeL {
 
 		shader = new ComputeShader("shaders/nearest.com.glsl");
 
-		const RenderTexture& positionTexture = provider.requestPositionRoughness();
+		const RenderTexture& positionTexture = provider.requestPosition();
 		shader->addMap(positionTexture, "gPosition");
 
 		glGenBuffers(1, &ssbo);

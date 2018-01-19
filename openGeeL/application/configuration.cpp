@@ -14,11 +14,9 @@ namespace geeL {
 
 	Configuration::Configuration(RenderWindow& window, 
 		SceneInitialization initFunction, 
-		GBufferContent content, 
 		PhysicsType physicsType)
 			: window(window)
 			, initFunction(initFunction)
-			, content(content)
 			, physicsType(physicsType) {}
 
 
@@ -35,7 +33,7 @@ namespace geeL {
 		PerspectiveCamera& defaultCamera = PerspectiveCamera(cameraTransform, 60.f, 
 			window.getWidth(), window.getHeight(), 0.1f, 100.f);
 
-		GBuffer& gBuffer = GBuffer(window.resolution, content);
+		GBuffer& gBuffer = GBuffer(window.resolution);
 		MaterialFactory& materialFactory = MaterialFactory(gBuffer);
 		MeshFactory& meshFactory = MeshFactory(materialFactory);
 		LightManager& lightManager = LightManager();

@@ -81,10 +81,16 @@ namespace geeL {
 					GL_COLOR_ATTACHMENT3 };
 				glDrawBuffers(4, attachments);
 			}
-			default: {
+			case 5: {
 				unsigned int attachments[5] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,
 					GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 };
 				glDrawBuffers(5, attachments);
+			}
+
+			default: {
+				unsigned int attachments[6] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,
+					GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4, GL_COLOR_ATTACHMENT5 };
+				glDrawBuffers(6, attachments);
 			}
 		}
 

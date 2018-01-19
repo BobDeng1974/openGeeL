@@ -200,7 +200,7 @@ public:
 		};
 
 
-		Configuration config(window, init, GBufferContent::Default, PhysicsType::World);
+		Configuration config(window, init, PhysicsType::World);
 		config.run();
 	}
 

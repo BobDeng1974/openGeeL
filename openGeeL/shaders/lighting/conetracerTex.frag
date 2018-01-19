@@ -1,5 +1,10 @@
 #version 430
 
+#define POSITION_MAP	gPosition
+#define NORMAL_MAP		gNormal
+#define DIFFUSE_MAP		gDiffuse
+#define PROPERTY_MAP	gProperties
+
 #include <shaders/helperfunctions.glsl>
 
 const float epsilon = 0.000001f;
@@ -24,9 +29,12 @@ uniform float diffuseLOD;
 
 uniform sampler3D voxelTexture;
 uniform sampler2D image;
-uniform sampler2D gPositionRoughness;
-uniform sampler2D gNormalMet;
-uniform sampler2D gDiffuse;
+uniform sampler2D POSITION_MAP;
+uniform sampler2D NORMAL_MAP;
+uniform sampler2D DIFFUSE_MAP;
+uniform sampler2D PROPERTY_MAP;
+
+#include <shaders/gbufferread.glsl>
 
 vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo, vec3 kd, out float occlusion);
 vec3 indirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness, vec3 ks);
@@ -44,12 +52,9 @@ vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughn
 
 
 void main() {
-	vec4 normMet  = texture(gNormalMet, TexCoords);
-	vec4 posRough = texture(gPositionRoughness, TexCoords);
-
 	vec3 baseColor = texture(image, TexCoords).rgb;
-	vec3 posView  = posRough.rgb;
-	vec3 normView = normalize(normMet.rgb);
+	vec3 posView  = readPosition(TexCoords);
+	vec3 normView = readNormal(TexCoords);
 	vec3 viewView = normalize(-posView);
 
 	vec3 position = (inverseView * vec4(posView, 1.f)).xyz;
@@ -59,8 +64,10 @@ void main() {
 	vec3 camPosition = (inverseView * vec4(vec3(0.f), 1.f)).xyz;
 
 	vec4 albedo = texture(gDiffuse, TexCoords);
-	float roughness = posRough.w;
-	float metallic = normMet.w;
+
+	vec4 properties = readProperties(TexCoords);
+	float roughness = properties.b;
+	float metallic = properties.a;
 
 	vec3 ks = calculateFresnelTerm(doto(normal, view), albedo.rgb, metallic, roughness);
 	vec3 kd = 1.f - ks;

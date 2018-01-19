@@ -27,14 +27,11 @@ namespace geeL {
 
 		assert(provider != nullptr);
 		addTextureSampler(provider->requestAlbedo(), "gDiffuse");
-		addTextureSampler(provider->requestPositionRoughness(), "gPositionRoughness");
-		addTextureSampler(provider->requestNormalMetallic(), "gNormalMet");
+		addTextureSampler(provider->requestPosition(), "gPosition");
+		addTextureSampler(provider->requestNormal(), "gNormal");
+		addTextureSampler(provider->requesOcclusionEmissivityRoughnessMetallic(), "gProperties");
 
-		const Texture* occlusion = provider->requestOcclusion();
-		if (occlusion != nullptr) {
-			addTextureSampler(*occlusion, "ssao");
-			shader.bind<int>("useSSAO", 1);
-		}
+		shader.bind<int>("useSSAO", 1);
 
 		scene.getLightmanager().addReflectionProbes(shader);
 		invViewLocation = shader.getLocation("inverseView");

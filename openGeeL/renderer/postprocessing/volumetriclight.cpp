@@ -31,7 +31,7 @@ namespace geeL {
 		AdditiveEffect::init(parameter);
 
 		assert(provider != nullptr);
-		addTextureSampler(provider->requestPositionRoughness(), "gPositionRoughness");
+		addTextureSampler(provider->requestPosition(), "gPosition");
 
 		const ShadowMap* map = light.getShadowMap();
 		if (map != nullptr)

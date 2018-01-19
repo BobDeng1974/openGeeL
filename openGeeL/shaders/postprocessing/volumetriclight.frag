@@ -1,6 +1,6 @@
 #version 430 core
 
-#define POSITION_MAP gPositionDepth
+#define POSITION_MAP gPosition
 
 const float PI = 3.14159265359;
 

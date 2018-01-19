@@ -5,7 +5,6 @@ name    = "DeerScene"
 mode 	= "Windowed"
 
 usePhysics  = false
-useEmissive = false
 exposure = 1
 
 camera = {

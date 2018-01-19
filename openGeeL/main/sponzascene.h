@@ -117,7 +117,7 @@ public:
 		};
 
 
-		Configuration config(window, init, GBufferContent::DefaultEmissive);
+		Configuration config(window, init);
 		config.run();
 	}
 

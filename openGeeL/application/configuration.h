@@ -133,7 +133,6 @@ namespace geeL {
 	public:
 		Configuration(RenderWindow& window, 
 			SceneInitialization initFunction,
-			GBufferContent content = GBufferContent::Default, 
 			PhysicsType physicsType = PhysicsType::None);
 
 		void run();
@@ -141,7 +140,6 @@ namespace geeL {
 	private:
 		RenderWindow& window;
 		SceneInitialization initFunction;
-		GBufferContent content;
 		PhysicsType physicsType;
 
 	};

@@ -1,9 +1,9 @@
 #version 430
 
-#define POSITION_MAP	gPositionRoughness
-#define NORMAL_MAP		gNormalMet
+#define POSITION_MAP	gPosition
+#define NORMAL_MAP		gNormal
 #define DIFFUSE_MAP		gDiffuse
-#define EMISSIVITY_MAP	gEmissivity
+#define PROPERTY_MAP	gProperties
 
 #define MAX_LIGHTS 5
 #define GROUP_SIZE 8
@@ -37,7 +37,7 @@ uniform int slCount;
 uniform sampler2D POSITION_MAP;
 uniform sampler2D NORMAL_MAP;
 uniform sampler2D DIFFUSE_MAP;
-uniform sampler2D EMISSIVITY_MAP;
+uniform sampler2D PROPERTY_MAP;
 
 #include <shaders/gbufferread.glsl>
 
@@ -59,8 +59,7 @@ void main() {
 	ivec2 coords = ivec2(gl_GlobalInvocationID.xy);
 	vec2 textureCoordinates = gl_GlobalInvocationID.xy / resolution;
 
-	vec4 posRough = readPositionRoughness(textureCoordinates);
-	vec3 fragPosition = posRough.rgb;
+	vec3 fragPosition = readPosition(textureCoordinates);
 
 	
 	//Write min and max depth of workgroup for later view frustum creation
@@ -132,14 +131,13 @@ void main() {
 	
 	//Proceed as usual
 
-	vec4 normMet  = readNormalMetallic(textureCoordinates);
-
-    vec3 normal		= normMet.rgb;
+    vec3 normal		= readNormal(textureCoordinates);
     vec4 albedo		= readDiffuse(textureCoordinates);
-	vec3 emissivity = useEmissivity ? readEmissitivity(textureCoordinates).rgb : vec3(0.f);
 
-	float roughness	= posRough.a;
-	float metallic  = normMet.a;
+	vec4 properties = readProperties(textureCoordinates);
+	vec3 emissivity = vec3(properties.g);
+	float roughness = properties.b;
+	float metallic = properties.a;
 
 	vec3  viewDirection = normalize(-fragPosition);
 

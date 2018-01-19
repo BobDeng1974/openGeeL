@@ -89,8 +89,8 @@ namespace geeL {
 		PostProcessingEffectFS::init(parameter);
 
 		assert(provider != nullptr);
-		addTextureSampler(provider->requestPositionRoughness(), "gPositionDepth");
-		addTextureSampler(provider->requestNormalMetallic(), "gNormalMet");
+		addTextureSampler(provider->requestPosition(), "gPosition");
+		addTextureSampler(provider->requestNormal(), "gNormal");
 		addTextureSampler(*noiseTexture, "noiseTexture");
 
 		const Resolution& resolution = parameter.resolution;
@@ -139,7 +139,7 @@ namespace geeL {
 
 	void SSAO::fill() {
 		if (parentBuffer != nullptr) {
-			parentBuffer->add(*provider->requestOcclusion());
+			parentBuffer->add(provider->requestOcclusion());
 			parentBuffer->fill(*this, blend ? clearNothing : clearColor);
 		}
 	}

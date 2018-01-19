@@ -1,7 +1,8 @@
 #version 430 core
 
-#define POSITION_MAP	gPositionRoughness
-#define NORMAL_MAP		gNormalMet
+#define POSITION_MAP	gPosition
+#define NORMAL_MAP		gNormal
+#define PROPERTY_MAP	gProperties
 
 #include <shaders/helperfunctions.glsl>
 #include <shaders/samplingvector.glsl>
@@ -14,6 +15,7 @@ out vec4 color;
 uniform sampler2D image;
 uniform sampler2D POSITION_MAP;
 uniform sampler2D NORMAL_MAP;
+uniform sampler2D PROPERTY_MAP;
 
 #include <shaders/gbufferread.glsl>
 
@@ -28,7 +30,7 @@ uniform int effectOnly;
 float border = 1.f;
 
 bool computeReflectionColor(vec3 fragPos, vec3 reflectionDir, vec3 normal, float roughness, out vec3 color);
-vec3 getReflectionFussy(vec3 fragPos, vec3 normal, vec3 reflectionDirection, float roughness);
+vec3 getReflectionFussy(vec3 fragPos, vec3 normal, vec3 reflectionDirection, float roughness, float metallic);
 
 vec4 transformToClip(vec3 vector);
 vec2 hammersleySeq(int i, int count);
@@ -38,26 +40,27 @@ vec3 generateSampledVector(float roughness, vec2 samp);
 void main() {
 	vec3 result = step(effectOnly, 0.f) * texture(image, TexCoords).rgb;
 
-	vec4 posRough = readPositionRoughness(TexCoords);
-	vec3 fragPos = posRough.xyz;
+	vec3 fragPos = readPosition(TexCoords);
 	float depth = -fragPos.z;
-	float roughness = posRough.w; 
+
+	vec4 properties = readProperties(TexCoords);
+	float roughness = properties.b;
+	float metallic = properties.a;
 	
-	vec3 normal = normalize(texture(NORMAL_MAP, TexCoords).rgb);
+	vec3 normal = normalize(readNormal(TexCoords));
 	vec3 reflectionDirection = normalize(reflect(fragPos, normal));
 
 	//DBranch to filter out large bunch of pixels
 	if(depth > 0.1f && roughness < 0.99f) {
-		color = vec4(result + getReflectionFussy(fragPos, normal, reflectionDirection, roughness), 1.f);
+		color = vec4(result + getReflectionFussy(fragPos, normal, reflectionDirection, roughness, metallic), 1.f);
 	}
 	else 
 		color = vec4(result, 1.f);
 }
 
 
-vec3 getReflectionFussy(vec3 fragPos, vec3 normal, vec3 reflectionDirection, float roughness) {
+vec3 getReflectionFussy(vec3 fragPos, vec3 normal, vec3 reflectionDirection, float roughness, float metallic) {
 	vec3 viewDirection = normalize(-fragPos);
-	float metallic = texture(NORMAL_MAP, TexCoords).w;
 
 	vec3 right = cross(reflectionDirection, normal);
 	vec3 up = cross(reflectionDirection, right);

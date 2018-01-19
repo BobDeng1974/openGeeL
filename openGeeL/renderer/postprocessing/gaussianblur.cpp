@@ -136,7 +136,7 @@ namespace geeL {
 		GaussianBlur::init(parameter);
 
 		assert(provider != nullptr);
-		addTextureSampler(provider->requestPositionRoughness(), "position");
+		addTextureSampler(provider->requestPosition(), "position");
 	}
 
 	float SeparatedGaussian::getSigmaR() const {
@@ -211,7 +211,7 @@ namespace geeL {
 		GaussianBlur::init(parameter);
 
 		assert(provider != nullptr);
-		addTextureSampler(provider->requestPositionRoughness(), "gPositionDepth");
+		addTextureSampler(provider->requestPosition(), "gPositionDepth");
 
 		shader.bind<float>("sigma", sigma2);
 	}
@@ -267,7 +267,7 @@ namespace geeL {
 		GaussianBlur::init(parameter);
 
 		assert(provider != nullptr);
-		sobel.setImage(provider->requestPositionRoughness());
+		sobel.setImage(provider->requestPosition());
 
 		sobelTexture = new RenderTexture(resolution, ColorType::RGB16, WrapMode::ClampEdge, FilterMode::None);
 		sobel.init(parameter);
