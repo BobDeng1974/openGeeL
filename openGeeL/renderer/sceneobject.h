@@ -41,6 +41,7 @@ namespace geeL {
 
 		void removeComponent(Component& component);
 
+		bool isStatic() const;
 		virtual bool isActive() const;
 		virtual void setActive(bool active);
 		void addStatusListener(std::function<void(SceneObject&, bool status)> listener);

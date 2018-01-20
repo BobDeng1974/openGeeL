@@ -32,7 +32,7 @@ namespace geeL {
 		virtual void draw(const SceneCamera* const camera, const RenderScene& scene, 
 			ShadowmapRepository& repository) = 0;
 
-		//Sets 'targeted' shadow map resolution but won't actually resize underlying texture
+		//Sets 'targeted' shadow map resolution and resizes underlying texture
 		void setShadowResolution(ShadowmapResolution resolution);
 		ShadowmapResolution getShadowResolution() const;
 
@@ -78,6 +78,7 @@ namespace geeL {
 
 	inline void ShadowMap::setShadowResolution(ShadowmapResolution resolution) {
 		shadowResolution = resolution;
+		resize(resolution);
 	}
 
 	inline ShadowmapResolution ShadowMap::getShadowResolution() const {

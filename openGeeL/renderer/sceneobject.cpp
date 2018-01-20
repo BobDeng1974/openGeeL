@@ -43,6 +43,10 @@ namespace geeL {
 		delete c;
 	}
 
+	bool SceneObject::isStatic() const {
+		return transform.isStatic;
+	}
+
 	bool SceneObject::isActive() const {
 		return active;
 	}

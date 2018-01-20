@@ -51,6 +51,8 @@ namespace geeL {
 	private:
 		SimpleShadowMap& map;
 
+		void drawResolutionMeter(GUIContext* context);
+
 	};
 
 

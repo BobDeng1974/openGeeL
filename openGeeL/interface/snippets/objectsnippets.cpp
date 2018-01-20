@@ -183,9 +183,11 @@ namespace geeL {
 			nk_label(context, "Shadow Map", NK_TEXT_LEFT);
 			
 			unsigned int resolution = map.getScreenResolution().getWidth();
-			nk_label(context, "Size: ", NK_TEXT_RIGHT);
+			nk_label(context, "Dynamic Size: ", NK_TEXT_RIGHT);
 			nk_label(context, std::to_string(resolution).c_str(), NK_TEXT_CENTERED);
-			
+
+			if(!map.getLight().isStatic())
+				drawResolutionMeter(context);
 
 			float intensity = GUISnippets::drawBarFloat(context, map.getIntensity(), 0.f, 1.f, 0.001f, "Shadow Intensity");
 			map.setIntensity(intensity);
@@ -197,10 +199,10 @@ namespace geeL {
 			map.setFarPlane(plane);
 
 			if (type == ShadowMapType::Soft) {
-				int resolution = GUISnippets::drawBarInteger(context, map.getSoftShadowResolution(), 1, 10, 1, "Resolution");
+				int resolution = GUISnippets::drawBarInteger(context, map.getSoftShadowResolution(), 1, 10, 1, "Sample Size");
 				map.setSoftShadowResolution(resolution);
 
-				float scale = GUISnippets::drawBarFloatLogarithmic(context, map.getSoftShadowScale(), 0.f, 15.f, 0.1f, "Scale");
+				float scale = GUISnippets::drawBarFloatLogarithmic(context, map.getSoftShadowScale(), 0.f, 15.f, 0.1f, "Sample Scale");
 				map.setSoftShadowScale(scale);
 			}
 		}
@@ -209,4 +211,63 @@ namespace geeL {
 	std::string ShadowMapSnippet::toString() const {
 		return "Shadow Map";
 	}
+
+	void ShadowMapSnippet::drawResolutionMeter(GUIContext* context) {
+
+		int resNumber = 0;
+		int res = static_cast<int>(map.getShadowResolution());
+		switch (map.getShadowResolution()) {
+			case ShadowmapResolution::Small:
+				resNumber = 1;
+				break;
+			case ShadowmapResolution::Medium:
+				resNumber = 2;
+				break;
+			case ShadowmapResolution::High:
+				resNumber = 3;
+				break;
+			case ShadowmapResolution::VeryHigh:
+				resNumber = 4;
+				break;
+			case ShadowmapResolution::Large:
+				resNumber = 5;
+				break;
+			case ShadowmapResolution::Huge:
+				resNumber = 6;
+				break;
+		}
+
+		nk_layout_row_dynamic(context, 30, 3);
+		nk_label(context, "Size", NK_TEXT_CENTERED);
+		nk_slider_int(context, 0, &resNumber, 6, 1);
+
+		ShadowmapResolution newRes = ShadowmapResolution::Tiny;
+		switch (resNumber) {
+			case 1:
+				newRes = ShadowmapResolution::Small;
+				break;
+			case 2:
+				newRes = ShadowmapResolution::Medium;
+				break;
+			case 3:
+				newRes = ShadowmapResolution::High;
+				break;
+			case 4:
+				newRes = ShadowmapResolution::VeryHigh;
+				break;
+			case 5:
+				newRes = ShadowmapResolution::Large;
+				break;
+			case 6:
+				newRes = ShadowmapResolution::Huge;
+				break;
+		}
+
+		std::string valName = std::to_string(static_cast<unsigned int>(newRes));
+		nk_label(context, valName.c_str(), NK_TEXT_CENTERED);
+
+		map.setShadowResolution(newRes);
+	}
+
+
 }
