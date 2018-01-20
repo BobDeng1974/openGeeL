@@ -10,8 +10,6 @@
 #include "instancedmesh.h"
 #include "meshrenderer.h"
 
-#include <bitset>
-
 using namespace std;
 
 namespace geeL{

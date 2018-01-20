@@ -11,8 +11,18 @@ namespace geeL{
 
 	unsigned int MeshRendererIDGenerator::bucketCounters[4] = { 0, 0, 0, 0 };
 	unsigned int MeshRendererIDGenerator::bucketSizes[4] = { 2, 5, 8, 11 };
-	std::map<const MeshRenderer*, unsigned short>  MeshRendererIDGenerator::localMeshIDs;
 
+	std::map<const MeshRenderer*, unsigned short> MeshRendererIDGenerator::localMeshIDs;
+	std::queue<unsigned short> MeshRendererIDGenerator::a;
+	std::queue<unsigned short> MeshRendererIDGenerator::b;
+	std::queue<unsigned short> MeshRendererIDGenerator::c;
+	std::queue<unsigned short> MeshRendererIDGenerator::d;
+	
+	std::queue<unsigned short>*  MeshRendererIDGenerator::freeIDs[4] = {
+		&MeshRendererIDGenerator::a, 
+		&MeshRendererIDGenerator::b, 
+		&MeshRendererIDGenerator::c, 
+		&MeshRendererIDGenerator::d };
 
 
 	unsigned short MeshRendererIDGenerator::generateID(MeshRenderer& renderer, size_t meshCount) {
@@ -42,13 +52,25 @@ namespace geeL{
 			}
 		}
 
-		unsigned int bucketMax = pow(2, 14 - bucketSizes[bucketNumber]);
-		assert(bucketCounters[bucketNumber] < bucketMax && "ID capacity exhausted for given mesh count");
+		std::queue<unsigned short>& q = *freeIDs[bucketNumber];
 
-		unsigned short id = bucketNumber * 16384;
-		id += bucketCounters[bucketNumber]++ * pow(2, bucketSizes[bucketNumber]);
+		//Use existing ID that has been freed from a deleted mesh renderer
+		if (!q.empty()) {
+			unsigned short id = q.front();
+			q.pop();
 
-		return id;
+			return id;
+		}
+		//Otherwise generate a new ID
+		else {
+			unsigned int bucketMax = pow(2, 14 - bucketSizes[bucketNumber]);
+			assert(bucketCounters[bucketNumber] < bucketMax && "ID capacity exhausted for given mesh count");
+
+			unsigned short id = bucketNumber * 16384;
+			id += bucketCounters[bucketNumber]++ * pow(2, bucketSizes[bucketNumber]);
+
+			return id;
+		}
 	}
 
 	unsigned short MeshRendererIDGenerator::generateMeshID(const MeshRenderer& renderer) {
@@ -76,7 +98,11 @@ namespace geeL{
 
 
 	void MeshRendererIDGenerator::removeMeshRenderer(const MeshRenderer& renderer) {
-		//TODO: Free occupied ID
+		unsigned short id = renderer.getID();
+		unsigned short prefix = id >> 14;
+
+		std::queue<unsigned short>& q = *freeIDs[prefix];
+		q.push(id);
 
 		localMeshIDs.erase(&renderer);
 	}
