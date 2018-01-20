@@ -61,7 +61,7 @@ namespace geeL {
 	}
 
 	Resolution SimpleShadowMap::getScreenResolution() const {
-		return Resolution(resolution);
+		return getTexture().getScreenResolution();
 	}
 
 	float SimpleShadowMap::getShadowBias() const {
@@ -89,6 +89,16 @@ namespace geeL {
 	void SimpleShadowMap::setSoftShadowScale(float scale) {
 		if (scale != softShadowScale && scale > 0.f)
 			softShadowScale = scale;
+	}
+
+	float SimpleShadowMap::getFarPlane() const {
+		return farPlane;
+	}
+
+	void SimpleShadowMap::setFarPlane(float value) {
+		if (farPlane != value && value > 0.f) {
+			farPlane = value;
+		}
 	}
 
 
@@ -205,26 +215,26 @@ namespace geeL {
 	}
 
 	void SimplePointLightMap::computeLightTransform() {
-		mat4&& projection = glm::perspective(90.f, 1.f, 1.0f, farPlane);
+		mat4&& projection = glm::perspective(90.f, 1.f, 1.f, farPlane);
 
 		Transform& transform = light.transform;
 		mat4&& view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(1.f, 0.f, 0.f), vec3(0.f, -1.f, 0.f));
-		lightTransforms[0] = std::move(projection * view);
+		lightTransforms[0] = projection * view;
 
 		view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(-1.f, 0.f, 0.f), vec3(0.f, -1.f, 0.f));
-		lightTransforms[1] = std::move(projection * view);
+		lightTransforms[1] = projection * view;
 
 		view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(0.f, 1.f, 0.f), vec3(0.f, 0.f, 1.f));
-		lightTransforms[2] = std::move(projection * view);
+		lightTransforms[2] = projection * view;
 
 		view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(0.f, -1.f, 0.f), vec3(0.f, 0.f, -1.f));
-		lightTransforms[3] = std::move(projection * view);
+		lightTransforms[3] = projection * view;
 
 		view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(0.f, 0.f, 1.f), vec3(0.f, -1.f, 0.f));
-		lightTransforms[4] = std::move(projection * view);
+		lightTransforms[4] = projection * view;
 
 		view = glm::lookAt(transform.getPosition(), transform.getPosition() + vec3(0.f, 0.f, -1.f), vec3(0.f, -1.f, 0.f));
-		lightTransforms[5] = std::move(projection * view);
+		lightTransforms[5] = projection * view;
 	}
 
 

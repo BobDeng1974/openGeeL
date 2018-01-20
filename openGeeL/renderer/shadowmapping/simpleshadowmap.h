@@ -31,13 +31,14 @@ namespace geeL {
 		virtual Resolution getScreenResolution() const;
 
 		float getShadowBias() const;
-		void setShadowBias(float bias);
-
-		int getSoftShadowResolution() const;
-		void setSoftShadowResolution(unsigned int resolution);
-
+		float getFarPlane() const;
 		float getSoftShadowScale() const;
+		int getSoftShadowResolution() const;
+
+		void setShadowBias(float bias);
+		void setFarPlane(float value);
 		void setSoftShadowScale(float scale);
+		void setSoftShadowResolution(unsigned int resolution);
 
 	protected:
 		const ShadowMapType type;

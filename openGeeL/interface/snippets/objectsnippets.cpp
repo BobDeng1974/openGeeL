@@ -178,7 +178,14 @@ namespace geeL {
 		ShadowMapType type = map.getType();
 		
 		if (type != ShadowMapType::None) {
+
+			nk_layout_row_dynamic(context, 30, 3);
 			nk_label(context, "Shadow Map", NK_TEXT_LEFT);
+			
+			unsigned int resolution = map.getScreenResolution().getWidth();
+			nk_label(context, "Size: ", NK_TEXT_RIGHT);
+			nk_label(context, std::to_string(resolution).c_str(), NK_TEXT_CENTERED);
+			
 
 			float intensity = GUISnippets::drawBarFloat(context, map.getIntensity(), 0.f, 1.f, 0.001f, "Shadow Intensity");
 			map.setIntensity(intensity);
@@ -186,6 +193,8 @@ namespace geeL {
 			float bias = GUISnippets::drawBarFloat(context, map.getShadowBias(), 0.f, 0.02f, 0.0001f, "Shadow Bias");
 			map.setShadowBias(bias);
 
+			float plane = GUISnippets::drawBarFloatLogarithmic(context, map.getFarPlane(), 1.f, 500.f, 0.0001f, "Far Plane");
+			map.setFarPlane(plane);
 
 			if (type == ShadowMapType::Soft) {
 				int resolution = GUISnippets::drawBarInteger(context, map.getSoftShadowResolution(), 1, 10, 1, "Resolution");
