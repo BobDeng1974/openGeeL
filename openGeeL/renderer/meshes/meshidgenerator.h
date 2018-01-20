@@ -31,7 +31,6 @@ namespace geeL {
 		static unsigned int bucketSizes[4];
 
 		static std::map<const MeshRenderer*, unsigned short> localMeshIDs;
-
 		static std::queue<unsigned short> a, b, c, d;
 		static std::queue<unsigned short>* freeIDs[4];
 

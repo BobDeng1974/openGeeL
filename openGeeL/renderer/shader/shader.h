@@ -139,6 +139,7 @@ namespace geeL {
 		void use() const;
 
 		ShaderLocation bind(const std::string& name, int value) const;
+		ShaderLocation bind(const std::string& name, unsigned int value) const;
 		ShaderLocation bind(const std::string& name, float value) const;
 		ShaderLocation bind(const std::string& name, const glm::vec2& value) const;
 		ShaderLocation bind(const std::string& name, const glm::vec3& value) const;
@@ -153,6 +154,7 @@ namespace geeL {
 		ShaderLocation bind(const std::string& name, const gmat4& value) const;
 
 		void bind(ShaderLocation location, const int& value) const;
+		void bind(ShaderLocation location, const unsigned int& value) const;
 		void bind(ShaderLocation location, const float& value) const;
 		void bind(ShaderLocation location, const glm::vec2& value) const;
 		void bind(ShaderLocation location, const glm::vec3& value) const;

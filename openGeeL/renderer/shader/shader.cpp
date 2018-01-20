@@ -128,6 +128,13 @@ namespace geeL {
 		return location;
 	}
 
+	ShaderLocation Shader::bind(const std::string& name, unsigned int value) const {
+		ShaderLocation location = glGetUniformLocation(program, name.c_str());
+		glUniform1ui(location, value);
+
+		return location;
+	}
+
 	ShaderLocation Shader::bind(const string& name, float value) const {
 		ShaderLocation location = glGetUniformLocation(program, name.c_str());
 		glUniform1f(location, value);
@@ -209,6 +216,10 @@ namespace geeL {
 
 	void Shader::bind(ShaderLocation location, const int& value) const {
 		glUniform1i(location, value);
+	}
+
+	void Shader::bind(ShaderLocation location, const unsigned int & value) const {
+		glUniform1ui(location, value);
 	}
 
 	void Shader::bind(ShaderLocation location, const float& value) const {
