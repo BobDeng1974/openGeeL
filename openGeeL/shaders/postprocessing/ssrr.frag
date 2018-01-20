@@ -1,7 +1,7 @@
 #version 430 core
 
-#define POSITION_MAP	gPositionRoughness
-#define NORMAL_MAP		gNormalMet
+#define POSITION_MAP	gPosition
+#define NORMAL_MAP		gNormal
 #define PROPERTY_MAP	gProperties
 
 #include <shaders/helperfunctions.glsl>

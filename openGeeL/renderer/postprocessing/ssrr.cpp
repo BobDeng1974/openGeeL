@@ -24,8 +24,8 @@ namespace geeL {
 		PostProcessingEffectFS::init(parameter);
 
 		assert(provider != nullptr);
-		addTextureSampler(provider->requestPosition(), "gPositionRoughness");
-		addTextureSampler(provider->requestNormal(), "gNormalMet");
+		addTextureSampler(provider->requestPosition(), "gPosition");
+		addTextureSampler(provider->requestNormal(), "gNormal");
 		addTextureSampler(provider->requestProperties(), "gProperties");
 
 		shader.bind<int>("stepCount", steps);
