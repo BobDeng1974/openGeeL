@@ -543,6 +543,9 @@
     <ClCompile Include="interface\debug\shadowadapterdebug.cpp">
       <Filter>interface\debug</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\meshes\meshidgenerator.cpp">
+      <Filter>renderer\meshes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\texturing\texture.h">
@@ -1096,6 +1099,9 @@
     </ClInclude>
     <ClInclude Include="interface\debug\shadowadapterdebug.h">
       <Filter>interface\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\meshes\meshidgenerator.h">
+      <Filter>renderer\meshes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

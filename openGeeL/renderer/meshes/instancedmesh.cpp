@@ -4,7 +4,8 @@
 namespace geeL {
 
 	MeshInstance::MeshInstance(const Mesh& mesh)
-		: mesh(mesh) {}
+		: mesh(mesh)
+		, id(0) {}
 
 	bool MeshInstance::operator==(const Mesh& mesh) const {
 		return &this->mesh == &mesh;
@@ -20,6 +21,14 @@ namespace geeL {
 
 	const std::string& MeshInstance::getName() const {
 		return mesh.getName();
+	}
+
+	unsigned short MeshInstance::getID() const {
+		return id;
+	}
+
+	void MeshInstance::setID(unsigned short id) {
+		this->id = id;
 	}
 
 

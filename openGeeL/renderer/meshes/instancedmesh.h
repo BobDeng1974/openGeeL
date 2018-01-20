@@ -26,7 +26,11 @@ namespace geeL {
 		MaterialContainer& getMaterialContainer() const;
 		const std::string& getName() const;
 
+		unsigned short getID() const;
+		void setID(unsigned short id);
+
 	protected:
+		unsigned short id;
 		const Mesh& mesh;
 
 	};

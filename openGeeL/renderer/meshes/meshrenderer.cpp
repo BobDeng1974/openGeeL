@@ -6,8 +6,11 @@
 #include "shader/sceneshader.h"
 #include "mesh.h"
 #include "model.h"
+#include "meshidgenerator.h"
 #include "instancedmesh.h"
 #include "meshrenderer.h"
+
+#include <bitset>
 
 using namespace std;
 
@@ -15,15 +18,20 @@ namespace geeL{
 
 	MeshRenderer::MeshRenderer(Transform& transform, 
 		MemoryObject<Model> model,
+		size_t meshCount,
 		CullingMode faceCulling, 
 		const std::string& name) 
 			: SceneObject(transform, name)
 			, modelData(model)
 			, faceCulling(faceCulling)
-			, mask(RenderMask::None) {}
+			, mask(RenderMask::None)
+			, id(MeshRendererIDGenerator::generateID(*this, meshCount)) {}
 
 
 	MeshRenderer::~MeshRenderer() {
+		for (auto it(deleteListeners.begin()); it != deleteListeners.end(); it++)
+			(*it)(*this);
+
 		for (auto it(meshes.begin()); it != meshes.end(); it++)
 			delete *it;
 	}
@@ -53,6 +61,10 @@ namespace geeL{
 
 	void MeshRenderer::addMaterialChangeListener(std::function<void(MeshRenderer&, Material, Material)> listener) {
 		materialListeners.push_back(listener);
+	}
+
+	void MeshRenderer::addDeleteListener(std::function<void(const MeshRenderer&)> listener) {
+		deleteListeners.push_back(listener);
 	}
 
 	void MeshRenderer::setAutomaticFiltering(bool value) {
@@ -186,11 +198,9 @@ namespace geeL{
 	}
 
 	void MeshRenderer::iterateMeshes(std::function<void(const MeshInstance&)> function) const {
-		for (auto it = materials.begin(); it != materials.end(); it++) {
-			const std::list<MaterialMapping>& elements = it->second;
-
-			for (auto et = elements.begin(); et != elements.end(); et++)
-				function(et->mesh);
+		for (auto it = meshes.begin(); it != meshes.end(); it++) {
+			const MeshInstance& mesh = **it;
+			function(mesh);
 		}
 	}
 
@@ -252,7 +262,9 @@ namespace geeL{
 		return materials.find(&shader) != materials.end();
 	}
 
-	
+	size_t MeshRenderer::getMeshCount() const {
+		return meshes.size();
+	}
 
 	MaterialMapping* MeshRenderer::getMapping(const MeshInstance& mesh) {
 		for (auto it = materials.begin(); it != materials.end(); it++) {
@@ -268,6 +280,15 @@ namespace geeL{
 		return nullptr;
 	}
 
+	void MeshRenderer::addMesh(MeshInstance* mesh) {
+		mesh->setID(MeshRendererIDGenerator::generateMeshID(*this));
+		meshes.push_back(mesh);
+	}
+
+	unsigned short MeshRenderer::getID() const {
+		return id;
+	}
+
 
 
 	StaticMeshRenderer::StaticMeshRenderer(Transform& transform, 
@@ -275,7 +296,7 @@ namespace geeL{
 		MemoryObject<StaticModel> model,
 		CullingMode faceCulling, 
 		const std::string& name)
-			: MeshRenderer(transform, model, faceCulling, name) {
+			: MeshRenderer(transform, model, model->meshCount(), faceCulling, name) {
 	
 		initMaterials(shader, *model);
 	}
@@ -286,7 +307,7 @@ namespace geeL{
 		std::list<const StaticMesh*>& meshes,
 		CullingMode faceCulling, 
 		const std::string & name)
-			: MeshRenderer(transform, model, faceCulling, name) {
+			: MeshRenderer(transform, model, meshes.size(), faceCulling, name) {
 
 		initMaterials(shader, meshes);
 	}
@@ -298,33 +319,29 @@ namespace geeL{
 
 	void StaticMeshRenderer::initMaterials(SceneShader& shader, StaticModel& model) {
 		model.iterateMeshesGeneric([&](const StaticMesh& mesh) {
-			meshes.push_back(new StaticMeshInstance(mesh));
+			addMesh(new StaticMeshInstance(mesh));
 		});
 
-		for (auto it(meshes.begin()); it != meshes.end(); it++) {
-			MeshInstance& mesh = **it;
-
+		iterateMeshes([&](const MeshInstance& mesh) {
 			MaterialContainer& container = mesh.getMaterialContainer();
 			Material& material = Material(shader, container);
 
 			materials[&shader].push_back(MaterialMapping(mesh, material));
-		}
+		});
 	}
 
 	void StaticMeshRenderer::initMaterials(SceneShader& shader, std::list<const StaticMesh*>& newMeshes) {
 		for (auto it(newMeshes.begin()); it != newMeshes.end(); it++) {
 			const StaticMesh& mesh = **it;
-			meshes.push_back(new StaticMeshInstance(mesh));
+			addMesh(new StaticMeshInstance(mesh));
 		}
 
-		for (auto it(meshes.begin()); it != meshes.end(); it++) {
-			MeshInstance& mesh = **it;
-
+		iterateMeshes([&](const MeshInstance& mesh) {
 			MaterialContainer& container = mesh.getMaterialContainer();
 			Material& material = Material(shader, container);
 
 			materials[&shader].push_back(MaterialMapping(mesh, material));
-		}
+		});
 	}
 
 
@@ -334,7 +351,7 @@ namespace geeL{
 		MemoryObject<SkinnedModel> model,
 		CullingMode faceCulling,
 		const std::string& name)
-			: MeshRenderer(transform, model, faceCulling, name)
+			: MeshRenderer(transform, model, model->meshCount(), faceCulling, name)
 			, skinnedModel(*model)
 			, skeleton(new Skeleton(model->getSkeleton())) {
 
@@ -366,17 +383,15 @@ namespace geeL{
 
 	void SkinnedMeshRenderer::initMaterials(SceneShader& shader) {
 		skinnedModel.iterateMeshesGeneric([&](const SkinnedMesh& mesh) {
-			meshes.push_back(new SkinnedMeshInstance(mesh, *skeleton));
+			addMesh(new SkinnedMeshInstance(mesh, *skeleton));
 		});
 
-		for (auto it(meshes.begin()); it != meshes.end(); it++) {
-			MeshInstance& mesh = **it;
-
+		iterateMeshes([&](const MeshInstance& mesh) {
 			MaterialContainer& container = mesh.getMaterialContainer();
 			Material& material = Material(shader, container);
 
 			materials[&shader].push_back(MaterialMapping(mesh, material));
-		}
+		});
 	}
 
 }

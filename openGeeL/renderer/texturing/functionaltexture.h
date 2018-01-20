@@ -20,7 +20,6 @@ namespace geeL {
 
 		
 		virtual TextureType getTextureType() const;
-
 		
 		virtual void bind(unsigned int layer) const;
 		virtual void bindImage(unsigned int position = 0, AccessType access = AccessType::All) const;

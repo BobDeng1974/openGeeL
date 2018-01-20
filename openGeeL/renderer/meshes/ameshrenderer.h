@@ -59,6 +59,7 @@ namespace geeL {
 		virtual void changeMaterial(SceneShader& material, const MeshInstance& mesh);
 
 		void addMaterialChangeListener(std::function<void(MeshRenderer&, Material, Material)> listener);
+		void addDeleteListener(std::function<void(const MeshRenderer&)> listener);
 
 		virtual void iterate(std::function<void(const MeshInstance&, const Material&)> function) const;
 		virtual void iterateMeshes(std::function<void(const MeshInstance&)> function) const;
@@ -67,6 +68,7 @@ namespace geeL {
 		virtual void iterateShaders(std::function<void(const SceneShader&)> function) const;
 		virtual void iterateShaders(std::function<void(SceneShader&)> function);
 
+		size_t getMeshCount() const;
 		virtual const MeshInstance* getMesh(const std::string& name) const;
 		virtual RenderMode getRenderMode() const = 0;
 
@@ -80,25 +82,33 @@ namespace geeL {
 		bool isVisible(const Camera& camera) const;
 		virtual bool containsShader(SceneShader& shader) const;
 
+		unsigned short getID() const;
+
 	protected:
 		RenderMask mask;
 		const CullingMode faceCulling;
-
 		MemoryObject<Model> modelData;
-		std::list<MeshInstance*> meshes;
-		std::list<std::function<void(MeshRenderer&, Material, Material)>> materialListeners;
+		
 		std::map<SceneShader*, std::list<MaterialMapping>> materials;
+		std::list<std::function<void(MeshRenderer&, Material, Material)>> materialListeners;
+		std::list<std::function<void(const MeshRenderer&)>> deleteListeners;
 
 		MeshRenderer(Transform& transform,
 			MemoryObject<Model> model,
+			size_t meshCount,
 			CullingMode faceCulling = CullingMode::cullFront,
 			const std::string& name = "MeshRenderer");
 
 		void drawMask(const MaterialMapping& mapping) const;
 		virtual MaterialMapping* getMapping(const MeshInstance& mesh);
 
+		void addMesh(MeshInstance* mesh);
+
 	private:
+		unsigned short id;
 		bool autoFilter = false;
+
+		std::list<MeshInstance*> meshes;
 
 	};
 
