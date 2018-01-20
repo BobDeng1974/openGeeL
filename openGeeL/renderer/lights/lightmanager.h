@@ -28,11 +28,11 @@ namespace geeL {
 	class Light;
 	class SceneCamera;
 	class RenderShader;
-	class ShadowMap;
+	class Shadowmap;
 	class SceneShader;
 	class RenderScene;
 	class Shader;
-	class ShadowMap;
+	class Shadowmap;
 	class ShadowmapAdapter;
 	class Transform;
 	class VoxelStructure;
@@ -86,7 +86,7 @@ namespace geeL {
 		void iterLights(std::function<void(Light&)> function);
 		void iterLights(std::function<void(LightBinding&)> function);
 		void iterLights(std::function<void(const LightBinding&)> function) const;
-		void iterShadowmaps(std::function<void(ShadowMap&)> function) const;
+		void iterShadowmaps(std::function<void(Shadowmap&)> function) const;
 
 
 		DynamicIBLMap& addReflectionProbe(DynamicIBLMap& probe);

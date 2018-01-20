@@ -10,7 +10,7 @@ namespace geeL {
 
 	//Implementation of variance shadow maps according to
 	//'http://www.punkuser.net/vsm/vsm_paper.pdf'
-	class VarianceSpotLightMap : public ShadowMap {
+	class VarianceSpotLightMap : public Shadowmap {
 
 	public:
 		VarianceSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config);

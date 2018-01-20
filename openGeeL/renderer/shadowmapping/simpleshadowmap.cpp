@@ -18,10 +18,10 @@ using namespace glm;
 
 namespace geeL {
 
-	SimpleShadowMap::SimpleShadowMap(const Light& light, 
+	SimpleShadowmap::SimpleShadowmap(const Light& light, 
 		std::unique_ptr<Texture> innerTexture,
 		const ShadowMapConfiguration& config)
-			: ShadowMap(light, std::move(innerTexture), config.resolution)
+			: Shadowmap(light, std::move(innerTexture), config.resolution)
 			, type(config.type)
 			, shadowBias(config.shadowBias)
 			, farPlane(config.farPlane)
@@ -32,7 +32,7 @@ namespace geeL {
 	}
 
 
-	void SimpleShadowMap::draw(const SceneCamera* const camera, 
+	void SimpleShadowmap::draw(const SceneCamera* const camera, 
 		const RenderScene& scene, 
 		ShadowmapRepository& repository) {
 
@@ -44,7 +44,7 @@ namespace geeL {
 		});
 	}
 
-	void SimpleShadowMap::bindData(const Shader& shader, const std::string& name) {
+	void SimpleShadowmap::bindData(const Shader& shader, const std::string& name) {
 		shader.bind<float>(name + "bias", shadowBias);
 		shader.bind<float>(name + "shadowIntensity", intensity);
 		shader.bind<int>(name + "resolution", softShadowResolution);
@@ -52,50 +52,50 @@ namespace geeL {
 		shader.bind<int>(name + "type", (int)type);
 	}
 
-	ShadowMapType SimpleShadowMap::getType() const {
+	ShadowMapType SimpleShadowmap::getType() const {
 		return type;
 	}
 
-	void SimpleShadowMap::setResolution(ShadowmapResolution resolution) {
+	void SimpleShadowmap::setResolution(ShadowmapResolution resolution) {
 		this->resolution = (int)resolution;
 	}
 
-	Resolution SimpleShadowMap::getScreenResolution() const {
+	Resolution SimpleShadowmap::getScreenResolution() const {
 		return getTexture().getScreenResolution();
 	}
 
-	float SimpleShadowMap::getShadowBias() const {
+	float SimpleShadowmap::getShadowBias() const {
 		return shadowBias;
 	}
 
-	void SimpleShadowMap::setShadowBias(float bias) {
+	void SimpleShadowmap::setShadowBias(float bias) {
 		if (bias > 0.f)
 			shadowBias = bias;
 	}
 
-	int SimpleShadowMap::getSoftShadowResolution() const {
+	int SimpleShadowmap::getSoftShadowResolution() const {
 		return softShadowResolution;
 	}
 
-	void SimpleShadowMap::setSoftShadowResolution(unsigned int resolution) {
+	void SimpleShadowmap::setSoftShadowResolution(unsigned int resolution) {
 		if (resolution != softShadowResolution && resolution < 100)
 			softShadowResolution = resolution;
 	}
 
-	float SimpleShadowMap::getSoftShadowScale() const {
+	float SimpleShadowmap::getSoftShadowScale() const {
 		return softShadowScale;
 	}
 
-	void SimpleShadowMap::setSoftShadowScale(float scale) {
+	void SimpleShadowmap::setSoftShadowScale(float scale) {
 		if (scale != softShadowScale && scale > 0.f)
 			softShadowScale = scale;
 	}
 
-	float SimpleShadowMap::getFarPlane() const {
+	float SimpleShadowmap::getFarPlane() const {
 		return farPlane;
 	}
 
-	void SimpleShadowMap::setFarPlane(float value) {
+	void SimpleShadowmap::setFarPlane(float value) {
 		if (farPlane != value && value > 0.f) {
 			farPlane = value;
 		}
@@ -105,7 +105,7 @@ namespace geeL {
 
 	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight& light, 
 		const ShadowMapConfiguration& config)
-			: SimpleShadowMap(light, 
+			: SimpleShadowmap(light, 
 				std::unique_ptr<Texture>(new Texture2D(
 					Resolution((int)config.resolution),
 					ColorType::Depth,
@@ -117,7 +117,7 @@ namespace geeL {
 
 	SimpleSpotLightMap::SimpleSpotLightMap(const SpotLight& light, 
 		const ShadowMapConfiguration& config, bool init)
-			: SimpleShadowMap(light, 
+			: SimpleShadowmap(light, 
 				std::unique_ptr<Texture>(new Texture2D(
 					Resolution((int)config.resolution), 
 					ColorType::Depth,
@@ -129,7 +129,7 @@ namespace geeL {
 
 
 	void SimpleSpotLightMap::bindData(const Shader& shader, const std::string& name) {
-		SimpleShadowMap::bindData(shader, name);
+		SimpleShadowmap::bindData(shader, name);
 
 		shader.bind<glm::mat4>(name + "lightTransform", lightTransform);
 	}
@@ -166,7 +166,7 @@ namespace geeL {
 
 	SimplePointLightMap::SimplePointLightMap(const PointLight& light, 
 		const ShadowMapConfiguration& config)
-			: SimpleShadowMap(light, 
+			: SimpleShadowmap(light, 
 				std::unique_ptr<Texture>(new TextureCube(
 					(int)config.resolution, 
 					ColorType::Depth,
@@ -181,7 +181,7 @@ namespace geeL {
 
 
 	void SimplePointLightMap::bindData(const Shader& shader, const std::string& name) {
-		SimpleShadowMap::bindData(shader, name);
+		SimpleShadowmap::bindData(shader, name);
 
 		shader.bind<float>(name + "farPlane", farPlane);
 	}
@@ -240,7 +240,7 @@ namespace geeL {
 
 	SimpleDirectionalLightMap::SimpleDirectionalLightMap(const DirectionalLight& light, 
 		const ShadowMapConfiguration& config)
-			: SimpleShadowMap(light, 
+			: SimpleShadowmap(light, 
 				std::unique_ptr<Texture>(new Texture2D(
 					Resolution((int)config.resolution),
 					ColorType::Depth,
@@ -252,7 +252,7 @@ namespace geeL {
 
 
 	void SimpleDirectionalLightMap::bindData(const Shader& shader, const std::string& name) {
-		SimpleShadowMap::bindData(shader, name);
+		SimpleShadowmap::bindData(shader, name);
 
 		shader.bind<glm::mat4>(name + "lightTransform", lightTransform);
 	}

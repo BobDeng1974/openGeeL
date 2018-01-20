@@ -54,7 +54,7 @@ namespace geeL {
 
 		if (config.useShadowMap()) {
 			SimpleDirectionalLightMap* map = new SimpleDirectionalLightMap(*light, config);
-			//CascadedDirectionalShadowMap* map = new CascadedDirectionalShadowMap(*light, *camera, config.shadowBias, config.resolution);
+			//CascadedDirectionalShadowmap* map = new CascadedDirectionalShadowmap(*light, *camera, config.shadowBias, config.resolution);
 			map->setIntensity(config.intensity);
 			light->setShadowMap(*map);
 		}
@@ -78,7 +78,7 @@ namespace geeL {
 		LightBinding s(light, slCount++, slName);
 
 		if (config.useShadowMap()) {
-			ShadowMap* map = nullptr;
+			Shadowmap* map = nullptr;
 			if (config.type == ShadowMapType::Hard)
 				map = new SimpleSpotLightMap(*light, config);
 			else
@@ -190,12 +190,12 @@ namespace geeL {
 		}
 	}
 
-	void LightManager::iterShadowmaps(std::function<void(ShadowMap&)> function) const {
+	void LightManager::iterShadowmaps(std::function<void(Shadowmap&)> function) const {
 		for (auto it = lights.begin(); it != lights.end(); it++) {
 			const LightBinding& binding = it->second;
 			Light& light = *binding.light;
 
-			ShadowMap* map = light.getShadowMap();
+			Shadowmap* map = light.getShadowMap();
 
 			if (map != nullptr)
 				function(*map);

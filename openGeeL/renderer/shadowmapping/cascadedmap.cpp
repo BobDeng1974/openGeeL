@@ -18,23 +18,23 @@
 
 namespace geeL {
 
-	CascadedShadowMap::CascadedShadowMap(const Light& light,
+	CascadedShadowmap::CascadedShadowmap(const Light& light,
 		std::unique_ptr<Texture> innerTexture,
 		float shadowBias,
 		ShadowmapResolution resolution)
-			: ShadowMap(light, std::move(innerTexture), resolution)
+			: Shadowmap(light, std::move(innerTexture), resolution)
 			, shadowBias(shadowBias) {}
 
-	Resolution CascadedShadowMap::getScreenResolution() const {
+	Resolution CascadedShadowmap::getScreenResolution() const {
 		unsigned int res = static_cast<unsigned int>(getShadowResolution());
 		return Resolution(res, res);
 	}
 
 
 
-	CascadedDirectionalShadowMap::CascadedDirectionalShadowMap(const Light& light, const SceneCamera& camera, 
+	CascadedDirectionalShadowmap::CascadedDirectionalShadowmap(const Light& light, const SceneCamera& camera, 
 		float shadowBias, ShadowmapResolution resolution)
-			: CascadedShadowMap(light, 
+			: CascadedShadowmap(light, 
 				std::unique_ptr<Texture>(new Texture2D(
 					Resolution(static_cast<unsigned int>(resolution)), 
 					ColorType::Depth32,
@@ -48,7 +48,7 @@ namespace geeL {
 	}
 
 
-	void CascadedDirectionalShadowMap::setCascades(const SceneCamera& camera) {
+	void CascadedDirectionalShadowmap::setCascades(const SceneCamera& camera) {
 		float near = camera.getNearPlane();
 		float far = camera.getFarPlane();
 
@@ -64,7 +64,7 @@ namespace geeL {
 		}
 	}
 
-	void CascadedDirectionalShadowMap::bindData(const Shader& shader, const std::string& name) {
+	void CascadedDirectionalShadowmap::bindData(const Shader& shader, const std::string& name) {
 		shader.bind<float>(name + "bias", shadowBias);
 
 		for (unsigned int i = 0; i < MAPCOUNT; i++) {
@@ -73,12 +73,12 @@ namespace geeL {
 		}
 	}
 
-	void CascadedDirectionalShadowMap::removeMap(Shader& shader) {
+	void CascadedDirectionalShadowmap::removeMap(Shader& shader) {
 		shader.removeMap(*this);
 	}
 
 
-	void CascadedDirectionalShadowMap::draw(const SceneCamera* const camera, const RenderScene& scene,
+	void CascadedDirectionalShadowmap::draw(const SceneCamera* const camera, const RenderScene& scene,
 		ShadowmapRepository& repository) {
 
 		//TODO: Develop backup strategy for when scene camera is not available
@@ -104,7 +104,7 @@ namespace geeL {
 	}
 
 
-	void CascadedDirectionalShadowMap::computeLightTransforms(const SceneCamera& camera) {
+	void CascadedDirectionalShadowmap::computeLightTransforms(const SceneCamera& camera) {
 
 		glm::mat4 lightView = glm::lookAt(camera.transform.getPosition(), 
 			camera.transform.getPosition() - light.transform.getForwardDirection(),
@@ -144,7 +144,7 @@ namespace geeL {
 	}
 
 
-	TextureType CascadedDirectionalShadowMap::getTextureType() const {
+	TextureType CascadedDirectionalShadowmap::getTextureType() const {
 		return TextureType::Texture2D;
 	}
 

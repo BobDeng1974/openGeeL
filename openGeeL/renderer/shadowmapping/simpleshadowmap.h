@@ -14,10 +14,11 @@ namespace geeL {
 	class DirectionalLight;
 
 
-	class SimpleShadowMap : public ShadowMap {
+	//Simple shadow map that uses PCF for soft shadows
+	class SimpleShadowmap : public Shadowmap {
 
 	public:
-		SimpleShadowMap(const Light& light, 
+		SimpleShadowmap(const Light& light, 
 			std::unique_ptr<Texture> innerTexture, 
 			const ShadowMapConfiguration& config);
 
@@ -45,8 +46,8 @@ namespace geeL {
 		float shadowBias, farPlane, softShadowScale;
 		unsigned int resolution, softShadowResolution, depthID;
 
-		SimpleShadowMap(const SimpleShadowMap& other) = delete;
-		SimpleShadowMap& operator= (const SimpleShadowMap& other) = delete;
+		SimpleShadowmap(const SimpleShadowmap& other) = delete;
+		SimpleShadowmap& operator= (const SimpleShadowmap& other) = delete;
 
 		virtual void drawMap(const RenderScene& scene, ShadowmapRepository& repository) = 0;
 		virtual void computeLightTransform() = 0;
@@ -55,7 +56,7 @@ namespace geeL {
 
 
 
-	class SimpleSpotLightMap : public SimpleShadowMap {
+	class SimpleSpotLightMap : public SimpleShadowmap {
 
 	public:
 		SimpleSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config);
@@ -75,7 +76,7 @@ namespace geeL {
 
 
 
-	class SimplePointLightMap : public SimpleShadowMap {
+	class SimplePointLightMap : public SimpleShadowmap {
 
 	public:
 		SimplePointLightMap(const PointLight& light, const ShadowMapConfiguration& config);
@@ -93,7 +94,7 @@ namespace geeL {
 
 
 
-	class SimpleDirectionalLightMap : public SimpleShadowMap {
+	class SimpleDirectionalLightMap : public SimpleShadowmap {
 
 	public:
 		SimpleDirectionalLightMap(const DirectionalLight& light, const ShadowMapConfiguration& config);

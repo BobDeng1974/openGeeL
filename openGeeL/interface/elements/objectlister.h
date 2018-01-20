@@ -16,7 +16,7 @@ namespace geeL {
 	class Light;
 	class Scene;
 	class ShadowMapSnippet;
-	class SimpleShadowMap;
+	class SimpleShadowmap;
 
 	class ObjectLister : public GUISnippet, public DataEventListener<MeshRenderer> {
 
@@ -33,7 +33,7 @@ namespace geeL {
 		void add(Light& light);
 		void add(Light& light, ShadowMapSnippet& mapSnippet);
 
-		ShadowMapSnippet& createSnippet(SimpleShadowMap& map);
+		ShadowMapSnippet& createSnippet(SimpleShadowmap& map);
 
 		virtual void onAdd(MeshRenderer& renderer);
 		virtual void onRemove(std::shared_ptr<MeshRenderer> renderer);

@@ -13,7 +13,7 @@ using glm::vec3;
 namespace geeL {
 
 	class Camera;
-	class ShadowMap;
+	class Shadowmap;
 	class SceneCamera;
 	class Transform;
 	class RenderScene;
@@ -43,9 +43,9 @@ namespace geeL {
 		virtual void bind(const SceneShader& shader,
 			const std::string& name, const Camera* const camera = nullptr) const;
 
-		const ShadowMap* const getShadowMap() const;
-		ShadowMap* getShadowMap();
-		void setShadowMap(ShadowMap& map);
+		const Shadowmap* const getShadowMap() const;
+		Shadowmap* getShadowMap();
+		void setShadowMap(Shadowmap& map);
 
 		//Add shadow map to given shader
 		virtual void addShadowmap(Shader& shader, const std::string& name);
@@ -86,7 +86,7 @@ namespace geeL {
 
 	protected:
 		vec3 diffuse;
-		ShadowMap* shadowMap;
+		Shadowmap* shadowMap;
 
 		void onChange();
 

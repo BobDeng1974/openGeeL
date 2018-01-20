@@ -13,11 +13,11 @@ namespace geeL {
 	class RenderScene;
 
 
-	class ShadowMap : public FunctionalTexture {
+	class Shadowmap : public FunctionalTexture {
 
 	public:
 		//ShadowMap(const Light& light, std::unique_ptr<Texture> innerTexture);
-		ShadowMap(const Light& light, std::unique_ptr<Texture> innerTexture,
+		Shadowmap(const Light& light, std::unique_ptr<Texture> innerTexture,
 			ShadowmapResolution targetResolution);
 
 		virtual void bindData(const Shader& shader, const std::string& name) = 0;
@@ -53,7 +53,7 @@ namespace geeL {
 	};
 
 
-	inline ShadowMap::ShadowMap(const Light & light, std::unique_ptr<Texture> innerTexture, ShadowmapResolution targetResolution) 
+	inline Shadowmap::Shadowmap(const Light & light, std::unique_ptr<Texture> innerTexture, ShadowmapResolution targetResolution) 
 		: FunctionalTexture(std::move(innerTexture))
 		, light(light)
 		, intensity(1.f)
@@ -66,7 +66,7 @@ namespace geeL {
 		assert(res.getWidth() == res.getHeight());
 	}
 
-	inline void ShadowMap::resize(ShadowmapResolution resolution) {
+	inline void Shadowmap::resize(ShadowmapResolution resolution) {
 		Texture& texture = getTexture();
 		unsigned int res = texture.getScreenResolution().getWidth();
 		unsigned int newRes = (unsigned int)resolution;
@@ -76,29 +76,29 @@ namespace geeL {
 	}
 
 
-	inline void ShadowMap::setShadowResolution(ShadowmapResolution resolution) {
+	inline void Shadowmap::setShadowResolution(ShadowmapResolution resolution) {
 		shadowResolution = resolution;
 		resize(resolution);
 	}
 
-	inline ShadowmapResolution ShadowMap::getShadowResolution() const {
+	inline ShadowmapResolution Shadowmap::getShadowResolution() const {
 		return shadowResolution;
 	}
 
-	inline float ShadowMap::getIntensity() const {
+	inline float Shadowmap::getIntensity() const {
 		return intensity;
 	}
 
-	inline void ShadowMap::setIntensity(float value) {
+	inline void Shadowmap::setIntensity(float value) {
 		if (intensity != value && value > 0.f && value < 1.f)
 			intensity = value;
 	}
 
-	inline ShadowMapType ShadowMap::getType() const {
+	inline ShadowMapType Shadowmap::getType() const {
 		return ShadowMapType::None;
 	}
 
-	inline const Light& ShadowMap::getLight() const {
+	inline const Light& Shadowmap::getLight() const {
 		return light;
 	}
 

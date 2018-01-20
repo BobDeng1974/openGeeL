@@ -30,9 +30,9 @@ namespace geeL {
 			ShadowMapSnippet* snippet = nullptr;
 
 			//Hacky: Read specific shadow map type via casting
-			ShadowMap* map = light.getShadowMap();
+			Shadowmap* map = light.getShadowMap();
 			if (map != nullptr) {
-				SimpleShadowMap* simpleMap = dynamic_cast<SimpleShadowMap*>(map);
+				SimpleShadowmap* simpleMap = dynamic_cast<SimpleShadowmap*>(map);
 
 				if (simpleMap != nullptr)
 					snippet = &createSnippet(*simpleMap);
@@ -108,7 +108,7 @@ namespace geeL {
 		lightSnippets.push_back(std::unique_ptr<GUISnippet>(snippet));
 	}
 
-	ShadowMapSnippet& ObjectLister::createSnippet(SimpleShadowMap& map) {
+	ShadowMapSnippet& ObjectLister::createSnippet(SimpleShadowmap& map) {
 		ShadowMapSnippet* snippet = new ShadowMapSnippet(map);
 		otherSnippets.push_back(std::unique_ptr<GUISnippet>(snippet));
 

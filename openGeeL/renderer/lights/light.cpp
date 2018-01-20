@@ -28,15 +28,15 @@ namespace geeL {
 	}
 
 
-	const ShadowMap* const Light::getShadowMap() const {
+	const Shadowmap* const Light::getShadowMap() const {
 		return shadowMap;
 	}
 
-	ShadowMap* Light::getShadowMap() {
+	Shadowmap* Light::getShadowMap() {
 		return shadowMap;
 	}
 
-	void Light::setShadowMap(ShadowMap& map) {
+	void Light::setShadowMap(Shadowmap& map) {
 		shadowMap = &map;
 	}
 

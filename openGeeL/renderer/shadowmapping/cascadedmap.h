@@ -18,10 +18,10 @@ namespace geeL {
 	};
 
 
-	class CascadedShadowMap : public ShadowMap {
+	class CascadedShadowmap : public Shadowmap {
 
 	public:
-		CascadedShadowMap(const Light& light, std::unique_ptr<Texture> innerTexture, 
+		CascadedShadowmap(const Light& light, std::unique_ptr<Texture> innerTexture, 
 			float shadowBias, ShadowmapResolution resolution);
 
 		virtual Resolution getScreenResolution() const;
@@ -29,16 +29,16 @@ namespace geeL {
 	protected:
 		float shadowBias;
 
-		CascadedShadowMap(const CascadedShadowMap& other) = delete;
-		CascadedShadowMap& operator= (const CascadedShadowMap& other) = delete;
+		CascadedShadowmap(const CascadedShadowmap& other) = delete;
+		CascadedShadowmap& operator= (const CascadedShadowmap& other) = delete;
 
 	};
 
 
-	class CascadedDirectionalShadowMap : public CascadedShadowMap {
+	class CascadedDirectionalShadowmap : public CascadedShadowmap {
 
 	public:
-		CascadedDirectionalShadowMap(const Light& light, const SceneCamera& camera, 
+		CascadedDirectionalShadowmap(const Light& light, const SceneCamera& camera, 
 			float shadowBias, ShadowmapResolution resolution);
 
 		virtual void bindData(const Shader& shader, const std::string& name);

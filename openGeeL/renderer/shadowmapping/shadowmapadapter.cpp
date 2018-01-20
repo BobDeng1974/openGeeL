@@ -36,10 +36,10 @@ namespace geeL {
 		glm::vec3 position = camera.transform.getPosition() + depth * camera.transform.getForwardDirection();
 
 		float total = 0.f;
-		std::map<ShadowMap*, float> maps;
+		std::map<Shadowmap*, float> maps;
 
 		const LightManager& lightManager = scene.getLightmanager();
-		lightManager.iterShadowmaps([&total, &maps, &position, &normalizedDepth, this](ShadowMap& map) {
+		lightManager.iterShadowmaps([&total, &maps, &position, &normalizedDepth, this](Shadowmap& map) {
 			const Light& light = map.getLight();
 
 			//Filter out static and/or directional light sources
@@ -54,7 +54,7 @@ namespace geeL {
 
 		unsigned int allocationSpace = allocationSize;
 		for (auto it(maps.begin()); it != maps.end(); it++) {
-			ShadowMap& map = *it->first;
+			Shadowmap& map = *it->first;
 			float h = it->second;
 
 			float allocationShare = (h / total) * allocationSpace;

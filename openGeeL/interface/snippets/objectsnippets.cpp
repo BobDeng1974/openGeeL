@@ -172,7 +172,7 @@ namespace geeL {
 	}
 
 
-	ShadowMapSnippet::ShadowMapSnippet(SimpleShadowMap& map) : map(map) {}
+	ShadowMapSnippet::ShadowMapSnippet(SimpleShadowmap& map) : map(map) {}
 
 	void ShadowMapSnippet::draw(GUIContext* context) {
 		ShadowMapType type = map.getType();

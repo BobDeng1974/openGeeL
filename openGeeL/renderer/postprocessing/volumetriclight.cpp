@@ -33,7 +33,7 @@ namespace geeL {
 		assert(provider != nullptr);
 		addTextureSampler(provider->requestPosition(), "gPosition");
 
-		const ShadowMap* map = light.getShadowMap();
+		const Shadowmap* map = light.getShadowMap();
 		if (map != nullptr)
 			addTextureSampler(*map, "shadowMap");
 		else

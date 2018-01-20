@@ -13,7 +13,7 @@
 namespace geeL {
 
 	VarianceSpotLightMap::VarianceSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config)
-		: ShadowMap(light, std::unique_ptr<Texture>(new Texture2D(
+		: Shadowmap(light, std::unique_ptr<Texture>(new Texture2D(
 				Resolution((int)config.resolution),
 				ColorType::RG16,
 				FilterMode::TrilinearUltra,
