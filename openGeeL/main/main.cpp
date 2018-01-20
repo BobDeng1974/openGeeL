@@ -12,6 +12,10 @@
 #include "testscene.h"
 #include "capsulescene.h"
 
+#include <bitset>
+
+#include "meshes\meshidgenerator.h"
+
 int main(int argc, char* argv[]) {
 	ApplicationManagerInstance instance;
 

@@ -107,7 +107,7 @@ namespace geeL {
 				updateMeshRenderer(renderer, oldMaterial, newMaterial);
 			});
 			
-			renderObjects[shader.getMethod()][&shader][rawRenderer->transform.getID()] = rawRenderer;
+			renderObjects[shader.getMethod()][&shader][rawRenderer->getID()] = rawRenderer;
 		});
 
 		
@@ -124,7 +124,7 @@ namespace geeL {
 
 			if (itShader != shaders.end()) {
 				auto& objects = (*itShader).second;
-				auto obj = objects.find(renderer.transform.getID());
+				auto obj = objects.find(renderer.getID());
 				if (obj != objects.end()) {
 					objects.erase(obj);
 				}
@@ -159,7 +159,7 @@ namespace geeL {
 		}
 
 		addShader(newShader);
-		renderObjects[newShader.getMethod()][&newShader][renderer.transform.getID()] = &renderer;
+		renderObjects[newShader.getMethod()][&newShader][renderer.getID()] = &renderer;
 	}
 
 

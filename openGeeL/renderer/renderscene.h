@@ -34,7 +34,7 @@ namespace geeL {
 
 	enum class CullingMode;
 
-	using TransformMapping = std::map<unsigned int, MeshRenderer*>;
+	using TransformMapping = std::map<unsigned short, MeshRenderer*>;
 	using ShaderMapping    = std::map<SceneShader*, TransformMapping>;
 
 	//Class that holds scene information (Objects, cameras, lights, ...)
