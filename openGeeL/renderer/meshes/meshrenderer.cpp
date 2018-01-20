@@ -84,15 +84,14 @@ namespace geeL{
 			const std::list<MaterialMapping>& elements = it->second;
 			for (auto et = elements.begin(); et != elements.end(); et++) {
 				const MaterialMapping& container = *et;
+				const MeshInstance& mesh = container.mesh;
 
 				//Draw individual material
 				const Material& mat = container.material;
+				shader.bind<unsigned int>("id", mesh.getID());
 				mat.bind();
-
+				
 				drawMask(container);
-
-				//Draw mesh
-				const MeshInstance& mesh = container.mesh;
 				mesh.draw(shader);
 			}
 		}

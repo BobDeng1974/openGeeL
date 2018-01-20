@@ -15,6 +15,7 @@ in vec2 textureCoordinates;
 in mat3 TBN;
 
 uniform Material material;
+uniform uint id;
 
 
 void main() {    
@@ -68,6 +69,8 @@ void main() {
 
 
 	gNormal.rgb = norm;
+	gNormal.a = uintBitsToFloat(id);
+
 	gPosition = fragPosition;
 	gDiffuse = diffuse;
 

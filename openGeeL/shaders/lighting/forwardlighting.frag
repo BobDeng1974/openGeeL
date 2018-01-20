@@ -35,6 +35,7 @@ uniform DirectionalLight directionalLights[5];
 uniform SpotLight spotLights[5];
 
 uniform Material material;
+uniform uint id;
 
 uniform mat4 projection;
 uniform mat4 inverseView;
@@ -58,7 +59,7 @@ void main() {
 	vec3 viewDirection = normalize(-fragPosition.xyz);
 
 	gPosition = fragPosition.xyz;
-	gNormal = vec4(norm, 0.f);
+	gNormal = vec4(norm, uintBitsToFloat(id));
 	gDiffuse = albedo;
 	gProperties = vec4(roughness, metallic, 0.f, 0.f);
 
