@@ -34,12 +34,12 @@ public:
 
 			float lightIntensity = 240.f;
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(0.5f, -2.9f, 1.89f), vec3(-180.0f, 0, -50), vec3(1.f), false);
-			ShadowMapConfiguration config = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::High, 11.f, 7U, 150.f);
+			ShadowMapConfiguration config = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::VeryHigh, 7.5f, 3U, 150.f);
 			lightManager.addPointLight(config, lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379));
 
 			lightIntensity = 1.5f;
 			Transform& lightTransform21 = transformFactory.CreateTransform(vec3(-5.8f, -0.2f, -3.6f), vec3(-180.0f, 0, -50), vec3(1.f), true);
-			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::High, 6.f, 15U, 150.f, 1.f);
+			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00006f, ShadowMapType::Hard, ShadowmapResolution::High, 6.f, 1U, 150.f, 1.f);
 			lightManager.addPointLight(config2, lightTransform21, glm::vec3(lightIntensity * 3.f, lightIntensity * 59.f, lightIntensity * 43.f));
 
 

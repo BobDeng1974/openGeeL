@@ -36,7 +36,7 @@ public:
 
 			float lightIntensity = 7.f;
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-0.29f, 0.39f, 1.80f), vec3(-180.0f, 0, -50), vec3(1.f));
-			ShadowMapConfiguration config = ShadowMapConfiguration(0.000001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 5.f, 5);
+			ShadowMapConfiguration config = ShadowMapConfiguration(0.000001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 4.5f, 2);
 			&lightManager.addPointLight(config, lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379));
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(0.1f, 0.1f, 0.1f));
@@ -58,7 +58,7 @@ public:
 			gui.addElement(lister);
 			gui.addSystemInformation(0.01f, 0.655f, 0.17f, 0.14f);
 			*/
-			
+
 			BilateralFilter& blur = BilateralFilter(4.f, 7, 0.291f);
 			SSAO& ssao = SSAO(blur, 0.5f);
 			renderer.addEffect(ssao);

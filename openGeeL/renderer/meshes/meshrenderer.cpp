@@ -25,7 +25,6 @@ namespace geeL{
 			, mask(RenderMask::None)
 			, id(MeshRendererIDGenerator::generateID(*this, meshCount)) {}
 
-
 	MeshRenderer::~MeshRenderer() {
 		for (auto it(deleteListeners.begin()); it != deleteListeners.end(); it++)
 			(*it)(*this);

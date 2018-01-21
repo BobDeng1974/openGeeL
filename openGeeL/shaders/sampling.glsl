@@ -7,6 +7,7 @@ float random(vec3 seed, int i) {
 	return fract(sin(sn) * 43758.5453);
 }
 
+
 vec3 sampleDirections3D[20] = vec3[] (
    vec3(1, 1, 1), vec3(1, -1, 1), vec3(-1, -1, 1), vec3(-1, 1, 1), 
    vec3(1, 1, -1), vec3(1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
