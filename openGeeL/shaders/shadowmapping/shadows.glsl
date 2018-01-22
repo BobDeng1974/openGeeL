@@ -173,7 +173,7 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 		}    
 	}
 	
-	int kernelSize = 2 * kernel + 1; 
+	float kernelSize = 2 * kernel + 1; 
 	return shadow / (kernelSize * kernelSize);
 
 #endif

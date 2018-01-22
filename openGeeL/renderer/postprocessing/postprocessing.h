@@ -15,6 +15,7 @@ namespace geeL {
 	class DynamicBuffer;
 	class PostProcessingEffect;
 	class RenderShader;
+	class RenderTexture;
 	class ScreenQuad;
 	class Texture;
 	class ITextureProvider;
@@ -140,6 +141,7 @@ namespace geeL {
 		PostProcessingEffectCS(const std::string& path, Resolution groupSize = Resolution(8, 8));
 		virtual ~PostProcessingEffectCS() {}
 
+		void setTextureTarget(const RenderTexture& target);
 		virtual const ITexture& getImage() const;
 		virtual void setImage(const ITexture& texture);
 		virtual void addTextureSampler(const ITexture& texture, const std::string& name);
@@ -162,6 +164,9 @@ namespace geeL {
 		//By default, the current image (from render pipeline) is set as target
 		//and its resolution bound 
 		virtual void bindTextureTargets();
+
+	private:
+		const RenderTexture* target;
 
 	};
 

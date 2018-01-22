@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include "postprocessing/postprocessing.h"
 #include "renderer/deferredrenderer.h"
 #include "texturing/textureprovider.h"
 #include "texturing/rendertexture.h"
@@ -20,7 +21,24 @@ namespace geeL {
 		float x, float y, 
 		float width, float height) 
 			: GUIElement(window, x, y, width, height)
-			, renderer(renderer) {}
+			, renderer(renderer) {
+	
+		const TextureProvider& provider = renderer.getTextureProvider();
+		Resolution resolution = provider.getRenderResolution();
+
+		texture = new RenderTexture(resolution, ColorType::RGBA16,
+			WrapMode::ClampEdge, FilterMode::None);
+	
+		propertyVisualizer = new PostProcessingEffectCS("shaders/postprocessing/propertyvisualize.com.glsl");
+		propertyVisualizer->setResolution(resolution);
+		propertyVisualizer->setTextureTarget(*texture);
+		propertyVisualizer->addTextureSampler(provider.requestProperties(), "gProperties");
+	}
+
+	SystemInformation::~SystemInformation() {
+		delete texture;
+		delete propertyVisualizer;
+	}
 
 
 	void SystemInformation::draw(GUIContext* context) {
@@ -37,16 +55,37 @@ namespace geeL {
 			int back = -nk_button_label(context, "<");
 			int forward = nk_button_label(context, ">");
 
-			if (reset != 0)
+			if (reset != 0) {
 				renderer.setScreenImage();
+				position = -1;
+			}
 			else if (back != 0 || forward != 0) {
 				std::vector<const ITexture*> textures(std::move(getBuffers()));
-				unsigned int size = unsigned int(textures.size());
+				unsigned int size = unsigned int(textures.size()) + 3;
 
 				if (size != 0) {
 					position = modulo((position + back + forward), size);
-					renderer.setScreenImage(textures[position]);
+
+					switch (position) {
+						case 0:
+						case 1:
+							renderer.setScreenImage(textures[position]);
+							break;
+
+						default:
+							renderer.setScreenImage(textures[2]);
+							break;
+					}
+					
 				}
+			}
+
+			//Draw property visualizer if one of the properties is currently selected
+			if (position >= 2) {
+				Shader& shader = propertyVisualizer->getShader();
+				shader.bind<unsigned int>("mode", position - 2);
+
+				propertyVisualizer->draw();
 			}
 		}
 
@@ -64,27 +103,12 @@ namespace geeL {
 	std::vector<const ITexture*> SystemInformation::getBuffers() {
 		const TextureProvider& provider = renderer.getTextureProvider();
 
-
-		//const ITexture* emisTex = provider.requestEmissivity();
-		//const ITexture* occTex = provider.requestOcclusion();
-
-		size_t bufferSize = 2;
-		//bufferSize += int(emisTex != nullptr);
-		//bufferSize += int(occTex != nullptr);
-
 		std::vector<const ITexture*> buffers;
-		buffers.reserve(bufferSize);
+		buffers.reserve(3);
 
 		buffers.push_back(&provider.requestAlbedo());
 		buffers.push_back(&provider.requestNormal());
-
-		/*
-		if (emisTex != nullptr)
-			buffers.push_back(emisTex);
-
-		if (occTex != nullptr)
-			buffers.push_back(occTex);
-			*/
+		buffers.push_back(texture);
 
 		return buffers;
 	}

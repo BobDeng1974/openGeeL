@@ -133,8 +133,14 @@ namespace geeL {
 
 
 	PostProcessingEffectCS::PostProcessingEffectCS(const std::string& path, Resolution groupSize) 
-		: shader(path.c_str()), groupSize(groupSize) {}
+		: shader(path.c_str())
+		, groupSize(groupSize)
+		, target(nullptr) {}
 
+
+	void PostProcessingEffectCS::setTextureTarget(const RenderTexture& target) {
+		this->target = &target;
+	}
 
 	const ITexture& PostProcessingEffectCS::getImage() const {
 		return *shader.getMap("image");
@@ -181,9 +187,9 @@ namespace geeL {
 	}
 
 	void PostProcessingEffectCS::bindTextureTargets() {
-		const RenderTexture& target = provider->requestCurrentImage();
-		target.bindImage(0, AccessType::All);
-		shader.bind<glm::vec2>("resolution", target.getResolution());
+		const RenderTexture& t = (target != nullptr) ? *target : provider->requestCurrentImage();
+		t.bindImage(0, AccessType::All);
+		shader.bind<glm::vec2>("resolution", t.getResolution());
 	}
 
 

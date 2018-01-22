@@ -545,6 +545,7 @@
     <None Include="shaders\postprocessing\motionblur.frag" />
     <None Include="shaders\postprocessing\motionblur2.frag" />
     <None Include="shaders\postprocessing\passthrough.frag" />
+    <None Include="shaders\postprocessing\propertyvisualize.com.glsl" />
     <None Include="shaders\postprocessing\simpleblur.frag" />
     <None Include="shaders\postprocessing\simpleblur3d.frag" />
     <None Include="shaders\postprocessing\sobel.frag" />
