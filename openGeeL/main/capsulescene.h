@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../application/configuration.h"
+#include "../interface/debug/shadowadapterdebug.h"
 
 using namespace geeL;
 
@@ -87,6 +88,10 @@ public:
 			GUILister& lister = GUILister(window, 0.01f, 0.15f, 0.17f, 0.5f, objectLister, postLister);
 			gui.addElement(lister);
 			gui.addSystemInformation(0.01f, 0.655f, 0.17f, 0.14f);
+
+			ShadowmapAdapter& adapter = *lightManager.getShadowmapAdapter();
+			ShadowAdapterDebug aDebug(adapter);
+			lister.add(aDebug);
 
 			def.setExposure(3.5f);
 			postLister.add(def);

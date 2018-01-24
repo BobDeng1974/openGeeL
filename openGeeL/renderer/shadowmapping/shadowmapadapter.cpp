@@ -6,6 +6,7 @@
 #include "texturing/textureprovider.h"
 #include "transformation/transform.h"
 #include "renderscene.h"
+#include "shadowmapconfig.h"
 #include "shadowmap.h"
 #include "shadowmapadapter.h"
 
@@ -19,9 +20,9 @@ namespace geeL {
 		, scene(scene)
 		, depthReader(provider)
 		, allocationSize(allocationSize)
-		, depthScale(50.f) 
+		, depthScale(10.f) 
 		, attenuationScale(0.33f)
-		, baseSizeScale(2.f)
+		, baseSizeScale(1.f)
 		, active(true) {}
 
 
@@ -61,7 +62,7 @@ namespace geeL {
 			total -= h;
 
 			float sizeEstimate = min(h, allocationShare);
-			ShadowmapResolution newSize = getResolution(sizeEstimate);
+			ShadowmapResolution newSize = getShadowResolution(sizeEstimate);
 
 			//Use targeted shadowmap resolution as upper bound for new resolution
 			ShadowmapResolution targetSize = map.getShadowResolution();
@@ -69,8 +70,6 @@ namespace geeL {
 
 			allocationSpace -= static_cast<unsigned int>(finalSize);
 			map.resize(finalSize);
-
-			//std::cout << std::to_string(sizeEstimate) << " : " << std::to_string((int)finalSize) << "\n";
 		}
 	}
 
@@ -80,39 +79,11 @@ namespace geeL {
 		float attenuation = min(light.getAttenuation(position) * light.getIntensity(), 1.f);
 		attenuation = pow(attenuation, attenuationScale);
 
-		return (baseSizeScale * allocationSize) * weightedDepth * attenuation;
+		ShadowmapResolution resolution = light.getShadowMap()->getShadowResolution();
+		int mapSize = static_cast<int>(resolution);
+
+		return (baseSizeScale * mapSize) * weightedDepth * attenuation;
 	}
-
-
-	ShadowmapResolution ShadowmapAdapter::getResolution(float estimate) {
-		//Lazy binary search to find closest resolution
-
-		if (estimate <= (int)ShadowmapResolution::High) {
-			if (estimate <= (int)ShadowmapResolution::Small) {
-				if (estimate <= (int)ShadowmapResolution::Tiny)
-					return ShadowmapResolution::Tiny;
-				else
-					return ShadowmapResolution::Small;
-			}
-			else {
-				if (estimate <= (int)ShadowmapResolution::Medium)
-					return ShadowmapResolution::Medium;
-				else
-					return ShadowmapResolution::High;
-			}
-		}
-		else {
-			if (estimate <= (int)ShadowmapResolution::Large) {
-				if (estimate <= (int)ShadowmapResolution::VeryHigh)
-					return ShadowmapResolution::VeryHigh;
-				else
-					return ShadowmapResolution::Large;
-			}
-			else
-				return ShadowmapResolution::Huge;
-		}
-	}
-
 
 
 	float ShadowmapAdapter::getDepthScale() const {

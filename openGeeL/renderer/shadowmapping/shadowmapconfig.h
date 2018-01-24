@@ -23,12 +23,6 @@ namespace geeL {
 		Huge = 4096
 	};
 
-	inline bool operator<(ShadowmapResolution a, ShadowmapResolution b) {
-		return static_cast<int>(a) < static_cast<int>(b);
-	}
-
-
-
 
 	//Container class for shadow map configurations
 	struct ShadowMapConfiguration {
@@ -85,6 +79,41 @@ namespace geeL {
 		RenderShader* simpleCubeAnim;
 
 	};
+
+
+
+	inline bool operator<(ShadowmapResolution a, ShadowmapResolution b) {
+		return static_cast<int>(a) < static_cast<int>(b);
+	}
+
+	inline ShadowmapResolution getShadowResolution(float estimate) {
+		//Lazy binary search to find closest resolution
+
+		if (estimate <= (int)ShadowmapResolution::High) {
+			if (estimate <= (int)ShadowmapResolution::Small) {
+				if (estimate <= (int)ShadowmapResolution::Tiny)
+					return ShadowmapResolution::Tiny;
+				else
+					return ShadowmapResolution::Small;
+			}
+			else {
+				if (estimate <= (int)ShadowmapResolution::Medium)
+					return ShadowmapResolution::Medium;
+				else
+					return ShadowmapResolution::High;
+			}
+		}
+		else {
+			if (estimate <= (int)ShadowmapResolution::Large) {
+				if (estimate <= (int)ShadowmapResolution::VeryHigh)
+					return ShadowmapResolution::VeryHigh;
+				else
+					return ShadowmapResolution::Large;
+			}
+			else
+				return ShadowmapResolution::Huge;
+		}
+	}
 
 }
 

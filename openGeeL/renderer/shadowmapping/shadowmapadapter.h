@@ -42,7 +42,6 @@ namespace geeL {
 		TextureProvider& provider;
 
 		float computeSizeHeuristic(const Light& light, const glm::vec3& position, float depth);
-		ShadowmapResolution getResolution(float estimate);
 
 	};
 
