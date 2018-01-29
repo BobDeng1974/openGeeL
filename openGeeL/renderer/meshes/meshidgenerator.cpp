@@ -18,7 +18,7 @@ namespace geeL{
 	std::queue<unsigned short> MeshRendererIDGenerator::c;
 	std::queue<unsigned short> MeshRendererIDGenerator::d;
 	
-	std::queue<unsigned short>*  MeshRendererIDGenerator::freeIDs[4] = {
+	std::queue<unsigned short>* MeshRendererIDGenerator::freeIDs[4] = {
 		&MeshRendererIDGenerator::a, 
 		&MeshRendererIDGenerator::b, 
 		&MeshRendererIDGenerator::c, 

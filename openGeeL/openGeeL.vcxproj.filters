@@ -546,6 +546,9 @@
     <ClCompile Include="renderer\meshes\meshidgenerator.cpp">
       <Filter>renderer\meshes</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\transformation\boundingbox.cpp">
+      <Filter>renderer\transformation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\texturing\texture.h">
@@ -1102,6 +1105,9 @@
     </ClInclude>
     <ClInclude Include="renderer\meshes\meshidgenerator.h">
       <Filter>renderer\meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\transformation\boundingbox.h">
+      <Filter>renderer\transformation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
