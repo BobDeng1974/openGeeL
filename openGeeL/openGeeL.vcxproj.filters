@@ -549,6 +549,12 @@
     <ClCompile Include="renderer\transformation\boundingbox.cpp">
       <Filter>renderer\transformation</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\transformation\viewfrustum.cpp">
+      <Filter>renderer\transformation</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\transformation\plane.cpp">
+      <Filter>renderer\transformation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\texturing\texture.h">
@@ -1107,6 +1113,12 @@
       <Filter>renderer\meshes</Filter>
     </ClInclude>
     <ClInclude Include="renderer\transformation\boundingbox.h">
+      <Filter>renderer\transformation</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\transformation\viewfrustum.h">
+      <Filter>renderer\transformation</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\transformation\plane.h">
       <Filter>renderer\transformation</Filter>
     </ClInclude>
   </ItemGroup>

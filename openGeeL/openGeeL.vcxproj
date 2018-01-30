@@ -286,8 +286,10 @@
     <ClCompile Include="renderer\texturing\texture.cpp" />
     <ClCompile Include="renderer\texturing\texturetoken.cpp" />
     <ClCompile Include="renderer\transformation\boundingbox.cpp" />
+    <ClCompile Include="renderer\transformation\plane.cpp" />
     <ClCompile Include="renderer\transformation\transform.cpp" />
     <ClCompile Include="renderer\transformation\transformfactory.cpp" />
+    <ClCompile Include="renderer\transformation\viewfrustum.cpp" />
     <ClCompile Include="renderer\utility\debug.cpp" />
     <ClCompile Include="renderer\utility\defaults.cpp" />
     <ClCompile Include="renderer\utility\depthreader.cpp" />
@@ -465,8 +467,10 @@
     <ClInclude Include="renderer\texturing\texturetype.h" />
     <ClInclude Include="renderer\texturing\texturewrapper.h" />
     <ClInclude Include="renderer\transformation\boundingbox.h" />
+    <ClInclude Include="renderer\transformation\plane.h" />
     <ClInclude Include="renderer\transformation\transform.h" />
     <ClInclude Include="renderer\transformation\transformfactory.h" />
+    <ClInclude Include="renderer\transformation\viewfrustum.h" />
     <ClInclude Include="renderer\utility\debug.h" />
     <ClInclude Include="renderer\utility\defaults.h" />
     <ClInclude Include="renderer\utility\depthreader.h" />
