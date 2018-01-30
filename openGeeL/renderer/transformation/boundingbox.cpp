@@ -17,7 +17,7 @@ namespace geeL {
 		: min(min)
 		, max(max) {}
 
-	AABoundingBox::AABoundingBox(const AABoundingBox & other)
+	AABoundingBox::AABoundingBox(const AABoundingBox& other)
 		: min(other.min)
 		, max(other.max) {}
 
@@ -30,6 +30,8 @@ namespace geeL {
 		max.x = std::max(max.x, point.x);
 		max.y = std::max(max.y, point.y);
 		max.z = std::max(max.z, point.z);
+
+		onChange();
 	}
 
 	void AABoundingBox::update(const AABoundingBox& box) {
@@ -96,7 +98,7 @@ namespace geeL {
 
 
 
-	TransformableBoundingBox::TransformableBoundingBox(AABoundingBox& localBox, Transform& transform)
+	TransformableBoundingBox::TransformableBoundingBox(const AABoundingBox& localBox, Transform& transform)
 		: AABoundingBox(localBox)
 		, localBox(localBox)
 		, transform(transform) {

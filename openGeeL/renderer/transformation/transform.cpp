@@ -13,7 +13,7 @@ using namespace std;
 using namespace glm;
 using glm::normalize;
 
-#define transformLock() std::lock_guard<std::mutex> guard(mutex);
+#define transformLock() std::lock_guard<std::recursive_mutex> guard(mutex);
 
 namespace geeL {
 

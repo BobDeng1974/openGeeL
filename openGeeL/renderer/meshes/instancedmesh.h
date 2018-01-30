@@ -2,6 +2,7 @@
 #define INSTANCEDMESH_H
 
 #include <string>
+#include "transformation/boundingbox.h"
 
 namespace geeL {
 
@@ -11,12 +12,13 @@ namespace geeL {
 	class Skeleton;
 	class SkinnedMesh;
 	class StaticMesh;
+	class Transform;
 
 
 	class MeshInstance {
 
 	public:
-		MeshInstance(const Mesh& mesh);
+		MeshInstance(const Mesh& mesh, Transform& transform);
 
 		virtual void draw(const Shader& shader) const = 0;
 
@@ -32,6 +34,7 @@ namespace geeL {
 	protected:
 		unsigned short id;
 		const Mesh& mesh;
+		TransformableBoundingBox box;
 
 	};
 
@@ -39,7 +42,7 @@ namespace geeL {
 	class StaticMeshInstance : public MeshInstance {
 
 	public:
-		StaticMeshInstance(const StaticMesh& mesh);
+		StaticMeshInstance(const StaticMesh& mesh, Transform& transform);
 
 		virtual void draw(const Shader& shader) const;
 
@@ -49,7 +52,7 @@ namespace geeL {
 	class SkinnedMeshInstance : public MeshInstance {
 
 	public:
-		SkinnedMeshInstance(const SkinnedMesh& mesh, const Skeleton& skeleton);
+		SkinnedMeshInstance(const SkinnedMesh& mesh, Transform& transform, const Skeleton& skeleton);
 
 		virtual void draw(const Shader& shader) const;
 		

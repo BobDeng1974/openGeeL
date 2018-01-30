@@ -59,7 +59,7 @@ namespace geeL {
 		Skeleton* skeleton;
 		SkinnedModel& skinnedModel;
 
-		void initMaterials(SceneShader& shader);
+		void initialize(SceneShader& shader);
 
 	};
 

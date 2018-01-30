@@ -6,6 +6,7 @@
 #include "glwrapper/glguards.h"
 #include "materialmapping.h"
 #include "memory/memoryobject.h"
+#include "transformation/boundingbox.h"
 #include "sceneobject.h"
 
 using namespace geeL::memory;
@@ -88,6 +89,7 @@ namespace geeL {
 		RenderMask mask;
 		const CullingMode faceCulling;
 		MemoryObject<Model> modelData;
+		TransformableBoundingBox aabb;
 		
 		std::map<SceneShader*, std::list<MaterialMapping>> materials;
 		std::list<std::function<void(MeshRenderer&, Material, Material)>> materialListeners;

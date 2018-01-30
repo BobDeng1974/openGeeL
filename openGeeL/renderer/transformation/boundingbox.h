@@ -27,8 +27,6 @@ namespace geeL {
 		//Update local bounding box to include given bounding box
 		void update(const AABoundingBox& box);
 
-		
-
 		IntersectionType intersect(const ViewFrustum& frustum) const;
 
 
@@ -55,7 +53,7 @@ namespace geeL {
 	class TransformableBoundingBox : public AABoundingBox {
 
 	public:
-		TransformableBoundingBox(AABoundingBox& localBox, Transform& transform);
+		TransformableBoundingBox(const AABoundingBox& localBox, Transform& transform);
 
 	private:
 		const AABoundingBox& localBox; 

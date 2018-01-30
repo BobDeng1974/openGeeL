@@ -23,7 +23,8 @@ namespace geeL{
 			, modelData(model)
 			, faceCulling(faceCulling)
 			, mask(RenderMask::None)
-			, id(MeshRendererIDGenerator::generateID(*this, meshCount)) {}
+			, id(MeshRendererIDGenerator::generateID(*this, meshCount))
+			, aabb(TransformableBoundingBox(modelData->getBoundingBox(), transform)){}
 
 	MeshRenderer::~MeshRenderer() {
 		for (auto it(deleteListeners.begin()); it != deleteListeners.end(); it++)
@@ -315,7 +316,7 @@ namespace geeL{
 
 	void StaticMeshRenderer::initialize(SceneShader& shader, StaticModel& model) {
 		model.iterateMeshesGeneric([&](const StaticMesh& mesh) {
-			addMesh(new StaticMeshInstance(mesh));
+			addMesh(new StaticMeshInstance(mesh, transform));
 		});
 
 		iterateMeshes([&](const MeshInstance& mesh) {
@@ -329,7 +330,7 @@ namespace geeL{
 	void StaticMeshRenderer::initialize(SceneShader& shader, std::list<const StaticMesh*>& newMeshes) {
 		for (auto it(newMeshes.begin()); it != newMeshes.end(); it++) {
 			const StaticMesh& mesh = **it;
-			addMesh(new StaticMeshInstance(mesh));
+			addMesh(new StaticMeshInstance(mesh, transform));
 		}
 
 		iterateMeshes([&](const MeshInstance& mesh) {
@@ -351,7 +352,7 @@ namespace geeL{
 			, skinnedModel(*model)
 			, skeleton(new Skeleton(model->getSkeleton())) {
 
-		initMaterials(shader);
+		initialize(shader);
 
 		//Add transform of skeleton to the transform of the actual model
 		//and therefore into the whole scene structure. Thus, updating 
@@ -377,9 +378,9 @@ namespace geeL{
 		return RenderMode::Skinned;
 	}
 
-	void SkinnedMeshRenderer::initMaterials(SceneShader& shader) {
+	void SkinnedMeshRenderer::initialize(SceneShader& shader) {
 		skinnedModel.iterateMeshesGeneric([&](const SkinnedMesh& mesh) {
-			addMesh(new SkinnedMeshInstance(mesh, *skeleton));
+			addMesh(new SkinnedMeshInstance(mesh, transform, *skeleton));
 		});
 
 		iterateMeshes([&](const MeshInstance& mesh) {

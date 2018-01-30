@@ -3,9 +3,10 @@
 
 namespace geeL {
 
-	MeshInstance::MeshInstance(const Mesh& mesh)
+	MeshInstance::MeshInstance(const Mesh& mesh, Transform& transform)
 		: mesh(mesh)
-		, id(0) {}
+		, id(0)
+		, box(TransformableBoundingBox(mesh.getBoundingBox(), transform)){}
 
 	bool MeshInstance::operator==(const Mesh& mesh) const {
 		return &this->mesh == &mesh;
@@ -32,16 +33,16 @@ namespace geeL {
 	}
 
 
-	StaticMeshInstance::StaticMeshInstance(const StaticMesh& mesh)
-		: MeshInstance(mesh) {}
+	StaticMeshInstance::StaticMeshInstance(const StaticMesh& mesh, Transform& transform)
+		: MeshInstance(mesh, transform) {}
 
 	void StaticMeshInstance::draw(const Shader& shader) const {
 		mesh.draw(shader);
 	}
 
 
-	SkinnedMeshInstance::SkinnedMeshInstance(const SkinnedMesh& mesh, const Skeleton& skeleton)
-		: MeshInstance(mesh)
+	SkinnedMeshInstance::SkinnedMeshInstance(const SkinnedMesh& mesh, Transform& transform, const Skeleton& skeleton)
+		: MeshInstance(mesh, transform)
 		, skinnedMesh(mesh)
 		, skeleton(skeleton) {}
 
