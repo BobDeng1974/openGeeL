@@ -44,13 +44,13 @@ namespace geeL {
 	public:
 		ChangeActuator();
 
-		void addListener(std::function<void(const T&)> listener);
+		void addListener(std::function<void(const T&)> listener) const;
 
 	protected:
 		void onChange();
 
 	private:
-		std::list<std::function<void(const T&)>> listeners;
+		mutable std::list<std::function<void(const T&)>> listeners;
 
 	};
 
@@ -88,7 +88,7 @@ namespace geeL {
 	}
 
 	template<typename T>
-	inline void ChangeActuator<T>::addListener(std::function<void(const T&)> listener) {
+	inline void ChangeActuator<T>::addListener(std::function<void(const T&)> listener) const {
 		listeners.push_back(listener);
 	}
 
