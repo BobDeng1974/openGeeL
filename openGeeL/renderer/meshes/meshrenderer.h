@@ -29,12 +29,11 @@ namespace geeL {
 			CullingMode faceCulling = CullingMode::cullFront,
 			const std::string& name = "MeshRenderer");
 
-
 		virtual RenderMode getRenderMode() const;
 
 	private:
-		void initMaterials(SceneShader& shader, StaticModel& model);
-		void initMaterials(SceneShader& shader, std::list<const StaticMesh*>& meshes);
+		void initialize(SceneShader& shader, StaticModel& model);
+		void initialize(SceneShader& shader, std::list<const StaticMesh*>& meshes);
 
 	};
 

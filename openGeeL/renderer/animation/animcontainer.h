@@ -19,7 +19,7 @@ namespace geeL {
 		AnimationContainer();
 		virtual ~AnimationContainer();
 
-		//Add animation. Memory will be managed by this model
+		//Add animation. Memory will be managed by this container
 		virtual void addAnimation(std::unique_ptr<AnimationMemory> animation);
 
 		//Get animation with given name. Returns nullptr if no such animation exists

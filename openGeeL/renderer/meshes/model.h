@@ -8,6 +8,7 @@
 #include <map>
 #include "animation/animcontainer.h"
 #include "renderer/glstructures.h"
+#include "transformation/boundingbox.h"
 #include "mesh.h"
 
 namespace geeL {
@@ -35,10 +36,13 @@ namespace geeL {
 		virtual std::string toString() const;
 		const std::string& getPath() const;
 
+		const AABoundingBox& getBoundingBox() const;
+
 		void* operator new(size_t size);
 		void  operator delete(void* pointer);
 
 	protected:
+		AABoundingBox aabb;
 		std::string path;
 
 	};
@@ -83,6 +87,8 @@ namespace geeL {
 		SkinnedModel() : GenericModel(), AnimationContainer() {}
 		SkinnedModel(const std::string& path) : GenericModel(path), AnimationContainer() {}
 
+		virtual void addAnimation(std::unique_ptr<AnimationMemory> animation);
+
 	};
 
 	template<typename MeshType>
@@ -107,6 +113,10 @@ namespace geeL {
 
 	template<typename MeshType>
 	inline MeshType& GenericModel<MeshType>::addMesh(MeshType&& mesh) {
+		//Update bounding box oh whole model to fit given mesh as well
+		const AABoundingBox& box = mesh.getBoundingBox();
+		aabb.update(box);
+
 		meshes.push_back(std::move(mesh));
 
 		return meshes.back();

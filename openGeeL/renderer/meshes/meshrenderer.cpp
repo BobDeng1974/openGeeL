@@ -294,7 +294,7 @@ namespace geeL{
 		const std::string& name)
 			: MeshRenderer(transform, model, model->meshCount(), faceCulling, name) {
 	
-		initMaterials(shader, *model);
+		initialize(shader, *model);
 	}
 
 	StaticMeshRenderer::StaticMeshRenderer(Transform& transform, 
@@ -302,10 +302,10 @@ namespace geeL{
 		MemoryObject<StaticModel> model,
 		std::list<const StaticMesh*>& meshes,
 		CullingMode faceCulling, 
-		const std::string & name)
+		const std::string& name)
 			: MeshRenderer(transform, model, meshes.size(), faceCulling, name) {
 
-		initMaterials(shader, meshes);
+		initialize(shader, meshes);
 	}
 
 
@@ -313,7 +313,7 @@ namespace geeL{
 		return RenderMode::Static;
 	}
 
-	void StaticMeshRenderer::initMaterials(SceneShader& shader, StaticModel& model) {
+	void StaticMeshRenderer::initialize(SceneShader& shader, StaticModel& model) {
 		model.iterateMeshesGeneric([&](const StaticMesh& mesh) {
 			addMesh(new StaticMeshInstance(mesh));
 		});
@@ -326,7 +326,7 @@ namespace geeL{
 		});
 	}
 
-	void StaticMeshRenderer::initMaterials(SceneShader& shader, std::list<const StaticMesh*>& newMeshes) {
+	void StaticMeshRenderer::initialize(SceneShader& shader, std::list<const StaticMesh*>& newMeshes) {
 		for (auto it(newMeshes.begin()); it != newMeshes.end(); it++) {
 			const StaticMesh& mesh = **it;
 			addMesh(new StaticMeshInstance(mesh));

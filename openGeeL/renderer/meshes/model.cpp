@@ -1,3 +1,4 @@
+#include "animation/animation.h"
 #include "memory/memory.h"
 #include "appmanager.h"
 #include "model.h"
@@ -26,6 +27,10 @@ namespace geeL {
 		return path;
 	}
 
+	const AABoundingBox& Model::getBoundingBox() const {
+		return aabb;
+	}
+
 	void* Model::operator new(size_t size) {
 		Memory& memory = ApplicationManager::getCurrentMemory();
 		return memory.allocate(size);
@@ -36,5 +41,10 @@ namespace geeL {
 		memory.deallocate(pointer);
 	}
 
-
+	
+	void SkinnedModel::addAnimation(std::unique_ptr<AnimationMemory> animation) {
+		//TODO: Adjust AABB to surround model in every possible animation frame
+		AnimationContainer::addAnimation(std::move(animation));
+	}
+	
 }

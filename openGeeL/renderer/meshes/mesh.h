@@ -10,6 +10,7 @@
 #include "memory/memoryobject.h"
 #include "memory/poolallocator.h"
 #include "renderer/glstructures.h"
+#include "transformation/boundingbox.h"
 #include "animation/bone.h"
 
 #define BONECOUNT 4
@@ -59,6 +60,7 @@ namespace geeL {
 	public:
 		Mesh() {}
 		Mesh(const std::string& name, MemoryObject<MaterialContainer> material);
+		Mesh(const std::string& name, MemoryObject<MaterialContainer> material, const AABoundingBox& box);
 		Mesh(Mesh&& other);
 		virtual ~Mesh() {}
 
@@ -75,6 +77,7 @@ namespace geeL {
 		virtual std::string toString() const;
 		const std::string& getName() const;
 		MaterialContainer& getMaterialContainer() const;
+		const AABoundingBox& getBoundingBox() const;
 
 		void* operator new(size_t size);
 		void  operator delete(void* pointer);
@@ -82,6 +85,7 @@ namespace geeL {
 	protected:
 		std::string name;
 		MemoryObject<MaterialContainer> material;
+		AABoundingBox aabb;
 
 	};
 
@@ -115,6 +119,9 @@ namespace geeL {
 		unsigned int vao, vbo, ebo;
 		std::vector<VertexType, MemoryAllocator<VertexType>> vertices;
 		std::vector<unsigned int, MemoryAllocator<unsigned int>> indices;
+
+	private:
+		void computeBoundingBox();
 
 	};
 
@@ -204,7 +211,10 @@ namespace geeL {
 		MemoryObject<MaterialContainer> material)
 			: Mesh(name, material)
 			, vertices(std::move(vertices))
-			, indices(std::move(indices)) {}
+			, indices(std::move(indices)) {
+	
+		computeBoundingBox();
+	}
 
 	template<typename VertexType>
 	inline GenericMesh<VertexType>::GenericMesh(GenericMesh<VertexType>&& other)
@@ -264,6 +274,12 @@ namespace geeL {
 			i = vertices.size() - 1;
 
 		return indices[i];
+	}
+
+	template<typename VertexType>
+	inline void GenericMesh<VertexType>::computeBoundingBox() {
+		for (int i = 0; i < vertices.size(); i++)
+			aabb.update(vertices[i].position);
 	}
 
 }

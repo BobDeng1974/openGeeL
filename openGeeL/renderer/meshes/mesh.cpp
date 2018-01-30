@@ -17,6 +17,11 @@ namespace geeL {
 		: name(name)
 		, material(material) {}
 
+	Mesh::Mesh(const std::string & name, MemoryObject<MaterialContainer> material, const AABoundingBox & box)
+		: name(name)
+		, material(material)
+		, aabb(box) {}
+
 	Mesh::Mesh(Mesh&& other)
 		: name(std::move(other.name))
 		, material(other.material) {
@@ -38,6 +43,10 @@ namespace geeL {
 
 	MaterialContainer& Mesh::getMaterialContainer() const {
 		return *material;
+	}
+
+	const AABoundingBox& Mesh::getBoundingBox() const {
+		return aabb;
 	}
 
 	void* Mesh::operator new(size_t size) {
