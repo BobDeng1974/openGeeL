@@ -89,6 +89,8 @@ namespace geeL {
 		void update();
 		void bind(const Shader& shader, const std::string& name) const;
 
+		//Indicates whether transform has changed since last update
+		bool hasUpdated() const;
 		bool operator==(const Transform& b) const;
 		bool operator!=(const Transform& b) const;
 		Transform& operator= (const Transform& other);
@@ -135,10 +137,6 @@ namespace geeL {
 
 		void changeParentInternal(Transform& newParent);
 		void removeChildInternal(Transform& child);
-
-		//Returns true if the transform has changed during the 
-		//current cycle (since last 'update' call)
-		virtual bool hasUpdated() const;
 
 		std::string toStringRecursive(const std::string& offset, unsigned int depth) const;
 

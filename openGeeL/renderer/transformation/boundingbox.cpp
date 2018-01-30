@@ -1,5 +1,7 @@
 #include <algorithm>
+#include <iostream>
 #include <limits>
+#include "transform.h"
 #include "viewfrustum.h"
 #include "boundingbox.h"
 
@@ -11,6 +13,14 @@ namespace geeL {
 		: min(vec3(std::numeric_limits<float>::max()))
 		, max(vec3(std::numeric_limits<float>::min())) {}
 
+	AABoundingBox::AABoundingBox(const glm::vec3& min, const glm::vec3& max)
+		: min(min)
+		, max(max) {}
+
+	AABoundingBox::AABoundingBox(const AABoundingBox & other)
+		: min(other.min)
+		, max(other.max) {}
+
 
 	void AABoundingBox::update(const glm::vec3& point) {
 		min.x = std::min(min.x, point.x);
@@ -20,6 +30,11 @@ namespace geeL {
 		max.x = std::max(max.x, point.x);
 		max.y = std::max(max.y, point.y);
 		max.z = std::max(max.z, point.z);
+	}
+
+	void AABoundingBox::update(const AABoundingBox& box) {
+		update(box.getMin());
+		update(box.getMax());
 	}
 
 	const glm::vec3& AABoundingBox::getMin() const {
@@ -56,6 +71,11 @@ namespace geeL {
 		return p;
 	}
 
+	std::string AABoundingBox::toString() const {
+		return "AABB: (" + std::to_string(min.x) + ", " + std::to_string(min.y) + ", " + std::to_string(min.z) + ") - ("
+			+ std::to_string(max.x) + ", " + std::to_string(max.y) + ", " + std::to_string(max.z) + ")";
+	}
+
 	IntersectionType AABoundingBox::intersect(const ViewFrustum& frustum) const {
 		IntersectionType type = IntersectionType::Inside;
 
@@ -72,6 +92,28 @@ namespace geeL {
 		}
 
 		return type;
+	}
+
+
+
+	TransformableBoundingBox::TransformableBoundingBox(AABoundingBox& localBox, Transform& transform)
+		: AABoundingBox(localBox)
+		, localBox(localBox)
+		, transform(transform) {
+
+		transform.addChangeListener([this](const Transform& transform) {
+			updateGlobal();
+		});
+
+		localBox.addListener([this](const AABoundingBox& box) {
+			updateGlobal();
+		});
+
+	}
+
+	void TransformableBoundingBox::updateGlobal() {
+		min = vec3(transform.getMatrix() * vec4(localBox.getMin(), 1.f));
+		max = vec3(transform.getMatrix() * vec4(localBox.getMax(), 1.f));
 	}
 
 }
