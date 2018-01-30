@@ -38,6 +38,23 @@ namespace geeL {
 	};
 
 
+	template<typename T>
+	class ChangeActuator {
+
+	public:
+		ChangeActuator();
+
+		void addListener(std::function<void(const T&)> listener);
+
+	protected:
+		void onChange();
+
+	private:
+		std::list<std::function<void(const T&)>> listeners;
+
+	};
+
+
 
 	template<typename Data>
 	inline void DataEventActuator<Data>::addListener(DataEventListener<Data>& listener) {
@@ -63,6 +80,24 @@ namespace geeL {
 			auto& listener = **it;
 			listener.onRemove(data);
 		}
+	}
+
+	template<typename T>
+	inline ChangeActuator<T>::ChangeActuator() {
+		static_assert(std::is_base_of<ChangeActuator<T>, T>::value, "T has to have type of inheriting child class");
+	}
+
+	template<typename T>
+	inline void ChangeActuator<T>::addListener(std::function<void(const T&)> listener) {
+		listeners.push_back(listener);
+	}
+
+	template<typename T>
+	inline void ChangeActuator<T>::onChange() {
+		T* t = static_cast<T*>(this);
+
+		for (auto it(listeners.begin()); it != listeners.end(); it++)
+			(*it)(*t);
 	}
 
 }
