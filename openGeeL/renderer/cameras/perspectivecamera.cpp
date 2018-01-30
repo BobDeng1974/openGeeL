@@ -17,38 +17,34 @@ namespace geeL {
 		float nearClip, 
 		float farClip, 
 		const std::string& name)
-			: SceneCamera(transform, nearClip, farClip, name)
-			, fov(fov)
-			, width(float(width))
-			, height(float(height))
-			, aspectRatio(float(width) / float(height)) {
+			: SceneCamera(transform, 
+				ViewFrustum(fov, float(width) / float(height), 
+					nearClip, farClip), 
+				name) {
 	
 		computeProjectionMatrix();
 	}
 
 
 	void PerspectiveCamera::computeProjectionMatrix()  {
-		setProjectionMatrix(perspective(fov(), aspectRatio(), nearClip(), farClip()));
+		setProjectionMatrix(perspective(frustum.getFOV(), frustum.getAspectRatio(), 
+			frustum.getNearPlane(), frustum.getFarPlane()));
 	}
 
-	
-
 	float PerspectiveCamera::getFieldOfView() const {
-		return fov;
+		return frustum.getFOV();
 	}
 
 	void PerspectiveCamera::setFieldOfView(float fov) {
 		if (fov > 1.f && fov < 170.f) {
-			this->fov = fov;
+			frustum.setFOV(fov);
 			computeProjectionMatrix();
 		}
-			
 	}
 
 	std::vector<vec3> PerspectiveCamera::getViewBorders(float near, float far) const {
-		float invAspect = height / width;
-		float tanHor = tanf(glm::radians(fov / 2.f));
-		float tanVer = tanf(glm::radians((fov * invAspect) / 2.f));
+		float tanHor = tanf(glm::radians(frustum.getFOV() / 2.f));
+		float tanVer = tanf(glm::radians((frustum.getFOV() * frustum.getAspectRatioInverse()) / 2.f));
 
 		float xNear = near * tanHor;
 		float xFar = far * tanHor;

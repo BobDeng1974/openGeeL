@@ -1,3 +1,5 @@
+#include <iostream>
+#include <string>
 #include <cmath>
 #include <glm.hpp>
 #include "viewfrustum.h"
@@ -15,16 +17,16 @@ namespace geeL {
 		, far(farPlane) {}
 
 
-	void ViewFrustum::updateFrustum(const vec3& position, const vec3& direction, const vec3& up) {
+	void ViewFrustum::update(const vec3& position, const vec3& center, const vec3& up) {
 
 		//Compute camera axis
-		vec3 z = normalize(position - direction);
+		vec3 z = normalize(position - center);
 		vec3 x = normalize(cross(up, z));
 		vec3 y = normalize(cross(z, x));
 
 		//Compute center positions
-		vec3 nc = position - z * near;
-		vec3 fc = position - z * far;
+		vec3 nc = position - z * near();
+		vec3 fc = position - z * far();
 
 		//Compute frustum planes with reference point and normal
 
@@ -56,6 +58,28 @@ namespace geeL {
 		planes[1] = Plane(p, normal);
 
 	}
+
+
+	float ViewFrustum::getFOV() const {
+		return fov;
+	}
+
+	float ViewFrustum::getAspectRatio() const {
+		return aspect;
+	}
+
+	float ViewFrustum::getAspectRatioInverse() const {
+		return nearHeight / nearWidth;
+	}
+
+	float ViewFrustum::getNearPlane() const {
+		return near;
+	}
+
+	float ViewFrustum::getFarPlane() const {
+		return far;
+	}
+
 
 	void ViewFrustum::setFOV(float value) {
 		if (fov != value) {
@@ -98,6 +122,8 @@ namespace geeL {
 
 		farHeight = far * tan;
 		farWidth = farHeight * aspect;
+
+		std::cout << std::to_string(nearHeight /nearWidth) << ", " << std::to_string(farHeight/farWidth) << "\n";
 	}
 
 }

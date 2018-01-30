@@ -8,6 +8,7 @@ namespace geeL {
 		, id(0)
 		, box(TransformableBoundingBox(mesh.getBoundingBox(), transform)){}
 
+
 	bool MeshInstance::operator==(const Mesh& mesh) const {
 		return &this->mesh == &mesh;
 	}

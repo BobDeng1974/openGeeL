@@ -25,9 +25,8 @@ namespace geeL {
 		virtual std::vector<glm::vec3> getViewBorders(float near, float far) const;
 
 	private:
-		AtomicWrapper<float> fov, width, height, aspectRatio;
-
 		virtual void computeProjectionMatrix();
+
 	};
 }
 

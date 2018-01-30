@@ -6,6 +6,7 @@
 #include <vector>
 #include <vec3.hpp>
 #include <mat4x4.hpp>
+#include "transformation/viewfrustum.h"
 #include "objectwrapper.h"
 #include "sceneobject.h"
 
@@ -85,8 +86,7 @@ namespace geeL {
 	public:
 		//Defines a movable camera
 		SceneCamera(Transform& transform, 
-			float nearClip, 
-			float farClip, 
+			const ViewFrustum& frustum,
 			const std::string& name = "Camera");
 
 		//Update view and projection matrices
@@ -106,7 +106,7 @@ namespace geeL {
 		virtual std::vector<glm::vec3> getViewBorders(float near, float far) const = 0;
 
 	protected:
-		AtomicWrapper<float> nearClip, farClip;
+		ViewFrustum frustum;
 		std::list<std::function<void(const SceneCamera&)>> callbacks;
 
 		void computeViewMatrix();

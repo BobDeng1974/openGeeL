@@ -198,12 +198,10 @@ namespace geeL {
 
 
 	SceneCamera::SceneCamera(Transform& transform, 
-		float nearClip, 
-		float farClip, const 
-		std::string& name)
+		const ViewFrustum& frustum,
+		const std::string& name)
 			: Camera(transform, name)
-			, nearClip(nearClip)
-			, farClip(farClip) {}
+			, frustum(frustum) {}
 
 
 	void SceneCamera::lateUpdate() {
@@ -213,27 +211,32 @@ namespace geeL {
 
 	
 	void SceneCamera::computeViewMatrix() {
-		setViewMatrix(transform.lookAt());
+		if (transform.hasUpdated()) {
+			setViewMatrix(transform.lookAt());
+
+			frustum.update(transform.getPosition(), transform.getPosition() + transform.getForwardDirection(), vec3(0, 1, 0));
+		}
+			
 	}
 
 	const float SceneCamera::getNearPlane() const {
-		return nearClip;
+		return frustum.getNearPlane();
 	}
 
 	const float SceneCamera::getFarPlane() const {
-		return farClip;
+		return frustum.getFarPlane();
 	}
 
 	void SceneCamera::setNearPlane(float near) {
 		if (near > 0.f) {
-			nearClip = near;
+			frustum.setNearPlane(near);
 			onViewingPlaneChange();
 		}
 	}
 
 	void SceneCamera::setFarPlane(float far) {
-		if (far > nearClip) {
-			farClip = far;
+		if (far > frustum.getNearPlane()) {
+			frustum.setFarPlane(far);
 			onViewingPlaneChange();
 		}
 	}

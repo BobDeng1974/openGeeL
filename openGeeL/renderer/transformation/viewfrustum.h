@@ -2,6 +2,7 @@
 #define VIEWFRUSTUM_H
 
 #include <vec3.hpp>
+#include "objectwrapper.h"
 #include "plane.h"
 
 namespace geeL {
@@ -18,8 +19,14 @@ namespace geeL {
 	public:
 		ViewFrustum(float fov, float aspectRatio, float nearPlane, float farPlane);
 
+		//Update frustm with transformational data
+		void update(const glm::vec3& position, const glm::vec3& center, const glm::vec3& up);
 
-		void updateFrustum(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up);
+		float getFOV() const;
+		float getAspectRatio() const;
+		float getAspectRatioInverse() const;
+		float getNearPlane() const;
+		float getFarPlane() const;
 
 		void setFOV(float value);
 		void setAspectRatio(float value);
@@ -29,7 +36,7 @@ namespace geeL {
 		const Plane& getPlane(unsigned int side) const;
 
 	private:
-		float near, far, aspect, fov, tan;
+		AtomicWrapper<float> near, far, aspect, fov, tan;
 		float nearWidth, nearHeight, farWidth, farHeight;
 		Plane planes[6];
 
