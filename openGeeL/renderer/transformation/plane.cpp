@@ -22,7 +22,15 @@ namespace geeL {
 	}
 
 
-	float Plane::getDistance(const glm::vec3& point) {
+	const vec3& Plane::getPoint() const {
+		return point;
+	}
+
+	const vec3& Plane::getNormal() const {
+		return normal;
+	}
+
+	float Plane::getDistance(const glm::vec3& point) const {
 		return dot(normal, point - this->point);
 	}
 

@@ -87,6 +87,11 @@ namespace geeL {
 		}
 	}
 
+	const Plane& ViewFrustum::getPlane(unsigned int side) const {
+		unsigned int s = (side > 5) ? 5 : side;
+		return planes[s];
+	}
+
 	void ViewFrustum::updateParameters() {
 		nearHeight = near * tan;
 		nearWidth = nearHeight * aspect;

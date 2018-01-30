@@ -26,6 +26,8 @@ namespace geeL {
 		void setNearPlane(float value);
 		void setFarPlane(float value);
 
+		const Plane& getPlane(unsigned int side) const;
+
 	private:
 		float near, far, aspect, fov, tan;
 		float nearWidth, nearHeight, farWidth, farHeight;

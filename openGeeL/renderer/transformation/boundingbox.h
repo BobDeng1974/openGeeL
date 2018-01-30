@@ -5,6 +5,10 @@
 
 namespace geeL {
 
+	enum class IntersectionType;
+	class ViewFrustum;
+
+
 	class AABoundingBox {
 
 	public:
@@ -24,6 +28,9 @@ namespace geeL {
 
 		//Get maximum point relative to given normal
 		glm::vec3 getMax(const glm::vec3& normal) const;
+
+
+		IntersectionType intersect(const ViewFrustum& frustum) const;
 
 	private:
 		glm::vec3 min, max;

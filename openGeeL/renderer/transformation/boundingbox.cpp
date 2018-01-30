@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <limits>
+#include "viewfrustum.h"
 #include "boundingbox.h"
 
 using namespace glm;
@@ -53,6 +54,24 @@ namespace geeL {
 			p.z = max.z;
 
 		return p;
+	}
+
+	IntersectionType AABoundingBox::intersect(const ViewFrustum& frustum) const {
+		IntersectionType type = IntersectionType::Inside;
+
+		for (short i = 0; i < 6; i++) {
+			const Plane& plane = frustum.getPlane(i);
+
+			vec3 p = getMax(plane.getNormal());
+			if (plane.getDistance(p) < 0.f)
+				return IntersectionType::Outside;
+
+			p = getMin(plane.getNormal());
+			if (plane.getDistance(p) < 0.f)
+				type = IntersectionType::Intersect;
+		}
+
+		return type;
 	}
 
 }
