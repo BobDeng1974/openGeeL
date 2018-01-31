@@ -52,8 +52,9 @@ public:
 				meshTransform6, "Sponza");
 			MeshRenderer& sponza = scene.addMeshRenderer(std::move(sponzaPtr));
 
-			//DynamicRenderTexture& renderTex = DynamicRenderTexture(camera, Resolution(1000));
-			//renderer.addRenderTexture(renderTex);
+
+			//MemoryObject<DynamicRenderTexture> renderTex = new DynamicRenderTexture(camera, Resolution(1000));
+			//renderer.addRenderTexture(*renderTex);
 
 			sponza.iterateMaterials([&](MaterialContainer& container) {
 				if (container.name == "fabric_g") {

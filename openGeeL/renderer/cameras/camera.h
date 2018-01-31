@@ -52,8 +52,8 @@ namespace geeL {
 		const glm::vec3& GetOriginInViewSpace() const;
 		const ViewFrustum& getFrustum() const;
 
-		void setViewMatrix(const glm::mat4& view);
-		void setProjectionMatrix(const glm::mat4& projection);
+		virtual void setViewMatrix(const glm::mat4& view);
+		virtual void setProjectionMatrix(const glm::mat4& projection);
 
 	protected:
 		ViewFrustum frustum;
@@ -75,6 +75,11 @@ namespace geeL {
 
 	public:
 		ManualCamera(Transform& transform, const std::string&name = "Camera");
+
+		//Update view matrix and frustum with transformational changes
+		void injectTransform();
+
+		virtual void setProjectionMatrix(const glm::mat4& projection);
 
 	};
 

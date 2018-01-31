@@ -438,8 +438,11 @@ namespace geeL {
 		shader.loadSceneInformation(lightManager, camera);
 		shader.initDraw();
 
-		iterRenderObjects([&shader](const MeshRenderer& object) {
-			if (object.isActive())
+		iterRenderObjects([&shader, &camera](const MeshRenderer& object) {
+			//Use frustum culling if a camera has been attached
+			bool isVisible = !((camera != nullptr) && !object.isVisible(*camera));
+
+			if (object.isActive() && isVisible)
 				object.drawExclusive(shader);
 		});
 	}

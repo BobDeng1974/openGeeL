@@ -207,6 +207,19 @@ namespace geeL {
 	ManualCamera::ManualCamera(Transform& transform, const std::string& name)
 		: Camera(transform, ViewFrustum(0.f, 0.f, 0.f, 0.f), name) {}
 
+	void ManualCamera::injectTransform() {
+		if (transform.hasUpdated()) {
+			setViewMatrix(transform.lookAt());
+			frustum.update(transform);
+		}
+	}
+
+	void ManualCamera::setProjectionMatrix(const glm::mat4& projection) {
+		Camera::setProjectionMatrix(projection);
+
+		frustum.update(transform);
+	}
+
 
 
 	SceneCamera::SceneCamera(Transform& transform, 
