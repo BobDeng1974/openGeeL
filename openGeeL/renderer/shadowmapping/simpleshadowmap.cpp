@@ -276,6 +276,7 @@ namespace geeL {
 	void SimpleDirectionalLightMap::computeLightTransform() {
 		float a = farPlane;
 		vec3 position = light.transform.getPosition();
+
 		mat4 projection = ortho(-a, a, -a, a, -a, a);
 		mat4 view = lookAt(position, position - light.transform.getForwardDirection(), vec3(0.f, 1.f, 0.f));
 

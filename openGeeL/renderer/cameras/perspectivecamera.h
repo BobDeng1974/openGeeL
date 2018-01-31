@@ -24,7 +24,14 @@ namespace geeL {
 
 		virtual std::vector<glm::vec3> getViewBorders(float near, float far) const;
 
+		virtual const ViewFrustum& getFrustum() const;
+
+	protected:
+		virtual ViewFrustum& getFrustum();
+
 	private:
+		PerspectiveFrustum frustum;
+
 		virtual void computeProjectionMatrix();
 
 	};

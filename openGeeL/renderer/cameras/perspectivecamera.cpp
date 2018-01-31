@@ -17,10 +17,9 @@ namespace geeL {
 		float nearClip, 
 		float farClip, 
 		const std::string& name)
-			: SceneCamera(transform, 
-				ViewFrustum(fov, float(width) / float(height), 
-					nearClip, farClip), 
-				name) {
+			: SceneCamera(transform, name)
+			, frustum(PerspectiveFrustum(fov, float(width) / float(height),
+				nearClip, farClip)) {
 	
 		computeProjectionMatrix();
 	}
@@ -62,6 +61,14 @@ namespace geeL {
 			vec3(-xFar, -yFar, far) };
 
 		return corners;
+	}
+
+	const ViewFrustum& PerspectiveCamera::getFrustum() const {
+		return frustum;
+	}
+
+	ViewFrustum& PerspectiveCamera::getFrustum() {
+		return frustum;
 	}
 
 	

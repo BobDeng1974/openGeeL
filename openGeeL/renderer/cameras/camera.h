@@ -50,17 +50,19 @@ namespace geeL {
 		glm::vec3 TranslateToWorldSpace(const glm::vec3& vector) const;
 
 		const glm::vec3& GetOriginInViewSpace() const;
-		const ViewFrustum& getFrustum() const;
+		virtual const ViewFrustum& getFrustum() const = 0;
 
 		virtual void setViewMatrix(const glm::vec3& position, const glm::vec3& center, const glm::vec3& up);
 		virtual void setViewMatrix(const glm::mat4& view);
 		virtual void setProjectionMatrix(const glm::mat4& projection);
 
 	protected:
-		ViewFrustum frustum;
 		mutable std::mutex cameraMutex;
 
-		Camera(Transform& transform, const ViewFrustum& frustum, const std::string& name = "Camera");
+		Camera(Transform& transform, const std::string& name = "Camera");
+
+
+		virtual ViewFrustum& getFrustum() = 0;
 
 	private:
 		glm::vec3 originViewSpace;
@@ -75,7 +77,8 @@ namespace geeL {
 	class ManualCamera : public Camera {
 
 	public:
-		ManualCamera(Transform& transform, const std::string&name = "Camera");
+		ManualCamera(Transform& transform, std::unique_ptr<ViewFrustum> frustum, 
+			const std::string&name = "Camera");
 
 		//Update view matrix and frustum with transformational changes
 		void injectTransform();
@@ -84,7 +87,15 @@ namespace geeL {
 		virtual void setViewMatrix(const glm::mat4& view);
 		virtual void setProjectionMatrix(const glm::mat4& projection);
 
+		virtual const ViewFrustum& getFrustum() const;
+		void setFrustum(std::unique_ptr<ViewFrustum> frustum);
+
+	protected:
+		virtual ViewFrustum& getFrustum();
+
 	private:
+		std::unique_ptr<ViewFrustum> frustum;
+
 		void updateFrustum();
 
 	};
@@ -95,9 +106,7 @@ namespace geeL {
 
 	public:
 		//Defines a movable camera
-		SceneCamera(Transform& transform, 
-			const ViewFrustum& frustum,
-			const std::string& name = "Camera");
+		SceneCamera(Transform& transform, const std::string& name = "Camera");
 
 		//Update view and projection matrices
 		virtual void lateUpdate();

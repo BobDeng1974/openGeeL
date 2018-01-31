@@ -11,8 +11,6 @@
 #include "utility/rendertime.h"
 #include "appglobals.h"
 
-#define PI 3.1415926535
-
 #define cameraLock() std::lock_guard<std::mutex> guard(cameraMutex);
 #define sceneCameraLock() std::lock_guard<std::mutex> guard(cameraMutex);
 
@@ -21,9 +19,8 @@ using namespace glm;
 
 namespace geeL {
 
-	Camera::Camera(Transform& transform, const ViewFrustum& frustum, const string& name)
-		: SceneObject(transform, name)
-		, frustum(frustum) {}
+	Camera::Camera(Transform& transform, const string& name)
+		: SceneObject(transform, name) {}
 
 	
 	mat4 Camera::getViewMatrix() const {
@@ -164,15 +161,6 @@ namespace geeL {
 		return originViewSpace;
 	}
 
-	const ViewFrustum& Camera::getFrustum() const {
-#if MULTI_THREADING_SUPPORT
-		cameraLock();
-#endif
-
-		return frustum;
-	}
-
-
 
 	void Camera::setViewMatrix(const glm::vec3& position, const glm::vec3& center, const glm::vec3& up) {
 #if MULTI_THREADING_SUPPORT
@@ -204,33 +192,27 @@ namespace geeL {
 #endif
 
 		projectionMatrix = projection;
-
-		//Read frustum parameters from new projection matrix
-		double fov = 2.0 * atan(1.0 / projection[1][1]) * 180.0 / PI;
-		float aspect = projection[1][1] / projection[0][0];
-
-		float near = (2.f * projection[3][2]) / (2.f * projection[2][2] - 2.f);
-		float far = ((projection[2][2] - 1.f) * near) / (projection[2][2] + 1.f);
-
-		frustum.setParameters(float(fov), aspect, near, far);
+		getFrustum().setParameters(projection);
 	}
 
 
 
-	ManualCamera::ManualCamera(Transform& transform, const std::string& name)
-		: Camera(transform, ViewFrustum(0.f, 0.f, 0.f, 0.f), name) {}
+	ManualCamera::ManualCamera(Transform& transform, std::unique_ptr<ViewFrustum> frustum, const std::string& name)
+		: Camera(transform, name)
+		, frustum(std::move(frustum)) {}
+
 
 	void ManualCamera::injectTransform() {
 		if (transform.hasUpdated()) {
 			setViewMatrix(transform.lookAt());
-			frustum.update(transform);
+			getFrustum().update(transform);
 		}
 	}
 
 	void ManualCamera::setViewMatrix(const glm::vec3& position, const glm::vec3& center, const glm::vec3& up) {
 		Camera::setViewMatrix(position, center, up);
 
-		frustum.update(position, center, up);
+		getFrustum().update(position, center, up);
 	}
 
 	void ManualCamera::setViewMatrix(const glm::mat4& view) {
@@ -245,6 +227,18 @@ namespace geeL {
 		updateFrustum();
 	}
 
+	const ViewFrustum& ManualCamera::getFrustum() const {
+		return *frustum;
+	}
+
+	void ManualCamera::setFrustum(std::unique_ptr<ViewFrustum> frustum) {
+		this->frustum = std::move(frustum);
+	}
+
+	ViewFrustum& ManualCamera::getFrustum() {
+		return *frustum;
+	}
+
 	void ManualCamera::updateFrustum() {
 		const glm::mat4& inv = getInverseViewMatrix();
 
@@ -252,15 +246,13 @@ namespace geeL {
 		vec3 forward = -vec3(inv[2][0], inv[2][1], inv[2][2]);
 		vec3 up = vec3(inv[1][0], inv[1][1], inv[1][2]);
 
-		frustum.update(position, position + forward, up);
+		getFrustum().update(position, position + forward, up);
 	}
 
 
 
-	SceneCamera::SceneCamera(Transform& transform, 
-		const ViewFrustum& frustum,
-		const std::string& name)
-			: Camera(transform, frustum, name) {}
+	SceneCamera::SceneCamera(Transform& transform, const std::string& name)
+		: Camera(transform, name) {}
 
 
 	void SceneCamera::lateUpdate() {
@@ -272,28 +264,28 @@ namespace geeL {
 	void SceneCamera::computeViewMatrix() {
 		if (transform.hasUpdated()) {
 			setViewMatrix(transform.lookAt());
-			frustum.update(transform);
+			getFrustum().update(transform);
 		}
 	}
 
 	const float SceneCamera::getNearPlane() const {
-		return frustum.getNearPlane();
+		return getFrustum().getNearPlane();
 	}
 
 	const float SceneCamera::getFarPlane() const {
-		return frustum.getFarPlane();
+		return getFrustum().getFarPlane();
 	}
 
 	void SceneCamera::setNearPlane(float near) {
 		if (near > 0.f) {
-			frustum.setNearPlane(near);
+			getFrustum().setNearPlane(near);
 			onViewingPlaneChange();
 		}
 	}
 
 	void SceneCamera::setFarPlane(float far) {
-		if (far > frustum.getNearPlane()) {
-			frustum.setFarPlane(far);
+		if (far > getFrustum().getNearPlane()) {
+			getFrustum().setFarPlane(far);
 			onViewingPlaneChange();
 		}
 	}
