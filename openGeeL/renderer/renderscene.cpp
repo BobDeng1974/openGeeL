@@ -442,6 +442,8 @@ namespace geeL {
 			//Use frustum culling if a camera has been attached
 			bool isVisible = !((camera != nullptr) && !object.isVisible(*camera));
 
+			std::cout << std::to_string(isVisible) << "\n";
+
 			if (object.isActive() && isVisible)
 				object.drawExclusive(shader);
 		});

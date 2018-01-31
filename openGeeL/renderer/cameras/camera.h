@@ -52,6 +52,7 @@ namespace geeL {
 		const glm::vec3& GetOriginInViewSpace() const;
 		const ViewFrustum& getFrustum() const;
 
+		virtual void setViewMatrix(const glm::vec3& position, const glm::vec3& center, const glm::vec3& up);
 		virtual void setViewMatrix(const glm::mat4& view);
 		virtual void setProjectionMatrix(const glm::mat4& projection);
 
@@ -79,7 +80,12 @@ namespace geeL {
 		//Update view matrix and frustum with transformational changes
 		void injectTransform();
 
+		virtual void setViewMatrix(const glm::vec3& position, const glm::vec3& center, const glm::vec3& up);
+		virtual void setViewMatrix(const glm::mat4& view);
 		virtual void setProjectionMatrix(const glm::mat4& projection);
+
+	private:
+		void updateFrustum();
 
 	};
 

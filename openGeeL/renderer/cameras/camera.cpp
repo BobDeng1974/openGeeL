@@ -2,6 +2,7 @@
 #include <glew.h>
 #include <glfw3.h>
 #include <gtc/type_ptr.hpp>
+#include <gtc/matrix_transform.hpp>
 #include <glm.hpp>
 #include "shader/sceneshader.h"
 #include "camera.h"
@@ -173,6 +174,18 @@ namespace geeL {
 
 
 
+	void Camera::setViewMatrix(const glm::vec3& position, const glm::vec3& center, const glm::vec3& up) {
+#if MULTI_THREADING_SUPPORT
+		cameraLock();
+#endif
+
+		viewMatrix = glm::lookAt(position, center, up);
+		inverseView = inverse(viewMatrix);
+
+		vec4 o = viewMatrix * glm::vec4(0.f, 0.f, 0.f, 1.f);
+		originViewSpace = glm::vec3(o.x, o.y, o.z);
+	}
+
 	void Camera::setViewMatrix(const glm::mat4& view) {
 #if MULTI_THREADING_SUPPORT
 		cameraLock();
@@ -214,10 +227,32 @@ namespace geeL {
 		}
 	}
 
+	void ManualCamera::setViewMatrix(const glm::vec3& position, const glm::vec3& center, const glm::vec3& up) {
+		Camera::setViewMatrix(position, center, up);
+
+		frustum.update(position, center, up);
+	}
+
+	void ManualCamera::setViewMatrix(const glm::mat4& view) {
+		Camera::setViewMatrix(view);
+
+		updateFrustum();
+	}
+
 	void ManualCamera::setProjectionMatrix(const glm::mat4& projection) {
 		Camera::setProjectionMatrix(projection);
 
-		frustum.update(transform);
+		updateFrustum();
+	}
+
+	void ManualCamera::updateFrustum() {
+		const glm::mat4& inv = getInverseViewMatrix();
+
+		vec3 position = vec3(inv[3][0], inv[3][1], inv[3][2]);
+		vec3 forward = -vec3(inv[2][0], inv[2][1], inv[2][2]);
+		vec3 up = vec3(inv[1][0], inv[1][1], inv[1][2]);
+
+		frustum.update(position, position + forward, up);
 	}
 
 
