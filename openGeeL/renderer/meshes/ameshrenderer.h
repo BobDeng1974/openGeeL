@@ -22,6 +22,7 @@ namespace geeL {
 	class SceneShader;
 	class RenderShader;
 	class Transform;
+	class ViewFrustum;
 
 
 	//Represents a drawn model in a render scene. Independent from actual model
@@ -70,6 +71,8 @@ namespace geeL {
 
 		//States if currently visible (from given camera POV)
 		bool isVisible(const Camera& camera) const;
+		bool isVisible(const ViewFrustum& view) const;
+
 		virtual bool containsShader(SceneShader& shader) const;
 
 		unsigned short getID() const;

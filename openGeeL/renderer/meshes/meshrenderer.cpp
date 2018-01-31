@@ -66,10 +66,11 @@ namespace geeL{
 	}
 
 	bool MeshRenderer::isVisible(const Camera& camera) const {
-		const ViewFrustum& frustum = camera.getFrustum();
-		IntersectionType t = aabb.intersect(frustum);
+		return isVisible(camera.getFrustum());
+	}
 
-		return t != IntersectionType::Outside;
+	bool MeshRenderer::isVisible(const ViewFrustum& view) const {
+		return aabb.intersect(view) != IntersectionType::Outside;
 	}
 
 	void MeshRenderer::draw(SceneShader& shader) const {
