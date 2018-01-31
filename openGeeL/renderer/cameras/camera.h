@@ -55,9 +55,10 @@ namespace geeL {
 		void setProjectionMatrix(const glm::mat4& projection);
 
 	protected:
+		ViewFrustum frustum;
 		mutable std::mutex cameraMutex;
 
-		Camera(Transform& transform, const std::string& name = "Camera");
+		Camera(Transform& transform, const ViewFrustum& frustum, const std::string& name = "Camera");
 
 	private:
 		glm::vec3 originViewSpace;
@@ -104,7 +105,6 @@ namespace geeL {
 		virtual std::vector<glm::vec3> getViewBorders(float near, float far) const = 0;
 
 	protected:
-		ViewFrustum frustum;
 		std::list<std::function<void(const SceneCamera&)>> callbacks;
 
 		void computeViewMatrix();

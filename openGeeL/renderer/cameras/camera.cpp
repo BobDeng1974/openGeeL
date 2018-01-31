@@ -10,7 +10,7 @@
 #include "utility/rendertime.h"
 #include "appglobals.h"
 
-#define pi 3.141592f
+#define PI 3.1415926535
 
 #define cameraLock() std::lock_guard<std::mutex> guard(cameraMutex);
 #define sceneCameraLock() std::lock_guard<std::mutex> guard(cameraMutex);
@@ -20,8 +20,9 @@ using namespace glm;
 
 namespace geeL {
 
-	Camera::Camera(Transform& transform, const string& name) 
-		: SceneObject(transform, name) {}
+	Camera::Camera(Transform& transform, const ViewFrustum& frustum, const string& name)
+		: SceneObject(transform, name)
+		, frustum(frustum) {}
 
 	
 	mat4 Camera::getViewMatrix() const {
@@ -181,18 +182,28 @@ namespace geeL {
 #endif
 
 		projectionMatrix = projection;
+
+		//Read frustum parameters from new projection matrix
+		double fov = 2.0 * atan(1.0 / projection[1][1]) * 180.0 / PI;
+		float aspect = projection[1][1] / projection[0][0];
+
+		float near = (2.f * projection[3][2]) / (2.f * projection[2][2] - 2.f);
+		float far = ((projection[2][2] - 1.f) * near) / (projection[2][2] + 1.f);
+
+		frustum.setParameters(float(fov), aspect, near, far);
 	}
 
 
+
 	ManualCamera::ManualCamera(Transform& transform, const std::string& name)
-		: Camera(transform, name) {}
+		: Camera(transform, ViewFrustum(0.f, 0.f, 0.f, 0.f), name) {}
+
 
 
 	SceneCamera::SceneCamera(Transform& transform, 
 		const ViewFrustum& frustum,
 		const std::string& name)
-			: Camera(transform, name)
-			, frustum(frustum) {}
+			: Camera(transform, frustum, name) {}
 
 
 	void SceneCamera::lateUpdate() {

@@ -31,6 +31,7 @@ namespace geeL {
 		float getNearPlane() const;
 		float getFarPlane() const;
 
+		void setParameters(float fov, float aspectRatio, float nearPlane, float farPlane);
 		void setFOV(float value);
 		void setAspectRatio(float value);
 		void setNearPlane(float value);

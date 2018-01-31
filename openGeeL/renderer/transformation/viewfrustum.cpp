@@ -9,12 +9,8 @@ using namespace glm;
 
 namespace geeL {
 
-	ViewFrustum::ViewFrustum(float fov, float aspectRatio, float nearPlane, float farPlane)
-		: aspect(aspectRatio)
-		, near(nearPlane)
-		, far(farPlane) {
-	
-		setFOV(fov);
+	ViewFrustum::ViewFrustum(float fov, float aspectRatio, float nearPlane, float farPlane) {
+		setParameters(fov, aspectRatio, nearPlane, farPlane);
 	}
 
 
@@ -91,6 +87,17 @@ namespace geeL {
 		return far;
 	}
 
+
+	void geeL::ViewFrustum::setParameters(float fov, float aspectRatio, float nearPlane, float farPlane) {
+		this->fov = fov;
+		tan = (float)std::tan(ANG2RAD * fov * 0.5);
+
+		aspect = aspectRatio;
+		near = nearPlane;
+		far = farPlane;
+
+		updateParameters();
+	}
 
 	void ViewFrustum::setFOV(float value) {
 		if (fov != value) {
