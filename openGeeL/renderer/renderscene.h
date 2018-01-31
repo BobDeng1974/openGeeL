@@ -32,6 +32,7 @@ namespace geeL {
 	class MaterialFactory;
 	class MeshFactory;
 	class Transform;
+	class ViewFrustum;
 
 	enum class CullingMode;
 
@@ -154,7 +155,8 @@ namespace geeL {
 		void drawGeometry(const RenderShader& shader) const;
 
 		//Draw all objects in the scene with given shader that use given render mode
-		void drawGeometry(const RenderShader& shader, RenderMode mode) const;
+		void drawGeometry(const RenderShader& shader, RenderMode mode, 
+			const ViewFrustum * const frustum = nullptr) const;
 
 		
 		void bindSkybox(RenderShader& shader) const;

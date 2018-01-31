@@ -454,9 +454,12 @@ namespace geeL {
 		});
 	}
 
-	void RenderScene::drawGeometry(const RenderShader& shader, RenderMode mode) const {
+	void RenderScene::drawGeometry(const RenderShader& shader, RenderMode mode, const ViewFrustum * const frustum) const {
 		iterRenderObjects([&](const MeshRenderer& object) {
-			if (object.isActive() && object.getRenderMode() == mode)
+			//Use frustum culling if frustum has been attached
+			bool isVisible = !((frustum != nullptr) && !object.isVisible(*frustum));
+
+			if (object.isActive() && object.getRenderMode() == mode && isVisible)
 				object.drawGeometry(shader);
 		});
 	}
