@@ -162,15 +162,6 @@ namespace geeL {
 		return originViewSpace;
 	}
 
-	bool Camera::inView(const glm::vec3& position) const {
-		glm::vec3 p = TranslateToScreenSpace(position);
-		return (p.x > 0.f) && (p.x < 1.f) && (p.y > 0.f) && (p.y < 1.f);
-	}
-
-	bool Camera::isBehind(const glm::vec3& position) const {
-		glm::vec3 p = TranslateToScreenSpace(position);
-		return p.z > 1.f;
-	}
 
 	void Camera::setViewMatrix(const glm::mat4& view) {
 #if MULTI_THREADING_SUPPORT
@@ -213,10 +204,8 @@ namespace geeL {
 	void SceneCamera::computeViewMatrix() {
 		if (transform.hasUpdated()) {
 			setViewMatrix(transform.lookAt());
-
-			frustum.update(transform.getPosition(), transform.getPosition() + transform.getForwardDirection(), vec3(0, 1, 0));
+			frustum.update(transform);
 		}
-			
 	}
 
 	const float SceneCamera::getNearPlane() const {
@@ -225,6 +214,10 @@ namespace geeL {
 
 	const float SceneCamera::getFarPlane() const {
 		return frustum.getFarPlane();
+	}
+
+	const ViewFrustum& SceneCamera::getFrustum() const {
+		return frustum;
 	}
 
 	void SceneCamera::setNearPlane(float near) {

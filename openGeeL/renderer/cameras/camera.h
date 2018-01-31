@@ -51,9 +51,6 @@ namespace geeL {
 
 		const glm::vec3& GetOriginInViewSpace() const;
 
-		bool inView(const glm::vec3& position) const;
-		bool isBehind(const glm::vec3& position) const;
-
 		void setViewMatrix(const glm::mat4& view);
 		void setProjectionMatrix(const glm::mat4& projection);
 
@@ -94,6 +91,7 @@ namespace geeL {
 
 		const float getNearPlane() const;
 		const float getFarPlane() const;
+		const ViewFrustum& getFrustum() const;
 
 		void setNearPlane(float near);
 		void setFarPlane(float far);

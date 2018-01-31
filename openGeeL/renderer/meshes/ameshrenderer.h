@@ -13,7 +13,7 @@ using namespace geeL::memory;
 
 namespace geeL {
 
-	class Camera;
+	class SceneCamera;
 	class Material;
 	class MaterialContainer;
 	class Mesh;
@@ -73,14 +73,8 @@ namespace geeL {
 		virtual const MeshInstance* getMesh(const std::string& name) const;
 		virtual RenderMode getRenderMode() const = 0;
 
-		//Specify, whether this object should be able to be 
-		//filtered out / not drawn if it isn't actually visible
-		void setAutomaticFiltering(bool value);
-
 		//States if currently visible (from given camera POV)
-		//Note: Will always return true if automatic filtering
-		//is disabled (Disabled by default)
-		bool isVisible(const Camera& camera) const;
+		bool isVisible(const SceneCamera& camera) const;
 		virtual bool containsShader(SceneShader& shader) const;
 
 		unsigned short getID() const;
@@ -108,7 +102,6 @@ namespace geeL {
 
 	private:
 		unsigned short id;
-		bool autoFilter = false;
 
 		std::list<MeshInstance*> meshes;
 

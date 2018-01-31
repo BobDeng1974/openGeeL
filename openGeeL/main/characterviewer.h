@@ -59,7 +59,7 @@ public:
 				container.setFloatValue("Metallic", 0.f);
 				container.setFloatValue("Transparency", 0.65f);
 			});
-
+			
 			{
 				SceneShader& forwardShader = materialFactory.getDefaultShader(ShadingMethod::Hybrid);
 				SceneShader& transparentShader = materialFactory.getDefaultShader(ShadingMethod::Transparent);

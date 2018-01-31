@@ -24,7 +24,7 @@ namespace geeL{
 			, faceCulling(faceCulling)
 			, mask(RenderMask::None)
 			, id(MeshRendererIDGenerator::generateID(*this, meshCount))
-			, aabb(TransformableBoundingBox(modelData->getBoundingBox(), transform)){}
+			, aabb(TransformableBoundingBox(modelData->getBoundingBox(), transform)) {}
 
 	MeshRenderer::~MeshRenderer() {
 		for (auto it(deleteListeners.begin()); it != deleteListeners.end(); it++)
@@ -65,12 +65,11 @@ namespace geeL{
 		deleteListeners.push_back(listener);
 	}
 
-	void MeshRenderer::setAutomaticFiltering(bool value) {
-		autoFilter = value;
-	}
+	bool MeshRenderer::isVisible(const SceneCamera& camera) const {
+		const ViewFrustum& frustum = camera.getFrustum();
+		IntersectionType t = aabb.intersect(frustum);
 
-	bool MeshRenderer::isVisible(const Camera& camera) const {
-		return !autoFilter || !camera.isBehind(transform.getPosition());
+		return t != IntersectionType::Outside;
 	}
 
 	void MeshRenderer::draw(SceneShader& shader) const {
