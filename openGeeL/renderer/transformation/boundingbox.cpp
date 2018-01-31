@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <iostream>
 #include <limits>
 #include "transform.h"
 #include "viewfrustum.h"
@@ -102,6 +101,8 @@ namespace geeL {
 		: AABoundingBox(localBox)
 		, localBox(localBox)
 		, transform(transform) {
+
+		updateGlobal();
 
 		transform.addChangeListener([this](const Transform& transform) {
 			updateGlobal();

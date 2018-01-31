@@ -7,10 +7,12 @@
 
 namespace geeL {
 
+	class Transform;
+
 	enum class IntersectionType {
-		Inside,
-		Outside,
-		Intersect
+		Inside = 1,
+		Outside = 2,
+		Intersect = 3
 	};
 
 
@@ -20,6 +22,7 @@ namespace geeL {
 		ViewFrustum(float fov, float aspectRatio, float nearPlane, float farPlane);
 
 		//Update frustm with transformational data
+		void update(const Transform& transform);
 		void update(const glm::vec3& position, const glm::vec3& center, const glm::vec3& up);
 
 		float getFOV() const;
@@ -34,13 +37,17 @@ namespace geeL {
 		void setFarPlane(float value);
 
 		const Plane& getPlane(unsigned int side) const;
+		bool inView(const glm::vec3& point) const;
 
 	private:
-		AtomicWrapper<float> near, far, aspect, fov, tan;
-		float nearWidth, nearHeight, farWidth, farHeight;
 		Plane planes[6];
+		AtomicWrapper<float> near, far, aspect, fov,
+			nearWidth, nearHeight, farWidth, farHeight;
+		float tan;
 
 		void updateParameters();
+		void updatePlanes(const glm::vec3& position, const glm::vec3& x,
+			const glm::vec3& y, const glm::vec3& z);
 
 	};
 
