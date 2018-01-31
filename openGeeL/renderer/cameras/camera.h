@@ -50,6 +50,7 @@ namespace geeL {
 		glm::vec3 TranslateToWorldSpace(const glm::vec3& vector) const;
 
 		const glm::vec3& GetOriginInViewSpace() const;
+		const ViewFrustum& getFrustum() const;
 
 		void setViewMatrix(const glm::mat4& view);
 		void setProjectionMatrix(const glm::mat4& projection);
@@ -92,7 +93,6 @@ namespace geeL {
 
 		const float getNearPlane() const;
 		const float getFarPlane() const;
-		const ViewFrustum& getFrustum() const;
 
 		void setNearPlane(float near);
 		void setFarPlane(float far);

@@ -65,7 +65,7 @@ namespace geeL{
 		deleteListeners.push_back(listener);
 	}
 
-	bool MeshRenderer::isVisible(const SceneCamera& camera) const {
+	bool MeshRenderer::isVisible(const Camera& camera) const {
 		const ViewFrustum& frustum = camera.getFrustum();
 		IntersectionType t = aabb.intersect(frustum);
 

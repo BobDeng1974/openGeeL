@@ -139,7 +139,7 @@ namespace geeL {
 		void draw(ShadingMethod method);
 
 		//Draw all objects that contain materials with given shading method from given camera's perspective
-		void draw(ShadingMethod method, const SceneCamera& camera);
+		void draw(ShadingMethod method, const Camera& camera);
 
 		//Draw all objects with forward shading from given camera's perspective
 		void drawForwardForced(const Camera& camera, bool forceGamma = false) const;
@@ -175,15 +175,15 @@ namespace geeL {
 		std::mutex mutex;
 
 
-		void drawDefault(const SceneCamera& camera) const;
-		void drawForward(const SceneCamera& camera) const;
-		void drawHybrid(const SceneCamera& camera) const;
-		void drawTransparent(const SceneCamera& camera) const;
+		void drawDefault(const Camera& camera) const;
+		void drawForward(const Camera& camera) const;
+		void drawHybrid(const Camera& camera) const;
+		void drawTransparent(const Camera& camera) const;
 
 		//Draw all objects whose materials have given shading method
-		void draw(ShadingMethod shadingMethod, const SceneCamera& camera, bool updateBindings) const;
+		void draw(ShadingMethod shadingMethod, const Camera& camera, bool updateBindings) const;
 
-		void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const SceneCamera& camera,
+		void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera,
 			bool updateBindings = false) const;
 
 	};

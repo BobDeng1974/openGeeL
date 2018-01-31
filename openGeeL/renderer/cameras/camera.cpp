@@ -163,6 +163,15 @@ namespace geeL {
 		return originViewSpace;
 	}
 
+	const ViewFrustum& Camera::getFrustum() const {
+#if MULTI_THREADING_SUPPORT
+		cameraLock();
+#endif
+
+		return frustum;
+	}
+
+
 
 	void Camera::setViewMatrix(const glm::mat4& view) {
 #if MULTI_THREADING_SUPPORT
@@ -225,10 +234,6 @@ namespace geeL {
 
 	const float SceneCamera::getFarPlane() const {
 		return frustum.getFarPlane();
-	}
-
-	const ViewFrustum& SceneCamera::getFrustum() const {
-		return frustum;
 	}
 
 	void SceneCamera::setNearPlane(float near) {

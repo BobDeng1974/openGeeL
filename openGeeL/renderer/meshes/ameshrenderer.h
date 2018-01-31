@@ -13,7 +13,7 @@ using namespace geeL::memory;
 
 namespace geeL {
 
-	class SceneCamera;
+	class Camera;
 	class Material;
 	class MaterialContainer;
 	class Mesh;
@@ -74,7 +74,7 @@ namespace geeL {
 		virtual RenderMode getRenderMode() const = 0;
 
 		//States if currently visible (from given camera POV)
-		bool isVisible(const SceneCamera& camera) const;
+		bool isVisible(const Camera& camera) const;
 		virtual bool containsShader(SceneShader& shader) const;
 
 		unsigned short getID() const;
