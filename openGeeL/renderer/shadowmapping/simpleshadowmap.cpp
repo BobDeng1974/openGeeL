@@ -139,14 +139,14 @@ namespace geeL {
 			const RenderShader& shader = repository.getSimple2DShader();
 			shader.bind<glm::mat4>("lightTransform", lightTransform);
 
-			scene.drawStaticObjects(shader);
+			scene.drawGeometry(shader, RenderMode::Static);
 		}
 
 		if (scene.containsSkinnedObjects()) {
 			const RenderShader& shader = repository.getSimple2DAnimated();
 			shader.bind<glm::mat4>("lightTransform", lightTransform);
 
-			scene.drawSkinnedObjects(shader);
+			scene.drawGeometry(shader, RenderMode::Skinned);
 		}
 	}
 
@@ -197,7 +197,7 @@ namespace geeL {
 			shader.bind<float>("farPlane", farPlane);
 			shader.bind<glm::vec3>("lightPosition", light.transform.getPosition());
 
-			scene.drawStaticObjects(shader);
+			scene.drawGeometry(shader, RenderMode::Static);
 		}
 
 		if (scene.containsSkinnedObjects()) {
@@ -210,7 +210,7 @@ namespace geeL {
 			shader.bind<float>("farPlane", farPlane);
 			shader.bind<glm::vec3>("lightPosition", light.transform.getPosition());
 
-			scene.drawSkinnedObjects(shader);
+			scene.drawGeometry(shader, RenderMode::Skinned);
 		}
 	}
 
@@ -262,14 +262,14 @@ namespace geeL {
 			const RenderShader& shader = repository.getSimple2DShader();
 			shader.bind<glm::mat4>("lightTransform", lightTransform);
 
-			scene.drawStaticObjects(shader);
+			scene.drawGeometry(shader, RenderMode::Static);
 		}
 
 		if (scene.containsSkinnedObjects()) {
 			const RenderShader& shader = repository.getSimple2DAnimated();
 			shader.bind<glm::mat4>("lightTransform", lightTransform);
 
-			scene.drawSkinnedObjects(shader);
+			scene.drawGeometry(shader, RenderMode::Skinned);
 		}
 	}
 

@@ -402,6 +402,7 @@
     <ClInclude Include="renderer\meshes\meshidgenerator.h" />
     <ClInclude Include="renderer\meshes\meshrenderer.h" />
     <ClInclude Include="renderer\meshes\model.h" />
+    <ClInclude Include="renderer\meshes\rendermode.h" />
     <ClInclude Include="renderer\postprocessing\additiveeffect.h" />
     <ClInclude Include="renderer\postprocessing\bloom.h" />
     <ClInclude Include="renderer\postprocessing\blurredeffect.h" />

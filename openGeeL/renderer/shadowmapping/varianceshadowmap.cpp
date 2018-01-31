@@ -59,7 +59,7 @@ namespace geeL {
 				const RenderShader& shader = repository.getVariance2DShader();
 				shader.bind<glm::mat4>("lightTransform", lightTransform);
 
-				scene.drawStaticObjects(shader);
+				scene.drawGeometry(shader, RenderMode::Static);
 			}
 
 			/*
@@ -67,7 +67,7 @@ namespace geeL {
 				const RenderShader& shader = repository.getSimple2DAnimated();
 				shader.bind<glm::mat4>("lightTransform", lightTransform);
 
-				scene.drawSkinnedObjects(shader);
+				scene.drawGeometry(shader, RenderMode::Skinned);
 			}
 			*/
 		});

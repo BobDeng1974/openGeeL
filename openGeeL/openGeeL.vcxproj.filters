@@ -1121,6 +1121,9 @@
     <ClInclude Include="renderer\transformation\plane.h">
       <Filter>renderer\transformation</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\meshes\rendermode.h">
+      <Filter>renderer\meshes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\combine.frag">

@@ -8,6 +8,7 @@
 #include "memory/memoryobject.h"
 #include "transformation/boundingbox.h"
 #include "sceneobject.h"
+#include "rendermode.h"
 
 using namespace geeL::memory;
 
@@ -21,12 +22,6 @@ namespace geeL {
 	class SceneShader;
 	class RenderShader;
 	class Transform;
-
-	enum class RenderMode {
-		Static,
-		Skinned,
-		Instanced
-	};
 
 
 	//Represents a drawn model in a render scene. Independent from actual model

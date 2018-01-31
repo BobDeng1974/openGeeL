@@ -8,6 +8,7 @@
 #include <mutex>
 #include <list>
 #include <set>
+#include "meshes/rendermode.h"
 #include "utility/listener.h"
 #include "shader/defshading.h"
 #include "threading.h"
@@ -36,6 +37,7 @@ namespace geeL {
 
 	using TransformMapping = std::map<unsigned short, MeshRenderer*>;
 	using ShaderMapping    = std::map<SceneShader*, TransformMapping>;
+
 
 	//Class that holds scene information (Objects, cameras, lights, ...)
 	class Scene : public DataEventActuator<MeshRenderer> {
@@ -151,11 +153,8 @@ namespace geeL {
 		//Draw the geometry of all objects in the scene with given shader
 		void drawGeometry(const RenderShader& shader) const;
 
-		//Draw all static objects in the scene with given shader
-		void drawStaticObjects(const RenderShader& shader) const;
-
-		//Draw all skinned objects in the scene with given shader
-		void drawSkinnedObjects(const RenderShader& shader) const;
+		//Draw all objects in the scene with given shader that use given render mode
+		void drawGeometry(const RenderShader& shader, RenderMode mode) const;
 
 		
 		void bindSkybox(RenderShader& shader) const;

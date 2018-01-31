@@ -442,8 +442,6 @@ namespace geeL {
 			//Use frustum culling if a camera has been attached
 			bool isVisible = !((camera != nullptr) && !object.isVisible(*camera));
 
-			std::cout << std::to_string(isVisible) << "\n";
-
 			if (object.isActive() && isVisible)
 				object.drawExclusive(shader);
 		});
@@ -456,21 +454,13 @@ namespace geeL {
 		});
 	}
 
-	void RenderScene::drawStaticObjects(const RenderShader& shader) const {
+	void RenderScene::drawGeometry(const RenderShader& shader, RenderMode mode) const {
 		iterRenderObjects([&](const MeshRenderer& object) {
-			if (object.isActive() && object.getRenderMode() == RenderMode::Static)
+			if (object.isActive() && object.getRenderMode() == mode)
 				object.drawGeometry(shader);
 		});
 	}
 
-	void RenderScene::drawSkinnedObjects(const RenderShader& shader) const {
-		iterRenderObjects([&](const MeshRenderer& object) {
-			if (object.isActive() && object.getRenderMode() == RenderMode::Skinned)
-				object.drawGeometry(shader);
-		});
-	}
-
-	
 
 	void RenderScene::drawSkybox() const {
 		if (skybox != nullptr)

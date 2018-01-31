@@ -97,7 +97,7 @@ namespace geeL {
 
 				Viewport::set(x * hWidth, y * hHeight, hWidth, hHeight);
 				shader.bind<glm::mat4>("lightTransform", shadowMaps[i].lightTransform);
-				scene.drawStaticObjects(shader); //Note: currently only static objects
+				scene.drawGeometry(shader, RenderMode::Static); //Note: currently only static objects
 			}
 
 		});
