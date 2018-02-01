@@ -27,6 +27,9 @@ namespace geeL {
 		//Update local bounding box to include given bounding box
 		void update(const AABoundingBox& box);
 
+		//Reset size of bounding box
+		void reset();
+
 		IntersectionType intersect(const ViewFrustum& frustum) const;
 
 

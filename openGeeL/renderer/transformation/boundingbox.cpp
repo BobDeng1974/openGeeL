@@ -77,6 +77,11 @@ namespace geeL {
 			+ std::to_string(max.x) + ", " + std::to_string(max.y) + ", " + std::to_string(max.z) + ")";
 	}
 
+	void AABoundingBox::reset() {
+		min = vec3(std::numeric_limits<float>::max());
+		max = vec3(std::numeric_limits<float>::min());
+	}
+
 	IntersectionType AABoundingBox::intersect(const ViewFrustum& frustum) const {
 		IntersectionType type = IntersectionType::Inside;
 

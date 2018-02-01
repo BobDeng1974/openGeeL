@@ -96,7 +96,7 @@ namespace geeL {
 		void drawMask(const MaterialMapping& mapping) const;
 		virtual MaterialMapping* getMapping(const MeshInstance& mesh);
 
-		void addMesh(MeshInstance* mesh);
+		void addMesh(std::unique_ptr<MeshInstance> mesh);
 
 	private:
 		unsigned short id;

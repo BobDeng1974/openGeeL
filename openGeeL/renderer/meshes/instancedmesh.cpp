@@ -6,7 +6,7 @@ namespace geeL {
 	MeshInstance::MeshInstance(const Mesh& mesh, Transform& transform)
 		: mesh(mesh)
 		, id(0)
-		, box(TransformableBoundingBox(mesh.getBoundingBox(), transform)){}
+		, box(TransformableBoundingBox(mesh.getBoundingBox(), transform)) {}
 
 
 	bool MeshInstance::operator==(const Mesh& mesh) const {
@@ -31,6 +31,10 @@ namespace geeL {
 
 	void MeshInstance::setID(unsigned short id) {
 		this->id = id;
+	}
+
+	const AABoundingBox& MeshInstance::getBoundingBox() const {
+		return box;
 	}
 
 

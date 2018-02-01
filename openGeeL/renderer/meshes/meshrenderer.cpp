@@ -277,9 +277,9 @@ namespace geeL{
 		return nullptr;
 	}
 
-	void MeshRenderer::addMesh(MeshInstance* mesh) {
+	void MeshRenderer::addMesh(std::unique_ptr<MeshInstance> mesh) {
 		mesh->setID(MeshRendererIDGenerator::generateMeshID(*this));
-		meshes.push_back(mesh);
+		meshes.push_back(mesh.release());
 	}
 
 	unsigned short MeshRenderer::getID() const {
@@ -316,7 +316,7 @@ namespace geeL{
 
 	void StaticMeshRenderer::initialize(SceneShader& shader, StaticModel& model) {
 		model.iterateMeshesGeneric([&](const StaticMesh& mesh) {
-			addMesh(new StaticMeshInstance(mesh, transform));
+			addMesh(unique_ptr<StaticMeshInstance>(new StaticMeshInstance(mesh, transform)));
 		});
 
 		iterateMeshes([&](const MeshInstance& mesh) {
@@ -328,9 +328,16 @@ namespace geeL{
 	}
 
 	void StaticMeshRenderer::initialize(SceneShader& shader, std::list<const StaticMesh*>& newMeshes) {
+		//Adjust bounding box to only surrounds the given singular meshes
+		aabb.reset();
+
 		for (auto it(newMeshes.begin()); it != newMeshes.end(); it++) {
 			const StaticMesh& mesh = **it;
-			addMesh(new StaticMeshInstance(mesh, transform));
+
+			StaticMeshInstance* m = new StaticMeshInstance(mesh, transform);
+			aabb.update(m->getBoundingBox());
+
+			addMesh(unique_ptr<StaticMeshInstance>(m));
 		}
 
 		iterateMeshes([&](const MeshInstance& mesh) {
@@ -380,7 +387,7 @@ namespace geeL{
 
 	void SkinnedMeshRenderer::initialize(SceneShader& shader) {
 		skinnedModel.iterateMeshesGeneric([&](const SkinnedMesh& mesh) {
-			addMesh(new SkinnedMeshInstance(mesh, transform, *skeleton));
+			addMesh(unique_ptr<SkinnedMeshInstance>(new SkinnedMeshInstance(mesh, transform, *skeleton)));
 		});
 
 		iterateMeshes([&](const MeshInstance& mesh) {
