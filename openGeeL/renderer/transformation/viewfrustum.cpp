@@ -10,6 +10,11 @@ using namespace glm;
 
 namespace geeL {
 
+	const Plane& ViewFrustum::getPlane(unsigned int side) const {
+		unsigned int s = (side > 5) ? 5 : side;
+		return planes[s];
+	}
+
 	bool ViewFrustum::inView(const vec3& point) const {
 		for (int i = 0; i < 6; i++) {
 			if (getPlane(i).getDistance(point) < 0.f)
@@ -154,10 +159,7 @@ namespace geeL {
 		}
 	}
 
-	const Plane& PerspectiveFrustum::getPlane(unsigned int side) const {
-		unsigned int s = (side > 5) ? 5 : side;
-		return planes[s];
-	}
+	
 	
 	void PerspectiveFrustum::updateParameters() {
 		nearHeight = near * tan;
@@ -165,6 +167,81 @@ namespace geeL {
 
 		farHeight = far * tan;
 		farWidth = farHeight * aspect;
+	}
+
+
+
+	OrthographicFrustum::OrthographicFrustum(float left, float right, float bottom, float top, float near, float far)
+		: l(left), r(right), b(bottom), t(top), n(near), f(far) {}
+
+
+	void OrthographicFrustum::update(const Transform& transform) {
+		updatePlanes(transform.getPosition(),
+			transform.getRightDirection(),
+			transform.getUpDirection(),
+			-transform.getForwardDirection());
+	}
+
+	void OrthographicFrustum::update(const vec3& position, const vec3& center, const vec3& up) {
+		vec3 z = normalize(position - center);
+		vec3 x = normalize(cross(up, z));
+		vec3 y = normalize(cross(z, x));
+
+		updatePlanes(position, x, y, z);
+	}
+
+	void OrthographicFrustum::setParameters(const glm::mat4& p) {
+		l = -(p[3][0] / p[0][0]) - (1.f / p[0][0]);
+		r = (2.f / p[0][0]) + l;
+
+		b = -(p[3][1] / p[1][1]) - (1.f / p[1][1]);
+		t = (2.f / p[1][1]) + t;
+
+		n = (p[3][2] / p[2][2]) + (1.f / p[2][2]);
+		f = (-2.f / p[2][2]) + n;
+	}
+
+	float OrthographicFrustum::getNearPlane() const {
+		return n;
+	}
+
+	float OrthographicFrustum::getFarPlane() const {
+		return f;
+	}
+
+	void OrthographicFrustum::setNearPlane(float value) {
+		n = value;
+	}
+
+	void OrthographicFrustum::setFarPlane(float value) {
+		f = value;
+	}
+
+	void OrthographicFrustum::updatePlanes(const vec3& position, const vec3& x, const vec3& y, const vec3& z) {
+
+		//Top
+		vec3 p = position + y * t();
+		planes[0] = Plane(p, -y);
+
+		//Bottom
+		p = position + y * b();
+		planes[0] = Plane(p, y);
+
+		//Left
+		p = position + x * l();
+		planes[0] = Plane(p, -y);
+
+		//Right
+		p = position + x * r();
+		planes[0] = Plane(p, -y);
+
+		//Near
+		p = position + z * n();
+		planes[4] = Plane(p, -z);
+
+		//Far
+		p = position - z * f();
+		planes[5] = Plane(p, z);
 	}
 
 }

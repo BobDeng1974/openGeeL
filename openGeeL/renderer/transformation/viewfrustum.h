@@ -33,9 +33,12 @@ namespace geeL {
 		virtual void setNearPlane(float value) = 0;
 		virtual void setFarPlane(float value) = 0;
 
-		virtual const Plane& getPlane(unsigned int side) const = 0;
+		const Plane& getPlane(unsigned int side) const;
 
 		bool inView(const glm::vec3& point) const;
+
+	protected:
+		Plane planes[6];
 
 	};
 	
@@ -65,16 +68,38 @@ namespace geeL {
 		virtual void setNearPlane(float value);
 		virtual void setFarPlane(float value);
 
-		virtual const Plane& getPlane(unsigned int side) const;
-		
-
 	private:
-		Plane planes[6];
 		AtomicWrapper<float> near, far, aspect, fov,
 			nearWidth, nearHeight, farWidth, farHeight;
 		float tan;
 
 		void updateParameters();
+		void updatePlanes(const glm::vec3& position, const glm::vec3& x,
+			const glm::vec3& y, const glm::vec3& z);
+
+	};
+
+
+
+	class OrthographicFrustum : public ViewFrustum {
+
+	public:
+		OrthographicFrustum(float left, float right, float bottom, float top, float near, float far);
+
+		virtual void update(const Transform& transform);
+		virtual void update(const glm::vec3& position, const glm::vec3& center, const glm::vec3& up);
+
+		virtual void setParameters(const glm::mat4& projection);
+
+		virtual float getNearPlane() const;
+		virtual float getFarPlane() const;
+
+		virtual void setNearPlane(float value);
+		virtual void setFarPlane(float value);
+
+	private:
+		AtomicWrapper<float> l, r, b, t, n, f;
+
 		void updatePlanes(const glm::vec3& position, const glm::vec3& x,
 			const glm::vec3& y, const glm::vec3& z);
 
