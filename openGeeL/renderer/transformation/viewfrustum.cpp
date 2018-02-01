@@ -26,6 +26,9 @@ namespace geeL {
 
 
 
+	PerspectiveFrustum::PerspectiveFrustum() 
+		: fov(0.f), aspect(0.f), near(0.f), far(0.f), tan(0.f) {}
+
 	PerspectiveFrustum::PerspectiveFrustum(float fov, float aspectRatio, float nearPlane, float farPlane) {
 		setParameters(fov, aspectRatio, nearPlane, farPlane);
 	}
@@ -38,7 +41,7 @@ namespace geeL {
 			-transform.getForwardDirection());
 	}
 
-	void PerspectiveFrustum::update(const glm::vec3 & position, const glm::vec3 & center, const glm::vec3 & up) {
+	void PerspectiveFrustum::update(const glm::vec3& position, const glm::vec3& center, const glm::vec3& up) {
 		vec3 z = normalize(position - center);
 		vec3 x = normalize(cross(up, z));
 		vec3 y = normalize(cross(z, x));
@@ -171,6 +174,9 @@ namespace geeL {
 
 
 
+	OrthographicFrustum::OrthographicFrustum()
+		: l(0.f), r(0.f), b(0.f), t(0.f), n(0.f), f(0.f) {}
+
 	OrthographicFrustum::OrthographicFrustum(float left, float right, float bottom, float top, float near, float far)
 		: l(left), r(right), b(bottom), t(top), n(near), f(far) {}
 
@@ -236,7 +242,7 @@ namespace geeL {
 		planes[0] = Plane(p, -y);
 
 		//Near
-		p = position + z * n();
+		p = position - z * n();
 		planes[4] = Plane(p, -z);
 
 		//Far

@@ -158,6 +158,11 @@ namespace geeL {
 		void drawGeometry(const RenderShader& shader, RenderMode mode, 
 			const ViewFrustum * const frustum = nullptr) const;
 
+		//Draw the geometry of all objects in the scene. Shaders for  
+		//static and skinned objects can be supplied separately
+		void drawGeometry(const RenderShader& staticShader, const RenderShader& skinnedShader,
+			const ViewFrustum * const frustum = nullptr) const;
+
 		
 		void bindSkybox(RenderShader& shader) const;
 

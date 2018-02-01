@@ -439,11 +439,13 @@ namespace geeL {
 		shader.initDraw();
 
 		iterRenderObjects([&shader, &camera](const MeshRenderer& object) {
-			//Use frustum culling if a camera has been attached
-			bool isVisible = !((camera != nullptr) && !object.isVisible(*camera));
+			if (object.isActive()) {
+				//Use frustum culling if a camera has been attached
+				bool isVisible = !((camera != nullptr) && !object.isVisible(*camera));
 
-			if (object.isActive() && isVisible)
-				object.drawExclusive(shader);
+				if (isVisible)
+					object.drawExclusive(shader);
+			}
 		});
 	}
 	
@@ -454,13 +456,33 @@ namespace geeL {
 		});
 	}
 
-	void RenderScene::drawGeometry(const RenderShader& shader, RenderMode mode, const ViewFrustum * const frustum) const {
+	void RenderScene::drawGeometry(const RenderShader& shader, RenderMode mode, const ViewFrustum* const frustum) const {
 		iterRenderObjects([&](const MeshRenderer& object) {
-			//Use frustum culling if frustum has been attached
-			bool isVisible = !((frustum != nullptr) && !object.isVisible(*frustum));
+			if (object.isActive()) {
+				//Use frustum culling if frustum has been attached
+				bool isVisible = !((frustum != nullptr) && !object.isVisible(*frustum));
 
-			if (object.isActive() && object.getRenderMode() == mode && isVisible)
-				object.drawGeometry(shader);
+				if (object.getRenderMode() == mode && isVisible)
+					object.drawGeometry(shader);
+			}
+		});
+	}
+
+	void RenderScene::drawGeometry(const RenderShader& staticShader, const RenderShader& skinnedShader, 
+		const ViewFrustum* const frustum) const {
+
+		iterRenderObjects([&](const MeshRenderer& object) {
+			if (object.isActive()) {
+				//Use frustum culling if frustum has been attached
+				bool isVisible = !((frustum != nullptr) && !object.isVisible(*frustum));
+
+				if (isVisible) {
+					const RenderShader& s = (object.getRenderMode() == RenderMode::Static)
+						? staticShader : skinnedShader;
+
+					object.drawGeometry(s);
+				}
+			}
 		});
 	}
 
@@ -474,6 +496,8 @@ namespace geeL {
 		if (skybox != nullptr)
 			skybox->draw(camera);
 	}
+
+	
 
 	void RenderScene::bindSkybox(RenderShader& shader) const {
 		if (skybox != nullptr)

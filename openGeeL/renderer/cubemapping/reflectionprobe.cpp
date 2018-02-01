@@ -67,7 +67,7 @@ namespace geeL {
 		frameBuffer.init(getTextureCube());
 
 		ManualCamera& cam = ManualCamera(transform, 
-			std::unique_ptr<ViewFrustum>(new PerspectiveFrustum(0.f, 0.f, 0.f, 0.f)));
+			std::unique_ptr<ViewFrustum>(new PerspectiveFrustum()));
 
 		glm::mat4 projections[] = {
 			perspective(90.0f, 1.0f, 0.1f, width),

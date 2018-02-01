@@ -135,30 +135,27 @@ namespace geeL {
 	}
 
 	void SimpleSpotLightMap::drawMap(const RenderScene& scene, ShadowmapRepository& repository) {
-		if (scene.containsStaticObjects()) {
-			const RenderShader& shader = repository.getSimple2DShader();
-			shader.bind<glm::mat4>("lightTransform", lightTransform);
+		const RenderShader& staticShader = repository.getSimple2DShader();
+		const RenderShader& skinnedShader = repository.getSimple2DAnimated();
 
-			scene.drawGeometry(shader, RenderMode::Static);
-		}
+		staticShader.bind<glm::mat4>("lightTransform", lightTransform);
+		skinnedShader.bind<glm::mat4>("lightTransform", lightTransform);
 
-		if (scene.containsSkinnedObjects()) {
-			const RenderShader& shader = repository.getSimple2DAnimated();
-			shader.bind<glm::mat4>("lightTransform", lightTransform);
-
-			scene.drawGeometry(shader, RenderMode::Skinned);
-		}
+		scene.drawGeometry(staticShader, skinnedShader, &frustum);
 	}
 
 	void SimpleSpotLightMap::computeLightTransform() {
 		Transform& transform = light.transform;
 
 		float fov = glm::degrees(spotLight.getAngle());
-		mat4&& projection = glm::perspective(fov, 1.f, 1.f, farPlane);
-		mat4&& view = lookAt(transform.getPosition(), transform.getPosition() +
+		mat4& projection = glm::perspective(fov, 1.f, 1.f, farPlane);
+		mat4& view = lookAt(transform.getPosition(), transform.getPosition() +
 			transform.getForwardDirection(), transform.getUpDirection());
 
 		lightTransform = projection * view;
+
+		frustum.setParameters(projection);
+		frustum.update(transform);
 	}
 
 
@@ -187,31 +184,23 @@ namespace geeL {
 	}
 
 	void SimplePointLightMap::drawMap(const RenderScene& scene, ShadowmapRepository& repository) {
-		if (scene.containsStaticObjects()) {
-			const RenderShader& shader = repository.getSimpleCubeShader();
-			for (int i = 0; i < 6; i++) {
-				std::string name = "lightTransforms[" + std::to_string(i) + "]";
-				shader.bind<glm::mat4>(name, lightTransforms[i]);
-			}
+		const RenderShader& staticShader = repository.getSimpleCubeShader();
+		const RenderShader& skinnedShader = repository.getSimpleCubeAnimated();
 
-			shader.bind<float>("farPlane", farPlane);
-			shader.bind<glm::vec3>("lightPosition", light.transform.getPosition());
+		for (int i = 0; i < 6; i++) {
+			std::string name = "lightTransforms[" + std::to_string(i) + "]";
 
-			scene.drawGeometry(shader, RenderMode::Static);
+			staticShader.bind<glm::mat4>(name, lightTransforms[i]);
+			skinnedShader.bind<glm::mat4>(name, lightTransforms[i]);
 		}
 
-		if (scene.containsSkinnedObjects()) {
-			const RenderShader& shader = repository.getSimpleCubeAnimated();
-			for (int i = 0; i < 6; i++) {
-				std::string name = "lightTransforms[" + std::to_string(i) + "]";
-				shader.bind<glm::mat4>(name, lightTransforms[i]);
-			}
+		staticShader.bind<float>("farPlane", farPlane);
+		skinnedShader.bind<float>("farPlane", farPlane);
 
-			shader.bind<float>("farPlane", farPlane);
-			shader.bind<glm::vec3>("lightPosition", light.transform.getPosition());
+		staticShader.bind<glm::vec3>("lightPosition", light.transform.getPosition());
+		skinnedShader.bind<glm::vec3>("lightPosition", light.transform.getPosition());
 
-			scene.drawGeometry(shader, RenderMode::Skinned);
-		}
+		scene.drawGeometry(staticShader, skinnedShader);
 	}
 
 	void SimplePointLightMap::computeLightTransform() {
@@ -258,19 +247,13 @@ namespace geeL {
 	}
 
 	void SimpleDirectionalLightMap::drawMap(const RenderScene& scene, ShadowmapRepository& repository) {
-		if (scene.containsStaticObjects()) {
-			const RenderShader& shader = repository.getSimple2DShader();
-			shader.bind<glm::mat4>("lightTransform", lightTransform);
+		const RenderShader& staticShader = repository.getSimple2DShader();
+		const RenderShader& skinnedShader = repository.getSimple2DAnimated();
 
-			scene.drawGeometry(shader, RenderMode::Static);
-		}
+		staticShader.bind<glm::mat4>("lightTransform", lightTransform);
+		skinnedShader.bind<glm::mat4>("lightTransform", lightTransform);
 
-		if (scene.containsSkinnedObjects()) {
-			const RenderShader& shader = repository.getSimple2DAnimated();
-			shader.bind<glm::mat4>("lightTransform", lightTransform);
-
-			scene.drawGeometry(shader, RenderMode::Skinned);
-		}
+		scene.drawGeometry(staticShader, skinnedShader, &frustum);
 	}
 
 	void SimpleDirectionalLightMap::computeLightTransform() {
@@ -280,6 +263,9 @@ namespace geeL {
 		mat4 view = lookAt(position, position - light.transform.getForwardDirection(), vec3(0.f, 1.f, 0.f));
 
 		lightTransform = projection * view;
+
+		frustum.setParameters(projection);
+		frustum.update(position, position - light.transform.getForwardDirection(), vec3(0.f, 1.f, 0.f));
 	}
 
 }

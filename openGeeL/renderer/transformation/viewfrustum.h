@@ -47,6 +47,7 @@ namespace geeL {
 	class PerspectiveFrustum : public ViewFrustum {
 
 	public:
+		PerspectiveFrustum();
 		PerspectiveFrustum(float fov, float aspectRatio, float nearPlane, float farPlane);
 
 		virtual void update(const Transform& transform);
@@ -84,6 +85,7 @@ namespace geeL {
 	class OrthographicFrustum : public ViewFrustum {
 
 	public:
+		OrthographicFrustum();
 		OrthographicFrustum(float left, float right, float bottom, float top, float near, float far);
 
 		virtual void update(const Transform& transform);

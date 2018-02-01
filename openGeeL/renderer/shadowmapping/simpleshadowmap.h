@@ -2,8 +2,8 @@
 #define SIMPLESHADOWMAP_H
 
 #include <vector>
+#include "transformation/viewfrustum.h"
 #include "shadowmapconfig.h"
-
 #include "shadowmap.h"
 
 
@@ -65,6 +65,7 @@ namespace geeL {
 
 	protected:
 		const SpotLight& spotLight;
+		PerspectiveFrustum frustum;
 		glm::mat4 lightTransform;
 
 		SimpleSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config, bool init);
@@ -103,6 +104,7 @@ namespace geeL {
 
 	private:
 		const DirectionalLight& directionalLight;
+		OrthographicFrustum frustum;
 		glm::mat4 lightTransform;
 
 		virtual void drawMap(const RenderScene& scene, ShadowmapRepository& repository);
