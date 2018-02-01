@@ -24,7 +24,8 @@ namespace geeL {
 
 	Mesh::Mesh(Mesh&& other)
 		: name(std::move(other.name))
-		, material(other.material) {
+		, material(other.material)
+		, aabb(other.aabb) {
 
 		other.material.reset();
 	}
@@ -33,6 +34,7 @@ namespace geeL {
 		if (this != &other) {
 			name = std::move(other.name);
 			material = other.material;
+			aabb = other.aabb;
 
 			other.material.reset();
 		}
