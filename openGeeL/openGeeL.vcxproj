@@ -273,6 +273,9 @@
     <ClCompile Include="renderer\shadowmapping\shadowmapconfig.cpp" />
     <ClCompile Include="renderer\shadowmapping\simpleshadowmap.cpp" />
     <ClCompile Include="renderer\shadowmapping\varianceshadowmap.cpp" />
+    <ClCompile Include="renderer\structures\boundingbox.cpp" />
+    <ClCompile Include="renderer\structures\plane.cpp" />
+    <ClCompile Include="renderer\structures\viewfrustum.cpp" />
     <ClCompile Include="renderer\texturing\brdfIntMap.cpp" />
     <ClCompile Include="renderer\texturing\dynamictexture.cpp" />
     <ClCompile Include="renderer\texturing\envmap.cpp" />
@@ -285,11 +288,8 @@
     <ClCompile Include="renderer\texturing\rendertexture.cpp" />
     <ClCompile Include="renderer\texturing\texture.cpp" />
     <ClCompile Include="renderer\texturing\texturetoken.cpp" />
-    <ClCompile Include="renderer\transformation\boundingbox.cpp" />
-    <ClCompile Include="renderer\transformation\plane.cpp" />
     <ClCompile Include="renderer\transformation\transform.cpp" />
     <ClCompile Include="renderer\transformation\transformfactory.cpp" />
-    <ClCompile Include="renderer\transformation\viewfrustum.cpp" />
     <ClCompile Include="renderer\utility\debug.cpp" />
     <ClCompile Include="renderer\utility\defaults.cpp" />
     <ClCompile Include="renderer\utility\depthreader.cpp" />
@@ -451,6 +451,9 @@
     <ClInclude Include="renderer\shadowmapping\shadowmapconfig.h" />
     <ClInclude Include="renderer\shadowmapping\simpleshadowmap.h" />
     <ClInclude Include="renderer\shadowmapping\varianceshadowmap.h" />
+    <ClInclude Include="renderer\structures\boundingbox.h" />
+    <ClInclude Include="renderer\structures\plane.h" />
+    <ClInclude Include="renderer\structures\viewfrustum.h" />
     <ClInclude Include="renderer\texturing\brdfIntMap.h" />
     <ClInclude Include="renderer\texturing\dynamictexture.h" />
     <ClInclude Include="renderer\texturing\envmap.h" />
@@ -467,11 +470,8 @@
     <ClInclude Include="renderer\texturing\texturetoken.h" />
     <ClInclude Include="renderer\texturing\texturetype.h" />
     <ClInclude Include="renderer\texturing\texturewrapper.h" />
-    <ClInclude Include="renderer\transformation\boundingbox.h" />
-    <ClInclude Include="renderer\transformation\plane.h" />
     <ClInclude Include="renderer\transformation\transform.h" />
     <ClInclude Include="renderer\transformation\transformfactory.h" />
-    <ClInclude Include="renderer\transformation\viewfrustum.h" />
     <ClInclude Include="renderer\utility\debug.h" />
     <ClInclude Include="renderer\utility\defaults.h" />
     <ClInclude Include="renderer\utility\depthreader.h" />

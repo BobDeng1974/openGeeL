@@ -12,7 +12,6 @@ namespace geeL {
 		Plane(const glm::vec3& point, const glm::vec3& normal);
 		Plane(const glm::vec3& a, const glm::vec3& b, const glm::vec3& c);
 
-
 		const glm::vec3& getPoint() const;
 		const glm::vec3& getNormal() const;
 		float getDistance(const glm::vec3& point) const;

@@ -6,7 +6,7 @@
 #include "glwrapper/glguards.h"
 #include "materialmapping.h"
 #include "memory/memoryobject.h"
-#include "transformation/boundingbox.h"
+#include "structures/boundingbox.h"
 #include "sceneobject.h"
 #include "rendermode.h"
 

@@ -2,7 +2,7 @@
 #define SIMPLESHADOWMAP_H
 
 #include <vector>
-#include "transformation/viewfrustum.h"
+#include "structures/viewfrustum.h"
 #include "shadowmapconfig.h"
 #include "shadowmap.h"
 

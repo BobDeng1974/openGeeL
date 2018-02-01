@@ -8,7 +8,7 @@
 #include <map>
 #include "animation/animcontainer.h"
 #include "renderer/glstructures.h"
-#include "transformation/boundingbox.h"
+#include "structures/boundingbox.h"
 #include "mesh.h"
 
 namespace geeL {

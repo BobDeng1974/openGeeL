@@ -6,7 +6,7 @@
 #include <vector>
 #include <vec3.hpp>
 #include <mat4x4.hpp>
-#include "transformation/viewfrustum.h"
+#include "structures/viewfrustum.h"
 #include "objectwrapper.h"
 #include "sceneobject.h"
 

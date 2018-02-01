@@ -2,7 +2,7 @@
 #define INSTANCEDMESH_H
 
 #include <string>
-#include "transformation/boundingbox.h"
+#include "structures/boundingbox.h"
 
 namespace geeL {
 

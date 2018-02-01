@@ -10,7 +10,7 @@
 #include "memory/memoryobject.h"
 #include "memory/poolallocator.h"
 #include "renderer/glstructures.h"
-#include "transformation/boundingbox.h"
+#include "structures/boundingbox.h"
 #include "animation/bone.h"
 
 #define BONECOUNT 4

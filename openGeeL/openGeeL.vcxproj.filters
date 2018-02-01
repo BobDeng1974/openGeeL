@@ -103,6 +103,9 @@
     <Filter Include="interface\debug">
       <UniqueIdentifier>{4089986a-a86c-42db-b563-40d46b48630d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="renderer\structures">
+      <UniqueIdentifier>{165438d8-6379-4dcf-b95e-b349003eb0da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main\main.cpp">
@@ -546,14 +549,14 @@
     <ClCompile Include="renderer\meshes\meshidgenerator.cpp">
       <Filter>renderer\meshes</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\transformation\boundingbox.cpp">
-      <Filter>renderer\transformation</Filter>
+    <ClCompile Include="renderer\structures\boundingbox.cpp">
+      <Filter>renderer\structures</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\transformation\viewfrustum.cpp">
-      <Filter>renderer\transformation</Filter>
+    <ClCompile Include="renderer\structures\plane.cpp">
+      <Filter>renderer\structures</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\transformation\plane.cpp">
-      <Filter>renderer\transformation</Filter>
+    <ClCompile Include="renderer\structures\viewfrustum.cpp">
+      <Filter>renderer\structures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1112,17 +1115,17 @@
     <ClInclude Include="renderer\meshes\meshidgenerator.h">
       <Filter>renderer\meshes</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\transformation\boundingbox.h">
-      <Filter>renderer\transformation</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\transformation\viewfrustum.h">
-      <Filter>renderer\transformation</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\transformation\plane.h">
-      <Filter>renderer\transformation</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\meshes\rendermode.h">
       <Filter>renderer\meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\structures\boundingbox.h">
+      <Filter>renderer\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\structures\plane.h">
+      <Filter>renderer\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\structures\viewfrustum.h">
+      <Filter>renderer\structures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
