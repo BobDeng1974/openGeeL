@@ -17,7 +17,7 @@ namespace geeL {
 		return true;
 	}
 
-	bool MeshNode::operator==(const TreeNode& other) const {
+	bool MeshNode::operator==(const TreeNode<MeshNode>& other) const {
 		const MeshNode* node = dynamic_cast<const MeshNode*>(&other);
 
 		if (node != nullptr) {
@@ -28,18 +28,24 @@ namespace geeL {
 		return false;
 	}
 
-	bool MeshNode::add(TreeNode& node) {
+	bool MeshNode::add(MeshNode& node) {
 		return false;
 	}
 
-	bool MeshNode::remove(TreeNode& node) {
+	bool MeshNode::remove(MeshNode& node) {
 		return false;
 	}
 
-	void MeshNode::iterChildren(std::function<void(TreeNode&)> function) {}
+	void MeshNode::iterChildren(std::function<void(MeshNode&)> function) {
+		function(*this);
+	}
 
 	size_t MeshNode::getChildCount() const {
 		return 0;
+	}
+
+	MeshRenderer& MeshNode::getMeshRenderer() {
+		return renderer;
 	}
 
 	const MeshRenderer& MeshNode::getMeshRenderer() const {

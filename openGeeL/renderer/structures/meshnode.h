@@ -10,7 +10,7 @@ namespace geeL {
 	class MeshRenderer;
 
 
-	class MeshNode : public TreeNode {
+	class MeshNode : public TreeNode<MeshNode> {
 
 	public:
 		MeshNode(MeshRenderer& renderer);
@@ -18,14 +18,15 @@ namespace geeL {
 		virtual void draw(const Camera& camera, SceneShader& shader);
 
 		virtual bool isLeaf() const;
-		virtual bool operator==(const TreeNode& other) const;
+		virtual bool operator==(const TreeNode<MeshNode>& other) const;
 
-		virtual bool add(TreeNode& node);
-		virtual bool remove(TreeNode& node);
+		virtual bool add(MeshNode& node);
+		virtual bool remove(MeshNode& node);
 
-		virtual void iterChildren(std::function<void(TreeNode&)> function);
+		virtual void iterChildren(std::function<void(MeshNode&)> function);
 		virtual size_t getChildCount() const;
 
+		MeshRenderer& getMeshRenderer();
 		const MeshRenderer& getMeshRenderer() const;
 
 	protected:

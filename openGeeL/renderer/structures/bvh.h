@@ -2,11 +2,12 @@
 #define BVH_H
 
 #include <list>
+#include "meshnode.h"
 #include "treenode.h"
 
 namespace geeL {
 
-	class BVH : public TreeNode {
+	class BVH : public TreeNode<MeshNode> {
 
 	public:
 		BVH();
@@ -16,15 +17,16 @@ namespace geeL {
 		virtual void draw(const Camera& camera, SceneShader& shader);
 
 		virtual bool isLeaf() const;
-		virtual bool operator==(const TreeNode& other) const;
+		virtual bool operator==(const TreeNode<MeshNode>& other) const;
 
 		//Insert a new tree node during runtime
-		void insert(TreeNode& node);
+		void insert(MeshNode& node);
 		
-		virtual bool add(TreeNode& node);
-		virtual bool remove(TreeNode& node);
+		virtual bool add(MeshNode& node);
+		virtual bool remove(MeshNode& node);
 
-		virtual void iterChildren(std::function<void(TreeNode&)> function);
+		void iterVisibleChildren(const Camera& camera, std::function<void(MeshNode&)> function);
+		virtual void iterChildren(std::function<void(MeshNode&)> function);
 		virtual size_t getChildCount() const;
 
 	protected:
@@ -38,9 +40,9 @@ namespace geeL {
 		};
 
 		BVH* parent;
-		std::list<TreeNode*> children;
+		std::list<TreeNode<MeshNode>*> children;
 
-		void addDirect(TreeNode& node);
+		void addDirect(MeshNode& node);
 		void subdivide();
 		void updateSize();
 		void updateSizeLocal();

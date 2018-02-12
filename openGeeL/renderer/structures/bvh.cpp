@@ -18,64 +18,20 @@ namespace geeL {
 	}
 
 
-	/*
-	void BVH::build(size_t childCap) {
-		size_t childCount = children.size();
-
-		if ((childCount >= MAXCHILDREN) && (childCount < childCap)) {
-			vec3 boxSize(aabb.getSize());
-			SplitPane p = getSplitHeuristic(boxSize);
-
-			BVH* a = new BVH();
-			BVH* b = new BVH();
-
-			for (auto it(children.begin()); it != children.end(); it++) {
-				TreeNode& node = **it;
-
-				vec3 position(node.getBoundingBox().getMin());
-				float v = position[p.axis];
-
-				if (v < p.pane)
-					a->add(node);
-				else
-					b->add(node);
-			}
-
-			children.clear();
-
-			if (a->getChildCount() > 0) {
-				a->build(childCount);
-				add(*a);
-			}
-			else
-				delete a;
-
-			if (b->getChildCount() > 0) {
-				b->build(childCount);
-				add(*a);
-
-			}
-			else
-				delete b;
-		}
-	}
-	*/
-	
-
 	void BVH::draw(const Camera& camera, SceneShader& shader) {
 		const ViewFrustum& frustum = camera.getFrustum();
 		IntersectionType intersection = aabb.intersect(frustum);
 
 		if (intersection != IntersectionType::Outside) {
 			for (auto it(children.begin()); it != children.end(); it++) {
-				TreeNode& node = **it;
-				node.draw(camera, shader);
+				auto& childNode = **it;
+				childNode.draw(camera, shader);
 			}
 		}
 	}
 	
 
-	void BVH::insert(TreeNode& node) {
+	void BVH::insert(MeshNode& node) {
 
 		//Add node directly to this BVH if it is empty
 		if (isLeaf()) {
@@ -84,13 +40,13 @@ namespace geeL {
 		}
 		
 		for (auto it(children.begin()); it != children.end(); it++) {
-			TreeNode& n = **it;
-			const AABoundingBox& box = n.getBoundingBox();
+			auto& childNode = **it;
+			const AABoundingBox& box = childNode.getBoundingBox();
 
 			//Since current child node is a leaf, all other child nodes 
 			//must be leaves as well. Therefore we can't add the node
 			//to them and have to add it to this BVH
-			if (n.isLeaf()) {
+			if (childNode.isLeaf()) {
 				addDirect(node);
 				return;
 			}
@@ -98,7 +54,7 @@ namespace geeL {
 			//Add node to given child node if it is 
 			//encapsulated by the child nodes bounding box
 			if (box.contains(node.getBoundingBox())) {
-				bool added = n.add(node);
+				bool added = childNode.add(node);
 				if(added) return;
 			}
 		}
@@ -107,16 +63,16 @@ namespace geeL {
 		glm::vec3 nodeCenter(node.getBoundingBox().getCenter());
 
 		bool closestDistance = std::numeric_limits<float>::max();
-		TreeNode* closestNode = nullptr;
+		TreeNode<MeshNode>* closestNode = nullptr;
 
 		for (auto it(children.begin()); it != children.end(); it++) {
-			TreeNode& n = **it;
-			const AABoundingBox& box = n.getBoundingBox();
+			auto& childNode = **it;
+			const AABoundingBox& box = childNode.getBoundingBox();
 			float distance = box.distanceCenter(nodeCenter);
 
 			if (distance < closestDistance) {
 				closestDistance = distance;
-				closestNode = &n;
+				closestNode = &childNode;
 			}
 		}
 
@@ -126,18 +82,18 @@ namespace geeL {
 		}
 	}
 
-	bool BVH::add(TreeNode& node) {
+	bool BVH::add(MeshNode& node) {
 		insert(node);
 		
 		return true;
 	}
 
-	bool BVH::remove(TreeNode& node) {
+	bool BVH::remove(MeshNode& node) {
 		//Remove node if it is child of this tree
 		for (auto it(children.begin()); it != children.end(); it++) {
-			TreeNode& n = **it;
+			auto& childNode = **it;
 
-			if (n == node) {
+			if (childNode == node) {
 				children.erase(it);
 
 				//This node is now empty and can be removed from tree structure
@@ -152,7 +108,7 @@ namespace geeL {
 		
 		//Otherwise find child node that should encapsulates given node
 		for (auto it(children.begin()); it != children.end(); it++) {
-			TreeNode& n = **it;
+			auto& n = **it;
 			const AABoundingBox& box = n.getBoundingBox();
 
 			if (box.contains(node.getBoundingBox())) {
@@ -165,7 +121,7 @@ namespace geeL {
 	}
 
 
-	void BVH::addDirect(TreeNode& node) {
+	void BVH::addDirect(MeshNode& node) {
 		children.push_back(&node);
 		aabb.extend(node.getBoundingBox());
 
@@ -181,15 +137,19 @@ namespace geeL {
 			BVH* b = new BVH();
 
 			for (auto it(children.begin()); it != children.end(); it++) {
-				TreeNode& node = **it;
+				auto& childNode = **it;
 
-				vec3 position(node.getBoundingBox().getMin());
+				//MeshNode* meshNode = static_cast<MeshNode*>(&childNode);
+				MeshNode* meshNode = dynamic_cast<MeshNode*>(&childNode);
+				assert(meshNode != nullptr);
+
+				vec3 position(childNode.getBoundingBox().getMin());
 				float v = position[p.axis];
 
 				if (v < p.pane)
-					a->add(node);
+					a->add(*meshNode);
 				else
-					b->add(node);
+					b->add(*meshNode);
 			}
 
 			children.clear();
@@ -205,8 +165,8 @@ namespace geeL {
 	void BVH::updateSize() {
 		AABoundingBox updatedBox;
 		for (auto it(children.begin()); it != children.end(); it++) {
-			TreeNode& node = **it;
-			updatedBox.extend(node.getBoundingBox());
+			auto& childNode = **it;
+			updatedBox.extend(childNode.getBoundingBox());
 		}
 
 		if (updatedBox != aabb) {
@@ -219,16 +179,30 @@ namespace geeL {
 		aabb.reset();
 
 		for (auto it(children.begin()); it != children.end(); it++) {
-			TreeNode& node = **it;
-			aabb.extend(node.getBoundingBox());
+			auto& childNode = **it;
+			aabb.extend(childNode.getBoundingBox());
 		}
 	}
 
 	
 
-	void BVH::iterChildren(std::function<void(TreeNode&)> function) {
-		for (auto it(children.begin()); it != children.end(); it++)
-			function(**it);
+	void BVH::iterVisibleChildren(const Camera& camera, std::function<void(MeshNode&)> function) {
+		const ViewFrustum& frustum = camera.getFrustum();
+		IntersectionType intersection = aabb.intersect(frustum);
+
+		if (intersection != IntersectionType::Outside) {
+			for (auto it(children.begin()); it != children.end(); it++) {
+				auto& childNode = **it;
+				childNode.iterChildren(function);
+			}
+		}
+	}
+
+	void BVH::iterChildren(std::function<void(MeshNode&)> function) {
+		for (auto it(children.begin()); it != children.end(); it++) {
+			auto& childNode = **it;
+			childNode.iterChildren(function);
+		}
 	}
 
 	size_t BVH::getChildCount() const {
@@ -244,8 +218,6 @@ namespace geeL {
 			//Find other BVH child
 			auto otherChild = children.end();
 			for (auto it(children.begin()); it != children.end(); it++) {
-				TreeNode& n = **it;
-				
 				if (it != itChild) {
 					otherChild = it;
 					break;
@@ -280,7 +252,7 @@ namespace geeL {
 		return children.size() == 0;
 	}
 
-	bool BVH::operator==(const TreeNode& other) const {
+	bool BVH::operator==(const TreeNode<MeshNode>& other) const {
 		return this == &other;
 	}
 
@@ -292,7 +264,7 @@ namespace geeL {
 
 		//Find median
 		for (auto it(children.begin()); it != children.end(); it++) {
-			TreeNode& node = **it;
+			auto& node = **it;
 
 			min = VectorExtension::min(min, node.getBoundingBox().getMin());
 			max = VectorExtension::max(min, node.getBoundingBox().getMax());

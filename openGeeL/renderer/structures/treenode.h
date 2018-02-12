@@ -9,15 +9,15 @@ namespace geeL {
 	class Camera;
 	class SceneShader;
 
-
-	class TreeNode : public Group<TreeNode> {
+	template<typename T>
+	class TreeNode : public Group<T> {
 
 	public:
 		virtual void draw(const Camera& camera, SceneShader& shader) = 0;
 
 		virtual bool isLeaf() const = 0;
-		virtual bool operator==(const TreeNode& other) const= 0;
-		virtual bool operator!=(const TreeNode& other) const;
+		virtual bool operator==(const TreeNode<T>& other) const= 0;
+		virtual bool operator!=(const TreeNode<T>& other) const;
 
 		const AABoundingBox& getBoundingBox() const;
 
@@ -27,13 +27,14 @@ namespace geeL {
 	};
 
 
-
-	inline const AABoundingBox& TreeNode::getBoundingBox() const {
-		return aabb;
+	template<typename T>
+	inline bool TreeNode<T>::operator!=(const TreeNode<T>& other) const {
+		return !(*this == other);
 	}
 
-	inline bool TreeNode::operator!=(const TreeNode& other) const {
-		return !(*this == other);
+	template<typename T>
+	inline const AABoundingBox& TreeNode<T>::getBoundingBox() const {
+		return aabb;
 	}
 
 }
