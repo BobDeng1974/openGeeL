@@ -1,0 +1,315 @@
+#include "cameras/camera.h"
+#include "utility/vectorextension.h"
+#include "bvh.h"
+
+#define MAXCHILDREN 5
+
+using namespace glm;
+
+namespace geeL {
+
+	BVH::BVH() : parent(nullptr) {}
+
+	BVH::BVH(BVH& parent) :parent(&parent) {}
+
+	BVH::~BVH() {
+		for (auto it(children.begin()); it != children.end(); it++)
+			delete *it;
+	}
+
+
+	/*
+	void BVH::build(size_t childCap) {
+		size_t childCount = children.size();
+
+		if ((childCount >= MAXCHILDREN) && (childCount < childCap)) {
+			vec3 boxSize(aabb.getSize());
+			SplitPane p = getSplitHeuristic(boxSize);
+
+			BVH* a = new BVH();
+			BVH* b = new BVH();
+
+			for (auto it(children.begin()); it != children.end(); it++) {
+				TreeNode& node = **it;
+
+				vec3 position(node.getBoundingBox().getMin());
+				float v = position[p.axis];
+
+				if (v < p.pane)
+					a->add(node);
+				else
+					b->add(node);
+			}
+
+			children.clear();
+
+			if (a->getChildCount() > 0) {
+				a->build(childCount);
+				add(*a);
+			}
+			else
+				delete a;
+
+			if (b->getChildCount() > 0) {
+				b->build(childCount);
+				add(*a);
+
+			}
+			else
+				delete b;
+		}
+	}
+	*/
+	
+
+	void BVH::draw(const Camera& camera, SceneShader& shader) {
+		const ViewFrustum& frustum = camera.getFrustum();
+		IntersectionType intersection = aabb.intersect(frustum);
+
+		if (intersection != IntersectionType::Outside) {
+			for (auto it(children.begin()); it != children.end(); it++) {
+				TreeNode& node = **it;
+				node.draw(camera, shader);
+			}
+		}
+	}
+	
+
+	void BVH::insert(TreeNode& node) {
+
+		//Add node directly to this BVH if it is empty
+		if (isLeaf()) {
+			addDirect(node);
+			return;
+		}
+		
+		for (auto it(children.begin()); it != children.end(); it++) {
+			TreeNode& n = **it;
+			const AABoundingBox& box = n.getBoundingBox();
+
+			//Since current child node is a leaf, all other child nodes 
+			//must be leaves as well. Therefore we can't add the node
+			//to them and have to add it to this BVH
+			if (n.isLeaf()) {
+				addDirect(node);
+				return;
+			}
+
+			//Add node to given child node if it is 
+			//encapsulated by the child nodes bounding box
+			if (box.contains(node.getBoundingBox())) {
+				bool added = n.add(node);
+				if(added) return;
+			}
+		}
+
+		//Otherwise find closest child node and expand its bounding box
+		glm::vec3 nodeCenter(node.getBoundingBox().getCenter());
+
+		bool closestDistance = std::numeric_limits<float>::max();
+		TreeNode* closestNode = nullptr;
+
+		for (auto it(children.begin()); it != children.end(); it++) {
+			TreeNode& n = **it;
+			const AABoundingBox& box = n.getBoundingBox();
+			float distance = box.distanceCenter(nodeCenter);
+
+			if (distance < closestDistance) {
+				closestDistance = distance;
+				closestNode = &n;
+			}
+		}
+
+		if (closestNode) {
+			closestNode->add(node);
+			updateSizeLocal();
+		}
+	}
+
+	bool BVH::add(TreeNode& node) {
+		insert(node);
+		
+		return true;
+	}
+
+	bool BVH::remove(TreeNode& node) {
+		//Remove node if it is child of this tree
+		for (auto it(children.begin()); it != children.end(); it++) {
+			TreeNode& n = **it;
+
+			if (n == node) {
+				children.erase(it);
+
+				//This node is now empty and can be removed from tree structure
+				if (children.size() == 0)
+					parent->remove(*this);
+				else
+					updateSize();
+
+				return true;
+			}
+		}
+		
+		//Otherwise find child node that should encapsulates given node
+		for (auto it(children.begin()); it != children.end(); it++) {
+			TreeNode& n = **it;
+			const AABoundingBox& box = n.getBoundingBox();
+
+			if (box.contains(node.getBoundingBox())) {
+				bool removed = n.remove(node);
+				if(removed) return true;
+			}
+		}
+
+		return false;
+	}
+
+
+	void BVH::addDirect(TreeNode& node) {
+		children.push_back(&node);
+		aabb.extend(node.getBoundingBox());
+
+		subdivide();
+	}
+
+	void BVH::subdivide() {
+		if (children.size() > MAXCHILDREN) {
+			vec3 boxSize(aabb.getSize());
+			SplitPane p = getSplitHeuristic(boxSize);
+
+			BVH* a = new BVH();
+			BVH* b = new BVH();
+
+			for (auto it(children.begin()); it != children.end(); it++) {
+				TreeNode& node = **it;
+
+				vec3 position(node.getBoundingBox().getMin());
+				float v = position[p.axis];
+
+				if (v < p.pane)
+					a->add(node);
+				else
+					b->add(node);
+			}
+
+			children.clear();
+
+			assert(a->getChildCount() > 0);
+			assert(b->getChildCount() > 0);
+
+			children.push_back(a);
+			children.push_back(b);
+		}
+	}
+
+	void BVH::updateSize() {
+		AABoundingBox updatedBox;
+		for (auto it(children.begin()); it != children.end(); it++) {
+			TreeNode& node = **it;
+			updatedBox.extend(node.getBoundingBox());
+		}
+
+		if (updatedBox != aabb) {
+			aabb = updatedBox;
+			if (parent) parent->updateSize();
+		}
+	}
+
+	void BVH::updateSizeLocal() {
+		aabb.reset();
+
+		for (auto it(children.begin()); it != children.end(); it++) {
+			TreeNode& node = **it;
+			aabb.extend(node.getBoundingBox());
+		}
+	}
+
+	
+
+	void BVH::iterChildren(std::function<void(TreeNode&)> function) {
+		for (auto it(children.begin()); it != children.end(); it++)
+			function(**it);
+	}
+
+	size_t BVH::getChildCount() const {
+		return children.size();
+	}
+
+	void BVH::remove(BVH& child) {
+		auto itChild = std::find(children.begin(), children.end(), &child);
+
+		//Given BVH is child of this node and therefore all(both)
+		//children have to be BVHs as well
+		if (itChild != children.end()) {
+			//Find other BVH child
+			auto otherChild = children.end();
+			for (auto it(children.begin()); it != children.end(); it++) {
+				TreeNode& n = **it;
+				
+				if (it != itChild) {
+					otherChild = it;
+					break;
+				}
+			}
+
+			//Detach remaining child from this node
+			children.erase(otherChild);
+
+			BVH* c = static_cast<BVH*>(*otherChild);
+
+			//Rebalance tree
+			parent->balance(*this, *c);
+		}
+	}
+
+	void BVH::balance(BVH& toRemove, BVH& toAdd) {
+		auto itChild = std::find(children.begin(), children.end(), &toRemove);
+
+		if (itChild != children.end()) {
+			children.erase(itChild);
+			delete &toRemove;
+
+			children.push_back(&toAdd);
+			assert(children.size() == 2);
+
+			updateSize();
+		}
+	}
+
+	bool BVH::isLeaf() const {
+		return children.size() == 0;
+	}
+
+	bool BVH::operator==(const TreeNode& other) const {
+		return this == &other;
+	}
+
+
+	BVH::SplitPane BVH::getSplitHeuristic(const glm::vec3& size) {
+		SplitPane p;
+		vec3 min(std::numeric_limits<float>::max());
+		vec3 max(std::numeric_limits<float>::min());
+
+		//Find median
+		for (auto it(children.begin()); it != children.end(); it++) {
+			TreeNode& node = **it;
+
+			min = VectorExtension::min(min, node.getBoundingBox().getMin());
+			max = VectorExtension::max(min, node.getBoundingBox().getMax());
+		}
+
+		//Find largest axis of bounding box
+		if ((size.x >= size.y) && (size.x >= size.z))
+			p.axis = 0;
+		else if ((size.y > size.x) && (size.y > size.z))
+			p.axis = 1;
+		else
+			p.axis = 2;
+
+		p.pane = (max[p.axis] + min[p.axis]) / 2;
+
+		return p;
+	}
+
+
+}
