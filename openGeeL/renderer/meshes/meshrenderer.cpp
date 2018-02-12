@@ -329,13 +329,14 @@ namespace geeL{
 
 	void StaticMeshRenderer::initialize(SceneShader& shader, std::list<const StaticMesh*>& newMeshes) {
 		//Adjust bounding box to only surrounds the given singular meshes
-		aabb.reset();
+		AABoundingBox bb;
 
 		for (auto it(newMeshes.begin()); it != newMeshes.end(); it++) {
 			const StaticMesh& mesh = **it;
 
 			StaticMeshInstance* m = new StaticMeshInstance(mesh, transform);
-			aabb.update(m->getBoundingBox());
+			bb.extend(m->getBoundingBox());
+			aabb.setLocalBox(bb);
 
 			addMesh(unique_ptr<StaticMeshInstance>(m));
 		}

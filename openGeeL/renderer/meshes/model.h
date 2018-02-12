@@ -115,7 +115,7 @@ namespace geeL {
 	inline MeshType& GenericModel<MeshType>::addMesh(MeshType&& mesh) {
 		//Update bounding box oh whole model to fit given mesh as well
 		const AABoundingBox& box = mesh.getBoundingBox();
-		aabb.update(box);
+		aabb.extend(box);
 
 		meshes.push_back(std::move(mesh));
 

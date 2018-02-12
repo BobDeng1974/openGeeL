@@ -279,7 +279,7 @@ namespace geeL {
 	template<typename VertexType>
 	inline void GenericMesh<VertexType>::computeBoundingBox() {
 		for (int i = 0; i < vertices.size(); i++)
-			aabb.update(vertices[i].position);
+			aabb.extend(vertices[i].position);
 	}
 
 }

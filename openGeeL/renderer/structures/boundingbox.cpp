@@ -21,7 +21,7 @@ namespace geeL {
 		, max(other.max) {}
 
 
-	void AABoundingBox::update(const glm::vec3& point) {
+	void AABoundingBox::extend(const glm::vec3& point) {
 		min.x = std::min(min.x, point.x);
 		min.y = std::min(min.y, point.y);
 		min.z = std::min(min.z, point.z);
@@ -33,9 +33,9 @@ namespace geeL {
 		onChange();
 	}
 
-	void AABoundingBox::update(const AABoundingBox& box) {
-		update(box.getMin());
-		update(box.getMax());
+	void AABoundingBox::extend(const AABoundingBox& box) {
+		extend(box.getMin());
+		extend(box.getMax());
 	}
 
 	const glm::vec3& AABoundingBox::getMin() const {
@@ -72,9 +72,43 @@ namespace geeL {
 		return p;
 	}
 
+	float AABoundingBox::distanceCenter(const glm::vec3& point) const {
+		return length(getCenter() - point);
+	}
+
+	const glm::vec3 AABoundingBox::getCenter() const {
+		return min + 0.5f * (max - min);
+	}
+
+	const glm::vec3 AABoundingBox::getDiagonal() const {
+		return max - min;
+	}
+
+	const glm::vec3 AABoundingBox::getSize() const {
+		return glm::abs(max - min);
+	}
+
 	std::string AABoundingBox::toString() const {
 		return "AABB: (" + std::to_string(min.x) + ", " + std::to_string(min.y) + ", " + std::to_string(min.z) + ") - ("
 			+ std::to_string(max.x) + ", " + std::to_string(max.y) + ", " + std::to_string(max.z) + ")";
+	}
+
+	bool AABoundingBox::operator==(const AABoundingBox& other) const {
+		return (min == other.min) && (max == other.max);
+	}
+
+	bool AABoundingBox::operator!=(const AABoundingBox& other) const {
+		return (min != other.min) || (max != other.max);
+	}
+
+	bool AABoundingBox::contains(const glm::vec3& point) const {
+		return (min.x <= point.x) && (max.x >= point.x)
+			&& (min.y <= point.y) && (max.y >= point.y)
+			&& (min.z <= point.z) && (max.z >= point.z);
+	}
+
+	bool AABoundingBox::contains(const AABoundingBox& box) const {
+		return contains(box.getMin()) && contains(box.getMax());
 	}
 
 	void AABoundingBox::reset() {
@@ -112,11 +146,11 @@ namespace geeL {
 		transform.addChangeListener([this](const Transform& transform) {
 			updateGlobal();
 		});
+	}
 
-		localBox.addListener([this](const AABoundingBox& box) {
-			updateGlobal();
-		});
-
+	void TransformableBoundingBox::setLocalBox(const AABoundingBox& localBox) {
+		this->localBox = localBox;
+		updateGlobal();
 	}
 
 	void TransformableBoundingBox::updateGlobal() {
