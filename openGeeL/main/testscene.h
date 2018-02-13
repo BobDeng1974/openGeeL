@@ -50,7 +50,7 @@ public:
 
 			
 			lightIntensity = 15.f;
-			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(0.f), vec3(145.0f, 50, -160), vec3(1.f));
+			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(8.f, 3.5f, 0.f), vec3(145.0f, 50, -160), vec3(1.f));
 			ShadowMapConfiguration dlConfig(0.00002f, ShadowMapType::Soft, ShadowmapResolution::Huge, 0.5f, 2U, 15);
 			lightManager.addDirectionalLight(dlConfig, lightTransform2, glm::vec3(lightIntensity*0.796, lightIntensity*0.535, lightIntensity*0.379));
 			

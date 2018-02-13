@@ -154,8 +154,11 @@ namespace geeL {
 	}
 
 	void TransformableBoundingBox::updateGlobal() {
-		min = vec3(transform.getMatrix() * vec4(localBox.getMin(), 1.f));
-		max = vec3(transform.getMatrix() * vec4(localBox.getMax(), 1.f));
+		vec3 tmin(transform.getMatrix() * vec4(localBox.getMin(), 1.f));
+		vec3 tmax(transform.getMatrix() * vec4(localBox.getMax(), 1.f));
+
+		min = vec3(std::min(tmin.x, tmax.x), std::min(tmin.y, tmax.y), std::min(tmin.z, tmax.z));
+		max = vec3(std::max(tmin.x, tmax.x), std::max(tmin.y, tmax.y), std::max(tmin.z, tmax.z));
 	}
 
 }
