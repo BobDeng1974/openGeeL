@@ -225,7 +225,6 @@ namespace geeL {
 		}
 	}
 
-	
 	void BVH::balance(TreeNode<MeshNode>& toRemove, TreeNode<MeshNode>& toAdd) {
 		auto itChild = std::find(children.begin(), children.end(), &toRemove);
 
