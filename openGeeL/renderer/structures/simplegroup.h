@@ -6,26 +6,29 @@
 
 namespace geeL {
 
-	class SimpleGroup : public Group {
+	template<typename T>
+	class SimpleGroup : public Group<T> {
 
 	public:
-		virtual void add(TreeNode& node);
-		virtual bool remove(TreeNode& node);
+		virtual void add(T& node);
+		virtual bool remove(T& node);
 
-		virtual void iterChildren(std::function<void(TreeNode&)> function);
+		virtual void iterChildren(std::function<void(T&)> function);
 		virtual size_t getChildCount() const;
 
 	private:
-		std::list<TreeNode*> children;
+		std::list<T*> children;
 
 	};
 
 
-	inline void SimpleGroup::add(TreeNode& node) {
+	template<typename T>
+	inline void SimpleGroup<T>::add(T& node) {
 		children.push_back(&node);
 	}
 
-	inline bool SimpleGroup::remove(TreeNode& node) {
+	template<typename T>
+	inline bool SimpleGroup<T>::remove(T& node) {
 		auto it = std::find(children.begin(), children.end(), &node);
 
 		if (it != children.end()) {
@@ -36,13 +39,16 @@ namespace geeL {
 		return false;
 	}
 
-	inline void SimpleGroup::iterChildren(std::function<void(TreeNode&)> function) {
+	template<typename T>
+	inline void SimpleGroup<T>::iterChildren(std::function<void(T&)> function) {
 		for (auto it(children.begin()); it != children.end(); it++)
 			function(**it);
 	}
 
-	inline size_t SimpleGroup::getChildCount() const {
+	template<typename T>
+	inline size_t SimpleGroup<T>::getChildCount() const {
 		return children.size();
+	
 	}
 
 }

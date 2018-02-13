@@ -8,9 +8,10 @@ using namespace glm;
 
 namespace geeL {
 
-	BVH::BVH() : parent(nullptr) {}
+	BVH::BVH() {}
 
-	BVH::BVH(BVH& parent) :parent(&parent) {}
+	BVH::BVH(BVH& parent) 
+		: TreeNode<MeshNode>(parent) {}
 
 	BVH::~BVH() {
 		for (auto it(children.begin()); it != children.end(); it++)
@@ -29,6 +30,48 @@ namespace geeL {
 			}
 		}
 	}
+
+	void BVH::onChildChange(TreeNode<MeshNode>& child) {
+		if (!aabb.contains(child.getBoundingBox()))
+			updateSize();
+	}
+
+	void BVH::onChildRemove(TreeNode<MeshNode>& child) {
+		BVH* c = dynamic_cast<BVH*>(&child);
+
+		if (c) {
+			auto itChild = std::find(children.begin(), children.end(), &child);
+
+			//Given BVH is child of this node and therefore all(both)
+			//children have to be BVHs as well
+			if (itChild != children.end()) {
+				//Find other BVH child
+				auto otherChild = children.end();
+				for (auto it(children.begin()); it != children.end(); it++) {
+					if (it != itChild) {
+						otherChild = it;
+						break;
+					}
+				}
+
+				children.clear();
+				delete c;
+
+				BVH* oc = static_cast<BVH*>(*otherChild);
+
+				//Reblace this node with remaining child node in parent node
+				if (parentNode)
+					parentNode->balance(*this, *oc);
+				//Otherwise, this node is the root node and we 
+				//have to move child data into this node
+				else {
+					TreeNode::operator=(std::move(*oc));
+					delete oc;
+				}
+			}
+		}
+	}
+
 	
 
 	void BVH::insert(MeshNode& node) {
@@ -97,8 +140,8 @@ namespace geeL {
 				children.erase(it);
 
 				//This node is now empty and can be removed from tree structure
-				if (children.size() == 0)
-					parent->remove(*this);
+				if (parentNode && children.size() == 0)
+					parentNode->onChildRemove(*this);
 				else
 					updateSize();
 
@@ -133,8 +176,8 @@ namespace geeL {
 			vec3 boxSize(aabb.getSize());
 			SplitPane p = getSplitHeuristic(boxSize);
 
-			BVH* a = new BVH();
-			BVH* b = new BVH();
+			BVH* a = new BVH(*this);
+			BVH* b = new BVH(*this);
 
 			for (auto it(children.begin()); it != children.end(); it++) {
 				auto& childNode = **it;
@@ -171,7 +214,7 @@ namespace geeL {
 
 		if (updatedBox != aabb) {
 			aabb = updatedBox;
-			if (parent) parent->updateSize();
+			if (parentNode) parentNode->onChildChange(*this);
 		}
 	}
 
@@ -209,32 +252,7 @@ namespace geeL {
 		return children.size();
 	}
 
-	void BVH::remove(BVH& child) {
-		auto itChild = std::find(children.begin(), children.end(), &child);
-
-		//Given BVH is child of this node and therefore all(both)
-		//children have to be BVHs as well
-		if (itChild != children.end()) {
-			//Find other BVH child
-			auto otherChild = children.end();
-			for (auto it(children.begin()); it != children.end(); it++) {
-				if (it != itChild) {
-					otherChild = it;
-					break;
-				}
-			}
-
-			//Detach remaining child from this node
-			children.erase(otherChild);
-
-			BVH* c = static_cast<BVH*>(*otherChild);
-
-			//Rebalance tree
-			parent->balance(*this, *c);
-		}
-	}
-
-	void BVH::balance(BVH& toRemove, BVH& toAdd) {
+	void BVH::balance(TreeNode<MeshNode>& toRemove, TreeNode<MeshNode>& toAdd) {
 		auto itChild = std::find(children.begin(), children.end(), &toRemove);
 
 		if (itChild != children.end()) {
@@ -242,6 +260,7 @@ namespace geeL {
 			delete &toRemove;
 
 			children.push_back(&toAdd);
+			toAdd.setParent(*this);
 			assert(children.size() == 2);
 
 			updateSize();

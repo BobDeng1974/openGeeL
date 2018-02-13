@@ -1,17 +1,29 @@
 #include "cameras/camera.h"
 #include "meshes/ameshrenderer.h"
+#include "transformation/transform.h"
 #include "meshnode.h"
 
 namespace geeL {
 
 	MeshNode::MeshNode(MeshRenderer& renderer) 
-		: renderer(renderer) {}
+		: renderer(renderer) {
+
+		//Listen to transformational changes of given 
+		//renderer and  inform parent node if needed
+		Transform& t = renderer.getTransform();
+		t.addChangeListener([this](const Transform& transform) {
+			if (parentNode)
+				parentNode->onChildChange(*this);
+		});
+	}
 
 
 	void MeshNode::draw(const Camera& camera, SceneShader& shader) {
 		if(renderer.isVisible(camera))
 			renderer.draw(shader);
 	}
+
+	void MeshNode::balance(TreeNode<MeshNode>& toRemove, TreeNode<MeshNode>& toAdd) {}
 
 	bool MeshNode::isLeaf() const {
 		return true;
