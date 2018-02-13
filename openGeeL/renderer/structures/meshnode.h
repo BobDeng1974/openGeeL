@@ -29,6 +29,7 @@ namespace geeL {
 		virtual bool remove(MeshNode& node);
 
 		virtual void iterChildren(std::function<void(MeshNode&)> function);
+		virtual void iterVisibleChildren(const Camera& camera, std::function<void(MeshNode&)> function);
 		virtual size_t getChildCount() const;
 
 		MeshRenderer& getMeshRenderer();

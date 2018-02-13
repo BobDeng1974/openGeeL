@@ -31,7 +31,11 @@ namespace geeL {
 		virtual bool operator!=(const TreeNode<T>& other) const;
 
 		const AABoundingBox& getBoundingBox() const;
+
 		virtual void setParent(TreeNode<T>& parent);
+		virtual void iterChildren(std::function<void(T&)> function);
+		virtual void iterVisibleChildren(const Camera& camera, std::function<void(T&)> function);
+		virtual size_t getChildCount() const;
 
 	protected:
 		std::list<TreeNode<T>*> children;
@@ -79,6 +83,32 @@ namespace geeL {
 	template<typename T>
 	inline void TreeNode<T>::setParent(TreeNode<T>& parent) {
 		parentNode = &parent;
+	}
+
+	template<typename T>
+	inline void TreeNode<T>::iterChildren(std::function<void(T&)> function) {
+		for (auto it(children.begin()); it != children.end(); it++) {
+			auto& childNode = **it;
+			childNode.iterChildren(function);
+		}
+	}
+
+	template<typename T>
+	inline void TreeNode<T>::iterVisibleChildren(const Camera& camera, std::function<void(T&)> function) {
+		const ViewFrustum& frustum = camera.getFrustum();
+		IntersectionType intersection = aabb.intersect(frustum);
+
+		if (intersection != IntersectionType::Outside) {
+			for (auto it(children.begin()); it != children.end(); it++) {
+				auto& childNode = **it;
+				childNode.iterVisibleChildren(camera, function);
+			}
+		}
+	}
+
+	template<typename T>
+	inline size_t TreeNode<T>::getChildCount() const {
+		return children.size();
 	}
 
 }

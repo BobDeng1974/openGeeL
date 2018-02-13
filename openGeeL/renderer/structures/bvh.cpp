@@ -57,16 +57,14 @@ namespace geeL {
 				children.clear();
 				delete c;
 
-				BVH* oc = static_cast<BVH*>(*otherChild);
-
 				//Reblace this node with remaining child node in parent node
 				if (parentNode)
-					parentNode->balance(*this, *oc);
+					parentNode->balance(*this, **otherChild);
 				//Otherwise, this node is the root node and we 
 				//have to move child data into this node
 				else {
-					TreeNode::operator=(std::move(*oc));
-					delete oc;
+					TreeNode::operator=(std::move(**otherChild));
+					delete *otherChild;
 				}
 			}
 		}
@@ -228,30 +226,6 @@ namespace geeL {
 	}
 
 	
-
-	void BVH::iterVisibleChildren(const Camera& camera, std::function<void(MeshNode&)> function) {
-		const ViewFrustum& frustum = camera.getFrustum();
-		IntersectionType intersection = aabb.intersect(frustum);
-
-		if (intersection != IntersectionType::Outside) {
-			for (auto it(children.begin()); it != children.end(); it++) {
-				auto& childNode = **it;
-				childNode.iterChildren(function);
-			}
-		}
-	}
-
-	void BVH::iterChildren(std::function<void(MeshNode&)> function) {
-		for (auto it(children.begin()); it != children.end(); it++) {
-			auto& childNode = **it;
-			childNode.iterChildren(function);
-		}
-	}
-
-	size_t BVH::getChildCount() const {
-		return children.size();
-	}
-
 	void BVH::balance(TreeNode<MeshNode>& toRemove, TreeNode<MeshNode>& toAdd) {
 		auto itChild = std::find(children.begin(), children.end(), &toRemove);
 

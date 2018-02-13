@@ -52,6 +52,10 @@ namespace geeL {
 		function(*this);
 	}
 
+	void MeshNode::iterVisibleChildren(const Camera & camera, std::function<void(MeshNode&)> function) {
+		function(*this);
+	}
+
 	size_t MeshNode::getChildCount() const {
 		return 0;
 	}

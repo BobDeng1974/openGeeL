@@ -29,17 +29,12 @@ namespace geeL {
 		virtual bool add(MeshNode& node);
 		virtual bool remove(MeshNode& node);
 
-		void iterVisibleChildren(const Camera& camera, std::function<void(MeshNode&)> function);
-		virtual void iterChildren(std::function<void(MeshNode&)> function);
-		virtual size_t getChildCount() const;
-
 	private:
 		struct SplitPane {
 			int axis;
 			float pane;
 		};
 
-		
 
 		void addDirect(MeshNode& node);
 		void subdivide();
