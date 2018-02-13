@@ -456,6 +456,7 @@
     <ClInclude Include="renderer\structures\boundingbox.h" />
     <ClInclude Include="renderer\structures\bvh.h" />
     <ClInclude Include="renderer\structures\group.h" />
+    <ClInclude Include="renderer\structures\groups.h" />
     <ClInclude Include="renderer\structures\meshnode.h" />
     <ClInclude Include="renderer\structures\plane.h" />
     <ClInclude Include="renderer\structures\simplegroup.h" />

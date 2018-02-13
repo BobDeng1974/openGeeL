@@ -1,7 +1,7 @@
 #ifndef BVH_H
 #define BVH_H
 
-#include <list>
+
 #include "meshnode.h"
 #include "treenode.h"
 
@@ -15,6 +15,10 @@ namespace geeL {
 		virtual ~BVH();
 
 		virtual void draw(const Camera& camera, SceneShader& shader);
+		virtual void balance(TreeNode<MeshNode>& toRemove, TreeNode<MeshNode>& toAdd);
+
+		virtual void onChildChange(TreeNode<MeshNode>& child);
+		virtual void onChildRemove(TreeNode<MeshNode>& child);
 
 		virtual bool isLeaf() const;
 		virtual bool operator==(const TreeNode<MeshNode>& other) const;
@@ -29,18 +33,13 @@ namespace geeL {
 		virtual void iterChildren(std::function<void(MeshNode&)> function);
 		virtual size_t getChildCount() const;
 
-	protected:
-		void remove(BVH& child);
-		void balance(BVH& toRemove, BVH& toAdd);
-
 	private:
 		struct SplitPane {
 			int axis;
 			float pane;
 		};
 
-		BVH* parent;
-		std::list<TreeNode<MeshNode>*> children;
+		
 
 		void addDirect(MeshNode& node);
 		void subdivide();

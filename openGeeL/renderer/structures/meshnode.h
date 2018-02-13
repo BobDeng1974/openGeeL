@@ -8,14 +8,19 @@
 namespace geeL {
 
 	class MeshRenderer;
+	class MeshNode;
 
 
-	class MeshNode : public TreeNode<MeshNode> {
+	class AMeshNode : public TreeNode<MeshNode> {};
+
+
+	class MeshNode : public AMeshNode {
 
 	public:
 		MeshNode(MeshRenderer& renderer);
 
 		virtual void draw(const Camera& camera, SceneShader& shader);
+		virtual void balance(TreeNode<MeshNode>& toRemove, TreeNode<MeshNode>& toAdd);
 
 		virtual bool isLeaf() const;
 		virtual bool operator==(const TreeNode<MeshNode>& other) const;
