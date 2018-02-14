@@ -11,6 +11,7 @@ namespace geeL {
 	class PerspectiveCamera;
 	class SceneObject;
 	class SimpleShadowmap;
+	class SingleMeshRenderer;
 
 
 	class SceneObjectSnippet : public GUISnippet {
@@ -37,6 +38,19 @@ namespace geeL {
 
 	private:
 		MeshRenderer& mesh;
+
+	};
+
+	class SingleMeshRendererSnippet : public SceneObjectSnippet {
+
+	public:
+		SingleMeshRendererSnippet(SingleMeshRenderer& mesh);
+
+		virtual void draw(GUIContext* context);
+		virtual std::string toString() const;
+
+	private:
+		SingleMeshRenderer& mesh;
 
 	};
 

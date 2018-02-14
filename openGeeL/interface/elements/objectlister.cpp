@@ -73,6 +73,11 @@ namespace geeL {
 				snippet.draw(context);
 			}
 
+			for (auto it = meshSnippets.begin(); it != meshSnippets.end(); it++) {
+				GUISnippet& snippet = **it;
+				snippet.draw(context);
+			}
+
 			nk_tree_pop(context);
 		}
 	}
@@ -96,6 +101,12 @@ namespace geeL {
 	void ObjectLister::add(MeshRenderer& mesh) {
 		MeshRendererSnippet* snippet = new MeshRendererSnippet(mesh);
 		objectSnippets[&mesh] = std::unique_ptr<GUISnippet>(snippet);
+	}
+
+	void ObjectLister::add(SingleMeshRenderer & mesh) {
+		SingleMeshRendererSnippet* snippet = new SingleMeshRendererSnippet(mesh);
+		meshSnippets.push_back(std::unique_ptr<GUISnippet>(snippet));
+
 	}
 
 	void ObjectLister::add(Light& light) {
