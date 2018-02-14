@@ -223,11 +223,9 @@
     <ClCompile Include="renderer\materials\genericmaterial.cpp" />
     <ClCompile Include="renderer\materials\material.cpp" />
     <ClCompile Include="renderer\materials\materialfactory.cpp" />
-    <ClCompile Include="renderer\meshes\instancedmesh.cpp" />
     <ClCompile Include="renderer\meshes\mesh.cpp" />
     <ClCompile Include="renderer\meshes\meshfactory.cpp" />
     <ClCompile Include="renderer\meshes\meshidgenerator.cpp" />
-    <ClCompile Include="renderer\meshes\meshrenderer.cpp" />
     <ClCompile Include="renderer\meshes\model.cpp" />
     <ClCompile Include="renderer\meshes\singlemeshrenderer.cpp" />
     <ClCompile Include="renderer\postprocessing\additiveeffect.cpp" />
@@ -395,13 +393,9 @@
     <ClInclude Include="renderer\materials\genericmaterial.h" />
     <ClInclude Include="renderer\materials\material.h" />
     <ClInclude Include="renderer\materials\materialfactory.h" />
-    <ClInclude Include="renderer\meshes\ameshrenderer.h" />
-    <ClInclude Include="renderer\meshes\instancedmesh.h" />
-    <ClInclude Include="renderer\meshes\materialmapping.h" />
     <ClInclude Include="renderer\meshes\mesh.h" />
     <ClInclude Include="renderer\meshes\meshfactory.h" />
     <ClInclude Include="renderer\meshes\meshidgenerator.h" />
-    <ClInclude Include="renderer\meshes\meshrenderer.h" />
     <ClInclude Include="renderer\meshes\model.h" />
     <ClInclude Include="renderer\meshes\rendermode.h" />
     <ClInclude Include="renderer\meshes\singlemeshrenderer.h" />

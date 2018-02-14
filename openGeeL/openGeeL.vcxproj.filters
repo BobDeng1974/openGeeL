@@ -129,9 +129,6 @@
     <ClCompile Include="renderer\transformation\transformfactory.cpp">
       <Filter>renderer\transformation</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\meshes\meshrenderer.cpp">
-      <Filter>renderer\meshes</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\meshes\meshfactory.cpp">
       <Filter>renderer\meshes</Filter>
     </ClCompile>
@@ -486,9 +483,6 @@
     <ClCompile Include="renderer\animation\bone.cpp">
       <Filter>renderer\animation</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\meshes\instancedmesh.cpp">
-      <Filter>renderer\meshes</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\shader\uniformstack.cpp">
       <Filter>renderer\shader</Filter>
     </ClCompile>
@@ -592,9 +586,6 @@
     </ClInclude>
     <ClInclude Include="renderer\transformation\transformfactory.h">
       <Filter>renderer\transformation</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\meshes\meshrenderer.h">
-      <Filter>renderer\meshes</Filter>
     </ClInclude>
     <ClInclude Include="renderer\meshes\meshfactory.h">
       <Filter>renderer\meshes</Filter>
@@ -1021,15 +1012,6 @@
     </ClInclude>
     <ClInclude Include="renderer\animation\bone.h">
       <Filter>renderer\animation</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\meshes\ameshrenderer.h">
-      <Filter>renderer\meshes</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\meshes\materialmapping.h">
-      <Filter>renderer\meshes</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\meshes\instancedmesh.h">
-      <Filter>renderer\meshes</Filter>
     </ClInclude>
     <ClInclude Include="main\modelviewer.h">
       <Filter>main</Filter>

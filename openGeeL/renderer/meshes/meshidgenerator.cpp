@@ -1,7 +1,6 @@
 #include <cassert>
 #include <cmath>
 #include <functional>
-#include "instancedmesh.h"
 #include "singlemeshrenderer.h"
 #include "meshidgenerator.h"
 
