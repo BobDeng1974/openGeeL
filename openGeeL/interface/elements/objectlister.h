@@ -12,7 +12,6 @@ namespace geeL {
 	class SceneObject;
 	class SceneCamera;
 	class PerspectiveCamera;
-	class MeshRenderer;
 	class Light;
 	class Scene;
 	class ShadowMapSnippet;
@@ -30,7 +29,6 @@ namespace geeL {
 		//void add(SceneObject& obj);
 		void add(SceneCamera& cam);
 		void add(PerspectiveCamera& cam);
-		void add(MeshRenderer& mesh);
 		void add(SingleMeshRenderer& mesh);
 		void add(Light& light);
 		void add(Light& light, ShadowMapSnippet& mapSnippet);
@@ -42,7 +40,6 @@ namespace geeL {
 
 	private:
 		std::list<std::unique_ptr<GUISnippet>> lightSnippets;
-		std::map<MeshRenderer*, std::unique_ptr<GUISnippet>> objectSnippets;
 		std::map<SingleMeshRenderer*, std::unique_ptr<GUISnippet>> meshSnippets;
 		std::list<std::unique_ptr<GUISnippet>> cameraSnippets;
 		std::list<std::unique_ptr<GUISnippet>> otherSnippets;

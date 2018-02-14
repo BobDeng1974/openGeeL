@@ -7,7 +7,6 @@ namespace geeL {
 	
 	class SceneCamera;
 	class Light;
-	class MeshRenderer;
 	class PerspectiveCamera;
 	class SceneObject;
 	class SimpleShadowmap;
@@ -27,19 +26,6 @@ namespace geeL {
 
 	};
 
-
-	class MeshRendererSnippet : public SceneObjectSnippet {
-
-	public:
-		MeshRendererSnippet(MeshRenderer& mesh);
-
-		virtual void draw(GUIContext* context);
-		virtual std::string toString() const;
-
-	private:
-		MeshRenderer& mesh;
-
-	};
 
 	class SingleMeshRendererSnippet : public SceneObjectSnippet {
 

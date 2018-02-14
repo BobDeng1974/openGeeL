@@ -5,7 +5,6 @@
 #include "materials/defaultmaterial.h"
 #include "materials/genericmaterial.h"
 #include "meshes/mesh.h"
-#include "meshes/meshrenderer.h"
 #include "meshes/singlemeshrenderer.h"
 #include "lights/light.h"
 #include "sceneobject.h"
@@ -36,65 +35,6 @@ namespace geeL {
 	}
 
 
-	MeshRendererSnippet::MeshRendererSnippet(MeshRenderer& mesh) 
-		: SceneObjectSnippet(mesh), mesh(mesh) {}
-
-	void MeshRendererSnippet::draw(GUIContext* context) {
-		unsigned int id = mesh.transform.getID();
-
-		std::string number = "#" + std::to_string(mesh.transform.getID());
-		std::string name = mesh.getName() + " " + number;
-		if (nk_tree_push_id(context, NK_TREE_NODE, name.c_str(), NK_MINIMIZED, id)) {
-			SceneObjectSnippet::draw(context);
-
-			unsigned int materialsID = id + 1;
-
-			if (nk_tree_push_id(context, NK_TREE_NODE, "Materials", NK_MINIMIZED, materialsID)) {
-				auto defaultColor = context->style.tab.node_minimize_button.text_normal;
-
-				unsigned int counter = 0;
-				mesh.iterate([&](const MeshInstance& mesh, const Material& material) {
-					MaterialContainer& container = material.getMaterialContainer();
-					unsigned int containerID = id + counter;
-
-					glm::vec3 c(container.getVectorValue("Color") * 256.f);
-					context->style.tab.node_minimize_button.text_normal = nk_rgb(c.r, c.g, c.b);
-
-
-					std::string name = container.name + " (" + mesh.getName() + ")";
-					if (nk_tree_push_id(context, NK_TREE_NODE, name.c_str(), NK_MINIMIZED, containerID)) {
-
-						//TODO: Make this less horrible and remove casts
-						DefaultMaterialContainer* def = dynamic_cast<DefaultMaterialContainer*>(&container);
-						if (def != nullptr)
-							GUISnippets::drawMaterial(context, def);
-						else {
-							GenericMaterialContainer* gen = dynamic_cast<GenericMaterialContainer*>(&container);
-							if (gen != nullptr)
-								GUISnippets::drawMaterial(context, gen);
-						}
-
-						nk_tree_pop(context);
-					}
-
-					counter++;
-				});
-
-
-				context->style.tab.node_minimize_button.text_normal = defaultColor;
-
-				nk_tree_pop(context);
-			}
-
-			nk_tree_pop(context);
-		}
-	}
-
-	std::string MeshRendererSnippet::toString() const {
-		return "Mesh Renderer";
-	}
-
-
 
 	SingleMeshRendererSnippet::SingleMeshRendererSnippet(SingleMeshRenderer & mesh)
 		: SceneObjectSnippet(mesh), mesh(mesh) {}
@@ -113,9 +53,9 @@ namespace geeL {
 			SceneObjectSnippet::draw(context);
 
 			unsigned int materialsID = id + 1;
-			std::string name = container.name + " (" + mesh.getName() + ")";
+			//std::string name = container.name + " (" + mesh.getName() + ")";
 
-			if (nk_tree_push_id(context, NK_TREE_NODE, name.c_str(), NK_MINIMIZED, materialsID)) {
+			if (nk_tree_push_id(context, NK_TREE_NODE, "Material", NK_MINIMIZED, materialsID)) {
 				DefaultMaterialContainer* def = dynamic_cast<DefaultMaterialContainer*>(&container);
 				if (def != nullptr)
 					GUISnippets::drawMaterial(context, def);

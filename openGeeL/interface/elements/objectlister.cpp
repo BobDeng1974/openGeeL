@@ -67,12 +67,7 @@ namespace geeL {
 			nk_tree_pop(context);
 		}
 			
-		if (nk_tree_push(context, NK_TREE_NODE, "Objects", NK_MAXIMIZED)) {
-			for (auto it = objectSnippets.begin(); it != objectSnippets.end(); it++) {
-				GUISnippet& snippet = *it->second;
-				snippet.draw(context);
-			}
-
+		if (nk_tree_push(context, NK_TREE_NODE, "Objects", NK_MINIMIZED)) {
 			for (auto it = meshSnippets.begin(); it != meshSnippets.end(); it++) {
 				GUISnippet& snippet = *it->second;
 				snippet.draw(context);
@@ -96,11 +91,6 @@ namespace geeL {
 	void ObjectLister::add(PerspectiveCamera& cam) {
 		PerspectiveCameraSnippet* snippet = new PerspectiveCameraSnippet(cam);
 		cameraSnippets.push_back(std::unique_ptr<GUISnippet>(snippet));
-	}
-
-	void ObjectLister::add(MeshRenderer& mesh) {
-		MeshRendererSnippet* snippet = new MeshRendererSnippet(mesh);
-		objectSnippets[&mesh] = std::unique_ptr<GUISnippet>(snippet);
 	}
 
 	void ObjectLister::add(SingleMeshRenderer & mesh) {
