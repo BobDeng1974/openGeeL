@@ -55,6 +55,8 @@ namespace geeL {
 		SceneShader& getShader();
 		MaterialContainer& getMaterialContainer() const;
 
+		void setShader(SceneShader& shader);
+
 	private:
 		SceneShader* shader;
 		MaterialContainer* container;

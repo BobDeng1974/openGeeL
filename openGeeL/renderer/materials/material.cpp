@@ -30,4 +30,8 @@ namespace geeL {
 		return *container;
 	}
 
+	void Material::setShader(SceneShader& shader) {
+		this->shader = &shader;
+	}
+
 }
