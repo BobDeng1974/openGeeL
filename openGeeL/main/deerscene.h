@@ -41,7 +41,7 @@ public:
 			&lightManager.addPointLight(config, lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379));
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f), vec3(0.f), vec3(0.1f, 0.1f, 0.1f));
-			list<unique_ptr<StaticMeshRenderer>> deerScene = meshFactory.createSingleMeshRenderers(
+			StaticModelRenderer deerScene = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/deer/scene2.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);

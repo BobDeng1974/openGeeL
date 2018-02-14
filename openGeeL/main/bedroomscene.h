@@ -50,7 +50,7 @@ public:
 
 			float scale = 0.05f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(scale));
-			std::list<std::unique_ptr<StaticMeshRenderer>> bedroomScene = meshFactory.createSingleMeshRenderers(
+			StaticModelRenderer bedroomScene = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/bedroom/Bedroom2.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);

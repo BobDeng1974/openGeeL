@@ -49,6 +49,9 @@ namespace geeL {
 	class StaticMesh;
 	class TextureMap;
 	class Transform;
+
+	using StaticModelRenderer  = std::list<std::unique_ptr<StaticMeshRenderer>>;
+	using SkinnedModelRenderer = std::list<std::unique_ptr<SkinnedMeshRenderer>>;
 	
 
 	class MeshFactory : public DataEventActuator<GLStructure> {
@@ -56,10 +59,10 @@ namespace geeL {
 	public:
 		MeshFactory(MaterialFactory& factory);
 
-		std::list<std::unique_ptr<StaticMeshRenderer>> createSingleMeshRenderers(MemoryObject<StaticModel> model,
+		StaticModelRenderer createSingleMeshRenderers(MemoryObject<StaticModel> model,
 			SceneShader& shader, Transform& transform, bool splitTransform = false);
 
-		std::list<std::unique_ptr<SkinnedMeshRenderer>> createSingleMeshRenderers(MemoryObject<SkinnedModel> model,
+		SkinnedModelRenderer createSingleMeshRenderers(MemoryObject<SkinnedModel> model,
 			SceneShader& shader, Transform& transform, bool splitTransform = false);
 
 		//Creates, initializes and returns a new static model from given file path or 

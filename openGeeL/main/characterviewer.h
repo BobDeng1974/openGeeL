@@ -54,7 +54,7 @@ public:
 
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 0.0f), vec3(0.f), vec3(100.f, 0.2f, 100.f));
-			std::list<std::unique_ptr<StaticMeshRenderer>> plane = meshFactory.createSingleMeshRenderers(
+			StaticModelRenderer plane = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/primitives/plane.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);
@@ -76,7 +76,7 @@ public:
 
 
 			Transform& meshTransform22 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 5.9f), vec3(0.f), vec3(0.12f));
-			std::list<std::unique_ptr<StaticMeshRenderer>> girl = meshFactory.createSingleMeshRenderers(
+			StaticModelRenderer girl = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/girl/girl_nofloor.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform22, false);

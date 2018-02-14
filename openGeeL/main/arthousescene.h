@@ -53,7 +53,7 @@ public:
 
 			float scale = 0.008f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(scale));
-			list<unique_ptr<StaticMeshRenderer>> studioScene = meshFactory.createSingleMeshRenderers(
+			StaticModelRenderer studioScene = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/art/artStudio.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);

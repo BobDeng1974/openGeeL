@@ -146,7 +146,7 @@ namespace geeL {
 		virtual void drawMesh(const Shader& shader) const;
 
 	private:
-		const SkinnedMesh & mesh;
+		const SkinnedMesh& mesh;
 		std::shared_ptr<Skeleton> skeleton;
 		AnimationContainer& animationContainer;
 

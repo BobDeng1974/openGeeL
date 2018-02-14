@@ -34,7 +34,7 @@ public:
 
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 121.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
-			std::list<std::unique_ptr<StaticMeshRenderer>> buddha = meshFactory.createSingleMeshRenderers(
+			StaticModelRenderer buddha = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/classics/buddha.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);
@@ -53,7 +53,7 @@ public:
 
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(152.f, 24.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
-			std::list<std::unique_ptr<StaticMeshRenderer>> sponza = meshFactory.createSingleMeshRenderers(
+			StaticModelRenderer sponza = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/sponza/sponza.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform6, false);

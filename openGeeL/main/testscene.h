@@ -57,7 +57,7 @@ public:
 
 			float height = -2.f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(20.f, 0.2f, 20.f));
-			std::list<std::unique_ptr<StaticMeshRenderer>> plane = meshFactory.createSingleMeshRenderers(
+			StaticModelRenderer plane = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/primitives/plane.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);
@@ -77,7 +77,7 @@ public:
 
 
 			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 2.f, 4.f), vec3(0.f), vec3(1.f));
-			std::list<std::unique_ptr<StaticMeshRenderer>> sphere = meshFactory.createSingleMeshRenderers(
+			StaticModelRenderer sphere = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/primitives/sphere.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform4, false);
@@ -102,7 +102,7 @@ public:
 
 
 			Transform& meshTransform42 = transformFactory.CreateTransform(vec3(12.f, 2.f, 4.f), vec3(0.f), vec3(1.f));
-			std::list<std::unique_ptr<StaticMeshRenderer>> sphere2 = meshFactory.createSingleMeshRenderers(
+			StaticModelRenderer sphere2 = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/primitives/sphere.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform42, false);
@@ -125,7 +125,7 @@ public:
 
 
 			Transform& meshTransform5 = transformFactory.CreateTransform(vec3(0.0f, 0.5f, -2.0f), vec3(0.5f, 0.5f, 0.5f), vec3(5.2f, 2.2f, 1.2f));
-			std::list<std::unique_ptr<StaticMeshRenderer>> box = meshFactory.createSingleMeshRenderers(
+			StaticModelRenderer box = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/primitives/cube.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform5, false);
@@ -144,7 +144,7 @@ public:
 
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(1.f));
-			std::list<std::unique_ptr<StaticMeshRenderer>> cyborg = meshFactory.createSingleMeshRenderers(
+			StaticModelRenderer cyborg = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/cyborg/Cyborg.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform6, false);
@@ -157,7 +157,7 @@ public:
 
 
 			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f), vec3(0.2f));
-			std::list<std::unique_ptr<StaticMeshRenderer>> nano = meshFactory.createSingleMeshRenderers(
+			StaticModelRenderer nano = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/nanosuit/nanosuit.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform1, false);

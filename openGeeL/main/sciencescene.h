@@ -46,7 +46,7 @@ public:
 
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f), vec3(0.f), vec3(0.1f));
-			std::list<std::unique_ptr<StaticMeshRenderer>> scienceScene = meshFactory.createSingleMeshRenderers(
+			StaticModelRenderer scienceScene = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/mad/madScience.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);

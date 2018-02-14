@@ -45,7 +45,7 @@ public:
 
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.1f));
-			std::list<std::unique_ptr<StaticMeshRenderer>> capsule = meshFactory.createSingleMeshRenderers(
+			StaticModelRenderer capsule = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/capsule/Capsule.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);
@@ -62,7 +62,7 @@ public:
 
 			
 			Transform& meshTransform222 = transformFactory.CreateTransform(vec3(0.0f, -4.75f, 4.1f), vec3(0.f, 180.f, 0.f), vec3(0.0075f));
-			std::list<std::unique_ptr<SkinnedMeshRenderer>> drone = meshFactory.createSingleMeshRenderers(
+			SkinnedModelRenderer drone = meshFactory.createSingleMeshRenderers(
 				meshFactory.createSkinnedModel("resources/drone/Drone.fbx"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, true),
 				meshTransform222, false);

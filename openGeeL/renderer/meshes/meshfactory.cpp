@@ -33,7 +33,7 @@ namespace geeL {
 
 
 
-	list<unique_ptr<StaticMeshRenderer>> MeshFactory::createSingleMeshRenderers(MemoryObject<StaticModel> model,
+	StaticModelRenderer MeshFactory::createSingleMeshRenderers(MemoryObject<StaticModel> model,
 		SceneShader& shader, Transform& transform, bool splitTransform) {
 
 		list<unique_ptr<StaticMeshRenderer>> renderers;
@@ -50,7 +50,7 @@ namespace geeL {
 		return renderers;
 	}
 
-	list<unique_ptr<SkinnedMeshRenderer>> MeshFactory::createSingleMeshRenderers(MemoryObject<SkinnedModel> model,
+	SkinnedModelRenderer MeshFactory::createSingleMeshRenderers(MemoryObject<SkinnedModel> model,
 		SceneShader& shader, Transform& transform, bool splitTransform) {
 
 		std::shared_ptr<Skeleton> skeleton = nullptr;
