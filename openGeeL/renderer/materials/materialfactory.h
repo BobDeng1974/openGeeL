@@ -62,9 +62,7 @@ namespace geeL {
 		//Note: Only generic, forward and transparent shading methods allowed
 		SceneShader& createShader(ShadingMethod shading, std::string fragmentPath, bool animated = false);
 
-		//Returns default shader for static deferred rendering
-		SceneShader& getDeferredShader() const;
-		SceneShader& getDefaultShader(ShadingMethod shading, bool animated = false);
+		SceneShader& getDefaultShader(ShadingMethod shading, bool animated);
 
 	private:
 		ShaderProvider* const provider;

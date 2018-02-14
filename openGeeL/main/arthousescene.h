@@ -55,7 +55,7 @@ public:
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(scale));
 			list<unique_ptr<SingleStaticMeshRenderer>> studioScene = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/art/artStudio.obj"),
-				materialFactory.getDeferredShader(),
+				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);
 
 			for (auto it(studioScene.begin()); it != studioScene.end(); it++) {

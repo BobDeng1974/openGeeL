@@ -226,8 +226,4 @@ namespace geeL {
 		return *deferredShader;
 	}
 
-	SceneShader& MaterialFactory::getDeferredShader() const {
-		return *deferredShader;
-	}
-
 }

@@ -29,11 +29,11 @@ namespace geeL {
 	}
 
 
-	void SingleMeshRenderer::draw(SceneShader& shader) const {
+	void SingleMeshRenderer::draw(SceneShader& s) const {
 		CullingGuard culling(faceCulling);
 		StencilGuard stencil;
 
-		//const SceneShader& shader = material.getShader();
+		const SceneShader& shader = material.getShader();
 		shader.bindMatrices(transform);
 
 		shader.bind<unsigned int>("id", getID());

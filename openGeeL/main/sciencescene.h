@@ -48,7 +48,7 @@ public:
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f), vec3(0.f), vec3(0.1f));
 			std::list<std::unique_ptr<SingleStaticMeshRenderer>> scienceScene = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/mad/madScience.obj"),
-				materialFactory.getDeferredShader(),
+				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);
 
 			for (auto it(scienceScene.begin()); it != scienceScene.end(); it++) {
@@ -77,7 +77,7 @@ public:
 						container.setVectorValue("Color", glm::vec3(0.3f));
 					}
 
-					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
+					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent, false);
 					renderer->setShader(ss);
 				}
 

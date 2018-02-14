@@ -353,7 +353,7 @@ namespace geeL {
 	}
 
 	void RenderScene::drawForwardForced(const Camera& camera, bool forceGamma) const {
-		SceneShader& shader = materialFactory.getDefaultShader(ShadingMethod::Forward);
+		SceneShader& shader = materialFactory.getDefaultShader(ShadingMethod::Forward, false);
 
 		if (forceGamma) shader.bind<int>("gammaCorrection", true);
 

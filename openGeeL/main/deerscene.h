@@ -43,7 +43,7 @@ public:
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f), vec3(0.f), vec3(0.1f, 0.1f, 0.1f));
 			list<unique_ptr<SingleStaticMeshRenderer>> deerScene = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/deer/scene2.obj"),
-				materialFactory.getDeferredShader(), 
+				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);
 
 			for (auto it(deerScene.begin()); it != deerScene.end(); it++) {

@@ -245,7 +245,7 @@ namespace geeL {
 
 						std::list<std::unique_ptr<SingleStaticMeshRenderer>> meshRenderers = meshFactory.createSingleMeshRenderers(
 							meshFactory.createStaticModel(filePath),
-							materialFactory.getDeferredShader(),
+							materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 							meshTransform, false);
 
 						//Iterate through all materials
@@ -310,7 +310,7 @@ namespace geeL {
 											string methodName = methodInit;
 											ShadingMethod method = getShadingMethod(methodName);
 
-											SceneShader& ss = materialFactory.getDefaultShader(method);
+											SceneShader& ss = materialFactory.getDefaultShader(method, false);
 											renderer.setShader(ss);
 										}
 

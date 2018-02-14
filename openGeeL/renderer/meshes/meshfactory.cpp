@@ -36,7 +36,7 @@ namespace geeL {
 	unique_ptr<StaticMeshRenderer> MeshFactory::createMeshRenderer(MemoryObject<StaticModel> model,
 		Transform& transform, const string& name) {
 		
-		return createMeshRenderer(model, factory.getDefaultShader(ShadingMethod::Deferred), 
+		return createMeshRenderer(model, factory.getDefaultShader(ShadingMethod::Deferred, false), 
 			transform, name);
 	}
 

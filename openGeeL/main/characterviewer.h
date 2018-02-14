@@ -45,8 +45,8 @@ public:
 
 
 			{
-				SceneShader& forwardShader = materialFactory.getDefaultShader(ShadingMethod::Hybrid);
-				SceneShader& transparentShader = materialFactory.getDefaultShader(ShadingMethod::Transparent);
+				SceneShader& forwardShader = materialFactory.getDefaultShader(ShadingMethod::Hybrid, false);
+				SceneShader& transparentShader = materialFactory.getDefaultShader(ShadingMethod::Transparent, false);
 
 				forwardShader.bind<float>("fogFalloff", 15.f);
 				transparentShader.bind<float>("fogFalloff", 15.f);
@@ -56,13 +56,13 @@ public:
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 0.0f), vec3(0.f), vec3(100.f, 0.2f, 100.f));
 			std::list<std::unique_ptr<SingleStaticMeshRenderer>> plane = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/primitives/plane.obj"),
-				materialFactory.getDeferredShader(),
+				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);
 
 			for (auto it(plane.begin()); it != plane.end(); it++) {
 				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
 
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Hybrid);
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Hybrid, false);
 				renderer->setShader(ss);
 
 				MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
@@ -78,7 +78,7 @@ public:
 			Transform& meshTransform22 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 5.9f), vec3(0.f), vec3(0.12f));
 			std::list<std::unique_ptr<SingleStaticMeshRenderer>> girl = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/girl/girl_nofloor.obj"),
-				materialFactory.getDeferredShader(),
+				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform22, false);
 
 			for (auto it(girl.begin()); it != girl.end(); it++) {
@@ -86,13 +86,13 @@ public:
 
 				const Mesh& mesh = renderer->getMesh();
 				if (mesh.getName() == "eyelash" || mesh.getName() == "fur") {
-					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Forward);
+					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Forward, false);
 					renderer->setShader(ss);
 				}
 				else if (mesh.getName() == "body")
 					renderer->setRenderMask(RenderMask::Skin);
 				else if (mesh.getName() == "hair_inner") {
-					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
+					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent, false);
 					renderer->setShader(ss);
 				}
 
