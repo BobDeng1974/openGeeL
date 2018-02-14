@@ -58,10 +58,13 @@ objects = {
 			--transparency = 0,
 		},
 
-		materials = {
-
+		meshes = {
+			
 			{
-				name = "Grass",
+				name   = "defaultobject",
+				mask   = "Skin",
+				method = "Transparent",
+
 				roughness = 0.2,
 
 				textures = {
@@ -72,37 +75,29 @@ objects = {
 
 					}
 					--]]
-				}
-			}
+				},
 
-		},
-
-		meshes = {
-			--[[
-			{
-				name   = "defaultobject",
-				mask   = "Skin",
-				method = "TransparentOD"
-			},
-			--]]
-		},
-
-		scripts = {
-			--[[			
-			{
-				path = "main/deerconfig.lua",
-				parameters = {
-
+				scripts = {
+						--[[
 					{
-						name  = "i",
-						value = 5
+						path = "main/deerconfig.lua",
+						parameters = {
+
+							{
+								name  = "i",
+								value = 5
+							}
+						}
 					}
+					--]]
 				}
 			}
-			--]]
+			
 		}
 
-	},
+		
+
+	}
 
 }
 

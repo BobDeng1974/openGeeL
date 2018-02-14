@@ -206,7 +206,7 @@ namespace geeL {
 
 
 			//Mesh renderer initalization
-			/*
+			
 			{
 				auto& meshes = state["objects"];
 				if (meshes.valid()) {
@@ -242,32 +242,11 @@ namespace geeL {
 						bool separate = m["separate"].get_or(false);
 
 						//Build mesh renderers
-						
-						
 
-						std::list<MeshRenderer*> meshRenderers;
-						if (separate) {
-							std::list<StaticMeshRenderer*> renderers = std::move(meshFactory.createMeshRenderers(
-								meshFactory.createStaticModel(filePath),
-								materialFactory.getDeferredShader(),
-								meshTransform));
-
-							for (auto it(renderers.begin()); it != renderers.end(); it++) {
-								MeshRenderer* rendererPtr = *it;
-
-								MeshRenderer& renderer = scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(rendererPtr));
-								meshRenderers.push_back(&renderer);
-							}
-						}
-						else {
-							std::unique_ptr<MeshRenderer> rendererPtr = meshFactory.createMeshRenderer(
-								meshFactory.createStaticModel(filePath),
-								meshTransform, name);
-
-							MeshRenderer& meshRenderer = scene.addMeshRenderer(std::move(rendererPtr));
-							meshRenderers.push_back(&meshRenderer);
-						}
-						
+						std::list<std::unique_ptr<SingleStaticMeshRenderer>> meshRenderers = meshFactory.createSingleMeshRenderers(
+							meshFactory.createStaticModel(filePath),
+							materialFactory.getDeferredShader(),
+							meshTransform, false);
 
 						//Iterate through all materials
 
@@ -276,101 +255,26 @@ namespace geeL {
 						auto& materialsInit = m["allmaterials"];
 						if (materialsInit.valid()) {
 							for (auto it(meshRenderers.begin()); it != meshRenderers.end(); it++) {
-								MeshRenderer& renderer = **it;
+								SingleMeshRenderer& renderer = **it;
 
-								renderer.iterateMaterials([&](MaterialContainer& container) {
-									auto& roughness = materialsInit["roughness"];
-									if (roughness.valid())
-										container.setFloatValue("Roughness", roughness);
+								MaterialContainer& container = renderer.getMaterial().getMaterialContainer();
+								auto& roughness = materialsInit["roughness"];
+								if (roughness.valid())
+									container.setFloatValue("Roughness", roughness);
 
-									auto& metallic = materialsInit["metallic"];
-									if (metallic.valid())
-										container.setFloatValue("Metallic", metallic);
+								auto& metallic = materialsInit["metallic"];
+								if (metallic.valid())
+									container.setFloatValue("Metallic", metallic);
 
-									auto& transparency = materialsInit["transparency"];
-									if (transparency.valid())
-										container.setFloatValue("Transparency", transparency);
+								auto& transparency = materialsInit["transparency"];
+								if (transparency.valid()) {
+									container.setFloatValue("Transparency", transparency);
+								}
+									
 
-									auto& emissivity = materialsInit["emissivity"];
-									if (emissivity.valid())
-										container.setFloatValue("Emissivity", transparency);
-
-								});
-							}
-						}
-
-
-						//Set material options for specific meshes
-						
-						auto& materialsInit2 = m["materials"];
-						if (materialsInit2.valid()) {
-							for (auto it(meshRenderers.begin()); it != meshRenderers.end(); it++) {
-								MeshRenderer& renderer = **it;
-
-								renderer.iterateMaterials([&](MaterialContainer& container) {
-
-									unsigned int j = 1;
-									auto* material = &materialsInit2[j];
-									while (material->valid()) {
-										auto& mat = *material;
-
-										auto& name = mat["name"];
-										assert(name.valid() && "Given material has no name");
-
-										if (name == container.name) {
-											auto& texturesInit = mat["textures"];
-											if (texturesInit.valid()) {
-
-												unsigned int k = 1;
-												auto* texture = &texturesInit[k];
-												while (texture->valid()) {
-													auto& tex = *texture;
-
-													auto& path = tex["path"];
-													auto& type = tex["type"];
-													assert(path.valid() && "No path specified for given texture");
-													assert(type.valid() && "No type specified for given texture");
-
-													container.addTexture(type, 
-														materialFactory.createTexture(path, ColorType::GammaSpace));
-
-													k++;
-													texture = &texturesInit[k];
-												}
-											}
-
-
-											auto& x = mat["color"]["r"];
-											auto& y = mat["color"]["g"];
-											auto& z = mat["color"]["b"];
-
-											if (x.valid() && y.valid() && z.valid()) {
-												vec3 color(x, y, z);
-												container.setVectorValue("Color", color);
-											}
-
-											auto& roughness = mat["roughness"];
-											if (roughness.valid())
-												container.setFloatValue("Roughness", roughness);
-
-											auto& metallic = mat["metallic"];
-											if (metallic.valid())
-												container.setFloatValue("Metallic", metallic);
-
-											auto& transparency = mat["transparency"];
-											if (transparency.valid())
-												container.setFloatValue("Transparency", transparency);
-
-											auto& emissivity = mat["emissivity"];
-											if (emissivity.valid())
-												container.setFloatValue("Emissivity", transparency);
-
-										}
-
-										j++;
-										material = &materialsInit2[j];
-									}
-								});
+								auto& emissivity = materialsInit["emissivity"];
+								if (emissivity.valid())
+									container.setFloatValue("Emissivity", transparency);
 							}
 						}
 
@@ -379,20 +283,9 @@ namespace geeL {
 						auto& meshesInit = m["meshes"];
 						if (meshesInit.valid()) {
 							for (auto it(meshRenderers.begin()); it != meshRenderers.end(); it++) {
-								MeshRenderer& renderer = **it;
+								SingleMeshRenderer& renderer = **it;
 
-								//Look for mesh renderer mask
-
-								auto& maskInit = m["mask"];
-								if (maskInit.valid()) {
-									string maskName = maskInit;
-									RenderMask mask = Masking::getShadingMask(maskName);
-
-									renderer.setRenderMask(mask);
-								}
-
-
-								//Set material options for specific meshes
+								//Set options for specific meshes
 
 								unsigned int j = 1;
 								auto* mesh2 = &meshesInit[j];
@@ -402,15 +295,14 @@ namespace geeL {
 									auto& name = mm["name"];
 									assert(name.valid() && "Given mesh has no name");
 
-									const MeshInstance* currentMesh = renderer.getMesh(name);
-									if (currentMesh != nullptr) {
-
+									const string& meshName = path;
+									if (meshName == renderer.getMesh().getName()) {
 										auto& maskInit = mm["mask"];
 										if (maskInit.valid()) {
 											string maskName = maskInit;
 											RenderMask mask = Masking::getShadingMask(maskName);
 
-											renderer.setRenderMask(mask, *currentMesh);
+											renderer.setRenderMask(mask);
 										}
 
 										auto& methodInit = mm["method"];
@@ -419,7 +311,109 @@ namespace geeL {
 											ShadingMethod method = getShadingMethod(methodName);
 
 											SceneShader& ss = materialFactory.getDefaultShader(method);
-											renderer.changeMaterial(ss, *currentMesh);
+											renderer.setShader(ss);
+										}
+
+										MaterialContainer& container = renderer.getMaterial().getMaterialContainer();
+
+										auto& x = mm["color"]["r"];
+										auto& y = mm["color"]["g"];
+										auto& z = mm["color"]["b"];
+
+										if (x.valid() && y.valid() && z.valid()) {
+											vec3 color(x, y, z);
+											container.setVectorValue("Color", color);
+										}
+
+										auto& roughness = mm["roughness"];
+										if (roughness.valid())
+											container.setFloatValue("Roughness", roughness);
+
+										auto& metallic = mm["metallic"];
+										if (metallic.valid())
+											container.setFloatValue("Metallic", metallic);
+
+										auto& transparency = mm["transparency"];
+										if (transparency.valid())
+											container.setFloatValue("Transparency", transparency);
+
+										auto& emissivity = mm["emissivity"];
+										if (emissivity.valid())
+											container.setFloatValue("Emissivity", transparency);
+
+
+										auto& texturesInit = mm["textures"];
+										if (texturesInit.valid()) {
+
+											unsigned int k = 1;
+											auto* texture = &texturesInit[k];
+											while (texture->valid()) {
+												auto& tex = *texture;
+
+												auto& path = tex["path"];
+												auto& type = tex["type"];
+												assert(path.valid() && "No path specified for given texture");
+												assert(type.valid() && "No type specified for given texture");
+
+												container.addTexture(type,
+													materialFactory.createTexture(path, ColorType::GammaSpace));
+
+												k++;
+												texture = &texturesInit[k];
+											}
+										}
+
+
+										//Add scripts as components
+
+										auto& scriptsInit = mm["scripts"];
+										if (scriptsInit.valid()) {
+											for (auto it(meshRenderers.begin()); it != meshRenderers.end(); it++) {
+												SingleMeshRenderer& renderer = **it;
+
+												unsigned int aj = 1;
+												auto* script = &scriptsInit[aj];
+												while (script->valid()) {
+													auto& s = *script;
+
+													auto& path = s["path"];
+													assert(path.valid() && "No path specified for given script");
+													string filePath = path;
+
+													try {
+														LUAComponent& component = renderer.addComponent<LUAComponent>(filePath);
+
+														auto& parameters = s["parameters"];
+														if (parameters.valid()) {
+															component.injectParameters([&parameters](sol::state& state) {
+
+																unsigned int h = 1;
+																auto* parameter = &parameters[h];
+																while (parameter->valid()) {
+																	auto& p = *parameter;
+
+																	auto& name = p["name"];
+																	auto& val = p["value"];
+																	assert(name.valid() && "Given parameter has no name");
+																	assert(val.valid() && "Given parameter has no value");
+
+																	state[name] = val;
+
+																	h++;
+																	parameter = &parameters[h];
+																}
+															});
+														}
+													}
+													catch (const exception& e) {
+														std::cout << "Script won't be added because it terminated with error:\n'"
+															<< e.what() << "'\n";
+													}
+
+													aj++;
+													script = &scriptsInit[aj];
+												}
+											}
 										}
 									}
 
@@ -429,64 +423,19 @@ namespace geeL {
 							}
 						}
 
-						//Add scripts as components
-
-						auto& scriptsInit = m["scripts"];
-						if (scriptsInit.valid()) {
-							for (auto it(meshRenderers.begin()); it != meshRenderers.end(); it++) {
-								MeshRenderer& renderer = **it;
-
-								unsigned int j = 1;
-								auto* script = &scriptsInit[j];
-								while (script->valid()) {
-									auto& s = *script;
-
-									auto& path = s["path"];
-									assert(path.valid() && "No path specified for given script");
-									string filePath = path;
-
-									try {
-										LUAComponent& component = renderer.addComponent<LUAComponent>(filePath);
-
-										auto& parameters = s["parameters"];
-										if (parameters.valid()) {
-											component.injectParameters([&parameters](sol::state& state) {
-
-												unsigned int h = 1;
-												auto* parameter = &parameters[h];
-												while (parameter->valid()) {
-													auto& p = *parameter;
-
-													auto& name = p["name"];
-													auto& val  = p["value"];
-													assert(name.valid() && "Given parameter has no name");
-													assert(val.valid()  && "Given parameter has no value");
-
-													state[name] = val;
-
-													h++;
-													parameter = &parameters[h];
-												}
-											});
-										}
-									}
-									catch (const exception& e) {
-										std::cout << "Script won't be added because it terminated with error:\n'" 
-											<< e.what() << "'\n";
-									}
-
-									j++;
-									script = &scriptsInit[j];
-								}
-							}
-						}
 
 						i++;
 						mesh = &meshes[i];
+
+
+						for (auto it(meshRenderers.begin()); it != meshRenderers.end(); it++) {
+							scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(*it)));
+						}
+
 					}
 				}
 			}
-			*/
+			
 
 			//Light initalization
 

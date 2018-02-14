@@ -33,12 +33,16 @@ int main(int argc, char* argv[]) {
 		return 0;
 	}
 
+
+	LUAConfigurator config("main/deerconfig.lua");
+	config.run();
+
 	//BedroomScene::draw();
 	//DeerScene::draw();
 	//ArthouseScene::draw();
 	//SponzaGIScene::draw();
 	//ScienceScene::draw();
-	CharacterViewer::draw();
+	//CharacterViewer::draw();
 	//ModelViewer::draw();
 	//CapsuleScene::draw();
 
