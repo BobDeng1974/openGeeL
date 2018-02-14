@@ -57,6 +57,7 @@ namespace geeL {
 		void addMaterialChangeListener(std::function<void(SingleMeshRenderer&, Material, Material)> listener);
 		void addDeleteListener(std::function<void(const SingleMeshRenderer&)> listener);
 
+		const AABoundingBox& getBoundingBox() const;
 		virtual RenderMode getRenderMode() const = 0;
 
 		//States if currently visible (from given camera POV)

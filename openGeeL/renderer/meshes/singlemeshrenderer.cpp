@@ -103,6 +103,10 @@ namespace geeL {
 		deleteListeners.push_back(listener);
 	}
 
+	const AABoundingBox& SingleMeshRenderer::getBoundingBox() const {
+		return aabb;
+	}
+
 	bool SingleMeshRenderer::isVisible(const Camera& camera) const {
 		return isVisible(camera.getFrustum());
 	}
@@ -208,9 +212,12 @@ namespace geeL {
 
 		assert(renderers.size() > 0 && "At least one mesh renderers has to be attached to this group");
 
+		aabb.reset();
 		mode = renderers.front()->getRenderMode();
 		for (auto it(renderers.begin()); it != renderers.end(); it++) {
 			SingleMeshRenderer& r = **it;
+
+			aabb.extend(r.getBoundingBox());
 
 			if (mode != r.getRenderMode())
 				throw "All given mesh renderers should have the same render mode\n";
