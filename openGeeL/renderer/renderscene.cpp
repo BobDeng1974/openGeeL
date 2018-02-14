@@ -3,7 +3,6 @@
 #include <vector>
 #include "shader/sceneshader.h"
 #include "shader/uniformstack.h"
-#include "meshes/meshrenderer.h"
 #include "meshes/singlemeshrenderer.h"
 #include "materials/materialfactory.h"
 #include "cameras/camera.h"

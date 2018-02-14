@@ -2,7 +2,7 @@
 #include <cmath>
 #include <functional>
 #include "instancedmesh.h"
-#include "meshrenderer.h"
+#include "singlemeshrenderer.h"
 #include "meshidgenerator.h"
 
 using namespace std;
@@ -12,7 +12,7 @@ namespace geeL{
 	unsigned int MeshRendererIDGenerator::bucketCounters[4] = { 0, 0, 0, 0 };
 	unsigned int MeshRendererIDGenerator::bucketSizes[4] = { 2, 5, 8, 11 };
 
-	std::map<const MeshRenderer*, unsigned short> MeshRendererIDGenerator::localMeshIDs;
+	std::map<const SingleMeshRenderer*, unsigned short> MeshRendererIDGenerator::localMeshIDs;
 	std::queue<unsigned short> MeshRendererIDGenerator::a;
 	std::queue<unsigned short> MeshRendererIDGenerator::b;
 	std::queue<unsigned short> MeshRendererIDGenerator::c;
@@ -25,8 +25,8 @@ namespace geeL{
 		&MeshRendererIDGenerator::d };
 
 
-	unsigned short MeshRendererIDGenerator::generateID(MeshRenderer& renderer, size_t meshCount) {
-		renderer.addDeleteListener([](const MeshRenderer& renderer) {
+	unsigned short MeshRendererIDGenerator::generateID(SingleMeshRenderer& renderer, size_t meshCount) {
+		renderer.addDeleteListener([](const SingleMeshRenderer& renderer) {
 			removeMeshRenderer(renderer);
 		});
 
@@ -73,7 +73,7 @@ namespace geeL{
 		}
 	}
 
-	unsigned short MeshRendererIDGenerator::generateMeshID(const MeshRenderer& renderer) {
+	unsigned short MeshRendererIDGenerator::generateMeshID(const SingleMeshRenderer& renderer) {
 		auto it = localMeshIDs.find(&renderer);
 		assert(it != localMeshIDs.end() && "Given mesh renderer has no ID yet");
 
@@ -92,12 +92,8 @@ namespace geeL{
 		return id;
 	}
 
-	unsigned short MeshRendererIDGenerator::getID(MeshInstance& mesh) {
-		return getID(mesh.getID());
-	}
 
-
-	void MeshRendererIDGenerator::removeMeshRenderer(const MeshRenderer& renderer) {
+	void MeshRendererIDGenerator::removeMeshRenderer(const SingleMeshRenderer& renderer) {
 		unsigned short id = renderer.getID();
 		unsigned short prefix = id >> 14;
 

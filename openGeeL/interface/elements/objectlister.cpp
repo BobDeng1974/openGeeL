@@ -1,5 +1,4 @@
 #include "transformation/transform.h"
-#include "meshes/meshrenderer.h"
 #include "cameras/camera.h"
 #include "cameras/perspectivecamera.h"
 #include "lights/light.h"

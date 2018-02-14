@@ -56,32 +56,11 @@ namespace geeL {
 	public:
 		MeshFactory(MaterialFactory& factory);
 
-		//Create new mesh renderer with default shading
-		std::unique_ptr<StaticMeshRenderer> createMeshRenderer(MemoryObject<StaticModel> model,
-			Transform& transform, const std::string& name);
-
-		std::unique_ptr<StaticMeshRenderer> createMeshRenderer(MemoryObject<StaticModel> model,
-			SceneShader& shader, Transform& transform, const std::string& name);
-
-		//Create separate mesh renderers for every mesh in given model
-		//Note: Memory of returned mesh renderers is unmanaged
-		std::list<StaticMeshRenderer*> createMeshRenderers(MemoryObject<StaticModel> model,
-			SceneShader& shader, Transform& transform);
-
-		//Create new skinned mesh renderer with default shading
-		std::unique_ptr<SkinnedMeshRenderer> createMeshRenderer(MemoryObject<SkinnedModel> model,
-			Transform& transform, const std::string& name);
-
-		std::unique_ptr<SkinnedMeshRenderer> createMeshRenderer(MemoryObject<SkinnedModel> model,
-			SceneShader& shader, Transform& transform, const std::string& name);
-
-
 		std::list<std::unique_ptr<SingleStaticMeshRenderer>> createSingleMeshRenderers(MemoryObject<StaticModel> model,
 			SceneShader& shader, Transform& transform, bool splitTransform = false);
 
 		std::list<std::unique_ptr<SingleSkinnedMeshRenderer>> createSingleMeshRenderers(MemoryObject<SkinnedModel> model,
 			SceneShader& shader, Transform& transform, bool splitTransform = false);
-
 
 		//Creates, initializes and returns a new static model from given file path or 
 		//returns an existing model if it already uses this file

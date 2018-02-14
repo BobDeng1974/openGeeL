@@ -8,17 +8,13 @@
 
 namespace geeL {
 
-	unsigned int idCounter = 0;
-
-
 	SingleMeshRenderer::SingleMeshRenderer(Transform& transform, const Mesh& mesh, 
 		SceneShader& shader, MemoryObject<Model> modelData,
 		CullingMode faceCulling, const std::string & name)
 			: SceneObject(transform, name)
 			, faceCulling(faceCulling)
 			, mask(RenderMask::None)
-			//, id(MeshRendererIDGenerator::generateID(*this, 1))
-			, id(idCounter++)
+			, id(MeshRendererIDGenerator::generateID(*this, 1))
 			, modelData(modelData)
 			, material(Material(shader, mesh.getMaterialContainer()))
 			, aabb(TransformableBoundingBox(mesh.getBoundingBox(), transform)) {}

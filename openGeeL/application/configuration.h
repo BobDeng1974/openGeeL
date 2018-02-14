@@ -52,7 +52,6 @@
 #include "meshes/mesh.h"
 #include "meshes/model.h"
 #include "meshes/instancedmesh.h"
-#include "meshes/meshrenderer.h"
 #include "meshes/singlemeshrenderer.h"
 #include "meshes/meshfactory.h"
 

@@ -23,7 +23,7 @@ namespace geeL{
 			, modelData(model)
 			, faceCulling(faceCulling)
 			, mask(RenderMask::None)
-			, id(MeshRendererIDGenerator::generateID(*this, meshCount))
+			//, id(MeshRendererIDGenerator::generateID(*this, meshCount))
 			, aabb(TransformableBoundingBox(modelData->getBoundingBox(), transform)) {}
 
 	MeshRenderer::~MeshRenderer() {
@@ -278,7 +278,7 @@ namespace geeL{
 	}
 
 	void MeshRenderer::addMesh(std::unique_ptr<MeshInstance> mesh) {
-		mesh->setID(MeshRendererIDGenerator::generateMeshID(*this));
+		//mesh->setID(MeshRendererIDGenerator::generateMeshID(*this));
 		meshes.push_back(mesh.release());
 	}
 

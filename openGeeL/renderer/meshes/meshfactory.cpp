@@ -17,7 +17,6 @@
 #include "mesh.h"
 #include "model.h"
 #include "singlemeshrenderer.h"
-#include "meshrenderer.h"
 #include "meshfactory.h"
 
 #include "memory/defaultmemory.h"
@@ -33,59 +32,6 @@ namespace geeL {
 		, memory(new DefaultMemory()) {}
 
 
-	unique_ptr<StaticMeshRenderer> MeshFactory::createMeshRenderer(MemoryObject<StaticModel> model,
-		Transform& transform, const string& name) {
-		
-		return createMeshRenderer(model, factory.getDefaultShader(ShadingMethod::Deferred, false), 
-			transform, name);
-	}
-
-	unique_ptr<StaticMeshRenderer> MeshFactory::createMeshRenderer(MemoryObject<StaticModel> model, SceneShader& shader,
-		Transform& transform, const string& name) {
-
-		unique_ptr<StaticMeshRenderer> renderer(
-			new StaticMeshRenderer(transform, shader, model, CullingMode::cullFront, name));
-
-		return renderer;
-	}
-
-	list<StaticMeshRenderer*> MeshFactory::createMeshRenderers(MemoryObject<StaticModel> model, SceneShader& shader,
-		Transform& transform) {
-
-		list<StaticMeshRenderer*> renderers;
-		string path = model->getPath();
-		
-		size_t counter = 1;
-		model->iterateMeshesGeneric([&](const StaticMesh& mesh) {
-			string newName = path + " " + mesh.getName() + std::to_string(counter++);
-			Transform& newTransform = transform.getParent()->addChild(transform);
-			std::list<const StaticMesh*> meshes = { &mesh };
-			
-			StaticMeshRenderer* renderer = new StaticMeshRenderer(newTransform, shader, model, meshes, 
-				CullingMode::cullFront, mesh.getName());
-
-			renderers.push_back(renderer);
-		});
-		
-		return renderers;
-	}
-
-
-	unique_ptr<SkinnedMeshRenderer> MeshFactory::createMeshRenderer(MemoryObject<SkinnedModel> model,
-		Transform& transform, const string& name) {
-
-		return createMeshRenderer(model, factory.getDefaultShader(ShadingMethod::Deferred, true), 
-			transform, name);
-	}
-
-	unique_ptr<SkinnedMeshRenderer> MeshFactory::createMeshRenderer(MemoryObject<SkinnedModel> model, SceneShader& shader,
-		Transform& transform, const string& name) {
-
-		std::unique_ptr<SkinnedMeshRenderer> renderer(
-			new SkinnedMeshRenderer(transform, shader, model, CullingMode::cullFront, name));
-
-		return renderer;
-	}
 
 	list<unique_ptr<SingleStaticMeshRenderer>> MeshFactory::createSingleMeshRenderers(MemoryObject<StaticModel> model,
 		SceneShader& shader, Transform& transform, bool splitTransform) {
