@@ -335,11 +335,12 @@ namespace geeL{
 			const StaticMesh& mesh = **it;
 
 			StaticMeshInstance* m = new StaticMeshInstance(mesh, transform);
-			bb.extend(m->getBoundingBox());
-			aabb.setLocalBox(bb);
+			bb.extend(m->getLocalBox());
 
 			addMesh(unique_ptr<StaticMeshInstance>(m));
 		}
+
+		aabb.setLocalBox(bb);
 
 		iterateMeshes([&](const MeshInstance& mesh) {
 			MaterialContainer& container = mesh.getMaterialContainer();

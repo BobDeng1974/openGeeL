@@ -71,6 +71,7 @@ namespace geeL {
 	public:
 		TransformableBoundingBox(const AABoundingBox& localBox, Transform& transform);
 
+		const AABoundingBox& getLocalBox() const;
 		void setLocalBox(const AABoundingBox& localBox);
 
 	private:

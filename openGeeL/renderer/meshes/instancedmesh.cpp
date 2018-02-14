@@ -37,6 +37,10 @@ namespace geeL {
 		return box;
 	}
 
+	const AABoundingBox& MeshInstance::getLocalBox() const {
+		return box.getLocalBox();
+	}
+
 
 	StaticMeshInstance::StaticMeshInstance(const StaticMesh& mesh, Transform& transform)
 		: MeshInstance(mesh, transform) {}

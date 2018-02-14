@@ -32,6 +32,7 @@ namespace geeL {
 		void setID(unsigned short id);
 
 		const AABoundingBox& getBoundingBox() const;
+		const AABoundingBox& getLocalBox() const;
 
 	protected:
 		unsigned short id;

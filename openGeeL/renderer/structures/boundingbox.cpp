@@ -148,6 +148,10 @@ namespace geeL {
 		});
 	}
 
+	const AABoundingBox& TransformableBoundingBox::getLocalBox() const {
+		return localBox;
+	}
+
 	void TransformableBoundingBox::setLocalBox(const AABoundingBox& localBox) {
 		this->localBox = localBox;
 		updateGlobal();
