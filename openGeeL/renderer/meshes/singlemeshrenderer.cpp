@@ -127,11 +127,6 @@ namespace geeL {
 
 	}
 
-	const Mesh & SingleMeshRenderer::getMesh() const
-	{
-		// TODO: hier Rückgabeanweisung eingeben
-	}
-
 
 
 	SingleStaticMeshRenderer::SingleStaticMeshRenderer(Transform& transform, 
@@ -201,6 +196,71 @@ namespace geeL {
 	void SingleSkinnedMeshRenderer::drawMesh(const Shader& shader) const {
 		mesh.updateBones(shader, *skeleton);
 		mesh.draw(shader);
+	}
+
+
+
+	MeshRendererGroup::MeshRendererGroup(Transform& transform, SceneShader& shader, 
+		std::list<SingleMeshRenderer*> renderers, 
+		CullingMode faceCulling, const std::string & name)
+			: SingleMeshRenderer(transform, renderers.front()->getMesh(), shader, nullptr, faceCulling, name) 
+			, renderers(std::move(renderers)) {
+
+		assert(renderers.size() > 0 && "At least one mesh renderers has to be attached to this group");
+
+		mode = renderers.front()->getRenderMode();
+		for (auto it(renderers.begin()); it != renderers.end(); it++) {
+			SingleMeshRenderer& r = **it;
+
+			if (mode != r.getRenderMode())
+				throw "All given mesh renderers should have the same render mode\n";
+		}
+	}
+
+	void MeshRendererGroup::draw(SceneShader & shader) const {
+		CullingGuard culling(faceCulling);
+		StencilGuard stencil;
+
+		shader.bindMatrices(transform);
+		shader.bind<unsigned int>("id", getID());
+
+		drawMask();
+		for (auto it(renderers.begin()); it != renderers.end(); it++) {
+			SingleMeshRenderer& r = **it;
+			Material& m = r.getMaterial();
+
+			m.bind();
+			r.drawMesh(shader);
+		}
+	}
+
+	void MeshRendererGroup::drawExclusive(SceneShader& shader) const {
+		CullingGuard culling(faceCulling);
+		StencilGuard stencil;
+
+		shader.bindMatrices(transform);
+		for (auto it(renderers.begin()); it != renderers.end(); it++) {
+			SingleMeshRenderer& r = **it;
+			MaterialContainer& m = r.getMaterial().getMaterialContainer();
+
+			m.bind(shader);
+			r.drawMesh(shader);
+		}
+	}
+
+	RenderMode MeshRendererGroup::getRenderMode() const {
+		return mode;
+	}
+
+	const Mesh& MeshRendererGroup::getMesh() const {
+		return renderers.front()->getMesh();
+	}
+
+	void MeshRendererGroup::drawMesh(const Shader & shader) const {
+		for (auto it(renderers.begin()); it != renderers.end(); it++) {
+			SingleMeshRenderer& r = **it;
+			r.drawMesh(shader);
+		}
 	}
 
 }

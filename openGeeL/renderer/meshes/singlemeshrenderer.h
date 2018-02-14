@@ -28,6 +28,7 @@ namespace geeL {
 	class ViewFrustum;
 
 
+	//Represents a drawn model in a render scene. Independent from actual model
 	class SingleMeshRenderer : public SceneObject {
 
 	public:
@@ -65,6 +66,8 @@ namespace geeL {
 		virtual const Mesh& getMesh() const = 0;
 		unsigned short getID() const;
 
+		virtual void drawMesh(const Shader& shader) const = 0;
+
 	protected:
 		Material material;
 		RenderMask mask;
@@ -82,7 +85,6 @@ namespace geeL {
 			const std::string& name = "MeshRenderer");
 
 		void drawMask() const;
-		virtual void drawMesh(const Shader& shader) const = 0;
 
 	private:
 		MemoryObject<Model> modelData;
@@ -91,7 +93,7 @@ namespace geeL {
 	};
 
 
-
+	//Represents a drawn model in a render scene. Independent from actual model
 	class SingleStaticMeshRenderer : public SingleMeshRenderer {
 
 	public:
@@ -106,7 +108,6 @@ namespace geeL {
 		virtual RenderMode getRenderMode() const;
 		virtual const Mesh& getMesh() const;
 
-	protected:
 		virtual void drawMesh(const Shader& shader) const;
 
 	private:
@@ -115,7 +116,7 @@ namespace geeL {
 	};
 
 
-
+	//Special mesh renderer that is intended for use with animated/skinned models
 	class SingleSkinnedMeshRenderer : public SingleMeshRenderer {
 
 	public:
@@ -141,13 +142,39 @@ namespace geeL {
 		virtual RenderMode getRenderMode() const;
 		virtual const Mesh& getMesh() const;
 
-	protected:
 		virtual void drawMesh(const Shader& shader) const;
 
 	private:
 		const SkinnedMesh & mesh;
 		std::shared_ptr<Skeleton> skeleton;
 		AnimationContainer& animationContainer;
+
+	};
+
+	
+
+	//Groups mesh renderers of the same type and draw them with
+	//same transform and same shader
+	class MeshRendererGroup : public SingleMeshRenderer {
+
+	public:
+		MeshRendererGroup(Transform& transform,
+			SceneShader& shader,
+			std::list<SingleMeshRenderer*> renderers,
+			CullingMode faceCulling = CullingMode::cullFront,
+			const std::string& name = "MeshRendererGroup");
+
+		virtual void draw(SceneShader& shader) const;
+		virtual void drawExclusive(SceneShader& shader) const;
+
+		virtual RenderMode getRenderMode() const ;
+		virtual const Mesh& getMesh() const;
+
+		virtual void drawMesh(const Shader& shader) const;
+
+	private:
+		RenderMode mode;
+		std::list<SingleMeshRenderer*> renderers;
 
 	};
 
