@@ -34,11 +34,11 @@ int main(int argc, char* argv[]) {
 	}
 
 	//BedroomScene::draw();
-	//DeerScene::draw();
+	DeerScene::draw();
 	//ArthouseScene::draw();
 	//SponzaGIScene::draw();
 	//ScienceScene::draw();
-	CharacterViewer::draw();
+	//CharacterViewer::draw();
 	//ModelViewer::draw();
 	//CapsuleScene::draw();
 

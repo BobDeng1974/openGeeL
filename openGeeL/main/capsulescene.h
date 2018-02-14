@@ -48,12 +48,14 @@ public:
 			std::unique_ptr<MeshRenderer> capsulePtr = meshFactory.createMeshRenderer(
 				meshFactory.createStaticModel("resources/capsule/Capsule.obj"),
 				meshTransform2, "Capsule");
+
+			/*
 			 MeshRenderer& capsule = scene.addMeshRenderer(std::move(capsulePtr));
 
 			capsule.iterateMaterials([&](MaterialContainer& container) {
 				container.setIntValue("InverseRoughness", 1);
 			});
-
+		
 
 			Transform& meshTransform222 = transformFactory.CreateTransform(vec3(0.0f, -4.75f, 4.1f), vec3(0.f, 180.f, 0.f), vec3(0.0075f));
 			std::unique_ptr<SkinnedMeshRenderer> drone = meshFactory.createMeshRenderer(
@@ -79,7 +81,7 @@ public:
 			});
 
 			scene.addMeshRenderer(std::move(drone));
-
+			*/
 
 
 			ObjectLister& objectLister = ObjectLister(scene);

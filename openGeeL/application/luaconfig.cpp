@@ -206,7 +206,7 @@ namespace geeL {
 
 
 			//Mesh renderer initalization
-
+			/*
 			{
 				auto& meshes = state["objects"];
 				if (meshes.valid()) {
@@ -241,8 +241,10 @@ namespace geeL {
 
 						bool separate = m["separate"].get_or(false);
 
-						//Build meshe renderers
+						//Build mesh renderers
 						
+						
+
 						std::list<MeshRenderer*> meshRenderers;
 						if (separate) {
 							std::list<StaticMeshRenderer*> renderers = std::move(meshFactory.createMeshRenderers(
@@ -484,7 +486,7 @@ namespace geeL {
 					}
 				}
 			}
-			
+			*/
 
 			//Light initalization
 

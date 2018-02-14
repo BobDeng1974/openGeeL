@@ -49,6 +49,8 @@ public:
 			std::unique_ptr<MeshRenderer> sciencePtr = meshFactory.createMeshRenderer(
 				meshFactory.createStaticModel("resources/mad/madScience.obj"),
 				meshTransform2, "Science");
+
+			/*
 			MeshRenderer& science = scene.addMeshRenderer(std::move(sciencePtr));
 
 			std::map<const MeshInstance*, const Material*> transObjects;
@@ -88,6 +90,7 @@ public:
 			}
 
 			transObjects.clear();
+			*/
 
 			ObjectLister& objectLister = ObjectLister(scene);
 			objectLister.add(camera);

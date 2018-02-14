@@ -55,7 +55,7 @@ public:
 			std::unique_ptr<MeshRenderer> studio = meshFactory.createMeshRenderer(
 				meshFactory.createStaticModel("resources/art/artStudio.obj"),
 				meshTransform2, "Studio");
-			scene.addMeshRenderer(std::move(studio));
+			//scene.addMeshRenderer(std::move(studio));
 
 
 			ObjectLister& objectLister = ObjectLister(scene);

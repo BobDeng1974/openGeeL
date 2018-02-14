@@ -53,6 +53,8 @@ public:
 			std::unique_ptr<MeshRenderer> bedroomPtr = meshFactory.createMeshRenderer(
 				meshFactory.createStaticModel("resources/bedroom/Bedroom2.obj"),
 				meshTransform2, "Bedroom");
+
+			/*
 			MeshRenderer& bedroom = scene.addMeshRenderer(std::move(bedroomPtr));
 
 			std::map<const MeshInstance*, const Material*> transObjects;
@@ -75,6 +77,7 @@ public:
 			}
 
 			transObjects.clear();
+			*/
 
 
 			ObjectLister& objectLister = ObjectLister(scene);

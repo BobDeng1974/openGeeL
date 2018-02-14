@@ -19,7 +19,7 @@ namespace geeL {
 	class SimpleShadowmap;
 	class SingleMeshRenderer;
 
-	class ObjectLister : public GUISnippet, public DataEventListener<MeshRenderer> {
+	class ObjectLister : public GUISnippet, public DataEventListener<SingleMeshRenderer> {
 
 	public:
 		ObjectLister(Scene& scene);
@@ -37,13 +37,13 @@ namespace geeL {
 
 		ShadowMapSnippet& createSnippet(SimpleShadowmap& map);
 
-		virtual void onAdd(MeshRenderer& renderer);
-		virtual void onRemove(std::shared_ptr<MeshRenderer> renderer);
+		virtual void onAdd(SingleMeshRenderer& renderer);
+		virtual void onRemove(std::shared_ptr<SingleMeshRenderer> renderer);
 
 	private:
 		std::list<std::unique_ptr<GUISnippet>> lightSnippets;
 		std::map<MeshRenderer*, std::unique_ptr<GUISnippet>> objectSnippets;
-		std::list<std::unique_ptr<GUISnippet>> meshSnippets;
+		std::map<SingleMeshRenderer*, std::unique_ptr<GUISnippet>> meshSnippets;
 		std::list<std::unique_ptr<GUISnippet>> cameraSnippets;
 		std::list<std::unique_ptr<GUISnippet>> otherSnippets;
 		Scene& scene;

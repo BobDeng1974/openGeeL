@@ -21,7 +21,7 @@ namespace geeL {
 
 		scene.addListener(*this);
 
-		scene.iterRenderObjects([&](MeshRenderer& renderer) {
+		scene.iterRenderObjects([&](SingleMeshRenderer& renderer) {
 			add(renderer);
 		});
 
@@ -74,7 +74,7 @@ namespace geeL {
 			}
 
 			for (auto it = meshSnippets.begin(); it != meshSnippets.end(); it++) {
-				GUISnippet& snippet = **it;
+				GUISnippet& snippet = *it->second;
 				snippet.draw(context);
 			}
 
@@ -105,8 +105,7 @@ namespace geeL {
 
 	void ObjectLister::add(SingleMeshRenderer & mesh) {
 		SingleMeshRendererSnippet* snippet = new SingleMeshRendererSnippet(mesh);
-		meshSnippets.push_back(std::unique_ptr<GUISnippet>(snippet));
-
+		meshSnippets[&mesh] = std::unique_ptr<GUISnippet>(snippet);
 	}
 
 	void ObjectLister::add(Light& light) {
@@ -126,12 +125,12 @@ namespace geeL {
 		return *snippet;
 	}
 
-	void ObjectLister::onAdd(MeshRenderer& renderer) {
+	void ObjectLister::onAdd(SingleMeshRenderer& renderer) {
 		add(renderer);
 	}
 
-	void ObjectLister::onRemove(std::shared_ptr<MeshRenderer> renderer) {
-		objectSnippets.erase(renderer.get());
+	void ObjectLister::onRemove(std::shared_ptr<SingleMeshRenderer> renderer) {
+		meshSnippets.erase(renderer.get());
 	}
 
 }

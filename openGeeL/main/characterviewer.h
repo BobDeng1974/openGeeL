@@ -42,11 +42,14 @@ public:
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Large, 7.5f, 2U, 150.f, 1.f);
 			lightManager.addPointLight(config2, lightTransform21, glm::vec3(lightIntensity * 3.f, lightIntensity * 59.f, lightIntensity * 43.f), 0.25f);
 
+			/*
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(100.f, 0.2f, 100.f));
 			std::unique_ptr<MeshRenderer> planePtr = meshFactory.createMeshRenderer(
 				meshFactory.createStaticModel("resources/primitives/plane.obj"),
 				meshTransform2, "Floor");
 			MeshRenderer& plane = scene.addMeshRenderer(std::move(planePtr));
+
+
 
 		
 			plane.iterateMeshesSafe([&](const MeshInstance& mesh) {
@@ -120,7 +123,7 @@ public:
 					container.setIntValue("InverseRoughness", true);
 				}
 			});
-
+			*/
 
 			ObjectLister& objectLister = ObjectLister(scene);
 			objectLister.add(camera);

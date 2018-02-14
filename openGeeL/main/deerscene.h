@@ -41,23 +41,30 @@ public:
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(0.1f, 0.1f, 0.1f));
 
-			std::unique_ptr<MeshRenderer> deerPtr = meshFactory.createMeshRenderer(
-				meshFactory.createStaticModel("resources/deer/scene2.obj"),
-				meshTransform2, "Deer");
-			MeshRenderer& deer = scene.addMeshRenderer(std::move(deerPtr));
+			std::list<SingleStaticMeshRenderer*> ayyo = meshFactory.createSingleMeshRenderers(
+				meshFactory.createStaticModel("resources/deer/scene2.obj"), materialFactory.getDeferredShader(), meshTransform2, false);
 
-			deer.iterateMaterials([&](MaterialContainer& container) {
-				container.setFloatValue("Metallic", 0.2f);
-			});
+			for (auto it(ayyo.begin()); it != ayyo.end(); it++) {
+				SingleStaticMeshRenderer* renderer = *it;
 
-			/*
+
+				MaterialContainer& m = renderer->getMaterial().getMaterialContainer();
+				m.setFloatValue("Metallic", 0.2f);
+
+
+				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(renderer));
+
+
+			}
+
+
 			ObjectLister& objectLister = ObjectLister(scene);
 			objectLister.add(camera);
 			PostProcessingEffectLister postLister;
 			GUILister& lister = GUILister(window, 0.01f, 0.15f, 0.17f, 0.5f, objectLister, postLister);
 			gui.addElement(lister);
 			gui.addSystemInformation(0.01f, 0.655f, 0.17f, 0.14f);
-			*/
+			
 
 			BilateralFilter& blur = BilateralFilter(4.f, 7, 0.291f);
 			SSAO& ssao = SSAO(blur, 0.5f);

@@ -61,6 +61,7 @@ public:
 				meshFactory.createStaticModel("resources/primitives/plane.obj"),
 				meshTransform2, "Floor");
 
+			/*
 			MeshRenderer& plane = scene.addMeshRenderer(std::move(planePtr));
 			//physics.addPlane(vec3(0.f, 1.f, 0.f), meshTransform2, RigidbodyProperties(0.f, false));
 
@@ -148,6 +149,7 @@ public:
 			SimpleAnimator& anim = dude->addComponent<SimpleAnimator>(dude->getSkinnedModel(), dude->getSkeleton());
 			//anim.startAnimation("Animation 1");
 			//scene.addMeshRenderer(std::move(dude));
+			*/
 
 			ObjectLister& objectLister = ObjectLister(scene);
 			objectLister.add(camera);

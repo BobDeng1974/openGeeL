@@ -34,7 +34,7 @@ namespace geeL {
 		virtual ~SingleMeshRenderer();
 
 
-		virtual void draw() const;
+		virtual void draw(SceneShader& shader) const;
 
 		//Draw all meshes and materials exclusively with the given shader.
 		virtual void drawExclusive(SceneShader& shader) const;
@@ -49,6 +49,7 @@ namespace geeL {
 		const Material& getMaterial() const;
 		void setMaterial(Material& material);
 
+		SceneShader& getShader();
 		const SceneShader& getShader() const;
 		void setShader(SceneShader& shader);
 

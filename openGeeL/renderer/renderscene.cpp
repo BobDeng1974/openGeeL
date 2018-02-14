@@ -4,6 +4,7 @@
 #include "shader/sceneshader.h"
 #include "shader/uniformstack.h"
 #include "meshes/meshrenderer.h"
+#include "meshes/singlemeshrenderer.h"
 #include "materials/materialfactory.h"
 #include "cameras/camera.h"
 #include "cubemapping/skybox.h"
@@ -35,8 +36,8 @@ namespace geeL {
 
 	Scene::~Scene() {
 		for (auto it(renderers.begin()); it != renderers.end(); it++) {
-			MeshRenderer* renderer = *it;
-			onRemove(std::shared_ptr<MeshRenderer>(renderer));
+			SingleMeshRenderer* renderer = *it;
+			onRemove(std::shared_ptr<SingleMeshRenderer>(renderer));
 		}
 	}
 
@@ -94,29 +95,26 @@ namespace geeL {
 		}
 	}
 
-	MeshRenderer& Scene::addMeshRenderer(std::unique_ptr<MeshRenderer> renderer) {
-		MeshRenderer* rawRenderer = renderer.release();
+	SingleMeshRenderer& Scene::addMeshRenderer(std::unique_ptr<SingleMeshRenderer> renderer) {
+		SingleMeshRenderer* rawRenderer = renderer.release();
 		renderers.emplace(rawRenderer);
 		onAdd(*rawRenderer);
 
-		rawRenderer->iterateShaders([this, &rawRenderer](SceneShader& shader) {
-			//Init shader if it hasn't been added to the scene yet
-			addShader(shader);
+		SceneShader& shader = rawRenderer->getShader();
+		addShader(shader);
 
-			rawRenderer->addMaterialChangeListener([this](MeshRenderer& renderer, Material oldMaterial, Material newMaterial) {
-				updateMeshRenderer(renderer, oldMaterial, newMaterial);
-			});
-			
-			renderObjects[shader.getMethod()][&shader][rawRenderer->getID()] = rawRenderer;
+		rawRenderer->addMaterialChangeListener([this](SingleMeshRenderer& renderer, Material oldMaterial, Material newMaterial) {
+			updateMeshRenderer(renderer, oldMaterial, newMaterial);
 		});
 
-		
+		renderObjects[shader.getMethod()][&shader][rawRenderer->getID()] = rawRenderer;
+
 		return *rawRenderer;
 	}
 
 
 
-	void Scene::removeMeshRenderer(MeshRenderer& renderer, SceneShader& shader) {
+	void Scene::removeMeshRenderer(SingleMeshRenderer& renderer, SceneShader& shader) {
 		auto itMethod = renderObjects.find(shader.getMethod());
 		if (itMethod != renderObjects.end()) {
 			auto& shaders = (*itMethod).second;
@@ -132,31 +130,25 @@ namespace geeL {
 		}
 	}
 
-	void Scene::removeMeshRenderer(MeshRenderer& renderer) {
-
+	void Scene::removeMeshRenderer(SingleMeshRenderer& renderer) {
 		auto toRemove = renderers.find(&renderer);
 
 		if (toRemove != renderers.end()) {
-			renderer.iterateShaders([this, &renderer](SceneShader& shader) {
-				removeMeshRenderer(renderer, shader);
-			});
-
+			removeMeshRenderer(renderer, renderer.getShader());
 			renderers.erase(toRemove);
-			onRemove(std::shared_ptr<MeshRenderer>(&renderer));
+			onRemove(std::shared_ptr<SingleMeshRenderer>(&renderer));
 		}
 	}
 
 
-	void Scene::updateMeshRenderer(MeshRenderer& renderer, Material oldMaterial, Material newMaterial) {
+	void Scene::updateMeshRenderer(SingleMeshRenderer& renderer, Material oldMaterial, Material newMaterial) {
 		SceneShader& oldShader = oldMaterial.getShader();
 		SceneShader& newShader = newMaterial.getShader();
 
 		if (&oldShader == &newShader || oldShader.getMethod() == newShader.getMethod()) return;
 
 		//Remove mesh renderer from old materials shaders bucket
-		if (!renderer.containsShader(oldShader)) {
-			removeMeshRenderer(renderer, oldShader);
-		}
+		removeMeshRenderer(renderer, oldShader);
 
 		addShader(newShader);
 		renderObjects[newShader.getMethod()][&newShader][renderer.getID()] = &renderer;
@@ -253,13 +245,13 @@ namespace geeL {
 		addShader(materialFactory.getDefaultShader(ShadingMethod::Forward, true));
 	}
 
-	MeshRenderer& RenderScene::addMeshRenderer(std::unique_ptr<MeshRenderer> renderer) {
+	SingleMeshRenderer& RenderScene::addMeshRenderer(std::unique_ptr<SingleMeshRenderer> renderer) {
 		std::lock_guard<std::mutex> lock(mutex);
 
 		return Scene::addMeshRenderer(std::move(renderer));
 	}
 
-	void RenderScene::removeMeshRenderer(MeshRenderer& renderer) {
+	void RenderScene::removeMeshRenderer(SingleMeshRenderer& renderer) {
 		std::lock_guard<std::mutex> lock(mutex);
 
 		Scene::removeMeshRenderer(renderer);
@@ -336,7 +328,7 @@ namespace geeL {
 		SceneShader* currentShader = nullptr;
 
 		iterRenderObjects(shadingMethod, [this, &camera, &currentShader, &updateBinding]
-			(const MeshRenderer& object, SceneShader& shader) {
+			(const SingleMeshRenderer& object, SceneShader& shader) {
 
 			if (currentShader != &shader) {
 				if(updateBinding) shader.loadSceneInformation(lightManager, camera);
@@ -387,7 +379,7 @@ namespace geeL {
 	}
 
 	void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera, bool updateBindings) const {
-		using MSPair = pair<const MeshRenderer*, SceneShader*>;
+		using MSPair = pair<const SingleMeshRenderer*, SceneShader*>;
 
 		SceneShader* currentShader = nullptr;
 
@@ -395,14 +387,14 @@ namespace geeL {
 		size_t c = count(shadingMethod);
 		vector<MSPair> sortedObjects;
 		sortedObjects.reserve(c);
-		iterRenderObjects(shadingMethod, [&sortedObjects](const MeshRenderer& object, SceneShader& shader) {
+		iterRenderObjects(shadingMethod, [&sortedObjects](const SingleMeshRenderer& object, SceneShader& shader) {
 			sortedObjects.push_back(MSPair(&object, &shader));
 		});
 
 		//Sort by distance to camera
 		sort(sortedObjects.begin(), sortedObjects.end(), [&camera](const MSPair& a, const MSPair& b) -> bool {
-			const MeshRenderer& x = *a.first;
-			const MeshRenderer& y = *b.first;
+			const SingleMeshRenderer& x = *a.first;
+			const SingleMeshRenderer& y = *b.first;
 
 			glm::vec3 camPos = camera.transform.getPosition();
 			float xDist = glm::distance(x.transform.getPosition(), camPos);
@@ -413,7 +405,7 @@ namespace geeL {
 
 		//Read sorted data structure
 		for (auto it(sortedObjects.begin()); it != sortedObjects.end(); it++) {
-			const MeshRenderer& object = *it->first;
+			const SingleMeshRenderer& object = *it->first;
 			SceneShader& shader = *it->second;
 
 			if (currentShader != &shader) {
@@ -438,7 +430,7 @@ namespace geeL {
 		shader.loadSceneInformation(lightManager, camera);
 		shader.initDraw();
 
-		iterRenderObjects([&shader, &camera](const MeshRenderer& object) {
+		iterRenderObjects([&shader, &camera](const SingleMeshRenderer& object) {
 			if (object.isActive()) {
 				//Use frustum culling if a camera has been attached
 				bool isVisible = !((camera != nullptr) && !object.isVisible(*camera));
@@ -450,14 +442,14 @@ namespace geeL {
 	}
 	
 	void RenderScene::drawGeometry(const RenderShader& shader) const {
-		iterRenderObjects([&](const MeshRenderer& object) {
+		iterRenderObjects([&](const SingleMeshRenderer& object) {
 			if (object.isActive())
 				object.drawGeometry(shader);
 		});
 	}
 
 	void RenderScene::drawGeometry(const RenderShader& shader, RenderMode mode, const ViewFrustum* const frustum) const {
-		iterRenderObjects([&](const MeshRenderer& object) {
+		iterRenderObjects([&](const SingleMeshRenderer& object) {
 			if (object.isActive()) {
 				//Use frustum culling if frustum has been attached
 				bool isVisible = !((frustum != nullptr) && !object.isVisible(*frustum));
@@ -471,7 +463,7 @@ namespace geeL {
 	void RenderScene::drawGeometry(const RenderShader& staticShader, const RenderShader& skinnedShader, 
 		const ViewFrustum* const frustum) const {
 
-		iterRenderObjects([&](const MeshRenderer& object) {
+		iterRenderObjects([&](const SingleMeshRenderer& object) {
 			if (object.isActive()) {
 				//Use frustum culling if frustum has been attached
 				bool isVisible = !((frustum != nullptr) && !object.isVisible(*frustum));
@@ -517,7 +509,7 @@ namespace geeL {
 	void Scene::iterSceneObjects(std::function<void(SceneObject&)> function) {
 		function(*camera);
 
-		iterRenderObjects([&](MeshRenderer& object) {
+		iterRenderObjects([&](SingleMeshRenderer& object) {
 			function(object);
 		});
 
@@ -527,14 +519,14 @@ namespace geeL {
 	}
 
 
-	void Scene::iterRenderObjects(function<void(MeshRenderer&)> function) const {
+	void Scene::iterRenderObjects(function<void(SingleMeshRenderer&)> function) const {
 		for (auto it(renderers.begin()); it != renderers.end(); it++) {
-			MeshRenderer& renderer = **it;
+			SingleMeshRenderer& renderer = **it;
 			function(renderer);
 		}
 	}
 
-	void Scene::iterRenderObjects(SceneShader& shader, function<void(const MeshRenderer&)> function) const {
+	void Scene::iterRenderObjects(SceneShader& shader, function<void(const SingleMeshRenderer&)> function) const {
 		auto itMethod = renderObjects.find(shader.getMethod());
 		if (itMethod != renderObjects.end()) {
 			const ShaderMapping& shaders = itMethod->second;
@@ -544,7 +536,7 @@ namespace geeL {
 				const TransformMapping& elements = itShader->second;
 
 				for (auto ut(elements.begin()); ut != elements.end(); ut++) {
-					const MeshRenderer& object = *ut->second;
+					const SingleMeshRenderer& object = *ut->second;
 					function(object);
 				}
 
@@ -552,7 +544,7 @@ namespace geeL {
 		}
 	}
 
-	void Scene::iterRenderObjects(ShadingMethod shadingMethod, std::function<void(const MeshRenderer&, SceneShader&)> function) const {
+	void Scene::iterRenderObjects(ShadingMethod shadingMethod, std::function<void(const SingleMeshRenderer&, SceneShader&)> function) const {
 		auto itMethod = renderObjects.find(shadingMethod);
 		if (itMethod != renderObjects.end()) {
 			const ShaderMapping& shaders = itMethod->second;
@@ -562,7 +554,7 @@ namespace geeL {
 				const TransformMapping& elements = itShader->second;
 
 				for (auto ut(elements.begin()); ut != elements.end(); ut++) {
-					const MeshRenderer& object = *ut->second;
+					const SingleMeshRenderer& object = *ut->second;
 					function(object, shader);
 				}
 			}

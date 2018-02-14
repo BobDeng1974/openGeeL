@@ -29,12 +29,12 @@ namespace geeL {
 	}
 
 
-	void SingleMeshRenderer::draw() const {
+	void SingleMeshRenderer::draw(SceneShader& shader) const {
 		CullingGuard culling(faceCulling);
 		StencilGuard stencil;
 
-		const SceneShader& shader = material.getShader();
-		shader.bindMatrices(transform); //ISSUES: transform bound multiple times
+		//const SceneShader& shader = material.getShader();
+		shader.bindMatrices(transform);
 
 		shader.bind<unsigned int>("id", getID());
 		material.bind();
@@ -48,7 +48,7 @@ namespace geeL {
 		StencilGuard stencil;
 
 		const MaterialContainer& container = material.getMaterialContainer();
-		shader.bindMatrices(transform); //ISSUES: transform bound multiple times
+		shader.bindMatrices(transform);
 
 		container.bind(shader);
 		drawMesh(shader);
@@ -77,6 +77,10 @@ namespace geeL {
 
 		for (auto it(materialListeners.begin()); it != materialListeners.end(); it++)
 			(*it)(*this, oldMaterial, material);
+	}
+
+	SceneShader& SingleMeshRenderer::getShader() {
+		return material.getShader();
 	}
 
 	const SceneShader& SingleMeshRenderer::getShader() const {

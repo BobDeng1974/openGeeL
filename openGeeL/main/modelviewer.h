@@ -71,7 +71,7 @@ public:
 				}
 			});
 
-			scene.addMeshRenderer(std::move(skull));
+			//scene.addMeshRenderer(std::move(skull));
 
 
 			ObjectLister& objectLister = ObjectLister(scene);

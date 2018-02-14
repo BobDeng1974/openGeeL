@@ -25,8 +25,7 @@ namespace geeL {
 	class RenderShader;
 	class UniformBindingStack;
 	class SceneShader;
-	class MeshRenderer;
-	class SkinnedMeshRenderer;
+	class SingleMeshRenderer;
 	class StaticModel;
 	class Material;
 	class MaterialFactory;
@@ -36,12 +35,12 @@ namespace geeL {
 
 	enum class CullingMode;
 
-	using TransformMapping = std::map<unsigned short, MeshRenderer*>;
+	using TransformMapping = std::map<unsigned short, SingleMeshRenderer*>;
 	using ShaderMapping    = std::map<SceneShader*, TransformMapping>;
 
 
 	//Class that holds scene information (Objects, cameras, lights, ...)
-	class Scene : public DataEventActuator<MeshRenderer> {
+	class Scene : public DataEventActuator<SingleMeshRenderer> {
 
 	public:
 		Scene(Transform& world, LightManager& lightManager, UniformBindingStack& pipeline, SceneCamera& camera);
@@ -57,17 +56,17 @@ namespace geeL {
 		const LightManager& getLightmanager() const;
 		LightManager& getLightmanager();
 
-		virtual MeshRenderer& addMeshRenderer(std::unique_ptr<MeshRenderer> renderer);
-		virtual void removeMeshRenderer(MeshRenderer& renderer);
+		virtual SingleMeshRenderer& addMeshRenderer(std::unique_ptr<SingleMeshRenderer> renderer);
+		virtual void removeMeshRenderer(SingleMeshRenderer& renderer);
 
 		void setSkybox(Skybox& skybox);
 
 		void iterSceneObjects(std::function<void(SceneObject&)> function);
 
-		void iterRenderObjects(std::function<void(MeshRenderer&)> function) const;
-		void iterRenderObjects(SceneShader& shader, std::function<void(const MeshRenderer&)> function) const;
+		void iterRenderObjects(std::function<void(SingleMeshRenderer&)> function) const;
+		void iterRenderObjects(SceneShader& shader, std::function<void(const SingleMeshRenderer&)> function) const;
 		void iterRenderObjects(ShadingMethod shadingMethod, 
-			std::function<void(const MeshRenderer&, SceneShader&)> function) const;
+			std::function<void(const SingleMeshRenderer&, SceneShader&)> function) const;
 		void iterShaders(std::function<void(SceneShader&)> function);
 
 
@@ -103,10 +102,10 @@ namespace geeL {
 		std::map<ShadingMethod, ShaderMapping> renderObjects;
 
 		//Second indexing structure of mesh renderers that is mainly used for better iteration performance
-		std::set<MeshRenderer*> renderers;
+		std::set<SingleMeshRenderer*> renderers;
 
-		void removeMeshRenderer(MeshRenderer& renderer, SceneShader& shader);
-		void updateMeshRenderer(MeshRenderer& renderer, Material oldMaterial, Material newMaterial);
+		void removeMeshRenderer(SingleMeshRenderer& renderer, SceneShader& shader);
+		void updateMeshRenderer(SingleMeshRenderer& renderer, Material oldMaterial, Material newMaterial);
 
 		void iterShaders(std::function<bool(const SceneShader&)> function) const;
 
@@ -121,8 +120,8 @@ namespace geeL {
 		RenderScene(Transform& world, LightManager& lightManager, UniformBindingStack& pipeline, SceneCamera& camera, 
 			MaterialFactory& materialFactory, Input& input);
 
-		virtual MeshRenderer& addMeshRenderer(std::unique_ptr<MeshRenderer> renderer);
-		virtual void removeMeshRenderer(MeshRenderer& renderer);
+		virtual SingleMeshRenderer& addMeshRenderer(std::unique_ptr<SingleMeshRenderer> renderer);
+		virtual void removeMeshRenderer(SingleMeshRenderer& renderer);
 
 
 		void init();

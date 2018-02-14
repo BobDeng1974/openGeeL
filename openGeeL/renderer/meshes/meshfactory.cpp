@@ -91,15 +91,12 @@ namespace geeL {
 		SceneShader& shader, Transform& transform, bool splitTransform) {
 
 		list<SingleStaticMeshRenderer*> renderers;
-		string path = model->getPath();
-
-		size_t counter = 1;
 		model->iterateMeshesGeneric([&](const StaticMesh& mesh) {
-			string newName = path + " " + mesh.getName() + std::to_string(counter++);
+			string newName = mesh.getMaterialContainer().name;
 			Transform& newTransform = splitTransform ? transform.getParent()->addChild(transform) : transform;
 
 			SingleStaticMeshRenderer* renderer = new SingleStaticMeshRenderer(newTransform, mesh, shader, 
-				model, CullingMode::cullFront, mesh.getName());
+				model, CullingMode::cullFront, newName);
 
 			renderers.push_back(renderer);
 		});
@@ -110,20 +107,16 @@ namespace geeL {
 	std::list<SingleSkinnedMeshRenderer*> MeshFactory::createSkinnedMeshRenderers(MemoryObject<SkinnedModel> model,
 		SceneShader& shader, Transform& transform, bool splitTransform) {
 
-		list<SingleSkinnedMeshRenderer*> renderers;
-		string path = model->getPath();
-
 		std::shared_ptr<Skeleton> skeleton = nullptr;
-
-		size_t counter = 1;
+		list<SingleSkinnedMeshRenderer*> renderers;
 		model->iterateMeshesGeneric([&](const SkinnedMesh& mesh) {
-			string newName = path + " " + mesh.getName() + std::to_string(counter++);
+			string newName = mesh.getMaterialContainer().name;
 			Transform& newTransform = splitTransform ? transform.getParent()->addChild(transform) : transform;
 
 			//Read skeleton from first mesh
 			if (skeleton == nullptr) {
 				SingleSkinnedMeshRenderer* renderer = new SingleSkinnedMeshRenderer(newTransform, mesh, shader,
-					model, CullingMode::cullFront, mesh.getName());
+					model, CullingMode::cullFront, newName);
 
 				skeleton = renderer->shareSkeleton();
 				renderers.push_back(renderer);
@@ -131,7 +124,7 @@ namespace geeL {
 			//Reuse skeleton for other meshes
 			else {
 				SingleSkinnedMeshRenderer* renderer = new SingleSkinnedMeshRenderer(newTransform, mesh, shader,
-					model, skeleton, CullingMode::cullFront, mesh.getName());
+					model, skeleton, CullingMode::cullFront, newName);
 
 				renderers.push_back(renderer);
 			}
