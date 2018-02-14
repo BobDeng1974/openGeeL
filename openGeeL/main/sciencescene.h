@@ -45,16 +45,18 @@ public:
 			SpotLight& spotLight = lightManager.addSpotlight(config, lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle);
 
 
-			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(0.1f, 0.1f, 0.1f));
-			std::unique_ptr<MeshRenderer> sciencePtr = meshFactory.createMeshRenderer(
+			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f), vec3(0.f), vec3(0.1f));
+			std::list<std::unique_ptr<SingleStaticMeshRenderer>> scienceScene = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/mad/madScience.obj"),
-				meshTransform2, "Science");
+				materialFactory.getDeferredShader(),
+				meshTransform2, false);
 
-			/*
-			MeshRenderer& science = scene.addMeshRenderer(std::move(sciencePtr));
+			for (auto it(scienceScene.begin()); it != scienceScene.end(); it++) {
+				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
 
-			std::map<const MeshInstance*, const Material*> transObjects;
-			science.iterate([&](const MeshInstance& mesh, const Material& material) {
+				const Mesh& mesh = renderer->getMesh();
+				MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
+
 				if (mesh.getName() == "GRP_Models_MDL_Glass_GRP_Glass_Triangle" ||
 					mesh.getName() == "GRP_Models_GRP_Stack_GRP__MDL_Goggles_Object02" ||
 					mesh.getName() == "GRP_Models_GRP_LargeTallBeaker_MDL_Glass1" ||
@@ -64,33 +66,24 @@ public:
 					mesh.getName().find("SpoutedBeakerGlass") != std::string::npos ||
 					mesh.getName().find("BrainJar_MDL_GlassOuter") != std::string::npos) {
 
-					transObjects[&mesh] = &material;
-				}
-			});
+					if (mesh.getName().find("Goggles") != std::string::npos)
+						container.setFloatValue("Transparency", 0.6f);
+					else {
+						if (mesh.getName().find("TestTubes") != std::string::npos)
+							container.setFloatValue("Transparency", 0.75f);
+						else
+							container.setFloatValue("Transparency", 0.5f);
 
-			for (auto it(transObjects.begin()); it != transObjects.end(); it++) {
-				const MeshInstance& mesh = *it->first;
-				const Material& material = *it->second;
+						container.setVectorValue("Color", glm::vec3(0.3f));
+					}
 
-				MaterialContainer& container = material.getMaterialContainer();
-
-				if (mesh.getName().find("Goggles") != std::string::npos)
-					container.setFloatValue("Transparency", 0.6f);
-				else {
-					if (mesh.getName().find("TestTubes") != std::string::npos)
-						container.setFloatValue("Transparency", 0.75f);
-					else 
-						container.setFloatValue("Transparency", 0.5f);
-
-					container.setVectorValue("Color", glm::vec3(0.3f));
+					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
+					renderer->setShader(ss);
 				}
 
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
-				science.changeMaterial(ss, mesh);
+				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
 			}
 
-			transObjects.clear();
-			*/
 
 			ObjectLister& objectLister = ObjectLister(scene);
 			objectLister.add(camera);

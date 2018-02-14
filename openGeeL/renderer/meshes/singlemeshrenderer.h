@@ -62,6 +62,7 @@ namespace geeL {
 		bool isVisible(const Camera& camera) const;
 		bool isVisible(const ViewFrustum& view) const;
 
+		virtual const Mesh& getMesh() const = 0;
 		unsigned short getID() const;
 
 	protected:
@@ -103,6 +104,7 @@ namespace geeL {
 			const std::string& name = "MeshRenderer");
 
 		virtual RenderMode getRenderMode() const;
+		virtual const Mesh& getMesh() const;
 
 	protected:
 		virtual void drawMesh(const Shader& shader) const;
@@ -137,6 +139,7 @@ namespace geeL {
 		AnimationContainer& getAnimationContainer();
 
 		virtual RenderMode getRenderMode() const;
+		virtual const Mesh& getMesh() const;
 
 	protected:
 		virtual void drawMesh(const Shader& shader) const;

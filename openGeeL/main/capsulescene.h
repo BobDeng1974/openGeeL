@@ -45,28 +45,38 @@ public:
 
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.1f));
-			std::unique_ptr<MeshRenderer> capsulePtr = meshFactory.createMeshRenderer(
+			std::list<std::unique_ptr<SingleStaticMeshRenderer>> capsule = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/capsule/Capsule.obj"),
-				meshTransform2, "Capsule");
+				materialFactory.getDeferredShader(),
+				meshTransform2, false);
 
-			/*
-			 MeshRenderer& capsule = scene.addMeshRenderer(std::move(capsulePtr));
+			for (auto it(capsule.begin()); it != capsule.end(); it++) {
+				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
 
-			capsule.iterateMaterials([&](MaterialContainer& container) {
-				container.setIntValue("InverseRoughness", 1);
-			});
-		
+				MaterialContainer& m = renderer->getMaterial().getMaterialContainer();
+				m.setIntValue("InverseRoughness", 1);
 
-			Transform& meshTransform222 = transformFactory.CreateTransform(vec3(0.0f, -4.75f, 4.1f), vec3(0.f, 180.f, 0.f), vec3(0.0075f));
-			std::unique_ptr<SkinnedMeshRenderer> drone = meshFactory.createMeshRenderer(
-				meshFactory.createSkinnedModel("resources/drone/Drone.fbx"),
-				meshTransform222, "Drone");
+				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+			}
+
+
 			
-			SimpleAnimator& anim = drone->addComponent<SimpleAnimator>(drone->getSkinnedModel(), drone->getSkeleton());
+			Transform& meshTransform222 = transformFactory.CreateTransform(vec3(0.0f, -4.75f, 4.1f), vec3(0.f, 180.f, 0.f), vec3(0.0075f));
+			std::list<std::unique_ptr<SingleSkinnedMeshRenderer>> drone = meshFactory.createSingleMeshRenderers(
+				meshFactory.createSkinnedModel("resources/drone/Drone.fbx"),
+				materialFactory.getDeferredShader(),
+				meshTransform222, false);
+
+
+			SingleSkinnedMeshRenderer& base = *drone.front();
+			SimpleAnimator& anim = base.addComponent<SimpleAnimator>(base.getAnimationContainer(), base.getSkeleton());
 			anim.loopAnimation(true);
 			anim.startAnimation("AnimStack::Take 001", 10);
 
-			drone->iterateMaterials([&](MaterialContainer& container) {
+			for (auto it(drone.begin()); it != drone.end(); it++) {
+				unique_ptr<SingleSkinnedMeshRenderer> renderer = std::move(*it);
+
+				MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
 				if (container.name == "Robot") {
 					container.addTexture("diffuse", materialFactory.createTexture("resources/drone/Drone_diff.jpg", ColorType::GammaSpace));
 					container.addTexture("roughness", materialFactory.createTexture("resources/drone/Drone_spec.jpg"));
@@ -78,10 +88,9 @@ public:
 					container.setFloatValue("Roughness", 0.6f);
 					container.setFloatValue("Metallic", 0.8f);
 				}
-			});
 
-			scene.addMeshRenderer(std::move(drone));
-			*/
+				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+			}
 
 
 			ObjectLister& objectLister = ObjectLister(scene);

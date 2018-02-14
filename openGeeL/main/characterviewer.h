@@ -42,55 +42,62 @@ public:
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Large, 7.5f, 2U, 150.f, 1.f);
 			lightManager.addPointLight(config2, lightTransform21, glm::vec3(lightIntensity * 3.f, lightIntensity * 59.f, lightIntensity * 43.f), 0.25f);
 
-			/*
-			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(100.f, 0.2f, 100.f));
-			std::unique_ptr<MeshRenderer> planePtr = meshFactory.createMeshRenderer(
-				meshFactory.createStaticModel("resources/primitives/plane.obj"),
-				meshTransform2, "Floor");
-			MeshRenderer& plane = scene.addMeshRenderer(std::move(planePtr));
 
 
-
-		
-			plane.iterateMeshesSafe([&](const MeshInstance& mesh) {
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Hybrid);
-				plane.changeMaterial(ss, mesh);
-			});
-
-			plane.iterateMaterials([&](MaterialContainer& container) {
-				container.setFloatValue("Roughness", 0.25f);
-				container.setFloatValue("Metallic", 0.f);
-				container.setFloatValue("Transparency", 0.65f);
-			});
-			
 			{
 				SceneShader& forwardShader = materialFactory.getDefaultShader(ShadingMethod::Hybrid);
 				SceneShader& transparentShader = materialFactory.getDefaultShader(ShadingMethod::Transparent);
-				
+
 				forwardShader.bind<float>("fogFalloff", 15.f);
 				transparentShader.bind<float>("fogFalloff", 15.f);
 			}
 
-			Transform& meshTransform22 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 5.9f), vec3(0.f, 0.f, 0.f), vec3(0.12f));
-			std::unique_ptr<MeshRenderer> girlPtr = meshFactory.createMeshRenderer(
-				meshFactory.createStaticModel("resources/girl/girl_nofloor.obj"),
-				meshTransform22, "Girl");
-			MeshRenderer& girl = scene.addMeshRenderer(std::move(girlPtr));
 
-			girl.iterateMeshesSafe([&](const MeshInstance& mesh) {
+			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 0.0f), vec3(0.f), vec3(100.f, 0.2f, 100.f));
+			std::list<std::unique_ptr<SingleStaticMeshRenderer>> plane = meshFactory.createSingleMeshRenderers(
+				meshFactory.createStaticModel("resources/primitives/plane.obj"),
+				materialFactory.getDeferredShader(),
+				meshTransform2, false);
+
+			for (auto it(plane.begin()); it != plane.end(); it++) {
+				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
+
+				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Hybrid);
+				renderer->setShader(ss);
+
+				MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
+				container.setFloatValue("Roughness", 0.25f);
+				container.setFloatValue("Metallic", 0.f);
+				container.setFloatValue("Transparency", 0.65f);
+
+				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+			}
+
+
+
+			Transform& meshTransform22 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 5.9f), vec3(0.f), vec3(0.12f));
+			std::list<std::unique_ptr<SingleStaticMeshRenderer>> girl = meshFactory.createSingleMeshRenderers(
+				meshFactory.createStaticModel("resources/girl/girl_nofloor.obj"),
+				materialFactory.getDeferredShader(),
+				meshTransform22, false);
+
+			for (auto it(girl.begin()); it != girl.end(); it++) {
+				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
+
+				const Mesh& mesh = renderer->getMesh();
 				if (mesh.getName() == "eyelash" || mesh.getName() == "fur") {
 					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Forward);
-					girl.changeMaterial(ss, mesh);
+					renderer->setShader(ss);
 				}
 				else if (mesh.getName() == "body")
-					girl.setRenderMask(RenderMask::Skin, mesh);
+					renderer->setRenderMask(RenderMask::Skin);
 				else if (mesh.getName() == "hair_inner") {
 					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
-					girl.changeMaterial(ss, mesh);
+					renderer->setShader(ss);
 				}
-			});
 
-			girl.iterateMaterials([&](MaterialContainer& container) {
+
+				MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
 				if (container.name == "fur") {
 					container.addTexture("alpha", materialFactory.createTexture("resources/girl/fur_alpha_01.jpg"));
 					container.setFloatValue("Transparency", 0.4f);
@@ -122,8 +129,10 @@ public:
 
 					container.setIntValue("InverseRoughness", true);
 				}
-			});
-			*/
+
+				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+			}
+
 
 			ObjectLister& objectLister = ObjectLister(scene);
 			objectLister.add(camera);

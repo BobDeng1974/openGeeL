@@ -127,6 +127,11 @@ namespace geeL {
 
 	}
 
+	const Mesh & SingleMeshRenderer::getMesh() const
+	{
+		// TODO: hier Rückgabeanweisung eingeben
+	}
+
 
 
 	SingleStaticMeshRenderer::SingleStaticMeshRenderer(Transform& transform, 
@@ -138,6 +143,10 @@ namespace geeL {
 
 	RenderMode SingleStaticMeshRenderer::getRenderMode() const {
 		return RenderMode::Static;
+	}
+
+	const Mesh& SingleStaticMeshRenderer::getMesh() const {
+		return mesh;
 	}
 
 	void SingleStaticMeshRenderer::drawMesh(const Shader& shader) const {
@@ -183,6 +192,10 @@ namespace geeL {
 
 	RenderMode SingleSkinnedMeshRenderer::getRenderMode() const {
 		return RenderMode::Skinned;
+	}
+
+	const Mesh& SingleSkinnedMeshRenderer::getMesh() const {
+		return mesh;
 	}
 
 	void SingleSkinnedMeshRenderer::drawMesh(const Shader& shader) const {

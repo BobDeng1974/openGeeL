@@ -32,32 +32,39 @@ public:
 			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 5.5f, 3U, 150.f);
 			lightManager.addPointLight(config, lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f));
 
-			/*
-			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 121.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
-			std::unique_ptr<MeshRenderer> buddhaPtr = meshFactory.createMeshRenderer(
-				meshFactory.createStaticModel("resources/classics/buddha.obj"),
-				meshTransform2, "Buddha");
-			MeshRenderer& buddha = scene.addMeshRenderer(std::move(buddhaPtr));
 
-			buddha.iterateMaterials([&](MaterialContainer& container) {
+			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 121.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
+			std::list<std::unique_ptr<SingleStaticMeshRenderer>> buddha = meshFactory.createSingleMeshRenderers(
+				meshFactory.createStaticModel("resources/classics/buddha.obj"),
+				materialFactory.getDeferredShader(),
+				meshTransform2, false);
+
+			for (auto it(buddha.begin()); it != buddha.end(); it++) {
+				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
+
+				MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
 				container.setFloatValue("Transparency", 0.01f);
 				container.setFloatValue("Roughness", 0.25f);
 				container.setFloatValue("Metallic", 0.4f);
 				container.setVectorValue("Color", vec3(0.1f));
-			});
+
+				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+			}
 
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(152.f, 24.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
-			std::unique_ptr<MeshRenderer> sponzaPtr = meshFactory.createMeshRenderer(
+			std::list<std::unique_ptr<SingleStaticMeshRenderer>> sponza = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/sponza/sponza.obj"),
-				meshTransform6, "Sponza");
-			MeshRenderer& sponza = scene.addMeshRenderer(std::move(sponzaPtr));
-
+				materialFactory.getDeferredShader(),
+				meshTransform6, false);
 
 			//MemoryObject<DynamicRenderTexture> renderTex = new DynamicRenderTexture(camera, Resolution(1000));
 			//renderer.addRenderTexture(*renderTex);
 
-			sponza.iterateMaterials([&](MaterialContainer& container) {
+			for (auto it(sponza.begin()); it != sponza.end(); it++) {
+				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
+
+				MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
 				if (container.name == "fabric_g") {
 					//container.addTexture("Diffuse", renderTex);
 					container.setVectorValue("Emissivity", vec3(0.08f));
@@ -69,8 +76,8 @@ public:
 				else if (container.name == "leaf")
 					container.addTexture("alpha", materialFactory.createTexture("resources/sponza/textures/sponza_thorn_mask.tga"));
 
-			});
-			*/
+				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+			}
 
 
 			ObjectLister& objectLister = ObjectLister(scene);

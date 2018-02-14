@@ -104,7 +104,7 @@ namespace geeL {
 		return renderers;
 	}
 
-	list<unique_ptr<SingleSkinnedMeshRenderer>> MeshFactory::createSkinnedMeshRenderers(MemoryObject<SkinnedModel> model,
+	list<unique_ptr<SingleSkinnedMeshRenderer>> MeshFactory::createSingleMeshRenderers(MemoryObject<SkinnedModel> model,
 		SceneShader& shader, Transform& transform, bool splitTransform) {
 
 		std::shared_ptr<Skeleton> skeleton = nullptr;
