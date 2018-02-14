@@ -4,11 +4,11 @@
 #include "mesh.h"
 #include "meshidgenerator.h"
 #include "model.h"
-#include "singlemeshrenderer.h"
+#include "meshrenderer.h"
 
 namespace geeL {
 
-	SingleMeshRenderer::SingleMeshRenderer(Transform& transform, const Mesh& mesh, 
+	MeshRenderer::MeshRenderer(Transform& transform, const Mesh& mesh, 
 		SceneShader& shader, MemoryObject<Model> modelData,
 		CullingMode faceCulling, const std::string & name)
 			: SceneObject(transform, name)
@@ -19,13 +19,13 @@ namespace geeL {
 			, material(Material(shader, mesh.getMaterialContainer()))
 			, aabb(TransformableBoundingBox(mesh.getBoundingBox(), transform)) {}
 
-	SingleMeshRenderer::~SingleMeshRenderer() {
+	MeshRenderer::~MeshRenderer() {
 		for (auto it(deleteListeners.begin()); it != deleteListeners.end(); it++)
 			(*it)(*this);
 	}
 
 
-	void SingleMeshRenderer::draw(SceneShader& s) const {
+	void MeshRenderer::draw(SceneShader& s) const {
 		CullingGuard culling(faceCulling);
 		StencilGuard stencil;
 
@@ -39,7 +39,7 @@ namespace geeL {
 		drawMesh(shader);
 	}
 
-	void SingleMeshRenderer::drawExclusive(SceneShader& shader) const {
+	void MeshRenderer::drawExclusive(SceneShader& shader) const {
 		CullingGuard culling(faceCulling);
 		StencilGuard stencil;
 
@@ -50,24 +50,24 @@ namespace geeL {
 		drawMesh(shader);
 	}
 
-	void SingleMeshRenderer::drawGeometry(const RenderShader& shader) const {
+	void MeshRenderer::drawGeometry(const RenderShader& shader) const {
 		transform.bind(shader, "model");
 		drawMesh(shader);
 	}
 
-	void SingleMeshRenderer::setRenderMask(RenderMask mask) {
+	void MeshRenderer::setRenderMask(RenderMask mask) {
 		this->mask = mask;
 	}
 
-	Material& SingleMeshRenderer::getMaterial() {
+	Material& MeshRenderer::getMaterial() {
 		return material;
 	}
 
-	const Material& SingleMeshRenderer::getMaterial() const {
+	const Material& MeshRenderer::getMaterial() const {
 		return material;
 	}
 
-	void SingleMeshRenderer::setMaterial(Material& material) {
+	void MeshRenderer::setMaterial(Material& material) {
 		Material oldMaterial(this->material);
 		this->material = material;
 
@@ -75,15 +75,15 @@ namespace geeL {
 			(*it)(*this, oldMaterial, material);
 	}
 
-	SceneShader& SingleMeshRenderer::getShader() {
+	SceneShader& MeshRenderer::getShader() {
 		return material.getShader();
 	}
 
-	const SceneShader& SingleMeshRenderer::getShader() const {
+	const SceneShader& MeshRenderer::getShader() const {
 		return material.getShader();
 	}
 
-	void SingleMeshRenderer::setShader(SceneShader& shader) {
+	void MeshRenderer::setShader(SceneShader& shader) {
 		Material oldMaterial(this->material);
 		material.setShader(shader);
 
@@ -91,31 +91,31 @@ namespace geeL {
 			(*it)(*this, oldMaterial, material);
 	}
 
-	void SingleMeshRenderer::addMaterialChangeListener(std::function<void(SingleMeshRenderer&, Material, Material)> listener) {
+	void MeshRenderer::addMaterialChangeListener(std::function<void(MeshRenderer&, Material, Material)> listener) {
 		materialListeners.push_back(listener);
 	}
 
-	void SingleMeshRenderer::addDeleteListener(std::function<void(const SingleMeshRenderer&)> listener) {
+	void MeshRenderer::addDeleteListener(std::function<void(const MeshRenderer&)> listener) {
 		deleteListeners.push_back(listener);
 	}
 
-	const AABoundingBox& SingleMeshRenderer::getBoundingBox() const {
+	const AABoundingBox& MeshRenderer::getBoundingBox() const {
 		return aabb;
 	}
 
-	bool SingleMeshRenderer::isVisible(const Camera& camera) const {
+	bool MeshRenderer::isVisible(const Camera& camera) const {
 		return isVisible(camera.getFrustum());
 	}
 
-	bool SingleMeshRenderer::isVisible(const ViewFrustum& view) const {
+	bool MeshRenderer::isVisible(const ViewFrustum& view) const {
 		return aabb.intersect(view) != IntersectionType::Outside;
 	}
 
-	unsigned short SingleMeshRenderer::getID() const {
+	unsigned short MeshRenderer::getID() const {
 		return id;
 	}
 
-	void SingleMeshRenderer::drawMask() const {
+	void MeshRenderer::drawMask() const {
 		const SceneShader& shader = material.getShader();
 		RenderMask shaderMask = Masking::getShadingMask(shader.getMethod());
 		RenderMask activeMask = shaderMask | mask;
@@ -129,31 +129,31 @@ namespace geeL {
 
 
 
-	SingleStaticMeshRenderer::SingleStaticMeshRenderer(Transform& transform, 
+	StaticMeshRenderer::StaticMeshRenderer(Transform& transform, 
 		const StaticMesh& mesh, SceneShader& shader, MemoryObject<StaticModel> model,
 		CullingMode faceCulling, const std::string& name)
-			: SingleMeshRenderer(transform, mesh, shader, model, faceCulling, name)
+			: MeshRenderer(transform, mesh, shader, model, faceCulling, name)
 			, mesh(mesh) {}
 
 
-	RenderMode SingleStaticMeshRenderer::getRenderMode() const {
+	RenderMode StaticMeshRenderer::getRenderMode() const {
 		return RenderMode::Static;
 	}
 
-	const Mesh& SingleStaticMeshRenderer::getMesh() const {
+	const Mesh& StaticMeshRenderer::getMesh() const {
 		return mesh;
 	}
 
-	void SingleStaticMeshRenderer::drawMesh(const Shader& shader) const {
+	void StaticMeshRenderer::drawMesh(const Shader& shader) const {
 		mesh.draw(shader);
 	}
 
 
 
-	SingleSkinnedMeshRenderer::SingleSkinnedMeshRenderer(Transform& transform, const SkinnedMesh& mesh, 
+	SkinnedMeshRenderer::SkinnedMeshRenderer(Transform& transform, const SkinnedMesh& mesh, 
 		SceneShader& shader, MemoryObject<SkinnedModel> model, 
 		CullingMode faceCulling, const std::string& name)
-			: SingleMeshRenderer(transform, mesh, shader, model, faceCulling, name)
+			: MeshRenderer(transform, mesh, shader, model, faceCulling, name)
 			, mesh(mesh)
 			, animationContainer(*model) 
 			, skeleton(new Skeleton(model->getSkeleton())) {
@@ -164,36 +164,36 @@ namespace geeL {
 		skeleton->setParent(transform);
 	}
 
-	SingleSkinnedMeshRenderer::SingleSkinnedMeshRenderer(Transform& transform, const SkinnedMesh& mesh, 
+	SkinnedMeshRenderer::SkinnedMeshRenderer(Transform& transform, const SkinnedMesh& mesh, 
 		SceneShader& shader, MemoryObject<SkinnedModel> model, std::shared_ptr<Skeleton> skeleton, 
 		CullingMode faceCulling, const std::string & name)
-			: SingleMeshRenderer(transform, mesh, shader, model, faceCulling, name)
+			: MeshRenderer(transform, mesh, shader, model, faceCulling, name)
 			, mesh(mesh)
 			, animationContainer(*model)
 			, skeleton(skeleton) {}
 
 
-	std::shared_ptr<Skeleton> SingleSkinnedMeshRenderer::shareSkeleton() {
+	std::shared_ptr<Skeleton> SkinnedMeshRenderer::shareSkeleton() {
 		return skeleton;
 	}
 
-	Skeleton& SingleSkinnedMeshRenderer::getSkeleton() {
+	Skeleton& SkinnedMeshRenderer::getSkeleton() {
 		return *skeleton;
 	}
 
-	AnimationContainer& SingleSkinnedMeshRenderer::getAnimationContainer() {
+	AnimationContainer& SkinnedMeshRenderer::getAnimationContainer() {
 		return animationContainer;
 	}
 
-	RenderMode SingleSkinnedMeshRenderer::getRenderMode() const {
+	RenderMode SkinnedMeshRenderer::getRenderMode() const {
 		return RenderMode::Skinned;
 	}
 
-	const Mesh& SingleSkinnedMeshRenderer::getMesh() const {
+	const Mesh& SkinnedMeshRenderer::getMesh() const {
 		return mesh;
 	}
 
-	void SingleSkinnedMeshRenderer::drawMesh(const Shader& shader) const {
+	void SkinnedMeshRenderer::drawMesh(const Shader& shader) const {
 		mesh.updateBones(shader, *skeleton);
 		mesh.draw(shader);
 	}
@@ -201,9 +201,9 @@ namespace geeL {
 
 
 	MeshRendererGroup::MeshRendererGroup(Transform& transform, SceneShader& shader, 
-		std::list<SingleMeshRenderer*> renderers, 
+		std::list<MeshRenderer*> renderers, 
 		CullingMode faceCulling, const std::string & name)
-			: SingleMeshRenderer(transform, renderers.front()->getMesh(), shader, nullptr, faceCulling, name) 
+			: MeshRenderer(transform, renderers.front()->getMesh(), shader, nullptr, faceCulling, name) 
 			, renderers(std::move(renderers)) {
 
 		assert(renderers.size() > 0 && "At least one mesh renderers has to be attached to this group");
@@ -211,7 +211,7 @@ namespace geeL {
 		aabb.reset();
 		mode = renderers.front()->getRenderMode();
 		for (auto it(renderers.begin()); it != renderers.end(); it++) {
-			SingleMeshRenderer& r = **it;
+			MeshRenderer& r = **it;
 
 			aabb.extend(r.getBoundingBox());
 
@@ -229,7 +229,7 @@ namespace geeL {
 
 		drawMask();
 		for (auto it(renderers.begin()); it != renderers.end(); it++) {
-			SingleMeshRenderer& r = **it;
+			MeshRenderer& r = **it;
 			Material& m = r.getMaterial();
 
 			m.bind();
@@ -243,7 +243,7 @@ namespace geeL {
 
 		shader.bindMatrices(transform);
 		for (auto it(renderers.begin()); it != renderers.end(); it++) {
-			SingleMeshRenderer& r = **it;
+			MeshRenderer& r = **it;
 			MaterialContainer& m = r.getMaterial().getMaterialContainer();
 
 			m.bind(shader);
@@ -261,7 +261,7 @@ namespace geeL {
 
 	void MeshRendererGroup::drawMesh(const Shader & shader) const {
 		for (auto it(renderers.begin()); it != renderers.end(); it++) {
-			SingleMeshRenderer& r = **it;
+			MeshRenderer& r = **it;
 			r.drawMesh(shader);
 		}
 	}

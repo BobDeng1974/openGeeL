@@ -5,7 +5,7 @@
 #include "materials/defaultmaterial.h"
 #include "materials/genericmaterial.h"
 #include "meshes/mesh.h"
-#include "meshes/singlemeshrenderer.h"
+#include "meshes/meshrenderer.h"
 #include "lights/light.h"
 #include "sceneobject.h"
 #include "shadowmapping/simpleshadowmap.h"
@@ -36,7 +36,7 @@ namespace geeL {
 
 
 
-	SingleMeshRendererSnippet::SingleMeshRendererSnippet(SingleMeshRenderer & mesh)
+	SingleMeshRendererSnippet::SingleMeshRendererSnippet(MeshRenderer & mesh)
 		: SceneObjectSnippet(mesh), mesh(mesh) {}
 
 	void SingleMeshRendererSnippet::draw(GUIContext* context) {

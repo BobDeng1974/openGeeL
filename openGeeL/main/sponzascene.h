@@ -34,13 +34,13 @@ public:
 
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 121.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
-			std::list<std::unique_ptr<SingleStaticMeshRenderer>> buddha = meshFactory.createSingleMeshRenderers(
+			std::list<std::unique_ptr<StaticMeshRenderer>> buddha = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/classics/buddha.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);
 
 			for (auto it(buddha.begin()); it != buddha.end(); it++) {
-				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
+				unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
 
 				MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
 				container.setFloatValue("Transparency", 0.01f);
@@ -48,12 +48,12 @@ public:
 				container.setFloatValue("Metallic", 0.4f);
 				container.setVectorValue("Color", vec3(0.1f));
 
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(152.f, 24.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
-			std::list<std::unique_ptr<SingleStaticMeshRenderer>> sponza = meshFactory.createSingleMeshRenderers(
+			std::list<std::unique_ptr<StaticMeshRenderer>> sponza = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/sponza/sponza.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform6, false);
@@ -62,7 +62,7 @@ public:
 			//renderer.addRenderTexture(*renderTex);
 
 			for (auto it(sponza.begin()); it != sponza.end(); it++) {
-				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
+				unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
 
 				MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
 				if (container.name == "fabric_g") {
@@ -76,7 +76,7 @@ public:
 				else if (container.name == "leaf")
 					container.addTexture("alpha", materialFactory.createTexture("resources/sponza/textures/sponza_thorn_mask.tga"));
 
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
 

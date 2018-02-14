@@ -41,18 +41,18 @@ public:
 			&lightManager.addPointLight(config, lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379));
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f), vec3(0.f), vec3(0.1f, 0.1f, 0.1f));
-			list<unique_ptr<SingleStaticMeshRenderer>> deerScene = meshFactory.createSingleMeshRenderers(
+			list<unique_ptr<StaticMeshRenderer>> deerScene = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/deer/scene2.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);
 
 			for (auto it(deerScene.begin()); it != deerScene.end(); it++) {
-				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
+				unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
 
 				MaterialContainer& m = renderer->getMaterial().getMaterialContainer();
 				m.setFloatValue("Metallic", 0.2f);
 
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
 			/*

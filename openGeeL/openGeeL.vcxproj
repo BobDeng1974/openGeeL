@@ -227,7 +227,7 @@
     <ClCompile Include="renderer\meshes\meshfactory.cpp" />
     <ClCompile Include="renderer\meshes\meshidgenerator.cpp" />
     <ClCompile Include="renderer\meshes\model.cpp" />
-    <ClCompile Include="renderer\meshes\singlemeshrenderer.cpp" />
+    <ClCompile Include="renderer\meshes\meshrenderer.cpp" />
     <ClCompile Include="renderer\postprocessing\additiveeffect.cpp" />
     <ClCompile Include="renderer\postprocessing\bloom.cpp" />
     <ClCompile Include="renderer\postprocessing\blurredeffect.cpp" />
@@ -398,7 +398,7 @@
     <ClInclude Include="renderer\meshes\meshidgenerator.h" />
     <ClInclude Include="renderer\meshes\model.h" />
     <ClInclude Include="renderer\meshes\rendermode.h" />
-    <ClInclude Include="renderer\meshes\singlemeshrenderer.h" />
+    <ClInclude Include="renderer\meshes\meshrenderer.h" />
     <ClInclude Include="renderer\postprocessing\additiveeffect.h" />
     <ClInclude Include="renderer\postprocessing\bloom.h" />
     <ClInclude Include="renderer\postprocessing\blurredeffect.h" />

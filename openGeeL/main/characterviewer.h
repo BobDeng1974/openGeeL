@@ -54,13 +54,13 @@ public:
 
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 0.0f), vec3(0.f), vec3(100.f, 0.2f, 100.f));
-			std::list<std::unique_ptr<SingleStaticMeshRenderer>> plane = meshFactory.createSingleMeshRenderers(
+			std::list<std::unique_ptr<StaticMeshRenderer>> plane = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/primitives/plane.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);
 
 			for (auto it(plane.begin()); it != plane.end(); it++) {
-				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
+				unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
 
 				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Hybrid, false);
 				renderer->setShader(ss);
@@ -70,19 +70,19 @@ public:
 				container.setFloatValue("Metallic", 0.f);
 				container.setFloatValue("Transparency", 0.65f);
 
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
 
 
 			Transform& meshTransform22 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 5.9f), vec3(0.f), vec3(0.12f));
-			std::list<std::unique_ptr<SingleStaticMeshRenderer>> girl = meshFactory.createSingleMeshRenderers(
+			std::list<std::unique_ptr<StaticMeshRenderer>> girl = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/girl/girl_nofloor.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform22, false);
 
 			for (auto it(girl.begin()); it != girl.end(); it++) {
-				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
+				unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
 
 				const Mesh& mesh = renderer->getMesh();
 				if (mesh.getName() == "eyelash" || mesh.getName() == "fur") {
@@ -130,7 +130,7 @@ public:
 					container.setIntValue("InverseRoughness", true);
 				}
 
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
 

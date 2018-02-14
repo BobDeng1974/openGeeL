@@ -50,13 +50,13 @@ public:
 
 			float scale = 0.05f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(scale));
-			std::list<std::unique_ptr<SingleStaticMeshRenderer>> bedroomScene = meshFactory.createSingleMeshRenderers(
+			std::list<std::unique_ptr<StaticMeshRenderer>> bedroomScene = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/bedroom/Bedroom2.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);
 
 			for (auto it(bedroomScene.begin()); it != bedroomScene.end(); it++) {
-				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
+				unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
 
 				MaterialContainer& m = renderer->getMaterial().getMaterialContainer();
 				if (m.name == "Bottle") {
@@ -66,7 +66,7 @@ public:
 					renderer->setShader(ss);
 				}
 
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
 

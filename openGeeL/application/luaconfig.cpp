@@ -243,7 +243,7 @@ namespace geeL {
 
 						//Build mesh renderers
 
-						std::list<std::unique_ptr<SingleStaticMeshRenderer>> meshRenderers = meshFactory.createSingleMeshRenderers(
+						std::list<std::unique_ptr<StaticMeshRenderer>> meshRenderers = meshFactory.createSingleMeshRenderers(
 							meshFactory.createStaticModel(filePath),
 							materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 							meshTransform, false);
@@ -255,7 +255,7 @@ namespace geeL {
 						auto& materialsInit = m["allmaterials"];
 						if (materialsInit.valid()) {
 							for (auto it(meshRenderers.begin()); it != meshRenderers.end(); it++) {
-								SingleMeshRenderer& renderer = **it;
+								MeshRenderer& renderer = **it;
 
 								MaterialContainer& container = renderer.getMaterial().getMaterialContainer();
 								auto& roughness = materialsInit["roughness"];
@@ -283,7 +283,7 @@ namespace geeL {
 						auto& meshesInit = m["meshes"];
 						if (meshesInit.valid()) {
 							for (auto it(meshRenderers.begin()); it != meshRenderers.end(); it++) {
-								SingleMeshRenderer& renderer = **it;
+								MeshRenderer& renderer = **it;
 
 								//Set options for specific meshes
 
@@ -369,7 +369,7 @@ namespace geeL {
 										auto& scriptsInit = mm["scripts"];
 										if (scriptsInit.valid()) {
 											for (auto it(meshRenderers.begin()); it != meshRenderers.end(); it++) {
-												SingleMeshRenderer& renderer = **it;
+												MeshRenderer& renderer = **it;
 
 												unsigned int aj = 1;
 												auto* script = &scriptsInit[aj];
@@ -429,7 +429,7 @@ namespace geeL {
 
 
 						for (auto it(meshRenderers.begin()); it != meshRenderers.end(); it++) {
-							scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(*it)));
+							scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(*it)));
 						}
 
 					}

@@ -53,14 +53,14 @@ public:
 
 			float scale = 0.008f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(scale));
-			list<unique_ptr<SingleStaticMeshRenderer>> studioScene = meshFactory.createSingleMeshRenderers(
+			list<unique_ptr<StaticMeshRenderer>> studioScene = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/art/artStudio.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);
 
 			for (auto it(studioScene.begin()); it != studioScene.end(); it++) {
-				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+				unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
+				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
 

@@ -552,7 +552,7 @@
     <ClCompile Include="renderer\structures\viewfrustum.cpp">
       <Filter>renderer\structures</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\meshes\singlemeshrenderer.cpp">
+    <ClCompile Include="renderer\meshes\meshrenderer.cpp">
       <Filter>renderer\meshes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1112,7 +1112,7 @@
     <ClInclude Include="renderer\structures\viewfrustum.h">
       <Filter>renderer\structures</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\meshes\singlemeshrenderer.h">
+    <ClInclude Include="renderer\meshes\meshrenderer.h">
       <Filter>renderer\meshes</Filter>
     </ClInclude>
   </ItemGroup>

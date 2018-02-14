@@ -43,19 +43,19 @@ public:
 			lightManager.addPointLight(config, lightTransform21, glm::vec3(13.f / 256.f, 255.f / 256.f, 186.f / 256.f) * lightIntensity);
 
 			Transform& meshTransform3 = transformFactory.CreateTransform(vec3(1.5f, 0.34f, 12.5f), vec3(180.f, 29.6f, 180.f), vec3(0.12f));
-			std::list<std::unique_ptr<SingleSkinnedMeshRenderer>> skull = meshFactory.createSingleMeshRenderers(
+			std::list<std::unique_ptr<SkinnedMeshRenderer>> skull = meshFactory.createSingleMeshRenderers(
 				meshFactory.createSkinnedModel("resources/skull/skull.fbx"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, true),
 				meshTransform3, false);
 
-			SingleSkinnedMeshRenderer& base = *skull.front();
+			SkinnedMeshRenderer& base = *skull.front();
 			SimpleAnimator& anim = base.addComponent<SimpleAnimator>(base.getAnimationContainer(), base.getSkeleton());
 			anim.loopAnimation(true);
 			anim.startAnimation("AnimStack::Take 001");
 
 
 			for (auto it(skull.begin()); it != skull.end(); it++) {
-				unique_ptr<SingleSkinnedMeshRenderer> renderer = std::move(*it);
+				unique_ptr<SkinnedMeshRenderer> renderer = std::move(*it);
 
 				MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
 				if (container.name == "skullhull") {
@@ -76,7 +76,7 @@ public:
 					container.setFloatValue("Metallic", 0.1f);
 				}
 
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
 

@@ -51,7 +51,7 @@
 
 #include "meshes/mesh.h"
 #include "meshes/model.h"
-#include "meshes/singlemeshrenderer.h"
+#include "meshes/meshrenderer.h"
 #include "meshes/meshfactory.h"
 
 #include "postprocessing/postprocessing.h"

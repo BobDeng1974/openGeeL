@@ -16,7 +16,7 @@
 #include "texturing/maptype.h"
 #include "mesh.h"
 #include "model.h"
-#include "singlemeshrenderer.h"
+#include "meshrenderer.h"
 #include "meshfactory.h"
 
 #include "memory/defaultmemory.h"
@@ -33,46 +33,46 @@ namespace geeL {
 
 
 
-	list<unique_ptr<SingleStaticMeshRenderer>> MeshFactory::createSingleMeshRenderers(MemoryObject<StaticModel> model,
+	list<unique_ptr<StaticMeshRenderer>> MeshFactory::createSingleMeshRenderers(MemoryObject<StaticModel> model,
 		SceneShader& shader, Transform& transform, bool splitTransform) {
 
-		list<unique_ptr<SingleStaticMeshRenderer>> renderers;
+		list<unique_ptr<StaticMeshRenderer>> renderers;
 		model->iterateMeshesGeneric([&](const StaticMesh& mesh) {
 			string newName = mesh.getMaterialContainer().name;
 			Transform& newTransform = splitTransform ? transform.getParent()->addChild(transform) : transform;
 
-			SingleStaticMeshRenderer* renderer = new SingleStaticMeshRenderer(newTransform, mesh, shader, 
+			StaticMeshRenderer* renderer = new StaticMeshRenderer(newTransform, mesh, shader, 
 				model, CullingMode::cullFront, newName);
 
-			renderers.push_back(unique_ptr<SingleStaticMeshRenderer>(renderer));
+			renderers.push_back(unique_ptr<StaticMeshRenderer>(renderer));
 		});
 
 		return renderers;
 	}
 
-	list<unique_ptr<SingleSkinnedMeshRenderer>> MeshFactory::createSingleMeshRenderers(MemoryObject<SkinnedModel> model,
+	list<unique_ptr<SkinnedMeshRenderer>> MeshFactory::createSingleMeshRenderers(MemoryObject<SkinnedModel> model,
 		SceneShader& shader, Transform& transform, bool splitTransform) {
 
 		std::shared_ptr<Skeleton> skeleton = nullptr;
-		list<unique_ptr<SingleSkinnedMeshRenderer>> renderers;
+		list<unique_ptr<SkinnedMeshRenderer>> renderers;
 		model->iterateMeshesGeneric([&](const SkinnedMesh& mesh) {
 			string newName = mesh.getMaterialContainer().name;
 			Transform& newTransform = splitTransform ? transform.getParent()->addChild(transform) : transform;
 
 			//Read skeleton from first mesh
 			if (skeleton == nullptr) {
-				SingleSkinnedMeshRenderer* renderer = new SingleSkinnedMeshRenderer(newTransform, mesh, shader,
+				SkinnedMeshRenderer* renderer = new SkinnedMeshRenderer(newTransform, mesh, shader,
 					model, CullingMode::cullFront, newName);
 
 				skeleton = renderer->shareSkeleton();
-				renderers.push_back(unique_ptr<SingleSkinnedMeshRenderer>(renderer));
+				renderers.push_back(unique_ptr<SkinnedMeshRenderer>(renderer));
 			}
 			//Reuse skeleton for other meshes
 			else {
-				SingleSkinnedMeshRenderer* renderer = new SingleSkinnedMeshRenderer(newTransform, mesh, shader,
+				SkinnedMeshRenderer* renderer = new SkinnedMeshRenderer(newTransform, mesh, shader,
 					model, skeleton, CullingMode::cullFront, newName);
 
-				renderers.push_back(unique_ptr<SingleSkinnedMeshRenderer>(renderer));
+				renderers.push_back(unique_ptr<SkinnedMeshRenderer>(renderer));
 			}
 		});
 

@@ -10,7 +10,7 @@ namespace geeL {
 	class PerspectiveCamera;
 	class SceneObject;
 	class SimpleShadowmap;
-	class SingleMeshRenderer;
+	class MeshRenderer;
 
 
 	class SceneObjectSnippet : public GUISnippet {
@@ -30,13 +30,13 @@ namespace geeL {
 	class SingleMeshRendererSnippet : public SceneObjectSnippet {
 
 	public:
-		SingleMeshRendererSnippet(SingleMeshRenderer& mesh);
+		SingleMeshRendererSnippet(MeshRenderer& mesh);
 
 		virtual void draw(GUIContext* context);
 		virtual std::string toString() const;
 
 	private:
-		SingleMeshRenderer& mesh;
+		MeshRenderer& mesh;
 
 	};
 

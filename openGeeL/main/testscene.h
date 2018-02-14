@@ -57,33 +57,33 @@ public:
 
 			float height = -2.f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f, 0.f, 0.f), vec3(20.f, 0.2f, 20.f));
-			std::list<std::unique_ptr<SingleStaticMeshRenderer>> plane = meshFactory.createSingleMeshRenderers(
+			std::list<std::unique_ptr<StaticMeshRenderer>> plane = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/primitives/plane.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);
 
 			for (auto it(plane.begin()); it != plane.end(); it++) {
-				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
+				unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
 
 				MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
 				container.setFloatValue("Roughness", 0.25f);
 				container.setFloatValue("Metallic", 0.f);
 				container.setVectorValue("Color", vec3(0.4f));
 
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
 			//physics.addPlane(vec3(0.f, 1.f, 0.f), meshTransform2, RigidbodyProperties(0.f, false));
 
 
 			Transform& meshTransform4 = transformFactory.CreateTransform(vec3(8.f, 2.f, 4.f), vec3(0.f), vec3(1.f));
-			std::list<std::unique_ptr<SingleStaticMeshRenderer>> sphere = meshFactory.createSingleMeshRenderers(
+			std::list<std::unique_ptr<StaticMeshRenderer>> sphere = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/primitives/sphere.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform4, false);
 
 			for (auto it(sphere.begin()); it != sphere.end(); it++) {
-				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
+				unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
 
 				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent, false);
 				renderer->setShader(ss);
@@ -94,7 +94,7 @@ public:
 				container.setFloatValue("Roughness", 0.05f);
 				container.setFloatValue("Metallic", 0.5f);
 
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
 			//physics.addSphere(1.f, meshTransform4, RigidbodyProperties(10.f, false));
@@ -102,13 +102,13 @@ public:
 
 
 			Transform& meshTransform42 = transformFactory.CreateTransform(vec3(12.f, 2.f, 4.f), vec3(0.f), vec3(1.f));
-			std::list<std::unique_ptr<SingleStaticMeshRenderer>> sphere2 = meshFactory.createSingleMeshRenderers(
+			std::list<std::unique_ptr<StaticMeshRenderer>> sphere2 = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/primitives/sphere.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform42, false);
 
 			for (auto it(sphere2.begin()); it != sphere2.end(); it++) {
-				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
+				unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
 
 				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent, false);
 				renderer->setShader(ss);
@@ -119,55 +119,55 @@ public:
 				container.setFloatValue("Roughness", 0.05f);
 				container.setFloatValue("Metallic", 0.5f);
 
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
 
 
 			Transform& meshTransform5 = transformFactory.CreateTransform(vec3(0.0f, 0.5f, -2.0f), vec3(0.5f, 0.5f, 0.5f), vec3(5.2f, 2.2f, 1.2f));
-			std::list<std::unique_ptr<SingleStaticMeshRenderer>> box = meshFactory.createSingleMeshRenderers(
+			std::list<std::unique_ptr<StaticMeshRenderer>> box = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/primitives/cube.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform5, false);
 
 			for (auto it(box.begin()); it != box.end(); it++) {
-				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
+				unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
 
 				MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
 				container.setFloatValue("Roughness", 0.3f);
 				container.setFloatValue("Metallic", 0.1f);
 				container.setVectorValue("Color", vec3(0.1f, 0.1f, 0.1f));
 
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
 
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(4.f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(1.f));
-			std::list<std::unique_ptr<SingleStaticMeshRenderer>> cyborg = meshFactory.createSingleMeshRenderers(
+			std::list<std::unique_ptr<StaticMeshRenderer>> cyborg = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/cyborg/Cyborg.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform6, false);
 
 			for (auto it(cyborg.begin()); it != cyborg.end(); it++) {
-				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+				unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
+				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
 
 
 			Transform& meshTransform1 = transformFactory.CreateTransform(vec3(0.0f, height, 0.0f), vec3(0.f), vec3(0.2f));
-			std::list<std::unique_ptr<SingleStaticMeshRenderer>> nano = meshFactory.createSingleMeshRenderers(
+			std::list<std::unique_ptr<StaticMeshRenderer>> nano = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/nanosuit/nanosuit.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform1, false);
 
-			SingleMeshRenderer& base = *nano.front();
+			MeshRenderer& base = *nano.front();
 			base.addComponent<RotationComponent>();
 
 			for (auto it(nano.begin()); it != nano.end(); it++) {
-				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+				unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
+				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
 

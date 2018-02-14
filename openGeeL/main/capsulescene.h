@@ -45,36 +45,36 @@ public:
 
 
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.0f, -2.f, 0.0f), vec3(0.f, 0.f, 0.f), vec3(0.1f));
-			std::list<std::unique_ptr<SingleStaticMeshRenderer>> capsule = meshFactory.createSingleMeshRenderers(
+			std::list<std::unique_ptr<StaticMeshRenderer>> capsule = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/capsule/Capsule.obj"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
 				meshTransform2, false);
 
 			for (auto it(capsule.begin()); it != capsule.end(); it++) {
-				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
+				unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
 
 				MaterialContainer& m = renderer->getMaterial().getMaterialContainer();
 				m.setIntValue("InverseRoughness", 1);
 
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
 
 			
 			Transform& meshTransform222 = transformFactory.CreateTransform(vec3(0.0f, -4.75f, 4.1f), vec3(0.f, 180.f, 0.f), vec3(0.0075f));
-			std::list<std::unique_ptr<SingleSkinnedMeshRenderer>> drone = meshFactory.createSingleMeshRenderers(
+			std::list<std::unique_ptr<SkinnedMeshRenderer>> drone = meshFactory.createSingleMeshRenderers(
 				meshFactory.createSkinnedModel("resources/drone/Drone.fbx"),
 				materialFactory.getDefaultShader(ShadingMethod::Deferred, true),
 				meshTransform222, false);
 
 
-			SingleSkinnedMeshRenderer& base = *drone.front();
+			SkinnedMeshRenderer& base = *drone.front();
 			SimpleAnimator& anim = base.addComponent<SimpleAnimator>(base.getAnimationContainer(), base.getSkeleton());
 			anim.loopAnimation(true);
 			anim.startAnimation("AnimStack::Take 001", 10);
 
 			for (auto it(drone.begin()); it != drone.end(); it++) {
-				unique_ptr<SingleSkinnedMeshRenderer> renderer = std::move(*it);
+				unique_ptr<SkinnedMeshRenderer> renderer = std::move(*it);
 
 				MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
 				if (container.name == "Robot") {
@@ -89,7 +89,7 @@ public:
 					container.setFloatValue("Metallic", 0.8f);
 				}
 
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
 

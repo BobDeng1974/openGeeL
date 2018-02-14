@@ -29,10 +29,10 @@ namespace geeL {
 
 
 	//Represents a drawn model in a render scene. Independent from actual model
-	class SingleMeshRenderer : public SceneObject {
+	class MeshRenderer : public SceneObject {
 
 	public:
-		virtual ~SingleMeshRenderer();
+		virtual ~MeshRenderer();
 
 
 		virtual void draw(SceneShader& shader) const;
@@ -54,8 +54,8 @@ namespace geeL {
 		const SceneShader& getShader() const;
 		void setShader(SceneShader& shader);
 
-		void addMaterialChangeListener(std::function<void(SingleMeshRenderer&, Material, Material)> listener);
-		void addDeleteListener(std::function<void(const SingleMeshRenderer&)> listener);
+		void addMaterialChangeListener(std::function<void(MeshRenderer&, Material, Material)> listener);
+		void addDeleteListener(std::function<void(const MeshRenderer&)> listener);
 
 		const AABoundingBox& getBoundingBox() const;
 		virtual RenderMode getRenderMode() const = 0;
@@ -75,10 +75,10 @@ namespace geeL {
 		const CullingMode faceCulling;
 		TransformableBoundingBox aabb;
 
-		std::list<std::function<void(SingleMeshRenderer&, Material, Material)>> materialListeners;
-		std::list<std::function<void(const SingleMeshRenderer&)>> deleteListeners;
+		std::list<std::function<void(MeshRenderer&, Material, Material)>> materialListeners;
+		std::list<std::function<void(const MeshRenderer&)>> deleteListeners;
 
-		SingleMeshRenderer(Transform& transform, 
+		MeshRenderer(Transform& transform, 
 			const Mesh& mesh, 
 			SceneShader& shader, 
 			MemoryObject<Model> modelData,
@@ -95,11 +95,11 @@ namespace geeL {
 
 
 	//Represents a drawn model in a render scene. Independent from actual model
-	class SingleStaticMeshRenderer : public SingleMeshRenderer {
+	class StaticMeshRenderer : public MeshRenderer {
 
 	public:
 		//Constructor for mesh renderer with an unique assigned model
-		SingleStaticMeshRenderer(Transform& transform,
+		StaticMeshRenderer(Transform& transform,
 			const StaticMesh& mesh,
 			SceneShader& shader,
 			MemoryObject<StaticModel> model,
@@ -118,17 +118,17 @@ namespace geeL {
 
 
 	//Special mesh renderer that is intended for use with animated/skinned models
-	class SingleSkinnedMeshRenderer : public SingleMeshRenderer {
+	class SkinnedMeshRenderer : public MeshRenderer {
 
 	public:
-		SingleSkinnedMeshRenderer(Transform& transform,
+		SkinnedMeshRenderer(Transform& transform,
 			const SkinnedMesh& mesh,
 			SceneShader& shader,
 			MemoryObject<SkinnedModel> model,
 			CullingMode faceCulling = CullingMode::cullFront,
 			const std::string& name = "SkinnedMeshRenderer");
 
-		SingleSkinnedMeshRenderer(Transform& transform,
+		SkinnedMeshRenderer(Transform& transform,
 			const SkinnedMesh& mesh,
 			SceneShader& shader,
 			MemoryObject<SkinnedModel> model,
@@ -156,12 +156,12 @@ namespace geeL {
 
 	//Groups mesh renderers of the same type and draw them with
 	//same transform and same shader
-	class MeshRendererGroup : public SingleMeshRenderer {
+	class MeshRendererGroup : public MeshRenderer {
 
 	public:
 		MeshRendererGroup(Transform& transform,
 			SceneShader& shader,
-			std::list<SingleMeshRenderer*> renderers,
+			std::list<MeshRenderer*> renderers,
 			CullingMode faceCulling = CullingMode::cullFront,
 			const std::string& name = "MeshRendererGroup");
 
@@ -175,7 +175,7 @@ namespace geeL {
 
 	private:
 		RenderMode mode;
-		std::list<SingleMeshRenderer*> renderers;
+		std::list<MeshRenderer*> renderers;
 
 	};
 
