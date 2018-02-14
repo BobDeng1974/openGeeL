@@ -16,6 +16,7 @@
 #include "texturing/maptype.h"
 #include "mesh.h"
 #include "model.h"
+#include "singlemeshrenderer.h"
 #include "meshrenderer.h"
 #include "meshfactory.h"
 
@@ -85,6 +86,60 @@ namespace geeL {
 
 		return renderer;
 	}
+
+	std::list<SingleStaticMeshRenderer*> MeshFactory::createSingleMeshRenderers(MemoryObject<StaticModel> model, 
+		SceneShader& shader, Transform& transform, bool splitTransform) {
+
+		list<SingleStaticMeshRenderer*> renderers;
+		string path = model->getPath();
+
+		size_t counter = 1;
+		model->iterateMeshesGeneric([&](const StaticMesh& mesh) {
+			string newName = path + " " + mesh.getName() + std::to_string(counter++);
+			Transform& newTransform = splitTransform ? transform.getParent()->addChild(transform) : transform;
+
+			SingleStaticMeshRenderer* renderer = new SingleStaticMeshRenderer(newTransform, mesh, shader, 
+				model, CullingMode::cullFront, mesh.getName());
+
+			renderers.push_back(renderer);
+		});
+
+		return renderers;
+	}
+
+	std::list<SingleSkinnedMeshRenderer*> MeshFactory::createSkinnedMeshRenderers(MemoryObject<SkinnedModel> model,
+		SceneShader& shader, Transform& transform, bool splitTransform) {
+
+		list<SingleSkinnedMeshRenderer*> renderers;
+		string path = model->getPath();
+
+		std::shared_ptr<Skeleton> skeleton = nullptr;
+
+		size_t counter = 1;
+		model->iterateMeshesGeneric([&](const SkinnedMesh& mesh) {
+			string newName = path + " " + mesh.getName() + std::to_string(counter++);
+			Transform& newTransform = splitTransform ? transform.getParent()->addChild(transform) : transform;
+
+			//Read skeleton from first mesh
+			if (skeleton == nullptr) {
+				SingleSkinnedMeshRenderer* renderer = new SingleSkinnedMeshRenderer(newTransform, mesh, shader,
+					model, CullingMode::cullFront, mesh.getName());
+
+				skeleton = renderer->shareSkeleton();
+				renderers.push_back(renderer);
+			}
+			//Reuse skeleton for other meshes
+			else {
+				SingleSkinnedMeshRenderer* renderer = new SingleSkinnedMeshRenderer(newTransform, mesh, shader,
+					model, skeleton, CullingMode::cullFront, mesh.getName());
+
+				renderers.push_back(renderer);
+			}
+		});
+
+		return renderers;
+	}
+
 
 	MemoryObject<StaticModel> MeshFactory::createStaticModel(const string& filePath) {
 

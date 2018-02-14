@@ -39,6 +39,9 @@ namespace geeL {
 	class StaticMeshRenderer;
 	class Model;
 	class SceneShader;
+	class SingleMeshRenderer;
+	class SingleStaticMeshRenderer;
+	class SingleSkinnedMeshRenderer;
 	class SkinnedMesh;
 	class SkinnedMeshRenderer;
 	class SkinnedModel;
@@ -71,6 +74,14 @@ namespace geeL {
 
 		std::unique_ptr<SkinnedMeshRenderer> createMeshRenderer(MemoryObject<SkinnedModel> model,
 			SceneShader& shader, Transform& transform, const std::string& name);
+
+
+		std::list<SingleStaticMeshRenderer*> createSingleMeshRenderers(MemoryObject<StaticModel> model,
+			SceneShader& shader, Transform& transform, bool splitTransform = false);
+
+		std::list<SingleSkinnedMeshRenderer*> createSkinnedMeshRenderers(MemoryObject<SkinnedModel> model,
+			SceneShader& shader, Transform& transform, bool splitTransform = false);
+
 
 		//Creates, initializes and returns a new static model from given file path or 
 		//returns an existing model if it already uses this file

@@ -48,7 +48,6 @@ namespace geeL {
 		StencilGuard stencil;
 
 		const MaterialContainer& container = material.getMaterialContainer();
-		const SceneShader& shader = material.getShader();
 		shader.bindMatrices(transform); //ISSUES: transform bound multiple times
 
 		container.bind(shader);
