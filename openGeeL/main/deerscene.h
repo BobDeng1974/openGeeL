@@ -3,6 +3,7 @@
 #include "../application/configuration.h"
 
 using namespace geeL;
+using namespace std;
 
 
 class DeerScene {
@@ -39,32 +40,29 @@ public:
 			ShadowMapConfiguration config = ShadowMapConfiguration(0.000001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 4.5f, 2);
 			&lightManager.addPointLight(config, lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379));
 
-			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(0.1f, 0.1f, 0.1f));
+			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f), vec3(0.f), vec3(0.1f, 0.1f, 0.1f));
+			list<unique_ptr<SingleStaticMeshRenderer>> deerScene = meshFactory.createSingleMeshRenderers(
+				meshFactory.createStaticModel("resources/deer/scene2.obj"),
+				materialFactory.getDeferredShader(), 
+				meshTransform2, false);
 
-			std::list<SingleStaticMeshRenderer*> ayyo = meshFactory.createSingleMeshRenderers(
-				meshFactory.createStaticModel("resources/deer/scene2.obj"), materialFactory.getDeferredShader(), meshTransform2, false);
-
-			for (auto it(ayyo.begin()); it != ayyo.end(); it++) {
-				SingleStaticMeshRenderer* renderer = *it;
-
+			for (auto it(deerScene.begin()); it != deerScene.end(); it++) {
+				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
 
 				MaterialContainer& m = renderer->getMaterial().getMaterialContainer();
 				m.setFloatValue("Metallic", 0.2f);
 
-
-				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(renderer));
-
-
+				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
 			}
 
-
+			/*
 			ObjectLister& objectLister = ObjectLister(scene);
 			objectLister.add(camera);
 			PostProcessingEffectLister postLister;
 			GUILister& lister = GUILister(window, 0.01f, 0.15f, 0.17f, 0.5f, objectLister, postLister);
 			gui.addElement(lister);
 			gui.addSystemInformation(0.01f, 0.655f, 0.17f, 0.14f);
-			
+			*/
 
 			BilateralFilter& blur = BilateralFilter(4.f, 7, 0.291f);
 			SSAO& ssao = SSAO(blur, 0.5f);

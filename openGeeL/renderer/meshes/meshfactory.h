@@ -76,10 +76,10 @@ namespace geeL {
 			SceneShader& shader, Transform& transform, const std::string& name);
 
 
-		std::list<SingleStaticMeshRenderer*> createSingleMeshRenderers(MemoryObject<StaticModel> model,
+		std::list<std::unique_ptr<SingleStaticMeshRenderer>> createSingleMeshRenderers(MemoryObject<StaticModel> model,
 			SceneShader& shader, Transform& transform, bool splitTransform = false);
 
-		std::list<SingleSkinnedMeshRenderer*> createSkinnedMeshRenderers(MemoryObject<SkinnedModel> model,
+		std::list<std::unique_ptr<SingleSkinnedMeshRenderer>> createSkinnedMeshRenderers(MemoryObject<SkinnedModel> model,
 			SceneShader& shader, Transform& transform, bool splitTransform = false);
 
 

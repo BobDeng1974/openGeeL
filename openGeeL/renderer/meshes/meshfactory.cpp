@@ -87,10 +87,10 @@ namespace geeL {
 		return renderer;
 	}
 
-	std::list<SingleStaticMeshRenderer*> MeshFactory::createSingleMeshRenderers(MemoryObject<StaticModel> model, 
+	list<unique_ptr<SingleStaticMeshRenderer>> MeshFactory::createSingleMeshRenderers(MemoryObject<StaticModel> model,
 		SceneShader& shader, Transform& transform, bool splitTransform) {
 
-		list<SingleStaticMeshRenderer*> renderers;
+		list<unique_ptr<SingleStaticMeshRenderer>> renderers;
 		model->iterateMeshesGeneric([&](const StaticMesh& mesh) {
 			string newName = mesh.getMaterialContainer().name;
 			Transform& newTransform = splitTransform ? transform.getParent()->addChild(transform) : transform;
@@ -98,17 +98,17 @@ namespace geeL {
 			SingleStaticMeshRenderer* renderer = new SingleStaticMeshRenderer(newTransform, mesh, shader, 
 				model, CullingMode::cullFront, newName);
 
-			renderers.push_back(renderer);
+			renderers.push_back(unique_ptr<SingleStaticMeshRenderer>(renderer));
 		});
 
 		return renderers;
 	}
 
-	std::list<SingleSkinnedMeshRenderer*> MeshFactory::createSkinnedMeshRenderers(MemoryObject<SkinnedModel> model,
+	list<unique_ptr<SingleSkinnedMeshRenderer>> MeshFactory::createSkinnedMeshRenderers(MemoryObject<SkinnedModel> model,
 		SceneShader& shader, Transform& transform, bool splitTransform) {
 
 		std::shared_ptr<Skeleton> skeleton = nullptr;
-		list<SingleSkinnedMeshRenderer*> renderers;
+		list<unique_ptr<SingleSkinnedMeshRenderer>> renderers;
 		model->iterateMeshesGeneric([&](const SkinnedMesh& mesh) {
 			string newName = mesh.getMaterialContainer().name;
 			Transform& newTransform = splitTransform ? transform.getParent()->addChild(transform) : transform;
@@ -119,14 +119,14 @@ namespace geeL {
 					model, CullingMode::cullFront, newName);
 
 				skeleton = renderer->shareSkeleton();
-				renderers.push_back(renderer);
+				renderers.push_back(unique_ptr<SingleSkinnedMeshRenderer>(renderer));
 			}
 			//Reuse skeleton for other meshes
 			else {
 				SingleSkinnedMeshRenderer* renderer = new SingleSkinnedMeshRenderer(newTransform, mesh, shader,
 					model, skeleton, CullingMode::cullFront, newName);
 
-				renderers.push_back(renderer);
+				renderers.push_back(unique_ptr<SingleSkinnedMeshRenderer>(renderer));
 			}
 		});
 
