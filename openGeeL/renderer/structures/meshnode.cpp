@@ -18,11 +18,6 @@ namespace geeL {
 	}
 
 
-	void MeshNode::draw(const Camera& camera, SceneShader& shader) {
-		if(renderer.isVisible(camera))
-			renderer.draw(shader);
-	}
-
 	void MeshNode::balance(TreeNode<MeshNode>& toRemove, TreeNode<MeshNode>& toAdd) {}
 
 	bool MeshNode::isLeaf() const {

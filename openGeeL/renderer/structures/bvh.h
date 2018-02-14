@@ -11,11 +11,11 @@ namespace geeL {
 
 	public:
 		BVH();
+		BVH(BVH&& other);
 		BVH(BVH& parent);
 		virtual ~BVH();
 
-		virtual void draw(const Camera& camera, SceneShader& shader);
-		virtual void balance(TreeNode<MeshNode>& toRemove, TreeNode<MeshNode>& toAdd);
+		BVH& operator=(BVH&& other);
 
 		virtual void onChildChange(TreeNode<MeshNode>& child);
 		virtual void onChildRemove(TreeNode<MeshNode>& child);
@@ -28,6 +28,11 @@ namespace geeL {
 		
 		virtual bool add(MeshNode& node);
 		virtual bool remove(MeshNode& node);
+		virtual void balance(TreeNode<MeshNode>& toRemove, TreeNode<MeshNode>& toAdd);
+
+		virtual void iterChildren(std::function<void(MeshNode&)> function);
+		virtual void iterVisibleChildren(const Camera& camera, std::function<void(MeshNode&)> function);
+		virtual size_t getChildCount() const;
 
 	private:
 		struct SplitPane {
@@ -35,6 +40,7 @@ namespace geeL {
 			float pane;
 		};
 
+		std::list<TreeNode<MeshNode>*> children;
 
 		void addDirect(MeshNode& node);
 		void subdivide();

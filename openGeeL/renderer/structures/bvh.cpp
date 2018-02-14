@@ -10,6 +10,10 @@ namespace geeL {
 
 	BVH::BVH() {}
 
+	BVH::BVH(BVH&& other)
+		: TreeNode<MeshNode>(std::move(other))
+		, children(std::move(other.children)) {}
+
 	BVH::BVH(BVH& parent) 
 		: TreeNode<MeshNode>(parent) {}
 
@@ -18,18 +22,15 @@ namespace geeL {
 			delete *it;
 	}
 
-
-	void BVH::draw(const Camera& camera, SceneShader& shader) {
-		const ViewFrustum& frustum = camera.getFrustum();
-		IntersectionType intersection = aabb.intersect(frustum);
-
-		if (intersection != IntersectionType::Outside) {
-			for (auto it(children.begin()); it != children.end(); it++) {
-				auto& childNode = **it;
-				childNode.draw(camera, shader);
-			}
+	BVH& BVH::operator=(BVH&& other) {
+		if (this != &other) {
+			TreeNode<MeshNode>::operator=(std::move(other));
+			children = std::move(other.children);
 		}
+
+		return *this;
 	}
+
 
 	void BVH::onChildChange(TreeNode<MeshNode>& child) {
 		if (!aabb.contains(child.getBoundingBox()))
@@ -238,6 +239,29 @@ namespace geeL {
 
 			updateSize();
 		}
+	}
+
+	void BVH::iterChildren(std::function<void(MeshNode&)> function) {
+		for (auto it(children.begin()); it != children.end(); it++) {
+			auto& childNode = **it;
+			childNode.iterChildren(function);
+		}
+	}
+
+	void BVH::iterVisibleChildren(const Camera & camera, std::function<void(MeshNode&)> function) {
+		const ViewFrustum& frustum = camera.getFrustum();
+		IntersectionType intersection = aabb.intersect(frustum);
+
+		if (intersection != IntersectionType::Outside) {
+			for (auto it(children.begin()); it != children.end(); it++) {
+				auto& childNode = **it;
+				childNode.iterVisibleChildren(camera, function);
+			}
+		}
+	}
+
+	size_t BVH::getChildCount() const {
+		return children.size();
 	}
 
 	bool BVH::isLeaf() const {
