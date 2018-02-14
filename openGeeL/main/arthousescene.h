@@ -3,6 +3,7 @@
 #include "../application/configuration.h"
 
 using namespace geeL;
+using namespace std;
 
 
 class ArthouseScene {
@@ -52,10 +53,15 @@ public:
 
 			float scale = 0.008f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(scale));
-			std::unique_ptr<MeshRenderer> studio = meshFactory.createMeshRenderer(
+			list<unique_ptr<SingleStaticMeshRenderer>> studioScene = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/art/artStudio.obj"),
-				meshTransform2, "Studio");
-			//scene.addMeshRenderer(std::move(studio));
+				materialFactory.getDeferredShader(),
+				meshTransform2, false);
+
+			for (auto it(studioScene.begin()); it != studioScene.end(); it++) {
+				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
+				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
+			}
 
 
 			ObjectLister& objectLister = ObjectLister(scene);

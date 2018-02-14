@@ -50,34 +50,24 @@ public:
 
 			float scale = 0.05f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(scale));
-			std::unique_ptr<MeshRenderer> bedroomPtr = meshFactory.createMeshRenderer(
+			std::list<std::unique_ptr<SingleStaticMeshRenderer>> bedroomScene = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/bedroom/Bedroom2.obj"),
-				meshTransform2, "Bedroom");
+				materialFactory.getDeferredShader(),
+				meshTransform2, false);
 
-			/*
-			MeshRenderer& bedroom = scene.addMeshRenderer(std::move(bedroomPtr));
+			for (auto it(bedroomScene.begin()); it != bedroomScene.end(); it++) {
+				unique_ptr<SingleStaticMeshRenderer> renderer = std::move(*it);
 
-			std::map<const MeshInstance*, const Material*> transObjects;
-			bedroom.iterate([&](const MeshInstance& mesh, const Material& material) {
-				if (mesh.getName() == "Soda_Bottle") {
-					transObjects[&mesh] = &material;
+				MaterialContainer& m = renderer->getMaterial().getMaterialContainer();
+				if (m.name == "Bottle") {
+					m.setFloatValue("Transparency", 0.3f);
+
+					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
+					renderer->setShader(ss);
 				}
 
-			});
-
-			for (auto it(transObjects.begin()); it != transObjects.end(); it++) {
-				const MeshInstance& mesh = *it->first;
-				const Material& material = *it->second;
-
-				MaterialContainer& container = material.getMaterialContainer();
-				container.setFloatValue("Transparency", 0.3f);
-
-				SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent);
-				bedroom.changeMaterial(ss, mesh);
+				scene.addMeshRenderer(std::unique_ptr<SingleMeshRenderer>(std::move(renderer)));
 			}
-
-			transObjects.clear();
-			*/
 
 
 			ObjectLister& objectLister = ObjectLister(scene);
