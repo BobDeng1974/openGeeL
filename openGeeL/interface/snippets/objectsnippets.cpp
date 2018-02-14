@@ -102,25 +102,20 @@ namespace geeL {
 	void SingleMeshRendererSnippet::draw(GUIContext* context) {
 		unsigned int id = mesh.getID();
 
+		MaterialContainer& container = mesh.getMaterial().getMaterialContainer();
+		auto defaultColor = context->style.tab.node_minimize_button.text_normal;
+		glm::vec3 c(container.getVectorValue("Color") * 256.f);
+		context->style.tab.node_minimize_button.text_normal = nk_rgb(c.r, c.g, c.b);
+
 		std::string number = "#" + std::to_string(id);
 		std::string name = mesh.getName() + " " + number;
 		if (nk_tree_push_id(context, NK_TREE_NODE, name.c_str(), NK_MINIMIZED, id)) {
 			SceneObjectSnippet::draw(context);
 
 			unsigned int materialsID = id + 1;
-
-			MaterialContainer& container = mesh.getMaterial().getMaterialContainer();
 			std::string name = container.name + " (" + mesh.getName() + ")";
 
 			if (nk_tree_push_id(context, NK_TREE_NODE, name.c_str(), NK_MINIMIZED, materialsID)) {
-				auto defaultColor = context->style.tab.node_minimize_button.text_normal;
-
-				MaterialContainer& container = mesh.getMaterial().getMaterialContainer();
-
-				glm::vec3 c(container.getVectorValue("Color") * 256.f);
-				context->style.tab.node_minimize_button.text_normal = nk_rgb(c.r, c.g, c.b);
-
-
 				DefaultMaterialContainer* def = dynamic_cast<DefaultMaterialContainer*>(&container);
 				if (def != nullptr)
 					GUISnippets::drawMaterial(context, def);
@@ -129,14 +124,14 @@ namespace geeL {
 					if (gen != nullptr)
 						GUISnippets::drawMaterial(context, gen);
 				}
-
-				context->style.tab.node_minimize_button.text_normal = defaultColor;
+				
 				nk_tree_pop(context);
 			}
 
 			nk_tree_pop(context);
 		}
 
+		context->style.tab.node_minimize_button.text_normal = defaultColor;
 	}
 
 	std::string SingleMeshRendererSnippet::toString() const {
