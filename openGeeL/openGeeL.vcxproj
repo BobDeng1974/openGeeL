@@ -275,7 +275,6 @@
     <ClCompile Include="renderer\shadowmapping\varianceshadowmap.cpp" />
     <ClCompile Include="renderer\structures\boundingbox.cpp" />
     <ClCompile Include="renderer\structures\bvh.cpp" />
-    <ClCompile Include="renderer\structures\meshnode.cpp" />
     <ClCompile Include="renderer\structures\plane.cpp" />
     <ClCompile Include="renderer\structures\viewfrustum.cpp" />
     <ClCompile Include="renderer\texturing\brdfIntMap.cpp" />
@@ -457,7 +456,6 @@
     <ClInclude Include="renderer\structures\bvh.h" />
     <ClInclude Include="renderer\structures\group.h" />
     <ClInclude Include="renderer\structures\groups.h" />
-    <ClInclude Include="renderer\structures\meshnode.h" />
     <ClInclude Include="renderer\structures\plane.h" />
     <ClInclude Include="renderer\structures\simplegroup.h" />
     <ClInclude Include="renderer\structures\treenode.h" />

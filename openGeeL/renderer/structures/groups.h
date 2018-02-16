@@ -8,7 +8,7 @@
 namespace geeL {
 
 	using MeshGroup = SimpleGroup<MeshNode>;
-	using MeshTree  = BVH;
+	using MeshTree  = BVHBranch;
 
 }
 

@@ -9,11 +9,12 @@ namespace geeL {
 	class Group {
 
 	public:
-		virtual bool add(T& node) = 0;
+		virtual void add(T& node) = 0;
 		virtual bool remove(T& node) = 0;
 		virtual void replace(T& toRemove, T& toAdd);
 
-		virtual void iterChildren(std::function<void(T&)> function) = 0;
+		virtual void iterElements(std::function<void(T&)> function) = 0;
+		virtual void iterVisibleElements(const Camera& camera, std::function<void(T&)> function) = 0;
 		virtual size_t getChildCount() const = 0;
 
 	};

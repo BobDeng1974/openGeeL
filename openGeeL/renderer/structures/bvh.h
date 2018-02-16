@@ -1,37 +1,76 @@
 #ifndef BVH_H
 #define BVH_H
 
-
-#include "meshnode.h"
-#include "treenode.h"
+#include <list>
+#include "group.h"
+#include "boundedobject.h"
 
 namespace geeL {
 
-	class BVH : public TreeNode<MeshNode> {
+	class MeshRenderer;
+
+
+	class BVHNode : public BoundedObject, public Group<MeshRenderer> {
+
+	public:
+		BVHNode(BVHNode&& other);
+		BVHNode& operator=(BVHNode&& other);
+
+		virtual void onChildChange(BVHNode& child) {}
+		virtual void onChildEmpty(BVHNode& child) {}
+
+		virtual void balance(BVHNode& toRemove, BVHNode& toAdd) {}
+
+		virtual void updateSize() = 0;
+		virtual void updateSizeAdd(const AABoundingBox& newBox);
+		void setParent(BVHNode& parent);
+
+	protected:
+		BVHNode* parent;
+
+		BVHNode();
+		BVHNode(BVHNode& parent);
+
+	};
+
+
+
+	class BVH : public BVHNode {
 
 	public:
 		BVH();
-		BVH(BVH&& other);
-		BVH(BVH& parent);
-		virtual ~BVH();
 
-		BVH& operator=(BVH&& other);
+		virtual void add(MeshRenderer& node);
+		virtual bool remove(MeshRenderer& node);
 
-		virtual void onChildChange(TreeNode<MeshNode>& child);
-		virtual void onChildRemove(TreeNode<MeshNode>& child);
+		virtual void updateSize();
+		virtual void balance(BVHNode& toRemove, BVHNode& toAdd);
 
-		virtual bool isLeaf() const;
-		virtual bool operator==(const TreeNode<MeshNode>& other) const;
+		virtual void iterElements(std::function<void(MeshRenderer&)> function);
+		virtual void iterVisibleElements(const Camera& camera, std::function<void(MeshRenderer&)> function);
+		virtual size_t getChildCount() const;
 
-		//Insert a new tree node during runtime
-		void insert(MeshNode& node);
-		
-		virtual bool add(MeshNode& node);
-		virtual bool remove(MeshNode& node);
-		virtual void balance(TreeNode<MeshNode>& toRemove, TreeNode<MeshNode>& toAdd);
+	private:
+		BVHNode* base;
+		std::list<MeshRenderer*> unboundedChildren;
 
-		virtual void iterChildren(std::function<void(MeshNode&)> function);
-		virtual void iterVisibleChildren(const Camera& camera, std::function<void(MeshNode&)> function);
+	};
+
+
+
+	class BVHLeaf : public BVHNode {
+
+	public:
+		BVHLeaf();
+		BVHLeaf(BVHNode& parent);
+
+		virtual void add(MeshRenderer& node);
+		virtual bool remove(MeshRenderer& node);
+
+		virtual void updateSize();
+
+		virtual void iterElements(std::function<void(MeshRenderer&)> function);
+		virtual void iterVisibleElements(const Camera& camera, std::function<void(MeshRenderer&)> function);
 		virtual size_t getChildCount() const;
 
 	private:
@@ -40,14 +79,47 @@ namespace geeL {
 			float pane;
 		};
 
-		std::list<TreeNode<MeshNode>*> children;
+		std::list<MeshRenderer*> group;
 
-		void addDirect(MeshNode& node);
 		void subdivide();
-		void updateSize();
-		void updateSizeLocal();
-
 		SplitPane getSplitHeuristic(const glm::vec3& size);
+
+	};
+
+
+
+
+	class BVHBranch : public BVHNode {
+
+	public:
+		BVHBranch();
+		BVHBranch(BVHBranch&& other);
+		BVHBranch(BVHNode& parent);
+		BVHBranch(BVHNode& parent, BVHLeaf& firstChild, BVHLeaf& secondChild);
+		virtual ~BVHBranch();
+
+		BVHBranch& operator=(BVHBranch&& other);
+
+		virtual void updateSize();
+		virtual void balance(BVHNode& toRemove, BVHNode& toAdd);
+
+		virtual void onChildChange(BVHNode& child);
+		virtual void onChildEmpty(BVHNode& child);
+
+		virtual void add(MeshRenderer& node);
+		virtual bool remove(MeshRenderer& node);
+		
+
+		virtual void iterElements(std::function<void(MeshRenderer&)> function);
+		virtual void iterVisibleElements(const Camera& camera, std::function<void(MeshRenderer&)> function);
+		virtual size_t getChildCount() const;
+
+	private:
+		BVHNode* a;
+		BVHNode* b;
+
+		void updateSizeLocal();
+		void iter(std::function<void(BVHNode& child)> function);
 
 	};
 

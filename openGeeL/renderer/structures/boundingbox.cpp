@@ -101,6 +101,11 @@ namespace geeL {
 		return (min != other.min) || (max != other.max);
 	}
 
+	bool AABoundingBox::isUnbounded() const {
+		return (min == vec3(std::numeric_limits<float>::max()) || min == vec3(std::numeric_limits<float>::min()))
+			&& (max == vec3(std::numeric_limits<float>::min()) || max == vec3(std::numeric_limits<float>::max()));
+	}
+
 	bool AABoundingBox::contains(const glm::vec3& point) const {
 		return (min.x <= point.x) && (max.x >= point.x)
 			&& (min.y <= point.y) && (max.y >= point.y)
