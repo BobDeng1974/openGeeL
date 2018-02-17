@@ -8,6 +8,8 @@ namespace geeL {
 	class BoundedObject {
 
 	public:
+		~BoundedObject() {}
+
 		const AABoundingBox& getBoundingBox() const;
 
 	protected:

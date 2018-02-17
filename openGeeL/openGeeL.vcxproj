@@ -448,6 +448,7 @@
     <ClInclude Include="renderer\shadowmapping\shadowmapconfig.h" />
     <ClInclude Include="renderer\shadowmapping\simpleshadowmap.h" />
     <ClInclude Include="renderer\shadowmapping\varianceshadowmap.h" />
+    <ClInclude Include="renderer\structures\boundedobject.h" />
     <ClInclude Include="renderer\structures\boundingbox.h" />
     <ClInclude Include="renderer\structures\bvh.h" />
     <ClInclude Include="renderer\structures\group.h" />

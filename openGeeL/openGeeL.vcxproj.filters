@@ -1130,6 +1130,9 @@
     <ClInclude Include="renderer\structures\simplegroup.h">
       <Filter>renderer\structures</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\structures\boundedobject.h">
+      <Filter>renderer\structures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\combine.frag">

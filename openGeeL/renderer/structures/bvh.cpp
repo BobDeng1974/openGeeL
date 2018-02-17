@@ -122,6 +122,15 @@ namespace geeL {
 	BVHLeaf::BVHLeaf(BVHNode& parent)
 		: BVHNode(parent) {}
 
+	BVHLeaf::~BVHLeaf() {
+		for (auto it(group.begin()); it != group.end(); it++) {
+			auto& node = **it;
+
+			Transform& t = node.getTransform();
+			t.removeListener(*this);
+		}
+	}
+
 
 	void BVHLeaf::add(MeshRenderer& node) {
 		group.push_back(&node);
@@ -141,7 +150,8 @@ namespace geeL {
 		if (it != group.end()) {
 			group.erase(it);
 
-			//TODO: remove transform listener
+			Transform& t = node.getTransform();
+			t.removeListener(*this);
 
 			if (group.size() == 0)
 				parent->onChildEmpty(*this);
@@ -202,6 +212,9 @@ namespace geeL {
 			for (auto it(group.begin()); it != group.end(); it++) {
 				auto& childNode = **it;
 
+				Transform& t = childNode.getTransform();
+				t.removeListener(*this);
+
 				vec3 position(childNode.getBoundingBox().getMin());
 				float v = position[p.axis];
 
@@ -212,7 +225,6 @@ namespace geeL {
 			}
 
 			group.clear();
-			//TODO: remove transform listeners
 
 			assert(a->getChildCount() > 0);
 			assert(b->getChildCount() > 0);

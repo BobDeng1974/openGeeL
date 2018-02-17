@@ -17,6 +17,7 @@ namespace geeL {
 	public:
 		BVHNode(BVHNode&& other);
 		BVHNode& operator=(BVHNode&& other);
+		virtual ~BVHNode() {}
 
 		virtual void onChildChange(BVHNode& child) {}
 		virtual void onChildEmpty(BVHNode& child) {}
@@ -65,6 +66,7 @@ namespace geeL {
 	public:
 		BVHLeaf();
 		BVHLeaf(BVHNode& parent);
+		virtual ~BVHLeaf();
 
 		virtual void add(MeshRenderer& node);
 		virtual bool remove(MeshRenderer& node);

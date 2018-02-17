@@ -9,6 +9,8 @@ namespace geeL {
 	class Group {
 
 	public:
+		virtual ~Group() {}
+
 		virtual void add(T& node) = 0;
 		virtual bool remove(T& node) = 0;
 		virtual void replace(T& toRemove, T& toAdd);
