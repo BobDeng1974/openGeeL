@@ -555,6 +555,9 @@
     <ClCompile Include="renderer\meshes\meshrenderer.cpp">
       <Filter>renderer\meshes</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\structures\bvh.cpp">
+      <Filter>renderer\structures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\texturing\texture.h">
@@ -1114,6 +1117,18 @@
     </ClInclude>
     <ClInclude Include="renderer\meshes\meshrenderer.h">
       <Filter>renderer\meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\structures\bvh.h">
+      <Filter>renderer\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\structures\group.h">
+      <Filter>renderer\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\structures\groups.h">
+      <Filter>renderer\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\structures\simplegroup.h">
+      <Filter>renderer\structures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
