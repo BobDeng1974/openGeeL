@@ -6,6 +6,7 @@
 #include <functional>
 #include <list>
 #include <string>
+#include "utility/listener.h"
 #include "sceneobject.h"
 
 using glm::vec3;
@@ -31,7 +32,7 @@ namespace geeL {
 
 
 	//Base class for all light scene objects
-	class Light : public SceneObject {
+	class Light : public SceneObject, public ChangeListener<Transform> {
 
 	public:
 		Light(Transform& transform, vec3 diffuse, const std::string& name = "Light");
@@ -81,6 +82,7 @@ namespace geeL {
 		//Add change callback to this light and specify whether function should
 		//be invoked once immediately or not
 		void addChangeListener(std::function<void(Light&)> function, bool invoke = false);
+		virtual void onChange(const Transform& t);
 
 		virtual LightType getLightType() const = 0;
 
@@ -88,7 +90,7 @@ namespace geeL {
 		vec3 diffuse;
 		Shadowmap* shadowMap;
 
-		void onChange();
+		
 
 		float getLightRadius(float cutoff) const;
 

@@ -29,8 +29,6 @@ namespace geeL {
 		max.x = std::max(max.x, point.x);
 		max.y = std::max(max.y, point.y);
 		max.z = std::max(max.z, point.z);
-
-		onChange();
 	}
 
 	void AABoundingBox::extend(const AABoundingBox& box) {
@@ -148,9 +146,11 @@ namespace geeL {
 
 		updateGlobal();
 
-		transform.addChangeListener([this](const Transform& transform) {
-			updateGlobal();
-		});
+		transform.addListener(*this);
+	}
+
+	TransformableBoundingBox::~TransformableBoundingBox() {
+		transform.removeListener(*this);
 	}
 
 	const AABoundingBox& TransformableBoundingBox::getLocalBox() const {
@@ -159,6 +159,10 @@ namespace geeL {
 
 	void TransformableBoundingBox::setLocalBox(const AABoundingBox& localBox) {
 		this->localBox = localBox;
+		updateGlobal();
+	}
+
+	void TransformableBoundingBox::onChange(const Transform& t) {
 		updateGlobal();
 	}
 

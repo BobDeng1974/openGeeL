@@ -40,11 +40,18 @@ namespace geeL {
 	KinematicMotionState::KinematicMotionState(Transform& transform) 
 		: MotionState(transform) {
 	
-		auto callback = [this](const Transform& transform) { this->update(); };
-		transform.addChangeListener(callback);
+		transform.addListener(*this);
+	}
+
+	KinematicMotionState::~KinematicMotionState() {
+		transform.removeListener(*this);
 	}
 
 
 	void KinematicMotionState::setWorldTransform(const btTransform& trans) {}
+
+	void KinematicMotionState::onChange(const Transform & t) {
+		update();
+	}
 
 }

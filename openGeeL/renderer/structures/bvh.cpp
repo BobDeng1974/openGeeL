@@ -132,9 +132,7 @@ namespace geeL {
 		//Listen to transformational changes of given 
 		//renderer and  inform parent node if needed
 		Transform& t = node.getTransform();
-		t.addChangeListener([this](const Transform& transform) {
-			parent->onChildChange(*this);
-		});
+		t.addListener(*this);
 	}
 
 	bool BVHLeaf::remove(MeshRenderer& node) {
@@ -184,6 +182,10 @@ namespace geeL {
 
 	size_t BVHLeaf::getChildCount() const {
 		return group.size();
+	}
+
+	void BVHLeaf::onChange(const Transform& t) {
+		parent->onChildChange(*this);
 	}
 
 

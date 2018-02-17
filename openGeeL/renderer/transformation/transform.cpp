@@ -517,23 +517,6 @@ namespace geeL {
 		return id;
 	}
 
-	void Transform::addChangeListener(function<void(const Transform&)> listener) {
-#if MULTI_THREADING_SUPPORT
-		transformLock();
-#endif
-
-		changeListener.push_back(listener);
-	}
-
-
-	void Transform::onChange() {
-		for (auto it = changeListener.begin(); it != changeListener.end(); it++) {
-			auto func = *it;
-			func(*this);
-		}
-	}
-
-	
 
 	Transform* Transform::getParent() const {
 #if MULTI_THREADING_SUPPORT

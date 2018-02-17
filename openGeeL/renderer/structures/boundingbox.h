@@ -12,7 +12,7 @@ namespace geeL {
 	class ViewFrustum;
 
 
-	class AABoundingBox : public ChangeActuator<AABoundingBox> {
+	class AABoundingBox {
 
 	public:
 		AABoundingBox();
@@ -67,13 +67,16 @@ namespace geeL {
 	};
 
 
-	class TransformableBoundingBox : public AABoundingBox {
+	class TransformableBoundingBox : public AABoundingBox, public ChangeListener<Transform> {
 
 	public:
 		TransformableBoundingBox(const AABoundingBox& localBox, Transform& transform);
+		virtual ~TransformableBoundingBox();
 
 		const AABoundingBox& getLocalBox() const;
 		void setLocalBox(const AABoundingBox& localBox);
+
+		virtual void onChange(const Transform& t);
 
 	private:
 		AABoundingBox localBox; 

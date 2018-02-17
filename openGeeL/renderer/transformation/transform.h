@@ -9,6 +9,7 @@
 #include <list>
 #include <memory>
 #include <string>
+#include "utility/listener.h"
 
 using glm::vec3;
 using glm::mat4;
@@ -24,7 +25,7 @@ namespace geeL {
 	};
 
 
-	class Transform {
+	class Transform : public ChangeActuator<Transform> {
 
 	public:
 		const bool isStatic;
@@ -97,8 +98,6 @@ namespace geeL {
 
 		unsigned int getID() const;
 
-		void addChangeListener(std::function<void(const Transform&)> listener);
-
 		std::string toString() const;
 		std::string toStringRecursive() const;
 
@@ -125,7 +124,6 @@ namespace geeL {
 
 		Transform* parent;
 		std::list<Transform*> children;
-		std::list<std::function<void(const Transform&)>> changeListener;
 		TransformUpdateStatus status;
 
 		mutable std::recursive_mutex mutex;
@@ -133,7 +131,6 @@ namespace geeL {
 		void setEulerAnglesInternal(const vec3& eulerAngles);
 		void resetMatrix();
 		void updateDirections();
-		void onChange();
 
 		void changeParentInternal(Transform& newParent);
 		void removeChildInternal(Transform& child);

@@ -19,10 +19,12 @@ namespace geeL {
 		: SceneObject(transform, name), diffuse(diffuse), shadowMap(nullptr) {
 	
 		setColorAndIntensityFromDiffuse();
-		transform.addChangeListener([this](const Transform& transform) { onChange(); });
+		transform.addListener(*this);
 	}
 
 	Light::~Light() {
+		transform.removeListener(*this);
+
 		if (shadowMap != nullptr)
 			delete shadowMap;
 	}
@@ -94,7 +96,7 @@ namespace geeL {
 			diffuse = value;
 			
 			setColorAndIntensityFromDiffuse();
-			onChange();
+			onChange(transform);
 		}
 	}
 
@@ -117,7 +119,7 @@ namespace geeL {
 		if (invoke) function(*this);
 	}
 
-	void Light::onChange() {
+	void Light::onChange(const Transform& t) {
 		for (auto it(changeListeners.begin()); it != changeListeners.end(); it++) {
 			auto function = *it;
 			function(*this);
@@ -141,7 +143,7 @@ namespace geeL {
 	void Light::setDiffuseOnly(vec3 value) {
 		if (!transform.isStatic && !VectorExtension::equals(diffuse, value)) {
 			diffuse = value;
-			onChange();
+			onChange(transform);
 		}
 	}
 
