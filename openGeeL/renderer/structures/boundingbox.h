@@ -57,6 +57,7 @@ namespace geeL {
 		bool operator==(const AABoundingBox& other) const;
 		bool operator!=(const AABoundingBox& other) const;
 
+		bool isUnbounded() const;
 		bool contains(const glm::vec3& point) const;
 		bool contains(const AABoundingBox& box) const;
 

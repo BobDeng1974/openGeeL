@@ -1,6 +1,7 @@
 #ifndef VECTOREXTENSION_H
 #define VECTOREXTENSION_H
 
+#include <algorithm>
 #include <cmath>
 #include <vec3.hpp>
 #include <string>
@@ -32,6 +33,14 @@ namespace geeL {
 
 		inline static glm::vec3 lerp(const glm::vec3& v1, const glm::vec3& v2, float factor) {
 			return v1 * factor + v2 * (1.f - factor);
+		}
+
+		inline static glm::vec3 min(const glm::vec3& v1, const glm::vec3& v2) {
+			return glm::vec3(std::min(v1.x, v2.x), std::min(v1.y, v2.y), std::min(v1.z, v2.z));
+		}
+
+		inline static glm::vec3 max(const glm::vec3& v1, const glm::vec3& v2) {
+			return glm::vec3(std::max(v1.x, v2.x), std::max(v1.y, v2.y), std::max(v1.z, v2.z));
 		}
 
 		inline static glm::vec3 quatToEuler(float x, float y, float z, float w) {
