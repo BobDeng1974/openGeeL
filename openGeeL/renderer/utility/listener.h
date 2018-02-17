@@ -1,7 +1,6 @@
 #ifndef DATAEVENTLISTENER_H
 #define DATAEVENTLISTENER_H
 
-#include <functional>
 #include <list>
 #include <memory>
 
@@ -38,19 +37,30 @@ namespace geeL {
 	};
 
 
+
+	template<typename T>
+	class ChangeListener {
+
+	public:
+		virtual void onChange(const T& t) = 0;
+
+	};
+
+
 	template<typename T>
 	class ChangeActuator {
 
 	public:
 		ChangeActuator();
 
-		void addListener(std::function<void(const T&)> listener) const;
+		void addListener(ChangeListener<T>& listener) const;
+		void removeListener(ChangeListener<T>& listener) const;
 
 	protected:
 		void onChange();
 
 	private:
-		mutable std::list<std::function<void(const T&)>> listeners;
+		mutable std::list<ChangeListener<T>*> listeners;
 
 	};
 
@@ -88,8 +98,13 @@ namespace geeL {
 	}
 
 	template<typename T>
-	inline void ChangeActuator<T>::addListener(std::function<void(const T&)> listener) const {
-		listeners.push_back(listener);
+	inline void ChangeActuator<T>::addListener(ChangeListener<T>& listener) const {
+		listeners.push_back(&listener);
+	}
+
+	template<typename T>
+	inline void ChangeActuator<T>::removeListener(ChangeListener<T>& listener) const {
+		listeners.remove(&listener);
 	}
 
 	template<typename T>
@@ -97,7 +112,7 @@ namespace geeL {
 		T* t = static_cast<T*>(this);
 
 		for (auto it(listeners.begin()); it != listeners.end(); it++)
-			(*it)(*t);
+			(*it)->onChange(*t);
 	}
 
 }
