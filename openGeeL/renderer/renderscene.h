@@ -102,7 +102,7 @@ namespace geeL {
 		std::map<ShadingMethod, ShaderMapping> renderObjects;
 
 		//Second indexing structure of mesh renderers that is mainly used for better iteration performance
-		std::set<MeshRenderer*> renderers;
+		std::map<unsigned short, MeshRenderer*> renderers;
 
 		void removeMeshRenderer(MeshRenderer& renderer, SceneShader& shader);
 		void updateMeshRenderer(MeshRenderer& renderer, Material oldMaterial, Material newMaterial);

@@ -35,7 +35,7 @@ namespace geeL {
 
 	Scene::~Scene() {
 		for (auto it(renderers.begin()); it != renderers.end(); it++) {
-			MeshRenderer* renderer = *it;
+			MeshRenderer* renderer = it->second;
 			onRemove(std::shared_ptr<MeshRenderer>(renderer));
 		}
 	}
@@ -96,7 +96,8 @@ namespace geeL {
 
 	MeshRenderer& Scene::addMeshRenderer(std::unique_ptr<MeshRenderer> renderer) {
 		MeshRenderer* rawRenderer = renderer.release();
-		renderers.emplace(rawRenderer);
+
+		renderers[rawRenderer->getID()] = rawRenderer;
 		onAdd(*rawRenderer);
 
 		SceneShader& shader = rawRenderer->getShader();
@@ -130,7 +131,7 @@ namespace geeL {
 	}
 
 	void Scene::removeMeshRenderer(MeshRenderer& renderer) {
-		auto toRemove = renderers.find(&renderer);
+		auto toRemove = renderers.find(renderer.getID());
 
 		if (toRemove != renderers.end()) {
 			removeMeshRenderer(renderer, renderer.getShader());
@@ -520,7 +521,7 @@ namespace geeL {
 
 	void Scene::iterRenderObjects(function<void(MeshRenderer&)> function) const {
 		for (auto it(renderers.begin()); it != renderers.end(); it++) {
-			MeshRenderer& renderer = **it;
+			MeshRenderer& renderer = *it->second;
 			function(renderer);
 		}
 	}
