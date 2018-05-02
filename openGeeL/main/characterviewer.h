@@ -48,8 +48,8 @@ public:
 				SceneShader& forwardShader = materialFactory.getDefaultShader(ShadingMethod::Hybrid, false);
 				SceneShader& transparentShader = materialFactory.getDefaultShader(ShadingMethod::Transparent, false);
 
-				forwardShader.bind<float>("fogFalloff", 15.f);
-				transparentShader.bind<float>("fogFalloff", 15.f);
+				forwardShader.bind<float>("fadeFalloff", 15.f);
+				transparentShader.bind<float>("fadeFalloff", 15.f);
 			}
 
 

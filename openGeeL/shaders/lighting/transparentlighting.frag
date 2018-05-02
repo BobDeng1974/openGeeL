@@ -1,10 +1,9 @@
 #version 430
 
-#define FOG 1
-
 #include <shaders/helperfunctions.glsl>
 #include <shaders/material.glsl>
 #include <shaders/lighting/iblcore.glsl>
+#include <shaders/fade.glsl>
 
 
 in vec3 normal;
@@ -38,7 +37,6 @@ uniform Material material;
 uniform uint id;
 
 uniform mat4 projection;
-uniform float fogFalloff = 200.f;
 uniform bool useIBL;
 
 
@@ -59,10 +57,6 @@ void main() {
 	gNormal = vec4(norm, uintBitsToFloat(id));
 	gDiffuse = albedo;
 	gProperties = vec4(roughness, metallic, 0.f, 0.f);
-
-#if (FOG == 1)
-	float fogFactor = 1.f - clamp(abs(fragPosition.z) / fogFalloff, 0.f, 1.f);
-#endif
 
 	vec3 irradiance = albedo.xyz * emission;
 
@@ -89,8 +83,8 @@ void main() {
 		irradiance += ambienceDiffuse + ambienceSpecular;
 	}
 
-#if (FOG == 1)
-	color = vec4(irradiance, albedo.a) * fogFactor;
+#if (FADE == 1)
+	color = vec4(irradiance, albedo.a) * computeFade(fragPosition);
 #else
 	color = vec4(irradiance, albedo.a);
 #endif
@@ -124,9 +118,11 @@ void main() {
 		spec += ambienceSpecular;
 	}
 
-#if (FOG == 1)
-	diffuse  = vec4(diff + irradiance, albedo.a) * fogFactor;
-	specular = vec4(spec, albedo.a) * fogFactor;
+#if (FADE == 1)
+	float fadeFactor = computeFade(fragPosition);
+
+	diffuse  = vec4(diff + irradiance, albedo.a) * fadeFactor;
+	specular = vec4(spec, albedo.a) * fadeFactor;
 #else
 	diffuse = vec4(diff + irradiance, albedo.a);
 	specular = vec4(spec, albedo.a);

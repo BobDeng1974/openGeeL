@@ -1,11 +1,9 @@
 #version 430
 
-#define FOG 1
-
 #include <shaders/helperfunctions.glsl>
 #include <shaders/material.glsl>
-
 #include <shaders/lighting/cooktorrance.glsl>
+#include <shaders/fade.glsl>
 
 in vec3 normal;
 in vec3 fragPosition;
@@ -41,9 +39,6 @@ uniform mat4 projection;
 uniform mat4 inverseView;
 uniform vec3 origin;
 
-uniform float fogFalloff = 200.f;
-
-
 #include <shaders/materialproperties.glsl>
 #include <shaders/shadowmapping/shadowsView.glsl>
 #include <shaders/lighting/cooktorrancelights.glsl>
@@ -64,10 +59,6 @@ void main() {
 	gProperties = vec4(roughness, metallic, 0.f, 0.f);
 
 
-#if (FOG == 1)
-	float fogFactor = 1.f - clamp(abs(fragPosition.z) / fogFalloff, 0.f, 1.f);
-#endif
-
 	vec3 irradiance = albedo.xyz * emission;
 
 #if (DIFFUSE_SPECULAR_SEPARATION == 0)
@@ -80,8 +71,8 @@ void main() {
 	for(int i = 0; i < slCount; i++)
 		irradiance += calculateSpotLight(i, spotLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
 
-#if (FOG == 1)
-	color = vec4(irradiance, albedo.a) * fogFactor;
+#if (FADE == 1)
+	color = vec4(irradiance, albedo.a) * computeFade(fragPosition);
 #else
 	color = vec4(irradiance, albedo.a);
 #endif
@@ -101,9 +92,11 @@ void main() {
 	for(int i = 0; i < slCount; i++)
 		irradiance += calculateSpotLight(i, spotLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
 
-#if (FOG == 1)
-	diffuse  = vec4(diff + irradiance, albedo.a) * fogFactor;
-	specular = vec4(spec, albedo.a) * fogFactor;
+#if (FADE == 1)
+	float fadeFactor = computeFade(fragPosition);
+
+	diffuse  = vec4(diff + irradiance, albedo.a) * fadeFactor;
+	specular = vec4(spec, albedo.a) * fadeFactor;
 #else
 	diffuse = vec4(diff + irradiance, albedo.a);
 	specular = vec4(spec, albedo.a);

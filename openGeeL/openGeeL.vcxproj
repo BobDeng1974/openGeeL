@@ -509,6 +509,8 @@
     <None Include="shaders\empty.frag" />
     <None Include="shaders\empty.vert" />
     <None Include="shaders\emptyAnim.vert" />
+    <None Include="shaders\fade.glsl" />
+    <None Include="shaders\fog.glsl" />
     <None Include="shaders\gbuffer.vert" />
     <None Include="shaders\gbufferAnim.vert" />
     <None Include="shaders\gbuffer.frag" />
