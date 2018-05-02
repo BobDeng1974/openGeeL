@@ -16,7 +16,7 @@ namespace geeL {
 		SpotLight(Transform& transform,
 			vec3 diffuse,
 			float angle = 30.f,
-			float outerAngle = 5.f,
+			float outerAngle = 1.f,
 			float cutoff = 0.01f,
 			const std::string& name = "SpotLight");
 

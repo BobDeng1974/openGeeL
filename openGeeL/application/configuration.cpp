@@ -51,7 +51,7 @@ namespace geeL {
 		ShadowmapAdapter shadowAdapter(scene, textureProvider, 4000);
 		lightManager.addShadowmapAdapter(shadowAdapter);
 
-		DefaultPostProcess& def = DefaultPostProcess();
+		DefaultPostProcess& def = DefaultPostProcess(1.f, TonemappingMethod::Uncharted2);
 		RenderContext& context = RenderContext();
 		SceneRender& lighting = DeferredLighting(scene);
 		//SceneRender& lighting = TiledDeferredLighting(scene);

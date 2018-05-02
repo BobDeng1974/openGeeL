@@ -43,7 +43,7 @@ public:
 			lightIntensity = 100.f;
 			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-31.4f, 18.79f, -9.7f), vec3(119.4f, 58.5f, 2.9f), vec3(2.9f), true);
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.0001f, ShadowMapType::Hard, ShadowmapResolution::Huge);
-			SpotLight& spotLight = lightManager.addSpotlight(config2, lightTransform2, glm::vec3(lightIntensity * 0.85f, lightIntensity * 0.87f, lightIntensity * 0.66f), 25.5f, 27.5f);
+			SpotLight& spotLight = lightManager.addSpotlight(config2, lightTransform2, glm::vec3(lightIntensity * 0.85f, lightIntensity * 0.87f, lightIntensity * 0.66f), 25.5f, 2.f);
 
 			float scale = 0.05f;
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(scale));

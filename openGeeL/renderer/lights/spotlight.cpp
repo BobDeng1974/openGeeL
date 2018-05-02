@@ -26,7 +26,7 @@ namespace geeL {
 		const string& name)
 			: Light(transform, diffuse, name)
 			, angle(glm::cos(glm::radians(angle)))
-			, outerAngle(glm::cos(glm::radians(outerAngle)))
+			, outerAngle(glm::cos(glm::radians(angle + outerAngle)))
 			, cutoff(cutoff)
 			, lightCookie(nullptr) {}
 
@@ -92,6 +92,7 @@ namespace geeL {
 
 		if (!transform.isStatic && value > 0.f && value < 180.f && val != angle) {
 			angle = val;
+			outerAngle = glm::cos(glm::radians(value + outerAngle));
 		}
 	}
 

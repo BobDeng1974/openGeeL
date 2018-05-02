@@ -500,8 +500,8 @@ namespace geeL {
 
 						Light* lightSource = nullptr;
 						if (typeString == "Spot") {
-							float angle = l["angle"].get_or(25.5f);
-							float outerAngle = l["outerAngle"].get_or(27.5f);
+							float angle = l["angle"].get_or(30.f);
+							float outerAngle = l["outerAngle"].get_or(1.f);
 
 							lightSource = &lightManager.addSpotlight(config, lightTransform, color * intensity, angle, outerAngle);
 						}
