@@ -34,6 +34,9 @@ namespace geeL {
 		virtual void addShadowmap(Shader& shader, const std::string& name);
 
 		float getAngle() const;
+		float getAngleDegree() const;
+		void  setAngleDegree(float value);
+
 		virtual LightType getLightType() const;
 
 	private:
@@ -42,10 +45,6 @@ namespace geeL {
 
 	};
 
-
-	inline float SpotLight::getAngle() const {
-		return angle;
-	}
 
 	inline LightType SpotLight::getLightType() const {
 		return LightType::Spot;

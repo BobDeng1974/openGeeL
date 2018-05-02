@@ -42,12 +42,9 @@ public:
 			lightManager.addPointLight(config, lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379));
 
 			lightIntensity = 100.f;
-			float angle = glm::cos(glm::radians(25.5f));
-			float outerAngle = glm::cos(glm::radians(27.5f));
-
-			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-14.88f, 0.4f, -1.88f), vec3(90.f, -56.24f, 179.f), vec3(1.f, 1.f, 1.f), true);
+			Transform& lightTransform2 = transformFactory.CreateTransform(vec3(-14.88f, 0.4f, -1.88f), vec3(90.f, -56.24f, 179.f), vec3(1.f, 1.f, 1.f), false);
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00001f, ShadowMapType::Hard, ShadowmapResolution::Huge);
-			SpotLight& spotLight = lightManager.addSpotlight(config2, lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), angle, outerAngle);
+			SpotLight& spotLight = lightManager.addSpotlight(config2, lightTransform2, glm::vec3(lightIntensity, lightIntensity, lightIntensity * 2), 25.5f, 27.5f);
 			spotLight.setLightCookie(materialFactory.createTexture("resources/textures/cookie.png",
 				ColorType::GammaSpace, FilterMode::Linear, WrapMode::ClampBorder));
 

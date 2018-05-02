@@ -1,5 +1,6 @@
 #define GLEW_STATIC
 #include <glew.h>
+#include <glm.hpp>
 #include <string>
 #include <cassert>
 #include <gtc/matrix_transform.hpp>
@@ -24,8 +25,8 @@ namespace geeL {
 		float cutoff,
 		const string& name)
 			: Light(transform, diffuse, name)
-			, angle(angle)
-			, outerAngle(outerAngle)
+			, angle(glm::cos(glm::radians(angle)))
+			, outerAngle(glm::cos(glm::radians(outerAngle)))
 			, cutoff(cutoff)
 			, lightCookie(nullptr) {}
 
@@ -77,5 +78,21 @@ namespace geeL {
 			shader.addMap(*lightCookie, name + "cookie");
 	}
 
+
+	float SpotLight::getAngle() const {
+		return angle;
+	}
+
+	float SpotLight::getAngleDegree() const {
+		return glm::degrees(glm::acos(angle));
+	}
+
+	void SpotLight::setAngleDegree(float value) {
+		float val = glm::cos(glm::radians(value));
+
+		if (!transform.isStatic && value > 0.f && value < 180.f && val != angle) {
+			angle = val;
+		}
+	}
 
 }

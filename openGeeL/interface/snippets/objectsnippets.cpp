@@ -8,6 +8,7 @@
 #include "meshes/meshrenderer.h"
 #include "lights/light.h"
 #include "lights/pointlight.h"
+#include "lights/spotlight.h"
 #include "sceneobject.h"
 #include "shadowmapping/simpleshadowmap.h"
 #include "snippets/guisnippets.h"
@@ -116,6 +117,13 @@ namespace geeL {
 
 				float volDensity = GUISnippets::drawBarFloat(context, pl->getVolumetricDensity(), 0.01f, 10.f, 0.01f, "Vol Density");
 				pl->setVolumetricDensity(volDensity);
+			}
+			else {
+				SpotLight* sl = dynamic_cast<SpotLight*>(&light);
+				if (sl) {
+					float angle = GUISnippets::drawBarFloat(context, sl->getAngleDegree(), 0.f, 180.f, 1.f, "Angle");
+					sl->setAngleDegree(angle);
+				}
 			}
 			
 			nk_tree_pop(context);
