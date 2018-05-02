@@ -96,4 +96,16 @@ namespace geeL {
 		}
 	}
 
+	float SpotLight::getOuterAngleDegree() const {
+		return glm::degrees(glm::acos(outerAngle)) - getAngleDegree();
+	}
+
+	void SpotLight::setOuterAngleDegree(float value) {
+		float val = glm::cos(glm::radians(value + getAngleDegree()));
+
+		if (!transform.isStatic && value > 0.f && value < 15.f && val != outerAngle) {
+			outerAngle = val;
+		}
+	}
+
 }

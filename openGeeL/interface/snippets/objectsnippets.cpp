@@ -123,6 +123,9 @@ namespace geeL {
 				if (sl) {
 					float angle = GUISnippets::drawBarFloat(context, sl->getAngleDegree(), 0.f, 180.f, 1.f, "Angle");
 					sl->setAngleDegree(angle);
+
+					float border = GUISnippets::drawBarFloat(context, sl->getOuterAngleDegree(), 0.f, 15.f, 0.1f, "Border");
+					sl->setOuterAngleDegree(border);
 				}
 			}
 			

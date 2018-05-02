@@ -82,12 +82,8 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal,
 
 	//Set intensity depending on if object is inside spotlights halo (or outer halo)
 	float theta = dot(lightDirection, normalize(-light.direction)); 
-
-
     float epsilon = light.angle - light.outerAngle;
     float intensity = clamp((theta - light.outerAngle) / epsilon, 0.f, 1.f);
-
-	intensity = float(theta > light.angle);
 
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
 		viewDirection, light.position, light.diffuse, albedo, roughness, metallic);

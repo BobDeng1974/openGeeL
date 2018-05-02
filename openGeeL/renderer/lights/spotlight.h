@@ -37,6 +37,9 @@ namespace geeL {
 		float getAngleDegree() const;
 		void  setAngleDegree(float value);
 
+		float getOuterAngleDegree() const;
+		void  setOuterAngleDegree(float value);
+
 		virtual LightType getLightType() const;
 
 	private:
