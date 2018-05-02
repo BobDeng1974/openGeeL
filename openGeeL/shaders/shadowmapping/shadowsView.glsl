@@ -94,21 +94,17 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 
 		}
 
 		//Soft shadow
-		return 1.f - chebyshevInequality(i, coords);
+		//return 1.f - chebyshevInequality(i, coords);
 
-		/*
 		float shadow = 0.f;
 		vec2 texelSize = vec2(spotLights[i].scale) / 1000.f;
 		int samples = spotLights[i].resolution;
 		for(int j = 0; j < samples; j++) {
-			int index = int(20.0f * random(floor(fragPosition.xyz * 1000.0f), j)) % 20;
-
-			float depth = texture(spotLights[i].shadowMap, coords.xy + sampleDirections2D[index] * texelSize).r;
+			float depth = texture(spotLights[i].shadowMap, coords.xy + sampleDirections2D[j] * texelSize).r;
 			shadow += step(depth, curDepth - bias);
 		}    
 	
 		return shadow / float(samples);
-		*/
 	}
 }
 
