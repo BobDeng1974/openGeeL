@@ -44,11 +44,6 @@ uniform SpotLight spotLights[5];
 #include <shaders/lighting/cooktorrancelights.glsl>
 
 
-
-
-vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightColor, float density);
-
-
 void main() {
 	vec3 fragPosition = readPosition(textureCoordinates);
 
@@ -96,28 +91,5 @@ void main() {
 #endif
 
 	
-}
-
-//Volumetric light......................................................................................................................
-
-vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightColor, float density) {
-
-	float lightInView = step(lightPosition.z, 0.f);
-
-	//Find shortest path from light position to viewing vector
-	float depth = length(fragPos);
-	vec3 n = normalize(fragPos);
-	vec3 a_p = -lightPosition;
-	float projN = dot(a_p, n);
-	vec3 shortestPath = a_p - projN * n;
-
-	//Pick shortest path OR fragPosition if shortestPath is too far away
-	float mini = step(depth, -projN);
-	float a = (1.f - mini) * length(shortestPath);
-	float b =  mini * distance(fragPos, lightPosition);
-	float dist = a + b + 0.0001f;
-	float attenuation = 1.f / (dist * dist);
-
-	return lightColor * attenuation * density * lightInView;
 }
 

@@ -18,7 +18,9 @@ namespace geeL {
 
 	PointLight::PointLight(Transform& transform, vec3 diffuse, float cutoff, const string& name)
 		: Light(transform, diffuse, name)
-		, cutoff(cutoff) {}
+		, cutoff(cutoff)
+		, volStrength(0.f)
+		, volDensity(1.f) {}
 
 
 	void PointLight::bind(const Shader& shader, const string& name, 
@@ -26,6 +28,8 @@ namespace geeL {
 		
 		Light::bind(shader, name, space, camera);
 		shader.bind<float>(name + "radius", getLightRadius(cutoff));
+		shader.bind<float>(name + "volumetricStrength", volStrength);
+		shader.bind<float>(name + "volumetricDensity", volDensity);
 
 		switch (space) {
 			case ShaderTransformSpace::View:
@@ -38,6 +42,27 @@ namespace geeL {
 				break;
 		}
 		
+	}
+
+
+	float PointLight::getVolumetricStrength() const {
+		return volStrength;
+	}
+
+	float PointLight::getVolumetricDensity() const {
+		return volDensity;
+	}
+
+	void PointLight::setVolumetricStrength(float value) {
+		if (value >= 0.f && volStrength != value) {
+			volStrength = value;
+		}
+	}
+
+	void PointLight::setVolumetricDensity(float value) {
+		if (value >= 0.f && volDensity != value) {
+			volDensity = value;
+		}
 	}
 
 }

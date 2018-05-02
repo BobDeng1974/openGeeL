@@ -7,6 +7,7 @@
 #include "meshes/mesh.h"
 #include "meshes/meshrenderer.h"
 #include "lights/light.h"
+#include "lights/pointlight.h"
 #include "sceneobject.h"
 #include "shadowmapping/simpleshadowmap.h"
 #include "snippets/guisnippets.h"
@@ -107,6 +108,15 @@ namespace geeL {
 			
 			if (snippet != nullptr)
 				snippet->draw(context);
+
+			PointLight* pl = dynamic_cast<PointLight*>(&light);
+			if (pl) {
+				float volStrength = GUISnippets::drawBarFloat(context, pl->getVolumetricStrength(), 0.f, 0.05f, 0.001f, "Vol Strength");
+				pl->setVolumetricStrength(volStrength);
+
+				float volDensity = GUISnippets::drawBarFloat(context, pl->getVolumetricDensity(), 0.01f, 10.f, 0.01f, "Vol Density");
+				pl->setVolumetricDensity(volDensity);
+			}
 			
 			nk_tree_pop(context);
 		}

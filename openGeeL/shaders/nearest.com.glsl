@@ -20,7 +20,7 @@ shared float depths[10][10];
 
 
 void main() {
-	ivec2 coords = ivec2(gl_GlobalInvocationID.xy);;
+	ivec2 coords = ivec2(gl_GlobalInvocationID.xy);
 	vec2 texCoords = vec2(coords) / vec2(GROUP_SIZE);
 
 	float depth = readDepth(texCoords);

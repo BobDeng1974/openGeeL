@@ -17,8 +17,14 @@ namespace geeL {
 
 		virtual LightType getLightType() const;
 
+		float getVolumetricStrength() const;
+		float getVolumetricDensity() const;
+
+		void setVolumetricStrength(float value);
+		void setVolumetricDensity(float value);
+
 	private:
-		float cutoff;
+		float cutoff, volStrength, volDensity;
 
 	};
 
@@ -27,6 +33,7 @@ namespace geeL {
 		return LightType::Point;
 	}
 
+	
 }
 
 #endif

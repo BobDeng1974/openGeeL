@@ -1,5 +1,6 @@
 
 
+
 #include <shaders/lighting/cooktorrance.glsl>
 //Note: preferred shadowing shader should be included beforehand (e.g. shadows in view or world space)
 
@@ -16,11 +17,41 @@ vec3 subsurfaceScatteringBack(vec3 fragPosition, vec3 normal, vec3 viewDirection
 }
 
 
+#if (VOLUMETRIC_LIGHT == 1)
+
+vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightColor, float strength, float density) {
+	float lightInView = step(lightPosition.z, 0.f);
+
+	//Find shortest path from light position to viewing vector
+	float depth = length(fragPos);
+	vec3 n = normalize(fragPos);
+	vec3 a_p = -lightPosition;
+	float projN = dot(a_p, n);
+	vec3 shortestPath = a_p - projN * n;
+
+	//Pick shortest path OR fragPosition if shortestPath is too far away
+	float mini = step(depth, -projN);
+	float a = (1.f - mini) * length(shortestPath);
+	float b =  mini * distance(fragPos, lightPosition);
+	float dist = a + b + 0.0001f;
+	float attenuation = 1.f / pow(dist, density); // (dist * dist);
+
+	return lightColor * attenuation * strength * lightInView;
+}
+
+#endif
+
+
 vec3 calculatePointLight(int index, PointLight light, vec3 normal, 
 	vec3 fragPosition, vec3 viewDirection, vec4 albedo, float roughness, float metallic) {
 
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
 		viewDirection, light.position, light.diffuse, albedo.rgb, roughness, metallic);
+
+#if (VOLUMETRIC_LIGHT == 1)
+	vec3 volumetricColor = calculateVolumetricLightColor(fragPosition, light.position, light.diffuse, 
+		light.volumetricStrength, light.volumetricDensity);
+#endif
 
 	float travel = 0.f;
 	float shadow = 1.f - light.shadowIntensity * calculatePointLightShadows(index, normal, fragPosition, travel);
@@ -29,9 +60,20 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal,
 	vec3 sss = subsurfaceScatteringBack(fragPosition, normal, viewDirection, albedo, 
 		light.position, light.diffuse, roughness, metallic, travel);
 
+#if (VOLUMETRIC_LIGHT == 1)
+	return shadow * reflectance + sss + volumetricColor;
+#else
 	return shadow * reflectance + sss;
+#endif
+	
+#else
+
+#if (VOLUMETRIC_LIGHT == 1)
+	return shadow * reflectance + volumetricColor;
 #else
 	return shadow * reflectance;
+#endif
+
 #endif
 }
 
@@ -77,6 +119,11 @@ void calculatePointLight(int index, PointLight light, vec3 normal,
 	calculateReflectance(fragPosition, normal, viewDirection, light.position, light.diffuse, 
 		albedo.rgb, roughness, metallic, tempDiff, tempSpec);
 
+#if (VOLUMETRIC_LIGHT == 1)
+	vec3 volumetricColor = calculateVolumetricLightColor(fragPosition, light.position, light.diffuse, 
+		light.volumetricStrength, light.volumetricDensity);
+#endif
+
 	float travel = 0.f;
 	float shadow = 1.f - light.shadowIntensity * calculatePointLightShadows(index, normal, fragPosition, travel);
 
@@ -84,11 +131,22 @@ void calculatePointLight(int index, PointLight light, vec3 normal,
 	vec3 sss = subsurfaceScatteringBack(fragPosition, normal, viewDirection, albedo, 
 		light.position, light.diffuse, roughness, metallic, travel);
 
+#if (VOLUMETRIC_LIGHT == 1)
+	diffuse  += tempDiff * shadow + sss + volumetricColor;
+#else
 	diffuse  += tempDiff * shadow + sss;
+#endif
 	specular += tempSpec * shadow;
+
+#else
+
+#if (VOLUMETRIC_LIGHT == 1)
+	diffuse  += tempDiff * shadow + volumetricColor;
 #else
 	diffuse  += tempDiff * shadow;
+#endif
 	specular += tempSpec * shadow;
+
 #endif
 }
 

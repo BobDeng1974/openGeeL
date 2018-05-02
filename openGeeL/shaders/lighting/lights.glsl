@@ -1,5 +1,6 @@
 
 #define USE_CASCASDED_MAP 0
+#define VOLUMETRIC_LIGHT 0
 
 
 struct PointLight {
@@ -12,6 +13,11 @@ struct PointLight {
 	float bias;
 	float farPlane;
 	float radius;
+	
+#if (VOLUMETRIC_LIGHT == 1)
+	float volumetricStrength;
+	float volumetricDensity;
+#endif
 
 	int resolution;
 	float scale;
