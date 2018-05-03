@@ -14,6 +14,7 @@ uniform vec3 noiseScale;
 //1 => Simple Reinhardt 2
 //2 => Hejl/Burgess-Dawson
 //3 => Uncharted 2
+//4 => ACES Filmic
 #define TONEMAPPING_METHOD 3
 
 
@@ -32,6 +33,20 @@ vec3 Uncharted2Tonemap(vec3 x) {
 
 float exposureBias = 2.f;
 vec3 whiteScale = 1.f / Uncharted2Tonemap(vec3(W));
+#endif
+
+#if (TONEMAPPING_METHOD == 4)
+float A = 2.51f;
+float B = 0.03f;
+float C = 2.43f;
+float D = 0.59f;
+float E = 0.14f;
+
+//Adapted from Krzysztof Narkowicz
+vec3 ACESFilm(vec3 x) {
+	return clamp((x * (A * x + B)) / (x * (C * x + D) + E), 0.f, 1.f);
+}
+
 #endif
 
 
@@ -56,6 +71,9 @@ void main() {
 	vec3 result = Uncharted2Tonemap(exposureBias * imageColor) * whiteScale;
 	result = pow(result.rgb, vec3(0.4545f));
 
+#elif (TONEMAPPING_METHOD == 4)
+	vec3 result = ACESFilm(imageColor * 0.6f);
+	result = pow(result.rgb, vec3(0.4545f));
 #endif
 
 	float dither = texture(noiseMap, TexCoords * noiseScale.xy).r * 0.003f;

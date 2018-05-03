@@ -14,7 +14,8 @@ namespace geeL {
 		SimpleReinhardt1 = 0,
 		SimpleReinhardt2 = 1,
 		HejlBurgessDawson = 2,
-		Uncharted2 = 3
+		Uncharted2 = 3,
+		ACESFilm = 4
 
 	};
 
