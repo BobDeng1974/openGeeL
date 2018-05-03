@@ -9,8 +9,9 @@ vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughn
     F0 = mix(F0, albedo, metallic);
 
 	//Simplified term withouth roughness included
-    //return F0 + (1.f - F0) * pow(1.f - theta, 5.f);
-	vec3 fres = F0 + (max(vec3(1.f - roughness), F0) - F0) * pow(1.f - theta, 5.f);
+    vec3 fres =  F0 + (1.f - F0) * pow(1.f - theta, 5.f);
+	//vec3 fres = F0 + (max(vec3(1.f - roughness), F0) - F0) * pow(1.f - theta, 5.f);
+
 	return clamp(fres, 0.f, 1.f);
 }
 
