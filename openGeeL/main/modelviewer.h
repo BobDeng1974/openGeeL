@@ -79,6 +79,29 @@ public:
 				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
+			/*
+			Transform& meshTransform33 = transformFactory.CreateTransform(vec3(1.5f, 0.34f, 12.5f), vec3(0.f), vec3(2.f));
+			StaticModelRenderer gun = meshFactory.createSingleMeshRenderers(
+			meshFactory.createStaticModel("resources/bolter/BOLTER_low.obj"),
+			materialFactory.getDefaultShader(ShadingMethod::Deferred, false),
+			meshTransform33, false);
+
+			for (auto it(gun.begin()); it != gun.end(); it++) {
+			unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
+
+			MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
+			if (container.name == "DefaultMaterial") {
+			container.addTexture("diffuse", materialFactory.createTexture("resources/bolter/DefaultMaterial_albedo.jpg", ColorType::GammaSpace, FilterMode::Bilinear));
+			container.addTexture("normal", materialFactory.createTexture("resources/bolter/DefaultMaterial_normal.jpg", ColorType::RGBA, FilterMode::Bilinear));
+			container.addTexture("roughness", materialFactory.createTexture("resources/bolter/DefaultMaterial_roughness.jpg", ColorType::RGBA, FilterMode::Bilinear));
+			container.addTexture("occlusion", materialFactory.createTexture("resources/bolter/DefaultMaterial_AO.jpg", ColorType::GammaSpace));
+			container.addTexture("metallic", materialFactory.createTexture("resources/bolter/DefaultMaterial_metallic.jpg", ColorType::RGBA));
+			}
+
+			scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
+			}
+			*/
+
 
 			ObjectLister& objectLister = ObjectLister(scene);
 			objectLister.add(camera);
