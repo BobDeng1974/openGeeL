@@ -14,9 +14,11 @@ namespace geeL {
 
 	Configuration::Configuration(RenderWindow& window, 
 		SceneInitialization initFunction, 
+		TonemappingMethod toneMethod,
 		PhysicsType physicsType)
 			: window(window)
 			, initFunction(initFunction)
+			, toneMethod(toneMethod)
 			, physicsType(physicsType) {}
 
 
@@ -51,7 +53,7 @@ namespace geeL {
 		ShadowmapAdapter shadowAdapter(scene, textureProvider, 4000);
 		lightManager.addShadowmapAdapter(shadowAdapter);
 
-		DefaultPostProcess& def = DefaultPostProcess(1.f, TonemappingMethod::Uncharted2);
+		DefaultPostProcess& def = DefaultPostProcess(1.f, toneMethod);
 		RenderContext& context = RenderContext();
 		SceneRender& lighting = DeferredLighting(scene);
 		//SceneRender& lighting = TiledDeferredLighting(scene);

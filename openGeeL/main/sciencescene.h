@@ -89,7 +89,7 @@ public:
 			gui.addElement(lister);
 			//gui.addSystemInformation(0.01f, 0.655f, 0.17f, 0.14f);
 
-			def.setExposure(2.f);
+			def.setExposure(4.f);
 			postLister.add(def);
 
 			BilateralFilter& blur = BilateralFilter(5.424f, 7, 0.323f);
@@ -129,7 +129,7 @@ public:
 		};
 
 
-		Configuration config(window, init);
+		Configuration config(window, init, TonemappingMethod::ACESFilm);
 		config.run();
 	}
 

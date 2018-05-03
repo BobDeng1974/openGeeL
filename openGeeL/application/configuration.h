@@ -132,6 +132,7 @@ namespace geeL {
 	public:
 		Configuration(RenderWindow& window, 
 			SceneInitialization initFunction,
+			TonemappingMethod toneMethod = TonemappingMethod::ACESFilm,
 			PhysicsType physicsType = PhysicsType::None);
 
 		void run();
@@ -139,6 +140,7 @@ namespace geeL {
 	private:
 		RenderWindow& window;
 		SceneInitialization initFunction;
+		TonemappingMethod toneMethod;
 		PhysicsType physicsType;
 
 	};

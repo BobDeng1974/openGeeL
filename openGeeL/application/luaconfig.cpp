@@ -821,7 +821,7 @@ namespace geeL {
 
 		PhysicsType physicsType = usePhysics ? PhysicsType::World : PhysicsType::None;
 
-		Configuration config(window, init, physicsType);
+		Configuration config(window, init, TonemappingMethod::Uncharted2, physicsType);
 		config.run();
 	}
 

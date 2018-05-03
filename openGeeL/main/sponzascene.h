@@ -127,7 +127,7 @@ public:
 		};
 
 
-		Configuration config(window, init);
+		Configuration config(window, init, TonemappingMethod::Uncharted2);
 		config.run();
 	}
 
