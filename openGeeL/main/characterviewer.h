@@ -83,6 +83,7 @@ public:
 
 			for (auto it(girl.begin()); it != girl.end(); it++) {
 				unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
+				MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
 
 				const Mesh& mesh = renderer->getMesh();
 				if (mesh.getName() == "eyelash" || mesh.getName() == "fur") {
@@ -95,9 +96,24 @@ public:
 					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent, false);
 					renderer->setShader(ss);
 				}
+				else if (mesh.getName() == "tear") {
+					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent, false);
+					renderer->setShader(ss);
+
+					container.setFloatValue("Transparency", 0.2f);
+					container.setFloatValue("Roughness", 0.1f);
+					container.setFloatValue("Metallic", 0.9f);
+				}
+				else if (mesh.getName() == "eyes_outer") {
+					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent, false);
+					renderer->setShader(ss);
+
+					container.setFloatValue("Transparency", 0.2f);
+					container.setFloatValue("Roughness", 0.5f);
+					container.setFloatValue("Metallic", 0.5f);
+				}
 
 
-				MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
 				if (container.name == "fur") {
 					container.addTexture("alpha", materialFactory.createTexture("resources/girl/fur_alpha_01.jpg"));
 					container.setFloatValue("Transparency", 0.4f);
@@ -110,8 +126,8 @@ public:
 					container.addTexture("alpha", materialFactory.createTexture("resources/girl/hair_inner_alpha_01.jpg"));
 					container.setFloatValue("Transparency", 0.9f);
 				}
-				else if (container.name == "eyes_outer")
-					container.setFloatValue("Roughness", 0.28f);
+				else if (container.name == "eyes_inner")
+					container.setFloatValue("Roughness", 0.12f);
 				else if (container.name == "hair_outer")
 					container.addTexture("alpha", materialFactory.createTexture("resources/girl/hair_outer_alpha_01.jpg"));
 				else if (container.name == "cloth") {
@@ -150,8 +166,8 @@ public:
 			postLister.add(iblSnippet);
 
 			BrightnessFilterCutoff& filter = BrightnessFilterCutoff(1.f);
-			GaussianBlur& bloomBlur = GaussianBlur(3.5f, 11);
-			Bloom& bloom = Bloom(filter, bloomBlur, ResolutionPreset::FULLSCREEN, ResolutionPreset::HALFSCREEN);
+			GaussianBlur& bloomBlur = GaussianBlur(6.f, 25);
+			Bloom& bloom = Bloom(filter, bloomBlur, ResolutionPreset::FULLSCREEN, ResolutionPreset::FULLSCREEN);
 			renderer.addEffect(bloom, DrawTime::Late);
 			postLister.add(bloom);
 
