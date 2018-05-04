@@ -59,6 +59,16 @@ void main() {
 
 	vec3 fragPosition = readPosition(textureCoordinates);
 
+#if (VOLUMETRIC_LIGHT == 1)
+	if(length(fragPosition) <= 0.001f) {
+		//Reconstruct position
+		vec4 screen = vec4(textureCoordinates, 1.f, 1.f);
+		vec4 eye = inverseProjection * 2.f * (screen - vec4(0.5f));
+
+		fragPosition =  eye.xyz / eye.w;
+	}
+#endif
+
 	
 	//Write min and max depth of workgroup for later view frustum creation
 	float depth = 0.f;//-fragPosition.z;

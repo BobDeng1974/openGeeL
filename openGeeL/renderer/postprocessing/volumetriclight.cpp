@@ -50,12 +50,12 @@ namespace geeL {
 		shader.bind<float>("minCutoff", minDistance);
 		shader.bind<float>("density", density);
 		
-		projectionLocation = shader.getLocation("projection");
+		projectionLocation = shader.getLocation("inverseProjection");
 		invViewLocation = shader.getLocation("inverseView");
 	}
 
 	void VolumetricLight::bindValues() {
-		camera->bindProjectionMatrix(shader, projectionLocation);
+		camera->bindInverseProjectionMatrix(shader, projectionLocation);
 		camera->bindInverseViewMatrix(shader, invViewLocation);
 
 		light.bind(shader, "light.", ShaderTransformSpace::View, camera);

@@ -35,6 +35,8 @@ namespace geeL {
 		void bindInverseViewMatrix(const Shader& shader, const std::string& name) const;
 		void bindProjectionMatrix(const Shader& shader, ShaderLocation location) const;
 		void bindProjectionMatrix(const Shader& shader, const std::string& name) const;
+		void bindInverseProjectionMatrix(const Shader& shader, ShaderLocation location) const;
+		void bindInverseProjectionMatrix(const Shader& shader, const std::string& name) const;
 
 		void bind(const SceneShader& shader) const;
 		void bindPosition(const RenderShader& shader, std::string name = "cameraPosition") const;

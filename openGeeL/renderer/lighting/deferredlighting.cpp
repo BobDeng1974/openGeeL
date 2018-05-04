@@ -34,6 +34,7 @@ namespace geeL {
 		manager.addShaderListener(shader);
 
 		projectionLocation = shader.getLocation("projection");
+		invProjLocation = shader.getLocation("inverseProjection");
 		invViewLocation = shader.getLocation("inverseView");
 		originLocation = shader.getLocation("origin");
 
@@ -71,6 +72,7 @@ namespace geeL {
 		scene.getLightmanager().bind(shader, ShaderTransformSpace::View, camera);
 
 		camera->bindProjectionMatrix(shader, projectionLocation);
+		camera->bindInverseProjectionMatrix(shader, invProjLocation);
 		camera->bindInverseViewMatrix(shader, invViewLocation);
 
 		shader.bind<glm::vec3>(originLocation, camera->GetOriginInViewSpace());
@@ -99,6 +101,7 @@ namespace geeL {
 		manager.addShaderListener(shader);
 
 		projectionLocation = shader.getLocation("projection");
+		invProjLocation = shader.getLocation("inverseProjection");
 		invViewLocation = shader.getLocation("inverseView");
 		originLocation = shader.getLocation("origin");
 	}
@@ -125,6 +128,7 @@ namespace geeL {
 		scene.getLightmanager().bind(shader, ShaderTransformSpace::View, camera);
 
 		camera->bindProjectionMatrix(shader, projectionLocation);
+		camera->bindInverseProjectionMatrix(shader, invProjLocation);
 		camera->bindInverseViewMatrix(shader, invViewLocation);
 
 		shader.bind<glm::vec3>(originLocation, camera->GetOriginInViewSpace());

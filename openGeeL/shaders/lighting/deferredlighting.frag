@@ -10,7 +10,6 @@
 #include <shaders/lighting/lights.glsl>
 #include <shaders/lighting/cooktorrance.glsl>
 
-
 in vec2 textureCoordinates;
 
 #if (DIFFUSE_SPECULAR_SEPARATION == 0)
@@ -36,6 +35,10 @@ uniform mat4 projection;
 uniform mat4 inverseView;
 uniform vec3 origin;
 
+#if (VOLUMETRIC_LIGHT == 1)
+uniform mat4 inverseProjection;
+#endif
+
 uniform PointLight pointLights[5];
 uniform DirectionalLight directionalLights[5];
 uniform SpotLight spotLights[5];     
@@ -47,8 +50,18 @@ uniform SpotLight spotLights[5];
 void main() {
 	vec3 fragPosition = readPosition(textureCoordinates);
 
+#if (VOLUMETRIC_LIGHT == 1)
+	if(length(fragPosition) <= 0.001f) {
+		//Reconstruct position
+		vec4 screen = vec4(textureCoordinates, 1.f, 1.f);
+		vec4 eye = inverseProjection * 2.f * (screen - vec4(0.5f));
+
+		fragPosition =  eye.xyz / eye.w;
+	}
+#else
 	//Discard pixel if it is not connected to any position in scene (Will be rendered black anyway)
 	discard(length(fragPosition) <= 0.001f);
+#endif
 
     vec3 normal	= readNormal(textureCoordinates);
     vec4 albedo	= readDiffuse(textureCoordinates);

@@ -166,7 +166,7 @@ public:
 			postLister.add(iblSnippet);
 
 			BrightnessFilterCutoff& filter = BrightnessFilterCutoff(1.f);
-			GaussianBlur& bloomBlur = GaussianBlur(6.f, 25);
+			GaussianBlur& bloomBlur = GaussianBlur(9.5f, 25);
 			Bloom& bloom = Bloom(filter, bloomBlur, ResolutionPreset::FULLSCREEN, ResolutionPreset::FULLSCREEN);
 			renderer.addEffect(bloom, DrawTime::Late);
 			postLister.add(bloom);

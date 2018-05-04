@@ -96,6 +96,23 @@ namespace geeL {
 		shader.bind<glm::mat4>(name, projectionMatrix);
 	}
 
+	void Camera::bindInverseProjectionMatrix(const Shader& shader, ShaderLocation location) const {
+#if MULTI_THREADING_SUPPORT
+		cameraLock();
+#endif
+
+		shader.bind<glm::mat4>(location, inverse(projectionMatrix));
+	}
+
+	void Camera::bindInverseProjectionMatrix(const Shader& shader, const std::string& name) const {
+#if MULTI_THREADING_SUPPORT
+		cameraLock();
+#endif
+
+		shader.bind<glm::mat4>(name, inverse(projectionMatrix));
+	}
+
+
 	void Camera::bind(const SceneShader& shader) const {
 #if MULTI_THREADING_SUPPORT
 		cameraLock();

@@ -33,7 +33,7 @@ uniform float density;
 uniform float minCutoff;
 uniform int samples;
 uniform mat4 inverseView;
-uniform mat4 projection;
+uniform mat4 inverseProjection;
 
 uniform int effectOnly;
 uniform bool useCookie;
@@ -115,7 +115,7 @@ vec3 convertToLightSpace(vec3 fragPosition) {
 
 vec3 convertToViewSpace() {
 	vec4 screen = vec4(TexCoords, 1.f, 1.f);
-	vec4 eye = inverse(projection) * 2.f * (screen - vec4(0.5f));
+	vec4 eye = inverseProjection * 2.f * (screen - vec4(0.5f));
 
 	return eye.xyz / eye.w; //Transfer from homogeneous coordinates
 }

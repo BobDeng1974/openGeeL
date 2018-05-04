@@ -20,6 +20,7 @@ namespace geeL {
 
 	private:
 		ShaderLocation projectionLocation;
+		ShaderLocation invProjLocation;
 		ShaderLocation invViewLocation;
 		ShaderLocation originLocation;
 
@@ -42,6 +43,7 @@ namespace geeL {
 
 	private:
 		ShaderLocation projectionLocation;
+		ShaderLocation invProjLocation;
 		ShaderLocation invViewLocation;
 		ShaderLocation originLocation;
 
