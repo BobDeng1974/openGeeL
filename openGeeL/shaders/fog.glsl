@@ -4,8 +4,8 @@
 
 #if (FOG == 1)
 
-uniform vec3 fogColor = vec3(0.5f);
-uniform float fogFalloff = 20.f;
+uniform vec3 fogColor = vec3(0.f);
+uniform float fogFalloff = 100.f;
 uniform float fogFactor = 2.f;
 
 
