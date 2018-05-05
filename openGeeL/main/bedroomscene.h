@@ -18,7 +18,7 @@ public:
 			CubeMapFactory& cubeMapFactory, DefaultPostProcess& def, Physics& physics) {
 
 
-			Transform& cameraTransform = transformFactory.CreateTransform(vec3(5.4f, 10.0f, -2.9f), vec3(70.f, 50.f, -175.f), vec3(1.f));
+			Transform& cameraTransform = transformFactory.CreateTransform(vec3(7.36f, 5.55f, -4.4f), vec3(86.3f, 55.65f, -179.44f), vec3(1.f));
 			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 60.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
 			camera.addComponent<MovableCamera>(5.f, 0.45f);
 			scene.setCamera(camera);
@@ -74,7 +74,8 @@ public:
 			gui.addElement(lister);
 			gui.addSystemInformation(0.01f, 0.655f, 0.17f, 0.14f);
 
-			def.setExposure(14.f);
+			def.setExposure(4.f);
+			def.setAdaptiveExposure(true);
 			postLister.add(def);
 
 			BilateralFilter& blur = BilateralFilter(4.257f, 7, 0.323f);
