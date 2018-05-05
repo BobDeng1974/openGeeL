@@ -80,9 +80,10 @@ void main() {
 
 	if(albedo.a < 1.f) {
 		vec3 refractionColor = indirectReflection(position, view, normal, roughness, kd);
+
 		color = vec4(mix(refractionColor, solidColor, albedo.a), 1.f);
 	}
-	else
+	else 
 		color = vec4(solidColor, 1.f);
 }
 
@@ -92,7 +93,7 @@ vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo, vec3 kd, out float
 	//sampling neighboring voxels when direction is steep
 	vec3 halfDir = getClosestAxisNormal(normal);
 	float offset = getNodeBorderDistance(position, halfDir, int(VOXELSIZE * 16.f));
-	offset = offset / dot(normal, halfDir); //Projection of border dist onto direction vector
+	offset = offset / doto(normal, halfDir); //Projection of border dist onto direction vector
 	vec3 startPos = position + offset * halfDir;
 
 	vec3 right = normalize(orthogonal(normal));
@@ -118,12 +119,12 @@ vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo, vec3 kd, out float
 	spreads[1] = 0.166f;
 
 	vec4 color = vec4(0.f);
-	color += weights[0] * traceIndirectDiffuse(startPos, sampleVectors[0], spreads[0]) * dot(sampleVectors[0], normal);
+	color += weights[0] * traceIndirectDiffuse(startPos, sampleVectors[0], spreads[0]) * doto(sampleVectors[0], normal);
 
 	for(int i = 1; i < 6; i++)
-		color += weights[1] * traceIndirectDiffuse(startPos, sampleVectors[i], spreads[1]) * dot(sampleVectors[i], normal);
+		color += weights[1] * traceIndirectDiffuse(startPos, sampleVectors[i], spreads[1]) * doto(sampleVectors[i], normal);
 
-	color.rgb /= color.a;
+	color.rgb /= (color.a + 0.0001f);
 	occlusion = 1.f - color.a / 2.f;
 
 	return color.rgb * albedo * kd;// / PI;
@@ -133,11 +134,11 @@ vec3 indirectDiffuse(vec3 position, vec3 normal, vec3 albedo, vec3 kd, out float
 vec3 indirectSpecular(vec3 position, vec3 direction, vec3 normal, float roughness, vec3 ks) {
 	vec4 radiance = traceIndirectSpecular(position, direction, normal, roughness);
 
-	return radiance.rgb * ks * dot(direction, normal);
+	return radiance.rgb * ks * doto(direction, normal);
 }
 
 vec3 indirectReflection(vec3 position, vec3 view, vec3 normal, float roughness, vec3 kd) {
-	float refIndex = dot(kd, luminance);
+	float refIndex = doto(kd, luminance);
 	vec3 refrDir = refract(-view, normal, refIndex);
 	vec4 radiance = traceIndirectSpecular(position, refrDir, normal, roughness);
 
@@ -229,9 +230,9 @@ vec3 getClosestAxisNormal(vec3 v) {
 
 
 float planeIntersection(vec3 rayO, vec3 rayD, vec3 planeO, vec3 planeN) {
-	float v = dot(planeN, rayD) + epsilon;
+	float v = doto(planeN, rayD) + epsilon;
 	vec3 a = planeO - rayO;
-	float d = dot(a, planeN) / v;
+	float d = doto(a, planeN) / v;
 
 	float pick = step(epsilon, d);
 	return (pick * d) + ((1.f - pick) * FLOAT_MAX);

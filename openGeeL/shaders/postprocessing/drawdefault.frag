@@ -64,7 +64,7 @@ void main() {
 
 		float autoExposure = exposure / averageBrightness;
 
-		imageColor *=autoExposure;
+		imageColor *= autoExposure;
 	}
 	else
 		imageColor *= exposure;
