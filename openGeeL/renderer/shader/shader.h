@@ -65,7 +65,7 @@ namespace geeL {
 
 		//Bind value into shader. Value won't be saved in this 
 		//shader class and can't be accessed later on.
-		//Valid types: int, float, vec2, vec3, vec4, mat3, mat4
+		//Valid types: bool, int, uint, float, vec2, vec3, vec4, mat3, mat4
 		template<class T>
 		ShaderLocation bind(const std::string& name, const T& value) const;
 
@@ -74,7 +74,7 @@ namespace geeL {
 		
 		//Bind value into shader. Value won't be saved in this 
 		//shader class and can't be accessed later on.
-		//Valid types: int, float vec2, vec3, vec4, mat3, mat4
+		//Valid types: bool, int, uint, float vec2, vec3, vec4, mat3, mat4
 		template<class T>
 		void bind(ShaderLocation location, const T& value) const;
 
@@ -138,6 +138,7 @@ namespace geeL {
 
 		void use() const;
 
+		ShaderLocation bind(const std::string& name, bool value) const;
 		ShaderLocation bind(const std::string& name, int value) const;
 		ShaderLocation bind(const std::string& name, unsigned int value) const;
 		ShaderLocation bind(const std::string& name, float value) const;
@@ -153,6 +154,7 @@ namespace geeL {
 		ShaderLocation bind(const std::string& name, const gmat3& value) const;
 		ShaderLocation bind(const std::string& name, const gmat4& value) const;
 
+		void bind(ShaderLocation location, const bool& value) const;
 		void bind(ShaderLocation location, const int& value) const;
 		void bind(ShaderLocation location, const unsigned int& value) const;
 		void bind(ShaderLocation location, const float& value) const;

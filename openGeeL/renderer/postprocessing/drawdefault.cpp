@@ -99,7 +99,7 @@ namespace geeL {
 	void DefaultPostProcess::setAdaptiveExposure(bool value) {
 		if (adaptiveExposure != value) {
 			adaptiveExposure = value;
-			shader.bind<int>("adaptiveExposure", value);
+			shader.bind<bool>("adaptiveExposure", value);
 		}
 	}
 
