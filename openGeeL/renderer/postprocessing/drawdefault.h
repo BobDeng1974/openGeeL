@@ -24,7 +24,7 @@ namespace geeL {
 
 	public:
 		DefaultPostProcess(float exposure = 1.f, 
-			TonemappingMethod method = TonemappingMethod::Uncharted2);
+			TonemappingMethod method = TonemappingMethod::Uncharted2, bool adaptive = false);
 
 		DefaultPostProcess(const DefaultPostProcess& other);
 		DefaultPostProcess& operator= (const DefaultPostProcess& other);
@@ -38,11 +38,17 @@ namespace geeL {
 		float getExposure() const;
 		void setExposure(float exposure);
 
+		bool getAdaptiveExposure() const;
+		void setAdaptiveExposure(bool value);
+
 		virtual std::string toString() const;
 
 	protected:
 		del_unique_ptr<ImageTexture> noise;
 		const ITexture* customTexture;
+
+	private:
+		bool adaptiveExposure;
 
 	};
 

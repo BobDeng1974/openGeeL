@@ -117,6 +117,17 @@ namespace geeL {
 	DefaultSnippet::DefaultSnippet(DefaultPostProcess& def) : PostEffectSnippet(def), def(def) {}
 
 	void DefaultSnippet::drawSimple(GUIContext* context) {
+
+		
+		int active = !def.getAdaptiveExposure();
+		//nk_layout_row_dynamic(context, 30, 2);
+		nk_checkbox_label(context, "Adaptive", &active);
+
+		//std::cout << std::to_string(active);
+
+		def.setAdaptiveExposure(!active);
+		
+
 		float defExposure = def.getExposure();
 		float exposure = GUISnippets::drawBarFloatLogarithmic(context, defExposure, 0.f, 100.f, 0.1f, "Exposure");
 		if (exposure != defExposure)

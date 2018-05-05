@@ -5,9 +5,12 @@ out vec4 color;
 
 uniform sampler2D image;
 uniform float exposure;
+uniform bool adaptiveExposure = false;
 
 uniform sampler2D noiseMap;
 uniform vec3 noiseScale;
+
+const vec3 luminance = vec3(0.299f, 0.587f, 0.114f);
 
 
 //0 => Simple Reinhardt 1
@@ -51,9 +54,21 @@ vec3 ACESFilm(vec3 x) {
 
 
 
+
 void main() { 
 	vec3 imageColor = texture(image, TexCoords).rgb;
-	imageColor *= exposure;
+
+	if(adaptiveExposure) {
+		vec3 averageColor = textureLod(image, TexCoords, 100).rgb; 
+		float averageBrightness = clamp(dot(luminance, averageColor), 0.f, 1.f);
+
+		float autoExposure = exposure / averageBrightness;
+
+		imageColor *=autoExposure;
+	}
+	else
+		imageColor *= exposure;
+
 
 #if (TONEMAPPING_METHOD == 0)
 	vec3 result = vec3(1.f) - exp(-imageColor);

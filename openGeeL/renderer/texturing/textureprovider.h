@@ -56,6 +56,9 @@ namespace geeL {
 
 		virtual void returnTexture(RenderTexture& texture) = 0;
 
+		virtual TextureParameters& getParameters(FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter) = 0;
+		virtual TextureParameters& getDefaultParameters() = 0;
+
 	};
 
 
@@ -86,6 +89,9 @@ namespace geeL {
 			FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter);
 
 		virtual void returnTexture(RenderTexture& texture);
+
+		virtual TextureParameters& getParameters(FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter);
+		virtual TextureParameters& getDefaultParameters();
 
 		Resolution getRenderResolution() const;
 
@@ -125,7 +131,7 @@ namespace geeL {
 		std::map<FilterMode, std::map<WrapMode, std::map<AnisotropicFilter, TextureParameters>>> parameters;
 
 
-		TextureParameters& getParameters(FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter);
+		
 
 	};
 

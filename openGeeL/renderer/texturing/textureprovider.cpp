@@ -188,6 +188,10 @@ namespace geeL {
 		return parameters[filterMode][wrapMode][aFilter];
 	}
 
+	TextureParameters& TextureProvider::getDefaultParameters() {
+		return getParameters(FilterMode::None, WrapMode::ClampEdge, AnisotropicFilter::None);
+	}
+
 	
 
 	RenderTexture* TextureProvider::MonitoredList::pop() {
