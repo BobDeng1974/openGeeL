@@ -12,6 +12,8 @@ uniform vec3 noiseScale;
 
 const vec3 luminance = vec3(0.299f, 0.587f, 0.114f);
 
+#define EXPOSURE_MAX 150
+
 
 //0 => Simple Reinhardt 1
 //1 => Simple Reinhardt 2
@@ -53,8 +55,6 @@ vec3 ACESFilm(vec3 x) {
 #endif
 
 
-
-
 void main() { 
 	vec3 imageColor = texture(image, TexCoords).rgb;
 
@@ -62,7 +62,7 @@ void main() {
 		vec3 averageColor = textureLod(image, TexCoords, 100).rgb; 
 		float averageBrightness = clamp(dot(luminance, averageColor), 0.f, 1.f);
 
-		float autoExposure = exposure / averageBrightness;
+		float autoExposure = min((exposure * 0.1f) / averageBrightness, EXPOSURE_MAX);
 
 		imageColor *= autoExposure;
 	}
