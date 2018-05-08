@@ -216,6 +216,9 @@ namespace geeL {
 		}
 
 		switch (time) {
+			case DrawTime::External:
+				externalEffects.push_back(&effect);
+				break;
 			case DrawTime::Early:
 				earlyEffects.push_back(&effect);
 				break;
@@ -226,12 +229,6 @@ namespace geeL {
 				lateEffects.push_back(&effect);
 				break;
 		}
-	}
-
-	void DeferredRenderer::addEffect(PostProcessingEffect& effect, RenderTexture& texture) {
-		lock_guard<mutex> renderGuard(renderMutex);
-
-		externalEffects.push_back(&effect);
 	}
 
 

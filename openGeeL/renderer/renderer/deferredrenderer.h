@@ -45,8 +45,6 @@ namespace geeL {
 
 		//Add new post processing effect to renderer. 
 		virtual void addEffect(PostProcessingEffect& effect, DrawTime time);
-		virtual void addEffect(PostProcessingEffect& effect, RenderTexture& texture);
-
 		virtual void addRenderTexture(DynamicRenderTexture& texture);
 		void addFBuffer(ForwardBuffer& buffer);
 

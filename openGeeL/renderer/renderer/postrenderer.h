@@ -11,10 +11,12 @@ namespace geeL {
 
 
 	//Specifies a time to be drawn during rendering process
+	//External: Outside regular rendering pipeline
 	//Early: Directly after geometry pass
 	//Intermediate: After transparency pass (Default)
 	//Late: After generic pass
 	enum class DrawTime {
+		External,
 		Early,
 		Intermediate,
 		Late
@@ -28,8 +30,6 @@ namespace geeL {
 
 	public:
 		virtual void addEffect(PostProcessingEffect& effect, DrawTime time = DrawTime::Intermediate) = 0;
-		virtual void addEffect(PostProcessingEffect& effect, RenderTexture& texture) = 0;
-		
 		virtual void addRenderTexture(DynamicRenderTexture& texture) = 0;
 
 		template<typename... PostProcessingEffects>
