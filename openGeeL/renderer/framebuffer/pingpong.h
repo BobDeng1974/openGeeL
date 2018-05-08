@@ -12,18 +12,12 @@ namespace geeL {
 	class PingPongBuffer : public FrameBuffer {
 
 	public:
-		PingPongBuffer() : first(nullptr), second(nullptr) {}
-		virtual ~PingPongBuffer();
+		PingPongBuffer();
 
 		//Init buffer with external textures which will be filled by subsequent drawcalls
 		//Note: Memory of render textures won't be managed by this color buffer
 		//Note: It is assumed that given textures have same dimensions.
 		void init(RenderTarget& texture1, RenderTarget& texture2);
-
-		//Init buffer and create own render textures with given parameters
-		//Note: Memory of these render texture will be managed by this color buffer
-		void init(Resolution resolution, ColorType colorType = ColorType::RGBA16,
-			FilterMode filterMode = FilterMode::None, WrapMode wrapMode = WrapMode::ClampEdge);
 
 		virtual void initDepth();
 		void reset();
@@ -43,7 +37,6 @@ namespace geeL {
 		RenderTarget* current;
 		RenderTarget* first;
 		RenderTarget* second;
-		bool external;
 
 		void swap();
 

@@ -8,7 +8,7 @@
 namespace geeL {
 
 	class DeferredRenderer;
-	class ITExture;
+	class ITexture;
 	class PostProcessingEffectCS;
 	class RenderTexture;
 

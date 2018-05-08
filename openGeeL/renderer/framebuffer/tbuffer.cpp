@@ -7,8 +7,9 @@
 #include "stackbuffer.h"
 #include "tbuffer.h"
 
-namespace geeL {
+#if ORDER_INDEPENDENT_TRANSPARENCY
 
+namespace geeL {
 
 	TransparentOIDBuffer::TransparentOIDBuffer(GBuffer& gBuffer, ITextureProvider& provider, DynamicBuffer& compBuffer) 
 		: gBuffer(gBuffer)
@@ -105,3 +106,5 @@ namespace geeL {
 	}
 
 }
+
+#endif

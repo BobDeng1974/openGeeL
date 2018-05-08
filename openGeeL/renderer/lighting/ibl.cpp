@@ -52,8 +52,8 @@ namespace geeL {
 		blend.blendAdd();
 
 		if (parentBuffer != nullptr) {
-			RenderTexture& diffuse  = provider->requestCurrentImage();
-			RenderTexture& specular = provider->requestCurrentSpecular();
+			RenderTarget& diffuse  = provider->requestCurrentImage();
+			RenderTarget& specular = provider->requestCurrentSpecular();
 			LayeredTarget combinedTarget(diffuse, specular);
 
 			parentBuffer->add(combinedTarget);

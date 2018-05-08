@@ -11,7 +11,6 @@ namespace geeL {
 
 	public:
 		ColorBuffer() {}
-		virtual ~ColorBuffer();
 
 		//Init color buffer with external textures which will be filled by subsequent drawcalls
 		//Note: Memory of render textures won't be managed by this color buffer
@@ -21,11 +20,6 @@ namespace geeL {
 		//Init color buffer with external texture and subsequent drawcalls will fill it
 		//Note: Memory of render texture won't be managed by this color buffer
 		void init(Resolution resolution, RenderTarget& texture);
-
-		//Init color buffer and create own render textures with given parameters
-		//Note: Memory of these render texture will be managed by this color buffer
-		void init(Resolution resolution, ColorType colorType = ColorType::RGBA16,
-			FilterMode filterMode = FilterMode::None, WrapMode wrapMode = WrapMode::ClampEdge);
 
 		virtual void initDepth();
 
@@ -39,7 +33,7 @@ namespace geeL {
 
 	private:
 		Resolution resolution;
-		std::vector<std::pair<bool, RenderTarget*>> buffers;
+		std::vector<RenderTarget*> buffers;
 
 		ColorBuffer(const ColorBuffer& other) = delete;
 		ColorBuffer& operator= (const ColorBuffer& other) = delete;

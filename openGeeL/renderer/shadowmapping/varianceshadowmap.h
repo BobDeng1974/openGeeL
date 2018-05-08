@@ -1,6 +1,11 @@
 #ifndef VARIANCESHADOWMAP_H
 #define VARIANCESHADOWMAP_H
 
+#define VARIANCE_SHADOWMAP 0
+
+#if VARIANCE_SHADOWMAP
+
+
 #include "framebuffer/stackbuffer.h"
 #include "texturing/rendertexture.h"
 #include "postprocessing/gaussianblur.h"
@@ -41,5 +46,7 @@ namespace geeL {
 	};
 
 }
+
+#endif
 
 #endif

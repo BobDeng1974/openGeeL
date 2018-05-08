@@ -26,8 +26,8 @@ namespace geeL {
 		TextureProvider& provider = renderer.getTextureProvider();
 		Resolution resolution = provider.getRenderResolution();
 
-		texture = new RenderTexture(resolution, ColorType::RGBA16,
-			WrapMode::ClampEdge, FilterMode::None);
+		texture = &provider.requestTextureManual(ResolutionPreset::FULLSCREEN, ColorType::RGBA16,
+			FilterMode::None, WrapMode::ClampEdge, AnisotropicFilter::None);
 	
 		propertyVisualizer = new PostProcessingEffectCS("shaders/postprocessing/propertyvisualize.com.glsl");
 		propertyVisualizer->setResolution(resolution);

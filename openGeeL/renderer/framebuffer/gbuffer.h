@@ -1,12 +1,12 @@
 #ifndef GBUFFER_H
 #define GBUFFER_H
 
-#include "texturing/rendertexture.h"
 #include "framebuffer.h"
 
 namespace geeL {
 
 	class ITextureProvider;
+	class RenderTarget;
 
 
 	//Special framebuffer that holds various scene render information like colors, normals and positions

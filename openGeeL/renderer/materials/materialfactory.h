@@ -16,7 +16,6 @@ using namespace geeL::memory;
 namespace geeL {
 
 	class Camera;
-	class DynamicRenderTexture;
 	class FrameBuffer;
 	class GBuffer;
 	class Material;

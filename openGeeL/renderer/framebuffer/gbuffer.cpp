@@ -7,9 +7,10 @@
 #include "shader/rendershader.h"
 #include "renderer/glstructures.h"
 #include "texturing/textureprovider.h"
+#include "texturing/rendertexture.h"
 #include "appglobals.h"
 #include "bufferutil.h"
-
+#include "rendertarget.h"
 #include "gbuffer.h"
 
 
@@ -67,10 +68,10 @@ namespace geeL {
 	}
 
 	void GBuffer::initTextures(Resolution resolution) {
-		RenderTexture& position = provider.requestPosition();
-		RenderTexture& normal = provider.requestNormal();
-		RenderTexture& diffuse = provider.requestAlbedo();
-		RenderTexture& occEmiRoughMet = provider.requestProperties();
+		RenderTarget& position = provider.requestPosition();
+		RenderTarget& normal = provider.requestNormal();
+		RenderTarget& diffuse = provider.requestAlbedo();
+		RenderTarget& occEmiRoughMet = provider.requestProperties();
 
 		position.assignTo(*this, 0);
 		normal.assignTo(*this, 1);

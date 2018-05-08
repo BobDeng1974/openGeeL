@@ -52,8 +52,8 @@ namespace geeL {
 	void DeferredLighting::fill() {
 #if DIFFUSE_SPECULAR_SEPARATION
 		if (parentBuffer != nullptr) {
-			RenderTexture& diffuse  = provider->requestDefaultTexture();
-			RenderTexture& specular = provider->requestDefaultTexture();
+			auto& diffuse  = provider->requestDefaultTexture();
+			auto& specular = provider->requestDefaultTexture();
 			LayeredTarget combinedTarget(diffuse, specular);
 
 			parentBuffer->add(combinedTarget);
@@ -118,7 +118,7 @@ namespace geeL {
 		PostProcessingEffectCS::bindTextureTargets();
 
 #if DIFFUSE_SPECULAR_SEPARATION
-		const RenderTexture& specularTarget = provider->requestCurrentSpecular();
+		const ITexture& specularTarget = provider->requestCurrentSpecular();
 		specularTarget.bindImage(1, AccessType::All);
 #endif
 

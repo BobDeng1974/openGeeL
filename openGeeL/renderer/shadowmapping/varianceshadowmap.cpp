@@ -10,6 +10,8 @@
 #include "renderscene.h"
 #include "varianceshadowmap.h"
 
+#if VARIANCE_SHADOWMAP
+
 namespace geeL {
 
 	VarianceSpotLightMap::VarianceSpotLightMap(const SpotLight& light, const ShadowMapConfiguration& config)
@@ -104,3 +106,5 @@ namespace geeL {
 	}
 
 }
+
+#endif

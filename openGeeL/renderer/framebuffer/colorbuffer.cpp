@@ -4,28 +4,17 @@
 #include <iostream>
 #include "glwrapper/viewport.h"
 #include "renderer/glstructures.h"
-#include "texturing/rendertexture.h"
+#include "rendertarget.h"
 #include "colorbuffer.h"
 
 using namespace std;
 
 namespace geeL {
 
-
-	ColorBuffer::~ColorBuffer() {
-		for (auto it = buffers.begin(); it != buffers.end(); it++) {
-			//Only remove texture if it was created by this color buffer
-			if (it->first) {
-				RenderTarget* texture = it->second;
-				delete texture;
-			}
-		}
-	}
-
 	void ColorBuffer::init(Resolution resolution, std::vector<RenderTarget*>& colorBuffers) {
 		for (auto it = colorBuffers.begin(); it != colorBuffers.end(); it++) {
 			RenderTarget* texture = *it;
-			buffers.push_back(pair<bool, RenderTarget*>(false, texture));
+			buffers.push_back(texture);
 		}
 
 		this->resolution = resolution;
@@ -39,7 +28,7 @@ namespace geeL {
 
 		// Create color attachment textures
 		for (int i = 0; i < amount; i++) {
-			RenderTarget& tex = *buffers[i].second;
+			RenderTarget& tex = *buffers[i];
 			tex.assignTo(*this, i);
 		}
 
@@ -77,27 +66,7 @@ namespace geeL {
 		unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
 		glDrawBuffers(1, attachments);
 
-		buffers.push_back(pair<bool, RenderTarget*>(false, &texture));
-
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
-
-		unbind();
-	}
-
-	void ColorBuffer::init(Resolution resolution, ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
-		this->resolution = resolution;
-
-		glGenFramebuffers(1, &fbo.token);
-		bind();
-
-		// Create color attachment textures
-		RenderTexture* texture = new RenderTexture(resolution, colorType, wrapMode, filterMode);
-		texture->assignTo(*this, 0);
-		unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
-		glDrawBuffers(1, attachments);
-		buffers.push_back(pair<bool, RenderTexture*>(true, texture));
-
+		buffers.push_back(&texture);
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
@@ -145,7 +114,7 @@ namespace geeL {
 		if (position >= buffers.size())
 			throw "Committed position out of bounds";
 
-		return *buffers[position].second;
+		return *buffers[position];
 	}
 
 	std::string ColorBuffer::toString() const {

@@ -2,23 +2,19 @@
 #include <glew.h>
 #include <iostream>
 #include "renderer/glstructures.h"
-#include "texturing/rendertexture.h"
+#include "rendertarget.h"
 #include "pingpong.h"
 
 using namespace std;
 
 namespace geeL {
 
-	PingPongBuffer::~PingPongBuffer() {
-		if (!external) {
-			if (first != nullptr) delete first;
-			if (second != nullptr) delete second;
-		}
-	}
+	PingPongBuffer::PingPongBuffer() 
+		: first(nullptr)
+		, second(nullptr) {}
+
 
 	void PingPongBuffer::init(RenderTarget& texture1, RenderTarget& texture2) {
-		external = true;
-	
 		glGenFramebuffers(1, &fbo.token);
 		bind();
 
@@ -36,26 +32,6 @@ namespace geeL {
 		unbind();
 	}
 
-
-	void PingPongBuffer::init(Resolution resolution, ColorType colorType, FilterMode filterMode, WrapMode wrapMode) {
-		external = false;
-
-		glGenFramebuffers(1, &fbo.token);
-		bind();
-
-		first = new RenderTexture(resolution, colorType, wrapMode, filterMode);
-		second = new RenderTexture(resolution, colorType, wrapMode, filterMode);
-
-		first->assignTo(*this, 0);
-		second->assignTo(*this, 1);
-
-		reset();
-
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			cout << "ERROR::FRAMEBUFFER:: Pingpong buffer is not complete!" << endl;
-
-		unbind();
-	}
 
 	void PingPongBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
 		unsigned int id = (current == first) ? 0 : 1;
