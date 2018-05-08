@@ -422,7 +422,7 @@ namespace geeL {
 
 			if ((bool)ifile) {
 				MemoryObject<TextureMap> texture = factory.createTextureMap(fileName, type,
-					ct, FilterMode::Bilinear, WrapMode::Repeat, AnisotropicFilter::Medium);
+					ct, FilterMode::Trilinear, WrapMode::Repeat, AnisotropicFilter::Medium);
 				textures.push_back(texture);
 			}
 		}
