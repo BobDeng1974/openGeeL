@@ -23,7 +23,7 @@ namespace geeL {
 	class DefaultPostProcess : public PostProcessingEffectFS {
 
 	public:
-		DefaultPostProcess(float exposure = 1.f, 
+		DefaultPostProcess(const Resolution& windowResolution, float exposure = 1.f, 
 			TonemappingMethod method = TonemappingMethod::Uncharted2, bool adaptive = false);
 
 		DefaultPostProcess(const DefaultPostProcess& other);
@@ -49,6 +49,7 @@ namespace geeL {
 
 	private:
 		bool adaptiveExposure;
+		const Resolution& resolution;
 
 	};
 

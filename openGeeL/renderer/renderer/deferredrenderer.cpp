@@ -48,11 +48,11 @@ namespace geeL {
 	void DeferredRenderer::init() {
 		geometryPassFunction = [this] () { this->scene->draw(ShadingMethod::Deferred); };
 
-		stackBuffer.initResolution(window.resolution);
+		stackBuffer.initResolution(provider.getRenderResolution());
 		stackBuffer.referenceRBO(gBuffer);
 
 #if DIFFUSE_SPECULAR_SEPARATION
-		separatedBuffer.initResolution(window.resolution);
+		separatedBuffer.initResolution(provider.getRenderResolution());
 		separatedBuffer.referenceRBO(gBuffer);
 		separatedBuffer.setSize(2);
 #endif
@@ -85,9 +85,6 @@ namespace geeL {
 	}
 
 	void DeferredRenderer::draw() {
-		DepthGuard::enable(true);
-		Viewport::setForced(0, 0, window.resolution.getWidth(), window.resolution.getHeight());
-
 		//Update scene and forward information into objects and effects
 		
 		scene->lock();
@@ -105,6 +102,8 @@ namespace geeL {
 		scene->unlock();
 
 		//Draw all objects and effects
+		DepthGuard::enable(true);
+		Viewport::setForced(0, 0, provider.getRenderResolution().getWidth(), provider.getRenderResolution().getHeight());
 
 		//Geometry pass
 		gBuffer.fill(geometryPassFunction);
@@ -202,7 +201,7 @@ namespace geeL {
 	void DeferredRenderer::addEffect(SSAO& ssao) {
 		this->ssao = &ssao;
 
-		Resolution ssaoRes = Resolution(window.resolution, ssao.getResolution());
+		Resolution ssaoRes = Resolution(provider.getRenderResolution(), ssao.getResolution());
 		ssao.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, 
 			ssaoRes, &provider, &fallbackEffect, nullptr, &materialFactory));
 	}
@@ -261,10 +260,10 @@ namespace geeL {
 	void DeferredRenderer::initEffects() {
 #if DIFFUSE_SPECULAR_SEPARATION
 		PostProcessingParameter parameter(ScreenQuad::get(), stackBuffer,
-			window.resolution, &provider, &fallbackEffect, &separatedBuffer, &materialFactory);
+			provider.getRenderResolution(), &provider, &fallbackEffect, &separatedBuffer, &materialFactory);
 #else
 		PostProcessingParameter parameter(ScreenQuad::get(), stackBuffer,
-			window.resolution, &provider, &fallbackEffect, nullptr, &materialFactory);
+			provider.getRenderResolution(), &provider, &fallbackEffect, nullptr, &materialFactory);
 #endif
 
 		defaultEffect.init(parameter);

@@ -14,10 +14,11 @@ using namespace glm;
 
 namespace geeL {
 
-	DefaultPostProcess::DefaultPostProcess(float exposure, TonemappingMethod method, bool adaptive)
+	DefaultPostProcess::DefaultPostProcess(const Resolution& windowResolution, float exposure, TonemappingMethod method, bool adaptive)
 		: PostProcessingEffectFS(defaultVertexPath, "shaders/postprocessing/drawdefault.frag", 
 			StringReplacement("^#define TONEMAPPING_METHOD\\s+([0-9]+){1}\\s?",
 				std::to_string((int)method), 1))
+		, resolution(windowResolution)
 		, customTexture(nullptr)
 		, adaptiveExposure(adaptive) {
 	
@@ -27,6 +28,7 @@ namespace geeL {
 
 	DefaultPostProcess::DefaultPostProcess(const DefaultPostProcess& other) 
 		: PostProcessingEffectFS(other)
+		, resolution(other.resolution)
 		, customTexture(other.customTexture) {
 
 		noise = ImageTexture::create<ImageTexture>("resources/textures/noise.png", ColorType::Single);
@@ -65,6 +67,9 @@ namespace geeL {
 
 		if(customTexture == nullptr)
 			setImage(image);
+
+		//Force resolution to ensure final image is properly alligned to window aspect
+		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 			
 		PostProcessingEffectFS::draw();
 

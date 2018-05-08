@@ -44,7 +44,7 @@ void RaymarchTest::draw() {
 	UniformBindingStack pipeline;
 	RenderScene* scene = new RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, camera, materialFactory, manager);
 
-	DefaultPostProcess& def = DefaultPostProcess(2.f);
+	DefaultPostProcess& def = DefaultPostProcess(window.getResolution(), 2.f);
 	RenderContext& context = RenderContext();
 	RayMarcher& raymarch = RayMarcher(*scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, textureProvider, raymarch, context, def, 
