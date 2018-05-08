@@ -23,7 +23,7 @@ namespace geeL {
 			: GUIElement(window, x, y, width, height)
 			, renderer(renderer) {
 	
-		const TextureProvider& provider = renderer.getTextureProvider();
+		TextureProvider& provider = renderer.getTextureProvider();
 		Resolution resolution = provider.getRenderResolution();
 
 		texture = new RenderTexture(resolution, ColorType::RGBA16,
@@ -101,7 +101,7 @@ namespace geeL {
 	}
 
 	std::vector<const ITexture*> SystemInformation::getBuffers() {
-		const TextureProvider& provider = renderer.getTextureProvider();
+		TextureProvider& provider = renderer.getTextureProvider();
 
 		std::vector<const ITexture*> buffers;
 		buffers.reserve(3);

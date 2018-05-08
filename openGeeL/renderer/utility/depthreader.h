@@ -10,7 +10,7 @@ namespace geeL {
 	class DepthReader {
 
 	public:
-		DepthReader(const TextureProvider& provider);
+		DepthReader(TextureProvider& provider);
 		~DepthReader();
 
 		void readDepth();
@@ -22,7 +22,7 @@ namespace geeL {
 		float depth;
 		unsigned int ssbo;
 		ComputeShader* shader;
-		const TextureProvider& provider;
+		TextureProvider& provider;
 
 	};
 

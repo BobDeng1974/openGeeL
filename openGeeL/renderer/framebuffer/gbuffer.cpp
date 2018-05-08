@@ -6,6 +6,7 @@
 #include "glwrapper/glguards.h"
 #include "shader/rendershader.h"
 #include "renderer/glstructures.h"
+#include "texturing/textureprovider.h"
 #include "appglobals.h"
 #include "bufferutil.h"
 
@@ -14,23 +15,14 @@
 
 namespace geeL {
 
-	GBuffer::GBuffer(Resolution resolution) 
-		: resolution(resolution)
-		, occEmiRoughMet(nullptr) {
+	GBuffer::GBuffer(ITextureProvider& provider)
+		: provider(provider) {
 		
-		init(resolution);
+		init();
 	}
 
-	GBuffer::~GBuffer() {
-		delete position;
-		delete normal;
-		delete diffuse;
-		delete occEmiRoughMet;
-	}
-
-
-	void GBuffer::init(Resolution resolution) {
-		this->resolution = resolution;
+	void GBuffer::init() {
+		const Resolution& resolution = provider.getRenderResolution();
 
 		glGenFramebuffers(1, &fbo.token);
 		bind();
@@ -48,6 +40,8 @@ namespace geeL {
 	}
 
 	void GBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
+		const Resolution& resolution = provider.getRenderResolution();
+
 		bind();
 		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 		clearer.clear();
@@ -61,27 +55,7 @@ namespace geeL {
 	}
 
 	Resolution GBuffer::getResolution() const {
-		return resolution;
-	}
-
-	const RenderTexture& GBuffer::getDiffuse() const {
-		return *diffuse;
-	}
-
-	const RenderTexture& GBuffer::getPosition() const {
-		return *position;
-	}
-
-	const RenderTexture& GBuffer::getNormal() const {
-		return *normal;
-	}
-
-	const RenderTexture& GBuffer::getProperties() const {
-		return *occEmiRoughMet;
-	}
-
-	RenderTexture& GBuffer::getOcclusion() const {
-		return *occEmiRoughMet;
+		return provider.getRenderResolution();
 	}
 
 	std::string GBuffer::getFragmentPath() const {
@@ -93,23 +67,24 @@ namespace geeL {
 	}
 
 	void GBuffer::initTextures(Resolution resolution) {
-		position = new RenderTexture(resolution, ColorType::RGB16);
-		normal = new RenderTexture(resolution, ColorType::RGBA16);
-		diffuse = new RenderTexture(resolution, ColorType::RGBA);
-		occEmiRoughMet = new RenderTexture(resolution, ColorType::RGBA);
-		
-		position->assignTo(*this, 0);
-		normal->assignTo(*this, 1);
-		diffuse->assignTo(*this, 2);
-		occEmiRoughMet->assignTo(*this, 3);
+		RenderTexture& position = provider.requestPosition();
+		RenderTexture& normal = provider.requestNormal();
+		RenderTexture& diffuse = provider.requestAlbedo();
+		RenderTexture& occEmiRoughMet = provider.requestProperties();
+
+		position.assignTo(*this, 0);
+		normal.assignTo(*this, 1);
+		diffuse.assignTo(*this, 2);
+		occEmiRoughMet.assignTo(*this, 3);
 		
 		unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 		glDrawBuffers(4, attachments);
 	}
 
 
-	ForwardBuffer::ForwardBuffer(GBuffer& gBuffer) 
+	ForwardBuffer::ForwardBuffer(GBuffer& gBuffer, ITextureProvider& provider)
 		: gBuffer(gBuffer)
+		, provider(provider)
 		, target(nullptr) {
 
 		init();
@@ -120,10 +95,10 @@ namespace geeL {
 		bind();
 
 		//Create attachements for all color buffers
-		gBuffer.getPosition().assignToo(*this, 0);
-		gBuffer.getNormal().assignToo(*this, 1);
-		gBuffer.getDiffuse().assignToo(*this, 2);
-		gBuffer.getProperties().assignToo(*this, 3);
+		provider.requestPosition().assignToo(*this, 0);
+		provider.requestNormal().assignToo(*this, 1);
+		provider.requestAlbedo().assignToo(*this, 2);
+		provider.requestProperties().assignToo(*this, 3);
 
 #if DIFFUSE_SPECULAR_SEPARATION
 		BufferUtility::drawBuffers(6);

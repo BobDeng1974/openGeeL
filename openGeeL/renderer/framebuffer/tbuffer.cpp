@@ -3,14 +3,19 @@
 #include "glwrapper/viewport.h"
 #include "glwrapper/glguards.h"
 #include "primitives/screenquad.h"
+#include "texturing/textureprovider.h"
 #include "stackbuffer.h"
 #include "tbuffer.h"
 
 namespace geeL {
 
 
-	TransparentOIDBuffer::TransparentOIDBuffer(GBuffer& gBuffer, DynamicBuffer& compBuffer) : gBuffer(gBuffer), 
-		compBuffer(compBuffer), compositionTexture(nullptr), tComp("shaders/tcomp.frag") {
+	TransparentOIDBuffer::TransparentOIDBuffer(GBuffer& gBuffer, ITextureProvider& provider, DynamicBuffer& compBuffer) 
+		: gBuffer(gBuffer)
+		, provider(provider)
+		, compBuffer(compBuffer)
+		, compositionTexture(nullptr)
+		, tComp("shaders/tcomp.frag") {
 		
 		Resolution res(gBuffer.getResolution());
 
@@ -36,9 +41,9 @@ namespace geeL {
 		bind();
 
 		//Create attachements for all color buffers
-		gBuffer.getPosition().assignToo(*this, 0);
-		gBuffer.getNormal().assignToo(*this, 1);
-		gBuffer.getDiffuse().assignToo(*this, 2);
+		provider.requestPosition().assignToo(*this, 0);
+		provider.requestNormal().assignToo(*this, 1);
+		provider.requestAlbedo().assignToo(*this, 2);
 
 		accumulationTexture->assignTo(*this, 3);
 		revealageTexture->assignTo(*this, 4);

@@ -253,7 +253,7 @@ namespace geeL {
 		defaultEffect.setCustomImage(texture);
 	}
 
-	const TextureProvider& DeferredRenderer::getTextureProvider() const {
+	TextureProvider& DeferredRenderer::getTextureProvider() const {
 		return provider;
 	}
 

@@ -15,7 +15,7 @@ namespace geeL {
 	class TransparentOIDBuffer : public FrameBuffer {
 
 	public:
-		TransparentOIDBuffer(GBuffer& gBuffer, DynamicBuffer& compBuffer);
+		TransparentOIDBuffer(GBuffer& gBuffer, ITextureProvider& provider, DynamicBuffer& compBuffer);
 		virtual ~TransparentOIDBuffer();
 
 		void init(RenderTexture& colorTexture);
@@ -28,6 +28,7 @@ namespace geeL {
 
 	private:
 		GBuffer& gBuffer;
+		ITextureProvider& provider;
 		DynamicBuffer& compBuffer;
 
 		RenderTexture* accumulationTexture;

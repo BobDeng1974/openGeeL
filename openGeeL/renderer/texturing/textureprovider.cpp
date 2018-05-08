@@ -1,8 +1,6 @@
 #include <iostream>
 #include <cassert>
-#include "framebuffer/gbuffer.h"
 #include "utility/resolution.h"
-#include "window.h"
 #include "texturewrapper.h"
 #include "rendertexture.h"
 #include "textureparams.h"
@@ -10,12 +8,15 @@
 
 namespace geeL {
 
-	TextureProvider::TextureProvider(const RenderWindow& window, GBuffer& gBuffer) 
-		: window(window)
-		, gBuffer(gBuffer)
+	TextureProvider::TextureProvider(const Resolution& resolution) 
+		: resolution(resolution)
 		, diffuse(nullptr)
 		, specular(nullptr)
-		, previousDiffuse(nullptr) {
+		, previousDiffuse(nullptr)
+		, position(nullptr)
+		, normal(nullptr)
+		, albedo(nullptr)
+		, properties(nullptr) {
 
 		callback = [this](RenderTexture& texture) { returnTexture(texture); };
 	}
@@ -23,6 +24,11 @@ namespace geeL {
 	TextureProvider::~TextureProvider() {
 		if (diffuse != nullptr) delete diffuse;
 		if (specular != nullptr) delete specular;
+		if (previousDiffuse != nullptr) delete previousDiffuse;
+		if (position != nullptr) delete position;
+		if (normal != nullptr) delete normal;
+		if (albedo != nullptr) delete albedo;
+		if (properties != nullptr) delete properties;
 
 		for (auto resolutionIt(textures.begin()); resolutionIt != textures.end(); resolutionIt++) {
 			auto& colors = resolutionIt->second;
@@ -39,24 +45,45 @@ namespace geeL {
 	}
 
 
-	const RenderTexture& TextureProvider::requestAlbedo() const {
-		return gBuffer.getDiffuse();
+	RenderTexture& TextureProvider::requestAlbedo() {
+		if (albedo == nullptr)
+			//albedo = new RenderTexture(resolution, ColorType::RGBA);
+			albedo = &requestTextureManual(ResolutionPreset::FULLSCREEN, ColorType::RGBA,
+				FilterMode::None, WrapMode::Repeat, AnisotropicFilter::None);
+
+		return *albedo;
 	}
 
-	const RenderTexture& TextureProvider::requestPosition() const {
-		return gBuffer.getPosition();
+	RenderTexture& TextureProvider::requestPosition() {
+		if (position == nullptr)
+			position = &requestTextureManual(ResolutionPreset::FULLSCREEN, ColorType::RGB16,
+				FilterMode::None, WrapMode::Repeat, AnisotropicFilter::None);
+
+		return *position;
 	}
 
-	const RenderTexture& TextureProvider::requestNormal() const {
-		return gBuffer.getNormal();
+	RenderTexture& TextureProvider::requestNormal() {
+		if (normal == nullptr)
+			normal = &requestTextureManual(ResolutionPreset::FULLSCREEN, ColorType::RGBA16,
+				FilterMode::None, WrapMode::Repeat, AnisotropicFilter::None);
+
+		return *normal;
 	}
 
-	const RenderTexture& TextureProvider::requestProperties() const {
-		return gBuffer.getProperties();
+	RenderTexture& TextureProvider::requestProperties() {
+		if (properties == nullptr)
+			properties = &requestTextureManual(ResolutionPreset::FULLSCREEN, ColorType::RGBA,
+				FilterMode::None, WrapMode::Repeat, AnisotropicFilter::None);
+
+		return *properties;
 	}
 
-	RenderTexture& TextureProvider::requestOcclusion() const {
-		return gBuffer.getOcclusion();
+	RenderTexture& TextureProvider::requestOcclusion() {
+		if (properties == nullptr)
+			properties = &requestTextureManual(ResolutionPreset::FULLSCREEN, ColorType::RGBA,
+				FilterMode::None, WrapMode::Repeat, AnisotropicFilter::None);
+
+		return *properties;
 	}
 
 	RenderTexture& TextureProvider::requestDefaultTexture() {
@@ -139,7 +166,7 @@ namespace geeL {
 			}
 		}
 
-		RenderTexture* newTexture = new RenderTexture(Resolution(window.getResolution(), resolution), colorType);
+		RenderTexture* newTexture = new RenderTexture(Resolution(this->resolution, resolution), colorType);
 		newTexture->attachParameters(getParameters(filterMode, wrapMode, aFilter));
 
 		return *newTexture;
@@ -151,8 +178,8 @@ namespace geeL {
 		textures[texture.getScale()][texture.getColorType()].push(&texture);
 	}
 
-	Resolution TextureProvider::getRenderResolution() const {
-		return window.getResolution();
+	const Resolution& TextureProvider::getRenderResolution() const {
+		return resolution;
 	}
 
 	void TextureProvider::cleanupCache() {

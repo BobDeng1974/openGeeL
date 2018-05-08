@@ -36,8 +36,8 @@ void RaymarchTest::draw() {
 	geeL::Transform& cameraTransform = Transform(vec3(1.2f, 1.2f, -1.3f), vec3(70.f, 70.f, 180.f), vec3(1.f, 1.f, 1.f));
 	PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 60.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
 
-	GBuffer& gBuffer = GBuffer(window.resolution);
-	TextureProvider textureProvider(window, gBuffer);
+	TextureProvider textureProvider(window.getResolution());
+	GBuffer& gBuffer = GBuffer(textureProvider);
 	MaterialFactory &materialFactory = MaterialFactory(gBuffer);
 	MeshFactory& meshFactory = MeshFactory(materialFactory);
 	LightManager& lightManager = LightManager();

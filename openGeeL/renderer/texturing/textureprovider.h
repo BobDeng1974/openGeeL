@@ -21,11 +21,11 @@ namespace geeL {
 	class ITextureProvider {
 
 	public:
-		virtual const RenderTexture& requestAlbedo() const = 0;
-		virtual const RenderTexture& requestPosition() const = 0;
-		virtual const RenderTexture& requestNormal() const = 0;
-		virtual const RenderTexture& requestProperties() const = 0;
-		virtual RenderTexture& requestOcclusion() const = 0;
+		virtual RenderTexture& requestAlbedo() = 0;
+		virtual RenderTexture& requestPosition() = 0;
+		virtual RenderTexture& requestNormal() = 0;
+		virtual RenderTexture& requestProperties() = 0;
+		virtual RenderTexture& requestOcclusion() = 0;
 
 		//Request texture with default properties (Properties of final screen texture)
 		virtual RenderTexture& requestDefaultTexture() = 0;
@@ -62,6 +62,8 @@ namespace geeL {
 		virtual TextureParameters& getParameters(FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter) = 0;
 		virtual TextureParameters& getDefaultParameters() = 0;
 
+		virtual const Resolution& getRenderResolution() const = 0;
+
 	};
 
 
@@ -69,14 +71,14 @@ namespace geeL {
 	class TextureProvider : public ITextureProvider {
 
 	public:
-		TextureProvider(const RenderWindow& window, GBuffer& gBuffer);
+		TextureProvider(const Resolution& resolution);
 		~TextureProvider();
 
-		virtual const RenderTexture& requestAlbedo() const;
-		virtual const RenderTexture& requestPosition() const;
-		virtual const RenderTexture& requestNormal() const;
-		virtual const RenderTexture& requestProperties() const;
-		virtual RenderTexture& requestOcclusion() const;
+		virtual RenderTexture& requestAlbedo();
+		virtual RenderTexture& requestPosition();
+		virtual RenderTexture& requestNormal();
+		virtual RenderTexture& requestProperties();
+		virtual RenderTexture& requestOcclusion();
 
 		virtual RenderTexture& requestDefaultTexture();
 		virtual RenderTexture& requestCurrentImage();
@@ -99,7 +101,7 @@ namespace geeL {
 		virtual TextureParameters& getParameters(FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter);
 		virtual TextureParameters& getDefaultParameters();
 
-		Resolution getRenderResolution() const;
+		virtual const Resolution& getRenderResolution() const;
 
 		//Should be called at end of frame. Current images will be
 		//converted to previous images
@@ -129,12 +131,17 @@ namespace geeL {
 
 		const unsigned int cacheClearingRate = 10; //Cleanup only every n'th frame
 		unsigned int currentRate = 0;
+		Resolution resolution;
 
-		const RenderWindow& window;
-		GBuffer& gBuffer;
 		RenderTexture* diffuse;
 		RenderTexture* specular;
 		RenderTexture* previousDiffuse;
+		RenderTexture* albedo;
+		RenderTexture* position;
+		RenderTexture* normal;
+		RenderTexture* properties;
+
+
 		std::function<void(RenderTexture&)> callback;
 
 		std::map<ResolutionScale, std::map<ColorType, MonitoredList>> textures;

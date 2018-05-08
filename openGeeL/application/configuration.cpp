@@ -35,7 +35,10 @@ namespace geeL {
 		PerspectiveCamera& defaultCamera = PerspectiveCamera(cameraTransform, 60.f, 
 			window.getWidth(), window.getHeight(), 0.1f, 100.f);
 
-		GBuffer& gBuffer = GBuffer(window.resolution);
+		Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
+		TextureProvider textureProvider(window.getResolution());
+
+		GBuffer& gBuffer = GBuffer(textureProvider);
 		MaterialFactory& materialFactory = MaterialFactory(gBuffer);
 		MeshFactory& meshFactory = MeshFactory(materialFactory);
 		LightManager& lightManager = LightManager();
@@ -46,9 +49,6 @@ namespace geeL {
 		RenderScene* s = new RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, 
 			defaultCamera, materialFactory, manager);
 		RenderScene& scene = *s;
-
-		Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
-		TextureProvider textureProvider(window, gBuffer);
 
 		ShadowmapAdapter shadowAdapter(scene, textureProvider, 4000);
 		lightManager.addShadowmapAdapter(shadowAdapter);
@@ -61,7 +61,7 @@ namespace geeL {
 			gBuffer, meshFactory, materialFactory);
 		renderer.setScene(scene);
 
-		ForwardBuffer& fBuffer = ForwardBuffer(gBuffer);
+		ForwardBuffer& fBuffer = ForwardBuffer(gBuffer, textureProvider);
 		renderer.addFBuffer(fBuffer);
 
 		ContinuousSingleThread renderThread(renderer);

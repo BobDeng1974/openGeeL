@@ -7,7 +7,7 @@
 
 namespace geeL {
 	
-	DepthReader::DepthReader(const TextureProvider& provider) 
+	DepthReader::DepthReader(TextureProvider& provider) 
 		: provider(provider)
 		, depth(0.f) {
 

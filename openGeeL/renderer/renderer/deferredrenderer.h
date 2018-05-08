@@ -54,7 +54,7 @@ namespace geeL {
 		//image if given texture is NULL
 		void setScreenImage(const ITexture* const texture = nullptr);
 
-		const TextureProvider& getTextureProvider() const;
+		TextureProvider& getTextureProvider() const;
 		
 	private:
 		mutable std::mutex renderMutex;
