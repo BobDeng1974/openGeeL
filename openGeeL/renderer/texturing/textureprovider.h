@@ -42,6 +42,9 @@ namespace geeL {
 		virtual void updateCurrentImage(RenderTexture& texture) = 0;
 		virtual void updateCurrentSpecular(RenderTexture& texture) = 0;
 
+		virtual RenderTexture& requestPreviousImage() const = 0;
+		//virtual RenderTexture& requestPreviousPosition() const = 0;
+
 		virtual TextureWrapper requestTexture(ResolutionPreset resolution,
 			ColorType colorType = ColorType::RGB,
 			FilterMode filterMode = FilterMode::None,
@@ -82,6 +85,9 @@ namespace geeL {
 		virtual void updateCurrentImage(RenderTexture& texture);
 		virtual void updateCurrentSpecular(RenderTexture& texture);
 
+		virtual RenderTexture& requestPreviousImage() const;
+		//virtual RenderTexture& requestPreviousPosition() const;
+
 		virtual TextureWrapper requestTexture(ResolutionPreset resolution, ColorType colorType,
 			FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter);
 
@@ -95,6 +101,9 @@ namespace geeL {
 
 		Resolution getRenderResolution() const;
 
+		//Should be called at end of frame. Current images will be
+		//converted to previous images
+		void swap();
 		void cleanupCache();
 
 	private:
@@ -125,6 +134,7 @@ namespace geeL {
 		GBuffer& gBuffer;
 		RenderTexture* diffuse;
 		RenderTexture* specular;
+		RenderTexture* previousDiffuse;
 		std::function<void(RenderTexture&)> callback;
 
 		std::map<ResolutionScale, std::map<ColorType, MonitoredList>> textures;

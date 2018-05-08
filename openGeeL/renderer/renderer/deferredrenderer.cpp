@@ -79,6 +79,7 @@ namespace geeL {
 		lock_guard<mutex> renderGuard(renderMutex);
 		draw();
 
+		provider.swap();
 		provider.cleanupCache();
 		window.swapBuffer();
 	}
@@ -173,7 +174,6 @@ namespace geeL {
 
 		//Draw the last (default) effect to screen.
 		defaultEffect.draw();
-
 
 		//Render GUI overlay on top of final image
 		if (gui != nullptr) {

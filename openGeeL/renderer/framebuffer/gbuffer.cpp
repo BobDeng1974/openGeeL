@@ -107,6 +107,7 @@ namespace geeL {
 		glDrawBuffers(4, attachments);
 	}
 
+
 	ForwardBuffer::ForwardBuffer(GBuffer& gBuffer) 
 		: gBuffer(gBuffer)
 		, target(nullptr) {

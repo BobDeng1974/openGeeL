@@ -14,7 +14,8 @@ namespace geeL {
 		: window(window)
 		, gBuffer(gBuffer)
 		, diffuse(nullptr)
-		, specular(nullptr) {
+		, specular(nullptr)
+		, previousDiffuse(nullptr) {
 
 		callback = [this](RenderTexture& texture) { returnTexture(texture); };
 	}
@@ -79,7 +80,7 @@ namespace geeL {
 
 	void TextureProvider::updateCurrentImage(RenderTexture& texture) {
 		if (diffuse != &texture) {
-			//Assing diffuse to new texture and throw 
+			//Assign diffuse to new texture and throw 
 			//old texture back into texture pool
 			if(diffuse != nullptr) returnTexture(*diffuse);
 			diffuse = &texture;
@@ -91,6 +92,21 @@ namespace geeL {
 			if (specular != nullptr) returnTexture(*specular);
 			specular = &texture;
 		}
+	}
+
+	RenderTexture& TextureProvider::requestPreviousImage() const {
+		if (previousDiffuse != nullptr)
+			return *previousDiffuse;
+
+		return *diffuse;
+	}
+
+	void TextureProvider::swap() {
+		if (previousDiffuse != nullptr)
+			returnTexture(*previousDiffuse);
+
+		previousDiffuse = diffuse;
+		diffuse = nullptr;
 	}
 
 
