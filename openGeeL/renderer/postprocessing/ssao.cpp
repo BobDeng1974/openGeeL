@@ -73,7 +73,7 @@ namespace geeL {
 		addTextureSampler(provider->requestNormal(), "gNormal");
 		addTextureSampler(*noiseTexture, "noiseTexture");
 
-		const Resolution& resolution = parameter.resolution;
+		const Resolution& resolution = Resolution(parameter.resolution, scale);
 
 		shader.bind<float>("screenWidth", float(resolution.getWidth()));
 		shader.bind<float>("screenHeight", float(resolution.getHeight()));
@@ -81,16 +81,14 @@ namespace geeL {
 
 		for (unsigned int i = 0; i < sampleCount; i++)
 			shader.bind<glm::vec3>("samples[" + to_string(i) + "]", kernel[i]);
-		
-		ssaoTexture = new RenderTexture(resolution, ColorType::Single, WrapMode::Repeat, FilterMode::None);
 
+		ssaoTexture = &provider->requestTextureManual(scale, ColorType::Single, FilterMode::None, WrapMode::Repeat);
 		blur.init(PostProcessingParameter(parameter, resolution));
 		blur.setImage(*ssaoTexture);
 
 		projectionLocation = shader.getLocation("projection");
 
-
-		blurTexture = new RenderTexture(resolution, ColorType::Single, WrapMode::Repeat, FilterMode::None);
+		blurTexture = &provider->requestTextureManual(scale, ColorType::Single, FilterMode::None, WrapMode::Repeat);
 		blendEffect->init(PostProcessingParameter(ScreenQuad::get(), parameter.buffer, parameter.resolution));
 		blendEffect->setImage(*blurTexture);
 

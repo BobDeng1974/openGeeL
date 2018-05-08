@@ -70,9 +70,13 @@ namespace geeL {
 
 		effect.init(PostProcessingParameter(parameter, parameter.resolution));
 
-		if (tempTexture == nullptr)
-			tempTexture = new RenderTexture(parameter.resolution, ColorType::RGB16,
-				WrapMode::ClampEdge, FilterMode::Linear);
+		if (tempTexture == nullptr) {
+			ResolutionScale scale(resolution.getScale());
+			ResolutionPreset preset = getRenderResolution(scale);
+
+			tempTexture = &provider->requestTextureManual(preset, ColorType::RGB16,
+				FilterMode::Linear, WrapMode::ClampEdge);
+		}
 		else
 			tempTexture->resize(parameter.resolution);
 

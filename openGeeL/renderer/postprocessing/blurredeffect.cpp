@@ -41,15 +41,15 @@ namespace geeL {
 
 		Resolution effectRes(resolution, effectResolution);
 		if (effectTexture == nullptr)
-			effectTexture = new RenderTexture(effectRes, ColorType::RGB16,
-				WrapMode::ClampEdge, FilterMode::Linear);
+			effectTexture = &provider->requestTextureManual(effectResolution, ColorType::RGB16,
+				FilterMode::Linear, WrapMode::ClampEdge);
 		else
 			effectTexture->resize(effectRes);
 
 		Resolution blurRes(resolution, blurResolution);
 		if (blurTexture == nullptr)
-			blurTexture = new RenderTexture(blurRes, ColorType::RGB16,
-				WrapMode::ClampEdge, FilterMode::Linear);
+			blurTexture = &provider->requestTextureManual(blurResolution, ColorType::RGB16,
+				FilterMode::Linear, WrapMode::ClampEdge);
 		else
 			blurTexture->resize(blurRes);
 

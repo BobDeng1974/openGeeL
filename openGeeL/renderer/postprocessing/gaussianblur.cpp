@@ -51,8 +51,11 @@ namespace geeL {
 	void GaussianBlur::init(const PostProcessingParameter& parameter) {
 		PostProcessingEffectFS::init(parameter);
 
-		tempTexture = new RenderTexture(resolution, ColorType::RGB16, 
-			WrapMode::ClampEdge, FilterMode::Linear);
+		ResolutionScale scale(resolution.getScale());
+		ResolutionPreset preset = getRenderResolution(scale);
+
+		tempTexture = &provider->requestTextureManual(preset, ColorType::RGB16, 
+			FilterMode::Linear, WrapMode::ClampEdge);
 
 		horLocation = shader.getLocation("horizontal");
 	}
@@ -269,7 +272,11 @@ namespace geeL {
 		assert(provider != nullptr);
 		sobel.setImage(provider->requestPosition());
 
-		sobelTexture = new RenderTexture(resolution, ColorType::RGB16, WrapMode::ClampEdge, FilterMode::None);
+		ResolutionScale scale(resolution.getScale());
+		ResolutionPreset preset = getRenderResolution(scale);
+
+		sobelTexture = &provider->requestTextureManual(preset, ColorType::RGB16,
+			FilterMode::None, WrapMode::ClampEdge);
 		sobel.init(parameter);
 
 		addTextureSampler(*sobelTexture, "sobel");

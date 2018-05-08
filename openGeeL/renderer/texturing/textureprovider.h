@@ -88,11 +88,17 @@ namespace geeL {
 		virtual RenderTexture& requestPreviousImage() const;
 		//virtual RenderTexture& requestPreviousPosition() const;
 
-		virtual TextureWrapper requestTexture(ResolutionPreset resolution, ColorType colorType,
-			FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter);
+		virtual TextureWrapper requestTexture(ResolutionPreset resolution,
+			ColorType colorType = ColorType::RGB,
+			FilterMode filterMode = FilterMode::None,
+			WrapMode wrapMode = WrapMode::Repeat,
+			AnisotropicFilter aFilter = AnisotropicFilter::None);
 
-		virtual RenderTexture& requestTextureManual(ResolutionPreset resolution, ColorType colorType,
-			FilterMode filterMode, WrapMode wrapMode, AnisotropicFilter aFilter);
+		virtual RenderTexture& requestTextureManual(ResolutionPreset resolution,
+			ColorType colorType = ColorType::RGB,
+			FilterMode filterMode = FilterMode::None,
+			WrapMode wrapMode = WrapMode::Repeat,
+			AnisotropicFilter aFilter = AnisotropicFilter::None);
 
 		virtual void returnTexture(RenderTexture& texture);
 

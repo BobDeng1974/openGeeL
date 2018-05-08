@@ -122,8 +122,8 @@ namespace geeL {
 		float res = 1.f;
 		Resolution velocityRes = Resolution(parameter.resolution, 1.f);
 		if (velocityTexture == nullptr)
-			velocityTexture = new RenderTexture(velocityRes,
-				ColorType::RGBA16, WrapMode::ClampEdge, FilterMode::Linear);
+			velocityTexture = &provider->requestTextureManual(ResolutionPreset::FULLSCREEN, ColorType::RGB16,
+				FilterMode::Linear, WrapMode::ClampEdge);
 		else
 			velocityTexture->resize(velocityRes);
 
@@ -163,8 +163,8 @@ namespace geeL {
 
 		Resolution positionRes = Resolution(parameter.resolution, 1.f);
 		if (positionTexture == nullptr)
-			positionTexture = new RenderTexture(positionRes, ColorType::RGBA16,
-				WrapMode::ClampEdge, FilterMode::Linear);
+			positionTexture = &provider->requestTextureManual(ResolutionPreset::FULLSCREEN, ColorType::RGB16,
+				FilterMode::Linear, WrapMode::ClampEdge);
 		else
 			positionTexture->resize(positionRes);
 

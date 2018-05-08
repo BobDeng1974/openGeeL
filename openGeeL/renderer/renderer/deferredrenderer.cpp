@@ -125,8 +125,8 @@ namespace geeL {
 			DepthGuard::enable(true);
 
 #if DIFFUSE_SPECULAR_SEPARATION
-			RenderTexture& diffuse  = provider.requestCurrentImage();
-			RenderTexture& specular = provider.requestCurrentSpecular();
+			RenderTarget& diffuse  = provider.requestCurrentImage();
+			RenderTarget& specular = provider.requestCurrentSpecular();
 			LayeredTarget combinedTarget(diffuse, specular);
 
 			fBuffer->setTarget(combinedTarget);
@@ -201,9 +201,8 @@ namespace geeL {
 	void DeferredRenderer::addEffect(SSAO& ssao) {
 		this->ssao = &ssao;
 
-		Resolution ssaoRes = Resolution(provider.getRenderResolution(), ssao.getResolution());
 		ssao.init(PostProcessingParameter(ScreenQuad::get(), stackBuffer, 
-			ssaoRes, &provider, &fallbackEffect, nullptr, &materialFactory));
+			provider.getRenderResolution(), &provider, &fallbackEffect, nullptr, &materialFactory));
 	}
 
 	void DeferredRenderer::addEffect(PostProcessingEffect& effect, DrawTime time) {

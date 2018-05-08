@@ -3,6 +3,7 @@
 #include "cameras/camera.h"
 #include "texturing/imagetexture.h"
 #include "texturing/rendertexture.h"
+#include "texturing/textureprovider.h"
 #include "framebuffer/framebuffer.h"
 #include "gaussianblur.h"
 #include "lensflare.h"
@@ -42,8 +43,8 @@ namespace geeL {
 
 		Resolution filterRes = Resolution(parameter.resolution, filterResolution);
 		if (filterTexture == nullptr)
-			filterTexture = new RenderTexture(filterRes, ColorType::RGB16,
-				WrapMode::Repeat, FilterMode::Linear);
+			filterTexture = &provider->requestTextureManual(filterResolution, ColorType::RGB16,
+				FilterMode::Linear, WrapMode::ClampEdge);
 		else
 			filterTexture->resize(filterRes);
 
