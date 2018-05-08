@@ -120,7 +120,7 @@ namespace geeL {
 
 	void SSAO::fill() {
 		if (parentBuffer != nullptr) {
-			parentBuffer->add(provider->requestOcclusion());
+			parentBuffer->add(provider->requestProperties());
 			parentBuffer->fill(*this, clearNothing);
 		}
 	}

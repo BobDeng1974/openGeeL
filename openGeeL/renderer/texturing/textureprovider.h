@@ -25,7 +25,6 @@ namespace geeL {
 		virtual RenderTexture& requestPosition() = 0;
 		virtual RenderTexture& requestNormal() = 0;
 		virtual RenderTexture& requestProperties() = 0;
-		virtual RenderTexture& requestOcclusion() = 0;
 
 		//Request texture with default properties (Properties of final screen texture)
 		virtual RenderTexture& requestDefaultTexture() = 0;
@@ -78,7 +77,6 @@ namespace geeL {
 		virtual RenderTexture& requestPosition();
 		virtual RenderTexture& requestNormal();
 		virtual RenderTexture& requestProperties();
-		virtual RenderTexture& requestOcclusion();
 
 		virtual RenderTexture& requestDefaultTexture();
 		virtual RenderTexture& requestCurrentImage();

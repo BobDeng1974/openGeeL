@@ -47,7 +47,6 @@ namespace geeL {
 
 	RenderTexture& TextureProvider::requestAlbedo() {
 		if (albedo == nullptr)
-			//albedo = new RenderTexture(resolution, ColorType::RGBA);
 			albedo = &requestTextureManual(ResolutionPreset::FULLSCREEN, ColorType::RGBA,
 				FilterMode::None, WrapMode::Repeat, AnisotropicFilter::None);
 
@@ -71,14 +70,6 @@ namespace geeL {
 	}
 
 	RenderTexture& TextureProvider::requestProperties() {
-		if (properties == nullptr)
-			properties = &requestTextureManual(ResolutionPreset::FULLSCREEN, ColorType::RGBA,
-				FilterMode::None, WrapMode::Repeat, AnisotropicFilter::None);
-
-		return *properties;
-	}
-
-	RenderTexture& TextureProvider::requestOcclusion() {
 		if (properties == nullptr)
 			properties = &requestTextureManual(ResolutionPreset::FULLSCREEN, ColorType::RGBA,
 				FilterMode::None, WrapMode::Repeat, AnisotropicFilter::None);
