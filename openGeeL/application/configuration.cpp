@@ -15,11 +15,13 @@ namespace geeL {
 	Configuration::Configuration(RenderWindow& window, 
 		SceneInitialization initFunction, 
 		TonemappingMethod toneMethod,
+		ResolutionScale renderScale,
 		PhysicsType physicsType)
 			: window(window)
 			, initFunction(initFunction)
 			, toneMethod(toneMethod)
-			, physicsType(physicsType) {}
+			, physicsType(physicsType)
+			, renderScale(renderScale) {}
 
 
 	void Configuration::run() {
@@ -35,8 +37,9 @@ namespace geeL {
 		PerspectiveCamera& defaultCamera = PerspectiveCamera(cameraTransform, 60.f, 
 			window.getWidth(), window.getHeight(), 0.1f, 100.f);
 
+		Resolution renderResolution(window.getResolution(), renderScale);
 		Texture::setMaxAnisotropyAmount(AnisotropicFilter::Medium);
-		TextureProvider textureProvider(window.getResolution());
+		TextureProvider textureProvider(renderResolution);
 
 		GBuffer& gBuffer = GBuffer(textureProvider);
 		MaterialFactory& materialFactory = MaterialFactory(gBuffer);

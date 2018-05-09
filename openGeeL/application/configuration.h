@@ -133,6 +133,7 @@ namespace geeL {
 		Configuration(RenderWindow& window, 
 			SceneInitialization initFunction,
 			TonemappingMethod toneMethod = TonemappingMethod::ACESFilm,
+			ResolutionScale renderScale = 1.f,
 			PhysicsType physicsType = PhysicsType::None);
 
 		void run();
@@ -142,6 +143,7 @@ namespace geeL {
 		SceneInitialization initFunction;
 		TonemappingMethod toneMethod;
 		PhysicsType physicsType;
+		ResolutionScale renderScale;
 
 	};
 

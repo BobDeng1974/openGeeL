@@ -222,7 +222,7 @@ public:
 		};
 
 
-		Configuration config(window, init, TonemappingMethod::Uncharted2, PhysicsType::World);
+		Configuration config(window, init, TonemappingMethod::Uncharted2, 1.f, PhysicsType::World);
 		config.run();
 	}
 

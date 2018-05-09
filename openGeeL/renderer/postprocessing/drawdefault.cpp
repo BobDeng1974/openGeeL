@@ -58,11 +58,20 @@ namespace geeL {
 	void DefaultPostProcess::draw() {
 		RenderTexture& image = provider->requestCurrentImage();
 		bool useAutoExposure = (customTexture == nullptr) && adaptiveExposure;
+		bool useLinearFiltering = provider->getRenderResolution() != resolution;
 
+		//Mipmap given image to get average scene brightness at lowest mip level
 		if (useAutoExposure) {
 			TextureParameters& p = provider->getParameters(FilterMode::Trilinear, WrapMode::ClampEdge, AnisotropicFilter::None);
 			image.attachParameters(p);
 			image.mipmap();
+		}
+		//Sample given image with linear texture filtering since it uses a different resolution as the application.
+		//Note: This step is not necessary with active adaptive exposure, since image is already sampled with trillinear
+		//texture filtering there
+		else if (useLinearFiltering) {
+			TextureParameters& p = provider->getParameters(FilterMode::Linear, WrapMode::ClampEdge, AnisotropicFilter::None);
+			image.attachParameters(p);
 		}
 
 		if(customTexture == nullptr)
@@ -73,12 +82,11 @@ namespace geeL {
 			
 		PostProcessingEffectFS::draw();
 
-		if (useAutoExposure) {
+		if (useAutoExposure || useLinearFiltering) {
 			//Reset texture parameters
 			TextureParameters& p = provider->getDefaultParameters();
 			image.attachParameters(p);
 		}
-		
 	}
 
 	void DefaultPostProcess::setCustomImage(const ITexture* const texture) {
