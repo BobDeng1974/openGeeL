@@ -31,7 +31,7 @@ namespace geeL {
 			RenderTarget* previous = stackBuffer.top();
 			bind();
 			previous->assignTo(*this, 0);
-			previous->setRenderResolution();
+			previous->applyRenderResolution();
 		}
 	}
 
@@ -64,7 +64,7 @@ namespace geeL {
 		
 		bind();
 		current->assignTo(*this, 0);
-		current->setRenderResolution();
+		current->applyRenderResolution();
 		clearer.clear();
 
 		drawCall();
@@ -78,7 +78,7 @@ namespace geeL {
 
 		bind();
 		current->assignTo(*this, 0);
-		current->setRenderResolution();
+		current->applyRenderResolution();
 		clearer.clear();
 
 		drawer.draw();
@@ -93,9 +93,9 @@ namespace geeL {
 		return stackBuffer.top()->getRenderResolution();
 	}
 
-	void StackBuffer::setRenderResolution() const {
+	void StackBuffer::applyRenderResolution() const {
 		if(!stackBuffer.empty())
-			stackBuffer.top()->setRenderResolution();
+			stackBuffer.top()->applyRenderResolution();
 	}
 
 	void StackBuffer::resize(ResolutionScale resolution) {}

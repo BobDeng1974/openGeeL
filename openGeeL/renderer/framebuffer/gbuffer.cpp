@@ -120,7 +120,7 @@ namespace geeL {
 
 	void ForwardBuffer::fill(std::function<void()> drawCall, Clearer clearer) {
 		bind();
-		target->setRenderResolution();
+		target->applyRenderResolution();
 
 		BlendGuard blend(4);
 		blend.blendAlpha();

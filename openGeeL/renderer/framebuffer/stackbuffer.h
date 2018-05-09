@@ -26,7 +26,7 @@ namespace geeL {
 
 		//virtual const RenderTexture* const getTexture() const;
 		virtual Resolution getResolution() const;
-		virtual void setRenderResolution() const;
+		virtual void applyRenderResolution() const;
 		virtual void resize(ResolutionScale resolution);
 
 		virtual std::string toString() const;

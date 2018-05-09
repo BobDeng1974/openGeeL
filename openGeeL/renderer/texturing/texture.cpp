@@ -313,7 +313,7 @@ namespace geeL {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id, level);
 	}
 
-	void Texture2D::setRenderResolution() const {
+	void Texture2D::applyRenderResolution() const {
 		Viewport::set(0, 0, resolution.getWidth(), resolution.getHeight());
 	}
 
@@ -453,7 +453,7 @@ namespace geeL {
 		
 	}
 
-	void Texture3D::setRenderResolution() const {
+	void Texture3D::applyRenderResolution() const {
 		Viewport::set(0, 0, width, height);
 	}
 
@@ -562,7 +562,7 @@ namespace geeL {
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, a, res, res, 0, b, c, (images == 0) ? 0 : images[i]);
 	}
 
-	void TextureCube::setRenderResolution() const {
+	void TextureCube::applyRenderResolution() const {
 		Viewport::set(0, 0, resolution, resolution);
 	}
 

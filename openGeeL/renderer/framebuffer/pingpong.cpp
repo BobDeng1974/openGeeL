@@ -38,7 +38,7 @@ namespace geeL {
 
 		bind();
 		glDrawBuffer(GL_COLOR_ATTACHMENT0 + id);
-		current->setRenderResolution();
+		current->applyRenderResolution();
 		clearer.clear();
 
 		drawCall();
@@ -52,7 +52,7 @@ namespace geeL {
 
 		bind();
 		glDrawBuffer(GL_COLOR_ATTACHMENT0 + id);
-		current->setRenderResolution();
+		current->applyRenderResolution();
 		clearer.clear();
 
 		drawer.draw();
@@ -72,8 +72,8 @@ namespace geeL {
 			return *second;
 	}
 
-	void PingPongBuffer::setRenderResolution() const {
-		current->setRenderResolution();
+	void PingPongBuffer::applyRenderResolution() const {
+		current->applyRenderResolution();
 	}
 
 	void PingPongBuffer::resize(ResolutionScale resolution) {

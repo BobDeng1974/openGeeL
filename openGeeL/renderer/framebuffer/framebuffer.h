@@ -25,7 +25,7 @@ namespace geeL {
 		static void bind(unsigned int fbo);
 		static void unbind();
 
-		virtual void setRenderResolution() const;
+		virtual void applyRenderResolution() const;
 		virtual Resolution getResolution() const = 0;
 
 	protected:

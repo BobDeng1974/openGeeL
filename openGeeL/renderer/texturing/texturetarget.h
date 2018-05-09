@@ -11,7 +11,7 @@ namespace geeL {
 	public:
 		TextureTarget(std::unique_ptr<Texture> texture);
 
-		virtual void setRenderResolution() const;
+		virtual void applyRenderResolution() const;
 		virtual Resolution getRenderResolution() const;
 		virtual unsigned int getSize() const;
 

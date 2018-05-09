@@ -35,7 +35,7 @@ namespace geeL {
 		assert(current != nullptr);
 
 		bind();
-		current->setRenderResolution();
+		current->applyRenderResolution();
 		this->clearer.clear();
 
 		drawCall();

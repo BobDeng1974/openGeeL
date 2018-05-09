@@ -33,8 +33,8 @@ namespace geeL {
 	}
 
 
-	void LayeredTarget::setRenderResolution() const {
-		targets.front()->setRenderResolution();
+	void LayeredTarget::applyRenderResolution() const {
+		targets.front()->applyRenderResolution();
 	}
 
 	Resolution LayeredTarget::getRenderResolution() const {

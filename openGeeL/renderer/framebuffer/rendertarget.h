@@ -21,7 +21,7 @@ namespace geeL {
 		//Note: This function will only work if target has been assigned to a main buffer beforehand
 		bool assignToo(const IFrameBuffer& buffer, unsigned int position, bool bindFB = false) const;
 
-		virtual void setRenderResolution() const = 0;
+		virtual void applyRenderResolution() const = 0;
 		virtual Resolution getRenderResolution() const = 0;
 		virtual unsigned int getSize() const = 0;
 
@@ -46,7 +46,7 @@ namespace geeL {
 		template<typename... RenderTargets>
 		LayeredTarget(RenderTarget& target, RenderTargets& ...targets);
 
-		virtual void setRenderResolution() const;
+		virtual void applyRenderResolution() const;
 		virtual Resolution getRenderResolution() const;
 		virtual unsigned int getSize() const;
 

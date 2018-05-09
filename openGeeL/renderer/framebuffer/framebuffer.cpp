@@ -38,7 +38,7 @@ namespace geeL {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void IFrameBuffer::setRenderResolution() const {
+	void IFrameBuffer::applyRenderResolution() const {
 		Resolution res(getResolution());
 		Viewport::set(0, 0, res.getWidth(), res.getHeight());
 	}

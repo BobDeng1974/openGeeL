@@ -7,8 +7,8 @@ namespace geeL {
 		: FunctionalTexture(std::move(texture)) {}
 
 
-	void TextureTarget::setRenderResolution() const {
-		getTexture().setRenderResolution();
+	void TextureTarget::applyRenderResolution() const {
+		getTexture().applyRenderResolution();
 	}
 
 	Resolution TextureTarget::getRenderResolution() const {

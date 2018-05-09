@@ -81,7 +81,7 @@ namespace geeL {
 		static AnisotropicFilter getMaxAnisotropyAmount();
 
 		virtual Resolution getScreenResolution() const = 0;
-		virtual void setRenderResolution() const = 0;
+		virtual void applyRenderResolution() const = 0;
 
 		void attachParameters(const TextureParameters& parameters);
 		void detachParameters();
@@ -134,7 +134,7 @@ namespace geeL {
 
 		virtual const Resolution& getResolution() const;
 		virtual Resolution getScreenResolution() const;
-		virtual void setRenderResolution() const;
+		virtual void applyRenderResolution() const;
 
 		ResolutionScale getScale() const;
 
@@ -147,7 +147,6 @@ namespace geeL {
 		virtual void reserveStorage(unsigned int levels = 1);
 
 		void setResolution(const Resolution& resolution);
-		void setResolution(unsigned int width, unsigned int height);
 
 	};
 
@@ -179,7 +178,7 @@ namespace geeL {
 		virtual TextureType getTextureType() const;
 
 		virtual Resolution getScreenResolution() const;
-		virtual void setRenderResolution() const;
+		virtual void applyRenderResolution() const;
 
 		static void unbind();
 
@@ -214,7 +213,7 @@ namespace geeL {
 
 		virtual unsigned int getResolution() const;
 		virtual Resolution getScreenResolution() const;
-		virtual void setRenderResolution() const;
+		virtual void applyRenderResolution() const;
 
 		static void unbind();
 
@@ -265,10 +264,6 @@ namespace geeL {
 
 	inline void Texture2D::setResolution(const Resolution& resolution) {
 		this->resolution = resolution;
-	}
-
-	inline void Texture2D::setResolution(unsigned int width, unsigned int height) {
-		resolution = Resolution(width, height);
 	}
 
 	inline TextureType Texture2D::getTextureType() const {
