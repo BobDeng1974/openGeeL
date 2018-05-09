@@ -48,7 +48,7 @@ namespace geeL {
 		ResolutionScale getScale() const;
 
 		void resize(ResolutionScale& scale);
-		void setRenderResolution() const;
+		void applyRenderResolution() const;
 
 		template<class T>
 		float operator*(T o) const;
@@ -112,7 +112,7 @@ namespace geeL {
 		return (float)width / (float)baseWidth;
 	}
 
-	inline void Resolution::setRenderResolution() const {
+	inline void Resolution::applyRenderResolution() const {
 		Viewport::set(0, 0, width, height);
 	}
 
@@ -158,7 +158,7 @@ namespace geeL {
 	}
 
 	inline void ResolutionScale::set(float value) {
-		if (scale != value && value > 0.f && value <= 1.f)
+		if (scale != value && value > 0.f && value <= 2.f)
 			scale = value;
 	}
 
