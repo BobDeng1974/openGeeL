@@ -20,11 +20,11 @@ namespace geeL {
 				AnisotropicFilter::None,
 				0) {}
 
-	void RenderTexture::setRenderResolution() const {
-		Texture2D::setRenderResolution();
+	void RenderTexture::applyRenderResolution() const {
+		Texture2D::applyRenderResolution();
 	}
 
-	Resolution RenderTexture::getRenderResolution() const {
+	Resolution RenderTexture::getRenderPreset() const {
 		return Texture2D::getResolution();
 	}
 

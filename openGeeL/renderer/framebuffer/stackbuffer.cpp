@@ -90,7 +90,7 @@ namespace geeL {
 	Resolution StackBuffer::getResolution() const {
 		assert(!stackBuffer.empty());
 
-		return stackBuffer.top()->getRenderResolution();
+		return stackBuffer.top()->getRenderPreset();
 	}
 
 	void StackBuffer::applyRenderResolution() const {

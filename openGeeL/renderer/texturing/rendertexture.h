@@ -16,8 +16,8 @@ namespace geeL {
 			WrapMode wrapMode = WrapMode::Repeat, 
 			FilterMode filterMode = FilterMode::None);
 
-		virtual void setRenderResolution() const;
-		virtual Resolution getRenderResolution() const;
+		virtual void applyRenderResolution() const;
+		virtual Resolution getRenderPreset() const;
 		virtual unsigned int getSize() const;
 
 	protected:

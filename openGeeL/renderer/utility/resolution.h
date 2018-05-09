@@ -25,8 +25,8 @@ namespace geeL {
 	};
 
 	ResolutionScale getResolutionScale(ResolutionPreset resolution);
-	ResolutionPreset getRenderResolution(size_t index);
-	ResolutionPreset getRenderResolution(ResolutionScale resolution);
+	ResolutionPreset getRenderPreset(size_t index);
+	ResolutionPreset getRenderPreset(ResolutionScale resolution);
 	size_t getRenderResolutionCount();
 	size_t getRenderResolutionIndex(ResolutionPreset resolution);
 	
@@ -158,8 +158,8 @@ namespace geeL {
 	}
 
 	inline void ResolutionScale::set(float value) {
-		if (scale != value && value > 0.f && value <= 2.f)
-			scale = value;
+		if (scale != value)
+			scale = (value < 0.f) ? 0.f : (value > 2.f) ? 2.f : value;
 	}
 
 	template<class T>

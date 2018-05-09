@@ -44,14 +44,14 @@ namespace geeL {
 		return scales.size() - 1;
 	}
 
-	ResolutionPreset getRenderResolution(size_t index) {
+	ResolutionPreset getRenderPreset(size_t index) {
 		if (index >= scales.size())
 			return ResolutionPreset::FULLSCREEN;
 
 		return scales[index];
 	}
 
-	ResolutionPreset getRenderResolution(ResolutionScale resolution) {
+	ResolutionPreset getRenderPreset(ResolutionScale resolution) {
 		for (int i = 0; i < scales.size(); i++) {
 			ResolutionScale scale = getResolutionScale(scales[i]);
 

@@ -626,7 +626,7 @@ namespace geeL {
 					float resolution = ssaoInit["resolution"].get_or(1.f);
 
 					BilateralFilter* blur = new BilateralFilter(blurSigma, 7, blurFactor);
-					SSAO* ssao = new SSAO(*blur, radius, getRenderResolution(ResolutionScale(resolution)));
+					SSAO* ssao = new SSAO(*blur, radius, getRenderPreset(ResolutionScale(resolution)));
 					renderer.addEffect(*ssao);
 					scene.addRequester(*ssao);
 
@@ -660,7 +660,7 @@ namespace geeL {
 					float scatter = bloomInit["scatter"].get_or(1.f);
 					float blurSigma = bloomInit["blurSigma"].get_or(5.f);
 					float resolution = bloomInit["resolution"].get_or(1.f);
-					ResolutionPreset resPreset = getRenderResolution(ResolutionScale(resolution));
+					ResolutionPreset resPreset = getRenderPreset(ResolutionScale(resolution));
 
 					BrightnessFilterCutoff* filter = new BrightnessFilterCutoff(scatter);
 					GaussianBlur* blur = new GaussianBlur(blurSigma, 17);
@@ -684,7 +684,7 @@ namespace geeL {
 
 					float blurSigma = ssrrInit["blurSigma"].get_or(5.f);
 					float resolution = ssrrInit["resolution"].get_or(1.f);
-					ResolutionPreset resPreset = getRenderResolution(ResolutionScale(resolution));
+					ResolutionPreset resPreset = getRenderPreset(ResolutionScale(resolution));
 
 					GaussianBlur* blur = new GaussianBlur(blurSigma, 5);
 					SSRR* ssrr = new SSRR(stepCount, stepSize, stepGain);
@@ -713,7 +713,7 @@ namespace geeL {
 					float focalLength = dofInit["focalLength"].get_or(10.f);
 					float blurSigma = dofInit["blurSigma"].get_or(2.f);
 					float resolution = dofInit["resolution"].get_or(0.5f);
-					ResolutionPreset resPreset = getRenderResolution(ResolutionScale(resolution));
+					ResolutionPreset resPreset = getRenderPreset(ResolutionScale(resolution));
 
 					DepthOfFieldBlur* blur = new DepthOfFieldBlur(0.1f, blurSigma);
 					DepthOfFieldBlurred* dof = new DepthOfFieldBlurred(*blur, focalLength, aperture, 100.f, resPreset);
@@ -738,7 +738,7 @@ namespace geeL {
 					float blurSigma = godInit["blurSigma"].get_or(5.f);
 					float blurFactor = godInit["blurFactor"].get_or(5.f);
 					float resolution = godInit["resolution"].get_or(1.f);
-					ResolutionPreset resPreset = getRenderResolution(ResolutionScale(resolution));
+					ResolutionPreset resPreset = getRenderPreset(ResolutionScale(resolution));
 
 					BilateralFilter* blur = new BilateralFilter(blurSigma, 7, blurFactor);
 					GodRay* ray = new GodRay(position, sampleCount);

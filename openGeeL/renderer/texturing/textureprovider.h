@@ -62,6 +62,7 @@ namespace geeL {
 		virtual TextureParameters& getDefaultParameters() = 0;
 
 		virtual const Resolution& getRenderResolution() const = 0;
+		ResolutionPreset getClosestPreset(const Resolution& customResolution) const;
 
 	};
 

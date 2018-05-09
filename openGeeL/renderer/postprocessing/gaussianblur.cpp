@@ -51,9 +51,7 @@ namespace geeL {
 	void GaussianBlur::init(const PostProcessingParameter& parameter) {
 		PostProcessingEffectFS::init(parameter);
 
-		ResolutionScale scale(resolution.getScale());
-		ResolutionPreset preset = getRenderResolution(scale);
-
+		ResolutionPreset preset = provider->getClosestPreset(resolution);
 		tempTexture = &provider->requestTextureManual(preset, ColorType::RGB16, 
 			FilterMode::Linear, WrapMode::ClampEdge);
 
@@ -273,7 +271,7 @@ namespace geeL {
 		sobel.setImage(provider->requestPosition());
 
 		ResolutionScale scale(resolution.getScale());
-		ResolutionPreset preset = getRenderResolution(scale);
+		ResolutionPreset preset = getRenderPreset(scale);
 
 		sobelTexture = &provider->requestTextureManual(preset, ColorType::RGB16,
 			FilterMode::None, WrapMode::ClampEdge);

@@ -22,7 +22,7 @@ namespace geeL {
 		bool assignToo(const IFrameBuffer& buffer, unsigned int position, bool bindFB = false) const;
 
 		virtual void applyRenderResolution() const = 0;
-		virtual Resolution getRenderResolution() const = 0;
+		virtual Resolution getRenderPreset() const = 0;
 		virtual unsigned int getSize() const = 0;
 
 		bool isAssigned() const;
@@ -47,7 +47,7 @@ namespace geeL {
 		LayeredTarget(RenderTarget& target, RenderTargets& ...targets);
 
 		virtual void applyRenderResolution() const;
-		virtual Resolution getRenderResolution() const;
+		virtual Resolution getRenderPreset() const;
 		virtual unsigned int getSize() const;
 
 	protected:

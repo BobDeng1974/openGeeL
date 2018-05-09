@@ -12,7 +12,7 @@ namespace geeL {
 		TextureTarget(std::unique_ptr<Texture> texture);
 
 		virtual void applyRenderResolution() const;
-		virtual Resolution getRenderResolution() const;
+		virtual Resolution getRenderPreset() const;
 		virtual unsigned int getSize() const;
 
 		template<typename TextureType, typename ...TextureArgs>

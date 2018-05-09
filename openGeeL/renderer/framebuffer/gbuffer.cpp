@@ -137,7 +137,7 @@ namespace geeL {
 
 	Resolution ForwardBuffer::getResolution() const {
 		assert(target != nullptr);
-		return target->getRenderResolution();
+		return target->getRenderPreset();
 	}
 
 

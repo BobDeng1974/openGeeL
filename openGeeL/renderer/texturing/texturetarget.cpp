@@ -11,7 +11,7 @@ namespace geeL {
 		getTexture().applyRenderResolution();
 	}
 
-	Resolution TextureTarget::getRenderResolution() const {
+	Resolution TextureTarget::getRenderPreset() const {
 		return getTexture().getScreenResolution();
 	}
 

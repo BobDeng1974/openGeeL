@@ -62,7 +62,7 @@ namespace geeL {
 	}
 
 	Resolution PingPongBuffer::getResolution() const {
-		return current->getRenderResolution();
+		return current->getRenderPreset();
 	}
 
 	const RenderTarget& PingPongBuffer::getTexture(unsigned int position) const {

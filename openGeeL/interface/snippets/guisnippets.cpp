@@ -194,7 +194,7 @@ namespace geeL {
 		nk_label(context, "Resolution", NK_TEXT_CENTERED);
 		nk_slider_int(context, 0, &newIndex, int(getRenderResolutionCount()) - 1, 1);
 
-		ResolutionPreset newResolution(getRenderResolution(newIndex));
+		ResolutionPreset newResolution(getRenderPreset(newIndex));
 
 		std::string valName = std::to_string((int)newResolution) + "%";
 		nk_label(context, valName.c_str(), NK_TEXT_CENTERED);

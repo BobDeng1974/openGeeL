@@ -265,4 +265,9 @@ namespace geeL {
 		return list.end();
 	}
 
+	ResolutionPreset ITextureProvider::getClosestPreset(const Resolution& customResolution) const {
+		float scale = float(customResolution.getWidth()) / float(getRenderResolution().getWidth());
+		return getRenderPreset(ResolutionScale(scale));
+	}
+
 }
