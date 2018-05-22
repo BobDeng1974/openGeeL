@@ -25,6 +25,16 @@ namespace geeL {
 
 	Application::Application(RenderWindow& window, 
 		InputManager& inputManager, 
+		Memory& memory)
+			: window(window)
+			, inputManager(inputManager)
+			, memory(memory) {
+
+		inputManager.init(&window);
+	}
+
+	Application::Application(RenderWindow& window,
+		InputManager& inputManager, 
 		ContinuousThread& mainThread,
 		Memory& memory)
 			: window(window)

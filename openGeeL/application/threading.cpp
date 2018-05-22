@@ -8,10 +8,6 @@ using namespace std;
 
 namespace geeL {
 
-	ContinuousSingleThread::ContinuousSingleThread(ThreadedObject& obj) 
-		: obj(obj) {}
-
-
 	std::thread ContinuousThread::start() {
 		return std::thread([this]() { run(); });
 	}
@@ -26,6 +22,18 @@ namespace geeL {
 		this->app = &app;
 	}
 
+
+
+	ContinuousSingleThread::ContinuousSingleThread(ThreadedObject& obj)
+		: obj(obj) {}
+
+
+	std::thread ContinuousSingleThread::tick() {
+		return std::thread([this]() { 
+			obj.run();
+			time.update();
+		});
+	}
 
 	void ContinuousSingleThread::run() {
 		assert(app != nullptr);
@@ -51,10 +59,19 @@ namespace geeL {
 	}
 
 
-	ContinuousMultiThread::ContinuousMultiThread() {}
+	ContinuousMultiThread::ContinuousMultiThread()
+		: minMS(0) {}
+
+	std::thread ContinuousMultiThread::tick() {
+		return std::thread([this]() {
+			iterateObjects([this](ThreadedObject& obj) { obj.run(); });
+			time.update();
+		});
+	}
 
 	void ContinuousMultiThread::addObject(ThreadedObject& obj) {
 		objects.push_back(&obj);
+		computeFPS();
 	}
 
 	void ContinuousMultiThread::run() {
@@ -65,22 +82,13 @@ namespace geeL {
 		time.reset();
 		Time& inner = Time();
 
-		long fps = 0xFFFFFFFFFFFFFFFF;
-		iterateObjects([this, &fps](ThreadedObject& obj) {
-			long currFPS = obj.getFPS();
-			if (currFPS < fps) fps = currFPS;
-		});
-
-		long ms = 1000L / fps;
-
-
 		while (!app->closing()) {
 			inner.reset();
 
 			iterateObjects([this](ThreadedObject& obj) { obj.run(); });
 
 			inner.update();
-			long currMS = ms - inner.deltaTimeMS();
+			long currMS = minMS - inner.deltaTimeMS();
 			if (currMS > 0L) this_thread::sleep_for(chrono::milliseconds(currMS));
 
 			time.update();
@@ -94,6 +102,16 @@ namespace geeL {
 			ThreadedObject& obj = **it;
 			function(obj);
 		}
+	}
+
+	void ContinuousMultiThread::computeFPS() {
+		long fps = 0xFFFFFFFFFFFFFFFF;
+		iterateObjects([this, &fps](ThreadedObject& obj) {
+			long currFPS = obj.getFPS();
+			if (currFPS < fps) fps = currFPS;
+		});
+
+		minMS = 1000L / fps;
 	}
 
 }

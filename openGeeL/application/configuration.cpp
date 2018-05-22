@@ -77,7 +77,6 @@ namespace geeL {
 		GUIRenderer& gui = GUIRenderer(window, context, renderer);
 		renderer.addGUIRenderer(gui);
 
-
 		Physics* physics;
 		ContinuousSingleThread* physicsThread = nullptr;
 		if (physicsType == PhysicsType::World) {

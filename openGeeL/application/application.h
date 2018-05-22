@@ -25,6 +25,10 @@ namespace geeL {
 	class Application {
 
 	public:
+		Application(RenderWindow& window,
+			InputManager& inputManager,
+			memory::Memory& memory);
+
 		Application(RenderWindow& window, 
 			InputManager& inputManager,
 			ContinuousThread& mainThread,

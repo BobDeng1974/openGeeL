@@ -36,6 +36,9 @@ namespace geeL {
 		//Returns and starts std::thread that runs containing threaded object
 		std::thread start();
 
+		//Returns and starts std::thread that runs one tick of threaded object
+		virtual std::thread tick() = 0;
+
 		const Time& getTime() const;
 		void setApplication(const Application& app);
 
@@ -54,6 +57,8 @@ namespace geeL {
 	public:
 		ContinuousSingleThread(ThreadedObject& obj);
 
+		virtual std::thread tick();
+
 	protected:
 		virtual void run();
 
@@ -69,15 +74,18 @@ namespace geeL {
 	public:
 		ContinuousMultiThread();
 
+		virtual std::thread tick();
 		void addObject(ThreadedObject& obj);
 
 	protected:
 		virtual void run();
 
 	private:
+		double minMS;
 		std::list<ThreadedObject*> objects;
 
 		void iterateObjects(std::function<void(ThreadedObject&)> function);
+		void computeFPS();
 
 	};
 
