@@ -3,6 +3,11 @@
 #define DIFFUSE_SPECULAR_SEPARATION 0
 #define BACKFACE_SUBSURFACE_SCATTERING 0
 
+#define USE_UNREAL_FACTOR 0
+#define UNREAL_FACTOR 0.25
+#define INVERSE_UNREAL (1 - UNREAL_FACTOR)
+
+
 //Compute fresnel term with Fresnel-Schlick approximation
 vec3 calculateFresnelTerm(float theta, vec3 albedo, float metallic, float roughness) {
 	vec3 F0 = vec3(0.04f);
@@ -27,22 +32,26 @@ float calculateNormalDistrubution(vec3 normal, vec3 halfway, float roughness) {
 }
 
 float calculateGeometryFunctionSchlick(float NdotV, float roughness) {
-    float r = (roughness + 1.0f);
-    float k = (r * r) / 8.0f;
+    float r = (roughness + 1.f);
+    float k = (r * r) / 8.f;
 
     float nom   = NdotV;
-    float denom = NdotV * (1.0f - k) + k;
+    float denom = NdotV * (1.f - k) + k;
 	
     return nom / denom;
 }
 
 float calculateGeometryFunctionSmith(vec3 normal, vec3 viewDirection, vec3 lightDirection, float roughness) {
-    float NdotV = doto(normal, viewDirection);
-    float NdotL = doto(normal, lightDirection);
+    float NdotV = max(dot(normal, viewDirection), 0.f);
+    float NdotL = max(dot(normal, lightDirection), 0.f);
     float ggx2  = calculateGeometryFunctionSchlick(NdotV, roughness);
     float ggx1  = calculateGeometryFunctionSchlick(NdotL, roughness);
 	
-    return ggx1 * ggx2;
+#if (USE_UNREAL_FACTOR == 1)
+	return max(pow(ggx1 * ggx2, INVERSE_UNREAL), 0.001f);
+#else
+    return max(ggx1 * ggx2, 0.001f);
+#endif
 }
 
 
