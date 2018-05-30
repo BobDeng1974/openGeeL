@@ -51,7 +51,6 @@ namespace geeL {
 			inner.update();
 			long currMS = ms - inner.deltaTimeMS();
 			if (currMS > 0L) this_thread::sleep_for(chrono::milliseconds(currMS));
-
 			time.update();
 		}
 

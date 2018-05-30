@@ -182,7 +182,7 @@ public:
 			scene.addRequester(ray);
 			postLister.add(raySmooth, godRaySnippet);
 
-			MotionBlur& motionBlur = MotionBlur(0.3f, 2.f, 10);
+			MotionBlur& motionBlur = MotionBlur(0.2f, 2.f, 15);
 			//VelocityBuffer& velocity = VelocityBuffer();
 			//scene.addRequester(velocity);
 			//MotionBlurPerPixel& motionBlur = MotionBlurPerPixel(velocity);

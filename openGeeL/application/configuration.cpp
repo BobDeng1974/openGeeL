@@ -61,8 +61,7 @@ namespace geeL {
 		SceneRender& lighting = DeferredLighting(scene);
 		//SceneRender& lighting = TiledDeferredLighting(scene);
 		DeferredRenderer& renderer = DeferredRenderer(window, textureProvider, lighting, context, def, 
-			gBuffer, meshFactory, materialFactory);
-		renderer.setScene(scene);
+			gBuffer, scene, meshFactory, materialFactory);
 
 		ForwardBuffer& fBuffer = ForwardBuffer(gBuffer, textureProvider);
 		renderer.addFBuffer(fBuffer);
@@ -90,6 +89,7 @@ namespace geeL {
 			physics = new NoPhysics();
 
 		app.addThreadedObject(scene);
+		//app.addThreadedObject(renderer);
 
 		initFunction(app, renderer, gui, scene, lightManager, transFactory, meshFactory,
 			materialFactory, cubeMapFactory, def, *physics);

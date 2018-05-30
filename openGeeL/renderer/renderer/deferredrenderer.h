@@ -35,6 +35,7 @@ namespace geeL {
 			RenderContext& context, 
 			DefaultPostProcess& def, 
 			GBuffer& gBuffer,
+			RenderScene& scene,
 			MeshFactory& meshFactory, 
 			MaterialFactory& materialFactory);
 
@@ -64,6 +65,7 @@ namespace geeL {
 
 		std::list<DynamicRenderTexture*> renderTextures;
 
+		RenderScene& scene;
 		TextureProvider& provider;
 		GBuffer& gBuffer;
 		ForwardBuffer* fBuffer;

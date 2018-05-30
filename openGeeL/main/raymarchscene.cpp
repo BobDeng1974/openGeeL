@@ -48,8 +48,7 @@ void RaymarchTest::draw() {
 	RenderContext& context = RenderContext();
 	RayMarcher& raymarch = RayMarcher(*scene);
 	DeferredRenderer& renderer = DeferredRenderer(window, textureProvider, raymarch, context, def, 
-		gBuffer, meshFactory, materialFactory);
-	renderer.setScene(*scene);
+		gBuffer, *scene, meshFactory, materialFactory);
 
 	ContinuousSingleThread renderThread(renderer);
 	Application& app = ApplicationManager::createApplication(window, manager, renderThread, *memory);

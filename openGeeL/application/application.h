@@ -45,6 +45,7 @@ namespace geeL {
 		void addThreadedObject(ThreadedObject& object);
 
 		bool closing() const;
+		void setTargetFPS(long value);
 
 		const ContinuousThread* const getCurrentThread();
 		Time getCurrentTime();
@@ -52,6 +53,7 @@ namespace geeL {
 		memory::Memory& getMemory();
 
 	private:
+		long ms;
 		RenderWindow& window;
 		InputManager& inputManager;
 		memory::Memory& memory;

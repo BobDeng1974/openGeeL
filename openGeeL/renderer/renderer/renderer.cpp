@@ -46,11 +46,6 @@ namespace geeL {
 		gui = &renderer;
 	}
 
-	void Renderer::setScene(RenderScene& scene) {
-		this->scene = &scene;
-	}
-
-
 	void Renderer::onAdd(GLStructure& structure) {
 		std::lock_guard<std::mutex> guard(glMutex);
 		toAdd.emplace(&structure);

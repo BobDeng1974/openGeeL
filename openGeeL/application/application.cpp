@@ -22,13 +22,13 @@ namespace geeL {
 	}
 
 
-
 	Application::Application(RenderWindow& window, 
 		InputManager& inputManager, 
 		Memory& memory)
 			: window(window)
 			, inputManager(inputManager)
-			, memory(memory) {
+			, memory(memory)
+			, ms(10) {
 
 		inputManager.init(&window);
 	}
@@ -39,7 +39,8 @@ namespace geeL {
 		Memory& memory)
 			: window(window)
 			, inputManager(inputManager)
-			, memory(memory) {
+			, memory(memory)
+			, ms(10) {
 
 		inputManager.init(&window);
 		addThread(mainThread);
@@ -54,21 +55,18 @@ namespace geeL {
 
 		time.reset();
 		Time& inner = Time();
-		long ms = 10;
-
 		while (!window.shouldClose()) {
 			inner.reset();
 
 			glfwPollEvents();
 			inputManager.update();
+			updateExitStatus(inputManager, window);
+
 			iterObjects([](ThreadedObject& obj) { obj.run(); });
 
 			inner.update();
 			long currMS = std::max(0L, ms - inner.deltaTimeMS());
 			this_thread::sleep_for(chrono::milliseconds(currMS));
-
-			updateExitStatus(inputManager, window);
-
 			time.update();
 		}
 
@@ -91,6 +89,10 @@ namespace geeL {
 
 	bool Application::closing() const {
 		return close;
+	}
+
+	void Application::setTargetFPS(long value) {
+		ms = 1000L / value;
 	}
 
 	const ContinuousThread* const Application::getThread(ThreadID id) {
