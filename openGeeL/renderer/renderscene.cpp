@@ -292,6 +292,8 @@ namespace geeL {
 		});
 
 		unlock();
+
+		updateUpdateListener();
 	}
 
 	void RenderScene::updateBindings() {
@@ -380,7 +382,6 @@ namespace geeL {
 
 	void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera, bool updateBindings) const {
 		using MSPair = pair<const MeshRenderer*, SceneShader*>;
-
 		SceneShader* currentShader = nullptr;
 
 		//Write all objects into sortable data structure
@@ -419,6 +420,11 @@ namespace geeL {
 				object.draw(shader);
 		}
 
+	}
+
+	void RenderScene::updateUpdateListener() {
+		for (auto it(updateListeners.begin()); it != updateListeners.end(); it++)
+			(*it)(*this);
 	}
 
 	void RenderScene::drawTransparent(const Camera& camera) const {
@@ -502,6 +508,10 @@ namespace geeL {
 
 	void RenderScene::unlock() {
 		mutex.unlock();
+	}
+
+	void RenderScene::addUpdateListener(std::function<void(RenderScene&)> listener) {
+		updateListeners.push_back(listener);
 	}
 
 	

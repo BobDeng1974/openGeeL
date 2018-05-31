@@ -173,11 +173,14 @@ namespace geeL {
 		void lock();
 		void unlock();
 
+		void addUpdateListener(std::function<void(RenderScene&)> listener);
+
 	private:
 		bool initialized = false;
 		Input& input;
 		MaterialFactory& materialFactory;
 		std::mutex mutex;
+		std::list<std::function<void(RenderScene&)>> updateListeners;
 
 
 		void drawDefault(const Camera& camera) const;
@@ -190,6 +193,8 @@ namespace geeL {
 
 		void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera,
 			bool updateBindings = false) const;
+
+		void updateUpdateListener();
 
 	};
 

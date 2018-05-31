@@ -134,7 +134,7 @@ namespace geeL {
 
 		};
 
-		const unsigned int cacheClearingRate = 10; //Cleanup only every n'th frame
+		const unsigned int cacheClearingRate = 1; //Cleanup only every n'th frame
 		unsigned int currentRate = 0;
 		Resolution resolution;
 

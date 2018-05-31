@@ -57,6 +57,7 @@ namespace geeL {
 		
 	private:
 		mutable std::mutex renderMutex;
+		AtomicWrapper<bool> sceneReady;
 
 		std::vector<PostProcessingEffect*> earlyEffects;
 		std::vector<PostProcessingEffect*> intermediateEffects;
@@ -64,6 +65,7 @@ namespace geeL {
 		std::vector<PostProcessingEffect*> externalEffects;
 
 		std::list<DynamicRenderTexture*> renderTextures;
+		std::function<void()> geometryPassFunction;
 
 		RenderScene& scene;
 		TextureProvider& provider;
@@ -80,7 +82,6 @@ namespace geeL {
 		DefaultPostProcess& defaultEffect;
 		AdditiveEffect combineEffect;
 
-		std::function<void()> geometryPassFunction;
 
 		DeferredRenderer(const DeferredRenderer& other) = delete;
 		DeferredRenderer& operator= (const DeferredRenderer& other) = delete;

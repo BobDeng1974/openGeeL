@@ -41,7 +41,8 @@ namespace geeL {
 			, lighting(lighting)
 			, defaultEffect(def)
 			, fallbackEffect("shaders/screen.frag")
-			, combineEffect("shaders/screen.frag") {
+			, combineEffect("shaders/screen.frag")
+			, sceneReady(false) {
 
 		init();
 	}
@@ -61,6 +62,10 @@ namespace geeL {
 
 		ScreenQuad& defQuad = ScreenQuad::get();
 		defQuad.init();
+
+		scene.addUpdateListener([this](RenderScene& scene) {
+			this->sceneReady = true;
+		});
 	}
 
 	
@@ -76,13 +81,18 @@ namespace geeL {
 
 	void DeferredRenderer::run() {
 		Renderer::run();
+		provider.cleanupCache();
+
+		//Only draw current state of scene if it has actually updates since last draw call
+		if (sceneReady) sceneReady = false;
+		else return;
 
 		lock_guard<mutex> glGuard(glMutex);
 		lock_guard<mutex> renderGuard(renderMutex);
 		draw();
 
 		provider.swap();
-		provider.cleanupCache();
+		
 		window.swapBuffer();
 	}
 
