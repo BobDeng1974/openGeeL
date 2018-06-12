@@ -63,15 +63,14 @@ void main() {
 	discard(length(fragPosition) <= 0.001f);
 #endif
 
+	vec3 viewDirection = normalize(-fragPosition);
     vec3 normal	= readNormal(textureCoordinates);
     vec4 albedo	= readDiffuse(textureCoordinates);
 
-	vec4 properties = readProperties(textureCoordinates);
-	vec3 emissivity = vec3(properties.b);
-	float roughness = properties.r;
-	float metallic  = properties.g;
-
-	vec3  viewDirection = normalize(-fragPosition);
+	vec3 emissivity;
+	float roughness, metallic;
+	readProperties(textureCoordinates, roughness, metallic, emissivity);
+	
 
 	vec3 irradiance = albedo.rgb * emissivity;
 

@@ -64,10 +64,8 @@ void main() {
 	vec3 camPosition = (inverseView * vec4(vec3(0.f), 1.f)).xyz;
 
 	vec4 albedo = texture(gDiffuse, TexCoords);
-
-	vec4 properties = readProperties(TexCoords);
-	float roughness = properties.r;
-	float metallic = properties.g;
+	float roughness, metallic;
+	readProperties(TexCoords, roughness, metallic);
 
 	vec3 ks = calculateFresnelTerm(doto(normal, view), albedo.rgb, metallic, roughness);
 	vec3 kd = 1.f - ks;

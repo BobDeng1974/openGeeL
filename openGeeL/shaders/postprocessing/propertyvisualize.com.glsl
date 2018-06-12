@@ -7,7 +7,7 @@ layout (local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
 layout(binding = 0, rgba16f) uniform image2D target;
 
 uniform vec2 resolution;
-uniform uint mode; //0 => Roughness, 1 => Metallic, 2 => emissivity, 3 => occlusion
+uniform uint mode; //0 => Roughness, 1 => Metallic, 2 => Emissivity, 3 => Occlusion
 uniform sampler2D PROPERTY_MAP;
 
 #include <shaders/gbufferread.glsl>

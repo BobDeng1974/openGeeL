@@ -80,9 +80,8 @@ void main() {
 	vec3 camPosition = (inverseView * vec4(vec3(0.f), 1.f)).xyz;
 
 	vec3 albedo = readDiffuse(TexCoords).rgb;
-	vec4 properties = readProperties(TexCoords);
-	float roughness = properties.r;
-	float metallic = properties.g;
+	float roughness, metallic;
+	readProperties(TexCoords, roughness, metallic);
 
 	//vec3 indirectDiffuse = indirectDiffuse(position, normal, albedo);
 	//vec3 indirectSpecular = indirectSpecular(position, refl, normal, roughness);

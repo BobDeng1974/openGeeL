@@ -35,6 +35,30 @@
 		return texture(PROPERTY_MAP, texCoords);
 	}
 
+	void readProperties(vec2 texCoords, out float roughness, out float metallic) {
+		vec4 p = texture(PROPERTY_MAP, texCoords);
+
+		roughness = p.r;
+		metallic  = p.g;
+	}
+
+	void readProperties(vec2 texCoords, out float roughness, out float metallic, out float occlusion) {
+		vec4 p = texture(PROPERTY_MAP, texCoords);
+
+		roughness = p.r;
+		metallic  = p.g;
+		occlusion = p.a;
+	}
+
+	void readProperties(vec2 texCoords, out float roughness, out float metallic, out vec3 emissivity) {
+		vec4 p = texture(PROPERTY_MAP, texCoords);
+
+		roughness = p.r;
+		metallic  = p.g;
+		emissivity = vec3(p.b);
+	}
+
+
 	float readOcclusion(vec2 texCoords) {
 		return texture(PROPERTY_MAP, texCoords).a;
 	}
@@ -50,6 +74,7 @@
 	float readMetallic(vec2 texCoords) {
 		return texture(PROPERTY_MAP, texCoords).g;
 	}
+
 
 
 #endif

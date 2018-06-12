@@ -67,12 +67,12 @@ namespace geeL {
 		RenderTarget& position = provider.requestPosition();
 		RenderTarget& normal = provider.requestNormal();
 		RenderTarget& diffuse = provider.requestAlbedo();
-		RenderTarget& occEmiRoughMet = provider.requestProperties();
+		RenderTarget& properties = provider.requestProperties();
 
 		position.assignTo(*this, 0);
 		normal.assignTo(*this, 1);
 		diffuse.assignTo(*this, 2);
-		occEmiRoughMet.assignTo(*this, 3);
+		properties.assignTo(*this, 3);
 		
 		unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 		glDrawBuffers(4, attachments);
