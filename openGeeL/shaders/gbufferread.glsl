@@ -67,6 +67,10 @@
 	float readOcclusion(vec2 texCoords) {
 		return texture(PROPERTY_MAP, texCoords).a;
 	}
+
+	float readTranslucency(vec2 texCoords) {
+		return texture(PROPERTY_MAP, texCoords).b;
+	}
 	
 	float readRoughness(vec2 texCoords) {
 		return texture(PROPERTY_MAP, texCoords).r;
