@@ -1,9 +1,15 @@
 #version 430
 
+#define ENABLE_DEFERRED_EMISSIVITY 0
+
 #define POSITION_MAP	gPosition
 #define NORMAL_MAP		gNormal
 #define DIFFUSE_MAP		gDiffuse
 #define PROPERTY_MAP	gProperties
+
+#if (ENABLE_DEFERRED_EMISSIVITY == 1)
+#define EMISSION_MAP    gEmission
+#endif
 
 #include <shaders/helperfunctions.glsl>
 #include <shaders/sampling.glsl>
@@ -28,6 +34,9 @@ uniform sampler2D POSITION_MAP;
 uniform sampler2D NORMAL_MAP;
 uniform sampler2D DIFFUSE_MAP;
 uniform sampler2D PROPERTY_MAP;
+#if (ENABLE_DEFERRED_EMISSIVITY == 1)
+uniform sampler2D EMISSION_MAP;
+#endif
 
 #include <shaders/gbufferread.glsl>
 

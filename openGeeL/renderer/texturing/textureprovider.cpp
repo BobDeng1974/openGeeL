@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include "utility/resolution.h"
+#include "appglobals.h"
 #include "texturewrapper.h"
 #include "rendertexture.h"
 #include "textureparams.h"
@@ -16,7 +17,8 @@ namespace geeL {
 		, position(nullptr)
 		, normal(nullptr)
 		, albedo(nullptr)
-		, properties(nullptr) {
+		, properties(nullptr)
+		, emission(nullptr) {
 
 		callback = [this](RenderTexture& texture) { returnTexture(texture); };
 	}
@@ -29,6 +31,7 @@ namespace geeL {
 		if (normal != nullptr) delete normal;
 		if (albedo != nullptr) delete albedo;
 		if (properties != nullptr) delete properties;
+		if (emission != nullptr) delete emission;
 
 		for (auto resolutionIt(textures.begin()); resolutionIt != textures.end(); resolutionIt++) {
 			auto& colors = resolutionIt->second;
@@ -75,6 +78,16 @@ namespace geeL {
 				FilterMode::None, WrapMode::Repeat, AnisotropicFilter::None);
 
 		return *properties;
+	}
+
+	RenderTexture* const TextureProvider::requestEmission() {
+#if ENABLE_DEFERRED_EMISSIVITY
+	if (emission == nullptr)
+		emission = &requestTextureManual(ResolutionPreset::FULLSCREEN, ColorType::Single16,
+			FilterMode::None, WrapMode::Repeat, AnisotropicFilter::None);
+#endif
+
+		return emission;
 	}
 
 	RenderTexture& TextureProvider::requestDefaultTexture() {

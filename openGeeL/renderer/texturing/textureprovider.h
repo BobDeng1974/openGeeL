@@ -26,6 +26,9 @@ namespace geeL {
 		virtual RenderTexture& requestNormal() = 0;
 		virtual RenderTexture& requestProperties() = 0;
 
+		//Returns emission texture if emissivity is enabled, otherwise null
+		virtual RenderTexture* const requestEmission() = 0;
+
 		//Request texture with default properties (Properties of final screen texture)
 		virtual RenderTexture& requestDefaultTexture() = 0;
 
@@ -78,6 +81,7 @@ namespace geeL {
 		virtual RenderTexture& requestPosition();
 		virtual RenderTexture& requestNormal();
 		virtual RenderTexture& requestProperties();
+		virtual RenderTexture* const requestEmission();
 
 		virtual RenderTexture& requestDefaultTexture();
 		virtual RenderTexture& requestCurrentImage();
@@ -145,15 +149,12 @@ namespace geeL {
 		RenderTexture* position;
 		RenderTexture* normal;
 		RenderTexture* properties;
-
+		RenderTexture* emission;
 
 		std::function<void(RenderTexture&)> callback;
 
 		std::map<ResolutionScale, std::map<ColorType, MonitoredList>> textures;
 		std::map<FilterMode, std::map<WrapMode, std::map<AnisotropicFilter, TextureParameters>>> parameters;
-
-
-		
 
 	};
 

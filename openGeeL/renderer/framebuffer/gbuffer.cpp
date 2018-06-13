@@ -69,13 +69,30 @@ namespace geeL {
 		RenderTarget& diffuse = provider.requestAlbedo();
 		RenderTarget& properties = provider.requestProperties();
 
+		RenderTarget* const emission = provider.requestEmission();
+
+
 		position.assignTo(*this, 0);
 		normal.assignTo(*this, 1);
 		diffuse.assignTo(*this, 2);
 		properties.assignTo(*this, 3);
+
+		//Emission texture exists and we therefore attach it to gBuffer
+		if (emission) {
+			emission->assignTo(*this, 4);
+
+			unsigned int attachments[5] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, 
+				GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 };
+			glDrawBuffers(5, attachments);
+		}
+		//Ignore it otherwises
+		else {
+			unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, 
+				GL_COLOR_ATTACHMENT3 };
+			glDrawBuffers(4, attachments);
+
+		}
 		
-		unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
-		glDrawBuffers(4, attachments);
 	}
 
 

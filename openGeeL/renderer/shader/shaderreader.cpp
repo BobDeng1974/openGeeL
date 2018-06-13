@@ -162,6 +162,12 @@ namespace geeL {
 		}
 #endif
 
+#if ENABLE_DEFERRED_EMISSIVITY
+		{
+			StringReplacement separate("^#define ENABLE_DEFERRED_EMISSIVITY\\s+([0]){1}\\s?", "1");
+			FileReader::replaceOccurence(shaderCode, separate);
+		}
+#endif
 
 	}
 

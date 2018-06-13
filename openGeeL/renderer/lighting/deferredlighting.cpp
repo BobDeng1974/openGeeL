@@ -30,6 +30,10 @@ namespace geeL {
 		addTextureSampler(provider->requestNormal(), "gNormal");
 		addTextureSampler(provider->requestProperties(), "gProperties");
 
+		RenderTexture* const emission = provider->requestEmission();
+		if (emission) addTextureSampler(*emission, "gEmission");
+
+
 		LightManager& manager = scene.getLightmanager();
 		manager.addShaderListener(shader);
 
@@ -95,7 +99,10 @@ namespace geeL {
 		addTextureSampler(provider->requestPosition(), "gPosition");
 		addTextureSampler(provider->requestNormal(), "gNormal");
 		addTextureSampler(provider->requestProperties(), "gProperties");
-		shader.bind<int>("useEmissivity", 1);
+
+		RenderTexture* const emission = provider->requestEmission();
+		if (emission) addTextureSampler(*emission, "gEmission");
+
 
 		LightManager& manager = scene.getLightmanager();
 		manager.addShaderListener(shader);

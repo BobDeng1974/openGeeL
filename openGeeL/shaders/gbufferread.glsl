@@ -55,18 +55,19 @@
 
 		roughness = p.r;
 		metallic  = p.g;
-		emissivity = vec3(p.b);
+
+#ifdef EMISSION_MAP
+		emissivity = vec3(texture(EMISSION_MAP, texCoords).r);
+#else
+		emissivity = vec3(0.f);
+#endif
 	}
 
 
 	float readOcclusion(vec2 texCoords) {
 		return texture(PROPERTY_MAP, texCoords).a;
 	}
-
-	vec3 readEmissitivity(vec2 texCoords) {
-		return vec3(texture(PROPERTY_MAP, texCoords).b);
-	}
-
+	
 	float readRoughness(vec2 texCoords) {
 		return texture(PROPERTY_MAP, texCoords).r;
 	}
@@ -78,3 +79,13 @@
 
 
 #endif
+
+
+#ifdef EMISSION_MAP
+
+	vec3 readEmissitivity(vec2 texCoords) {
+		return vec3(texture(EMISSION_MAP, texCoords).r);
+	}
+
+#endif
+

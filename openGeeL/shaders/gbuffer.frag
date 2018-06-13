@@ -1,11 +1,16 @@
 #version 430 core
 
+#define ENABLE_DEFERRED_EMISSIVITY 0
+
 #include <shaders/material.glsl>
 
 layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec4 gNormal;
 layout (location = 2) out vec4 gDiffuse;
 layout (location = 3) out vec4 gProperties;
+#if (ENABLE_DEFERRED_EMISSIVITY == 1)
+layout (location = 4) out float gEmission;
+#endif
 
 in vec3 normal;
 in vec3 fragPosition;
@@ -32,6 +37,11 @@ void main() {
 
 	gProperties.r = roughness;
 	gProperties.g = metallic;
-	gProperties.b = dot(emission, vec3(0.2126f, 0.7152f, 0.0722f));
+	gProperties.b = 0.f;
 	gProperties.a = occlusion;
+
+#if (ENABLE_DEFERRED_EMISSIVITY == 1)
+	gEmission = dot(emission, vec3(0.2126f, 0.7152f, 0.0722f));
+#endif
+
 } 
