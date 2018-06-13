@@ -558,6 +558,9 @@
     <ClCompile Include="renderer\structures\bvh.cpp">
       <Filter>renderer\structures</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\postprocessing\subsurfacescattering.cpp">
+      <Filter>renderer\postprocessing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\texturing\texture.h">
@@ -1133,6 +1136,12 @@
     <ClInclude Include="renderer\structures\boundedobject.h">
       <Filter>renderer\structures</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\postprocessing\subsurfacescattering.h">
+      <Filter>renderer\postprocessing</Filter>
+    </ClInclude>
+    <ClInclude Include="main\headscene.h">
+      <Filter>main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\combine.frag">
@@ -1413,6 +1422,9 @@
     </None>
     <None Include="shaders\fade.glsl">
       <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\postprocessing\subsurfacescattering.frag">
+      <Filter>shaders\postprocessing</Filter>
     </None>
   </ItemGroup>
 </Project>

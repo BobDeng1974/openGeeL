@@ -11,6 +11,7 @@
 #include "sponzascene.h"
 #include "testscene.h"
 #include "capsulescene.h"
+#include "headscene.h"
 
 int main(int argc, char* argv[]) {
 	ApplicationManagerInstance instance;
@@ -38,7 +39,8 @@ int main(int argc, char* argv[]) {
 	//ArthouseScene::draw();
 	//SponzaGIScene::draw();
 	//ScienceScene::draw();
-	CharacterViewer::draw();
+	//CharacterViewer::draw();
+	HeadViewer::draw();
 	//ModelViewer::draw();
 	//CapsuleScene::draw();
 

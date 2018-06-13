@@ -90,10 +90,8 @@ public:
 					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Forward, false);
 					renderer->setShader(ss);
 				}
-				else if (mesh.getName() == "body") {
+				else if (mesh.getName() == "body")
 					renderer->setRenderMask(RenderMask::Skin);
-					//container.addTexture("translucency", materialFactory.createTexture("resources/girl/body_spec_01.jpg"));
-				}
 				else if (mesh.getName() == "hair_inner") {
 					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent, false);
 					renderer->setShader(ss);
@@ -135,12 +133,12 @@ public:
 				else if (container.name == "cloth") {
 					container.addTexture("emission", materialFactory.createTexture("resources/girl/cloth_glow_01.jpg", ColorType::GammaSpace));
 					container.addTexture("occlusion", materialFactory.createTexture("resources/girl/cloth_ao_01.jpg", ColorType::GammaSpace));
-					container.setVectorValue("Emissivity", vec3(20.f));
+					container.setVectorValue("Emissivity", vec3(1.f));
 					container.setFloatValue("Roughness", 0.5f);
 					container.setFloatValue("Metallic", 1.f);
 				}
 				else if (container.name == "light")
-					container.setVectorValue("Emissivity", vec3(100.f));
+					container.setVectorValue("Emissivity", vec3(1.f));
 				else if (container.name == "body") {
 					container.addTexture("occlusion", materialFactory.createTexture("resources/girl/body_ao_01.jpg", ColorType::GammaSpace));
 					container.setFloatValue("Roughness", 0.5f);

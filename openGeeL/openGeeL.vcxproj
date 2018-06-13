@@ -246,6 +246,7 @@
     <ClCompile Include="renderer\postprocessing\sobel.cpp" />
     <ClCompile Include="renderer\postprocessing\ssao.cpp" />
     <ClCompile Include="renderer\postprocessing\ssrr.cpp" />
+    <ClCompile Include="renderer\postprocessing\subsurfacescattering.cpp" />
     <ClCompile Include="renderer\postprocessing\tonemapping.cpp" />
     <ClCompile Include="renderer\postprocessing\volumetriclight.cpp" />
     <ClCompile Include="renderer\primitives\screencube.cpp" />
@@ -337,6 +338,7 @@
     <ClInclude Include="main\bedroomscene.h" />
     <ClInclude Include="main\characterviewer.h" />
     <ClInclude Include="main\deerscene.h" />
+    <ClInclude Include="main\headscene.h" />
     <ClInclude Include="main\sponzascene.h" />
     <ClInclude Include="main\modelviewer.h" />
     <ClInclude Include="main\raymarchscene.h" />
@@ -419,6 +421,7 @@
     <ClInclude Include="renderer\postprocessing\sobel.h" />
     <ClInclude Include="renderer\postprocessing\ssao.h" />
     <ClInclude Include="renderer\postprocessing\ssrr.h" />
+    <ClInclude Include="renderer\postprocessing\subsurfacescattering.h" />
     <ClInclude Include="renderer\postprocessing\tonemapping.h" />
     <ClInclude Include="renderer\postprocessing\volumetriclight.h" />
     <ClInclude Include="renderer\primitives\primitive.h" />
@@ -564,6 +567,7 @@
     <None Include="shaders\postprocessing\ssaoblend.frag" />
     <None Include="shaders\postprocessing\ssrr.frag" />
     <None Include="shaders\postprocessing\ssrr2.frag" />
+    <None Include="shaders\postprocessing\subsurfacescattering.frag" />
     <None Include="shaders\postprocessing\tonemapping.frag" />
     <None Include="shaders\postprocessing\velocity.frag" />
     <None Include="shaders\postprocessing\volumetriclight.frag" />
