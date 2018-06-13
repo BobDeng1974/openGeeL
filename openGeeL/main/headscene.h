@@ -35,9 +35,9 @@ public:
 			float lightIntensity = 27.f;
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-0.5f, -2.9f, 3), vec3(-180.0f, 0, -50), vec3(1.f), false);
 			ShadowMapConfiguration config = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Large, 6.f, 1U, 150.f);
-			lightManager.addPointLight(noShadowMapConfig, lightTransform1, glm::vec3(lightIntensity *0.996, lightIntensity *0.535, lightIntensity*0.379));
+			lightManager.addPointLight(noShadowMapConfig, lightTransform1, glm::vec3(lightIntensity *0.925, lightIntensity *0.793, lightIntensity*0.793));
 
-
+			
 			Transform& meshTransform = transformFactory.CreateTransform(vec3(2.29f, -3.15f, 2.99f), vec3(0.f, -38.1f, 0.f), vec3(1.f));
 			StaticModelRenderer head = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/head/head.obj"),
@@ -59,6 +59,7 @@ public:
 
 				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
+			
 
 
 
@@ -69,13 +70,14 @@ public:
 			gui.addElement(lister);
 			gui.addSystemInformation(0.01f, 0.655f, 0.17f, 0.14f);
 
-			def.setExposure(1.5f);
+			def.setExposure(1.3f);
 			postLister.add(def);
 
 			ImageBasedLighting& ibl = ImageBasedLighting(scene);
 			GenericPostSnippet& iblSnippet = GenericPostSnippet(ibl);
 			renderer.addEffect(ibl, DrawTime::Early);
 			postLister.add(iblSnippet);
+			ibl.setEffectScale(0.4f);
 
 
 			MotionBlur& motionBlur = MotionBlur(0.2f, 2.f, 15);
@@ -84,10 +86,10 @@ public:
 			scene.addRequester(motionBlur);
 			postLister.add(mSnippet);
 
-			SubsurfaceScattering& sss = SubsurfaceScattering(1.3f, 7, 0.55f);
+			SubsurfaceScattering& sss = SubsurfaceScattering(1.3f, 30, 0.55f);
 			sss.setSigmaR(17.4f);
 			sss.setSigmaG(7.4f);
-			sss.setSigmaB(14.4f);
+			sss.setSigmaB(10.4f);
 			SeparatedGaussianSnippet& ssssnip = SeparatedGaussianSnippet(sss);
 			AdditiveWrapper& additiveSSS = AdditiveWrapper(sss);
 			renderer.addEffect(additiveSSS, DrawTime::Early);
@@ -98,12 +100,12 @@ public:
 			renderer.addEffect(fxaa, DrawTime::Late);
 			postLister.add(fxaa);
 
-
+			
 			app.run();
 		};
 
 
-		Configuration config(window, init, TonemappingMethod::Uncharted2);
+		Configuration config(window, init, TonemappingMethod::ACESFilm);
 		config.run();
 	}
 

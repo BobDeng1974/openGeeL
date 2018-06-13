@@ -32,7 +32,7 @@ public:
 			ShadowMapConfiguration config = ShadowMapConfiguration(0.00001f, ShadowMapType::Soft, ShadowmapResolution::Huge, 5.5f, 3U, 150.f);
 			lightManager.addPointLight(config, lightTransform1, glm::vec3(lightIntensity *1.f, lightIntensity * 0.9f, lightIntensity * 0.9f));
 
-
+			/*
 			Transform& meshTransform2 = transformFactory.CreateTransform(vec3(135.f, 29.f, 121.0f), vec3(0.f, 70.f, 0.f), vec3(15.f));
 			StaticModelRenderer buddha = meshFactory.createSingleMeshRenderers(
 				meshFactory.createStaticModel("resources/classics/buddha.obj"),
@@ -50,6 +50,7 @@ public:
 
 				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
+			*/
 
 
 			Transform& meshTransform6 = transformFactory.CreateTransform(vec3(152.f, 24.f, 124.0f), vec3(0.f, 0.f, 0.f), vec3(0.08f));
