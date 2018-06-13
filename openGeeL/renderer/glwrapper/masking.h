@@ -12,7 +12,7 @@ namespace geeL {
 		Forward = 2,
 		Hybrid = 4,
 		Transparent = 8,
-		Skin = 16,
+		SubsurfaceScattering = 16,
 
 	};
 

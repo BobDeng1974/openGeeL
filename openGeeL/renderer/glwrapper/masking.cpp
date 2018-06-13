@@ -51,8 +51,8 @@ namespace geeL {
 			return RenderMask::Hybrid;
 		else if (name == "Transparent")
 			return RenderMask::Transparent;
-		else if (name == "Skin")
-			return RenderMask::Skin;
+		else if (name == "SubsurfaceScattering")
+			return RenderMask::SubsurfaceScattering;
 
 		return RenderMask::None;
 	}

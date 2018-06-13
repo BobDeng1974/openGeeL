@@ -47,7 +47,7 @@ public:
 
 			for (auto it(head.begin()); it != head.end(); it++) {
 				unique_ptr<StaticMeshRenderer> renderer = std::move(*it);
-				renderer->setRenderMask(RenderMask::Skin);
+				renderer->setRenderMask(RenderMask::SubsurfaceScattering);
 
 				MaterialContainer& container = renderer->getMaterial().getMaterialContainer();
 				container.addTexture("diffuse", materialFactory.createTexture("resources/head/Diffuse_Map.jpg", ColorType::GammaSpace));
@@ -92,7 +92,7 @@ public:
 			AdditiveWrapper& additiveSSS = AdditiveWrapper(sss);
 			renderer.addEffect(additiveSSS, DrawTime::Early);
 			postLister.add(ssssnip);
-			additiveSSS.setRenderMask(RenderMask::Skin);
+			additiveSSS.setRenderMask(RenderMask::SubsurfaceScattering);
 
 			FXAA& fxaa = FXAA(0.02f, 0.15f);
 			renderer.addEffect(fxaa, DrawTime::Late);

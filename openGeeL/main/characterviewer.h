@@ -91,7 +91,7 @@ public:
 					renderer->setShader(ss);
 				}
 				else if (mesh.getName() == "body") {
-					renderer->setRenderMask(RenderMask::Skin);
+					renderer->setRenderMask(RenderMask::SubsurfaceScattering);
 					container.setFloatValue("Translucency", 0.2f);
 				}
 				else if (mesh.getName() == "hair_inner") {
@@ -201,7 +201,7 @@ public:
 			AdditiveWrapper& additiveSSS = AdditiveWrapper(sss);
 			renderer.addEffect(additiveSSS, DrawTime::Early);
 			postLister.add(ssssnip);
-			additiveSSS.setRenderMask(RenderMask::Skin);
+			additiveSSS.setRenderMask(RenderMask::SubsurfaceScattering);
 
 			ColorCorrection& colorCorrect = ColorCorrection();
 			colorCorrect.setContrast(1.2f);
