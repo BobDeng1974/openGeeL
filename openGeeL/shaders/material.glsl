@@ -14,6 +14,7 @@ struct Material {
 
 	float roughness;
 	float metallic;
+	float translucencyFactor;
 
 	vec4  color;
 	vec3 emissivity;

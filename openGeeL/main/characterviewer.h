@@ -90,8 +90,10 @@ public:
 					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Forward, false);
 					renderer->setShader(ss);
 				}
-				else if (mesh.getName() == "body")
+				else if (mesh.getName() == "body") {
 					renderer->setRenderMask(RenderMask::Skin);
+					container.setFloatValue("Translucency", 0.2f);
+				}
 				else if (mesh.getName() == "hair_inner") {
 					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent, false);
 					renderer->setShader(ss);
@@ -191,9 +193,7 @@ public:
 			scene.addRequester(motionBlur);
 			postLister.add(mSnippet);
 
-
-			//Fake subsurface scattering with gaussian blur
-			SeparatedGaussian& sss = SeparatedGaussian(1.3f, 7, 0.55f);
+			SubsurfaceScattering& sss = SubsurfaceScattering(1.3f, 7, 0.55f);
 			sss.setSigmaR(3.4f);
 			sss.setSigmaG(1.4f);
 			sss.setSigmaB(2.4f);

@@ -164,6 +164,9 @@ namespace geeL {
 		float transparency = drawBarFloat(context, material->getTransparency(), 0.f, 1.f, 0.001f, "Transparency");
 		material->setTransparency(transparency);
 
+		float translucency = drawBarFloat(context, material->getTranslucency(), 0.f, 1.f, 0.001f, "Translucency");
+		material->setTranslucency(translucency);
+
 		float roughness = drawBarFloat(context, material->getRoughness(), 0.f, 1.f, 0.001f, "Roughness");
 		material->setRoughness(roughness);
 

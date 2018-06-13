@@ -24,12 +24,14 @@ namespace geeL {
 		void addTexture(const MapType& type, MemoryObject<ITexture> texture);
 
 		float getTransparency() const;
+		float getTranslucency() const;
 		float getRoughness() const;
 		float getMetallic() const;
 		const glm::vec3& getColor() const;
 		const glm::vec3& getEmissivity() const;
 
 		void setTransparency(float value);
+		void setTranslucency(float value);
 		void setRoughness(float value);
 		void setMetallic(float value);
 		void setColor(const glm::vec3& value);
@@ -48,6 +50,7 @@ namespace geeL {
 	private:
 		glm::vec3 color, emissivity;
 		float transparency;
+		float translucency;
 		float roughness;
 		float metallic;
 		bool inverseRoughness = false;

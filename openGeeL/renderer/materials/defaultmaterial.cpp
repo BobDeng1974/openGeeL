@@ -13,7 +13,8 @@ namespace geeL {
 
 	DefaultMaterialContainer::DefaultMaterialContainer() 
 		: MaterialContainer("material")
-		, transparency(1.f) {}
+		, transparency(1.f) 
+		, translucency(1.f) {}
 
 
 	void DefaultMaterialContainer::addTexture(const std::string& name, MemoryObject<ITexture> texture) {
@@ -68,6 +69,10 @@ namespace geeL {
 		return transparency;
 	}
 
+	float DefaultMaterialContainer::getTranslucency() const {
+		return translucency;
+	}
+
 	float DefaultMaterialContainer::getRoughness() const {
 		return roughness;
 	}
@@ -87,6 +92,12 @@ namespace geeL {
 	void DefaultMaterialContainer::setTransparency(float value) {
 		if (value != transparency && value >= 0.f && value <= 1.f)
 			transparency = value;
+	}
+
+	void DefaultMaterialContainer::setTranslucency(float value) {
+		if (value != translucency && value >= 0.f && value <= 1.f)
+			translucency = value;
+
 	}
 
 	void DefaultMaterialContainer::setRoughness(float value) {
@@ -112,8 +123,10 @@ namespace geeL {
 			return transparency;
 		else if (name == "Roughness")
 			return roughness;
-		if (name == "Metallic")
+		else if (name == "Metallic")
 			return metallic;
+		else if (name == "Translucency")
+			return translucency;
 
 		cout << "Value '" + name + "' not present in material\n";
 		return 0.f;
@@ -141,6 +154,8 @@ namespace geeL {
 			setRoughness(value);
 		else if (name == "Metallic")
 			setMetallic(value);
+		else if (name == "Translucency")
+			setTranslucency(value);
 		else
 			cout << "Value '" + name + "' not present in material\n";
 	}
@@ -170,6 +185,7 @@ namespace geeL {
 		shader.bind<int>("material.invSpec", inverseRoughness);
 		shader.bind<float>("material.roughness", roughness);
 		shader.bind<float>("material.metallic", metallic);
+		shader.bind<float>("material.translucencyFactor", translucency);
 		shader.bind<glm::vec4>("material.color", glm::vec4(color, transparency));
 		shader.bind<glm::vec3>("material.emissivity", emissivity);
 	}
