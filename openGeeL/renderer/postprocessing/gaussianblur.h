@@ -54,27 +54,25 @@ namespace geeL {
 	class SeparatedGaussian : public GaussianBlur {
 
 	public:
-		SeparatedGaussian(float sigma = 1.3f, unsigned int kernelSize = 7, float falloff = 0.f);
+		SeparatedGaussian(float sigma = 1.3f, unsigned int kernelSize = 7);
 
 		float getSigmaR() const;
 		float getSigmaG() const ;
 		float getSigmaB() const;
-		float getFalloff() const;
 
 		virtual void setSigma(float value);
 		void setSigmaR(float value);
 		void setSigmaG(float value);
 		void setSigmaB(float value);
-		void setFalloff(float value);
 
 		virtual std::string toString() const;
 
 	protected:
 		SeparatedGaussian(const std::string& shaderPath, float sigma = 1.3f, 
-			unsigned int kernelSize = 7, float falloff = 0.f);
+			unsigned int kernelSize = 7);
 
 	private:
-		float sigmaR, sigmaG, sigmaB, falloff;
+		float sigmaR, sigmaG, sigmaB;
 		LinearKernel kernelR, kernelG, kernelB;
 
 	};

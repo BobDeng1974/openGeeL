@@ -26,9 +26,6 @@ namespace geeL {
 
 		sigma = GUISnippets::drawBarFloatLogarithmic(context, blur.getSigmaB(), 0.0f, 25.f, 0.001f, "B");
 		blur.setSigmaB(sigma);
-
-		sigma = GUISnippets::drawBarFloat(context, blur.getFalloff(), 0.0f, 1.f, 0.001f, "Falloff");
-		blur.setFalloff(sigma);
 	}
 
 

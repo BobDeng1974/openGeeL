@@ -125,15 +125,13 @@ namespace geeL {
 
 
 
+	SeparatedGaussian::SeparatedGaussian(float sigma, unsigned int kernelSize)
+		: SeparatedGaussian("shaders/postprocessing/gaussianseparated.frag", sigma, kernelSize) {}
 
-	SeparatedGaussian::SeparatedGaussian(float sigma, unsigned int kernelSize, float falloff)
-		: SeparatedGaussian("shaders/postprocessing/gaussianseparated.frag", sigma, kernelSize, falloff) {}
-
-	SeparatedGaussian::SeparatedGaussian(const std::string& shaderPath, float sigma, unsigned int kernelSize, float falloff) 
+	SeparatedGaussian::SeparatedGaussian(const std::string& shaderPath, float sigma, unsigned int kernelSize) 
 		: GaussianBlur(shaderPath, sigma, kernelSize) {
 
 		setSigma(sigma);
-		setFalloff(falloff);
 	}
 
 
@@ -147,10 +145,6 @@ namespace geeL {
 
 	float SeparatedGaussian::getSigmaB() const {
 		return sigmaB;
-	}
-
-	float SeparatedGaussian::getFalloff() const {
-		return falloff;
 	}
 
 	void SeparatedGaussian::setSigma(float value) {
@@ -188,13 +182,7 @@ namespace geeL {
 		}
 	}
 
-	void SeparatedGaussian::setFalloff(float value) {
-		if (falloff != value && value > 0.f) {
-			falloff = value;
-
-			shader.bind<float>("falloff", value);
-		}
-	}
+	
 
 
 	BilateralFilter::BilateralFilter(float sigma, unsigned int kernelSize, float factor)

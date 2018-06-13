@@ -15,6 +15,12 @@ namespace geeL {
 
 		virtual void init(const PostProcessingParameter& parameter);
 
+		float getFalloff() const;
+		void setFalloff(float value);
+
+	private:
+		float falloff;
+
 	};
 
 }
