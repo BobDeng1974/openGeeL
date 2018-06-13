@@ -7,6 +7,7 @@ struct Material {
 	sampler2D alpha;
 	sampler2D emission;
 	sampler2D occlusion;
+	sampler2D translucency;
 
 	int mapFlags;
 	bool invSpec;

@@ -37,7 +37,7 @@ void main() {
 
 	gProperties.r = roughness;
 	gProperties.g = metallic;
-	gProperties.b = 0.f;
+	gProperties.b = readTranslucency(textureCoordinates);
 	gProperties.a = occlusion;
 
 #if (ENABLE_DEFERRED_EMISSIVITY == 1)

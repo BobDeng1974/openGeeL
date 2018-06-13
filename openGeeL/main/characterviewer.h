@@ -90,8 +90,10 @@ public:
 					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Forward, false);
 					renderer->setShader(ss);
 				}
-				else if (mesh.getName() == "body")
+				else if (mesh.getName() == "body") {
 					renderer->setRenderMask(RenderMask::Skin);
+					//container.addTexture("translucency", materialFactory.createTexture("resources/girl/body_spec_01.jpg"));
+				}
 				else if (mesh.getName() == "hair_inner") {
 					SceneShader& ss = materialFactory.getDefaultShader(ShadingMethod::Transparent, false);
 					renderer->setShader(ss);

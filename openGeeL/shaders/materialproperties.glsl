@@ -14,6 +14,7 @@ void readMaterialProperties(vec2 TexCoords, out vec4 albedo, out vec3 norm, out 
 	float alphaFlag = mod(material.mapFlags / 10000, 10);
 	float emisFlag  = mod(material.mapFlags / 100000, 10);
 	float occFlag   = mod(material.mapFlags / 1000000, 10);
+	
 
 	albedo = (diffFlag == 1) 
 		? texture(material.diffuse, TexCoords) * material.color 
@@ -49,4 +50,13 @@ void readMaterialProperties(vec2 TexCoords, out vec4 albedo, out vec3 norm, out 
 		? texture(material.occlusion, TexCoords).r + OCCLUSION_MIN 
 		: 0.f;
 
+}
+
+
+float readTranslucency(vec2 TexCoords) {
+	float transFlag = mod(material.mapFlags / 10000000, 10);
+
+	return (transFlag == 1)
+		? texture(material.translucency, TexCoords).r
+		: 1.f;
 }

@@ -14,7 +14,8 @@ namespace geeL {
 		Metallic,
 		Alpha,
 		Emission,
-		Occlusion
+		Occlusion,
+		Translucency
 
 	};
 
@@ -46,6 +47,9 @@ namespace geeL {
 				return "emission";
 			case MapType::Occlusion:
 				return "occlusion";
+			case MapType::Translucency:
+				return "translucency";
+
 		}
 
 		return "";
@@ -63,6 +67,7 @@ namespace geeL {
 		if (type == "alpha") return MapType::Alpha;
 		if (type == "emission") return MapType::Emission;
 		if (type == "occlusion") return MapType::Occlusion;
+		if (type == "translucency") return MapType::Translucency;
 
 		throw "Given name can't be converted into a map type\n";
 	}
