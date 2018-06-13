@@ -79,13 +79,14 @@ void main() {
 	vec3 emissivity;
 	float roughness, metallic;
 	readProperties(textureCoordinates, roughness, metallic, emissivity);
-	
+	float translucency = readTranslucency(textureCoordinates);
+
 
 	vec3 irradiance = albedo.rgb * emissivity;
 
 #if (DIFFUSE_SPECULAR_SEPARATION == 0)
 	for(int i = 0; i < plCount; i++)
-		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic);
+		irradiance += calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo.rgb, roughness, metallic. translucency);
        
 	for(int i = 0; i < dlCount; i++)
         irradiance += calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo.rgb, roughness, metallic);
@@ -99,7 +100,7 @@ void main() {
 	vec3 spec = vec3(0.f);
 
 	for(int i = 0; i < plCount; i++)
-		calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo, roughness, metallic, diff, spec);
+		calculatePointLight(i, pointLights[i], normal, fragPosition, viewDirection, albedo.rgb, roughness, metallic, translucency, diff, spec);
        
 	for(int i = 0; i < dlCount; i++)
         calculateDirectionaLight(i, directionalLights[i], normal, fragPosition, viewDirection, albedo.rgb, roughness, metallic, diff, spec);

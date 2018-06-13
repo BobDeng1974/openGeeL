@@ -2,14 +2,14 @@
 #include <shaders/lighting/cooktorrance.glsl>
 //Note: preferred shadowing shader should be included beforehand (e.g. shadows in view or world space)
 
-vec3 subsurfaceScatteringBack(vec3 fragPosition, vec3 normal, vec3 viewDirection, vec4 albedo, vec3 lightPosition, 
-	vec3 lightDiffuse, float roughness, float metallic, float travelDistance) {
+vec3 subsurfaceScatteringBack(vec3 fragPosition, vec3 normal, vec3 viewDirection, vec3 albedo, vec3 lightPosition, 
+	vec3 lightDiffuse, float roughness, float metallic, float translucency, float travelDistance) {
 
 	vec3 backsideReflectance = calculateReflectance(fragPosition, -normal, 
-		viewDirection, lightPosition, lightDiffuse, albedo.rgb, roughness, metallic);
+		viewDirection, lightPosition, lightDiffuse, albedo, roughness, metallic);
 
-	//Approximate transmittance coefficient via albedo alpha channel
-	float transCoef = 1.f / (pow(1.f - albedo.a, 5.f) + 0.000001f);
+	//Approximate transmittance coefficient via translucency property
+	float transCoef = 1.f / (pow(1.f - translucency, 5.f) + 0.000001f);
 
 	return backsideReflectance * exp(-travelDistance * transCoef);
 }
@@ -41,10 +41,10 @@ vec3 calculateVolumetricLightColor(vec3 fragPos, vec3 lightPosition, vec3 lightC
 
 
 vec3 calculatePointLight(int index, PointLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec4 albedo, float roughness, float metallic) {
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float roughness, float metallic, float translucency) {
 
 	vec3 reflectance = calculateReflectance(fragPosition, normal, 
-		viewDirection, light.position, light.diffuse, albedo.rgb, roughness, metallic);
+		viewDirection, light.position, light.diffuse, albedo, roughness, metallic);
 
 #if (VOLUMETRIC_LIGHT == 1)
 	vec3 volumetricColor = calculateVolumetricLightColor(fragPosition, light.position, light.diffuse, 
@@ -56,7 +56,7 @@ vec3 calculatePointLight(int index, PointLight light, vec3 normal,
 
 #if (BACKFACE_SUBSURFACE_SCATTERING == 1)
 	vec3 sss = subsurfaceScatteringBack(fragPosition, normal, viewDirection, albedo, 
-		light.position, light.diffuse, roughness, metallic, travel);
+		light.position, light.diffuse, roughness, metallic, translucency, travel);
 
 #if (VOLUMETRIC_LIGHT == 1)
 	return shadow * reflectance + sss + volumetricColor;
@@ -108,14 +108,14 @@ vec3 calculateDirectionaLight(int index, DirectionalLight light, vec3 normal,
 #if (DIFFUSE_SPECULAR_SEPARATION == 1)
 
 void calculatePointLight(int index, PointLight light, vec3 normal, 
-	vec3 fragPosition, vec3 viewDirection, vec4 albedo, float roughness, float metallic, 
+	vec3 fragPosition, vec3 viewDirection, vec3 albedo, float roughness, float metallic, float translucency, 
 	inout vec3 diffuse, inout vec3 specular) {
 
 	vec3 tempDiff = vec3(0.f);
 	vec3 tempSpec = vec3(0.f);
 
 	calculateReflectance(fragPosition, normal, viewDirection, light.position, light.diffuse, 
-		albedo.rgb, roughness, metallic, tempDiff, tempSpec);
+		albedo, roughness, metallic, tempDiff, tempSpec);
 
 #if (VOLUMETRIC_LIGHT == 1)
 	vec3 volumetricColor = calculateVolumetricLightColor(fragPosition, light.position, light.diffuse, 
@@ -127,7 +127,7 @@ void calculatePointLight(int index, PointLight light, vec3 normal,
 
 #if (BACKFACE_SUBSURFACE_SCATTERING == 1)
 	vec3 sss = subsurfaceScatteringBack(fragPosition, normal, viewDirection, albedo, 
-		light.position, light.diffuse, roughness, metallic, travel);
+		light.position, light.diffuse, roughness, metallic, translucency, travel);
 
 #if (VOLUMETRIC_LIGHT == 1)
 	diffuse  += tempDiff * shadow + sss + volumetricColor;

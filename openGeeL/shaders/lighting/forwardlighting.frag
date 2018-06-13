@@ -49,7 +49,7 @@ void main() {
 	vec3 norm, emission;
 	float roughness, metallic, occlusion;
 	readMaterialProperties(texCoords, albedo, norm, roughness, metallic, occlusion, emission, false);
-	
+	float translucency = readTranslucency(texCoords);
 
 	vec3 viewDirection = normalize(-fragPosition.xyz);
 
@@ -63,13 +63,13 @@ void main() {
 
 #if (DIFFUSE_SPECULAR_SEPARATION == 0)
 	for(int i = 0; i < plCount; i++) 
-		irradiance += calculatePointLight(i, pointLights[i], norm, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
+		irradiance += calculatePointLight(i, pointLights[i], norm, fragPosition.xyz, viewDirection, albedo.rgb, roughness, metallic, translucency);
        
 	for(int i = 0; i < dlCount; i++) 
-        irradiance += calculateDirectionaLight(i, directionalLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
+        irradiance += calculateDirectionaLight(i, directionalLights[i], norm, fragPosition.xyz, viewDirection, albedo.rgb, roughness, metallic);
 
 	for(int i = 0; i < slCount; i++)
-		irradiance += calculateSpotLight(i, spotLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
+		irradiance += calculateSpotLight(i, spotLights[i], norm, fragPosition.xyz, viewDirection, albedo.rgb, roughness, metallic);
 
 #if (FADE == 1)
 	color = vec4(irradiance, albedo.a) * computeFade(fragPosition);
@@ -84,13 +84,13 @@ void main() {
 	vec3 spec = vec3(0.f);
 
 	for(int i = 0; i < plCount; i++) 
-		irradiance += calculatePointLight(i, pointLights[i], norm, fragPosition.xyz, viewDirection, albedo, roughness, metallic);
+		irradiance += calculatePointLight(i, pointLights[i], norm, fragPosition.xyz, viewDirection, albedo.rgb, roughness, metallic, translucency);
        
 	for(int i = 0; i < dlCount; i++) 
-        irradiance += calculateDirectionaLight(i, directionalLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
+        irradiance += calculateDirectionaLight(i, directionalLights[i], norm, fragPosition.xyz, viewDirection, albedo.rgb, roughness, metallic);
 
 	for(int i = 0; i < slCount; i++)
-		irradiance += calculateSpotLight(i, spotLights[i], norm, fragPosition.xyz, viewDirection, albedo.xyz, roughness, metallic);
+		irradiance += calculateSpotLight(i, spotLights[i], norm, fragPosition.xyz, viewDirection, albedo.rgb, roughness, metallic);
 
 #if (FADE == 1)
 	float fadeFactor = computeFade(fragPosition);

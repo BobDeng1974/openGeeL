@@ -48,9 +48,9 @@ float calculateGeometryFunctionSmith(vec3 normal, vec3 viewDirection, vec3 light
     float ggx1  = calculateGeometryFunctionSchlick(NdotL, roughness);
 	
 #if (USE_UNREAL_FACTOR == 1)
-	return max(pow(ggx1 * ggx2, INVERSE_UNREAL), 0.001f);
+	return max(pow(ggx1 * ggx2, INVERSE_UNREAL), 0.002f);
 #else
-    return max(ggx1 * ggx2, 0.001f);
+    return max(ggx1 * ggx2, 0.002f);
 #endif
 }
 

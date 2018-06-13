@@ -66,6 +66,7 @@ void main() {
 	vec4 albedo = texture(gDiffuse, TexCoords);
 	float roughness, metallic;
 	readProperties(TexCoords, roughness, metallic);
+	float translucency = readTranslucency(TexCoords);
 
 	vec3 ks = calculateFresnelTerm(doto(normal, view), albedo.rgb, metallic, roughness);
 	vec3 kd = 1.f - ks;
@@ -76,10 +77,9 @@ void main() {
 	vec3 solidColor = baseColor + indirectDiff + indirectSpec;
 	//solidColor *= occlusion;
 
-	if(albedo.a < 1.f) {
+	if(translucency < 1.f) {
 		vec3 refractionColor = indirectReflection(position, view, normal, roughness, kd);
-
-		color = vec4(mix(refractionColor, solidColor, albedo.a), 1.f);
+		color = vec4(mix(refractionColor, solidColor, translucency), 1.f);
 	}
 	else 
 		color = vec4(solidColor, 1.f);
