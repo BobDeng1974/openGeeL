@@ -533,7 +533,6 @@
     <None Include="shaders\lighting\lights.glsl" />
     <None Include="shaders\lighting\raymarch.frag" />
     <None Include="shaders\lighting\tileddeferred.com.glsl" />
-    <None Include="shaders\lighting\transparentlighting2.frag" />
     <None Include="shaders\material.glsl" />
     <None Include="shaders\materialproperties.glsl" />
     <None Include="shaders\nearest.com.glsl" />

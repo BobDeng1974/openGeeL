@@ -48,8 +48,8 @@ uniform bool useIBL;
 void main() {
 	vec4 albedo;
 	vec3 norm, emission;
-	float roughness, metallic;
-	readMaterialProperties(albedo, norm, roughness, metallic, emission, false);
+	float roughness, metallic, occlusion;
+	readMaterialProperties(texCoords, albedo, norm, roughness, metallic, occlusion, emission, false);
 	
 	vec3 viewDirection = normalize(-fragPosition.xyz);
 
@@ -76,7 +76,7 @@ void main() {
 		vec3 kd = vec3(1.f) - ks;
 		kd *= 1.f - metallic;
 
-		vec3 ambienceDiffuse = calculateIndirectDiffuse(worldPosition, norm, kd, albedo.rgb, 1.f); 
+		vec3 ambienceDiffuse = calculateIndirectDiffuse(worldPosition, norm, kd, albedo.rgb, occlusion); 
 		vec3 ambienceSpecular = calculateIndirectSpecularSplitSum(worldPosition, norm, viewDirection, 
 			albedo.rgb, roughness, metallic);
 

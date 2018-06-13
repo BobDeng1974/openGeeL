@@ -1,7 +1,5 @@
 #version 430 core
 
-#define OCCLUSION_MIN (1.f / 256.f)
-
 #include <shaders/material.glsl>
 
 layout (location = 0) out vec3 gPosition;
@@ -17,66 +15,23 @@ in mat3 TBN;
 uniform Material material;
 uniform uint id;
 
+#include <shaders/materialproperties.glsl>
+
 
 void main() {    
-
-	//Check if materials is actually textured
-	float diffFlag = mod(material.mapFlags, 10);
-	float specFlag = mod(material.mapFlags / 10, 10);
-	float normFlag = mod(material.mapFlags / 100, 10);
-	float metaFlag = mod(material.mapFlags / 1000, 10);
-	float alphaFlag = mod(material.mapFlags / 10000, 10);
-	float emisFlag = mod(material.mapFlags / 100000, 10);
-	float occFlag = mod(material.mapFlags / 1000000, 10);
-
-	vec4 diffuse = (diffFlag == 1) 
-		? texture(material.diffuse, textureCoordinates) * material.color 
-		: material.color;
-
-	if(alphaFlag == 1) {
-		diffuse.a = texture(material.alpha, textureCoordinates).r;
-
-		//Discard fragment if alpha value is low
-		discard(diffuse.a < 0.5f);
-	}
-    
-	vec3 norm = normalize(normal);
-	if(normFlag == 1) {
-		norm = texture(material.normal, textureCoordinates).rgb;
-		norm = normalize(norm * 2.0f - 1.0f);
-		norm = normalize(TBN * norm);
-	}
-
-	//Interpret roughness as (1 - specuarlity)
-	vec3 speColor = (specFlag == 1) 
-		? abs((1.f - float(material.invSpec)) - texture(material.gloss, textureCoordinates).rgb) * material.roughness 
-		: vec3(material.roughness);
-
-	float metallic = (metaFlag == 1) 
-		? (1.f - texture(material.metal, textureCoordinates).r) * material.metallic
-		: material.metallic;
-
-	vec3 emiRGB = (emisFlag == 1) 
-		? texture(material.emission, textureCoordinates).rgb * material.emissivity 
-		: material.emissivity;
-
-	//Only write intensity of emissivity into gBuffer
-	float emissivity = dot(emiRGB, vec3(0.2126f, 0.7152f, 0.0722f));
-
-	float occlusion = (occFlag == 1) 
-		? texture(material.occlusion, textureCoordinates).r + OCCLUSION_MIN 
-		: 0.f;
-
+	vec4 albedo;
+	vec3 norm, emission;
+	float roughness, metallic, occlusion;
+	readMaterialProperties(textureCoordinates, albedo, norm, roughness, metallic, occlusion, emission, true);
 
 	gNormal.rgb = norm;
 	gNormal.a = uintBitsToFloat(id);
 
 	gPosition = fragPosition;
-	gDiffuse = diffuse;
+	gDiffuse = albedo;
 
-	gProperties.r = speColor.r;
+	gProperties.r = roughness;
 	gProperties.g = metallic;
-	gProperties.b = emissivity;
+	gProperties.b = dot(emission, vec3(0.2126f, 0.7152f, 0.0722f));
 	gProperties.a = occlusion;
-	
 } 

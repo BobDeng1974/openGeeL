@@ -1393,9 +1393,6 @@
     <None Include="shaders\lighting\iblcore.glsl">
       <Filter>shaders\lighting</Filter>
     </None>
-    <None Include="shaders\lighting\transparentlighting2.frag">
-      <Filter>shaders\lighting</Filter>
-    </None>
     <None Include="shaders\nearest.com.glsl">
       <Filter>shaders\postprocessing</Filter>
     </None>

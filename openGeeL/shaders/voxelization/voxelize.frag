@@ -123,8 +123,8 @@ vec3 getIrradiance() {
 	
 	vec4 albedo;
 	vec3 norm, emission;
-	float roughness, metallic;
-	readMaterialProperties(albedo, norm, roughness, metallic, emission, true);
+	float roughness, metallic, occlusion;
+	readMaterialProperties(texCoords, albedo, norm, roughness, metallic, occlusion, emission, true);
 	
 	vec3 viewDirection = normalize(cameraPosition - fragPosition.xyz);
 

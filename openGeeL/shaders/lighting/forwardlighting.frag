@@ -47,8 +47,8 @@ uniform vec3 origin;
 void main() {
 	vec4 albedo;
 	vec3 norm, emission;
-	float roughness, metallic;
-	readMaterialProperties(albedo, norm, roughness, metallic, emission, false);
+	float roughness, metallic, occlusion;
+	readMaterialProperties(texCoords, albedo, norm, roughness, metallic, occlusion, emission, false);
 	
 
 	vec3 viewDirection = normalize(-fragPosition.xyz);
