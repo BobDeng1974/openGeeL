@@ -136,12 +136,6 @@ namespace geeL {
 		setFalloff(falloff);
 	}
 
-	void SeparatedGaussian::init(const PostProcessingParameter& parameter) {
-		GaussianBlur::init(parameter);
-
-		assert(provider != nullptr);
-		addTextureSampler(provider->requestPosition(), "position");
-	}
 
 	float SeparatedGaussian::getSigmaR() const {
 		return sigmaR;

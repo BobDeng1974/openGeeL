@@ -16,16 +16,11 @@ uniform float weightsB[kernelSize];
 uniform float offsetsB[kernelSize];
 
 uniform sampler2D image;
-uniform sampler2D position;
 
 uniform bool horizontal;
 uniform float falloff;
 
 void main() {     
-
-	float depth = 1.f + (texture(position, TexCoords).z * falloff * 0.1f);
-	depth = clamp(pow(depth, 10.f), 0.f, 1.f);
-
 	vec3 baseColor = texture(image, TexCoords).rgb;
 
 	//Size of single texel
@@ -38,21 +33,19 @@ void main() {
 
 	vec2 offset = texOffset * vec2(hor, ver);
 	for(int i = 1; i < kernelSize; i++) {
-
 		vec3 weight = vec3(weightsR[i], weightsG[i], weightsB[i]);
-		vec3 weightedBaseColor = (1.f - depth) * baseColor * weight;
 
 		//Sample right / top pixel
 		result += vec3(
 			texture(image, TexCoords + offset * offsetsR[i]).r * weight.r,
 			texture(image, TexCoords + offset * offsetsG[i]).g * weight.g,
-			texture(image, TexCoords + offset * offsetsB[i]).b * weight.b) * depth + weightedBaseColor;
+			texture(image, TexCoords + offset * offsetsB[i]).b * weight.b);
             
 		//Sample left / bottom pixel
 		result += vec3(
 			texture(image, TexCoords - offset * offsetsR[i]).r * weight.r,
 			texture(image, TexCoords - offset * offsetsG[i]).g * weight.g,
-			texture(image, TexCoords - offset * offsetsB[i]).b * weight.b) * depth + weightedBaseColor;
+			texture(image, TexCoords - offset * offsetsB[i]).b * weight.b);
 
     }
 

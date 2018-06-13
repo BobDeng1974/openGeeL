@@ -56,8 +56,6 @@ namespace geeL {
 	public:
 		SeparatedGaussian(float sigma = 1.3f, unsigned int kernelSize = 7, float falloff = 0.f);
 
-		virtual void init(const PostProcessingParameter& parameter);
-
 		float getSigmaR() const;
 		float getSigmaG() const ;
 		float getSigmaB() const;
