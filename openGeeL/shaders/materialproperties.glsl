@@ -57,6 +57,6 @@ float readTranslucency(vec2 TexCoords) {
 	float transFlag = mod(material.mapFlags / 10000000, 10);
 
 	return (transFlag == 1)
-		? texture(material.translucency, TexCoords).r
+		? 1.f - texture(material.translucency, TexCoords).r
 		: 1.f;
 }

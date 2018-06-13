@@ -71,6 +71,10 @@ namespace geeL {
 
 		virtual std::string toString() const;
 
+	protected:
+		SeparatedGaussian(const std::string& shaderPath, float sigma = 1.3f, 
+			unsigned int kernelSize = 7, float falloff = 0.f);
+
 	private:
 		float sigmaR, sigmaG, sigmaB, falloff;
 		LinearKernel kernelR, kernelG, kernelB;

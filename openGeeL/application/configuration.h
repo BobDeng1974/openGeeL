@@ -73,6 +73,7 @@
 #include "postprocessing/drawdefault.h"
 #include "postprocessing/lensflare.h"
 #include "postprocessing/motionblur.h"
+#include "postprocessing/subsurfacescattering.h"
 
 #include "renderer/rendercontext.h"
 #include "renderer/deferredrenderer.h"

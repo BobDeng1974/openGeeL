@@ -127,7 +127,10 @@ namespace geeL {
 
 
 	SeparatedGaussian::SeparatedGaussian(float sigma, unsigned int kernelSize, float falloff)
-		: GaussianBlur("shaders/postprocessing/gaussianseparated.frag", sigma, kernelSize) {
+		: SeparatedGaussian("shaders/postprocessing/gaussianseparated.frag", sigma, kernelSize, falloff) {}
+
+	SeparatedGaussian::SeparatedGaussian(const std::string& shaderPath, float sigma, unsigned int kernelSize, float falloff) 
+		: GaussianBlur(shaderPath, sigma, kernelSize) {
 
 		setSigma(sigma);
 		setFalloff(falloff);
