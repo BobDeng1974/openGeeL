@@ -12,11 +12,22 @@
 
 namespace geeL {
 
+	void iterIBLShaders(MaterialFactory& factory, std::function<void(SceneShader&)> function) {
+		SceneShader& a = factory.getDefaultShader(ShadingMethod::Transparent, false);
+		SceneShader& b = factory.getDefaultShader(ShadingMethod::Transparent, true);
+
+		function(a);
+		function(b);
+	}
+
+
+
 	ImageBasedLighting::ImageBasedLighting(RenderScene& scene)
 		: SceneRender(scene)
 		, AdditiveEffect("shaders/lighting/deferredlighting.vert",
 			"shaders/lighting/ibl.frag") 
-		, factory(nullptr) {}
+		, factory(nullptr)
+		, effectScale(1.f) {}
 
 
 	void ImageBasedLighting::init(const PostProcessingParameter& parameter) {
@@ -24,6 +35,9 @@ namespace geeL {
 
 		factory = parameter.factory;
 		activateTransparentIBL(true);
+		iterIBLShaders(*factory, [this](SceneShader& shader) {
+			shader.bind<float>("effectScale", effectScale);
+		});
 
 		assert(provider != nullptr);
 		addTextureSampler(provider->requestAlbedo(), "gDiffuse");
@@ -64,6 +78,24 @@ namespace geeL {
 #endif 
 	}
 
+	float ImageBasedLighting::getEffectScale() const {
+		return effectScale;
+	}
+
+	void ImageBasedLighting::setEffectScale(float value) {
+		if (effectScale != value && value > 0.f && value <= 1.f) {
+			effectScale = value;
+
+			shader.bind<float>("effectScale", effectScale);
+
+			if (factory != nullptr) {
+				iterIBLShaders(*factory, [this](SceneShader& shader) {
+					shader.bind<float>("effectScale", effectScale);
+				});
+			}
+		}
+	}
+
 	void ImageBasedLighting::setActive(bool value) {
 		AdditiveEffect::setActive(value);
 
@@ -82,13 +114,7 @@ namespace geeL {
 	void ImageBasedLighting::activateTransparentIBL(bool activate) {
 		assert(factory != nullptr);
 
-		std::list<SceneShader*> shaders;
-		shaders.push_back(&factory->getDefaultShader(ShadingMethod::Transparent, false));
-		shaders.push_back(&factory->getDefaultShader(ShadingMethod::Transparent, true));
-
-		for (auto it(shaders.begin()); it != shaders.end(); it++) {
-			SceneShader& shader = **it;
-
+		iterIBLShaders(*factory, [this](SceneShader& shader) {
 			if (active) {
 				shader.bind<int>("useIBL", 1);
 				scene.getLightmanager().addReflectionProbes(shader);
@@ -98,7 +124,7 @@ namespace geeL {
 				shader.bind<int>("useIBL", 0);
 				scene.getLightmanager().removeReflectionProbes(shader);
 			}
-		}
+		});
 	}
 
 }

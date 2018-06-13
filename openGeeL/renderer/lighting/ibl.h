@@ -21,11 +21,15 @@ namespace geeL {
 		virtual void draw();
 		virtual void fill();
 
+		float getEffectScale() const;
+		void  setEffectScale(float value);
+
 		virtual void setActive(bool value);
 
 		virtual std::string toString() const;
 
 	private:
+		float effectScale;
 		MaterialFactory* factory;
 		ShaderLocation invViewLocation;
 		ShaderLocation originLocation;

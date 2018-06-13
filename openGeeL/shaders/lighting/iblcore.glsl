@@ -20,6 +20,7 @@ uniform sampler2D BRDFIntegrationMap;
 uniform mat4 inverseView;
 uniform vec3 origin;
 uniform vec3 ambient;
+uniform float effectScale = 1.f;
 
 
 //Translate given vector into space of reflection probe
@@ -39,7 +40,7 @@ vec3 calculateIndirectDiffuse(vec3 position, vec3 normal, vec3 kd, vec3 albedo, 
 	float check = step(0.01f, l);
 	irradiance = check * irradiance + (1.f - check) * ambient;
 
-	return irradiance * albedo * occlusion;
+	return irradiance * albedo * occlusion * effectScale;
 }
 
 
@@ -83,7 +84,7 @@ vec3 calculateIndirectSpecular(vec3 position, vec3 normal, vec3 view, vec3 albed
 	//Factor in pseudo NDF if only one sample is taken
 	float single = step(sampleCount, 2);
 	return radiance * (1.f - single) + 
-		radiance * single * (1.f - roughness);
+		radiance * single * (1.f - roughness) * effectScale;
 }
 
 const float ROUGHNESS_LOD = 4; //Amount of roughness levels in pre-filtered environment map 
@@ -107,7 +108,7 @@ vec3 calculateIndirectSpecularSplitSum(vec3 position, vec3 normal, vec3 view, ve
     F0 = mix(F0, albedo, metallic);
 
 	//Main splitsum integral
-	return prefilteredColor * (F0 * brdfInt.x + brdfInt.y);
+	return prefilteredColor * (F0 * brdfInt.x + brdfInt.y) * effectScale;
 }
 
 
