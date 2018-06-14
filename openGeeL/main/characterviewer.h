@@ -135,12 +135,12 @@ public:
 				else if (container.name == "cloth") {
 					container.addTexture("emission", materialFactory.createTexture("resources/girl/cloth_glow_01.jpg", ColorType::GammaSpace));
 					container.addTexture("occlusion", materialFactory.createTexture("resources/girl/cloth_ao_01.jpg", ColorType::GammaSpace));
-					container.setVectorValue("Emissivity", vec3(1.f));
+					container.setVectorValue("Emissivity", vec3(3.f));
 					container.setFloatValue("Roughness", 0.5f);
 					container.setFloatValue("Metallic", 1.f);
 				}
 				else if (container.name == "light")
-					container.setVectorValue("Emissivity", vec3(1.f));
+					container.setVectorValue("Emissivity", vec3(3.f));
 				else if (container.name == "body") {
 					container.addTexture("occlusion", materialFactory.createTexture("resources/girl/body_ao_01.jpg", ColorType::GammaSpace));
 					container.setFloatValue("Roughness", 0.5f);
@@ -167,7 +167,7 @@ public:
 			renderer.addEffect(ibl, DrawTime::Early);
 			postLister.add(iblSnippet);
 
-			BrightnessFilterCutoff& filter = BrightnessFilterCutoff(1.f);
+			BrightnessFilterCutoff& filter = BrightnessFilterCutoff(1.6f);
 			GaussianBlur& bloomBlur = GaussianBlur(9.5f, 25);
 			Bloom& bloom = Bloom(filter, bloomBlur, ResolutionPreset::FULLSCREEN, ResolutionPreset::FULLSCREEN);
 			renderer.addEffect(bloom, DrawTime::Late);

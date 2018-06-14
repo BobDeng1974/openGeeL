@@ -8,7 +8,7 @@
 #define GL_SRGB_ALPHA 0x8C42
 #define GL_ALPHA 0x1906
 #define GL_RED 0x1903
-#define GL_R16 0x822A
+#define GL_R16F 0x822D
 #define GL_RG16F 0x822F
 #define GL_RGB 0x1907
 #define GL_RGB16F 0x881B
@@ -39,7 +39,7 @@ namespace geeL {
 		Depth32 = GL_DEPTH_COMPONENT32,
 		GammaSpace = GL_SRGB_ALPHA,
 		Single = GL_RED,
-		Single16 = GL_R16,
+		Single16 = GL_R16F,
 		RG16 = GL_RG16F,
 		RGB = GL_RGB,
 		RGB16 = GL_RGB16F,

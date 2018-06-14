@@ -242,7 +242,7 @@ namespace geeL {
 				a = GL_RED; b = GL_RGB, c = GL_UNSIGNED_BYTE;
 				break;
 			case ColorType::Single16:
-				a = GL_R16; b = GL_RGB, c = GL_FLOAT;
+				a = GL_R16F; b = GL_RGB, c = GL_FLOAT;
 				break;
 			case ColorType::RG16:
 				a = GL_RG16; b = GL_RG, c = GL_FLOAT;
@@ -269,6 +269,7 @@ namespace geeL {
 				a = GL_RGBA32F; b = GL_RGBA, c = GL_FLOAT;
 				break;
 			}
+
 	}
 
 
