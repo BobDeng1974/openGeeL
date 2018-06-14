@@ -1,12 +1,19 @@
+#include "texturing/rendertexture.h"
+#include "texturing/textureprovider.h"
 #include "brightnessfilter.h"
 
 namespace geeL {
 
-	BrightnessFilter::BrightnessFilter(const std::string& path) : PostProcessingEffectFS(path) {}
+	BrightnessFilter::BrightnessFilter(const std::string& path) 
+		: PostProcessingEffectFS(path) {}
 
 
 	BrightnessFilterCutoff::BrightnessFilterCutoff(float scatter)
 		: BrightnessFilter("shaders/postprocessing/bloomfilter.frag")
+		, scatter(scatter) {}
+
+	BrightnessFilterCutoff::BrightnessFilterCutoff(const std::string& shaderPath, float scatter)
+		: BrightnessFilter(shaderPath)
 		, scatter(scatter) {}
 
 
@@ -27,6 +34,8 @@ namespace geeL {
 	float BrightnessFilterCutoff::getScatter() const {
 		return scatter;
 	}
+
+	
 
 	BrightnessFilterSmooth::BrightnessFilterSmooth(float bias, float scale)
 		: BrightnessFilter("shaders/postprocessing/brightnessfilter.frag")
@@ -65,6 +74,19 @@ namespace geeL {
 		}
 	}
 
+
 	
+	EmissiveBrightnessFilter::EmissiveBrightnessFilter(float scatter)
+		: BrightnessFilterCutoff("shaders/postprocessing/emissivefilter.frag", scatter) {}
+
+
+	void EmissiveBrightnessFilter::init(const PostProcessingParameter& parameter) {
+		BrightnessFilterCutoff::init(parameter);
+
+		assert(provider != nullptr);
+		RenderTexture* const emission = provider->requestEmission();
+		if (emission) addTextureSampler(*emission, "emission");
+	}
+
 
 }

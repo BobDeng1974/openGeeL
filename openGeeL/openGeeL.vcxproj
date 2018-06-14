@@ -548,6 +548,7 @@
     <None Include="shaders\postprocessing\dof.frag" />
     <None Include="shaders\postprocessing\dofblur.frag" />
     <None Include="shaders\postprocessing\drawdefault.frag" />
+    <None Include="shaders\postprocessing\emissivefilter.frag" />
     <None Include="shaders\postprocessing\fxaa.frag" />
     <None Include="shaders\postprocessing\gammacorrection.frag" />
     <None Include="shaders\postprocessing\gaussianblur.frag" />

@@ -1426,5 +1426,8 @@
     <None Include="shaders\postprocessing\subsurfacescattering.frag">
       <Filter>shaders\postprocessing</Filter>
     </None>
+    <None Include="shaders\postprocessing\emissivefilter.frag">
+      <Filter>shaders\postprocessing</Filter>
+    </None>
   </ItemGroup>
 </Project>

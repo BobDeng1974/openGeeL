@@ -32,6 +32,9 @@ namespace geeL {
 		void setScatter(float scatter);
 		float getScatter() const;
 
+	protected:
+		BrightnessFilterCutoff(const std::string& shaderPath, float scatter);
+
 	private:
 		ShaderLocation scatterLocation;
 
@@ -54,6 +57,18 @@ namespace geeL {
 
 	private:
 		float bias, scale;
+
+	};
+
+
+	//Brightness filter that uses brightness of objects emissivity
+	//instead of the brightness of the actual image
+	class EmissiveBrightnessFilter : public BrightnessFilterCutoff {
+
+	public:
+		EmissiveBrightnessFilter(float scatter = 0.6f);
+
+		virtual void init(const PostProcessingParameter& parameter);
 
 	};
 
