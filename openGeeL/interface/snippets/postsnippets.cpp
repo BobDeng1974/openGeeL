@@ -292,7 +292,11 @@ namespace geeL {
 
 	LensFlareSnippet::LensFlareSnippet(LensFlare& flare) : PostEffectSnippet(flare), flare(flare) {}
 
-	void LensFlareSnippet::drawSimple(GUIContext * context) {
+	void LensFlareSnippet::drawSimple(GUIContext* context) {
+		int active = !flare.getBloomUse();
+		nk_checkbox_label(context, "Bloom", &active);
+		flare.setBloomUse(!active);
+
 		float strength = GUISnippets::drawBarFloat(context, flare.getStrength(), 0.1f, 50.f, 0.001f, "Strength");
 		flare.setStrength(strength);
 

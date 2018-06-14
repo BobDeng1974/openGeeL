@@ -15,13 +15,15 @@ namespace geeL {
 	LensFlare::LensFlare(BlurredPostEffect& filter, 
 		float scale, 
 		float samples, 
-		const ResolutionPreset& resolution)
+		const ResolutionPreset& resolution,
+		bool useBloom)
 			: PostProcessingEffectFS("shaders/postprocessing/lensflare.frag")
 			, filter(filter)
 			, filterResolution(resolution)
 			, strength(1.f)
 			, scale(scale)
-			, samples(samples) {}
+			, samples(samples)
+			, useBloom(useBloom) {}
 
 	LensFlare::~LensFlare() {
 		if (filterTexture != nullptr) delete filterTexture;
@@ -40,6 +42,7 @@ namespace geeL {
 		shader.bind<float>("scale", scale);
 		shader.bind<float>("samples", samples);
 		shader.bind<float>("strength", strength);
+		shader.bind<bool>("useBloom", useBloom);
 
 		Resolution filterRes = Resolution(parameter.resolution, filterResolution);
 		if (filterTexture == nullptr)
@@ -51,6 +54,10 @@ namespace geeL {
 		filter.init(PostProcessingParameter(parameter, filterRes));
 
 		addTextureSampler(*filterTexture, "brightnessFilter");
+	}
+
+	bool LensFlare::getBloomUse() const {
+		return useBloom;
 	}
 
 	float LensFlare::getStrength() const {
@@ -74,6 +81,13 @@ namespace geeL {
 			strength = value;
 
 			shader.bind<float>("strength", strength);
+		}
+	}
+
+	void LensFlare::setBloomUse(bool value) {
+		if (useBloom != value) {
+			useBloom = value;
+			shader.bind<bool>("useBloom", useBloom);
 		}
 	}
 

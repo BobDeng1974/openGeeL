@@ -18,7 +18,8 @@ namespace geeL {
 		LensFlare(BlurredPostEffect& filter, 
 			float scale = 0.5f, 
 			float samples = 4.f, 
-			const ResolutionPreset& resolution = ResolutionPreset::FULLSCREEN);
+			const ResolutionPreset& resolution = ResolutionPreset::FULLSCREEN,
+			bool useBloom = true);
 
 		virtual ~LensFlare();
 
@@ -26,11 +27,13 @@ namespace geeL {
 		virtual void init(const PostProcessingParameter& parameter);
 		virtual void bindValues();
 
+		bool  getBloomUse() const;
 		float getStrength() const;
 		float getScale() const;
 		float getMaxSamples() const;
 		const glm::vec3& getDistortion() const;
 
+		void setBloomUse(bool value);
 		void setScale(float value);
 		void setStrength(float value);
 		void setMaxSamples(float value);
@@ -45,6 +48,7 @@ namespace geeL {
 		virtual void drawSubImages();
 
 	private:
+		bool useBloom;
 		glm::vec3 distortion;
 		float strength, scale, samples;
 		ResolutionPreset filterResolution;

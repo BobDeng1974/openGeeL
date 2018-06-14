@@ -9,8 +9,10 @@ uniform sampler2D brightnessFilter;
 uniform sampler2D dirt;
 uniform sampler2D starburst;
 
+uniform bool useBloom;
 uniform bool useDirt;
 uniform bool useStarburst;
+
 
 uniform float strength;
 uniform float scale;
@@ -22,7 +24,8 @@ uniform mat3 starTransform;
 vec3 sampleChromatic(vec2 TexCoords);
 
 void main() {       
-	const float baseLength = length(vec2(0.5f));      
+	const float baseLength = length(vec2(0.5f));    
+
 	
 	vec2 coords = 1.f - TexCoords;
 	vec2 ghostDir = (0.5f - coords) * scale;
@@ -38,6 +41,7 @@ void main() {
     }
 
 	vec3 baseC = texture(image, TexCoords).rgb;
+	if(useBloom) baseC += texture(brightnessFilter, TexCoords).rgb;
 
 	vec2 rotTexCoords = (starTransform * vec3(TexCoords, 1.f)).xy;
 	vec3 star  = useStarburst ? texture(starburst, rotTexCoords).rgb : vec3(1.f);
