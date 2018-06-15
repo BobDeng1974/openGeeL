@@ -44,6 +44,10 @@ namespace geeL {
 		});
 	}
 
+	ObjectLister::~ObjectLister() {
+		scene.removeListener(*this);
+	}
+
 
 	void ObjectLister::draw(GUIContext* context) {
 		if (nk_tree_push(context, NK_TREE_NODE, "Cameras", NK_MINIMIZED)) {

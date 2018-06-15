@@ -73,7 +73,7 @@ namespace geeL {
 
 	template<typename Data>
 	inline void DataEventActuator<Data>::removeListener(DataEventListener<Data>& listener) {
-		listeners.remove(listener);
+		listeners.remove(&listener);
 	}
 
 	template<typename Data>
@@ -87,8 +87,8 @@ namespace geeL {
 	template<typename Data>
 	inline void DataEventActuator<Data>::onRemove(std::shared_ptr<Data> data) {
 		for (auto it(listeners.begin()); it != listeners.end(); it++) {
-			auto& listener = **it;
-			listener.onRemove(data);
+			auto* listener = *it;
+			listener->onRemove(data);
 		}
 	}
 

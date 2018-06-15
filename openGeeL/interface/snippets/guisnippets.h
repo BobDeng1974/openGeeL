@@ -26,6 +26,8 @@ namespace geeL {
 	class GUISnippet {
 
 	public:
+		virtual ~GUISnippet() {}
+
 		virtual void draw(GUIContext* context) = 0;
 		virtual std::string toString() const = 0;
 

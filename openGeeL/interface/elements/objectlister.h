@@ -22,6 +22,7 @@ namespace geeL {
 
 	public:
 		ObjectLister(Scene& scene);
+		virtual ~ObjectLister();
 
 		virtual void draw(GUIContext* context);
 		virtual std::string toString() const;

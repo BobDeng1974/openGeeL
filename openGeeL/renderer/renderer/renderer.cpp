@@ -27,6 +27,9 @@ namespace geeL {
 
 	Renderer::~Renderer() {
 		onRemove();
+
+		meshFactory.removeListener(*this);
+		materialFactory.removeListener(*this);
 	}
 
 
