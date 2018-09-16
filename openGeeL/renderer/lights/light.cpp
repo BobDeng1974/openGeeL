@@ -15,8 +15,10 @@ using namespace glm;
 
 namespace geeL {
 
-	Light::Light(Transform& transform, vec3 diffuse, const std::string& name)
-		: SceneObject(transform, name), diffuse(diffuse), shadowMap(nullptr) {
+	Light::Light(Transform& transform, vec3 diffuse, const string& name)
+		: SceneObject(transform, name)
+		, diffuse(diffuse)
+		, shadowMap(nullptr) {
 	
 		setColorAndIntensityFromDiffuse();
 		transform.addListener(*this);
@@ -38,8 +40,21 @@ namespace geeL {
 		return shadowMap;
 	}
 
-	void Light::setShadowMap(Shadowmap& map) {
-		shadowMap = &map;
+	void Light::attachShadowmap(unique_ptr<Shadowmap> map) {
+		if (shadowMap != nullptr)
+			delete shadowMap;
+
+		shadowMap = map.release();
+		onShadowmapChange(true);
+	}
+
+	void Light::detatchShadowmap() {
+		if (shadowMap != nullptr) {
+			delete shadowMap;
+			shadowMap = nullptr;
+
+			onShadowmapChange(false);
+		}
 	}
 
 	void Light::bind(const Shader& shader, const std::string& name, ShaderTransformSpace space, const Camera* const camera) const {
@@ -56,12 +71,12 @@ namespace geeL {
 		bind(shader, name, shader.getSpace(), camera);
 	}
 
-	void Light::addShadowmap(Shader& shader, const std::string& name) {
+	void Light::bindShadowmap(Shader& shader, const std::string& name) {
 		if (shadowMap != nullptr)
 			shader.addMap(*shadowMap, name + "shadowMap");
 	}
 
-	void Light::removeShadowmap(Shader& shader) {
+	void Light::unbindShadowmap(Shader& shader) {
 		if (shadowMap != nullptr)
 			shader.removeMap(*shadowMap);
 	}
@@ -105,6 +120,14 @@ namespace geeL {
 		return color;
 	}
 
+	void Light::setActive(bool active) {
+		bool a = isActive();
+		SceneObject::setActive(active);
+
+		if (a != active && !transform.isStatic)
+			onShadowmapChange(active);
+	}
+
 	void Light::setColor(vec3 value) {
 		if (!transform.isStatic && !VectorExtension::equals(color, value)) {
 			color = clamp(value, 0.f, 1.f);
@@ -119,10 +142,21 @@ namespace geeL {
 		if (invoke) function(*this);
 	}
 
+	void Light::addShadowmapChangeListener(std::function<void(Light&, bool)> function) {
+		changeMapListeners.push_back(function);
+	}
+
 	void Light::onChange(const Transform& t) {
 		for (auto it(changeListeners.begin()); it != changeListeners.end(); it++) {
 			auto function = *it;
 			function(*this);
+		}
+	}
+
+	void Light::onShadowmapChange(bool active) {
+		for (auto it(changeMapListeners.begin()); it != changeMapListeners.end(); it++) {
+			auto function = *it;
+			function(*this, active);
 		}
 	}
 

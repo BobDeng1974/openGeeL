@@ -56,7 +56,7 @@ namespace geeL {
 			SimpleDirectionalLightMap* map = new SimpleDirectionalLightMap(*light, config);
 			//CascadedDirectionalShadowmap* map = new CascadedDirectionalShadowmap(*light, *camera, config.shadowBias, config.resolution);
 			map->setIntensity(config.intensity);
-			light->setShadowMap(*map);
+			light->attachShadowmap(unique_ptr<Shadowmap>(map));
 		}
 
 		addLight(light, d);
@@ -68,7 +68,7 @@ namespace geeL {
 		if (config.useShadowMap()) {
 			SimplePointLightMap* map = new SimplePointLightMap(*light, config);
 			map->setIntensity(config.intensity);
-			light->setShadowMap(*map);
+			light->attachShadowmap(unique_ptr<Shadowmap>(map));
 		}
 
 		addLight(light, p);
@@ -80,7 +80,7 @@ namespace geeL {
 		if (config.useShadowMap()) {
 			Shadowmap* map = new SimpleSpotLightMap(*light, config);
 			map->setIntensity(config.intensity);
-			light->setShadowMap(*map);
+			light->attachShadowmap(unique_ptr<Shadowmap>(map));
 		}
 
 		addLight(light, s);
@@ -125,7 +125,7 @@ namespace geeL {
 			Light& light = *binding.light;
 
 			if(light.isActive())
-				light.addShadowmap(shader, binding.getName());
+				light.bindShadowmap(shader, binding.getName());
 
 		});
 	}
@@ -214,7 +214,7 @@ namespace geeL {
 	void LightManager::onAdd(Light* light, LightBinding& binding) {
 		for (auto it = shaderListener.begin(); it != shaderListener.end(); it++) {
 			Shader& shader = **it;
-			light->addShadowmap(shader, binding.getName());
+			light->bindShadowmap(shader, binding.getName());
 		}
 	}
 
@@ -224,7 +224,7 @@ namespace geeL {
 
 		for (auto it = shaderListener.begin(); it != shaderListener.end(); it++) {
 			Shader& shader = **it;
-			light->removeShadowmap(shader);
+			light->unbindShadowmap(shader);
 		}
 	}
 
@@ -241,7 +241,7 @@ namespace geeL {
 			Shader& shader = **it;
 
 			iterLights([this, &shader](Light& light) {
-				light.removeShadowmap(shader);
+				light.unbindShadowmap(shader);
 			});
 		}
 
@@ -280,7 +280,7 @@ namespace geeL {
 
 			iterLights([this, &shader](LightBinding& binding) {
 				Light& light = *binding.light;
-				light.addShadowmap(shader, binding.getName());
+				light.bindShadowmap(shader, binding.getName());
 			});
 		}
 

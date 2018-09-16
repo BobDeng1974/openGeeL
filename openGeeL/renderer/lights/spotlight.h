@@ -31,7 +31,7 @@ namespace geeL {
 		//Add light cookie of this spotlight to given shader.
 		//Note: 'addShadowmap' has same effect
 		void addLightCookie(Shader& shader, const std::string& name);
-		virtual void addShadowmap(Shader& shader, const std::string& name);
+		virtual void bindShadowmap(Shader& shader, const std::string& name);
 
 		float getAngle() const;
 		float getAngleDegree() const;

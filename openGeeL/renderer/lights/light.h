@@ -46,13 +46,15 @@ namespace geeL {
 
 		const Shadowmap* const getShadowMap() const;
 		Shadowmap* getShadowMap();
-		void setShadowMap(Shadowmap& map);
+
+		void attachShadowmap(std::unique_ptr<Shadowmap> map);
+		void detatchShadowmap();
 
 		//Add shadow map to given shader
-		virtual void addShadowmap(Shader& shader, const std::string& name);
+		virtual void bindShadowmap(Shader& shader, const std::string& name);
 
 		//Remove shadow map from given shader
-		void removeShadowmap(Shader& shader);
+		void unbindShadowmap(Shader& shader);
 
 		template<typename ...ShadowArgs>
 		void renderShadowmap(ShadowArgs&& ...args);
@@ -72,25 +74,29 @@ namespace geeL {
 		//Sets intensity of diffuse color
 		void  setIntensity(float value);
 		float getIntensity() const;
-		
 
 		//Sets base color of diffuse color (Normalized without intensity)
 		void setColor(vec3 color);
 		vec3 getColor() const;
 		
+		virtual LightType getLightType() const = 0;
+		virtual void setActive(bool active);
 
 		//Add change callback to this light and specify whether function should
 		//be invoked once immediately or not
 		void addChangeListener(std::function<void(Light&)> function, bool invoke = false);
-		virtual void onChange(const Transform& t);
 
-		virtual LightType getLightType() const = 0;
+		//Add callback that listens to changes of shadowmap. Specifies if is active(true) or not(false)
+		//Note: This also works if light currently has no shadowmap attached
+		void addShadowmapChangeListener(std::function<void(Light&, bool)> function);
 
 	protected:
 		vec3 diffuse;
 		Shadowmap* shadowMap;
 
-		
+
+		virtual void onChange(const Transform& t);
+		void onShadowmapChange(bool active);
 
 		float getLightRadius(float cutoff) const;
 
@@ -98,6 +104,7 @@ namespace geeL {
 		float intensity;
 		vec3 color;
 		std::list<std::function<void(Light&)>> changeListeners;
+		std::list<std::function<void(Light&, bool)>> changeMapListeners;
 
 		void updateDiffuse();
 		void setColorAndIntensityFromDiffuse();
