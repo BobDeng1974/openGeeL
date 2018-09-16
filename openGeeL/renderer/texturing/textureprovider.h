@@ -13,6 +13,8 @@ namespace geeL {
 	class GBuffer;
 	class RenderTexture;
 	class RenderWindow;
+	class Texture2D;
+	class TextureCube;
 	class TextureParameters;
 	class TextureWrapper;
 
@@ -43,6 +45,14 @@ namespace geeL {
 		//and doesn't need to be returned
 		virtual void updateCurrentImage(RenderTexture& texture) = 0;
 		virtual void updateCurrentSpecular(RenderTexture& texture) = 0;
+
+
+		//Returns a 1x1 dummy 2D texture
+		virtual const Texture2D& requestDummy2D() = 0;
+
+		//Returns a 6x1x1 dummy cubic texture
+		virtual const TextureCube& requestDummyCube() = 0;
+
 
 		virtual RenderTexture& requestPreviousImage() const = 0;
 		//virtual RenderTexture& requestPreviousPosition() const = 0;
@@ -89,6 +99,9 @@ namespace geeL {
 
 		virtual void updateCurrentImage(RenderTexture& texture);
 		virtual void updateCurrentSpecular(RenderTexture& texture);
+
+		virtual const Texture2D& requestDummy2D();
+		virtual const TextureCube& requestDummyCube();
 
 		virtual RenderTexture& requestPreviousImage() const;
 		//virtual RenderTexture& requestPreviousPosition() const;
@@ -150,6 +163,9 @@ namespace geeL {
 		RenderTexture* normal;
 		RenderTexture* properties;
 		RenderTexture* emission;
+
+		Texture2D* dummy2D;
+		TextureCube* dummyCube;
 
 		std::function<void(RenderTexture&)> callback;
 

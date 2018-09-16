@@ -561,6 +561,9 @@
     <ClCompile Include="renderer\postprocessing\subsurfacescattering.cpp">
       <Filter>renderer\postprocessing</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\texturing\dummytexture.cpp">
+      <Filter>renderer\texturing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\texturing\texture.h">
@@ -1141,6 +1144,9 @@
     </ClInclude>
     <ClInclude Include="main\headscene.h">
       <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\texturing\dummytexture.h">
+      <Filter>renderer\texturing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -22,7 +22,7 @@ namespace geeL {
 	private:
 		struct ImageContainer {
 			int width, height;
-			unsigned char* images[6];
+			void* images[6];
 
 			ImageContainer(const std::string& rightPath, 
 				const std::string& leftPath, 

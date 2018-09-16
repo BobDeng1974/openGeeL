@@ -465,7 +465,7 @@ namespace geeL {
 		ColorType colorType,
 		FilterMode filterMode,
 		WrapMode wrapMode,
-		unsigned char* images[6])
+		void* images[6])
 			: Texture(colorType, filterMode, wrapMode)
 			, resolution(resolution) {
 
@@ -550,7 +550,7 @@ namespace geeL {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
-	void TextureCube::initStorage(unsigned char* images[6]) {
+	void TextureCube::initStorage(void* images[6]) {
 		int textureType = (int)getTextureType();
 		unsigned int res = getResolution();
 

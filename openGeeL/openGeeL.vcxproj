@@ -278,6 +278,7 @@
     <ClCompile Include="renderer\structures\plane.cpp" />
     <ClCompile Include="renderer\structures\viewfrustum.cpp" />
     <ClCompile Include="renderer\texturing\brdfIntMap.cpp" />
+    <ClCompile Include="renderer\texturing\dummytexture.cpp" />
     <ClCompile Include="renderer\texturing\dynamictexture.cpp" />
     <ClCompile Include="renderer\texturing\envmap.cpp" />
     <ClCompile Include="renderer\texturing\imagetexturecube.cpp" />
@@ -460,6 +461,7 @@
     <ClInclude Include="renderer\structures\simplegroup.h" />
     <ClInclude Include="renderer\structures\viewfrustum.h" />
     <ClInclude Include="renderer\texturing\brdfIntMap.h" />
+    <ClInclude Include="renderer\texturing\dummytexture.h" />
     <ClInclude Include="renderer\texturing\dynamictexture.h" />
     <ClInclude Include="renderer\texturing\envmap.h" />
     <ClInclude Include="renderer\texturing\functionaltexture.h" />

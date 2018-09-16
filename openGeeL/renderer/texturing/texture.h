@@ -194,7 +194,7 @@ namespace geeL {
 
 	public:
 		TextureCube(unsigned int resolution, ColorType colorType,
-			FilterMode filterMode, WrapMode wrapMode, unsigned char* images[6] = 0);
+			FilterMode filterMode, WrapMode wrapMode, void* images[6] = 0);
 		virtual ~TextureCube() {}
 
 		TextureCube(TextureCube&& other);
@@ -218,7 +218,7 @@ namespace geeL {
 		static void unbind();
 
 	protected:
-		void initStorage(unsigned char* images[6]);
+		void initStorage(void* images[6]);
 
 	private:
 		unsigned int resolution;

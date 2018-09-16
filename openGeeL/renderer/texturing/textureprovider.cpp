@@ -1,7 +1,9 @@
 #include <iostream>
 #include <cassert>
+#include <memory>
 #include "utility/resolution.h"
 #include "appglobals.h"
+#include "dummytexture.h"
 #include "texturewrapper.h"
 #include "rendertexture.h"
 #include "textureparams.h"
@@ -18,7 +20,9 @@ namespace geeL {
 		, normal(nullptr)
 		, albedo(nullptr)
 		, properties(nullptr)
-		, emission(nullptr) {
+		, emission(nullptr)
+		, dummy2D(nullptr)
+		, dummyCube(nullptr) {
 
 		callback = [this](RenderTexture& texture) { returnTexture(texture); };
 	}
@@ -32,6 +36,8 @@ namespace geeL {
 		if (albedo != nullptr) delete albedo;
 		if (properties != nullptr) delete properties;
 		if (emission != nullptr) delete emission;
+		if (dummy2D != nullptr) delete dummy2D;
+		if (dummyCube != nullptr) delete dummyCube;
 
 		for (auto resolutionIt(textures.begin()); resolutionIt != textures.end(); resolutionIt++) {
 			auto& colors = resolutionIt->second;
@@ -123,6 +129,24 @@ namespace geeL {
 			if (specular != nullptr) returnTexture(*specular);
 			specular = &texture;
 		}
+	}
+
+	const Texture2D& TextureProvider::requestDummy2D() {
+		if (dummy2D == nullptr) {
+			std::unique_ptr<Texture2D> t = std::move(DummyTexture::createTexture2D());
+			dummy2D = t.release();
+		}
+
+		return *dummy2D;
+	}
+
+	const TextureCube& TextureProvider::requestDummyCube() {
+		if (dummyCube == nullptr) {
+			std::unique_ptr<TextureCube> t = std::move(DummyTexture::createTextureCube());
+			dummyCube = t.release();
+		}
+
+		return *dummyCube;
 	}
 
 	RenderTexture& TextureProvider::requestPreviousImage() const {
