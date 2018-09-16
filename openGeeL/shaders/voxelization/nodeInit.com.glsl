@@ -13,8 +13,8 @@ void main() {
 	unsigned int index = gl_GlobalInvocationID.y * 1024 + gl_GlobalInvocationID.x;
 
 	//Filter out abundant calls of work group
-	if(index >= numNodes) return;
-
-	imageStore(nodeIndicies, int(allocOffset + index), uvec4(0));
-	imageStore(nodeDiffuse,  int(allocOffset + index), uvec4(0));
+	if(index < numNodes) {
+		imageStore(nodeIndicies, int(allocOffset + index), uvec4(0));
+		imageStore(nodeDiffuse,  int(allocOffset + index), uvec4(0));
+	}
 }

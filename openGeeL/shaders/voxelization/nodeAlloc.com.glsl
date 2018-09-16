@@ -15,19 +15,19 @@ void main() {
 	unsigned int index = gl_GlobalInvocationID.x;
 
 	//Filter out abundant calls of work group
-	if(index >= numNodes) return;
-
-	unsigned int childIndex = imageLoad(nodeIndicies, nodeOffset + int(index)).r;
+	if(index < numNodes) {
+		unsigned int childIndex = imageLoad(nodeIndicies, nodeOffset + int(index)).r;
 	
-	//Child flag is set and therefore child nodes will be allocated
-	//and their position linked to parent node
-	if((childIndex & 0x80000000) != 0) {
-		unsigned int offset;
-		offset = atomicCounterIncrement(nodeCounter); //Generate start index
-		offset *= 8;								  //Add offset for 8 child nodes									
-		offset += allocOffset;						  //Offset to free allocation space
-		offset |= 0x80000000;						  //Add child flag again
+		//Child flag is set and therefore child nodes will be allocated
+		//and their position linked to parent node
+		if((childIndex & 0x80000000) != 0) {
+			unsigned int offset;
+			offset = atomicCounterIncrement(nodeCounter); //Generate start index
+			offset *= 8;								  //Add offset for 8 child nodes									
+			offset += allocOffset;						  //Offset to free allocation space
+			offset |= 0x80000000;						  //Add child flag again
 
-		imageStore(nodeIndicies, nodeOffset + int(index), uvec4(offset, 0, 0, 0));
+			imageStore(nodeIndicies, nodeOffset + int(index), uvec4(offset, 0, 0, 0));
+		}
 	}
 }

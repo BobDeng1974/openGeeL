@@ -50,13 +50,15 @@ void main() {
 	//uvec4 coords = voxelizeConservative();
 
 	uint index = atomicCounterIncrement(voxelCount);
-	if(!drawVoxel) return; //Return in this case since we only want to count voxels
 
-	vec3 color = getIrradiance();
+	//Check if we want to draw or only count voxels
+	if(drawVoxel) {
+		vec3 color = getIrradiance();
 
-	imageStore(voxelPositions, int(index), coords);
-	imageStore(voxelNormals, int(index), vec4(normal, 0.f));
-	imageStore(voxelColors, int(index), vec4(color, 1.f));
+		imageStore(voxelPositions, int(index), coords);
+		imageStore(voxelNormals, int(index), vec4(normal, 0.f));
+		imageStore(voxelColors, int(index), vec4(color, 1.f));
+	}
 }
 
 

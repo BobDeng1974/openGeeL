@@ -11,8 +11,6 @@ shared vec4 groupColor;
 shared vec4 groupColors[8][8];
 
 void main() {
-	//if(gl_GlobalInvocationID.x >= resolution.x || gl_GlobalInvocationID.y >= resolution.y) return;
-	
 	ivec2 coords = ivec2(gl_GlobalInvocationID.xy);
 	vec2 texCoords = gl_GlobalInvocationID.xy / resolution;
 

@@ -32,7 +32,6 @@ void main() {
 	//Only blur if threshold for blur direction is reached
 	if(length(blurDirection) < DIFF_THRESHOLD) {
 		color = vec4(texture2D(image, TexCoords).rgb, 1.0f);
-		return;
 	}
 	else {
 		//Scale min value with mean luminance

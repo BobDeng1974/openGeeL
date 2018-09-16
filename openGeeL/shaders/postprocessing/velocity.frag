@@ -19,17 +19,16 @@ void main() {
 	vec3 currPos = texture(currentPosition, TexCoords).xyz;
 
 	//Use default offset if trying to blur over skybox
-	if(length(prevPos) < 0.1f || length(currPos) < 0.1f) {
+	if(length(prevPos) < 0.1f || length(currPos) < 0.1f)
 		color = vec4(defaultOffset, 1.f);
-		return;
+	else {
+		prevPos = transformToClip(prevPos).xyz;
+		currPos = transformToClip(currPos).xyz;
+
+		vec3 velocity = currPos - prevPos;
+
+		color = vec4(velocity, 1.f);
 	}
-
-	prevPos = transformToClip(prevPos).xyz;
-	currPos = transformToClip(currPos).xyz;
-
-	vec3 velocity = currPos - prevPos;
-
-	color = vec4(velocity, 1.f);
 }
 
 //Transform to clip space

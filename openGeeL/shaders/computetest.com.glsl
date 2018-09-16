@@ -8,7 +8,6 @@ uniform vec2 resolution;
 
 
 void main() {
-	//if(gl_GlobalInvocationID.x >= resolution.x || gl_GlobalInvocationID.y >= resolution.y) return;
 	ivec2 coords = ivec2(gl_GlobalInvocationID.xy);
 	vec2 texCoords = vec2(coords) / resolution;
 

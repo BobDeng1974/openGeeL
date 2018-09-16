@@ -46,50 +46,50 @@ vec3 convertToViewSpace();
 float calculateSpotLightShadows(vec3 coords);
 
 void main() {
-	if(!lightActive) return;
+	if(lightActive) {
+		vec3 fragPos = readPosition(TexCoords);
+		float depth = length(fragPos);
 
-	vec3 fragPos = readPosition(TexCoords);
-	float depth = length(fragPos);
+		//Detect pixels that aren't present in gbuffer
+		float noFrag = step(depth, 0.1f);
+		//Try to reconstruct view space coordinates from texture coordinates for those pixels
+		fragPos = (1.f - noFrag) * fragPos + noFrag * convertToViewSpace();
 
-	//Detect pixels that aren't present in gbuffer
-	float noFrag = step(depth, 0.1f);
-	//Try to reconstruct view space coordinates from texture coordinates for those pixels
-	fragPos = (1.f - noFrag) * fragPos + noFrag * convertToViewSpace();
-
-	vec3 fragLightSpace = convertToLightSpace(fragPos);
-	vec3 origLightSpace = convertToLightSpace(vec3(0.f));
-	vec3 direLightSpace = fragLightSpace - origLightSpace;
+		vec3 fragLightSpace = convertToLightSpace(fragPos);
+		vec3 origLightSpace = convertToLightSpace(vec3(0.f));
+		vec3 direLightSpace = fragLightSpace - origLightSpace;
 	
-	vec3 volume = vec3(0.f);
-	float f = 1.f / float(samples);
-	float stepi = random(TexCoords);
-	for(int i = 0; i < samples; i++) {
-		vec3 frag = origLightSpace + (direLightSpace * f * stepi);
-		vec3 fragView = fragPos * f * stepi;
+		vec3 volume = vec3(0.f);
+		float f = 1.f / float(samples);
+		float stepi = random(TexCoords);
+		for(int i = 0; i < samples; i++) {
+			vec3 frag = origLightSpace + (direLightSpace * f * stepi);
+			vec3 fragView = fragPos * f * stepi;
 
-		float shadow = 1.f - calculateSpotLightShadows(frag);
-		shadow *= useCookie ? texture(lightCookie, frag.xy).r : 1.f;
+			float shadow = 1.f - calculateSpotLightShadows(frag);
+			shadow *= useCookie ? texture(lightCookie, frag.xy).r : 1.f;
 
-		vec3 lightDirection = light.position - fragView;
-		float lightDistance = length(lightDirection);
-		float cutOff = step(minCutoff, lightDistance);
-		lightDirection = normalize(lightDirection);
+			vec3 lightDirection = light.position - fragView;
+			float lightDistance = length(lightDirection);
+			float cutOff = step(minCutoff, lightDistance);
+			lightDirection = normalize(lightDirection);
 
-		float attenuation = 1.f / (lightDistance * lightDistance);
+			float attenuation = 1.f / (lightDistance * lightDistance);
 
-		//Set intensity depending on if object is inside spotlights halo (or outer halo)
-		float theta = dot(lightDirection, normalize(-light.direction)); 
-		float epsilon = (light.angle - light.outerAngle);
-		float intensity = clamp((theta - light.outerAngle) / epsilon, 0.f, 1.f);
+			//Set intensity depending on if object is inside spotlights halo (or outer halo)
+			float theta = dot(lightDirection, normalize(-light.direction)); 
+			float epsilon = (light.angle - light.outerAngle);
+			float intensity = clamp((theta - light.outerAngle) / epsilon, 0.f, 1.f);
 
-		vec3 vol = light.diffuse * shadow * attenuation * density * intensity * cutOff;
+			vec3 vol = light.diffuse * shadow * attenuation * density * intensity * cutOff;
 
-		volume += vol;
-		stepi += 1.f;
+			volume += vol;
+			stepi += 1.f;
+		}
+
+		volume *= (1.f / stepi);
+		color = vec4(volume, 1.f);
 	}
-
-	volume *= (1.f / stepi);
-	color = vec4(volume, 1.f);
 }
 
 

@@ -21,40 +21,41 @@ void main() {
 	unsigned int voxelIndex = gl_GlobalInvocationID.y * 1024 + gl_GlobalInvocationID.x;
 	
 	//Filter out abundant calls of work group
-	if(voxelIndex >= numVoxels) return;
+	if(voxelIndex < numVoxels) {
 
-	//Dimensions of root node
-	unsigned int dim = dimensions;
-	uvec3 umin = uvec3(0, 0, 0);
-	uvec3 umax = uvec3(dim, dim, dim);
+		//Dimensions of root node
+		unsigned int dim = dimensions;
+		uvec3 umin = uvec3(0, 0, 0);
+		uvec3 umax = uvec3(dim, dim, dim);
 
-	uvec4 position = imageLoad(voxelPositions, int(voxelIndex));  //Position of voxel
-	vec4 diffuse = imageLoad(voxelColors, int(voxelIndex)); //Color of voxel
+		uvec4 position = imageLoad(voxelPositions, int(voxelIndex));  //Position of voxel
+		vec4 diffuse = imageLoad(voxelColors, int(voxelIndex)); //Color of voxel
 
-	int nodeIndex = 0; //Set index to root node (0)
-	unsigned int node = imageLoad(nodeIndicies, nodeIndex).r;
+		int nodeIndex = 0; //Set index to root node (0)
+		unsigned int node = imageLoad(nodeIndicies, nodeIndex).r;
 
-	for(int i = 0; i < level; i++) {
-		nodeIndex = int(node & 0x7FFFFFFF); //Remove child flag
+		for(int i = 0; i < level; i++) {
+			nodeIndex = int(node & 0x7FFFFFFF); //Remove child flag
 
-		dim /= 2;
-		//Spacial index of subnode
-		uvec3 box = clamp(ivec3(1 + position.xyz - umin - dim), 0, 1);
-		umin += box * dim;
+			dim /= 2;
+			//Spacial index of subnode
+			uvec3 box = clamp(ivec3(1 + position.xyz - umin - dim), 0, 1);
+			umin += box * dim;
 
-		//Spacial position translated into index
-		unsigned int childIndex = box.x + 4 * box.y + 2 * box.z;
-		nodeIndex += int(childIndex);
+			//Spacial position translated into index
+			unsigned int childIndex = box.x + 4 * box.y + 2 * box.z;
+			nodeIndex += int(childIndex);
 
-		node = imageLoad(nodeIndicies, nodeIndex).r;
+			node = imageLoad(nodeIndicies, nodeIndex).r;
+		}
+
+		//Write voxlel colors into leaf nodes
+		imageAtomicRGBA8Avg(diffuse, nodeIndex, nodeColors);
+
+		//Mark leaf node as non-empty
+		node |= 0x80000000;
+		imageStore(nodeIndicies, nodeIndex, uvec4(node, 0, 0, 0));
 	}
-
-	//Write voxlel colors into leaf nodes
-	imageAtomicRGBA8Avg(diffuse, nodeIndex, nodeColors);
-
-	//Mark leaf node as non-empty
-	node |= 0x80000000;
-	imageStore(nodeIndicies, nodeIndex, uvec4(node, 0, 0, 0));
 }
 
 

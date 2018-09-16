@@ -19,32 +19,32 @@ void main() {
 	unsigned int index = gl_GlobalInvocationID.x;
 
 	//Filter out abundant calls of work group
-	if(index >= numNodes) return;
-
-	unsigned int childIndex = imageLoad(nodeIndicies, nodeOffset + int(index)).r;
+	if(index < numNodes) {
+		unsigned int childIndex = imageLoad(nodeIndicies, nodeOffset + int(index)).r;
 	
-	//Child flag is set and therefore node needs to be mipmapped
-	if((childIndex & 0x80000000) != 0) {
-		int nodeIndex = int(childIndex & 0x7FFFFFFF); //Remove child flag
+		//Child flag is set and therefore node needs to be mipmapped
+		if((childIndex & 0x80000000) != 0) {
+			int nodeIndex = int(childIndex & 0x7FFFFFFF); //Remove child flag
 
-		float count = 0.f;
-		vec4 color = vec4(0.f);
-		for(int i = 0; i < 8; i++) {
-			unsigned int node = imageLoad(nodeIndicies, nodeIndex).r;
+			float count = 0.f;
+			vec4 color = vec4(0.f);
+			for(int i = 0; i < 8; i++) {
+				unsigned int node = imageLoad(nodeIndicies, nodeIndex).r;
 
-			if((node & 0x80000000) != 0) {
-				color += getColor(nodeIndex);
-				count += 1.f;
-			}
+				if((node & 0x80000000) != 0) {
+					color += getColor(nodeIndex);
+					count += 1.f;
+				}
 			
-			nodeIndex++;
+				nodeIndex++;
+			}
+
+			color.rgb /= count;
+			color.a /= 8.f; 
+
+			uint rgba8 = convVec4ToRGBA8(color * 255.f);
+			imageStore(nodeDiffuse, nodeOffset + int(index), uvec4(rgba8, 0, 0, 0));
 		}
-
-		color.rgb /= count;
-		color.a /= 8.f; 
-
-		uint rgba8 = convVec4ToRGBA8(color * 255.f);
-		imageStore(nodeDiffuse, nodeOffset + int(index), uvec4(rgba8, 0, 0, 0));
 	}
 }
 
