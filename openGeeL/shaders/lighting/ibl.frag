@@ -34,7 +34,7 @@ void main() {
 	vec3 position = (inverseView * vec4(fragPosition, 1.f)).xyz;
 
 	//Discard pixel if it is not connected to any position in scene (Will be rendered black anyway)
-	if(length(fragPosition) <= 0.001f) return;
+	if(length(fragPosition) <= 0.001f) discard;
 
 	vec3 viewDirection = normalize(-fragPosition);
     vec3 normal	= readNormal(textureCoordinates);

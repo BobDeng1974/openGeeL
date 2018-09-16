@@ -66,8 +66,8 @@ uvec4 voxelizeSimple() {
 
 uvec4 voxelizeConservative() {
 	//Discard if fragment is outside of triangles bounding box
-	discard(fragPosition.x < AABB.x || fragPosition.y < AABB.y 
-		|| fragPosition.x > AABB.z || fragPosition.y > AABB.w);
+	if (fragPosition.x < AABB.x || fragPosition.y < AABB.y || fragPosition.x > AABB.z || fragPosition.y > AABB.w)
+		discard;
 
 	vec4 fragCoords = getFragCoords();
 	uvec4 tCoords = uvec4(fragCoords.x, fragCoords.y, resolution.x * fragCoords.z, 0.f);

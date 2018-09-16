@@ -69,7 +69,7 @@ void main() {
 	}
 #else
 	//Discard pixel if it is not connected to any position in scene (Will be rendered black anyway)
-	discard(length(fragPosition) <= 0.001f);
+	if(length(fragPosition) <= 0.001f) discard;
 #endif
 
 	vec3 viewDirection = normalize(-fragPosition);

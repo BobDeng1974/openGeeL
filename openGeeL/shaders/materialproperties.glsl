@@ -24,7 +24,7 @@ void readMaterialProperties(vec2 TexCoords, out vec4 albedo, out vec3 norm, out 
 		albedo.a = texture(material.alpha, TexCoords).r * albedo.a;
 
 		//Discard fragment if alpha value is low
-		discard(cutout && albedo.a < 0.5f);
+		if(cutout && albedo.a < 0.5f) discard;
 	}
 
 	norm = normalize(normal);
