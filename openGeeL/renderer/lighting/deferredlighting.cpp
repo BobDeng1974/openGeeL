@@ -25,6 +25,10 @@ namespace geeL {
 		scene.init();
 
 		assert(provider != nullptr);
+
+		//TODO: Solve this better: currently radeon hardware bugs out on first given texture
+		addTextureSampler(provider->requestDummy2D(), "QuickFix"); 
+
 		addTextureSampler(provider->requestAlbedo(), "gDiffuse");
 		addTextureSampler(provider->requestPosition(), "gPosition");
 		addTextureSampler(provider->requestNormal(), "gNormal");
