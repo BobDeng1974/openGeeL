@@ -12,7 +12,6 @@
 #endif
 
 
-#define MAX_LIGHTS 5
 #define GROUP_SIZE 8
 layout (local_size_x = GROUP_SIZE, local_size_y = GROUP_SIZE, local_size_z = 1) in;
 
@@ -34,12 +33,8 @@ uniform vec2 resolution;
 shared uint uMinDepth;
 shared uint uMaxDepth;
 
-shared uint pointLightIndicies[MAX_LIGHTS];
+shared uint pointLightIndicies[MAX_POINTLIGHTS];
 shared uint pointLightCounter;
-
-uniform int plCount;
-uniform int dlCount;
-uniform int slCount;
 
 uniform sampler2D POSITION_MAP;
 uniform sampler2D NORMAL_MAP;
@@ -53,11 +48,7 @@ uniform sampler2D EMISSION_MAP;
 
 uniform mat4 projection;
 uniform mat4 inverseView;
-uniform vec3 origin;
-
-uniform PointLight pointLights[MAX_LIGHTS];
-uniform DirectionalLight directionalLights[MAX_LIGHTS];
-uniform SpotLight spotLights[MAX_LIGHTS];     
+uniform vec3 origin;   
 
 #include <shaders/shadowmapping/shadowsView.glsl>
 #include <shaders/lighting/cooktorrancelights.glsl>

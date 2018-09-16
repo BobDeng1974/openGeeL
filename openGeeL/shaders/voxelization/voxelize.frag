@@ -93,14 +93,6 @@ uvec4 voxelizeConservative() {
 
 //Cook-Torrance lighting............................................................................................................
 
-uniform int plCount;
-uniform int dlCount;
-uniform int slCount;
-
-uniform PointLight pointLights[5];
-uniform DirectionalLight directionalLights[5];
-uniform SpotLight spotLights[5];
-
 uniform Material material;
 uniform vec3 cameraPosition;
 

@@ -13,17 +13,9 @@ in mat3 TBN;
 
 out vec4 color;
 
-uniform int plCount;
-uniform int dlCount;
-uniform int slCount;
-
 uniform bool gammaCorrection;
 
 #include <shaders/lighting/lights.glsl>
-
-uniform PointLight pointLights[5];
-uniform DirectionalLight directionalLights[5];
-uniform SpotLight spotLights[5];
 
 uniform Material material;
 uniform vec3 cameraPosition;

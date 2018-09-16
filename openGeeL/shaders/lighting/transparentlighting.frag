@@ -23,15 +23,7 @@ layout (location = 4) out vec4 diffuse;
 layout (location = 5) out vec4 specular;
 #endif
 
-uniform int plCount;
-uniform int dlCount;
-uniform int slCount;
-
 #include <shaders/lighting/lights.glsl>
-
-uniform PointLight pointLights[5];
-uniform DirectionalLight directionalLights[5];
-uniform SpotLight spotLights[5];
 
 uniform Material material;
 uniform uint id;

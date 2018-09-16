@@ -69,3 +69,20 @@ struct DirectionalLight {
 	float bias;
 	int type; //0: No 1: Hard 2: Soft shadow
 };
+
+
+#define MAX_POINTLIGHTS 5
+#define MAX_SPOTLIGHTS 5
+#define MAX_DIRECTIONALLIGHTS 1
+
+#define MAX_SHADOWMAPS 3
+#define MAX_SHADOWCUBES 3
+
+
+uniform int plCount;
+uniform int dlCount;
+uniform int slCount;
+
+uniform PointLight pointLights[MAX_POINTLIGHTS];
+uniform DirectionalLight directionalLights[MAX_DIRECTIONALLIGHTS];
+uniform SpotLight spotLights[MAX_SPOTLIGHTS];

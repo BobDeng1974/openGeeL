@@ -26,10 +26,6 @@ layout (location = 1) out vec4 specular;
 #endif
 
 
-uniform int plCount;
-uniform int dlCount;
-uniform int slCount;
-
 uniform sampler2D POSITION_MAP;
 uniform sampler2D NORMAL_MAP;
 uniform sampler2D DIFFUSE_MAP;
@@ -47,10 +43,7 @@ uniform vec3 origin;
 #if (VOLUMETRIC_LIGHT == 1)
 uniform mat4 inverseProjection;
 #endif
-
-uniform PointLight pointLights[5];
-uniform DirectionalLight directionalLights[5];
-uniform SpotLight spotLights[5];     
+ 
 
 #include <shaders/shadowmapping/shadowsView.glsl>
 #include <shaders/lighting/cooktorrancelights.glsl>
