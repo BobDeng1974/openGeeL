@@ -15,8 +15,6 @@ namespace geeL {
 		static std::unique_ptr<TextureCube> createTextureCube();
 
 	};
-
 }
-
 
 #endif

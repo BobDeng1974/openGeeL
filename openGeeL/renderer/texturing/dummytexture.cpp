@@ -14,14 +14,14 @@ namespace geeL {
 		return unique_ptr<Texture2D>(t);
 	}
 
-	std::unique_ptr<TextureCube> DummyTexture::createTextureCube() {
+	unique_ptr<TextureCube> DummyTexture::createTextureCube() {
 		vector<GLubyte> d(4, 0);
 		void* dataArray[6] = { &d, &d, &d, &d, &d, &d };
 
 		TextureCube* t = new TextureCube(1, ColorType::RGBA, FilterMode::None,
 			WrapMode::Repeat, dataArray);
 
-		return std::unique_ptr<TextureCube>(t);
+		return unique_ptr<TextureCube>(t);
 	}
 
 }
