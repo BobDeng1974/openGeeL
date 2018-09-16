@@ -31,11 +31,11 @@ layout(binding = 1, rgba16f) uniform image2D specular;
 
 uniform vec2 resolution;
 
-shared uint uMinDepth = 0xFFFFFFF;
-shared uint uMaxDepth = 0;
+shared uint uMinDepth;
+shared uint uMaxDepth;
 
 shared uint pointLightIndicies[MAX_LIGHTS];
-shared uint pointLightCounter = 0;
+shared uint pointLightCounter;
 
 uniform int plCount;
 uniform int dlCount;
@@ -66,6 +66,14 @@ uniform SpotLight spotLights[MAX_LIGHTS];
 void main() {
 	ivec2 coords = ivec2(gl_GlobalInvocationID.xy);
 	vec2 textureCoordinates = gl_GlobalInvocationID.xy / resolution;
+
+	//Initialize shared memory
+	if (gl_LocalInvocationID.x == 0 && gl_LocalInvocationID.y == 0) {
+		uMinDepth = 0xFFFFFFF;
+		uMaxDepth = 0;
+		pointLightCounter = 0;
+	}
+
 
 	vec3 fragPosition = readPosition(textureCoordinates);
 
