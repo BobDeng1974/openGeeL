@@ -378,6 +378,10 @@ namespace geeL {
 		}
 	}
 
+	void Shader::setMapOffset(unsigned int value) {
+		//mapOffset = value;
+	}
+
 
 }
 

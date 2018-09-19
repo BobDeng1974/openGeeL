@@ -30,7 +30,6 @@ namespace geeL {
 
 	public:
 		unsigned int mapBindingPos;
-		unsigned int mapOffset = 0;
 		std::string name;
 
 		virtual ~Shader();
@@ -126,6 +125,8 @@ namespace geeL {
 		void iterateBindings(std::function<void(const ShaderBinding&)> function);
 		void iterateTextures(std::function<void(const TextureBinding& binding)> function) const;
 
+		void setMapOffset(unsigned int value);
+
 	protected:
 		unsigned int program;
 		std::map<std::string, TextureBinding> maps;
@@ -175,6 +176,7 @@ namespace geeL {
 
 	private:
 		static unsigned int activeProgram;
+		unsigned int mapOffset = 0;
 
 		//Bind all added maps into the shader
 		void bindMaps();

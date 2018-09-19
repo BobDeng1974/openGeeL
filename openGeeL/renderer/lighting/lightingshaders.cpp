@@ -11,7 +11,7 @@ namespace geeL {
 			ShadingMethod::Forward,
 			animated) {
 
-		mapOffset = 1;
+		setMapOffset(1);
 	}
 
 
@@ -22,7 +22,7 @@ namespace geeL {
 			ShadingMethod::Hybrid,
 			animated) {
 
-		mapOffset = 1;
+		setMapOffset(1);
 	}
 
 
@@ -34,7 +34,7 @@ namespace geeL {
 			animated)
 		, provider(provider) {
 
-		//mapOffset = 1;
+		setMapOffset(1);
 
 		const ITexture& t1 = provider.requestDummy2D();
 		const ITexture& t2 = provider.requestDummyCube();

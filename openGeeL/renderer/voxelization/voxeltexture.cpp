@@ -31,7 +31,7 @@ namespace geeL {
 		voxelShader = new SceneShader("shaders/voxelization/voxelize.vert", "shaders/voxelization/voxelize.geom",
 			frag, ShaderTransformSpace::World, ShadingMethod::Other);
 
-		voxelShader->mapOffset = 1;
+		voxelShader->setMapOffset(1);
 	}
 
 

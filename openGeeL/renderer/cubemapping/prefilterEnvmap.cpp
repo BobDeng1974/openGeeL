@@ -28,7 +28,7 @@ namespace geeL {
 
 		getTexture().mipmap();
 
-		conversionShader->mapOffset = 1;
+		conversionShader->setMapOffset(1);
 		conversionShader->addMap(environmentMap.getTexture(), "environmentMap");
 	}
 

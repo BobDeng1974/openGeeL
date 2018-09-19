@@ -46,7 +46,7 @@ namespace geeL {
 		RenderShader conversionShader("shaders/cubemapping/envconvert.vert",
 			"shaders/cubemapping/envconvert.frag");
 
-		conversionShader.mapOffset = 1;
+		conversionShader.setMapOffset(1);
 		conversionShader.addMap(map, "environmentMap");
 
 		frameBuffer.init(getTextureCube());

@@ -25,7 +25,7 @@ namespace geeL {
 			frag, ShaderTransformSpace::World, ShadingMethod::Other);
 
 		BufferUtility::generateAtomicBuffer(atomicBuffer);
-		voxelShader->mapOffset = 1;
+		voxelShader->setMapOffset(1);
 	}
 
 	Voxelizer::~Voxelizer() {

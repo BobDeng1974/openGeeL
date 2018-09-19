@@ -24,7 +24,7 @@ namespace geeL {
 			, conversionShader(new RenderShader("shaders/cubemapping/envconvert.vert", 
 				"shaders/cubemapping/irrmap.frag")) {
 
-		conversionShader->mapOffset = 1;
+		conversionShader->setMapOffset(1);
 		conversionShader->addMap(environmentMap.getTexture(), "environmentMap");
 	}
 
