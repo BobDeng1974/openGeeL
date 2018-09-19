@@ -81,9 +81,7 @@ namespace geeL {
 		bind(shader);
 	}
 
-	float p = 0.f; //TODO: remove this later
 	void ShadowmapStack::add(Light& light) {
-
 		LightMapType types = LightMapType::None;
 		LightMapContainer container = light.getMaps();
 		container.iter([&](const ITexture& texture, LightMapType type) {
@@ -102,8 +100,6 @@ namespace geeL {
 
 		if (types != LightMapType::None)
 			lights[&light] = types;
-
-		p += 1;
 	}
 
 
@@ -131,8 +127,6 @@ namespace geeL {
 			if (e2.light) function(*e2.light);
 		}
 	}
-
-
 
 	void ShadowmapStack::StackElement::update(Light& light, LightMapType type) {
 		if (this->light != &light) {

@@ -21,7 +21,7 @@ struct PointLight {
 
 	int resolution;
 	float scale;
-	int type; //0: No 1: Hard 2: Soft shadow
+	int type; //1: Hard 2: Soft shadow
 };
 
 struct SpotLight {
@@ -42,7 +42,7 @@ struct SpotLight {
 
 	int resolution;
 	float scale;
-	int type; //0: No 1: Hard 2: Soft shadow
+	int type; //1: Hard 2: Soft shadow
 };
 
 #if (USE_CASCASDED_MAP == 1)
@@ -67,7 +67,7 @@ struct DirectionalLight {
 
 	float shadowIntensity;
 	float bias;
-	int type; //0: No 1: Hard 2: Soft shadow
+	int type; //1: Hard 2: Soft shadow
 };
 
 

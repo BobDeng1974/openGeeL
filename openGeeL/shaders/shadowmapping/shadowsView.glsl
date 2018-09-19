@@ -6,7 +6,7 @@
 float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition, inout float travelDistance) {
 
 	//No shadow
-	if(pointLights[i].type == 0)
+	if(pointLights[i].shadowmapIndex == 0)
 		return 0.f;
 	
 	vec4 posLightSpace = inverseView * vec4(origin + fragPosition - pointLights[i].position, 1);
@@ -56,7 +56,7 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 
 	coords = coords * 0.5f + 0.5f;
 
 	//No shadow. Called after coordinate computation since these are needed for light cookie regardless
-	if(spotLights[i].type == 0.f)
+	if(spotLights[i].shadowmapIndex == 0.f)
 		return 0.f;
 
 	//Don't draw shadow when outside of farPlane region.
@@ -91,7 +91,7 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 
 
 float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 
-	if(directionalLights[i].type == 0)
+	if(directionalLights[i].shadowmapIndex == 0)
 		return 0.f;
 
 
