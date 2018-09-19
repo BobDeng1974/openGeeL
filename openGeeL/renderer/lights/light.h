@@ -8,12 +8,14 @@
 #include <string>
 #include "utility/listener.h"
 #include "sceneobject.h"
+#include "lightmaps.h"
 
 using glm::vec3;
 
 namespace geeL {
 
 	class Camera;
+	class ITexture;
 	class Shadowmap;
 	class SceneCamera;
 	class Transform;
@@ -24,11 +26,15 @@ namespace geeL {
 	class ShadowmapRepository;
 
 	enum class ShaderTransformSpace;
+
 	enum class LightType {
 		Directional,
 		Point,
 		Spot
 	};
+
+	
+
 
 
 	//Base class for all light scene objects
@@ -47,14 +53,16 @@ namespace geeL {
 		const Shadowmap* const getShadowMap() const;
 		Shadowmap* getShadowMap();
 
+		//Set map indicies. Their are needed for the shader to know
+		//which light maps to use. Index 0 is equivalent to no index, index n is 
+		//equivalent to array position (n - 1)
+		virtual void setMapIndex(unsigned int index, LightMapType type) = 0;
+		virtual LightMapContainer getMaps() const = 0;
+		virtual const ITexture* const getMap(LightMapType type) = 0;
+
 		void attachShadowmap(std::unique_ptr<Shadowmap> map);
 		void detatchShadowmap();
 
-		//Add shadow map to given shader
-		virtual void bindShadowmap(Shader& shader, const std::string& name);
-
-		//Remove shadow map from given shader
-		void unbindShadowmap(Shader& shader);
 
 		template<typename ...ShadowArgs>
 		void renderShadowmap(ShadowArgs&& ...args);
@@ -65,7 +73,6 @@ namespace geeL {
 
 		//Computes experienced attenuation at given point. Ranges between 0 and 1
 		virtual float getAttenuation(glm::vec3 point) const;
-
 		
 		//Sets diffuse color of this light
 		void setDiffuse(vec3 diffuse);
@@ -79,6 +86,12 @@ namespace geeL {
 		void setColor(vec3 color);
 		vec3 getColor() const;
 		
+		//States if any light map is currently active.
+		//Note: No map is active if no map is 
+		//attached or light is currently inactive
+		bool hasActiveMaps() const;
+
+		virtual std::string getShadowmapContainerName() const = 0;
 		virtual LightType getLightType() const = 0;
 		virtual void setActive(bool active);
 
@@ -86,17 +99,17 @@ namespace geeL {
 		//be invoked once immediately or not
 		void addChangeListener(std::function<void(Light&)> function, bool invoke = false);
 
-		//Add callback that listens to changes of shadowmap. Specifies if is active(true) or not(false)
-		//Note: This also works if light currently has no shadowmap attached
-		void addShadowmapChangeListener(std::function<void(Light&, bool)> function);
+		//Add callback that listens to changes of shadowmap. You can state if callback
+		//should be immediately invoked if a shadow map is currently active
+		void addShadowmapChangeListener(std::function<void(Light&)> function, bool invoke = true);
 
 	protected:
+		unsigned int shadowmapIndex;
 		vec3 diffuse;
 		Shadowmap* shadowMap;
 
-
 		virtual void onChange(const Transform& t);
-		void onShadowmapChange(bool active);
+		void onMapChange();
 
 		float getLightRadius(float cutoff) const;
 
@@ -104,7 +117,7 @@ namespace geeL {
 		float intensity;
 		vec3 color;
 		std::list<std::function<void(Light&)>> changeListeners;
-		std::list<std::function<void(Light&, bool)>> changeMapListeners;
+		std::list<std::function<void(Light&)>> changeMapListeners;
 
 		void updateDiffuse();
 		void setColorAndIntensityFromDiffuse();

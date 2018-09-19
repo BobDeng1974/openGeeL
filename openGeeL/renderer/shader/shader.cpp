@@ -39,7 +39,7 @@ namespace geeL {
 		else {
 			if (maps.size() >= TextureBindingStack::MAX_TEXTURE_BINDINGS) {
 				std::cout << "Can't add more than " << TextureBindingStack::MAX_TEXTURE_BINDINGS
-					<< "texture to shader\n";
+					<< " texture to shader\n";
 
 				return;
 			}

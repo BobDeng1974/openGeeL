@@ -23,15 +23,12 @@ namespace geeL {
 		virtual void bind(const Shader& shader,
 			const std::string& name, ShaderTransformSpace space, const Camera* const camera = nullptr) const;
 
-		//Set light cookie for this spotlight
+		virtual void setMapIndex(unsigned int index, LightMapType type);
+		virtual LightMapContainer getMaps() const;
+		virtual const ITexture* const getMap(LightMapType type);
+
 		void setLightCookie(memory::MemoryObject<ImageTexture> cookie);
 		const ITexture* const getLightCookie() const;
-
-		
-		//Add light cookie of this spotlight to given shader.
-		//Note: 'addShadowmap' has same effect
-		void addLightCookie(Shader& shader, const std::string& name);
-		virtual void bindShadowmap(Shader& shader, const std::string& name);
 
 		float getAngle() const;
 		float getAngleDegree() const;
@@ -40,14 +37,20 @@ namespace geeL {
 		float getOuterAngleDegree() const;
 		void  setOuterAngleDegree(float value);
 
+		virtual std::string getShadowmapContainerName() const;
 		virtual LightType getLightType() const;
 
 	private:
 		memory::MemoryObject<ImageTexture> lightCookie;
+		unsigned int cookieIndex;
 		float angle, outerAngle, cutoff;
 
 	};
 
+
+	inline std::string SpotLight::getShadowmapContainerName() const {
+		return "shadowMaps";
+	}
 
 	inline LightType SpotLight::getLightType() const {
 		return LightType::Spot;

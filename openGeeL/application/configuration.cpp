@@ -5,6 +5,7 @@
 #include "texturing/textureparams.h"
 #include "texturing/textureprovider.h"
 #include "shadowmapping/shadowmapadapter.h"
+#include "shadowmapping/shadowmapstack.h"
 #include "appmanager.h"
 #include "configuration.h"
 
@@ -44,7 +45,8 @@ namespace geeL {
 		GBuffer& gBuffer = GBuffer(textureProvider);
 		MaterialFactory& materialFactory = MaterialFactory(gBuffer);
 		MeshFactory& meshFactory = MeshFactory(materialFactory);
-		LightManager& lightManager = LightManager();
+		ShadowmapStack& shadowmapStack = ShadowmapStack(textureProvider);
+		LightManager& lightManager = LightManager(shadowmapStack);
 		
 
 		UniformBindingStack pipeline;

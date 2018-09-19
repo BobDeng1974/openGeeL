@@ -17,6 +17,7 @@
 #include "meshes/meshfactory.h"
 #include "renderer/rendercontext.h"
 #include "texturing/textureprovider.h"
+#include "shadowmapping/shadowmapstack.h"
 #include "shader/uniformstack.h"
 #include "memory/defaultmemory.h"
 #include "application.h"
@@ -40,7 +41,8 @@ void RaymarchTest::draw() {
 	GBuffer& gBuffer = GBuffer(textureProvider);
 	MaterialFactory &materialFactory = MaterialFactory(gBuffer);
 	MeshFactory& meshFactory = MeshFactory(materialFactory);
-	LightManager& lightManager = LightManager();
+	ShadowmapStack& shadowmapStack = ShadowmapStack(textureProvider);
+	LightManager& lightManager = LightManager(shadowmapStack);
 	UniformBindingStack pipeline;
 	RenderScene* scene = new RenderScene(transFactory.getWorldTransform(), lightManager, pipeline, camera, materialFactory, manager);
 

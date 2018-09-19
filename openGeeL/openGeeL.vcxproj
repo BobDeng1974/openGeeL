@@ -271,6 +271,7 @@
     <ClCompile Include="renderer\shadowmapping\shadowbuffer.cpp" />
     <ClCompile Include="renderer\shadowmapping\shadowmapadapter.cpp" />
     <ClCompile Include="renderer\shadowmapping\shadowmapconfig.cpp" />
+    <ClCompile Include="renderer\shadowmapping\shadowmapstack.cpp" />
     <ClCompile Include="renderer\shadowmapping\simpleshadowmap.cpp" />
     <ClCompile Include="renderer\shadowmapping\varianceshadowmap.cpp" />
     <ClCompile Include="renderer\structures\boundingbox.cpp" />
@@ -391,6 +392,7 @@
     <ClInclude Include="renderer\lights\light.h" />
     <ClInclude Include="renderer\lights\lightbinding.h" />
     <ClInclude Include="renderer\lights\lightmanager.h" />
+    <ClInclude Include="renderer\lights\lightmaps.h" />
     <ClInclude Include="renderer\lights\pointlight.h" />
     <ClInclude Include="renderer\lights\spotlight.h" />
     <ClInclude Include="renderer\materials\defaultmaterial.h" />
@@ -450,6 +452,7 @@
     <ClInclude Include="renderer\shadowmapping\shadowmap.h" />
     <ClInclude Include="renderer\shadowmapping\shadowmapadapter.h" />
     <ClInclude Include="renderer\shadowmapping\shadowmapconfig.h" />
+    <ClInclude Include="renderer\shadowmapping\shadowmapstack.h" />
     <ClInclude Include="renderer\shadowmapping\simpleshadowmap.h" />
     <ClInclude Include="renderer\shadowmapping\varianceshadowmap.h" />
     <ClInclude Include="renderer\structures\boundedobject.h" />

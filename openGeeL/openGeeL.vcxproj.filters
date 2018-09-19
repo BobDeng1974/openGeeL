@@ -564,6 +564,9 @@
     <ClCompile Include="renderer\texturing\dummytexture.cpp">
       <Filter>renderer\texturing</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\shadowmapping\shadowmapstack.cpp">
+      <Filter>renderer\shadowmapping</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\texturing\texture.h">
@@ -1147,6 +1150,12 @@
     </ClInclude>
     <ClInclude Include="renderer\texturing\dummytexture.h">
       <Filter>renderer\texturing</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shadowmapping\shadowmapstack.h">
+      <Filter>renderer\shadowmapping</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\lights\lightmaps.h">
+      <Filter>renderer\lights</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

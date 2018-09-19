@@ -24,7 +24,7 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 
 		//Hard shadow
 		if(pointLights[i].type == 1) {
-			float depth = texture(pointLights[i].shadowMap, direction).r;
+			float depth = getShadowDepthCube(pointLights[i].shadowmapIndex, direction);
 			return curDepth - bias > depth ? 1.f : 0.f; 
 		}
 
@@ -38,7 +38,7 @@ float calculatePointLightShadows(int i, vec3 norm, vec3 fragPosition) {
 		int samples = pointLights[i].resolution * 3;
 
 		for(int j = 0; j < pointLights[i].resolution * 3; j++) {
-			float depth = texture(pointLights[i].shadowMap, direction + sampleDirections3D[j] * diskRadius).r;
+			float depth = getShadowDepthCube(pointLights[i].shadowmapIndex, direction + sampleDirections3D[j] * diskRadius);
 			shadow += step(depth, curDepth - bias);
 		}    
 
@@ -67,7 +67,7 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 
 
 		//Hard shadow
 		if(spotLights[i].type == 1) {
-			float depth = texture(spotLights[i].shadowMap, coords.xy).r;
+			float depth = getShadowDepth2D(spotLights[i].shadowmapIndex, coords.xy);
 			return curDepth - bias > depth ? 1.f : 0.f; 
 		}
 
@@ -77,7 +77,7 @@ float calculateSpotLightShadows(int i, vec3 norm, vec3 fragPosition, inout vec3 
 		vec2 texelSize = vec2(spotLights[i].scale) / 1000.f;
 		int samples = spotLights[i].resolution;
 		for(int j = 0; j < samples; j++) {
-			float depth = texture(spotLights[i].shadowMap, coords.xy + sampleDirections2D[j] * texelSize).r;
+			float depth = getShadowDepth2D(spotLights[i].shadowmapIndex, coords.xy + sampleDirections2D[j] * texelSize);
 			shadow += step(depth, curDepth - bias);
 		}    
 	
@@ -126,12 +126,12 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 		float curDepth = coords.z - bias;
 
 		float shadow = 0.f;
-		vec2 texelSize = 0.8f / textureSize(directionalLights[i].shadowMap, 0);
+		vec2 texelSize = vec2(directionalLights[i].scale) / 1000.f;
 		int samples = 8;
 		for(int j = 0; j < samples; j++) {
 			int index = int(20.f * random(floor(fragPosition.xyz * 1000.f), j)) % 20;
 
-			float depth = texture(directionalLights[i].shadowMap, coords.xy + sampleDirections2D[index] * texelSize).r;
+			float depth = getShadowDepth2D(directionalLights[i].shadowmapIndex, coords.xy + sampleDirections2D[index] * texelSize); 
 			shadow += step(depth, curDepth - bias);      
 		}    
 	
@@ -153,7 +153,7 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 
 	//Hard shadow
 	if(directionalLights[i].type == 1) {
-		float depth = texture(directionalLights[i].shadowMap, coords.xy).r; 
+		float depth = getShadowDepth2D(directionalLights[i].shadowmapIndex, coords.xy);
 		return curDepth > depth ? 1.f : 0.f; 
 	}
 
@@ -166,7 +166,7 @@ float calculateDirectionalLightShadows(int i, vec3 norm, vec3 fragPosition) {
 	int kernel = directionalLights[i].resolution;
 	for(int x = -kernel; x <= kernel; x++) {
 		for(int y = -kernel; y <= kernel; y++) {
-			float depth = texture(directionalLights[i].shadowMap, coords.xy + vec2(x, y) * texelSize).r; 
+			float depth = getShadowDepth2D(directionalLights[i].shadowmapIndex, coords.xy + vec2(x, y) * texelSize);
 			shadow += curDepth - bias > depth ? 1.f : 0.f;        
 		}    
 	}

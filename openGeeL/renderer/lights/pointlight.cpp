@@ -6,6 +6,7 @@
 #include <string>
 #include "shader/rendershader.h"
 #include "shader/sceneshader.h"
+#include "shadowmapping/shadowmap.h"
 #include "transformation/transform.h"
 #include "cameras/camera.h"
 #include "renderscene.h"
@@ -44,6 +45,30 @@ namespace geeL {
 		
 	}
 
+
+	void PointLight::setMapIndex(unsigned int index, LightMapType type) {
+		if (contains(type, LightMapType::ShadowCube)) {
+			if (shadowmapIndex != index) shadowmapIndex = index;
+		}
+	}
+
+	LightMapContainer PointLight::getMaps() const {
+		if (shadowMap != nullptr) {
+			LightMapContainer container(1);
+			container.add(*shadowMap, LightMapType::ShadowCube);
+
+			return container;
+		}
+
+		return LightMapContainer();
+	}
+
+	const ITexture* const PointLight::getMap(LightMapType type) {
+		if (shadowMap && contains(type, LightMapType::ShadowCube))
+			return shadowMap;
+
+		return nullptr;
+	}
 
 	float PointLight::getVolumetricStrength() const {
 		return volStrength;

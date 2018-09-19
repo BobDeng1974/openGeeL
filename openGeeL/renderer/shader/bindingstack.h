@@ -11,7 +11,7 @@ namespace geeL {
 	class TextureBindingStack {
 
 	public:
-		static const unsigned int MAX_TEXTURE_BINDINGS = 10;
+		static const unsigned int MAX_TEXTURE_BINDINGS = 12;
 
 		static void bindTexturesSimple(const Shader& shader, unsigned int offset);
 		static void bindTexturesDynamic(const Shader& shader, unsigned int offset);

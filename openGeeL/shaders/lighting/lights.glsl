@@ -4,7 +4,7 @@
 
 
 struct PointLight {
-	samplerCube shadowMap;
+	unsigned int shadowmapIndex;
 
     vec3 position;
     vec3 diffuse;
@@ -25,8 +25,9 @@ struct PointLight {
 };
 
 struct SpotLight {
-	sampler2D shadowMap;
-	sampler2D cookie;
+	unsigned int shadowmapIndex;
+	unsigned int cookieIndex;
+
 	mat4 lightTransform;
 
     vec3 position;
@@ -42,7 +43,6 @@ struct SpotLight {
 	int resolution;
 	float scale;
 	int type; //0: No 1: Hard 2: Soft shadow
-	bool useCookie;
 };
 
 #if (USE_CASCASDED_MAP == 1)
@@ -50,7 +50,7 @@ const int DIRECTIONAL_SHADOWMAP_COUNT = 4;
 #endif
 
 struct DirectionalLight {
-	sampler2D shadowMap;
+	unsigned int shadowmapIndex;
 
 #if (USE_CASCASDED_MAP == 1)
 	float cascadeEndClip[DIRECTIONAL_SHADOWMAP_COUNT];
@@ -75,8 +75,9 @@ struct DirectionalLight {
 #define MAX_SPOTLIGHTS 5
 #define MAX_DIRECTIONALLIGHTS 1
 
-#define MAX_SHADOWMAPS 3
-#define MAX_SHADOWCUBES 3
+#define MAX_SHADOWMAPS 2
+#define MAX_SHADOWCUBES 2
+#define MAX_COOKIES 1
 
 
 uniform int plCount;
@@ -86,3 +87,23 @@ uniform int slCount;
 uniform PointLight pointLights[MAX_POINTLIGHTS];
 uniform DirectionalLight directionalLights[MAX_DIRECTIONALLIGHTS];
 uniform SpotLight spotLights[MAX_SPOTLIGHTS];
+
+
+uniform sampler2D shadowMaps[MAX_SHADOWMAPS];
+uniform samplerCube shadowCubes[MAX_SHADOWCUBES];
+uniform sampler2D cookieMaps[MAX_COOKIES];
+
+
+float getShadowDepth2D(unsigned int index, vec2 coordinates) {
+	return texture(shadowMaps[index - 1], coordinates).r;
+}
+
+float getShadowDepthCube(unsigned int index, vec3 direction) {
+	return texture(shadowCubes[index - 1], direction).r;
+}
+
+float getCookie(unsigned int index, vec2 coordinates) {
+	return texture(cookieMaps[index - 1], coordinates).r;
+}
+
+

@@ -5,6 +5,7 @@
 #include <gtc/matrix_transform.hpp>
 #include "shader/rendershader.h"
 #include "shader/sceneshader.h"
+#include "shadowmapping/shadowmap.h"
 #include "transformation/transform.h"
 #include "cameras/camera.h"
 #include "renderscene.h"
@@ -36,6 +37,30 @@ namespace geeL {
 				shader.bind<glm::vec3>(name + "direction", transform.getForwardDirection());
 				break;
 		}
+	}
+
+	void DirectionalLight::setMapIndex(unsigned int index, LightMapType type) {
+		if (contains(type, LightMapType::Shadow2D)) {
+			if (shadowmapIndex != index) shadowmapIndex = index;
+		}
+	}
+
+	LightMapContainer DirectionalLight::getMaps() const {
+		if (shadowMap != nullptr) {
+			LightMapContainer container(1);
+			container.add(*shadowMap, LightMapType::Shadow2D);
+
+			return container;
+		}
+
+		return LightMapContainer();
+	}
+
+	const ITexture* const DirectionalLight::getMap(LightMapType type) {
+		if (shadowMap && contains(type, LightMapType::Shadow2D))
+			return shadowMap;
+
+		return nullptr;
 	}
 
 	float DirectionalLight::getAttenuation(glm::vec3 point) const {

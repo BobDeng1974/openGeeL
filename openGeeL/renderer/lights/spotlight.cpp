@@ -6,6 +6,7 @@
 #include <gtc/matrix_transform.hpp>
 #include "shader/rendershader.h"
 #include "shader/sceneshader.h"
+#include "shadowmapping/shadowmap.h"
 #include "texturing/imagetexture.h"
 #include "transformation/transform.h"
 #include "cameras/camera.h"
@@ -28,13 +29,15 @@ namespace geeL {
 			, angle(glm::cos(glm::radians(angle)))
 			, outerAngle(glm::cos(glm::radians(angle + outerAngle)))
 			, cutoff(cutoff)
-			, lightCookie(nullptr) {}
+			, lightCookie(nullptr)
+			, cookieIndex(0) {}
 
 
 	void SpotLight::bind(const Shader& shader, const string& name, ShaderTransformSpace space, 
 		const Camera* const camera) const {
 		
 		Light::bind(shader, name, space, camera);
+		shader.bind<unsigned int>(name + "cookieIndex", cookieIndex);
 		shader.bind<float>(name + "radius", getLightRadius(cutoff));
 
 		switch (space) {
@@ -53,7 +56,33 @@ namespace geeL {
 
 		shader.bind<float>(name + "angle", angle);
 		shader.bind<float>(name + "outerAngle", outerAngle);
-		shader.bind<int>(name + "useCookie", (lightCookie != nullptr));
+	}
+
+	void SpotLight::setMapIndex(unsigned int index, LightMapType type) {
+		if (contains(type, LightMapType::Shadow2D)) {
+			if (shadowmapIndex != index) shadowmapIndex = index;
+		}
+		else if (contains(type, LightMapType::Cookie)) {
+			if (cookieIndex != index) cookieIndex = index;
+		}
+	}
+
+	LightMapContainer SpotLight::getMaps() const {
+		LightMapContainer container;
+
+		if (shadowMap != nullptr) container.add(*shadowMap, LightMapType::Shadow2D);
+		if (lightCookie != nullptr) container.add(*lightCookie, LightMapType::Cookie);
+
+		return container;
+	}
+
+	const ITexture* const SpotLight::getMap(LightMapType type){
+		if (shadowMap && contains(type, LightMapType::Shadow2D))
+			return shadowMap;
+		if (lightCookie && contains(type, LightMapType::Cookie))
+			return lightCookie.get();
+
+		return nullptr;
 	}
 
 	void SpotLight::setLightCookie(memory::MemoryObject<ImageTexture> cookie) {
@@ -61,21 +90,12 @@ namespace geeL {
 
 		//Force wrap mode to avoid artifacts with wrap methods like 'Repeat'
 		lightCookie->setWrapMode(WrapMode::ClampBorder);
+
+		onMapChange();
 	}
 
 	const ITexture* const SpotLight::getLightCookie() const {
 		return lightCookie.get();
-	}
-
-	void SpotLight::bindShadowmap(Shader& shader, const std::string& name) {
-		Light::bindShadowmap(shader, name);
-
-		addLightCookie(shader, name);
-	}
-
-	void SpotLight::addLightCookie(Shader& shader, const string& name) {
-		if(lightCookie != nullptr)
-			shader.addMap(*lightCookie, name + "cookie");
 	}
 
 

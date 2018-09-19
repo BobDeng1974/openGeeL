@@ -29,6 +29,7 @@ namespace geeL {
 	class SceneCamera;
 	class RenderShader;
 	class Shadowmap;
+	class ShadowmapStack;
 	class SceneShader;
 	class RenderScene;
 	class Shader;
@@ -54,7 +55,7 @@ namespace geeL {
 		std::string slCountName = "slCount";
 		std::string rpCountName = "rpCount";
 
-		LightManager();
+		LightManager(ShadowmapStack& shadowmapStack);
 		~LightManager();
 
 		//Add and create directional light
@@ -118,6 +119,7 @@ namespace geeL {
 		glm::vec3 ambient;
 		VoxelStructure* voxelStructure;
 		ShadowmapAdapter* mapAdapter;
+		ShadowmapStack& shadowmapStack;
 
 		ShadowmapRepository shaderRepository;
 		size_t plCount, dlCount, slCount;
@@ -135,6 +137,7 @@ namespace geeL {
 		void onRemove(Light* light, LightBinding& binding);
 		void onAdd(Light* light, LightBinding& binding);
 		void onChange(Light& light);
+		void onMapChange(Light& light);
 
 		void drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera);
 		void reindexLights();

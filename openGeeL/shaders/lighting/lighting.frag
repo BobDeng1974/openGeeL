@@ -82,7 +82,7 @@ vec3 calculateSpotLight(int index, SpotLight light, vec3 normal,
 
 	vec3 coords = vec3(0.f);
 	float shadow = 1.f - calculateSpotLightShadows(index, normal, fragPosition, coords);
-	float cookie = light.useCookie ? texture(light.cookie, coords.xy).r : 1.f;
+	float cookie = (light.cookieIndex != 0) ? getCookie(light.cookieIndex, coords.xy) : 1.f;
 
     return shadow * reflectance * intensity * cookie;
 }

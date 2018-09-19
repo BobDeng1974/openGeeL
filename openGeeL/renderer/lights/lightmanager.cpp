@@ -11,6 +11,7 @@
 #include "shadowmapping/varianceshadowmap.h"
 #include "shadowmapping/cascadedmap.h"
 #include "shadowmapping/shadowmapadapter.h"
+#include "shadowmapping/shadowmapstack.h"
 #include "cubemapping/reflectionprobe.h"
 #include "cubemapping/iblmap.h"
 #include "framebuffer/cubebuffer.h"
@@ -26,9 +27,10 @@ using namespace glm;
 
 namespace geeL {
 
-	LightManager::LightManager() 
-		: ambient(ambient)
+	LightManager::LightManager(ShadowmapStack& shadowmapStack)
+		: ambient(glm::vec3(0.f))
 		, voxelStructure(nullptr)
+		, shadowmapStack(shadowmapStack)
 		, mapAdapter(nullptr)
 		, plCount(0)
 		, dlCount(0)
@@ -47,6 +49,7 @@ namespace geeL {
 
 		light->addChangeListener([this](Light& light) { onChange(light); });
 		light->addStatusListener([this](SceneObject& o, bool s) { reindexLights(); });
+		light->addShadowmapChangeListener([this](Light& light) { onMapChange(light); });
 	}
 
 	void LightManager::addDirectionalLightInternal(DirectionalLight* light, const ShadowMapConfiguration& config) {
@@ -121,13 +124,7 @@ namespace geeL {
 
 
 	void LightManager::bindShadowmaps(Shader& shader) const {
-		iterLights([this, &shader](const LightBinding& binding) {
-			Light& light = *binding.light;
-
-			if(light.isActive())
-				light.bindShadowmap(shader, binding.getName());
-
-		});
+		shadowmapStack.staticBind(shader);
 	}
 
 	void LightManager::update(const RenderScene& scene, const SceneCamera* const camera) {
@@ -136,17 +133,24 @@ namespace geeL {
 
 		drawShadowmaps(scene, camera);
 		drawVoxelStructure();
+
+
+		shadowmapStack.update();
+
+		for (auto it = shaderListener.begin(); it != shaderListener.end(); it++) {
+			Shader& shader = **it;
+			shadowmapStack.bind(shader);
+		}
+
+		shadowmapStack.lateUpdate();
 	}
 
 
 	void LightManager::drawShadowmaps(const RenderScene& scene, const SceneCamera* const camera) {
 		CullingGuard guard(CullingMode::cullBack);
 
-		iterLights([this, &scene, &camera](const LightBinding& binding) {
-			Light& light = *binding.light;
-
-			if (light.isActive())
-				light.renderShadowmap(camera, scene, shaderRepository);
+		shadowmapStack.iterActiveShadowmaps([this, &scene, &camera](Light& light) {
+			light.renderShadowmap(camera, scene, shaderRepository);
 		});
 	}
 
@@ -212,40 +216,28 @@ namespace geeL {
 
 
 	void LightManager::onAdd(Light* light, LightBinding& binding) {
-		for (auto it = shaderListener.begin(); it != shaderListener.end(); it++) {
-			Shader& shader = **it;
-			light->bindShadowmap(shader, binding.getName());
-		}
+
 	}
 
 	
 	void LightManager::onRemove(Light* light, LightBinding& binding) {
 		reindexLights();
-
-		for (auto it = shaderListener.begin(); it != shaderListener.end(); it++) {
-			Shader& shader = **it;
-			light->unbindShadowmap(shader);
-		}
+		shadowmapStack.remove(*light);
 	}
 
 	void LightManager::onChange(Light& light) {
 
 	}
 
+	void LightManager::onMapChange(Light& light) {
+		if (light.hasActiveMaps())
+			shadowmapStack.add(light);
+		else
+			shadowmapStack.remove(light);
+	}
+
 
 	void LightManager::reindexLights() {
-
-		//Remove shadow maps from all shader listeners since 
-		//light index are changing
-		for (auto it = shaderListener.begin(); it != shaderListener.end(); it++) {
-			Shader& shader = **it;
-
-			iterLights([this, &shader](Light& light) {
-				light.unbindShadowmap(shader);
-			});
-		}
-
-
 		plCount = 0;
 		dlCount = 0;
 		slCount = 0;
@@ -272,18 +264,6 @@ namespace geeL {
 				(*counter)++;
 			}
 		}
-
-
-		//Add newly indexed shadow maps to shaders again
-		for (auto it = shaderListener.begin(); it != shaderListener.end(); it++) {
-			Shader& shader = **it;
-
-			iterLights([this, &shader](LightBinding& binding) {
-				Light& light = *binding.light;
-				light.bindShadowmap(shader, binding.getName());
-			});
-		}
-
 	}
 
 	const glm::vec3& LightManager::getAmbientColor() const {
