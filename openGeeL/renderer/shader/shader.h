@@ -41,11 +41,11 @@ namespace geeL {
 		void addMap(const ITexture& texture, const std::string& name);
 		const ITexture* const getMap(const std::string& name) const;
 
-		//Remove map from shader (if it is attached)
-		void removeMap(const ITexture& texture);
+		//Remove map from shader (if it is attached) and returns its name
+		virtual std::string removeMap(const ITexture& texture);
 
 		//Remove map with given name from shader (if it exists)
-		void removeMap(const std::string& name);
+		virtual void removeMap(const std::string& name);
 
 		//Load associated texture samplers into their binding points in the shader
 		virtual void loadMaps() const;

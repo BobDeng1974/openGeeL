@@ -39,7 +39,7 @@ void RaymarchTest::draw() {
 
 	TextureProvider textureProvider(window.getResolution());
 	GBuffer& gBuffer = GBuffer(textureProvider);
-	MaterialFactory &materialFactory = MaterialFactory(gBuffer);
+	MaterialFactory &materialFactory = MaterialFactory(gBuffer, textureProvider);
 	MeshFactory& meshFactory = MeshFactory(materialFactory);
 	ShadowmapStack& shadowmapStack = ShadowmapStack(textureProvider);
 	LightManager& lightManager = LightManager(shadowmapStack);

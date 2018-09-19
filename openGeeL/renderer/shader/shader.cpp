@@ -53,7 +53,7 @@ namespace geeL {
 		}
 	}
 
-	void Shader::removeMap(const ITexture& texture) {
+	std::string Shader::removeMap(const ITexture& texture) {
 		auto element = maps.end();
 		for (auto it = maps.begin(); it != maps.end(); it++) {
 			TextureBinding& tex = (*it).second;
@@ -65,11 +65,17 @@ namespace geeL {
 		}
 
 		if (element != maps.end()) {
+			std::string name(element->second.name);
+
 			maps.erase(element);
 
 			//Rebind all maps again since positions might have changed
 			bindMaps();
+
+			return name;
 		}
+
+		return std::string();
 	}
 
 	void Shader::removeMap(const std::string& name) {

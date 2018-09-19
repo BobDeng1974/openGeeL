@@ -1,3 +1,4 @@
+#include "texturing/texture.h"
 #include "texturing/textureprovider.h"
 #include "lightingshaders.h"
 
@@ -33,7 +34,33 @@ namespace geeL {
 			animated)
 		, provider(provider) {
 
-		mapOffset = 1;
+		//mapOffset = 1;
+
+		const ITexture& t1 = provider.requestDummy2D();
+		const ITexture& t2 = provider.requestDummyCube();
+		addMap(t1, "BRDFIntegrationMap");
+		addMap(t2, "skybox.irradiance");
+		addMap(t2, "skybox.prefilterEnv");
+	}
+
+	std::string TransparentLighting::removeMap(const ITexture& texture) {
+		std::string name(Shader::removeMap(texture));
+		addTextures(name);
+
+		return name;
+	}
+
+	void TransparentLighting::removeMap(const std::string& name) {
+		SceneShader::removeMap(name);
+		addTextures(name);
+	}
+
+
+	void TransparentLighting::addTextures(const std::string& name) {
+		if (name == "BRDFIntegrationMap")
+			addMap(provider.requestDummy2D(), name);
+		else if (name == "skybox.irradiance" || name == "skybox.prefilterEnv")
+			addMap(provider.requestDummyCube(), name);
 	}
 
 }
