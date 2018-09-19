@@ -127,12 +127,20 @@ namespace geeL {
 		}
 
 		DepthGuard::enable(false);
-
 		lighting.fill();
-		drawEffects(externalEffects);
-		drawEffects(earlyEffects);
 
-		//Hyprid forward pass (Hyprid & transparent objects + skybox
+		//Draw skybox
+		stackBuffer.push(provider.requestCurrentImage());
+		stackBuffer.fill([this]() {
+			DepthGuard depth;
+			scene.drawSkybox();
+		}, clearNothing);
+
+
+		drawEffects(earlyEffects);
+		drawEffects(externalEffects);
+
+		//Hyprid forward pass (Hyprid & transparent objects
 		if (hasForwardPass()) {
 			DepthGuard::enable(true);
 
@@ -146,20 +154,11 @@ namespace geeL {
 			fBuffer->setTarget(provider.requestCurrentImage());
 #endif
 			fBuffer->fill([this]() {
-				scene.drawSkybox();
 				scene.draw(ShadingMethod::Hybrid);
 
 				DepthWriteGuard depthWriteDisable;
 				scene.draw(ShadingMethod::Transparent);
 			});
-		}
-		//Draw skybox only
-		else {
-			stackBuffer.push(provider.requestCurrentImage());
-			stackBuffer.fill([this]() {
-				DepthGuard depth;
-				scene.drawSkybox();
-			}, clearNothing);
 		}
 
 		DepthGuard::enable(false);
