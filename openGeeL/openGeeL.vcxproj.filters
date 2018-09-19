@@ -567,6 +567,9 @@
     <ClCompile Include="renderer\shadowmapping\shadowmapstack.cpp">
       <Filter>renderer\shadowmapping</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\lighting\lightingshaders.cpp">
+      <Filter>renderer\lighting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\texturing\texture.h">
@@ -1156,6 +1159,9 @@
     </ClInclude>
     <ClInclude Include="renderer\lights\lightmaps.h">
       <Filter>renderer\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\lighting\lightingshaders.h">
+      <Filter>renderer\lighting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

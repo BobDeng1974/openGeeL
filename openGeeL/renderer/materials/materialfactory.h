@@ -18,6 +18,7 @@ namespace geeL {
 	class Camera;
 	class FrameBuffer;
 	class GBuffer;
+	class ITextureProvider;
 	class Material;
 	class MaterialContainer;
 	class DefaultMaterialContainer;
@@ -30,7 +31,8 @@ namespace geeL {
 	class MaterialFactory : public DataEventActuator<GLStructure> {
 
 	public:
-		MaterialFactory(const GBuffer& buffer, ShaderProvider* const provider = nullptr);
+		MaterialFactory(const GBuffer& buffer, ITextureProvider& textureProvider, 
+			ShaderProvider* const provider = nullptr);
 		~MaterialFactory();
 
 		//Creates and returns a new texture from given file path or 
@@ -64,6 +66,7 @@ namespace geeL {
 		SceneShader& getDefaultShader(ShadingMethod shading, bool animated);
 
 	private:
+		ITextureProvider& textureProvider;
 		ShaderProvider* const provider;
 
 		SceneShader* genericShader;
