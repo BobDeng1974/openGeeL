@@ -178,8 +178,8 @@ namespace geeL {
 
 
 	void DefaultMaterialContainer::bind(SceneShader& shader) const {
-		textureStack.bind(shader);
-		textureStack.draw(shader);
+		textureStack.bindTextures(shader);
+		shader.loadMaps();
 
 		shader.bind<int>("material.mapFlags", textureStack.mapFlags);
 		shader.bind<int>("material.invSpec", inverseRoughness);

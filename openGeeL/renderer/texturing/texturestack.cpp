@@ -24,19 +24,9 @@ namespace geeL {
 	}
 
 
-	void TextureStack::bind(const RenderShader& shader) const {
-		int counter = 0;
-		iterTextures([&counter, &shader](const std::string& name, const ITexture& texture) {
-			shader.bind<int>(name, counter + shader.mapBindingPos);
-			counter++;
-		});
-	}
-
-	void TextureStack::draw(const RenderShader& shader) const {
-		int counter = 0;
-		iterTextures([&counter, &shader](const std::string& name, const ITexture& texture) {
-			texture.bind(counter + shader.mapBindingPos);
-			counter++;
+	void TextureStack::bindTextures(RenderShader& shader) const {
+		iterTextures([&shader](const std::string& name, const ITexture& texture) {
+			shader.addMap(texture, name);
 		});
 	}
 

@@ -29,6 +29,7 @@ namespace geeL {
 		virtual bool isEmpty() const;
 
 		const Texture& getTexture() const;
+		virtual unsigned int getID() const;
 
 	protected:
 		Texture& getTexture();
@@ -36,7 +37,7 @@ namespace geeL {
 
 		FunctionalTexture();
 
-		virtual unsigned int getID() const;
+		virtual unsigned int getGPUID() const;
 
 		void deleteTexture();
 		void updateTexture(std::unique_ptr<Texture> texture);
@@ -78,7 +79,17 @@ namespace geeL {
 
 
 	inline unsigned int FunctionalTexture::getID() const {
+		if (texture == nullptr)
+			return 0;
+
 		return texture->getID();
+	}
+
+	inline unsigned int FunctionalTexture::getGPUID() const {
+		if (texture == nullptr)
+			return 0;
+
+		return texture->getGPUID();
 	}
 
 	inline void FunctionalTexture::deleteTexture() {

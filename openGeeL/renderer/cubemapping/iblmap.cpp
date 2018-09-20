@@ -13,10 +13,7 @@ namespace geeL {
 				&irrMap.getTextureCube()))
 			, brdfIntMap(brdfIntMap)
 			, irrMap(irrMap)
-			, preEnvMap(preEnvMap) {
-	
-		draw();
-	}
+			, preEnvMap(preEnvMap) {}
 
 	IBLMap::IBLMap(IBLMap&& map) 
 		: DynamicCubeMap(std::move(map))

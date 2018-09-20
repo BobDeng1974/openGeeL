@@ -22,15 +22,20 @@ public:
 			PerspectiveCamera& camera = PerspectiveCamera(cameraTransform, 45.f, window.getWidth(), window.getHeight(), 0.1f, 100.f);
 			camera.addComponent<MovableCamera>(MovableCamera(3.f, 0.45f));
 			scene.setCamera(camera);
-
+		
 			EnvironmentCubeMap& envCubeMap = EnvironmentCubeMap("resources/envmaps/TropicalRuins_3k.hdr", 
 				cubeMapFactory.getBuffer(), 1024);
+			
+
 			IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
+
+			std::cout << "asfasdf\n";
 
 			Skybox& skybox = Skybox(iblMap.getIrradianceMap(), 0.75f);
 			scene.setSkybox(skybox);
 			lightManager.addReflectionProbe(iblMap);
 
+			std::cout << "asfasdf\n";
 
 			float lightIntensity = 27.f;
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-0.5f, -2.9f, 3), vec3(-180.0f, 0, -50), vec3(1.f), true);
@@ -73,7 +78,7 @@ public:
 				scene.addMeshRenderer(std::unique_ptr<MeshRenderer>(std::move(renderer)));
 			}
 
-
+			
 
 			Transform& meshTransform22 = transformFactory.CreateTransform(vec3(0.0f, -5.25f, 5.9f), vec3(0.f), vec3(0.12f));
 			StaticModelRenderer girl = meshFactory.createSingleMeshRenderers(

@@ -32,8 +32,10 @@ namespace geeL {
 		bool operator== (const ITexture& rhs) const;
 		bool operator!= (const ITexture& rhs) const;
 
-	protected:
 		virtual unsigned int getID() const = 0;
+
+	protected:
+		virtual unsigned int getGPUID() const = 0;
 
 	};
 	
@@ -90,11 +92,14 @@ namespace geeL {
 		//and unbinding of underlying GPU data
 		FunctionGuard<Texture> operator->();
 
+		virtual unsigned int getID() const;
+
 	protected:
 		static AnisotropicFilter maxAnisotropy;
 		const TextureParameters* parameters;
 
-		TextureToken id;
+		unsigned int id;
+		TextureToken gid;
 		ColorType colorType;
 		FilterMode filterMode;
 		WrapMode wrapMode; 
@@ -106,7 +111,7 @@ namespace geeL {
 			AnisotropicFilter filter = AnisotropicFilter::None);
 
 		virtual void bind() const;
-		virtual unsigned int getID() const;
+		virtual unsigned int getGPUID() const;
 
 	};
 	
@@ -227,23 +232,23 @@ namespace geeL {
 
 
 	inline bool ITexture::isEmpty() const {
-		return getID() == 0;
+		return getGPUID() == 0;
 	}
 
 	inline bool ITexture::operator==(const ITexture& rhs) const {
-		return getID() == rhs.getID();
+		return getGPUID() == rhs.getGPUID();
 	}
 
 	inline bool ITexture::operator!=(const ITexture& rhs) const {
-		return getID() != rhs.getID();
+		return getGPUID() != rhs.getGPUID();
 	}
 
-	inline unsigned int Texture::getID() const {
-		return id;
+	inline unsigned int Texture::getGPUID() const {
+		return gid;
 	}
 
 	inline const TextureToken& Texture::getTextureToken() const {
-		return id;
+		return gid;
 	}
 
 	inline ColorType Texture::getColorType() const {

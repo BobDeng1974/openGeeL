@@ -9,63 +9,31 @@
 
 namespace geeL {
 
-	std::vector<const TextureBinding*> bindings(TextureBindingStack::MAX_TEXTURE_BINDINGS, nullptr);
+	std::vector<unsigned int> bindings(TextureBindingStack::MAX_TEXTURE_BINDINGS, 0);
 
 
-	void TextureBindingStack::bindTexturesSimple(const Shader& shader, unsigned int offset) {
+	void TextureBindingStack::bindTextures(const Shader& shader, unsigned int offset) {
+
 		shader.iterateTextures([&offset, &shader](const TextureBinding& binding) {
-			binding.texture->bind(offset + binding.offset);
-		});
-	}
+			unsigned int& b = bindings[binding.offset];
 
-	void TextureBindingStack::bindTexturesDynamic(const Shader& shader, unsigned int offset) {
-		std::vector<const TextureBinding*> tempBindings(TextureBindingStack::MAX_TEXTURE_BINDINGS, nullptr);
-
-		unsigned int maxPos = 0;
-		shader.iterateTextures([&maxPos, &offset, &shader, &tempBindings](const TextureBinding& binding) {
-			unsigned int o = offset + binding.offset;
-
-			if (bindings[o] == nullptr || *bindings[o] != binding) {
-				binding.texture->bind(o);
-
+			if (shader.ignoreOptimisations || b != binding.texture->getID()) {
+				binding.texture->bind(offset + binding.offset);
+				b = binding.texture->getID();
 			}
-
-			tempBindings[o] = &binding;
-			maxPos = (binding.offset > maxPos) ? binding.offset : maxPos;
 		});
-
-		maxPos += offset + 1;
-		clearUnits(maxPos);
-
-		bindings.clear();
-		bindings = tempBindings;
 	}
 
-	void TextureBindingStack::bindSingleTexture(unsigned int ID, const Shader& shader, 
+	void TextureBindingStack::bindSingleTexture(unsigned int GID, unsigned int ID, const Shader& shader,
 		unsigned int offset, const std::string& name, TextureType type) {
 
 		glActiveTexture(GL_TEXTURE0 + offset);
 
 		TextureParameters::unbind(offset);
 		shader.bind<int>(name, offset);
-		glBindTexture((int)type, ID);
+		glBindTexture((int)type, GID);
 
-	}
-
-	void TextureBindingStack::clearUnits(unsigned int start, unsigned int end) {
-
-		int layer = GL_TEXTURE0;
-		for (unsigned int i = start; i <= end; i++) {
-			const TextureBinding* binding = bindings[i];
-
-			if (binding != nullptr) {
-				const ITexture& texture = *binding->texture;
-
-				glActiveTexture(layer + i);
-				texture.unbind();
-				texture.disable();
-			}
-		}
+		bindings[offset] = ID;
 	}
 
 }

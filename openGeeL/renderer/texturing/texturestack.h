@@ -22,9 +22,7 @@ namespace geeL {
 		void addTexture(const std::string& name, memory::MemoryObject<TextureMap> texture);
 		void addTexture(const std::string& name, memory::MemoryObject<ITexture> texture, MapType type);
 
-		void bind(const RenderShader& shader) const;
-		void draw(const RenderShader& shader) const;
-
+		void bindTextures(RenderShader& shader) const;
 		void iterTextures(std::function<void(const std::string&, const ITexture&)> function) const;
 
 	private:

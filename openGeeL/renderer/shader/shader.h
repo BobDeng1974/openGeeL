@@ -29,8 +29,8 @@ namespace geeL {
 	class Shader {
 
 	public:
-		unsigned int mapBindingPos;
 		std::string name;
+		bool ignoreOptimisations;
 
 		virtual ~Shader();
 		
@@ -48,17 +48,6 @@ namespace geeL {
 
 		//Load associated texture samplers into their binding points in the shader
 		virtual void loadMaps() const;
-
-		//Load associated texture samplers into their binding points 
-		//in the shader with some internal optimizations.
-		//Note: Should only be used if texture repetition is
-		//expected in concurrent calls since some overhead is
-		//to be expected
-		virtual void loadMapsDynamic() const;
-
-		//Init function that should be called before draw calls. It a
-		//ctivates shader program and loads all necessary maps
-		virtual void initDraw() const;
 
 		ShaderLocation getLocation(const std::string& name) const;
 
@@ -135,7 +124,8 @@ namespace geeL {
 		std::queue<ShaderBinding*> bindingQueue;
 		std::queue<ShaderBinding*> tempQueue;
 
-		Shader() : mapBindingPos(0) {}
+
+		Shader() : ignoreOptimisations(false) {}
 
 		void use() const;
 

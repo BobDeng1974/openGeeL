@@ -11,6 +11,8 @@ using namespace std;
 
 namespace geeL {
 
+	unsigned int globalTextureIDCounter = 1;
+
 	AnisotropicFilter Texture::maxAnisotropy;
 
 
@@ -22,10 +24,14 @@ namespace geeL {
 			, filterMode(filterMode)
 			, wrapMode(wrapMode)
 			, filter(filter)
-			, parameters(nullptr) {}
+			, parameters(nullptr) {
+	
+		id = globalTextureIDCounter++;
+	}
 
 	Texture::Texture(Texture&& other) 
-		: id(std::move(other.id))
+		: id(other.id)
+		, gid(std::move(other.gid))
 		, colorType(other.colorType)
 		, parameters(other.parameters) {
 
@@ -34,7 +40,8 @@ namespace geeL {
 
 	Texture& Texture::operator=(Texture&& other) {
 		if (this != &other) {
-			id = std::move(other.id);
+			id = other.id;
+			gid = std::move(other.gid);
 			colorType = other.colorType;
 			parameters = other.parameters;
 
@@ -48,7 +55,7 @@ namespace geeL {
 	
 
 	void Texture::bind() const {
-		glBindTexture((int)getTextureType(), id);
+		glBindTexture((int)getTextureType(), gid);
 	}
 
 	void Texture::unbind() const {
@@ -67,7 +74,7 @@ namespace geeL {
 	}
 
 	void Texture::bindImage(unsigned int position, AccessType access) const {
-		glBindImageTexture(position, id, 0, GL_TRUE, 0, (int)access, (int)getColorType());
+		glBindImageTexture(position, gid, 0, GL_TRUE, 0, (int)access, (int)getColorType());
 	}
 
 	void Texture::disable() const {
@@ -75,7 +82,7 @@ namespace geeL {
 	}
 
 	bool Texture::isEmpty() const {
-		return id.operator unsigned int() == 0;
+		return gid.operator unsigned int() == 0;
 	}
 
 	void Texture::clear() {
@@ -87,7 +94,7 @@ namespace geeL {
 			case ColorType::RGB16:
 			case ColorType::RGB32: {
 				float colors[3] = { 0, 0, 0 };
-				glClearTexImage(id, 0, GL_RGB, GL_FLOAT, &colors);
+				glClearTexImage(gid, 0, GL_RGB, GL_FLOAT, &colors);
 				break;
 			}
 			case ColorType::GammaSpace:
@@ -96,13 +103,13 @@ namespace geeL {
 			case ColorType::RGBA16:
 			case ColorType::RGBA32: {
 				float colors2[4] = { 0, 0, 0, 0 };
-				glClearTexImage(id, 0, GL_RGBA, GL_FLOAT, &colors2);
+				glClearTexImage(gid, 0, GL_RGBA, GL_FLOAT, &colors2);
 				break;
 			}
 			case ColorType::Depth:
 			case ColorType::Depth32:
 				float colors[1] = { 0 };
-				glClearTexImage(id, 0, GL_DEPTH_COMPONENT, GL_FLOAT, &colors);
+				glClearTexImage(gid, 0, GL_DEPTH_COMPONENT, GL_FLOAT, &colors);
 				break;
 		}
 	}
@@ -186,6 +193,10 @@ namespace geeL {
 		std::function<void()> exit  = [this]() { this->unbind(); };
 
 		return FunctionGuard<Texture>(*this, enter, exit);
+	}
+
+	unsigned int Texture::getID() const {
+		return id;
 	}
 
 
@@ -294,24 +305,24 @@ namespace geeL {
 	}
 
 	void Texture2D::mipmap() const {
-		glBindTexture(GL_TEXTURE_2D, id);
+		glBindTexture(GL_TEXTURE_2D, gid);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	void Texture2D::resize(Resolution resolution) {
-		glBindTexture(GL_TEXTURE_2D, id);
+		glBindTexture(GL_TEXTURE_2D, gid);
 		setResolution(resolution);
 		initStorage(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	void Texture2D::assign(AttachmentPosition position, MipLevel level) const {
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, GL_TEXTURE_2D, id, level);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, GL_TEXTURE_2D, gid, level);
 	}
 
 	void Texture2D::assignDepth(MipLevel level) const {
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id, level);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, gid, level);
 	}
 
 	void Texture2D::applyRenderResolution() const {
@@ -389,7 +400,7 @@ namespace geeL {
 	}
 
 	void Texture3D::mipmap() const {
-		glBindTexture(GL_TEXTURE_3D, id);
+		glBindTexture(GL_TEXTURE_3D, gid);
 		glGenerateMipmap(GL_TEXTURE_3D);
 		glBindTexture(GL_TEXTURE_3D, 0);
 	}
@@ -493,7 +504,7 @@ namespace geeL {
 	}
 
 	void TextureCube::mipmap() const {
-		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, gid);
 		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
@@ -501,7 +512,7 @@ namespace geeL {
 	void TextureCube::resize(Resolution resolution) {
 		this->resolution = (resolution.getWidth() + resolution.getHeight()) / 2;
 
-		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, gid);
 		initStorage(0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
@@ -509,16 +520,16 @@ namespace geeL {
 	void TextureCube::assign(AttachmentPosition position, MipLevel level) const {
 		for (unsigned int side = 0; side < 6; side++)
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position, 
-				GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, id, level);
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, gid, level);
 	}
 
 	void TextureCube::assignSide(AttachmentPosition position, MipLevel level, unsigned int side) const {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + position,
-			GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, id, level);
+			GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, gid, level);
 	}
 
 	void TextureCube::assignDepth(MipLevel level) const {
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, id, level);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, gid, level);
 	}
 
 	void TextureCube::initWrapMode(WrapMode mode) {

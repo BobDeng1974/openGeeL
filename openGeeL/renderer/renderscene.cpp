@@ -334,8 +334,6 @@ namespace geeL {
 
 			if (currentShader != &shader) {
 				if(updateBinding) shader.loadSceneInformation(lightManager, camera);
-				shader.initDraw();
-
 				currentShader = &shader;
 			}
 
@@ -411,8 +409,6 @@ namespace geeL {
 
 			if (currentShader != &shader) {
 				if(updateBindings) shader.loadSceneInformation(lightManager, camera);
-				shader.initDraw();
-
 				currentShader = &shader;
 			}
 
@@ -434,7 +430,6 @@ namespace geeL {
 
 	void RenderScene::drawObjects(SceneShader& shader, const Camera* const camera) const {
 		shader.loadSceneInformation(lightManager, camera);
-		shader.initDraw();
 
 		iterRenderObjects([&shader, &camera](const MeshRenderer& object) {
 			if (object.isActive()) {

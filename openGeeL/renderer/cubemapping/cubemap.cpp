@@ -19,7 +19,7 @@ namespace geeL {
 
 
 	void CubeMap::bindMap(const RenderShader& shader, std::string name) const {
-		TextureBindingStack::bindSingleTexture(getID(), shader, 1, name, TextureType::TextureCube);
+		TextureBindingStack::bindSingleTexture(getGPUID(), getID(), shader, 1, name, TextureType::TextureCube);
 	}
 
 	void CubeMap::bind(const Camera& camera, const RenderShader& shader, 

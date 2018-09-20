@@ -49,7 +49,6 @@ namespace geeL {
 			bind<int>(name, mapOffset + offset);
 
 			maps[name] = TextureBinding(&texture, offset, name);
-			mapBindingPos = maps.size() + mapOffset;
 		}
 	}
 
@@ -104,23 +103,12 @@ namespace geeL {
 			bind<int>(binding.name, mapOffset + binding.offset);
 			counter++;
 		}
-
-		mapBindingPos = maps.size() + mapOffset;
 	}
 
 	void Shader::loadMaps() const {
-		TextureBindingStack::bindTexturesSimple(*this, mapOffset);
+		TextureBindingStack::bindTextures(*this, mapOffset);
 	}
 
-
-	void Shader::loadMapsDynamic() const {
-		TextureBindingStack::bindTexturesDynamic(*this, mapOffset);
-	}
-
-	void Shader::initDraw() const {
-		//use();
-		loadMaps();
-	}
 
 	ShaderLocation Shader::getLocation(const string& name) const {
 		return glGetUniformLocation(program, name.c_str());
