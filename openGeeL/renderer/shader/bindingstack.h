@@ -5,7 +5,6 @@
 
 namespace geeL {
 
-	class ITexture;
 	class Shader;
 
 

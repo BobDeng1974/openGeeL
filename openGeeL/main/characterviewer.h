@@ -29,13 +29,9 @@ public:
 
 			IBLMap& iblMap = cubeMapFactory.createIBLMap(envCubeMap);
 
-			std::cout << "asfasdf\n";
-
 			Skybox& skybox = Skybox(iblMap.getIrradianceMap(), 0.75f);
 			scene.setSkybox(skybox);
 			lightManager.addReflectionProbe(iblMap);
-
-			std::cout << "asfasdf\n";
 
 			float lightIntensity = 27.f;
 			Transform& lightTransform1 = transformFactory.CreateTransform(vec3(-0.5f, -2.9f, 3), vec3(-180.0f, 0, -50), vec3(1.f), true);
@@ -46,7 +42,6 @@ public:
 			Transform& lightTransform21 = transformFactory.CreateTransform(vec3(-5.2f, -0.2f, 7.5f), vec3(-180.0f, 0, -50), vec3(1.f), true);
 			ShadowMapConfiguration config2 = ShadowMapConfiguration(0.00006f, ShadowMapType::Soft, ShadowmapResolution::Large, 6.5f, 2U, 150.f, 1.f);
 			lightManager.addPointLight(config2, lightTransform21, glm::vec3(lightIntensity * 3.f, lightIntensity * 59.f, lightIntensity * 43.f), 0.25f);
-
 
 
 			{
