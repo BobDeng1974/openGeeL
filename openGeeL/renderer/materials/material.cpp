@@ -1,3 +1,4 @@
+#include "shader/sceneshader.h"
 #include "material.h"
 
 namespace geeL {
@@ -16,6 +17,10 @@ namespace geeL {
 
 	void Material::bind() const {
 		container->bind(*shader);
+	}
+
+	void Material::loadMaps() const {
+		shader->loadMaps();
 	}
 
 	const SceneShader& Material::getShader() const {

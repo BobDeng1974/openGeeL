@@ -53,6 +53,7 @@ namespace geeL {
 
 
 		void bind() const;
+		void loadMaps() const;
 
 		const SceneShader& getShader() const;
 		SceneShader& getShader();

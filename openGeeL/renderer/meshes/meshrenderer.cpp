@@ -34,6 +34,7 @@ namespace geeL {
 
 		shader.bind<unsigned int>("id", getID());
 		material.bind();
+		material.loadMaps();
 
 		drawMask();
 		drawMesh(shader);
@@ -47,6 +48,7 @@ namespace geeL {
 		shader.bindMatrices(transform);
 
 		container.bind(shader);
+		shader.loadMaps();
 		drawMesh(shader);
 	}
 
@@ -233,6 +235,7 @@ namespace geeL {
 			Material& m = r.getMaterial();
 
 			m.bind();
+			m.loadMaps();
 			r.drawMesh(shader);
 		}
 	}
@@ -247,6 +250,7 @@ namespace geeL {
 			MaterialContainer& m = r.getMaterial().getMaterialContainer();
 
 			m.bind(shader);
+			shader.loadMaps();
 			r.drawMesh(shader);
 		}
 	}
