@@ -1,11 +1,13 @@
 #ifndef RENDERSHADER_H
 #define RENDERSHADER_H
 
+#include <functional>
 #include <list>
 #include "shader.h"
 
 namespace geeL {
 
+	class  Material;
 	class  ShaderProvider;
 	struct StringReplacement;
 
@@ -28,9 +30,38 @@ namespace geeL {
 			ShaderProvider* const provider,
 			const Replacements& ...replacements);
 
+
+		virtual bool addMap(const ITexture& texture, const std::string& name);
+		virtual std::string removeMap(const ITexture& texture);
+		virtual bool removeMap(const std::string& name);
+
+		//Collects draw calls and executes them in packs. 
+		//Note: 'forceDraw' should be called after last call, to make sure that remaining draw calls
+		//get executed as well
+		void draw(const Material& material, std::function<void(const Material&)> drawCall);
+
+		//Force all currently collected draw calls to execute. 
+		void forceDraw();
+
 	protected:
 		void init(const char* vertexPath, const char* geometryPath, const char* fragmentPath, 
 			ShaderProvider* const provider, std::list<const StringReplacement*>& replacements);
+
+	private:
+		struct Drawcall {
+			const Material& material; 
+			std::function<void(const Material&)> drawCall;
+
+			Drawcall(const Material& material, std::function<void(const Material&)> drawCall)
+				: material(material), drawCall(drawCall) {}
+
+		};
+
+		std::list<Drawcall> drawcalls;
+		unsigned int queueSize;
+
+
+		void drawPack(unsigned int offset);
 
 	};
 
@@ -50,7 +81,8 @@ namespace geeL {
 	template<typename ...Replacements>
 	inline RenderShader::RenderShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath,
 		ShaderProvider* const provider, const Replacements& ...replacements)
-			: Shader() {
+			: Shader()
+			, queueSize(0) {
 
 		std::list<const StringReplacement*> list;
 		add(list, replacements...);

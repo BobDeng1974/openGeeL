@@ -25,6 +25,8 @@ namespace geeL {
 		void bindTextures(RenderShader& shader) const;
 		void iterTextures(std::function<void(const std::string&, const ITexture&)> function) const;
 
+		size_t getTextureCount() const;
+
 	private:
 		std::map<MapType, std::pair<std::string, memory::MemoryObject<ITexture>>> textures;
 

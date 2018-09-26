@@ -129,5 +129,17 @@ namespace geeL {
 		mat4Parameters[name] = value;
 	}
 
+	void GenericMaterialContainer::iterTextures(std::function<void(const std::string&, const ITexture&)> function) const {
+		for (auto it(textures.begin()); it != textures.end(); it++) {
+			const std::string& name = it->first;
+			const ITexture& texture = *it->second;
+			function(name, texture);
+		}
+	}
+
+	size_t GenericMaterialContainer::getTextureCount() const {
+		return textures.size();
+	}
+
 
 }

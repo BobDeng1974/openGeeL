@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include "materials/material.h"
+#include "bindingstack.h"
 #include "shaderreader.h"
 #include "rendershader.h"
 
@@ -11,11 +13,13 @@ using namespace std;
 namespace geeL {
 	
 	RenderShader::RenderShader()
-		: Shader() {}
+		: Shader()
+		, queueSize(0) {}
 
 	RenderShader::RenderShader(const char* vertexPath, const char* fragmentPath,
 		const char* geometryPath, ShaderProvider* const provider) 
-			: Shader() {
+			: Shader()
+			, queueSize(0) {
 
 		list<const StringReplacement*> list;
 
@@ -24,8 +28,94 @@ namespace geeL {
 	}
 
 
-	void RenderShader::init(const char* vertexPath, const char* geometryPath, const char* fragmentPath, 
-		ShaderProvider* const provider, std::list<const StringReplacement*>& replacements) {
+	bool RenderShader::addMap(const ITexture& texture, const string& name) {
+		bool added = Shader::addMap(texture, name);
+		if (added) queueSize++;
+
+		return added;
+	}
+
+	string RenderShader::removeMap(const ITexture& texture) {
+		string& name = Shader::removeMap(texture);
+
+		//No empty string returned => map successfully removed
+		if (name.size() > 0) queueSize--;
+
+		return name;
+	}
+
+	bool RenderShader::removeMap(const string& name) {
+		bool removed = Shader::removeMap(name);
+		if (removed) queueSize--;
+
+		return removed;
+	}
+
+	void RenderShader::draw(const Material& material, function<void(const Material&)> drawCall) {
+		const MaterialContainer& container = material.getMaterialContainer();
+		unsigned int size = container.getTextureCount();
+
+		//Add draw call to queue until binding stack is full
+		if ((queueSize + size) < TextureBindingStack::MAX_TEXTURE_ACTIVE)
+			queueSize += size;
+		else 
+			drawPack(size);
+
+
+		//Add current draw call to "next" call stack
+		drawcalls.push_back(Drawcall(material, drawCall));
+	}
+
+	void RenderShader::forceDraw() {
+		drawPack(0);
+	}
+
+	void RenderShader::drawPack(unsigned int offset) {
+		queueSize = getMapCount() + offset;
+
+		//Add all maps present in shader
+		loadMaps();
+
+		//Activate all textures of all operations on texture stack
+		list<list<TextureBinding>> bindings;
+		for (auto it(drawcalls.begin()); it != drawcalls.end(); it++) {
+			Drawcall& call = *it;
+			const MaterialContainer& m = call.material.getMaterialContainer();
+
+			bindings.push_back(list<TextureBinding>());
+
+			m.iterTextures([&](const string& name, const ITexture& texture) {
+				StackPosition p = TextureBindingStack::activateTexture(texture);
+
+				list<TextureBinding>& l = bindings.back();
+				l.push_back(TextureBinding(&texture, p, name));
+			});
+		}
+
+
+		//Perform all previously collected draw calls in order
+		auto bIt(bindings.begin());
+		for (auto it(drawcalls.begin()); it != drawcalls.end(); it++) {
+			Drawcall& call = *it;
+			const Material& m = call.material;
+
+			//Bind all textures that are associated with current draw call
+			list<TextureBinding>& b = *bIt;
+			for (auto et(b.begin()); et != b.end(); et++) {
+				TextureBinding& binding = *et;
+
+				bind<unsigned int>(binding.name, binding.offset);
+			}
+
+			call.drawCall(m);
+		}
+
+		drawcalls.clear();
+	}
+
+
+	void RenderShader::init(const char* vertexPath, const char* geometryPath, const char* fragmentPath,
+		ShaderProvider* const provider, list<const StringReplacement*>& replacements) {
 
 		//Vertex shader
 		string vertexCode = FileReader::readFile(vertexPath);

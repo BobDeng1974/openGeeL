@@ -1,9 +1,10 @@
 #ifndef DEFAULTMATERIAL_H
 #define DEFAULTMATERIAL_H
 
+#include <functional>
 #include <list>
-#include <vector>
 #include <string>
+#include <vector>
 #include "texturing/texturestack.h"
 #include "material.h"
 
@@ -46,6 +47,9 @@ namespace geeL {
 		virtual void setFloatValue(const std::string& name, float value);
 		virtual void setIntValue(const std::string& name, int value);
 		virtual void setVectorValue(const std::string& name, const glm::vec3& value);
+
+		virtual void iterTextures(std::function<void(const std::string&, const ITexture&)> function) const;
+		virtual size_t getTextureCount() const;
 
 	private:
 		glm::vec3 color, emissivity;

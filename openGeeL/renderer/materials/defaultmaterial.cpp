@@ -176,6 +176,18 @@ namespace geeL {
 			cout << "Value '" + name + "' not present in material\n";
 	}
 
+	void DefaultMaterialContainer::iterTextures(std::function<void(const std::string&, const ITexture&)> function) const {
+		const TextureStack& stack = textureStack;
+
+		stack.iterTextures([&function](const std::string& name, const ITexture& texture) {
+			function(name, texture);
+		});
+	}
+
+	size_t DefaultMaterialContainer::getTextureCount() const {
+		return textureStack.getTextureCount();
+	}
+
 
 	void DefaultMaterialContainer::bind(SceneShader& shader) const {
 		textureStack.bindTextures(shader);

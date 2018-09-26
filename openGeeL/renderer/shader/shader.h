@@ -36,15 +36,21 @@ namespace geeL {
 		
 		unsigned int getProgram() const;
 
-		//Add a new map as texture sampler to the shader
-		void addMap(const ITexture& texture, const std::string& name);
-		const ITexture* const getMap(const std::string& name) const;
+		//Add a new map as texture sampler to the shader. Returns true if new texture
+		//binding has been added or false if map already exists / if existing map with same
+		//name has been updated
+		virtual bool addMap(const ITexture& texture, const std::string& name);
 
 		//Remove map from shader (if it is attached) and returns its name
+		//Note: Returns empty string if removal wasn't successfull
 		virtual std::string removeMap(const ITexture& texture);
 
-		//Remove map with given name from shader (if it exists)
-		virtual void removeMap(const std::string& name);
+		//Remove map with given name from shader (if it exists). Returns true
+		//if map has been successfully removed
+		virtual bool removeMap(const std::string& name);
+
+		const ITexture* const getMap(const std::string& name) const;
+		size_t getMapCount() const;
 
 		//Load associated texture samplers into their binding points in the shader
 		virtual void loadMaps() const;

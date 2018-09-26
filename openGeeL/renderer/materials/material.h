@@ -33,6 +33,9 @@ namespace geeL {
 
 		virtual void bind(SceneShader& shader) const = 0;
 
+		virtual void iterTextures(std::function<void(const std::string&, const ITexture&)> function) const = 0;
+		virtual size_t getTextureCount() const = 0;
+
 	};
 
 

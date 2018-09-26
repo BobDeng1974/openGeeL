@@ -36,6 +36,10 @@ namespace geeL {
 			function(it->second.first, *it->second.second);
 	}
 
+	size_t TextureStack::getTextureCount() const {
+		return textures.size();
+	}
+
 	void TextureStack::iterTextures(std::function<void(const std::string&, ITexture&)> function) {
 		for (auto it(textures.begin()); it != textures.end(); it++)
 			function(it->second.first, *it->second.second);

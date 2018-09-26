@@ -29,7 +29,7 @@ namespace geeL {
 		TransparentLighting(ITextureProvider& provider, bool animated);
 
 		virtual std::string removeMap(const ITexture& texture);
-		virtual void removeMap(const std::string& name);
+		virtual bool removeMap(const std::string& name);
 
 	private:
 		ITextureProvider& provider;

@@ -28,12 +28,14 @@ namespace geeL {
 	}
 
 
-	void Shader::addMap(const ITexture& texture, const std::string& name) {
+	bool Shader::addMap(const ITexture& texture, const std::string& name) {
 		auto it = maps.find(name);
 		//Update texture ID if a binding with same name already exists
 		if (it != maps.end()) {
 			TextureBinding& binding = it->second;
 			binding.texture = &texture;
+
+			return false;
 		}
 		//Add new texture binding otherwise
 		else {
@@ -41,7 +43,7 @@ namespace geeL {
 				std::cout << "Can't add more than " << TextureBindingStack::MAX_TEXTURE_BINDINGS
 					<< " texture to shader\n";
 
-				return;
+				return false;
 			}
 
 			use();
@@ -50,6 +52,8 @@ namespace geeL {
 
 			maps[name] = TextureBinding(&texture, offset, name);
 		}
+
+		return true;
 	}
 
 	std::string Shader::removeMap(const ITexture& texture) {
@@ -77,14 +81,18 @@ namespace geeL {
 		return std::string();
 	}
 
-	void Shader::removeMap(const std::string& name) {
+	bool Shader::removeMap(const std::string& name) {
 		auto it = maps.find(name);
 		if (it != maps.end()) {
 			maps.erase(it);
 
 			//Rebind all maps again since positions might have changed
 			bindMaps();
+
+			return true;
 		}
+
+		return false;
 	}
 
 	const ITexture* const Shader::getMap(const std::string& name) const {
@@ -93,6 +101,10 @@ namespace geeL {
 			return (*it).second.texture;
 
 		return 0;
+	}
+
+	size_t Shader::getMapCount() const {
+		return maps.size();
 	}
 
 	void Shader::bindMaps() {

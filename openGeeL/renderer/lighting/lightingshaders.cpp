@@ -50,9 +50,11 @@ namespace geeL {
 		return name;
 	}
 
-	void TransparentLighting::removeMap(const std::string& name) {
-		SceneShader::removeMap(name);
+	bool TransparentLighting::removeMap(const std::string& name) {
+		bool removed = SceneShader::removeMap(name);
 		addTextures(name);
+
+		return removed;
 	}
 
 

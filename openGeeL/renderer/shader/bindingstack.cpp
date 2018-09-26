@@ -9,13 +9,13 @@
 
 namespace geeL {
 
-	std::vector<unsigned int> bindings(TextureBindingStack::MAX_TEXTURE_BINDINGS, 0);
+	std::vector<TextureID> bindings(TextureBindingStack::MAX_TEXTURE_ACTIVE, 0);
 
 
 	void TextureBindingStack::bindTextures(const Shader& shader, unsigned int offset) {
 
 		shader.iterateTextures([&offset, &shader](const TextureBinding& binding) {
-			unsigned int& b = bindings[binding.offset];
+			TextureID& b = bindings[binding.offset];
 
 			if (shader.ignoreOptimisations || b != binding.texture->getID()) {
 				binding.texture->bind(offset + binding.offset);
@@ -24,7 +24,7 @@ namespace geeL {
 		});
 	}
 
-	void TextureBindingStack::bindSingleTexture(unsigned int GID, unsigned int ID, const Shader& shader,
+	void TextureBindingStack::bindSingleTexture(unsigned int GID, TextureID ID, const Shader& shader,
 		unsigned int offset, const std::string& name, TextureType type) {
 
 		glActiveTexture(GL_TEXTURE0 + offset);
@@ -34,6 +34,17 @@ namespace geeL {
 		glBindTexture((int)type, GID);
 
 		bindings[offset] = ID;
+	}
+
+	StackPosition TextureBindingStack::activateTexture(const ITexture& texture) {
+		//TODO: implement this
+
+		return StackPosition();
+	}
+
+
+	void TextureBindingStack::unbindTexture(const ITexture& texture) {
+		//TODO: implement this
 	}
 
 }

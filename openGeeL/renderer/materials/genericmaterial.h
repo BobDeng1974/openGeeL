@@ -48,6 +48,8 @@ namespace geeL {
 		virtual void setVectorValue(const std::string&, const glm::vec3& value);
 		virtual void setMatrixValue(const std::string&, mat4 value);
 
+		virtual void iterTextures(std::function<void(const std::string&, const ITexture&)> function) const;
+		virtual size_t getTextureCount() const;
 
 	private:
 		std::map<std::string, MemoryObject<ITexture>> textures;
