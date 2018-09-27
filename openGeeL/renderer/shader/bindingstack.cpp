@@ -57,6 +57,9 @@ namespace geeL {
 	}
 
 	StackPosition TextureBindingStack::activateTexture(const ITexture& texture) {
+		auto it(positions.find(texture.getID()));
+		if (it != positions.end()) return it->second;
+
 		StackPosition position = stackPosition;
 		incrementStackPosition();
 
