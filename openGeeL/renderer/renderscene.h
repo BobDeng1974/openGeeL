@@ -108,6 +108,8 @@ namespace geeL {
 		void updateMeshRenderer(MeshRenderer& renderer, Material oldMaterial, Material newMaterial);
 
 		void iterShaders(std::function<bool(const SceneShader&)> function) const;
+		void iterRenderObjects(ShadingMethod shadingMethod,
+			std::function<void(MeshRenderer&, SceneShader&)> function);
 
 	};
 
@@ -144,14 +146,14 @@ namespace geeL {
 		void draw(ShadingMethod method, const Camera& camera);
 
 		//Draw all objects with forward shading from given camera's perspective
-		void drawForwardForced(const Camera& camera, bool forceGamma = false) const;
+		void drawForwardForced(const Camera& camera, bool forceGamma = false);
 
 		//Draw all objects in the scene with given shader and given camera.
 		//Note: Scene gets drawn in world space if no camera gets attached
-		void drawObjects(SceneShader& shader, const Camera* const camera = nullptr) const;
+		void drawObjects(SceneShader& shader, const Camera* const camera = nullptr);
 
 		//Draw the geometry of all objects in the scene with given shader
-		void drawGeometry(const RenderShader& shader) const;
+		void drawGeometry(const RenderShader& shader);
 
 		//Draw all objects in the scene with given shader that use given render mode
 		void drawGeometry(const RenderShader& shader, RenderMode mode, 
@@ -183,16 +185,16 @@ namespace geeL {
 		std::list<std::function<void(RenderScene&)>> updateListeners;
 
 
-		void drawDefault(const Camera& camera) const;
-		void drawForward(const Camera& camera) const;
-		void drawHybrid(const Camera& camera) const;
-		void drawTransparent(const Camera& camera) const;
+		void drawDefault(const Camera& camera);
+		void drawForward(const Camera& camera);
+		void drawHybrid(const Camera& camera);
+		void drawTransparent(const Camera& camera);
 
 		//Draw all objects whose materials have given shading method
-		void draw(ShadingMethod shadingMethod, const Camera& camera, bool updateBindings) const;
+		void draw(ShadingMethod shadingMethod, const Camera& camera, bool updateBindings);
 
 		void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera,
-			bool updateBindings = false) const;
+			bool updateBindings = false);
 
 		void updateUpdateListener();
 

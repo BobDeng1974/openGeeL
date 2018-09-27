@@ -12,7 +12,7 @@ namespace geeL {
 	class Voxelizer {
 
 	public:
-		Voxelizer(const RenderScene& scene, unsigned int dimensions = 256);
+		Voxelizer(RenderScene& scene, unsigned int dimensions = 256);
 		~Voxelizer();
 
 		//Build scene into a voxel list
@@ -34,7 +34,7 @@ namespace geeL {
 		unsigned int dimensions, atomicBuffer, voxelAmount;
 		TextureBuffer voxelPositions, voxelNormals, voxelColors;
 		SceneShader* voxelShader;
-		const RenderScene& scene;
+		RenderScene& scene;
 
 		void initVoxelShader() const;
 		void voxelizeScene(bool drawVoxel) const;

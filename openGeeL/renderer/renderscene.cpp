@@ -326,11 +326,11 @@ namespace geeL {
 	}
 
 	
-	void RenderScene::draw(ShadingMethod shadingMethod, const Camera& camera, bool updateBinding) const {
+	void RenderScene::draw(ShadingMethod shadingMethod, const Camera& camera, bool updateBinding) {
 		SceneShader* currentShader = nullptr;
 
 		iterRenderObjects(shadingMethod, [this, &camera, &currentShader, &updateBinding]
-			(const MeshRenderer& object, SceneShader& shader) {
+			(MeshRenderer& object, SceneShader& shader) {
 
 			if (currentShader != &shader) {
 				if(updateBinding) shader.loadSceneInformation(lightManager, camera);
@@ -343,7 +343,7 @@ namespace geeL {
 	}
 
 
-	void RenderScene::drawDefault(const Camera& camera) const {
+	void RenderScene::drawDefault(const Camera& camera) {
 		//Only bind camera if it is external since the scene 
 		//camera was already bound during update process
 		bool externalCamera = &camera != this->camera;
@@ -352,7 +352,7 @@ namespace geeL {
 		draw(ShadingMethod::Deferred, camera, externalCamera);
 	}
 
-	void RenderScene::drawForwardForced(const Camera& camera, bool forceGamma) const {
+	void RenderScene::drawForwardForced(const Camera& camera, bool forceGamma) {
 		SceneShader& shader = materialFactory.getDefaultShader(ShadingMethod::Forward, false);
 
 		if (forceGamma) shader.bind<int>("gammaCorrection", true);
@@ -362,7 +362,7 @@ namespace geeL {
 		if (forceGamma) shader.bind<int>("gammaCorrection", false);
 	}
 
-	void RenderScene::drawForward(const Camera& camera) const {
+	void RenderScene::drawForward(const Camera& camera) {
 		bool externalCamera = &camera != this->camera;
 
 		BlendGuard blend;
@@ -372,21 +372,21 @@ namespace geeL {
 	}
 
 
-	void RenderScene::drawHybrid(const Camera& camera) const {
+	void RenderScene::drawHybrid(const Camera& camera) {
 		bool externalCamera = &camera != this->camera;
 
 		draw(ShadingMethod::Hybrid, camera, externalCamera);
 	}
 
-	void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera, bool updateBindings) const {
-		using MSPair = pair<const MeshRenderer*, SceneShader*>;
+	void RenderScene::drawForwardOrdered(ShadingMethod shadingMethod, const Camera& camera, bool updateBindings) {
+		using MSPair = pair<MeshRenderer*, SceneShader*>;
 		SceneShader* currentShader = nullptr;
 
 		//Write all objects into sortable data structure
 		size_t c = count(shadingMethod);
 		vector<MSPair> sortedObjects;
 		sortedObjects.reserve(c);
-		iterRenderObjects(shadingMethod, [&sortedObjects](const MeshRenderer& object, SceneShader& shader) {
+		iterRenderObjects(shadingMethod, [&sortedObjects](MeshRenderer& object, SceneShader& shader) {
 			sortedObjects.push_back(MSPair(&object, &shader));
 		});
 
@@ -404,7 +404,7 @@ namespace geeL {
 
 		//Read sorted data structure
 		for (auto it(sortedObjects.begin()); it != sortedObjects.end(); it++) {
-			const MeshRenderer& object = *it->first;
+			MeshRenderer& object = *it->first;
 			SceneShader& shader = *it->second;
 
 			if (currentShader != &shader) {
@@ -423,15 +423,15 @@ namespace geeL {
 			(*it)(*this);
 	}
 
-	void RenderScene::drawTransparent(const Camera& camera) const {
+	void RenderScene::drawTransparent(const Camera& camera) {
 		drawForwardOrdered(ShadingMethod::Transparent, camera);
 	}
 
 
-	void RenderScene::drawObjects(SceneShader& shader, const Camera* const camera) const {
+	void RenderScene::drawObjects(SceneShader& shader, const Camera* const camera) {
 		shader.loadSceneInformation(lightManager, camera);
 
-		iterRenderObjects([&shader, &camera](const MeshRenderer& object) {
+		iterRenderObjects([&shader, &camera](MeshRenderer& object) {
 			if (object.isActive()) {
 				//Use frustum culling if a camera has been attached
 				bool isVisible = !((camera != nullptr) && !object.isVisible(*camera));
@@ -442,7 +442,7 @@ namespace geeL {
 		});
 	}
 	
-	void RenderScene::drawGeometry(const RenderShader& shader) const {
+	void RenderScene::drawGeometry(const RenderShader& shader) {
 		iterRenderObjects([&](const MeshRenderer& object) {
 			if (object.isActive())
 				object.drawGeometry(shader);
@@ -450,7 +450,7 @@ namespace geeL {
 	}
 
 	void RenderScene::drawGeometry(const RenderShader& shader, RenderMode mode, const ViewFrustum* const frustum) const {
-		iterRenderObjects([&](const MeshRenderer& object) {
+		iterRenderObjects([&](MeshRenderer& object) {
 			if (object.isActive()) {
 				//Use frustum culling if frustum has been attached
 				bool isVisible = !((frustum != nullptr) && !object.isVisible(*frustum));
@@ -566,6 +566,24 @@ namespace geeL {
 		}
 	}
 
+	void Scene::iterRenderObjects(ShadingMethod shadingMethod, std::function<void(MeshRenderer&, SceneShader&)> function) {
+		auto itMethod = renderObjects.find(shadingMethod);
+		if (itMethod != renderObjects.end()) {
+			const ShaderMapping& shaders = itMethod->second;
+
+			for (auto itShader(shaders.begin()); itShader != shaders.end(); itShader++) {
+				SceneShader& shader = *itShader->first;
+				const TransformMapping& elements = itShader->second;
+
+				for (auto ut(elements.begin()); ut != elements.end(); ut++) {
+					MeshRenderer& object = *ut->second;
+					function(object, shader);
+				}
+			}
+		}
+	}
+
+
 	void Scene::iterShaders(std::function<void(SceneShader&)> function) {
 		for (auto itMethod(renderObjects.begin()); itMethod != renderObjects.end(); itMethod++) {
 			const ShaderMapping& shaders = itMethod->second;
@@ -589,7 +607,4 @@ namespace geeL {
 		}
 	}
 
-	
-
-	
 }

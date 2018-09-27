@@ -16,7 +16,7 @@ using namespace glm;
 
 namespace geeL {
 
-	Voxelizer::Voxelizer(const RenderScene& scene, unsigned int dimensions) 
+	Voxelizer::Voxelizer(RenderScene& scene, unsigned int dimensions) 
 		: scene(scene)
 		, dimensions(dimensions) {
 

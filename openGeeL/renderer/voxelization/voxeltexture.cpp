@@ -12,7 +12,7 @@
 
 namespace geeL {
 
-	VoxelTexture::VoxelTexture(const RenderScene& scene, unsigned int dimensions) 
+	VoxelTexture::VoxelTexture(RenderScene& scene, unsigned int dimensions) 
 		: FunctionalTexture(std::unique_ptr<Texture>(new Texture3D(
 			dimensions, 
 			dimensions, 

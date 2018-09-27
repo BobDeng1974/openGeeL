@@ -35,10 +35,10 @@ namespace geeL {
 		virtual ~MeshRenderer();
 
 
-		virtual void draw() const;
+		virtual void draw();
 
 		//Draw mesh and its material exclusively with the given shader.
-		virtual void drawExclusive(SceneShader& shader) const;
+		virtual void drawExclusive(SceneShader& shader);
 
 		//Draw mesh without material properties with given shader
 		virtual void drawGeometry(const RenderShader& shader) const;

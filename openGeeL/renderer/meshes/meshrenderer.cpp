@@ -25,7 +25,7 @@ namespace geeL {
 	}
 
 
-	void MeshRenderer::draw() const {
+	void MeshRenderer::draw() {
 		CullingGuard culling(faceCulling);
 		StencilGuard stencil;
 
@@ -40,7 +40,7 @@ namespace geeL {
 		drawMesh(shader);
 	}
 
-	void MeshRenderer::drawExclusive(SceneShader& shader) const {
+	void MeshRenderer::drawExclusive(SceneShader& shader) {
 		CullingGuard culling(faceCulling);
 		StencilGuard stencil;
 

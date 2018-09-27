@@ -15,7 +15,7 @@ namespace geeL {
 	class VoxelTexture : public VoxelStructure, public FunctionalTexture {
 
 	public:
-		VoxelTexture(const RenderScene& scene, unsigned int dimensions = 256);
+		VoxelTexture(RenderScene& scene, unsigned int dimensions = 256);
 
 		virtual void build();
 		virtual void bind(const Shader& shader) const;
@@ -24,7 +24,7 @@ namespace geeL {
 
 	private:
 		unsigned int dimensions;
-		const RenderScene& scene;
+		RenderScene& scene;
 		SceneShader* voxelShader;
 
 		VoxelTexture(const VoxelTexture& other) = delete;
