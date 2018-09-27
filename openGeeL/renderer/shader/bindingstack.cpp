@@ -19,6 +19,11 @@ namespace geeL {
 		positions[id] = position;
 	}
 
+	void incrementStackPosition() {
+		stackPosition = (stackPosition + 1) % TextureBindingStack::MAX_TEXTURE_BINDINGS;
+	}
+
+
 	void TextureBindingStack::bindTextures(const Shader& shader, unsigned int offset) {
 
 		StackPosition counter = 0;
@@ -34,11 +39,13 @@ namespace geeL {
 			counter++;
 		});
 
-		stackPosition = counter;
+		stackPosition = counter; //Note: Counter can never be higher than max texture binding amount
 	}
 
 	void TextureBindingStack::bindSingleTexture(unsigned int GID, TextureID ID, const Shader& shader,
 		unsigned int offset, const std::string& name, TextureType type) {
+
+		assert(offset < TextureBindingStack::MAX_TEXTURE_BINDINGS);
 
 		glActiveTexture(GL_TEXTURE0 + offset);
 
@@ -50,12 +57,15 @@ namespace geeL {
 	}
 
 	StackPosition TextureBindingStack::activateTexture(const ITexture& texture) {
-		addTexture(texture.getID(), stackPosition);
+		StackPosition position = stackPosition;
+		incrementStackPosition();
 
-		glActiveTexture(GL_TEXTURE0 + stackPosition);
-		texture.bind(stackPosition);
+		addTexture(texture.getID(), position);
 
-		return stackPosition++;
+		glActiveTexture(GL_TEXTURE0 + position);
+		texture.bind(position);
+
+		return position;
 	}
 
 
