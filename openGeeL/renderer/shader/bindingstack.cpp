@@ -9,19 +9,32 @@
 
 namespace geeL {
 
+	StackPosition stackPosition = 0;
 	std::vector<TextureID> bindings(TextureBindingStack::MAX_TEXTURE_ACTIVE, 0);
+	std::map<TextureID, StackPosition> positions;
 
+
+	void addTexture(TextureID id, StackPosition position) {
+		bindings[position] = id;
+		positions[id] = position;
+	}
 
 	void TextureBindingStack::bindTextures(const Shader& shader, unsigned int offset) {
 
-		shader.iterateTextures([&offset, &shader](const TextureBinding& binding) {
-			TextureID& b = bindings[binding.offset];
+		StackPosition counter = 0;
+		shader.iterateTextures([&offset, &shader, &counter](const TextureBinding& binding) {
+			TextureID& b = bindings[offset + binding.offset];
+			const ITexture& texture = *binding.texture;
 
-			if (shader.ignoreOptimisations || b != binding.texture->getID()) {
-				binding.texture->bind(offset + binding.offset);
-				b = binding.texture->getID();
+			if (shader.ignoreOptimisations || b != texture.getID()) {
+				texture.bind(offset + binding.offset);
+				addTexture(texture.getID(), offset + binding.offset);
 			}
+
+			counter++;
 		});
+
+		stackPosition = counter;
 	}
 
 	void TextureBindingStack::bindSingleTexture(unsigned int GID, TextureID ID, const Shader& shader,
@@ -37,14 +50,26 @@ namespace geeL {
 	}
 
 	StackPosition TextureBindingStack::activateTexture(const ITexture& texture) {
-		//TODO: implement this
+		addTexture(texture.getID(), stackPosition);
 
-		return StackPosition();
+		glActiveTexture(GL_TEXTURE0 + stackPosition);
+		texture.bind(stackPosition);
+
+		return stackPosition++;
 	}
 
 
 	void TextureBindingStack::unbindTexture(const ITexture& texture) {
-		//TODO: implement this
+		auto it(positions.find(texture.getID()));
+		if (it != positions.end()) {
+			StackPosition position = it->second;
+
+			bindings[position] = 0;
+			positions.erase(it);
+
+			glActiveTexture(GL_TEXTURE0 + position);
+			texture.unbind();
+		}
 	}
 
 }
