@@ -24,18 +24,18 @@ namespace geeL {
 
 		static StackPosition activateTexture(const ITexture& texture);
 
-		static void unbindTexture(const ITexture& texture);
+		static void deactivateTexture(const ITexture& texture);
 
 		template<typename... ITextures>
-		static void unbindTexture(const ITexture& texture, const ITextures& ...textures);
+		static void deactivateTexture(const ITexture& texture, const ITextures& ...textures);
 
 	};
 
 
 	template<typename ...ITextures>
-	inline void TextureBindingStack::unbindTexture(const ITexture& texture, const ITextures& ...textures) {
-		unbindTexture(texture);
-		unbindTexture(textures...);
+	inline void TextureBindingStack::deactivateTexture(const ITexture& texture, const ITextures& ...textures) {
+		deactivateTexture(texture);
+		deactivateTexture(textures...);
 	}
 
 }

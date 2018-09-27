@@ -69,7 +69,7 @@ namespace geeL {
 	}
 
 
-	void TextureBindingStack::unbindTexture(const ITexture& texture) {
+	void TextureBindingStack::deactivateTexture(const ITexture& texture) {
 		auto it(positions.find(texture.getID()));
 		if (it != positions.end()) {
 			StackPosition position = it->second;

@@ -338,7 +338,7 @@ namespace geeL {
 			}
 
 			if (object.isActive() && object.isVisible(camera))
-				object.draw(shader);
+				object.draw();
 		});
 	}
 
@@ -413,7 +413,7 @@ namespace geeL {
 			}
 
 			if (object.isActive() && object.isVisible(camera))
-				object.draw(shader);
+				object.draw();
 		}
 
 	}

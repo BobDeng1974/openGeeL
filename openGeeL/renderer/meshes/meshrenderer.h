@@ -35,12 +35,12 @@ namespace geeL {
 		virtual ~MeshRenderer();
 
 
-		virtual void draw(SceneShader& shader) const;
+		virtual void draw() const;
 
-		//Draw all meshes and materials exclusively with the given shader.
+		//Draw mesh and its material exclusively with the given shader.
 		virtual void drawExclusive(SceneShader& shader) const;
 
-		//Draw only the meshes without material properties with given shader
+		//Draw mesh without material properties with given shader
 		virtual void drawGeometry(const RenderShader& shader) const;
 
 		//Add render mask to whole mesh renderer.
