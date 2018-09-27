@@ -26,30 +26,33 @@ namespace geeL {
 
 
 	void MeshRenderer::draw() {
-		CullingGuard culling(faceCulling);
-		StencilGuard stencil;
+		SceneShader& shader = material.getShader();
+		shader.draw(material, [this, &shader](const Material& material) {
+			CullingGuard culling(faceCulling);
+			StencilGuard stencil;
 
-		const SceneShader& shader = material.getShader();
-		shader.bindMatrices(transform);
+			shader.bindMatrices(transform);
+			shader.bind<unsigned int>("id", getID());
+			material.bind();
+			material.loadMaps();
 
-		shader.bind<unsigned int>("id", getID());
-		material.bind();
-		material.loadMaps();
-
-		drawMask();
-		drawMesh(shader);
+			drawMask();
+			drawMesh(shader);
+		});
 	}
 
 	void MeshRenderer::drawExclusive(SceneShader& shader) {
-		CullingGuard culling(faceCulling);
-		StencilGuard stencil;
+		shader.draw(material, [this, &shader](const Material& material) {
+			CullingGuard culling(faceCulling);
+			StencilGuard stencil;
 
-		const MaterialContainer& container = material.getMaterialContainer();
-		shader.bindMatrices(transform);
+			const MaterialContainer& container = material.getMaterialContainer();
+			shader.bindMatrices(transform);
 
-		container.bind(shader);
-		shader.loadMaps();
-		drawMesh(shader);
+			container.bind(shader);
+			shader.loadMaps();
+			drawMesh(shader);
+		});
 	}
 
 	void MeshRenderer::drawGeometry(const RenderShader& shader) const {

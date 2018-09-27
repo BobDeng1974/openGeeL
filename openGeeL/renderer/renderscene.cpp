@@ -333,6 +333,7 @@ namespace geeL {
 			(MeshRenderer& object, SceneShader& shader) {
 
 			if (currentShader != &shader) {
+				if (currentShader != nullptr) currentShader->forceDraw();
 				if(updateBinding) shader.loadSceneInformation(lightManager, camera);
 				currentShader = &shader;
 			}
@@ -340,6 +341,8 @@ namespace geeL {
 			if (object.isActive() && object.isVisible(camera))
 				object.draw();
 		});
+
+		if (currentShader != nullptr) currentShader->forceDraw();
 	}
 
 
@@ -408,6 +411,7 @@ namespace geeL {
 			SceneShader& shader = *it->second;
 
 			if (currentShader != &shader) {
+				if (currentShader != nullptr) currentShader->forceDraw();
 				if(updateBindings) shader.loadSceneInformation(lightManager, camera);
 				currentShader = &shader;
 			}
@@ -416,6 +420,7 @@ namespace geeL {
 				object.draw();
 		}
 
+		if (currentShader != nullptr) currentShader->forceDraw();
 	}
 
 	void RenderScene::updateUpdateListener() {
@@ -440,6 +445,8 @@ namespace geeL {
 					object.drawExclusive(shader);
 			}
 		});
+
+		shader.forceDraw();
 	}
 	
 	void RenderScene::drawGeometry(const RenderShader& shader) {
