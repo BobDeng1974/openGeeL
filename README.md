@@ -9,7 +9,7 @@ and large support for post-processing.
 - Experimental realtime global illumination via *Voxel Cone Tracing*
 - HDR and Tonemapping. Default: Academy Color Encoding System (**ACES**)
 - Large array of post processing effects like SSAO, motion blur, depth of field, lens flar, bloom, color correction & light shafts
-- Allows use of diffuse, normal, gloss, roughness, metallic, occlusion, translucency and alpha maps
+- Allows use of diffuse, normal, gloss, roughness, metallic, occlusion, emission, translucency and alpha maps
 - Deferred rendering by default with experimental Tile-based renderer
 - Separated lighting passes for diffuse and specular lighting to allow effects like *Subsurface Scattering*
 - Forward rendering supported. Used by default for transparent objects and for use of custom shaders
